@@ -1,0 +1,8 @@
+[build]
+  command = "python diamond_signals_v2_core.py"
+  publish = "dist"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  

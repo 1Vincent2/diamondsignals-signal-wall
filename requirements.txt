@@ -1,0 +1,5 @@
+requests
+pandas
+pybaseball
+jinja2
+numpy
