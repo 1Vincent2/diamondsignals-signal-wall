@@ -101,4 +101,4 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
         suffixes=("", "_base")
     )
 
-    merged = merged[merged["recent_bbe"] >= 4].
+    merged = merged[merged["recent_bbe"] >= 4]
