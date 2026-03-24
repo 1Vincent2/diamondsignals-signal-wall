@@ -149,6 +149,7 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
 
     fastballs = {"FF", "FT", "SI", "FC"}
     pitchers["is_fastball"] = pitchers["pitch_type"].isin(fastballs).astype(int)
+    pitchers["fastball_speed"] = pd.to_numeric(pitchers["release_speed"], errors="coerce").where(pitchers["is_fastball"] == 1)
 
     pitchers["is_recent"] = pitchers["game_date"] >= pd.Timestamp(TODAY - timedelta(days=7))
     pitchers["is_baseline"] = (pitchers["game_date"] < pd.Timestamp(TODAY - timedelta(days=7))) & (
@@ -161,7 +162,7 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
         .agg(
             recent_pitches=("pitch_type", "size"),
             recent_whiff_rate=("is_whiff", "mean"),
-            recent_fb_velo=("release_speed", lambda s: pd.to_numeric(s[pitchers.loc[s.index, "is_fastball"] == 1], errors="coerce").mean()),
+            recent_fb_velo=("fastball_speed", "mean"),
             recent_extension=("release_extension", "mean"),
         )
         .reset_index()
@@ -173,7 +174,7 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
         .agg(
             baseline_pitches=("pitch_type", "size"),
             baseline_whiff_rate=("is_whiff", "mean"),
-            baseline_fb_velo=("release_speed", lambda s: pd.to_numeric(s[pitchers.loc[s.index, "is_fastball"] == 1], errors="coerce").mean()),
+            baseline_fb_velo=("fastball_speed", "mean"),
             baseline_extension=("release_extension", "mean"),
         )
         .reset_index()
