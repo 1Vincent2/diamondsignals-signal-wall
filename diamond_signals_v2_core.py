@@ -268,226 +268,619 @@ HTML_TEMPLATE = Template("""
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DiamondSignals — Daily Signal Wall</title>
+  <title>DiamondSignals — Signal Wall</title>
   <style>
     :root {
-      --bg: #ffffff;
-      --ink: #0f172a;
-      --muted: #64748b;
-      --line: #e2e8f0;
-      --soft: #f8fafc;
-      --accent: #1d4ed8;
-      --gold: #b45309;
-      --shadow: 0 10px 30px rgba(2, 8, 23, 0.08);
+      --bg: #0c0c0c;
+      --surface: rgba(26, 26, 26, 0.82);
+      --surface-2: rgba(20, 20, 20, 0.92);
+      --border: rgba(255, 255, 255, 0.10);
+      --text: #e0e0e0;
+      --muted: #888888;
+      --soft: #b5b5b5;
+      --lime: #c6ff5e;
+      --coral: #ff6d8b;
+      --blue: #6aa6ff;
+      --red: #ef4444;
+      --shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      --glow: 0 0 0 1px rgba(198,255,94,0.22), 0 0 18px rgba(198,255,94,0.20);
       --radius: 18px;
+      --mono: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
+
     * { box-sizing: border-box; }
+
+    html {
+      background: var(--bg);
+    }
+
     body {
       margin: 0;
-      background: var(--bg);
-      color: var(--ink);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Arial, sans-serif;
-      line-height: 1.4;
+      color: var(--text);
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at top left, rgba(106,166,255,0.10), transparent 28%),
+        radial-gradient(circle at top right, rgba(239,68,68,0.08), transparent 24%),
+        linear-gradient(180deg, #111111 0%, #0c0c0c 38%, #090909 100%);
+      line-height: 1.35;
     }
-    .wrap {
-      width: min(1180px, calc(100% - 28px));
+
+    .app {
+      width: min(1180px, calc(100% - 24px));
       margin: 0 auto;
-      padding: 24px 0 56px;
+      padding: 0 0 36px;
     }
-    .hero {
-      display: grid;
-      gap: 14px;
-      padding: 8px 0 24px;
-      border-bottom: 1px solid var(--line);
-      margin-bottom: 24px;
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: rgba(12, 12, 12, 0.78);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
     }
-    .eyebrow {
-      font-size: 12px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      color: var(--accent);
-      font-weight: 800;
-    }
-    h1 {
-      margin: 0;
-      font-size: clamp(30px, 6vw, 52px);
-      line-height: .98;
-      letter-spacing: -0.03em;
-    }
-    .sub {
-      margin: 0;
-      color: var(--muted);
-      font-size: 15px;
-      max-width: 780px;
-    }
-    .meta {
+
+    .topbar-inner {
+      width: min(1180px, calc(100% - 24px));
+      margin: 0 auto;
+      min-height: 64px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 4px;
-    }
-    .pill {
-      border: 1px solid var(--line);
-      background: var(--soft);
-      color: var(--ink);
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-    .grid {
-      display: grid;
-      gap: 18px;
-      grid-template-columns: 1fr;
-    }
-    @media (min-width: 960px) {
-      .grid { grid-template-columns: 1fr 1fr; }
-    }
-    .panel {
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-    .panel-head {
-      padding: 18px 18px 14px;
-      border-bottom: 1px solid var(--line);
-      background: linear-gradient(to bottom, #fff, #fbfdff);
-    }
-    .panel-title {
-      margin: 0;
-      font-size: 18px;
-      letter-spacing: -0.02em;
-    }
-    .panel-sub {
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-    .cards {
-      display: grid;
-      gap: 0;
-    }
-    .card {
-      padding: 16px 18px;
-      border-top: 1px solid var(--line);
-      display: grid;
-      gap: 10px;
-    }
-    .topline {
-      display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
       gap: 12px;
+      padding: 12px 0;
     }
-    .rankname {
-      display: grid;
-      gap: 4px;
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
     }
-    .rank {
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 800;
+
+    .brand-mark {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--lime);
+      box-shadow: 0 0 12px rgba(198,255,94,0.65);
+      animation: pulse 1.75s infinite ease-in-out;
+      flex: 0 0 auto;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 0.65;
+        transform: scale(0.92);
+        box-shadow: 0 0 0 rgba(198,255,94,0.0);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.05);
+        box-shadow: 0 0 16px rgba(198,255,94,0.55);
+      }
+    }
+
+    .brand-text {
+      min-width: 0;
+    }
+
+    .brand-kicker {
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      letter-spacing: .12em;
-    }
-    .name {
-      font-size: 20px;
+      color: var(--blue);
       font-weight: 800;
-      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .brand-title {
+      font-size: 16px;
       line-height: 1.05;
+      letter-spacing: -0.02em;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .score {
-      min-width: 84px;
+
+    .livebox {
       text-align: right;
+      flex: 0 0 auto;
     }
-    .score-label {
+
+    .live-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--lime);
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--lime);
+      box-shadow: 0 0 12px rgba(198,255,94,0.65);
+      animation: pulse 1.75s infinite ease-in-out;
+    }
+
+    .live-time {
+      font-family: var(--mono);
       font-size: 11px;
       color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      font-weight: 800;
     }
-    .score-value {
-      font-size: 28px;
+
+    .hero {
+      padding: 22px 0 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .hero-card,
+    .meta-card,
+    .section,
+    .player-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .hero-card {
+      padding: 18px;
+    }
+
+    .eyebrow {
+      font-size: 10px;
       line-height: 1;
-      font-weight: 900;
-      letter-spacing: -0.03em;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--blue);
+      font-weight: 800;
+      margin-bottom: 10px;
     }
-    .metric-row {
+
+    .hero-title {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 7vw, 52px);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .hero-copy {
+      margin: 0;
+      max-width: 760px;
+      color: var(--soft);
+      font-size: 14px;
+    }
+
+    .meta-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
     }
-    .metric {
-      background: var(--soft);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 10px 12px;
+
+    .meta-card {
+      padding: 14px;
     }
-    .metric-label {
-      font-size: 11px;
-      color: var(--muted);
+
+    .meta-label {
+      font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: .10em;
+      letter-spacing: 0.14em;
+      color: var(--muted);
       font-weight: 800;
+      margin-bottom: 6px;
     }
-    .metric-value {
-      margin-top: 3px;
+
+    .meta-value {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .section {
+      overflow: hidden;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 16px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    }
+
+    .section-kicker {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .section-title {
+      margin: 0;
       font-size: 18px;
       font-weight: 800;
       letter-spacing: -0.02em;
+      text-transform: uppercase;
     }
-    .why {
-      color: var(--ink);
-      font-size: 14px;
+
+    .section-badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--lime);
+      border: 1px solid rgba(198,255,94,0.22);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(198,255,94,0.06);
+      white-space: nowrap;
     }
-    .footer {
-      margin-top: 26px;
-      padding-top: 18px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
+
+    .cards {
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .player-card {
+      padding: 14px;
+      background: linear-gradient(180deg, rgba(28,28,28,0.96), rgba(20,20,20,0.96));
+    }
+
+    .player-card.high-edge {
+      border-color: rgba(198,255,94,0.30);
+      box-shadow: var(--shadow), var(--glow);
+    }
+
+    .player-top {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
       font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      flex: 0 0 auto;
+    }
+
+    .player-ident {
+      min-width: 0;
+    }
+
+    .rankline {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .player-name {
+      font-size: 19px;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+      margin: 0 0 4px;
+      word-break: break-word;
+    }
+
+    .signal-line {
+      font-size: 11px;
+      color: var(--soft);
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .scorebox {
+      text-align: right;
+      min-width: 88px;
+    }
+
+    .score-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .score-value {
+      font-family: var(--mono);
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .score-value.edge-up {
+      color: var(--lime);
+      text-shadow: 0 0 12px rgba(198,255,94,0.24);
+    }
+
+    .sparkline-wrap {
+      margin: 0 0 12px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .sparkline-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .sparkline-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .sparkline-note {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--soft);
+    }
+
+    svg.sparkline {
+      display: block;
+      width: 100%;
+      height: 34px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .metric {
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 10px 10px 9px;
+      background: rgba(255,255,255,0.025);
+      min-width: 0;
+    }
+
+    .metric-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .metric-value {
+      font-family: var(--mono);
+      font-size: 15px;
+      line-height: 1.1;
+      color: var(--text);
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .why {
+      font-size: 13px;
+      color: var(--soft);
+    }
+
+    .footer {
+      padding: 16px 4px 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+    }
+
+    @media (min-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1.35fr 0.9fr;
+        align-items: stretch;
+      }
+
+      .board {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app {
+        width: min(100%, calc(100% - 16px));
+      }
+
+      .topbar-inner {
+        width: min(100%, calc(100% - 16px));
+        min-height: 58px;
+      }
+
+      .brand-title {
+        font-size: 14px;
+      }
+
+      .livebox {
+        max-width: 44%;
+      }
+
+      .hero {
+        padding-top: 16px;
+      }
+
+      .hero-card,
+      .meta-card,
+      .player-card {
+        border-radius: 16px;
+      }
+
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metric-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .player-top {
+        grid-template-columns: auto 1fr auto;
+        gap: 10px;
+      }
+
+      .player-name {
+        font-size: 17px;
+      }
+
+      .score-value {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div class="brand-text">
+          <div class="brand-kicker">DiamondSignals</div>
+          <div class="brand-title">Signal Wall // Hybrid Terminal</div>
+        </div>
+      </div>
+      <div class="livebox">
+        <div class="live-label"><span class="live-dot"></span>LIVE</div>
+        <div class="live-time">{{ generated_at }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
     <section class="hero">
-      <div class="eyebrow">DiamondSignals // Daily Trigger</div>
-      <h1>Signal Wall</h1>
-      <p class="sub">
-        A mobile-first ranking board for today’s strongest MLB trigger candidates.
-        Edge Scores emphasize recent quality plus short-term acceleration against baseline.
-      </p>
-      <div class="meta">
-        <span class="pill">Updated: {{ generated_at }}</span>
-        <span class="pill">Window: last 28 days</span>
-        <span class="pill">Threshold: {{ threshold }}</span>
+      <div class="hero-grid">
+        <div class="hero-card">
+          <div class="eyebrow">Institutional Edge</div>
+          <h1 class="hero-title">Today’s Signal Wall</h1>
+          <p class="hero-copy">
+            Mobile-first trigger board ranking the strongest live pitcher and hitter edges.
+            High-value signals surface in a dense terminal-style view with momentum emphasis,
+            neutral framing, and fast scan readability.
+          </p>
+        </div>
+
+        <div class="meta-grid">
+          <div class="meta-card">
+            <div class="meta-label">Last Updated</div>
+            <div class="meta-value">{{ generated_at }}</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Lookback</div>
+            <div class="meta-value">28D / 7D Split</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Alert Threshold</div>
+            <div class="meta-value">{{ threshold }}</div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="grid">
-      <div class="panel">
-        <div class="panel-head">
-          <h2 class="panel-title">Top 5 Pitchers</h2>
-          <p class="panel-sub">Whiff pressure, fastball life, and recent lift vs baseline.</p>
+    <section class="board">
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Pitching Board</div>
+            <h2 class="section-title">Top 5 Pitchers</h2>
+          </div>
+          <div class="section-badge">Live Ranked</div>
         </div>
+
         <div class="cards">
           {% for row in pitchers %}
-          <article class="card">
-            <div class="topline">
-              <div class="rankname">
-                <div class="rank">#{{ loop.index }} Pitcher</div>
-                <div class="name">{{ row.player_name }}</div>
+          <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
+            <div class="player-top">
+              <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+
+              <div class="player-ident">
+                <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
+                <h3 class="player-name">{{ row.player_name }}</h3>
+                <div class="signal-line">Pitcher // Live Edge Signal</div>
               </div>
-              <div class="score">
+
+              <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value">{{ row.edge_score }}</div>
+                <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
               </div>
             </div>
-            <div class="metric-row">
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">Signal pulse</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <polyline
+                  fill="none"
+                  stroke="{% if row.edge_score >= 65 %}#c6ff5e{% else %}#6aa6ff{% endif %}"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  points="0,25 15,23 30,19 45,21 60,16 75,17 90,12 105,14 120,9" />
+              </svg>
+            </div>
+
+            <div class="metric-grid">
               <div class="metric">
                 <div class="metric-label">{{ row.metric_1_label }}</div>
                 <div class="metric-value">{{ row.metric_1 }}</div>
@@ -501,31 +894,57 @@ HTML_TEMPLATE = Template("""
                 <div class="metric-value">{{ row.metric_3 }}</div>
               </div>
             </div>
+
             <div class="why">{{ row.why }}</div>
           </article>
           {% endfor %}
         </div>
       </div>
 
-      <div class="panel">
-        <div class="panel-head">
-          <h2 class="panel-title">Top 5 Hitters</h2>
-          <p class="panel-sub">Contact quality, max damage, and recent acceleration vs baseline.</p>
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Hitting Board</div>
+            <h2 class="section-title">Top 5 Hitters</h2>
+          </div>
+          <div class="section-badge">Live Ranked</div>
         </div>
+
         <div class="cards">
           {% for row in hitters %}
-          <article class="card">
-            <div class="topline">
-              <div class="rankname">
-                <div class="rank">#{{ loop.index }} Hitter</div>
-                <div class="name">{{ row.player_name }}</div>
+          <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
+            <div class="player-top">
+              <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+
+              <div class="player-ident">
+                <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
+                <h3 class="player-name">{{ row.player_name }}</h3>
+                <div class="signal-line">Hitter // Live Edge Signal</div>
               </div>
-              <div class="score">
+
+              <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value">{{ row.edge_score }}</div>
+                <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
               </div>
             </div>
-            <div class="metric-row">
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">Signal pulse</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <polyline
+                  fill="none"
+                  stroke="{% if row.edge_score >= 65 %}#c6ff5e{% else %}#6aa6ff{% endif %}"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  points="0,24 15,22 30,21 45,16 60,18 75,14 90,11 105,12 120,8" />
+              </svg>
+            </div>
+
+            <div class="metric-grid">
               <div class="metric">
                 <div class="metric-label">{{ row.metric_1_label }}</div>
                 <div class="metric-value">{{ row.metric_1 }}</div>
@@ -539,6 +958,7 @@ HTML_TEMPLATE = Template("""
                 <div class="metric-value">{{ row.metric_3 }}</div>
               </div>
             </div>
+
             <div class="why">{{ row.why }}</div>
           </article>
           {% endfor %}
@@ -546,9 +966,9 @@ HTML_TEMPLATE = Template("""
       </div>
     </section>
 
-    <section class="footer">
-      DiamondSignals Signal Wall • Generated during Netlify build • {{ timezone_label }}
-    </section>
+    <div class="footer">
+      DiamondSignals Signal Wall // Generated during Netlify build // {{ timezone_label }}
+    </div>
   </div>
 </body>
 </html>
