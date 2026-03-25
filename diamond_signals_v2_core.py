@@ -969,19 +969,17 @@ HTML_TEMPLATE = Template("""
                   </linearGradient>
                 </defs>
                 <polyline
-                  class="sparkline-path {% if row.edge_score >= 65 %}glow{% endif %}"
+                 class="sparkline-path {% if row.trend_glow %}glow{% endif %}"
                   stroke="url(#pitcherGradient{{ loop.index }})"
-                  points="0,25 15,23 30,19 45,21 60,16 75,17 90,12 105,14 120,9" />
+                  points="{{ row.trend_points }}" />
               </svg>
             </div>
 
             <div class="badge-row">
-              <span class="status-badge positive">Whiff Lift</span>
-              <span class="status-badge neutral">Trend Confirming</span>
-              {% if row.edge_score >= 70 %}
-              <span class="status-badge positive">VAA Spike</span>
-              {% endif %}
-            </div>
+  {% for badge in row.badges %}
+  <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
+  {% endfor %}
+</div>
 
             <div class="metric-grid">
               <div class="metric">
@@ -1046,17 +1044,15 @@ HTML_TEMPLATE = Template("""
                 <polyline
                   class="sparkline-path {% if row.edge_score >= 65 %}glow{% endif %}"
                   stroke="url(#hitterGradient{{ loop.index }})"
-                  points="0,24 15,22 30,21 45,16 60,18 75,14 90,11 105,12 120,8" />
+                  points="{{ row.trend_points }}" />
               </svg>
             </div>
 
-            <div class="badge-row">
-              <span class="status-badge positive active-pulse">EV Burst</span>
-              <span class="status-badge neutral">Trend Confirming</span>
-              {% if row.edge_score >= 70 %}
-              <span class="status-badge positive active-pulse">Barrel Jump</span>
-              {% endif %}
-            </div>
+           <div class="badge-row">
+  {% for badge in row.badges %}
+  <span class="status-badge {{ row.badge_classes[loop.index0] }} {% if badge in ['EV Burst', 'Barrel Jump'] %}active-pulse{% endif %}">{{ badge }}</span>
+  {% endfor %}
+</div>
 
             <div class="metric-grid">
               <div class="metric">
@@ -1110,7 +1106,31 @@ def main() -> None:
 
     top_hitters = hitter_signals.head(5).copy()
     top_pitchers = pitcher_signals.head(5).copy()
+    top_pitchers["trend_points"] = [
+        "0,25 15,23 30,19 45,21 60,16 75,17 90,12 105,14 120,9"
+        for _ in range(len(top_pitchers))
+    ]
+    top_hitters["trend_points"] = [
+        "0,24 15,22 30,21 45,16 60,18 75,14 90,11 105,12 120,8"
+        for _ in range(len(top_hitters))
+    ]
 
+    top_pitchers["trend_glow"] = top_pitchers["edge_score"] >= 65
+    top_hitters["trend_glow"] = top_hitters["edge_score"] >= 65
+
+    top_pitchers["badges"] = top_pitchers["edge_score"].apply(
+        lambda s: ["Whiff Lift", "Trend Confirming"] + (["VAA Spike"] if s >= 70 else [])
+    )
+    top_hitters["badges"] = top_hitters["edge_score"].apply(
+        lambda s: ["EV Burst", "Trend Confirming"] + (["Barrel Jump"] if s >= 70 else [])
+    )
+
+    top_pitchers["badge_classes"] = top_pitchers["edge_score"].apply(
+        lambda s: ["positive", "neutral"] + (["positive"] if s >= 70 else [])
+    )
+    top_hitters["badge_classes"] = top_hitters["edge_score"].apply(
+        lambda s: ["positive", "neutral"] + (["positive"] if s >= 70 else [])
+    )
     combined_alerts = pd.concat([top_pitchers, top_hitters], ignore_index=True)
     combined_alerts = combined_alerts.sort_values("edge_score", ascending=False).reset_index(drop=True)
 
