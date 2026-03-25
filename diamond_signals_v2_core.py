@@ -60,7 +60,7 @@ def fetch_statcast_window(start_dt: date, end_dt: date) -> pd.DataFrame:
         raise RuntimeError("Statcast returned no data for the requested window.")
     return df
 
-ddef build_batter_name_map(batter_ids) -> dict[int, str]:
+def build_batter_name_map(batter_ids) -> dict[int, str]:
     ids = []
     for value in batter_ids:
         try:
