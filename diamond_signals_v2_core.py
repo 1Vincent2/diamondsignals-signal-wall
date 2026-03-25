@@ -267,7 +267,7 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
     merged["metric_2_label"] = "Barrel-like %"
     merged["metric_3"] = merged["recent_max_ev"].round(1)
     merged["metric_3_label"] = "Max EV"
-
+    merged["sample_note"] = merged["recent_bbe"].apply(lambda x: f"{int(x)} BBE")
     def hitter_badges(row: pd.Series) -> list[str]:
         badges = []
 
@@ -433,6 +433,7 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
     merged["metric_2_label"] = "FB Velo"
     merged["metric_3"] = merged["recent_extension"].round(2)
     merged["metric_3_label"] = "Extension"
+    merged["sample_note"] = merged["recent_pitches"].apply(lambda x: f"{int(x)} P")
 
     def pitcher_badges(row: pd.Series) -> list[str]:
         badges = []
@@ -1272,7 +1273,7 @@ HTML_TEMPLATE = Template("""
               <div class="player-ident">
                 <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
                 <h3 class="player-name">{{ row.player_name }}</h3>
-                <div class="signal-line">Pitcher // Live Edge Signal</div>
+                <div class="signal-line">Pitcher // Live Edge Signal // {{ row.sample_note }}</div>
               </div>
 
               <div class="scorebox">
@@ -1345,7 +1346,7 @@ HTML_TEMPLATE = Template("""
               <div class="player-ident">
                 <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
                 <h3 class="player-name">{{ row.player_name }}</h3>
-                <div class="signal-line">Hitter // Live Edge Signal</div>
+                <div class="signal-line">Hitter // Live Edge Signal // {{ row.sample_note }}</div>
               </div>
 
               <div class="scorebox">
