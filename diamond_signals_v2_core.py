@@ -230,12 +230,16 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
         + 0.35 * zscore(merged["barrel_rate_delta"])
     )
 
-    merged["edge_score"] = (
+    merged["edge_score_raw"] = (
         50
-        + 18 * merged["quality_index"]
-        + 14 * merged["delta_index"]
-        + 4 * zscore(merged["recent_bbe"])
-    ).clip(1, 99).round(1)
+        + 11 * merged["quality_index"]
+        + 8 * merged["delta_index"]
+        + 2 * zscore(merged["recent_bbe"])
+    )
+
+    merged["edge_score"] = (
+        50 + (merged["edge_score_raw"] - 50) * 0.82
+    ).clip(5, 95).round(1)
 
     merged["player_name"] = merged["batter"].apply(
         lambda x: batter_name_map.get(int(x), f"Player {int(x)}") if pd.notna(x) else "Unknown"
@@ -391,12 +395,16 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
         + 0.15 * zscore(merged["extension_delta"])
     )
 
-    merged["edge_score"] = (
+    merged["edge_score_raw"] = (
         50
-        + 16 * merged["quality_index"]
-        + 16 * merged["delta_index"]
-        + 3 * zscore(merged["recent_pitches"])
-    ).clip(1, 99).round(1)
+        + 11 * merged["quality_index"]
+        + 9 * merged["delta_index"]
+        + 2 * zscore(merged["recent_pitches"])
+    )
+
+    merged["edge_score"] = (
+        50 + (merged["edge_score_raw"] - 50) * 0.84
+    ).clip(5, 95).round(1)
 
     merged["player_name"] = merged["player_name"].apply(safe_name)
     merged["signal_type"] = "Pitcher"
@@ -1429,9 +1437,36 @@ def main() -> None:
 
     summary = {
         "generated_at": datetime.now().isoformat(),
-        "top_pitchers": top_pitchers[["player_name", "edge_score"]].to_dict(orient="records"),
-        "top_hitters": top_hitters[["player_name", "edge_score"]].to_dict(orient="records"),
+        "top_pitchers": top_pitchers[
+            [
+                "player_name",
+                "edge_score",
+                "metric_1_label",
+                "metric_1",
+                "metric_2_label",
+                "metric_2",
+                "metric_3_label",
+                "metric_3",
+                "why",
+                "badges",
+            ]
+        ].to_dict(orient="records"),
+        "top_hitters": top_hitters[
+            [
+                "player_name",
+                "edge_score",
+                "metric_1_label",
+                "metric_1",
+                "metric_2_label",
+                "metric_2",
+                "metric_3_label",
+                "metric_3",
+                "why",
+                "badges",
+            ]
+        ].to_dict(orient="records"),
     }
+
     (DIST_DIR / "signals.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print("Wrote dist/signals.json")
 
