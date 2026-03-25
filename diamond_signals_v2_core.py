@@ -168,6 +168,42 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
 
     merged["badges"] = merged.apply(hitter_badges, axis=1)
     merged["badge_classes"] = merged.apply(hitter_badge_classes, axis=1)
+    recent_daily_ev = (
+        bbe[bbe["is_recent"]]
+        .groupby(["batter", "game_date"], dropna=False)
+        .agg(day_ev=("launch_speed", "mean"))
+        .reset_index()
+    )
+
+    def build_trend_points(player_id) -> str:
+        player_days = recent_daily_ev[recent_daily_ev["batter"] == player_id].copy()
+        if player_days.empty:
+            return "0,24 15,22 30,21 45,16 60,18 75,14 90,11 105,12 120,8"
+
+        player_days = player_days.sort_values("game_date")
+        vals = player_days["day_ev"].tolist()
+
+        if len(vals) == 1:
+            vals = vals * 7
+        elif len(vals) < 7:
+            vals = [vals[0]] * (7 - len(vals)) + vals
+        else:
+            vals = vals[-7:]
+
+        vmin = min(vals)
+        vmax = max(vals)
+
+        if vmax == vmin:
+            yvals = [17 for _ in vals]
+        else:
+            yvals = [26 - ((v - vmin) / (vmax - vmin)) * 16 for v in vals]
+
+        xvals = [0, 20, 40, 60, 80, 100, 120]
+        points = [f"{x},{round(y,1)}" for x, y in zip(xvals, yvals)]
+        return " ".join(points)
+
+    merged["trend_points"] = merged["batter"].apply(build_trend_points)
+    merged["trend_glow"] = merged["ev_delta"] >= 2.0
     return merged.sort_values("edge_score", ascending=False).reset_index(drop=True)
 
 
@@ -1168,13 +1204,9 @@ def main() -> None:
         "0,25 15,23 30,19 45,21 60,16 75,17 90,12 105,14 120,9"
         for _ in range(len(top_pitchers))
     ]
-    top_hitters["trend_points"] = [
-        "0,24 15,22 30,21 45,16 60,18 75,14 90,11 105,12 120,8"
-        for _ in range(len(top_hitters))
-    ]
 
     top_pitchers["trend_glow"] = top_pitchers["edge_score"] >= 65
-    top_hitters["trend_glow"] = top_hitters["edge_score"] >= 65
+
   
     combined_alerts = pd.concat([top_pitchers, top_hitters], ignore_index=True)
     combined_alerts = combined_alerts.sort_values("edge_score", ascending=False).reset_index(drop=True)
