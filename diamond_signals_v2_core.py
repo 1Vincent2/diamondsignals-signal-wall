@@ -210,7 +210,10 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
         suffixes=("", "_base")
     )
 
-    merged = merged[merged["recent_bbe"] >= 4].copy()
+    merged = merged[
+        (merged["recent_bbe"] >= 6) &
+        (merged["recent_max_ev"] >= 95)
+    ].copy()
     merged["baseline_bbe"] = merged["baseline_bbe"].fillna(0)
 
     merged["ev_delta"] = merged["recent_ev"] - merged["baseline_ev"].fillna(merged["recent_ev"])
@@ -377,7 +380,10 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     merged = recent.merge(baseline, on=["pitcher", "player_name"], how="left")
-    merged = merged[merged["recent_pitches"] >= 40].copy()
+    merged = merged[
+        (merged["recent_pitches"] >= 60) &
+        (merged["recent_fb_velo"].fillna(0) >= 90)
+    ].copy()
 
     merged["velo_delta"] = merged["recent_fb_velo"] - merged["baseline_fb_velo"].fillna(merged["recent_fb_velo"])
     merged["whiff_delta"] = merged["recent_whiff_rate"] - merged["baseline_whiff_rate"].fillna(merged["recent_whiff_rate"])
