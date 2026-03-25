@@ -60,7 +60,7 @@ def fetch_statcast_window(start_dt: date, end_dt: date) -> pd.DataFrame:
         raise RuntimeError("Statcast returned no data for the requested window.")
     return df
 
-def build_batter_name_map(batter_ids) -> dict[int, str]:
+ddef build_batter_name_map(batter_ids) -> dict[int, str]:
     ids = []
     for value in batter_ids:
         try:
@@ -94,8 +94,6 @@ def build_batter_name_map(batter_ids) -> dict[int, str]:
             if full_name:
                 name_map[pid] = full_name
 
-    # Fallback: if reverse lookup missed anyone, keep a deterministic placeholder
-    # so the UI shows the batter id instead of generic "Unknown".
     for pid in ids:
         if pid not in name_map:
             name_map[pid] = f"Player {pid}"
@@ -103,9 +101,45 @@ def build_batter_name_map(batter_ids) -> dict[int, str]:
     return name_map
 
 
+def fill_missing_batter_names_with_statsapi(name_map: dict[int, str], batter_ids) -> dict[int, str]:
+    ids = []
+    for value in batter_ids:
+        try:
+            if pd.notna(value):
+                ids.append(int(value))
+        except Exception:
+            continue
+
+    ids = sorted(set(ids))
+
+    for pid in ids:
+        current = str(name_map.get(pid, "")).strip()
+        if current and not current.startswith("Player "):
+            continue
+
+        try:
+            url = f"https://statsapi.mlb.com/api/v1/people/{pid}"
+            response = requests.get(url, timeout=10)
+            response.raise_for_status()
+            payload = response.json()
+
+            people = payload.get("people", [])
+            if people:
+                full_name = str(people[0].get("fullName", "")).strip()
+                if full_name:
+                    name_map[pid] = full_name
+        except Exception:
+            continue
+
+    return name_map
+
+
 def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
     hitters = df.copy()
-    batter_name_map = build_batter_name_map(hitters["batter"].dropna().unique())
+
+    batter_ids = hitters["batter"].dropna().unique()
+    batter_name_map = build_batter_name_map(batter_ids)
+    batter_name_map = fill_missing_batter_names_with_statsapi(batter_name_map, batter_ids)
 
     pitcher_ids = set(
         pd.to_numeric(df["pitcher"], errors="coerce").dropna().astype(int).tolist()
@@ -113,9 +147,6 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
 
     bbe = hitters[hitters["launch_speed"].notna()].copy()
 
-    # Hitter eligibility filter:
-    # require a batter to have at least 4 tracked batted-ball events
-    # in the recent window so pitchers with tiny batting samples do not leak in.
     recent_cutoff = pd.Timestamp(TODAY - timedelta(days=7))
     recent_bbe_counts = (
         bbe[pd.to_datetime(bbe["game_date"]) >= recent_cutoff]
@@ -207,8 +238,8 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
     ).clip(1, 99).round(1)
 
     merged["player_name"] = merged["batter"].apply(
-    lambda x: batter_name_map.get(int(x), f"Player {int(x)}") if pd.notna(x) else "Unknown"
-)
+        lambda x: batter_name_map.get(int(x), f"Player {int(x)}") if pd.notna(x) else "Unknown"
+    )
     merged["player_name"] = merged["player_name"].apply(safe_name)
 
     merged["signal_type"] = "Hitter"
@@ -302,11 +333,15 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
 def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
     pitchers = df.copy()
     pitchers["game_date"] = pd.to_datetime(pitchers["game_date"])
-    pitchers["is_whiff"] = pitchers["description"].isin(["swinging_strike", "swinging_strike_blocked"]).astype(int)
+    pitchers["is_whiff"] = pitchers["description"].isin(
+        ["swinging_strike", "swinging_strike_blocked"]
+    ).astype(int)
 
     fastballs = {"FF", "FT", "SI", "FC"}
     pitchers["is_fastball"] = pitchers["pitch_type"].isin(fastballs).astype(int)
-    pitchers["fastball_speed"] = pd.to_numeric(pitchers["release_speed"], errors="coerce").where(pitchers["is_fastball"] == 1)
+    pitchers["fastball_speed"] = pd.to_numeric(
+        pitchers["release_speed"], errors="coerce"
+    ).where(pitchers["is_fastball"] == 1)
 
     pitchers["is_recent"] = pitchers["game_date"] >= pd.Timestamp(TODAY - timedelta(days=7))
     pitchers["is_baseline"] = (pitchers["game_date"] < pd.Timestamp(TODAY - timedelta(days=7))) & (
@@ -345,20 +380,22 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
     merged["extension_delta"] = merged["recent_extension"] - merged["baseline_extension"].fillna(merged["recent_extension"])
 
     merged["quality_index"] = (
-        0.50 * zscore(merged["recent_whiff_rate"]) +
-        0.30 * zscore(merged["recent_fb_velo"]) +
-        0.20 * zscore(merged["recent_extension"])
+        0.50 * zscore(merged["recent_whiff_rate"])
+        + 0.30 * zscore(merged["recent_fb_velo"])
+        + 0.20 * zscore(merged["recent_extension"])
     )
+
     merged["delta_index"] = (
-        0.50 * zscore(merged["velo_delta"]) +
-        0.35 * zscore(merged["whiff_delta"]) +
-        0.15 * zscore(merged["extension_delta"])
+        0.50 * zscore(merged["velo_delta"])
+        + 0.35 * zscore(merged["whiff_delta"])
+        + 0.15 * zscore(merged["extension_delta"])
     )
+
     merged["edge_score"] = (
-        50 +
-        16 * merged["quality_index"] +
-        16 * merged["delta_index"] +
-        3 * zscore(merged["recent_pitches"])
+        50
+        + 16 * merged["quality_index"]
+        + 16 * merged["delta_index"]
+        + 3 * zscore(merged["recent_pitches"])
     ).clip(1, 99).round(1)
 
     merged["player_name"] = merged["player_name"].apply(safe_name)
@@ -371,12 +408,14 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
         ),
         axis=1
     )
+
     merged["metric_1"] = (100 * merged["recent_whiff_rate"]).round(1)
     merged["metric_1_label"] = "Whiff %"
     merged["metric_2"] = merged["recent_fb_velo"].round(1)
     merged["metric_2_label"] = "FB Velo"
     merged["metric_3"] = merged["recent_extension"].round(2)
     merged["metric_3_label"] = "Extension"
+
     def pitcher_badges(row: pd.Series) -> list[str]:
         badges = []
 
@@ -407,6 +446,7 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
 
     merged["badges"] = merged.apply(pitcher_badges, axis=1)
     merged["badge_classes"] = merged.apply(pitcher_badge_classes, axis=1)
+
     recent_daily_whiff = (
         pitchers[pitchers["is_recent"]]
         .groupby(["pitcher", "game_date"], dropna=False)
@@ -438,7 +478,7 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
             yvals = [26 - ((v - vmin) / (vmax - vmin)) * 16 for v in vals]
 
         xvals = [0, 20, 40, 60, 80, 100, 120]
-        points = [f"{x},{round(y,1)}" for x, y in zip(xvals, yvals)]
+        points = [f"{x},{round(y, 1)}" for x, y in zip(xvals, yvals)]
         return " ".join(points)
 
     merged["trend_points"] = merged["pitcher"].apply(build_pitcher_trend_points)
