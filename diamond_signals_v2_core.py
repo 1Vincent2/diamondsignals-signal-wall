@@ -276,13 +276,15 @@ HTML_TEMPLATE = Template("""
       --surface-deep: #0a0a0a;
       --surface-grad: linear-gradient(145deg, #1a1a1a 0%, #0a0a0a 100%);
       --border: rgba(255,255,255,0.08);
-      --border-strong: rgba(255,255,255,0.12);
       --text: #f0f0f0;
       --muted: #71717a;
       --soft: #a1a1aa;
       --tiny: #8a8a93;
       --emerald: #4ade80;
       --emerald-glow: rgba(74,222,128,0.22);
+      --lime-hot: #b6ff00;
+      --cyan-hot: #00e5ff;
+      --ghost-grey: #444444;
       --ghost-green: #2a3f2a;
       --crimson: #f87171;
       --blue: #6aa6ff;
@@ -364,6 +366,11 @@ HTML_TEMPLATE = Template("""
         transform: scale(1.03);
         box-shadow: 0 0 0 6px rgba(74,222,128,0.06), 0 0 8px rgba(74,222,128,0.18);
       }
+    }
+
+    @keyframes badgePulse {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
     }
 
     .brand-text {
@@ -707,12 +714,25 @@ HTML_TEMPLATE = Template("""
       font-family: var(--mono);
       font-size: 10px;
       color: var(--tiny);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     svg.sparkline {
       display: block;
       width: 100%;
       height: 34px;
+    }
+
+    .sparkline-path {
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .sparkline-path.glow {
+      filter: drop-shadow(0 0 2px rgba(182, 255, 0, 0.5));
     }
 
     .metric-grid {
@@ -781,6 +801,10 @@ HTML_TEMPLATE = Template("""
       color: var(--soft);
       border-color: rgba(255,255,255,0.08);
       background: rgba(255,255,255,0.02);
+    }
+
+    .status-badge.active-pulse {
+      animation: badgePulse 2.2s infinite ease-in-out;
     }
 
     .why {
@@ -923,15 +947,18 @@ HTML_TEMPLATE = Template("""
             <div class="sparkline-wrap">
               <div class="sparkline-head">
                 <div class="sparkline-label">7 Day Trend</div>
-                <div class="sparkline-note">vs baseline context</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
               </div>
               <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="pitcherGradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
                 <polyline
-                  fill="none"
-                  stroke="#2a3f2a"
-                  stroke-width="1.6"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  class="sparkline-path {% if row.edge_score >= 65 %}glow{% endif %}"
+                  stroke="url(#pitcherGradient{{ loop.index }})"
                   points="0,25 15,23 30,19 45,21 60,16 75,17 90,12 105,14 120,9" />
               </svg>
             </div>
@@ -995,24 +1022,27 @@ HTML_TEMPLATE = Template("""
             <div class="sparkline-wrap">
               <div class="sparkline-head">
                 <div class="sparkline-label">7 Day Trend</div>
-                <div class="sparkline-note">vs baseline context</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
               </div>
               <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="hitterGradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
                 <polyline
-                  fill="none"
-                  stroke="#2a3f2a"
-                  stroke-width="1.6"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  class="sparkline-path {% if row.edge_score >= 65 %}glow{% endif %}"
+                  stroke="url(#hitterGradient{{ loop.index }})"
                   points="0,24 15,22 30,21 45,16 60,18 75,14 90,11 105,12 120,8" />
               </svg>
             </div>
 
             <div class="badge-row">
-              <span class="status-badge positive">EV Burst</span>
+              <span class="status-badge positive active-pulse">EV Burst</span>
               <span class="status-badge neutral">Trend Confirming</span>
               {% if row.edge_score >= 70 %}
-              <span class="status-badge positive">Barrel Jump</span>
+              <span class="status-badge positive active-pulse">Barrel Jump</span>
               {% endif %}
             </div>
 
