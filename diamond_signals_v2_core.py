@@ -34,7 +34,15 @@ def zscore(series: pd.Series) -> pd.Series:
 def safe_name(value: str) -> str:
     if pd.isna(value):
         return "Unknown"
-    return str(value).strip()
+
+    text = str(value).strip()
+    if not text:
+        return "Unknown"
+
+    if text.lower() == "unknown":
+        return "Unknown"
+
+    return " ".join(part.capitalize() for part in text.split())
 
 
 def markdown_escape(text: str) -> str:
