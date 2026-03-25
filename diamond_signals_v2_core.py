@@ -55,6 +55,9 @@ def fetch_statcast_window(start_dt: date, end_dt: date) -> pd.DataFrame:
 
 def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
     hitters = df.copy()
+    pitcher_ids = set(
+        pd.to_numeric(df["pitcher"], errors="coerce").dropna().astype(int).tolist()
+    )
     bbe = hitters[hitters["launch_speed"].notna()].copy()
 
     # Hitter eligibility filter:
@@ -71,6 +74,7 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
     bbe = bbe.merge(recent_bbe_counts, on="batter", how="left")
     bbe["recent_bbe_count"] = bbe["recent_bbe_count"].fillna(0)
     bbe = bbe[bbe["recent_bbe_count"] >= 4].copy()
+    bbe = bbe[~pd.to_numeric(bbe["batter"], errors="coerce").fillna(-1).astype(int).isin(pitcher_ids)].copy()
     if bbe.empty:
         return pd.DataFrame()
 
