@@ -669,11 +669,44 @@ HTML_TEMPLATE = Template("""
       margin-bottom: 6px;
     }
 
-    .meta-value {
+     .meta-value {
       font-family: var(--mono);
       font-size: 13px;
       color: var(--text);
       word-break: break-word;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .slate-heat-card {
+      padding: 14px;
+    }
+
+    .slate-heat-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .slate-heat-bar {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.04);
+      overflow: hidden;
+    }
+
+    .slate-heat-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #444444 0%, #b6ff00 100%);
+      box-shadow: 0 0 8px rgba(182,255,0,0.16);
+    }
+
+    .slate-heat-value {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
       font-variant-numeric: tabular-nums;
     }
 
@@ -1043,20 +1076,29 @@ HTML_TEMPLATE = Template("""
         </div>
 
         <div class="meta-grid">
-          <div class="meta-card">
-            <div class="meta-label">Last Updated</div>
-            <div class="meta-value">{{ generated_at }}</div>
-          </div>
-          <div class="meta-card">
-            <div class="meta-label">Lookback</div>
-            <div class="meta-value">28D / 7D Split</div>
-          </div>
-          <div class="meta-card">
-            <div class="meta-label">Alert Threshold</div>
-            <div class="meta-value">{{ threshold }}</div>
-          </div>
-        </div>
-      </div>
+  <div class="meta-card">
+    <div class="meta-label">Last Updated</div>
+    <div class="meta-value">{{ generated_at }}</div>
+  </div>
+  <div class="meta-card">
+    <div class="meta-label">Lookback</div>
+    <div class="meta-value">28D / 7D Split</div>
+  </div>
+  <div class="meta-card">
+    <div class="meta-label">Alert Threshold</div>
+    <div class="meta-value">{{ threshold }}</div>
+  </div>
+</div>
+
+<div class="meta-card slate-heat-card">
+  <div class="meta-label">Slate Heat</div>
+  <div class="slate-heat-row">
+    <div class="slate-heat-bar">
+      <div class="slate-heat-fill" style="width: {{ slate_heat }}%;"></div>
+    </div>
+    <div class="slate-heat-value">{{ slate_heat }}</div>
+  </div>
+</div>
     </section>
 
     <section class="board">
@@ -1217,10 +1259,16 @@ HTML_TEMPLATE = Template("""
 
 
 def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
+    combined = pd.concat([pitchers, hitters], ignore_index=True)
+    slate_heat = 0
+    if not combined.empty and "edge_score" in combined.columns:
+        slate_heat = int(round(combined["edge_score"].head(10).mean()))
+
     return HTML_TEMPLATE.render(
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
         threshold=f"{ALERT_THRESHOLD:.0f}+",
         timezone_label=TIMEZONE_LABEL,
+        slate_heat=slate_heat,
         pitchers=pitchers.to_dict(orient="records"),
         hitters=hitters.to_dict(orient="records"),
     )
