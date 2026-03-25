@@ -249,7 +249,36 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
     merged["metric_2_label"] = "FB Velo"
     merged["metric_3"] = merged["recent_extension"].round(2)
     merged["metric_3_label"] = "Extension"
+    def pitcher_badges(row: pd.Series) -> list[str]:
+        badges = []
 
+        if pd.notna(row["whiff_delta"]) and row["whiff_delta"] >= 0.03:
+            badges.append("Whiff Lift")
+
+        if pd.notna(row["velo_delta"]) and row["velo_delta"] >= 0.8:
+            badges.append("Velo Jump")
+
+        if pd.notna(row["extension_delta"]) and row["extension_delta"] >= 0.10:
+            badges.append("Extension Gain")
+
+        if not badges:
+            badges.append("Trend Confirming")
+        elif "Trend Confirming" not in badges:
+            badges.append("Trend Confirming")
+
+        return badges
+
+    def pitcher_badge_classes(row: pd.Series) -> list[str]:
+        classes = []
+        for badge in row["badges"]:
+            if badge in ["Whiff Lift", "Velo Jump", "Extension Gain"]:
+                classes.append("positive")
+            else:
+                classes.append("neutral")
+        return classes
+
+    merged["badges"] = merged.apply(pitcher_badges, axis=1)
+    merged["badge_classes"] = merged.apply(pitcher_badge_classes, axis=1)
     return merged.sort_values("edge_score", ascending=False).reset_index(drop=True)
 
 
@@ -1146,14 +1175,6 @@ def main() -> None:
 
     top_pitchers["trend_glow"] = top_pitchers["edge_score"] >= 65
     top_hitters["trend_glow"] = top_hitters["edge_score"] >= 65
-
-    top_pitchers["badges"] = top_pitchers["edge_score"].apply(
-        lambda s: ["Whiff Lift", "Trend Confirming"] + (["VAA Spike"] if s >= 70 else [])
-    )
-   
-    top_pitchers["badge_classes"] = top_pitchers["edge_score"].apply(
-        lambda s: ["positive", "neutral"] + (["positive"] if s >= 70 else [])
-    )
   
     combined_alerts = pd.concat([top_pitchers, top_hitters], ignore_index=True)
     combined_alerts = combined_alerts.sort_values("edge_score", ascending=False).reset_index(drop=True)
