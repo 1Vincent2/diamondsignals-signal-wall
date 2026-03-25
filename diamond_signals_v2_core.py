@@ -261,7 +261,6 @@ def send_telegram_alerts(signals: pd.DataFrame) -> None:
         response.raise_for_status()
         print(f"Telegram alert sent: {row['player_name']} ({row['edge_score']})")
 
-
 HTML_TEMPLATE = Template("""
 <!doctype html>
 <html lang="en">
@@ -273,22 +272,19 @@ HTML_TEMPLATE = Template("""
     :root {
       --bg: #080808;
       --surface: #121212;
-      --surface-deep: #0a0a0a;
-      --surface-grad: linear-gradient(145deg, #1a1a1a 0%, #0a0a0a 100%);
-      --border: rgba(255,255,255,0.08);
+      --surface-deep: #080808;
+      --card-radial: radial-gradient(circle at top left, #1a1a1a 0%, #080808 100%);
+      --border: #2d2d2d;
       --text: #f0f0f0;
       --muted: #71717a;
       --soft: #a1a1aa;
       --tiny: #8a8a93;
       --emerald: #4ade80;
-      --emerald-glow: rgba(74,222,128,0.22);
       --lime-hot: #b6ff00;
       --cyan-hot: #00e5ff;
       --ghost-grey: #444444;
-      --ghost-green: #2a3f2a;
       --crimson: #f87171;
       --blue: #6aa6ff;
-      --red: #ef4444;
       --shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
       --radius: 18px;
       --mono: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
@@ -349,22 +345,22 @@ HTML_TEMPLATE = Template("""
       width: 11px;
       height: 11px;
       border-radius: 999px;
-      background: var(--emerald);
-      box-shadow: 0 0 6px var(--emerald-glow);
-      animation: shadowPulse 3s infinite ease-in-out;
+      background: var(--lime-hot);
+      box-shadow: 0 0 6px rgba(182,255,0,0.22);
+      animation: heartbeatPulse 4s infinite ease-in-out;
       flex: 0 0 auto;
     }
 
-    @keyframes shadowPulse {
+    @keyframes heartbeatPulse {
       0%, 100% {
-        opacity: 0.7;
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(74,222,128,0.00);
+        opacity: 0.72;
+        transform: scale(0.94);
+        box-shadow: 0 0 0 0 rgba(182,255,0,0.00);
       }
       50% {
         opacity: 1;
-        transform: scale(1.03);
-        box-shadow: 0 0 0 6px rgba(74,222,128,0.06), 0 0 8px rgba(74,222,128,0.18);
+        transform: scale(1.05);
+        box-shadow: 0 0 0 7px rgba(182,255,0,0.06), 0 0 10px rgba(182,255,0,0.22);
       }
     }
 
@@ -409,7 +405,7 @@ HTML_TEMPLATE = Template("""
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.16em;
-      color: var(--emerald);
+      color: var(--lime-hot);
       font-weight: 800;
       margin-bottom: 4px;
     }
@@ -418,15 +414,16 @@ HTML_TEMPLATE = Template("""
       width: 7px;
       height: 7px;
       border-radius: 999px;
-      background: var(--emerald);
-      box-shadow: 0 0 6px var(--emerald-glow);
-      animation: shadowPulse 3s infinite ease-in-out;
+      background: var(--lime-hot);
+      box-shadow: 0 0 6px rgba(182,255,0,0.22);
+      animation: heartbeatPulse 4s infinite ease-in-out;
     }
 
     .live-time {
       font-family: var(--mono);
       font-size: 11px;
       color: var(--muted);
+      font-variant-numeric: tabular-nums;
     }
 
     .app {
@@ -449,8 +446,8 @@ HTML_TEMPLATE = Template("""
     .meta-card,
     .section,
     .player-card {
-      background: var(--surface-grad);
-      border: 1px solid var(--border);
+      background: var(--card-radial);
+      border: 0.5px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       position: relative;
@@ -467,13 +464,13 @@ HTML_TEMPLATE = Template("""
       pointer-events: none;
       border-radius: inherit;
       padding: 0.5px;
-      background: linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+      background: linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.01));
       -webkit-mask:
         linear-gradient(#fff 0 0) content-box,
         linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
               mask-composite: exclude;
-      opacity: 0.65;
+      opacity: 0.55;
     }
 
     .hero-card {
@@ -521,10 +518,11 @@ HTML_TEMPLATE = Template("""
     .sparkline-label,
     .section-kicker,
     .score-label,
-    .rankline {
+    .rankline,
+    .status-badge {
       font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.1em;
       color: var(--muted);
       font-weight: 800;
     }
@@ -538,6 +536,7 @@ HTML_TEMPLATE = Template("""
       font-size: 13px;
       color: var(--text);
       word-break: break-word;
+      font-variant-numeric: tabular-nums;
     }
 
     .board {
@@ -596,6 +595,7 @@ HTML_TEMPLATE = Template("""
       white-space: nowrap;
       position: relative;
       z-index: 1;
+      font-variant-numeric: tabular-nums;
     }
 
     .cards {
@@ -640,6 +640,7 @@ HTML_TEMPLATE = Template("""
       font-weight: 800;
       letter-spacing: 0.04em;
       flex: 0 0 auto;
+      font-variant-numeric: tabular-nums;
     }
 
     .player-ident {
@@ -665,6 +666,7 @@ HTML_TEMPLATE = Template("""
       font-family: var(--mono);
       text-transform: uppercase;
       letter-spacing: 0.06em;
+      font-variant-numeric: tabular-nums;
     }
 
     .scorebox {
@@ -682,6 +684,7 @@ HTML_TEMPLATE = Template("""
       line-height: 1;
       font-weight: 800;
       color: var(--text);
+      font-variant-numeric: tabular-nums;
     }
 
     .score-value.edge-up {
@@ -715,7 +718,8 @@ HTML_TEMPLATE = Template("""
       font-size: 10px;
       color: var(--tiny);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.1em;
+      font-variant-numeric: tabular-nums;
     }
 
     svg.sparkline {
@@ -761,6 +765,7 @@ HTML_TEMPLATE = Template("""
       color: var(--text);
       font-weight: 700;
       word-break: break-word;
+      font-variant-numeric: tabular-nums;
     }
 
     .badge-row {
@@ -771,16 +776,14 @@ HTML_TEMPLATE = Template("""
     }
 
     .status-badge {
-      font-family: var(--mono);
-      font-size: 10px;
       line-height: 1;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
       border-radius: 999px;
       padding: 7px 9px;
       border: 1px solid rgba(255,255,255,0.08);
       color: var(--soft);
       background: rgba(255,255,255,0.02);
+      font-family: var(--mono);
+      font-variant-numeric: tabular-nums;
     }
 
     .status-badge.positive {
@@ -812,6 +815,7 @@ HTML_TEMPLATE = Template("""
       line-height: 1.45;
       color: var(--tiny);
       font-family: var(--mono);
+      font-variant-numeric: tabular-nums;
     }
 
     .footer {
@@ -821,6 +825,7 @@ HTML_TEMPLATE = Template("""
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
+      font-variant-numeric: tabular-nums;
     }
 
     @media (min-width: 900px) {
@@ -1069,7 +1074,7 @@ HTML_TEMPLATE = Template("""
     </section>
 
     <div class="footer">
-      DiamondSignals Signal Wall // Generated during Netlify build // {{ timezone_label }}
+      DiamondSignals Signal Wall // Generated During Netlify Build // {{ timezone_label }}
     </div>
   </div>
 </body>
