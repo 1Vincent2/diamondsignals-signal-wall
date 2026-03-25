@@ -56,6 +56,21 @@ def fetch_statcast_window(start_dt: date, end_dt: date) -> pd.DataFrame:
 def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
     hitters = df.copy()
     bbe = hitters[hitters["launch_speed"].notna()].copy()
+
+    # Hitter eligibility filter:
+    # require a batter to have at least 4 tracked batted-ball events
+    # in the recent window so pitchers with tiny batting samples do not leak in.
+    recent_cutoff = pd.Timestamp(TODAY - timedelta(days=7))
+    recent_bbe_counts = (
+        bbe[pd.to_datetime(bbe["game_date"]) >= recent_cutoff]
+        .groupby("batter", dropna=False)
+        .size()
+        .reset_index(name="recent_bbe_count")
+    )
+
+    bbe = bbe.merge(recent_bbe_counts, on="batter", how="left")
+    bbe["recent_bbe_count"] = bbe["recent_bbe_count"].fillna(0)
+    bbe = bbe[bbe["recent_bbe_count"] >= 4].copy()
     if bbe.empty:
         return pd.DataFrame()
 
