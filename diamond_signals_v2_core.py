@@ -271,19 +271,20 @@ HTML_TEMPLATE = Template("""
   <title>DiamondSignals — Signal Wall</title>
   <style>
     :root {
-      --bg: #0c0c0c;
-      --surface: rgba(26, 26, 26, 0.82);
-      --surface-2: rgba(20, 20, 20, 0.92);
-      --border: rgba(255, 255, 255, 0.10);
-      --text: #e0e0e0;
-      --muted: #888888;
-      --soft: #b5b5b5;
-      --lime: #c6ff5e;
-      --coral: #ff6d8b;
+      --bg: #080808;
+      --surface: #121212;
+      --surface-2: #151515;
+      --border: #262626;
+      --text: #f0f0f0;
+      --muted: #71717a;
+      --soft: #a1a1aa;
+      --emerald: #4ade80;
+      --crimson: #f87171;
       --blue: #6aa6ff;
       --red: #ef4444;
-      --shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-      --glow: 0 0 0 1px rgba(198,255,94,0.22), 0 0 18px rgba(198,255,94,0.20);
+      --shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
+      --emerald-glow: 0 0 8px rgba(74, 222, 128, 0.22);
+      --crimson-glow: 0 0 8px rgba(248, 113, 113, 0.22);
       --radius: 18px;
       --mono: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
       --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -291,41 +292,40 @@ HTML_TEMPLATE = Template("""
 
     * { box-sizing: border-box; }
 
-    html {
+    html, body {
+      margin: 0;
+      padding: 0;
       background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
     }
 
     body {
-      margin: 0;
-      color: var(--text);
-      font-family: var(--sans);
       background:
-        radial-gradient(circle at top left, rgba(106,166,255,0.10), transparent 28%),
-        radial-gradient(circle at top right, rgba(239,68,68,0.08), transparent 24%),
-        linear-gradient(180deg, #111111 0%, #0c0c0c 38%, #090909 100%);
+        radial-gradient(circle at top left, rgba(106,166,255,0.08), transparent 26%),
+        radial-gradient(circle at top right, rgba(239,68,68,0.05), transparent 22%),
+        linear-gradient(180deg, #101010 0%, #080808 34%, #060606 100%);
       line-height: 1.35;
-    }
-
-    .app {
-      width: min(1180px, calc(100% - 24px));
-      margin: 0 auto;
-      padding: 0 0 36px;
     }
 
     .topbar {
       position: sticky;
       top: 0;
       z-index: 50;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      background: rgba(12, 12, 12, 0.78);
-      border-bottom: 1px solid rgba(255,255,255,0.07);
+      background: rgba(8, 8, 8, 0.88);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .topbar-inner,
+    .app {
+      width: min(1180px, calc(100% - 24px));
+      margin: 0 auto;
     }
 
     .topbar-inner {
-      width: min(1180px, calc(100% - 24px));
-      margin: 0 auto;
-      min-height: 64px;
+      min-height: 62px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -341,25 +341,23 @@ HTML_TEMPLATE = Template("""
     }
 
     .brand-mark {
-      width: 12px;
-      height: 12px;
+      width: 11px;
+      height: 11px;
       border-radius: 999px;
-      background: var(--lime);
-      box-shadow: 0 0 12px rgba(198,255,94,0.65);
-      animation: pulse 1.75s infinite ease-in-out;
+      background: var(--emerald);
+      box-shadow: var(--emerald-glow);
+      animation: livePulse 3s infinite ease-in-out;
       flex: 0 0 auto;
     }
 
-    @keyframes pulse {
+    @keyframes livePulse {
       0%, 100% {
-        opacity: 0.65;
-        transform: scale(0.92);
-        box-shadow: 0 0 0 rgba(198,255,94,0.0);
+        opacity: 0.55;
+        transform: scale(0.94);
       }
       50% {
         opacity: 1;
-        transform: scale(1.05);
-        box-shadow: 0 0 16px rgba(198,255,94,0.55);
+        transform: scale(1.04);
       }
     }
 
@@ -399,18 +397,19 @@ HTML_TEMPLATE = Template("""
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.16em;
-      color: var(--lime);
+      color: var(--emerald);
       font-weight: 800;
       margin-bottom: 4px;
+      text-shadow: 0 0 6px rgba(74,222,128,0.15);
     }
 
     .live-dot {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 999px;
-      background: var(--lime);
-      box-shadow: 0 0 12px rgba(198,255,94,0.65);
-      animation: pulse 1.75s infinite ease-in-out;
+      background: var(--emerald);
+      box-shadow: var(--emerald-glow);
+      animation: livePulse 3s infinite ease-in-out;
     }
 
     .live-time {
@@ -419,10 +418,14 @@ HTML_TEMPLATE = Template("""
       color: var(--muted);
     }
 
+    .app {
+      padding: 18px 0 34px;
+    }
+
     .hero {
-      padding: 22px 0 18px;
       display: grid;
       gap: 14px;
+      margin-bottom: 16px;
     }
 
     .hero-grid {
@@ -435,12 +438,10 @@ HTML_TEMPLATE = Template("""
     .meta-card,
     .section,
     .player-card {
-      background: var(--surface);
+      background: linear-gradient(180deg, rgba(20,20,20,0.96), rgba(18,18,18,0.98));
       border: 1px solid var(--border);
-      box-shadow: var(--shadow);
       border-radius: var(--radius);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
     }
 
     .hero-card {
@@ -459,7 +460,7 @@ HTML_TEMPLATE = Template("""
 
     .hero-title {
       margin: 0 0 10px;
-      font-size: clamp(28px, 7vw, 52px);
+      font-size: clamp(28px, 7vw, 50px);
       line-height: 0.95;
       letter-spacing: -0.04em;
       font-weight: 900;
@@ -515,8 +516,8 @@ HTML_TEMPLATE = Template("""
       justify-content: space-between;
       gap: 12px;
       padding: 16px 16px 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.01));
     }
 
     .section-kicker {
@@ -539,11 +540,11 @@ HTML_TEMPLATE = Template("""
     .section-badge {
       font-family: var(--mono);
       font-size: 11px;
-      color: var(--lime);
-      border: 1px solid rgba(198,255,94,0.22);
+      color: var(--soft);
+      border: 1px solid rgba(255,255,255,0.08);
       border-radius: 999px;
       padding: 7px 10px;
-      background: rgba(198,255,94,0.06);
+      background: rgba(255,255,255,0.02);
       white-space: nowrap;
     }
 
@@ -555,12 +556,17 @@ HTML_TEMPLATE = Template("""
 
     .player-card {
       padding: 14px;
-      background: linear-gradient(180deg, rgba(28,28,28,0.96), rgba(20,20,20,0.96));
+      background: linear-gradient(180deg, #151515 0%, #121212 100%);
     }
 
     .player-card.high-edge {
-      border-color: rgba(198,255,94,0.30);
-      box-shadow: var(--shadow), var(--glow);
+      border-color: rgba(74,222,128,0.34);
+      box-shadow: var(--shadow), 0 0 10px rgba(74,222,128,0.10);
+    }
+
+    .player-card.regression {
+      border-color: rgba(248,113,113,0.28);
+      box-shadow: var(--shadow), 0 0 10px rgba(248,113,113,0.08);
     }
 
     .player-top {
@@ -575,11 +581,11 @@ HTML_TEMPLATE = Template("""
       width: 42px;
       height: 42px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.12);
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.03);
       color: var(--text);
       font-size: 13px;
       font-weight: 800;
@@ -640,16 +646,21 @@ HTML_TEMPLATE = Template("""
     }
 
     .score-value.edge-up {
-      color: var(--lime);
-      text-shadow: 0 0 12px rgba(198,255,94,0.24);
+      color: var(--emerald);
+      text-shadow: 0 0 6px rgba(74,222,128,0.18);
+    }
+
+    .score-value.edge-down {
+      color: var(--crimson);
+      text-shadow: 0 0 6px rgba(248,113,113,0.18);
     }
 
     .sparkline-wrap {
       margin: 0 0 12px;
       padding: 8px 10px;
-      border: 1px solid rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.04);
       border-radius: 12px;
-      background: rgba(255,255,255,0.02);
+      background: rgba(255,255,255,0.015);
     }
 
     .sparkline-head {
@@ -688,10 +699,10 @@ HTML_TEMPLATE = Template("""
     }
 
     .metric {
-      border: 1px solid rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.05);
       border-radius: 12px;
       padding: 10px 10px 9px;
-      background: rgba(255,255,255,0.025);
+      background: rgba(255,255,255,0.02);
       min-width: 0;
     }
 
@@ -711,6 +722,46 @@ HTML_TEMPLATE = Template("""
       color: var(--text);
       font-weight: 700;
       word-break: break-word;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 12px;
+    }
+
+    .status-badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 999px;
+      padding: 7px 9px;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--soft);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .status-badge.positive {
+      color: var(--emerald);
+      border-color: rgba(74,222,128,0.22);
+      box-shadow: 0 0 8px rgba(74,222,128,0.10);
+      background: rgba(74,222,128,0.04);
+    }
+
+    .status-badge.negative {
+      color: var(--crimson);
+      border-color: rgba(248,113,113,0.22);
+      box-shadow: 0 0 8px rgba(248,113,113,0.08);
+      background: rgba(248,113,113,0.04);
+    }
+
+    .status-badge.neutral {
+      color: var(--soft);
+      border-color: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
     }
 
     .why {
@@ -739,12 +790,12 @@ HTML_TEMPLATE = Template("""
     }
 
     @media (max-width: 640px) {
+      .topbar-inner,
       .app {
         width: min(100%, calc(100% - 16px));
       }
 
       .topbar-inner {
-        width: min(100%, calc(100% - 16px));
         min-height: 58px;
       }
 
@@ -756,27 +807,8 @@ HTML_TEMPLATE = Template("""
         max-width: 44%;
       }
 
-      .hero {
-        padding-top: 16px;
-      }
-
-      .hero-card,
-      .meta-card,
-      .player-card {
-        border-radius: 16px;
-      }
-
       .meta-grid {
         grid-template-columns: 1fr;
-      }
-
-      .metric-grid {
-        grid-template-columns: 1fr 1fr 1fr;
-      }
-
-      .player-top {
-        grid-template-columns: auto 1fr auto;
-        gap: 10px;
       }
 
       .player-name {
@@ -796,7 +828,7 @@ HTML_TEMPLATE = Template("""
         <div class="brand-mark"></div>
         <div class="brand-text">
           <div class="brand-kicker">DiamondSignals</div>
-          <div class="brand-title">Signal Wall // Hybrid Terminal</div>
+          <div class="brand-title">Signal Wall // Onyx Terminal</div>
         </div>
       </div>
       <div class="livebox">
@@ -810,12 +842,11 @@ HTML_TEMPLATE = Template("""
     <section class="hero">
       <div class="hero-grid">
         <div class="hero-card">
-          <div class="eyebrow">Institutional Edge</div>
+          <div class="eyebrow">Elite Dark Dashboard</div>
           <h1 class="hero-title">Today’s Signal Wall</h1>
           <p class="hero-copy">
-            Mobile-first trigger board ranking the strongest live pitcher and hitter edges.
-            High-value signals surface in a dense terminal-style view with momentum emphasis,
-            neutral framing, and fast scan readability.
+            A live, mobile-first DiamondSignals board built for fast scan readability.
+            Institutional dark surfaces, terminal-grade data density, and restrained signal emphasis.
           </p>
         </div>
 
@@ -872,12 +903,20 @@ HTML_TEMPLATE = Template("""
               <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                 <polyline
                   fill="none"
-                  stroke="{% if row.edge_score >= 65 %}#c6ff5e{% else %}#6aa6ff{% endif %}"
-                  stroke-width="2.2"
+                  stroke="#4ade80"
+                  stroke-width="1.8"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   points="0,25 15,23 30,19 45,21 60,16 75,17 90,12 105,14 120,9" />
               </svg>
+            </div>
+
+            <div class="badge-row">
+              <span class="status-badge positive">Whiff Lift</span>
+              <span class="status-badge neutral">Trend Confirming</span>
+              {% if row.edge_score >= 70 %}
+              <span class="status-badge positive">VAA Spike</span>
+              {% endif %}
             </div>
 
             <div class="metric-grid">
@@ -936,12 +975,20 @@ HTML_TEMPLATE = Template("""
               <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                 <polyline
                   fill="none"
-                  stroke="{% if row.edge_score >= 65 %}#c6ff5e{% else %}#6aa6ff{% endif %}"
-                  stroke-width="2.2"
+                  stroke="#4ade80"
+                  stroke-width="1.8"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   points="0,24 15,22 30,21 45,16 60,18 75,14 90,11 105,12 120,8" />
               </svg>
+            </div>
+
+            <div class="badge-row">
+              <span class="status-badge positive">EV Burst</span>
+              <span class="status-badge neutral">Trend Confirming</span>
+              {% if row.edge_score >= 70 %}
+              <span class="status-badge positive">Barrel Jump</span>
+              {% endif %}
             </div>
 
             <div class="metric-grid">
