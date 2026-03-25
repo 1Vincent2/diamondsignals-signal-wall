@@ -374,24 +374,31 @@ HTML_TEMPLATE = Template("""
     }
 
     .brand-kicker {
-      font-size: 10px;
-      line-height: 1;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--blue);
-      font-weight: 800;
-      margin-bottom: 4px;
-    }
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
 
-    .brand-title {
-      font-size: 16px;
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      font-weight: 800;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+.brand-white {
+  color: var(--text);
+}
+
+.brand-blue {
+  color: var(--blue);
+}
+
+.brand-title {
+  font-size: 16px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
     .livebox {
       text-align: right;
@@ -881,8 +888,8 @@ HTML_TEMPLATE = Template("""
       <div class="brand">
         <div class="brand-mark"></div>
         <div class="brand-text">
-          <div class="brand-kicker">DiamondSignals</div>
-          <div class="brand-title">Signal Wall // Institutional Elite</div>
+         <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
+<div class="brand-title">Signal Wall // Institutional Elite</div>
         </div>
       </div>
       <div class="livebox">
