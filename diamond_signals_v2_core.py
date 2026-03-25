@@ -73,27 +73,35 @@ def build_batter_name_map(batter_ids) -> dict[int, str]:
     if not ids:
         return {}
 
+    name_map = {}
+
     try:
         lookup = playerid_reverse_lookup(ids, key_type="mlbam")
     except Exception:
-        return {}
+        lookup = None
 
-    if lookup is None or lookup.empty:
-        return {}
+    if lookup is not None and not lookup.empty:
+        for _, row in lookup.iterrows():
+            try:
+                pid = int(row["key_mlbam"])
+            except Exception:
+                continue
 
-    name_map = {}
-    for _, row in lookup.iterrows():
-        try:
-            pid = int(row["key_mlbam"])
             first = str(row.get("name_first", "")).strip()
             last = str(row.get("name_last", "")).strip()
             full_name = f"{first} {last}".strip()
+
             if full_name:
                 name_map[pid] = full_name
-        except Exception:
-            continue
+
+    # Fallback: if reverse lookup missed anyone, keep a deterministic placeholder
+    # so the UI shows the batter id instead of generic "Unknown".
+    for pid in ids:
+        if pid not in name_map:
+            name_map[pid] = f"Player {pid}"
 
     return name_map
+
 
 def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
     hitters = df.copy()
@@ -198,7 +206,9 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
         + 4 * zscore(merged["recent_bbe"])
     ).clip(1, 99).round(1)
 
-    merged["player_name"] = merged["batter"].map(batter_name_map).fillna("Unknown")
+    merged["player_name"] = merged["batter"].apply(
+    lambda x: batter_name_map.get(int(x), f"Player {int(x)}") if pd.notna(x) else "Unknown"
+)
     merged["player_name"] = merged["player_name"].apply(safe_name)
 
     merged["signal_type"] = "Hitter"
