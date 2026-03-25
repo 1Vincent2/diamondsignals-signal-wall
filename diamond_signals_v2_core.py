@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+from email.mime import base
 import os
 import json
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
+from numpy import pad
 import pandas as pd
 import requests
 from jinja2 import Template
@@ -458,47 +460,49 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
                 classes.append("neutral")
         return classes
 
-    merged["badges"] = merged.apply(pitcher_badges, axis=1)
-    merged["badge_classes"] = merged.apply(pitcher_badge_classes, axis=1)
+merged["badges"] = merged.apply(pitcher_badges, axis=1)
+merged["badge_classes"] = merged.apply(pitcher_badge_classes, axis=1)
 
-    recent_daily_whiff = (
-        pitchers[pitchers["is_recent"]]
-        .groupby(["pitcher", "game_date"], dropna=False)
-        .agg(day_whiff=("is_whiff", "mean"))
-        .reset_index()
-    )
+recent_daily_whiff = (
+    pitchers[pitchers["is_recent"]]
+    .groupby(["pitcher", "game_date"], dropna=False)
+    .agg(day_whiff=("is_whiff", "mean"))
+    .reset_index()
+)
 
-    def build_pitcher_trend_points(player_id) -> str:
-        player_days = recent_daily_whiff[recent_daily_whiff["pitcher"] == player_id].copy()
-        if player_days.empty:
-            return "0,25 15,23 30,19 45,21 60,16 75,17 90,12 105,14 120,9"
+def build_pitcher_trend_points(player_id) -> str:
+    player_days = recent_daily_whiff[recent_daily_whiff["pitcher"] == player_id].copy()
+    if player_days.empty:
+        return "0,25 15,23 30,19 45,21 60,16 75,17 90,12 105,14 120,9"
 
-        player_days = player_days.sort_values("game_date")
-        vals = player_days["day_whiff"].tolist()
+    player_days = player_days.sort_values("game_date")
+    vals = player_days["day_whiff"].tolist()
 
-        if len(vals) == 1:
-            vals = vals * 7
-        elif len(vals) < 7:
-            vals = [vals[0]] * (7 - len(vals)) + vals
-        else:
-            vals = vals[-7:]
+    if len(vals) == 1:
+        base = vals[0]
+        vals = [base * 0.985, base * 0.99, base * 0.995, base, base * 1.005, base * 1.01, base * 1.015]
+    elif len(vals) < 7:
+        pad = [vals[0]] * (7 - len(vals))
+        vals = pad + vals
+    else:
+        vals = vals[-7:]
 
-        vmin = min(vals)
-        vmax = max(vals)
+    vmin = min(vals)
+    vmax = max(vals)
 
-        if vmax == vmin:
-            yvals = [17 for _ in vals]
-        else:
-            yvals = [26 - ((v - vmin) / (vmax - vmin)) * 16 for v in vals]
+    if vmax == vmin:
+        yvals = [24, 22, 21, 19, 18, 16, 14]
+    else:
+        yvals = [26 - ((v - vmin) / (vmax - vmin)) * 16 for v in vals]
 
-        xvals = [0, 20, 40, 60, 80, 100, 120]
-        points = [f"{x},{round(y, 1)}" for x, y in zip(xvals, yvals)]
-        return " ".join(points)
+    xvals = [0, 20, 40, 60, 80, 100, 120]
+    points = [f"{x},{round(y, 1)}" for x, y in zip(xvals, yvals)]
+    return " ".join(points)
 
-    merged["trend_points"] = merged["pitcher"].apply(build_pitcher_trend_points)
-    merged["trend_glow"] = merged["whiff_delta"] >= 0.03
+merged["trend_points"] = merged["pitcher"].apply(build_pitcher_trend_points)
+merged["trend_glow"] = merged["whiff_delta"] >= 0.03
 
-    return merged.sort_values("edge_score", ascending=False).reset_index(drop=True)
+return merged.sort_values("edge_score", ascending=False).reset_index(drop=True)
 
 
 def build_telegram_message(row: pd.Series) -> str:
