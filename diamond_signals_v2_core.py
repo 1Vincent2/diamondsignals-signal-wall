@@ -273,18 +273,21 @@ HTML_TEMPLATE = Template("""
     :root {
       --bg: #080808;
       --surface: #121212;
-      --surface-2: #151515;
-      --border: #262626;
+      --surface-deep: #0a0a0a;
+      --surface-grad: linear-gradient(145deg, #1a1a1a 0%, #0a0a0a 100%);
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.12);
       --text: #f0f0f0;
       --muted: #71717a;
       --soft: #a1a1aa;
+      --tiny: #8a8a93;
       --emerald: #4ade80;
+      --emerald-glow: rgba(74,222,128,0.22);
+      --ghost-green: #2a3f2a;
       --crimson: #f87171;
       --blue: #6aa6ff;
       --red: #ef4444;
       --shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
-      --emerald-glow: 0 0 8px rgba(74, 222, 128, 0.22);
-      --crimson-glow: 0 0 8px rgba(248, 113, 113, 0.22);
       --radius: 18px;
       --mono: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
       --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -302,9 +305,9 @@ HTML_TEMPLATE = Template("""
 
     body {
       background:
-        radial-gradient(circle at top left, rgba(106,166,255,0.08), transparent 26%),
-        radial-gradient(circle at top right, rgba(239,68,68,0.05), transparent 22%),
-        linear-gradient(180deg, #101010 0%, #080808 34%, #060606 100%);
+        radial-gradient(circle at top left, rgba(106,166,255,0.06), transparent 24%),
+        radial-gradient(circle at top right, rgba(239,68,68,0.04), transparent 20%),
+        linear-gradient(180deg, #101010 0%, #080808 34%, #050505 100%);
       line-height: 1.35;
     }
 
@@ -312,7 +315,7 @@ HTML_TEMPLATE = Template("""
       position: sticky;
       top: 0;
       z-index: 50;
-      background: rgba(8, 8, 8, 0.88);
+      background: rgba(8, 8, 8, 0.90);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -345,19 +348,21 @@ HTML_TEMPLATE = Template("""
       height: 11px;
       border-radius: 999px;
       background: var(--emerald);
-      box-shadow: var(--emerald-glow);
-      animation: livePulse 3s infinite ease-in-out;
+      box-shadow: 0 0 6px var(--emerald-glow);
+      animation: shadowPulse 3s infinite ease-in-out;
       flex: 0 0 auto;
     }
 
-    @keyframes livePulse {
+    @keyframes shadowPulse {
       0%, 100% {
-        opacity: 0.55;
-        transform: scale(0.94);
+        opacity: 0.7;
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(74,222,128,0.00);
       }
       50% {
         opacity: 1;
-        transform: scale(1.04);
+        transform: scale(1.03);
+        box-shadow: 0 0 0 6px rgba(74,222,128,0.06), 0 0 8px rgba(74,222,128,0.18);
       }
     }
 
@@ -400,7 +405,6 @@ HTML_TEMPLATE = Template("""
       color: var(--emerald);
       font-weight: 800;
       margin-bottom: 4px;
-      text-shadow: 0 0 6px rgba(74,222,128,0.15);
     }
 
     .live-dot {
@@ -408,8 +412,8 @@ HTML_TEMPLATE = Template("""
       height: 7px;
       border-radius: 999px;
       background: var(--emerald);
-      box-shadow: var(--emerald-glow);
-      animation: livePulse 3s infinite ease-in-out;
+      box-shadow: 0 0 6px var(--emerald-glow);
+      animation: shadowPulse 3s infinite ease-in-out;
     }
 
     .live-time {
@@ -438,10 +442,31 @@ HTML_TEMPLATE = Template("""
     .meta-card,
     .section,
     .player-card {
-      background: linear-gradient(180deg, rgba(20,20,20,0.96), rgba(18,18,18,0.98));
+      background: var(--surface-grad);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before,
+    .meta-card::before,
+    .section::before,
+    .player-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      padding: 0.5px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      opacity: 0.65;
     }
 
     .hero-card {
@@ -484,12 +509,20 @@ HTML_TEMPLATE = Template("""
       padding: 14px;
     }
 
-    .meta-label {
+    .meta-label,
+    .metric-label,
+    .sparkline-label,
+    .section-kicker,
+    .score-label,
+    .rankline {
       font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.05em;
       color: var(--muted);
       font-weight: 800;
+    }
+
+    .meta-label {
       margin-bottom: 6px;
     }
 
@@ -517,15 +550,23 @@ HTML_TEMPLATE = Template("""
       gap: 12px;
       padding: 16px 16px 14px;
       border-bottom: 1px solid rgba(255,255,255,0.05);
-      background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.01));
+      background: linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.008));
+      position: relative;
+    }
+
+    .section-head::after {
+      content: "◆";
+      position: absolute;
+      right: 76px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 30px;
+      color: rgba(255,255,255,0.03);
+      pointer-events: none;
+      letter-spacing: 0;
     }
 
     .section-kicker {
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--muted);
-      font-weight: 800;
       margin-bottom: 5px;
     }
 
@@ -546,6 +587,8 @@ HTML_TEMPLATE = Template("""
       padding: 7px 10px;
       background: rgba(255,255,255,0.02);
       white-space: nowrap;
+      position: relative;
+      z-index: 1;
     }
 
     .cards {
@@ -556,17 +599,16 @@ HTML_TEMPLATE = Template("""
 
     .player-card {
       padding: 14px;
-      background: linear-gradient(180deg, #151515 0%, #121212 100%);
     }
 
     .player-card.high-edge {
-      border-color: rgba(74,222,128,0.34);
-      box-shadow: var(--shadow), 0 0 10px rgba(74,222,128,0.10);
+      border-color: rgba(74,222,128,0.22);
+      box-shadow: var(--shadow), 0 0 8px rgba(74,222,128,0.07);
     }
 
     .player-card.regression {
-      border-color: rgba(248,113,113,0.28);
-      box-shadow: var(--shadow), 0 0 10px rgba(248,113,113,0.08);
+      border-color: rgba(248,113,113,0.22);
+      box-shadow: var(--shadow), 0 0 8px rgba(248,113,113,0.05);
     }
 
     .player-top {
@@ -581,7 +623,7 @@ HTML_TEMPLATE = Template("""
       width: 42px;
       height: 42px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.10);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -598,11 +640,6 @@ HTML_TEMPLATE = Template("""
     }
 
     .rankline {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--muted);
-      font-weight: 800;
       margin-bottom: 4px;
     }
 
@@ -620,7 +657,7 @@ HTML_TEMPLATE = Template("""
       color: var(--soft);
       font-family: var(--mono);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
     }
 
     .scorebox {
@@ -629,11 +666,6 @@ HTML_TEMPLATE = Template("""
     }
 
     .score-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--muted);
-      font-weight: 800;
       margin-bottom: 4px;
     }
 
@@ -671,18 +703,10 @@ HTML_TEMPLATE = Template("""
       margin-bottom: 6px;
     }
 
-    .sparkline-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--muted);
-      font-weight: 800;
-    }
-
     .sparkline-note {
       font-family: var(--mono);
       font-size: 10px;
-      color: var(--soft);
+      color: var(--tiny);
     }
 
     svg.sparkline {
@@ -707,11 +731,6 @@ HTML_TEMPLATE = Template("""
     }
 
     .metric-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      font-weight: 800;
       margin-bottom: 6px;
     }
 
@@ -736,7 +755,7 @@ HTML_TEMPLATE = Template("""
       font-size: 10px;
       line-height: 1;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.05em;
       border-radius: 999px;
       padding: 7px 9px;
       border: 1px solid rgba(255,255,255,0.08);
@@ -746,16 +765,16 @@ HTML_TEMPLATE = Template("""
 
     .status-badge.positive {
       color: var(--emerald);
-      border-color: rgba(74,222,128,0.22);
-      box-shadow: 0 0 8px rgba(74,222,128,0.10);
-      background: rgba(74,222,128,0.04);
+      border-color: rgba(74,222,128,0.18);
+      box-shadow: 0 0 6px rgba(74,222,128,0.08);
+      background: rgba(74,222,128,0.03);
     }
 
     .status-badge.negative {
       color: var(--crimson);
-      border-color: rgba(248,113,113,0.22);
-      box-shadow: 0 0 8px rgba(248,113,113,0.08);
-      background: rgba(248,113,113,0.04);
+      border-color: rgba(248,113,113,0.18);
+      box-shadow: 0 0 6px rgba(248,113,113,0.06);
+      background: rgba(248,113,113,0.03);
     }
 
     .status-badge.neutral {
@@ -765,8 +784,10 @@ HTML_TEMPLATE = Template("""
     }
 
     .why {
-      font-size: 13px;
-      color: var(--soft);
+      font-size: 10px;
+      line-height: 1.45;
+      color: var(--tiny);
+      font-family: var(--mono);
     }
 
     .footer {
@@ -775,7 +796,7 @@ HTML_TEMPLATE = Template("""
       font-family: var(--mono);
       font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: 0.10em;
+      letter-spacing: 0.08em;
     }
 
     @media (min-width: 900px) {
@@ -818,6 +839,10 @@ HTML_TEMPLATE = Template("""
       .score-value {
         font-size: 24px;
       }
+
+      .section-head::after {
+        right: 64px;
+      }
     }
   </style>
 </head>
@@ -828,7 +853,7 @@ HTML_TEMPLATE = Template("""
         <div class="brand-mark"></div>
         <div class="brand-text">
           <div class="brand-kicker">DiamondSignals</div>
-          <div class="brand-title">Signal Wall // Onyx Terminal</div>
+          <div class="brand-title">Signal Wall // Institutional Elite</div>
         </div>
       </div>
       <div class="livebox">
@@ -842,7 +867,7 @@ HTML_TEMPLATE = Template("""
     <section class="hero">
       <div class="hero-grid">
         <div class="hero-card">
-          <div class="eyebrow">Elite Dark Dashboard</div>
+          <div class="eyebrow">Executive Terminal</div>
           <h1 class="hero-title">Today’s Signal Wall</h1>
           <p class="hero-copy">
             A live, mobile-first DiamondSignals board built for fast scan readability.
@@ -898,13 +923,13 @@ HTML_TEMPLATE = Template("""
             <div class="sparkline-wrap">
               <div class="sparkline-head">
                 <div class="sparkline-label">7 Day Trend</div>
-                <div class="sparkline-note">Signal pulse</div>
+                <div class="sparkline-note">vs baseline context</div>
               </div>
               <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                 <polyline
                   fill="none"
-                  stroke="#4ade80"
-                  stroke-width="1.8"
+                  stroke="#2a3f2a"
+                  stroke-width="1.6"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   points="0,25 15,23 30,19 45,21 60,16 75,17 90,12 105,14 120,9" />
@@ -970,13 +995,13 @@ HTML_TEMPLATE = Template("""
             <div class="sparkline-wrap">
               <div class="sparkline-head">
                 <div class="sparkline-label">7 Day Trend</div>
-                <div class="sparkline-note">Signal pulse</div>
+                <div class="sparkline-note">vs baseline context</div>
               </div>
               <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                 <polyline
                   fill="none"
-                  stroke="#4ade80"
-                  stroke-width="1.8"
+                  stroke="#2a3f2a"
+                  stroke-width="1.6"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   points="0,24 15,22 30,21 45,16 60,18 75,14 90,11 105,12 120,8" />
