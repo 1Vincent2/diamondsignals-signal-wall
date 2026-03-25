@@ -7,7 +7,7 @@ from pathlib import Path
 import pandas as pd
 import requests
 from jinja2 import Template
-from pybaseball import statcast
+from pybaseball import statcast, playerid_reverse_lookup
 
 DIST_DIR = Path("dist")
 DIST_DIR.mkdir(parents=True, exist_ok=True)
@@ -52,12 +52,49 @@ def fetch_statcast_window(start_dt: date, end_dt: date) -> pd.DataFrame:
         raise RuntimeError("Statcast returned no data for the requested window.")
     return df
 
+def build_batter_name_map(batter_ids) -> dict[int, str]:
+    ids = []
+    for value in batter_ids:
+        try:
+            if pd.notna(value):
+                ids.append(int(value))
+        except Exception:
+            continue
+
+    ids = sorted(set(ids))
+    if not ids:
+        return {}
+
+    try:
+        lookup = playerid_reverse_lookup(ids, key_type="mlbam")
+    except Exception:
+        return {}
+
+    if lookup is None or lookup.empty:
+        return {}
+
+    name_map = {}
+    for _, row in lookup.iterrows():
+        try:
+            pid = int(row["key_mlbam"])
+            first = str(row.get("name_first", "")).strip()
+            last = str(row.get("name_last", "")).strip()
+            full_name = f"{first} {last}".strip()
+            if full_name:
+                name_map[pid] = full_name
+        except Exception:
+            continue
+
+    return name_map
 
 def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
     hitters = df.copy()
+    batter_name_map = build_batter_name_map(hitters["batter"].dropna().unique())
+
     pitcher_ids = set(
         pd.to_numeric(df["pitcher"], errors="coerce").dropna().astype(int).tolist()
     )
+
     bbe = hitters[hitters["launch_speed"].notna()].copy()
 
     # Hitter eligibility filter:
@@ -74,7 +111,13 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
     bbe = bbe.merge(recent_bbe_counts, on="batter", how="left")
     bbe["recent_bbe_count"] = bbe["recent_bbe_count"].fillna(0)
     bbe = bbe[bbe["recent_bbe_count"] >= 4].copy()
-    bbe = bbe[~pd.to_numeric(bbe["batter"], errors="coerce").fillna(-1).astype(int).isin(pitcher_ids)].copy()
+    bbe = bbe[
+        ~pd.to_numeric(bbe["batter"], errors="coerce")
+        .fillna(-1)
+        .astype(int)
+        .isin(pitcher_ids)
+    ].copy()
+
     if bbe.empty:
         return pd.DataFrame()
 
@@ -85,13 +128,13 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     bbe["barrel_like"] = (
-        (pd.to_numeric(bbe["launch_speed"], errors="coerce") >= 98) &
-        (pd.to_numeric(bbe["launch_angle"], errors="coerce").between(26, 30, inclusive="both"))
+        (pd.to_numeric(bbe["launch_speed"], errors="coerce") >= 98)
+        & (pd.to_numeric(bbe["launch_angle"], errors="coerce").between(26, 30, inclusive="both"))
     ).astype(int)
 
     recent = (
         bbe[bbe["is_recent"]]
-        .groupby(["batter", "player_name"], dropna=False)
+        .groupby(["batter"], dropna=False)
         .agg(
             recent_bbe=("launch_speed", "size"),
             recent_ev=("launch_speed", "mean"),
@@ -103,7 +146,7 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
 
     baseline = (
         bbe[bbe["is_baseline"]]
-        .groupby(["batter", "player_name"], dropna=False)
+        .groupby(["batter"], dropna=False)
         .agg(
             baseline_bbe=("launch_speed", "size"),
             baseline_ev=("launch_speed", "mean"),
@@ -115,7 +158,7 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
 
     merged = recent.merge(
         baseline,
-        on=["batter", "player_name"],
+        on=["batter"],
         how="left",
         suffixes=("", "_base")
     )
@@ -124,24 +167,32 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
     merged["baseline_bbe"] = merged["baseline_bbe"].fillna(0)
 
     merged["ev_delta"] = merged["recent_ev"] - merged["baseline_ev"].fillna(merged["recent_ev"])
-    merged["barrel_rate_delta"] = merged["recent_barrel_rate"] - merged["baseline_barrel_rate"].fillna(merged["recent_barrel_rate"])
+    merged["barrel_rate_delta"] = (
+        merged["recent_barrel_rate"]
+        - merged["baseline_barrel_rate"].fillna(merged["recent_barrel_rate"])
+    )
+
     merged["quality_index"] = (
-        0.50 * zscore(merged["recent_ev"]) +
-        0.25 * zscore(merged["recent_max_ev"]) +
-        0.25 * zscore(merged["recent_barrel_rate"])
+        0.50 * zscore(merged["recent_ev"])
+        + 0.25 * zscore(merged["recent_max_ev"])
+        + 0.25 * zscore(merged["recent_barrel_rate"])
     )
+
     merged["delta_index"] = (
-        0.65 * zscore(merged["ev_delta"]) +
-        0.35 * zscore(merged["barrel_rate_delta"])
+        0.65 * zscore(merged["ev_delta"])
+        + 0.35 * zscore(merged["barrel_rate_delta"])
     )
+
     merged["edge_score"] = (
-        50 +
-        18 * merged["quality_index"] +
-        14 * merged["delta_index"] +
-        4 * zscore(merged["recent_bbe"])
+        50
+        + 18 * merged["quality_index"]
+        + 14 * merged["delta_index"]
+        + 4 * zscore(merged["recent_bbe"])
     ).clip(1, 99).round(1)
 
+    merged["player_name"] = merged["batter"].map(batter_name_map).fillna("Unknown")
     merged["player_name"] = merged["player_name"].apply(safe_name)
+
     merged["signal_type"] = "Hitter"
     merged["why"] = merged.apply(
         lambda r: (
@@ -151,12 +202,14 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
         ),
         axis=1
     )
+
     merged["metric_1"] = merged["recent_ev"].round(1)
     merged["metric_1_label"] = "Avg EV"
     merged["metric_2"] = (100 * merged["recent_barrel_rate"]).round(1)
     merged["metric_2_label"] = "Barrel-like %"
     merged["metric_3"] = merged["recent_max_ev"].round(1)
     merged["metric_3_label"] = "Max EV"
+
     def hitter_badges(row: pd.Series) -> list[str]:
         badges = []
 
@@ -187,6 +240,7 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
 
     merged["badges"] = merged.apply(hitter_badges, axis=1)
     merged["badge_classes"] = merged.apply(hitter_badge_classes, axis=1)
+
     recent_daily_ev = (
         bbe[bbe["is_recent"]]
         .groupby(["batter", "game_date"], dropna=False)
@@ -218,11 +272,12 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
             yvals = [26 - ((v - vmin) / (vmax - vmin)) * 16 for v in vals]
 
         xvals = [0, 20, 40, 60, 80, 100, 120]
-        points = [f"{x},{round(y,1)}" for x, y in zip(xvals, yvals)]
+        points = [f"{x},{round(y, 1)}" for x, y in zip(xvals, yvals)]
         return " ".join(points)
 
     merged["trend_points"] = merged["batter"].apply(build_trend_points)
     merged["trend_glow"] = merged["ev_delta"] >= 2.0
+
     return merged.sort_values("edge_score", ascending=False).reset_index(drop=True)
 
 
