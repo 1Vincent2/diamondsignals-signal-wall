@@ -624,35 +624,47 @@ HTML_TEMPLATE = Template("""
       gap: 10px;
       min-width: 0;
     }
-
     .brand-mark {
       width: 11px;
       height: 11px;
       border-radius: 999px;
       background: var(--lime-hot);
-      box-shadow: 0 0 6px rgba(182,255,0,0.22);
-      animation: heartbeatPulse 4s infinite ease-in-out;
+      box-shadow: 0 0 10px rgba(182,255,0,0.35);
+      animation: heartbeatPulse 2.2s infinite ease-in-out;
       flex: 0 0 auto;
     }
 
+      .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--lime-hot);
+      box-shadow: 0 0 10px rgba(182,255,0,0.35);
+      animation: heartbeatPulse 2.2s infinite ease-in-out;
+    }
+
     @keyframes heartbeatPulse {
-      0%, 100% {
-        opacity: 0.72;
-        transform: scale(0.94);
-        box-shadow: 0 0 0 0 rgba(182,255,0,0.00);
+      0% {
+        opacity: 0.55;
+        transform: scale(0.88);
+        box-shadow: 0 0 0 0 rgba(182,255,0,0.00), 0 0 8px rgba(182,255,0,0.18);
       }
-      50% {
+      35% {
         opacity: 1;
-        transform: scale(1.05);
-        box-shadow: 0 0 0 7px rgba(182,255,0,0.06), 0 0 10px rgba(182,255,0,0.22);
+        transform: scale(1.18);
+        box-shadow: 0 0 0 6px rgba(182,255,0,0.10), 0 0 14px rgba(182,255,0,0.38);
+      }
+      70% {
+        opacity: 0.9;
+        transform: scale(1.00);
+        box-shadow: 0 0 0 12px rgba(182,255,0,0.00), 0 0 10px rgba(182,255,0,0.22);
+      }
+      100% {
+        opacity: 0.55;
+        transform: scale(0.88);
+        box-shadow: 0 0 0 0 rgba(182,255,0,0.00), 0 0 8px rgba(182,255,0,0.18);
       }
     }
-
-    @keyframes badgePulse {
-      0%, 100% { opacity: 0.8; }
-      50% { opacity: 1; }
-    }
-
     .brand-text {
       min-width: 0;
     }
