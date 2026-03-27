@@ -1488,7 +1488,7 @@ def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
         threshold=f"{ALERT_THRESHOLD:.0f}+",
         timezone_label=TIMEZONE_LABEL,
         slate_heat=slate_heat,
-        nav_html=Template(NAV_TEMPLATE).render(active_nav="signal_wall"),
+        
         pitchers=pitchers.to_dict(orient="records"),
         hitters=hitters.to_dict(orient="records"),
     )
