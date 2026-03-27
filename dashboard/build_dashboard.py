@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-from email.mime import base
 import os
 import json
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
-from numpy import pad
 import pandas as pd
 import requests
 from jinja2 import Template
@@ -13,8 +11,10 @@ from pybaseball import statcast, playerid_reverse_lookup
 
 DIST_DIR = Path("dist")
 DIST_DIR.mkdir(parents=True, exist_ok=True)
+
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
+
 ALERT_THRESHOLD = float(os.getenv("ALERT_THRESHOLD", "65"))
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "").strip()
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
@@ -62,6 +62,7 @@ def fetch_statcast_window(start_dt: date, end_dt: date) -> pd.DataFrame:
     if df is None or df.empty:
         raise RuntimeError("Statcast returned no data for the requested window.")
     return df
+
 
 def build_batter_name_map(batter_ids) -> dict[int, str]:
     ids = []
@@ -217,6 +218,10 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
         (merged["recent_bbe"] >= 6) &
         (merged["recent_max_ev"] >= 95)
     ].copy()
+
+    if merged.empty:
+        return pd.DataFrame()
+
     merged["baseline_bbe"] = merged["baseline_bbe"].fillna(0)
 
     merged["ev_delta"] = merged["recent_ev"] - merged["baseline_ev"].fillna(merged["recent_ev"])
@@ -269,6 +274,7 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
     merged["metric_3"] = merged["recent_max_ev"].round(1)
     merged["metric_3_label"] = "Max EV"
     merged["sample_note"] = merged["recent_bbe"].apply(lambda x: f"{int(x)} BBE")
+
     def hitter_badges(row: pd.Series) -> list[str]:
         badges = []
 
@@ -310,7 +316,7 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
     def build_trend_points(player_id) -> str:
         player_days = recent_daily_ev[recent_daily_ev["batter"] == player_id].copy()
         if player_days.empty:
-            return "0,24 15,22 30,21 45,16 60,18 75,14 90,11 105,12 120,8"
+            return "0,24 20,22 40,21 60,19 80,18 100,16 120,14"
 
         player_days = player_days.sort_values("game_date")
         vals = player_days["day_ev"].tolist()
@@ -338,6 +344,7 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
     merged["trend_glow"] = merged["ev_delta"] >= 2.0
 
     return merged.sort_values("edge_score", ascending=False).reset_index(drop=True)
+
 
 def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
     pitchers = df.copy()
@@ -546,6 +553,7 @@ def send_telegram_alerts(signals: pd.DataFrame) -> None:
         response.raise_for_status()
         print(f"Telegram alert sent: {row['player_name']} ({row['edge_score']})")
 
+
 HTML_TEMPLATE = Template("""
 <!doctype html>
 <html lang="en">
@@ -625,6 +633,7 @@ HTML_TEMPLATE = Template("""
       gap: 10px;
       min-width: 0;
     }
+
     .brand-mark {
       width: 11px;
       height: 11px;
@@ -633,15 +642,6 @@ HTML_TEMPLATE = Template("""
       box-shadow: 0 0 10px rgba(182,255,0,0.35);
       animation: heartbeatPulse 2.2s infinite ease-in-out;
       flex: 0 0 auto;
-    }
-
-      .live-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: var(--lime-hot);
-      box-shadow: 0 0 10px rgba(182,255,0,0.35);
-      animation: heartbeatPulse 2.2s infinite ease-in-out;
     }
 
     @keyframes heartbeatPulse {
@@ -666,41 +666,48 @@ HTML_TEMPLATE = Template("""
         box-shadow: 0 0 0 0 rgba(182,255,0,0.00), 0 0 8px rgba(182,255,0,0.18);
       }
     }
+
+    @keyframes badgePulse {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
+    }
+
     .brand-text {
       min-width: 0;
     }
 
     .brand-kicker {
-  font-size: 10px;
-  line-height: 1;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  font-weight: 800;
-  margin-bottom: 4px;
-}
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
 
-.brand-white {
-  color: var(--text);
-}
+    .brand-white {
+      color: var(--text);
+    }
 
-.brand-blue {
-  color: var(--blue);
-}
+    .brand-blue {
+      color: var(--blue);
+    }
 
-.brand-title {
-  font-size: 16px;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  font-weight: 800;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+    .brand-title {
+      font-size: 16px;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     .livebox {
       text-align: right;
       flex: 0 0 auto;
     }
+
     .topnav {
       border-top: 1px solid rgba(255,255,255,0.04);
       border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -755,6 +762,7 @@ HTML_TEMPLATE = Template("""
     .topnav-tag {
       color: var(--lime-hot);
     }
+
     .live-label {
       display: inline-flex;
       align-items: center;
@@ -772,8 +780,8 @@ HTML_TEMPLATE = Template("""
       height: 7px;
       border-radius: 999px;
       background: var(--lime-hot);
-      box-shadow: 0 0 6px rgba(182,255,0,0.22);
-      animation: heartbeatPulse 4s infinite ease-in-out;
+      box-shadow: 0 0 10px rgba(182,255,0,0.35);
+      animation: heartbeatPulse 2.2s infinite ease-in-out;
     }
 
     .live-time {
@@ -888,7 +896,7 @@ HTML_TEMPLATE = Template("""
       margin-bottom: 6px;
     }
 
-     .meta-value {
+    .meta-value {
       font-family: var(--mono);
       font-size: 13px;
       color: var(--text);
@@ -1231,7 +1239,8 @@ HTML_TEMPLATE = Template("""
 
     @media (max-width: 640px) {
       .topbar-inner,
-      .app {
+      .app,
+      .topnav-inner {
         width: min(100%, calc(100% - 16px));
       }
 
@@ -1271,8 +1280,8 @@ HTML_TEMPLATE = Template("""
       <div class="brand">
         <div class="brand-mark"></div>
         <div class="brand-text">
-         <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
-<div class="brand-title">Signal Wall // Institutional Elite</div>
+          <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
+          <div class="brand-title">Signal Wall // Institutional Elite</div>
         </div>
       </div>
       <div class="livebox">
@@ -1281,7 +1290,9 @@ HTML_TEMPLATE = Template("""
       </div>
     </div>
   </div>
- {{ nav_html | safe }}
+
+  {{ nav_html | safe }}
+
   <div class="app">
     <section class="hero">
       <div class="hero-grid">
@@ -1295,29 +1306,30 @@ HTML_TEMPLATE = Template("""
         </div>
 
         <div class="meta-grid">
-  <div class="meta-card">
-    <div class="meta-label">Last Updated</div>
-    <div class="meta-value">{{ generated_at }}</div>
-  </div>
-  <div class="meta-card">
-    <div class="meta-label">Lookback</div>
-    <div class="meta-value">28D / 7D Split</div>
-  </div>
-  <div class="meta-card">
-    <div class="meta-label">Alert Threshold</div>
-    <div class="meta-value">{{ threshold }}</div>
-  </div>
-</div>
+          <div class="meta-card">
+            <div class="meta-label">Last Updated</div>
+            <div class="meta-value">{{ generated_at }}</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Lookback</div>
+            <div class="meta-value">28D / 7D Split</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Alert Threshold</div>
+            <div class="meta-value">{{ threshold }}</div>
+          </div>
+        </div>
 
-<div class="meta-card slate-heat-card">
-  <div class="meta-label">Slate Heat</div>
-  <div class="slate-heat-row">
-    <div class="slate-heat-bar">
-      <div class="slate-heat-fill" style="width: {{ slate_heat }}%;"></div>
-    </div>
-    <div class="slate-heat-value">{{ slate_heat }}</div>
-  </div>
-</div>
+        <div class="meta-card slate-heat-card">
+          <div class="meta-label">Slate Heat</div>
+          <div class="slate-heat-row">
+            <div class="slate-heat-bar">
+              <div class="slate-heat-fill" style="width: {{ slate_heat }}%;"></div>
+            </div>
+            <div class="slate-heat-value">{{ slate_heat }}</div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="board">
@@ -1361,17 +1373,17 @@ HTML_TEMPLATE = Template("""
                   </linearGradient>
                 </defs>
                 <polyline
-                 class="sparkline-path {% if row.trend_glow %}glow{% endif %}"
+                  class="sparkline-path {% if row.trend_glow %}glow{% endif %}"
                   stroke="url(#pitcherGradient{{ loop.index }})"
                   points="{{ row.trend_points }}" />
               </svg>
             </div>
 
             <div class="badge-row">
-  {% for badge in row.badges %}
-  <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
-  {% endfor %}
-</div>
+              {% for badge in row.badges %}
+              <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
+              {% endfor %}
+            </div>
 
             <div class="metric-grid">
               <div class="metric">
@@ -1440,11 +1452,11 @@ HTML_TEMPLATE = Template("""
               </svg>
             </div>
 
-           <div class="badge-row">
-  {% for badge in row.badges %}
-  <span class="status-badge {{ row.badge_classes[loop.index0] }} {% if badge in ['EV Burst', 'Barrel Jump'] %}active-pulse{% endif %}">{{ badge }}</span>
-  {% endfor %}
-</div>
+            <div class="badge-row">
+              {% for badge in row.badges %}
+              <span class="status-badge {{ row.badge_classes[loop.index0] }} {% if badge in ['EV Burst', 'Barrel Jump'] %}active-pulse{% endif %}">{{ badge }}</span>
+              {% endfor %}
+            </div>
 
             <div class="metric-grid">
               <div class="metric">
@@ -1488,7 +1500,7 @@ def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
         threshold=f"{ALERT_THRESHOLD:.0f}+",
         timezone_label=TIMEZONE_LABEL,
         slate_heat=slate_heat,
-        
+        nav_html=Template(NAV_TEMPLATE).render(active_nav="signal_wall"),
         pitchers=pitchers.to_dict(orient="records"),
         hitters=hitters.to_dict(orient="records"),
     )
@@ -1506,7 +1518,6 @@ def main() -> None:
     top_hitters = hitter_signals.head(5).copy()
     top_pitchers = pitcher_signals.head(5).copy()
 
-  
     combined_alerts = pd.concat([top_pitchers, top_hitters], ignore_index=True)
     combined_alerts = combined_alerts.sort_values("edge_score", ascending=False).reset_index(drop=True)
 
