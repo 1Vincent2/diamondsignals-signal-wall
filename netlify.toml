@@ -1,8 +1,12 @@
 [build]
   command = "python dashboard/build_dashboard.py"
   publish = "dist"
+  edge_functions = "netlify/request-gates"
 
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
-  
+
+[[edge_functions]]
+  function = "signals-gate"
+  path = "/*"
