@@ -13,7 +13,8 @@ from pybaseball import statcast, playerid_reverse_lookup
 
 DIST_DIR = Path("dist")
 DIST_DIR.mkdir(parents=True, exist_ok=True)
-
+TEMPLATES_DIR = Path(__file__).parent / "templates"
+NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
 ALERT_THRESHOLD = float(os.getenv("ALERT_THRESHOLD", "65"))
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "").strip()
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
@@ -1280,15 +1281,7 @@ HTML_TEMPLATE = Template("""
       </div>
     </div>
   </div>
-  <div class="topnav">
-    <div class="topnav-inner">
-      <a class="topnav-link active" href="/dashboard"><span class="topnav-tag">[ LIVE ]</span> Signal Wall</a>
-      <a class="topnav-link" href="/promotion-watch"><span class="topnav-tag">[ SCOUT ]</span> AAA/AA Promotion Watch</a>
-      <a class="topnav-link" href="/ivb-heat-map"><span class="topnav-tag">[ LAB ]</span> IVB Heat Map</a>
-      <a class="topnav-link" href="/hidden-gems"><span class="topnav-tag">[ EDGE ]</span> Hidden Gems Pipeline</a>
-      <a class="topnav-link" href="https://diamondsignals.ai"><span class="topnav-tag">[ SITE ]</span> Back to Main Site</a>
-    </div>
-  </div>
+ {{ nav_html | safe }}
   <div class="app">
     <section class="hero">
       <div class="hero-grid">
@@ -1495,6 +1488,7 @@ def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
         threshold=f"{ALERT_THRESHOLD:.0f}+",
         timezone_label=TIMEZONE_LABEL,
         slate_heat=slate_heat,
+        nav_html=Template(NAV_TEMPLATE).render(active_nav="signal_wall"),
         pitchers=pitchers.to_dict(orient="records"),
         hitters=hitters.to_dict(orient="records"),
     )
