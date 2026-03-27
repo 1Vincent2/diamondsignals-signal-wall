@@ -1,5 +1,5 @@
 [build]
-  command = "python diamond_signals_v2_core.py"
+  command = "python dashboard/build_dashboard.py"
   publish = "dist"
 
 [functions]
