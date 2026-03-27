@@ -1225,7 +1225,35 @@ HTML_TEMPLATE = Template("""
       letter-spacing: 0.08em;
       font-variant-numeric: tabular-nums;
     }
+<script>
+  function openGlossary() {
+    const overlay = document.getElementById("glossaryOverlay");
+    const drawer = document.getElementById("glossaryDrawer");
+    if (overlay) overlay.classList.add("open");
+    if (drawer) {
+      drawer.classList.add("open");
+      drawer.setAttribute("aria-hidden", "false");
+    }
+    document.body.style.overflow = "hidden";
+  }
 
+  function closeGlossary() {
+    const overlay = document.getElementById("glossaryOverlay");
+    const drawer = document.getElementById("glossaryDrawer");
+    if (overlay) overlay.classList.remove("open");
+    if (drawer) {
+      drawer.classList.remove("open");
+      drawer.setAttribute("aria-hidden", "true");
+    }
+    document.body.style.overflow = "";
+  }
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      closeGlossary();
+    }
+  });
+</script>
     @media (min-width: 900px) {
       .hero-grid {
         grid-template-columns: 1.35fr 0.9fr;
