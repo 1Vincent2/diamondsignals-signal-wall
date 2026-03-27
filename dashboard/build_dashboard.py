@@ -710,27 +710,31 @@ HTML_TEMPLATE = Template("""
       flex: 0 0 auto;
     }
 
-    .info-trigger {
-      width: 30px;
-      height: 30px;
+        .info-trigger {
+      height: 34px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(182,255,0,0.22);
+      background: rgba(255,255,255,0.05);
       color: var(--text);
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      padding: 0 12px;
       font-family: var(--mono);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
       cursor: pointer;
+      box-shadow: 0 0 10px rgba(182,255,0,0.08);
       transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+      white-space: nowrap;
     }
 
     .info-trigger:hover {
       transform: translateY(-1px);
-      border-color: rgba(182,255,0,0.20);
-      background: rgba(255,255,255,0.05);
+      border-color: rgba(182,255,0,0.34);
+      background: rgba(255,255,255,0.08);
     }
 
     .livebox {
@@ -1444,7 +1448,7 @@ HTML_TEMPLATE = Template("""
         </div>
       </div>
       <div class="header-actions">
-        <button class="info-trigger" type="button" onclick="openGlossary()" aria-label="Open glossary">i</button>
+        <button class="info-trigger" type="button" onclick="openGlossary()" aria-label="Open glossary">ⓘ Glossary</button>
         <div class="livebox">
           <div class="live-label"><span class="live-dot"></span>LIVE</div>
           <div class="live-time">{{ generated_at }}</div>
