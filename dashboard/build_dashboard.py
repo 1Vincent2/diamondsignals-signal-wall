@@ -429,7 +429,7 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
     merged["why"] = merged.apply(
         lambda r: (
             f"Whiff rate {100 * r['recent_whiff_rate']:.1f}% "
-            f"({100 * r['whiff_delta']:+.1f} pts vs baseline), "
+            f"({r['whiff_delta']:+.1f} pts vs baseline), "
             f"FB velo {r['recent_fb_velo']:.1f} mph ({r['velo_delta']:+.1f})."
         ),
         axis=1
@@ -493,8 +493,8 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
             base = vals[0]
             vals = [base * 0.985, base * 0.99, base * 0.995, base, base * 1.005, base * 1.01, base * 1.015]
         elif len(vals) < 7:
-            pad = [vals[0]] * (7 - len(vals))
-            vals = pad + vals
+            pad_vals = [vals[0]] * (7 - len(vals))
+            vals = pad_vals + vals
         else:
             vals = vals[-7:]
 
@@ -703,6 +703,36 @@ HTML_TEMPLATE = Template("""
       text-overflow: ellipsis;
     }
 
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+
+    .info-trigger {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .info-trigger:hover {
+      transform: translateY(-1px);
+      border-color: rgba(182,255,0,0.20);
+      background: rgba(255,255,255,0.05);
+    }
+
     .livebox {
       text-align: right;
       flex: 0 0 auto;
@@ -789,6 +819,135 @@ HTML_TEMPLATE = Template("""
       font-size: 11px;
       color: var(--muted);
       font-variant-numeric: tabular-nums;
+    }
+
+    .glossary-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.52);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+      z-index: 80;
+    }
+
+    .glossary-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .glossary-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(560px, 100vw);
+      height: 100vh;
+      background: linear-gradient(180deg, #101010 0%, #080808 100%);
+      border-left: 1px solid rgba(255,255,255,0.08);
+      box-shadow: -12px 0 40px rgba(0,0,0,0.42);
+      transform: translateX(100%);
+      transition: transform 0.24s ease;
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .glossary-drawer.open {
+      transform: translateX(0);
+    }
+
+    .glossary-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .glossary-kicker {
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--blue);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .glossary-title {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .glossary-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .glossary-body {
+      overflow-y: auto;
+      padding: 18px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .glossary-section {
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      padding: 14px;
+    }
+
+    .glossary-section-title {
+      margin: 0 0 12px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--lime-hot);
+      font-weight: 800;
+      font-family: var(--mono);
+    }
+
+    .glossary-item {
+      margin-bottom: 12px;
+    }
+
+    .glossary-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .glossary-term {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      font-weight: 800;
+      font-family: var(--mono);
+    }
+
+    .glossary-definition {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--soft);
     }
 
     .app {
@@ -1225,35 +1384,7 @@ HTML_TEMPLATE = Template("""
       letter-spacing: 0.08em;
       font-variant-numeric: tabular-nums;
     }
-<script>
-  function openGlossary() {
-    const overlay = document.getElementById("glossaryOverlay");
-    const drawer = document.getElementById("glossaryDrawer");
-    if (overlay) overlay.classList.add("open");
-    if (drawer) {
-      drawer.classList.add("open");
-      drawer.setAttribute("aria-hidden", "false");
-    }
-    document.body.style.overflow = "hidden";
-  }
 
-  function closeGlossary() {
-    const overlay = document.getElementById("glossaryOverlay");
-    const drawer = document.getElementById("glossaryDrawer");
-    if (overlay) overlay.classList.remove("open");
-    if (drawer) {
-      drawer.classList.remove("open");
-      drawer.setAttribute("aria-hidden", "true");
-    }
-    document.body.style.overflow = "";
-  }
-
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") {
-      closeGlossary();
-    }
-  });
-</script>
     @media (min-width: 900px) {
       .hero-grid {
         grid-template-columns: 1.35fr 0.9fr;
@@ -1312,14 +1443,138 @@ HTML_TEMPLATE = Template("""
           <div class="brand-title">Signal Wall // Institutional Elite</div>
         </div>
       </div>
-      <div class="livebox">
-        <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">{{ generated_at }}</div>
+      <div class="header-actions">
+        <button class="info-trigger" type="button" onclick="openGlossary()" aria-label="Open glossary">i</button>
+        <div class="livebox">
+          <div class="live-label"><span class="live-dot"></span>LIVE</div>
+          <div class="live-time">{{ generated_at }}</div>
+        </div>
       </div>
     </div>
   </div>
 
   {{ nav_html | safe }}
+
+  <div id="glossaryOverlay" class="glossary-overlay" onclick="closeGlossary()"></div>
+
+  <aside id="glossaryDrawer" class="glossary-drawer" aria-hidden="true">
+    <div class="glossary-head">
+      <div>
+        <div class="glossary-kicker">DiamondSignals Intelligence</div>
+        <h2 class="glossary-title">Glossary</h2>
+      </div>
+      <button class="glossary-close" type="button" onclick="closeGlossary()" aria-label="Close glossary">×</button>
+    </div>
+
+    <div class="glossary-body">
+      <section class="glossary-section">
+        <h3 class="glossary-section-title">I. Global System Metrics</h3>
+
+        <div class="glossary-item">
+          <span class="glossary-term">Slate Heat</span>
+          <div class="glossary-definition">
+            A model-driven index of total opportunity across the day's schedule. A full Neon Green bar indicates a high density of ballistic anomalies, suggesting a target-rich day for fantasy and DFS adjustments.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">System Status</span>
+          <div class="glossary-definition">
+            Confirms the state of the live data pipeline. Our Python architecture monitors 750+ Ballistic Profiles in real-time, pulling direct Statcast feeds to detect skill shifts before they hit the box score.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">Edge Score</span>
+          <div class="glossary-definition">
+            A 0–100 proprietary ranking that quantifies the strength of a signal. Higher scores indicate high-conviction buy opportunities based on rolling ballistic data.
+          </div>
+        </div>
+      </section>
+
+      <section class="glossary-section">
+        <h3 class="glossary-section-title">II. The Ballistic Terminal (Pitching)</h3>
+
+        <div class="glossary-item">
+          <span class="glossary-term">IVB (Induced Vertical Break)</span>
+          <div class="glossary-definition">
+            The secret sauce of pitching. It measures how much a pitch defies gravity and rises. Spikes in IVB are the primary indicator of increased whiff rates.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">VAA (Vertical Approach Angle)</span>
+          <div class="glossary-definition">
+            The angle at which a pitch enters the zone. Flat VAAs at the top of the zone create an elite look that hitters cannot adjust to in time.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">FB Velo / Extension</span>
+          <div class="glossary-definition">
+            We track raw velocity alongside physical extension, or how close to the plate the ball is released. Higher extension creates perceived velocity, making a 95 mph pitch feel closer to 98.
+          </div>
+        </div>
+      </section>
+
+      <section class="glossary-section">
+        <h3 class="glossary-section-title">III. Impact & Power Metrics (Hitting)</h3>
+
+        <div class="glossary-item">
+          <span class="glossary-term">Avg / Max EV (Exit Velocity)</span>
+          <div class="glossary-definition">
+            The speed of the ball off the bat. Sudden jumps in Max EV indicate a physical breakthrough in a player’s raw power ceiling.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">Barrel-Like %</span>
+          <div class="glossary-definition">
+            Hits that fall into the optimal launch-angle-plus-velocity bucket. This is one of the strongest leading indicators for upcoming home run production.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">EV Burst</span>
+          <div class="glossary-definition">
+            An automated trigger that fires when a player’s hard-hit profile deviates significantly from their 30-day baseline.
+          </div>
+        </div>
+      </section>
+
+      <section class="glossary-section">
+        <h3 class="glossary-section-title">IV. Understanding the Player Trend Cards</h3>
+
+        <div class="glossary-item">
+          <span class="glossary-term">7 Day Rolling Trend Analysis</span>
+          <div class="glossary-definition">
+            Each player card features a 7-day rolling trend view. Read the visual data as a signal context tool, not a full historical chart.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">The Baseline</span>
+          <div class="glossary-definition">
+            The dimmer or gray line represents the player’s established seasonal average. It is the market value of the player.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">The Signal</span>
+          <div class="glossary-definition">
+            The bright Neon Green line tracks the actual data from the last 7 days.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">The Edge</span>
+          <div class="glossary-definition">
+            When you see the Neon Green line pull away from the gray baseline, the system has confirmed a breakout signal. The gap between those two lines is the working edge between what the player is doing now and what the market still thinks they are doing.
+          </div>
+        </div>
+      </section>
+    </div>
+  </aside>
 
   <div class="app">
     <section class="hero">
@@ -1512,6 +1767,36 @@ HTML_TEMPLATE = Template("""
       DiamondSignals Signal Wall // Generated During Netlify Build // {{ timezone_label }}
     </div>
   </div>
+
+  <script>
+    function openGlossary() {
+      const overlay = document.getElementById("glossaryOverlay");
+      const drawer = document.getElementById("glossaryDrawer");
+      if (overlay) overlay.classList.add("open");
+      if (drawer) {
+        drawer.classList.add("open");
+        drawer.setAttribute("aria-hidden", "false");
+      }
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeGlossary() {
+      const overlay = document.getElementById("glossaryOverlay");
+      const drawer = document.getElementById("glossaryDrawer");
+      if (overlay) overlay.classList.remove("open");
+      if (drawer) {
+        drawer.classList.remove("open");
+        drawer.setAttribute("aria-hidden", "true");
+      }
+      document.body.style.overflow = "";
+    }
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeGlossary();
+      }
+    });
+  </script>
 </body>
 </html>
 """)
