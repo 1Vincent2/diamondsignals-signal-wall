@@ -1,6 +1,5 @@
 // refresh function bundle after build hook env setupexport const config = {
   schedule: "0 14 * * *"
-};
 
 export default async () => {
   const buildHook = process.env.NETLIFY_BUILD_HOOK_URL;
