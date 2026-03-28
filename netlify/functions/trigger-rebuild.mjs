@@ -1,4 +1,4 @@
-export const config = {
+// refresh function bundle after build hook env setupexport const config = {
   schedule: "0 14 * * *"
 };
 
