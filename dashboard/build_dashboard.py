@@ -439,7 +439,9 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
     merged["metric_1_label"] = "Whiff %"
     merged["metric_2"] = merged["recent_fb_velo"].round(1)
     merged["metric_2_label"] = "FB Velo"
-    merged["metric_3"] = merged["recent_extension"].round(2)
+    merged["metric_3"] = merged["recent_extension"].round(1).map(
+        lambda x: f"{x:.1f} ft" if pd.notna(x) else "—"
+    )
     merged["metric_3_label"] = "Extension"
     merged["sample_note"] = merged["recent_pitches"].apply(lambda x: f"{int(x)} P")
 
