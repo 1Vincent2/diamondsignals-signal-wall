@@ -1,0 +1,1691 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DiamondSignals — Prospect Tracker</title>
+  <style>
+    :root {
+      --bg: #080808;
+      --surface: #121212;
+      --surface-deep: #080808;
+      --card-radial: radial-gradient(circle at top left, #1a1a1a 0%, #080808 100%);
+      --border: #2d2d2d;
+      --text: #f0f0f0;
+      --muted: #71717a;
+      --soft: #a1a1aa;
+      --tiny: #8a8a93;
+      --emerald: #4ade80;
+      --lime-hot: #b6ff00;
+      --cyan-hot: #00e5ff;
+      --blue: #6aa6ff;
+      --shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
+      --radius: 18px;
+      --mono: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(106,166,255,0.06), transparent 24%),
+        radial-gradient(circle at top right, rgba(239,68,68,0.04), transparent 20%),
+        linear-gradient(180deg, #101010 0%, #080808 34%, #050505 100%);
+      line-height: 1.35;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(8, 8, 8, 0.90);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .topbar-inner,
+    .app {
+      width: min(1180px, calc(100% - 24px));
+      margin: 0 auto;
+    }
+
+    .topbar-inner {
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      background: var(--lime-hot);
+      box-shadow: 0 0 10px rgba(182,255,0,0.35);
+      flex: 0 0 auto;
+    }
+
+    .brand-kicker {
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .brand-white { color: var(--text); }
+    .brand-blue { color: var(--blue); }
+
+    .brand-title {
+      font-size: 16px;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+
+    .info-trigger {
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(182,255,0,0.22);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .livebox {
+      text-align: right;
+      flex: 0 0 auto;
+    }
+
+    .live-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--lime-hot);
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--lime-hot);
+    }
+
+    .live-time {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .topnav {
+      border-top: 1px solid rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.015);
+    }
+
+    .topnav-inner {
+      width: min(1180px, calc(100% - 24px));
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 10px 0;
+      scrollbar-width: none;
+    }
+
+    .topnav-inner::-webkit-scrollbar {
+      display: none;
+    }
+
+    .topnav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--soft);
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+      transition: opacity 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+    }
+
+    .topnav-link:hover {
+      opacity: 1;
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .topnav-link.active {
+      color: var(--text);
+      border-color: rgba(182,255,0,0.20);
+      box-shadow: 0 0 8px rgba(182,255,0,0.08);
+    }
+
+    .topnav-tag {
+      color: var(--lime-hot);
+    }
+
+    .glossary-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.52);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+      z-index: 80;
+    }
+
+    .glossary-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .glossary-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(560px, 100vw);
+      height: 100vh;
+      background: linear-gradient(180deg, #101010 0%, #080808 100%);
+      border-left: 1px solid rgba(255,255,255,0.08);
+      box-shadow: -12px 0 40px rgba(0,0,0,0.42);
+      transform: translateX(100%);
+      transition: transform 0.24s ease;
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .glossary-drawer.open { transform: translateX(0); }
+
+    .glossary-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .glossary-kicker {
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--blue);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .glossary-title {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .glossary-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .glossary-body {
+      overflow-y: auto;
+      padding: 18px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .glossary-section {
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      padding: 14px;
+    }
+
+    .glossary-section-title {
+      margin: 0 0 12px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--lime-hot);
+      font-weight: 800;
+      font-family: var(--mono);
+    }
+
+    .glossary-item { margin-bottom: 12px; }
+    .glossary-item:last-child { margin-bottom: 0; }
+
+    .glossary-term {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      font-weight: 800;
+      font-family: var(--mono);
+    }
+
+    .glossary-definition {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--soft);
+    }
+
+    .app { padding: 18px 0 34px; }
+
+    .hero {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .hero-card,
+    .meta-card,
+    .section,
+    .player-card {
+      background: var(--card-radial);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card { padding: 18px; }
+
+    .eyebrow {
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--blue);
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .hero-title {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 7vw, 50px);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .hero-copy {
+      margin: 0;
+      max-width: 760px;
+      color: var(--soft);
+      font-size: 14px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .meta-card { padding: 14px; }
+
+    .meta-label,
+    .metric-label,
+    .sparkline-label,
+    .section-kicker,
+    .score-label,
+    .rankline,
+    .status-badge {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .meta-label { margin-bottom: 6px; }
+
+    .meta-value {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+      word-break: break-word;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .slate-heat-card { padding: 14px; }
+
+    .slate-heat-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .slate-heat-bar {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.04);
+      overflow: hidden;
+    }
+
+    .slate-heat-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #444444 0%, #b6ff00 100%);
+      box-shadow: 0 0 8px rgba(182,255,0,0.16);
+    }
+
+    .slate-heat-value {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .arrivals-section {
+      margin-bottom: 16px;
+    }
+
+    .signal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .arrivals-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .arrival-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .arrival-name-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .pos-badge,
+    .txn-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      color: var(--soft);
+    }
+
+    .pos-badge.pitcher {
+      color: #67e8f9;
+      border-color: rgba(103,232,249,0.28);
+      background: rgba(103,232,249,0.06);
+    }
+
+    .pos-badge.infielder {
+      color: #fbbf24;
+      border-color: rgba(251,191,36,0.28);
+      background: rgba(251,191,36,0.06);
+    }
+
+    .pos-badge.outfielder {
+      color: #34d399;
+      border-color: rgba(52,211,153,0.28);
+      background: rgba(52,211,153,0.06);
+    }
+
+    .txn-badge {
+      color: var(--text);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .arrival-dest {
+      color: #39FF14;
+      text-shadow: 0 0 6px rgba(57,255,20,0.18);
+      font-weight: 800;
+    }
+
+    .arrival-card {
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .arrival-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .arrival-name {
+      margin: 0 0 4px;
+      font-size: 17px;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      font-weight: 800;
+    }
+
+    .arrival-meta,
+    .arrival-route,
+    .arrival-note {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--soft);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .arrival-route {
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .arrival-note {
+      color: var(--tiny);
+      line-height: 1.45;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .section { overflow: hidden; }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 16px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.008));
+    }
+
+    .section-kicker { margin-bottom: 5px; }
+
+    .section-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    .section-badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--soft);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(255,255,255,0.02);
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cards {
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .player-card { padding: 14px; }
+
+    .player-card.high-edge {
+      border-color: rgba(74,222,128,0.22);
+      box-shadow: var(--shadow), 0 0 8px rgba(74,222,128,0.07);
+    }
+
+    .player-top {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      flex: 0 0 auto;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .player-ident { min-width: 0; }
+    .rankline { margin-bottom: 4px; }
+
+    .player-name {
+      font-size: 19px;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+      margin: 0 0 4px;
+      word-break: break-word;
+    }
+
+    .signal-line {
+      font-size: 11px;
+      color: var(--soft);
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .scorebox {
+      text-align: right;
+      min-width: 88px;
+    }
+
+    .score-label { margin-bottom: 4px; }
+
+    .score-value {
+      font-family: var(--mono);
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 800;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .score-value.edge-up {
+      color: var(--emerald);
+      text-shadow: 0 0 6px rgba(74,222,128,0.18);
+    }
+
+    .sparkline-wrap {
+      margin: 0 0 12px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.015);
+    }
+
+    .sparkline-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .sparkline-note {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--tiny);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    svg.sparkline {
+      display: block;
+      width: 100%;
+      height: 34px;
+    }
+
+    .sparkline-path {
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .sparkline-path.glow {
+      filter: drop-shadow(0 0 2px rgba(182, 255, 0, 0.5));
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .metric {
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 10px 10px 9px;
+      background: rgba(255,255,255,0.02);
+      min-width: 0;
+    }
+
+    .metric-label { margin-bottom: 6px; }
+
+    .metric-value {
+      font-family: var(--mono);
+      font-size: 15px;
+      line-height: 1.1;
+      color: var(--text);
+      font-weight: 700;
+      word-break: break-word;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 12px;
+    }
+
+    .status-badge {
+      line-height: 1;
+      border-radius: 999px;
+      padding: 7px 9px;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--soft);
+      background: rgba(255,255,255,0.02);
+      font-family: var(--mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .status-badge.positive {
+      color: var(--emerald);
+      border-color: rgba(74,222,128,0.18);
+      box-shadow: 0 0 6px rgba(74,222,128,0.08);
+      background: rgba(74,222,128,0.03);
+    }
+
+    .status-badge.neutral {
+      color: var(--soft);
+      border-color: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .why {
+      font-size: 10px;
+      line-height: 1.45;
+      color: var(--tiny);
+      font-family: var(--mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .footer {
+      padding: 16px 4px 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (min-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1.35fr 0.9fr;
+        align-items: stretch;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-inner,
+      .app,
+      .topnav-inner {
+        width: min(100%, calc(100% - 16px));
+      }
+
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .signal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .arrivals-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .player-name {
+        font-size: 17px;
+      }
+
+      .score-value {
+        font-size: 24px;
+      }
+
+      .arrival-top {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div class="brand-text">
+          <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
+          <div class="brand-title">Signal Wall // Institutional Elite</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="info-trigger" type="button" onclick="openGlossary()" aria-label="Open glossary">ⓘ Glossary</button>
+        <div class="livebox">
+          <div class="live-label"><span class="live-dot"></span>LIVE</div>
+          <div class="live-time">2026-03-30 10:18 AM</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topnav">
+  <div class="topnav-inner">
+    <a class="topnav-link " href="/"><span class="topnav-tag">[ LIVE ]</span> Signal Wall</a>
+    <a class="topnav-link active" href="/typical-call-up"><span class="topnav-tag">[ SCOUT ]</span> AAA/AA Promotion Watch</a>
+    <a class="topnav-link " href="/ivb-heat-map"><span class="topnav-tag">[ LAB ]</span> IVB Heat Map</a>
+    <a class="topnav-link " href="/hidden-gems"><span class="topnav-tag">[ EDGE ]</span> Hidden Gems Pipeline</a>
+    <a class="topnav-link" href="https://diamondsignals.ai"><span class="topnav-tag">[ SITE ]</span> Back to Main Site</a>
+  </div>
+</div>
+
+  <div id="glossaryOverlay" class="glossary-overlay" onclick="closeGlossary()"></div>
+
+  <aside id="glossaryDrawer" class="glossary-drawer" aria-hidden="true">
+    <div class="glossary-head">
+      <div>
+        <div class="glossary-kicker">DiamondSignals Intelligence</div>
+        <h2 class="glossary-title">Glossary</h2>
+      </div>
+      <button class="glossary-close" type="button" onclick="closeGlossary()" aria-label="Close glossary">×</button>
+    </div>
+
+    <div class="glossary-body">
+      <section class="glossary-section">
+        <h3 class="glossary-section-title">I. Global System Metrics</h3>
+        <div class="glossary-item">
+          <span class="glossary-term">Slate Heat</span>
+          <div class="glossary-definition">
+            A quick index built from the visible board scores. Higher values mean a stronger concentration of promotion-worthy AAA signals.
+          </div>
+        </div>
+        <div class="glossary-item">
+          <span class="glossary-term">Edge Score</span>
+          <div class="glossary-definition">
+            A simple 0–100 ranking built from the available AAA weekly signal fields in Supabase.
+          </div>
+        </div>
+      </section>
+
+      <section class="glossary-section">
+        <h3 class="glossary-section-title">II. Hitting Metrics</h3>
+        <div class="glossary-item">
+          <span class="glossary-term">ISO</span>
+          <div class="glossary-definition">
+            Isolated power. Higher values point to stronger extra-base impact.
+          </div>
+        </div>
+        <div class="glossary-item">
+          <span class="glossary-term">K/BB</span>
+          <div class="glossary-definition">
+            Strikeouts divided by walks. Lower is generally cleaner for hitters.
+          </div>
+        </div>
+      </section>
+
+      <section class="glossary-section">
+        <h3 class="glossary-section-title">III. Pitching Metrics</h3>
+        <div class="glossary-item">
+          <span class="glossary-term">K/BB</span>
+          <div class="glossary-definition">
+            Strikeouts divided by walks allowed. Higher is stronger for pitchers.
+          </div>
+        </div>
+        <div class="glossary-item">
+          <span class="glossary-term">BF</span>
+          <div class="glossary-definition">
+            Batters faced in the weekly sample.
+          </div>
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <div class="app">
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-card">
+          <div class="eyebrow">Executive Terminal</div>
+          <h1 class="hero-title">Prospect Tracker</h1>
+          <p class="hero-copy">
+            A live AAA-first DiamondSignals board built from Supabase weekly signal data, with a new movement layer for fresh AAA-to-MLB prospect tracking.
+          </p>
+        </div>
+
+        <div class="meta-grid">
+          <div class="meta-card">
+            <div class="meta-label">Last Updated</div>
+            <div class="meta-value">2026-03-30 10:18 AM</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Source</div>
+            <div class="meta-value">AAA Weekly Signal Base + Scout Transactions</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Alert Threshold</div>
+            <div class="meta-value">65+</div>
+          </div>
+        </div>
+
+        <div class="meta-card slate-heat-card">
+          <div class="meta-label">Slate Heat</div>
+          <div class="slate-heat-row">
+            <div class="slate-heat-bar">
+              <div class="slate-heat-fill" style="width: 53%;"></div>
+            </div>
+            <div class="slate-heat-value">53</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <section class="section arrivals-section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Movement Layer</div>
+          <h2 class="section-title">Recent Arrivals</h2>
+        </div>
+        <div class="section-badge">AAA → MLB</div>
+      </div>
+
+      <div class="arrivals-grid">
+        
+        <article class="arrival-card">
+          <div class="arrival-head">
+            <div>
+              <div class="arrival-name-row">
+                <h3 class="arrival-name">Jeferson Quero</h3>
+                <span class="pos-badge infielder">[C]</span>
+                <span class="txn-badge">[DEBUT]</span>
+              </div>
+              <div class="arrival-meta">Age 23</div>
+            </div>
+            <div class="arrival-date">2026-03-28</div>
+          </div>
+
+          <div class="arrival-route">
+            <span>[NAS]</span>
+            <span>➔</span>
+            <span class="arrival-dest">[MIL]</span>
+          </div>
+
+          <div class="arrival-meta">2026-03-29</div>
+          <div class="arrival-note">Milwaukee Brewers recalled C Jeferson Quero from Nashville Sounds.</div>
+        </article>
+        
+        <article class="arrival-card">
+          <div class="arrival-head">
+            <div>
+              <div class="arrival-name-row">
+                <h3 class="arrival-name">Deyvison De Los Santos</h3>
+                <span class="pos-badge infielder">[3B]</span>
+                <span class="txn-badge">[DEBUT]</span>
+              </div>
+              <div class="arrival-meta">Age 22</div>
+            </div>
+            <div class="arrival-date">2026-03-28</div>
+          </div>
+
+          <div class="arrival-route">
+            <span>[JAX]</span>
+            <span>➔</span>
+            <span class="arrival-dest">[MIA]</span>
+          </div>
+
+          <div class="arrival-meta">2026-03-29</div>
+          <div class="arrival-note">Miami Marlins recalled 3B Deyvison De Los Santos from Jacksonville Jumbo Shrimp.</div>
+        </article>
+        
+        <article class="arrival-card">
+          <div class="arrival-head">
+            <div>
+              <div class="arrival-name-row">
+                <h3 class="arrival-name">Cole Wilcox</h3>
+                <span class="pos-badge pitcher">[RHP]</span>
+                <span class="txn-badge">[RECALL]</span>
+              </div>
+              <div class="arrival-meta">Age 26 // Draft 2020</div>
+            </div>
+            <div class="arrival-date">2026-03-27</div>
+          </div>
+
+          <div class="arrival-route">
+            <span>[TAC]</span>
+            <span>➔</span>
+            <span class="arrival-dest">[SEA]</span>
+          </div>
+
+          <div class="arrival-meta">2025-09-19</div>
+          <div class="arrival-note">Seattle Mariners recalled RHP Cole Wilcox from Tacoma Rainiers.</div>
+        </article>
+        
+        <article class="arrival-card">
+          <div class="arrival-head">
+            <div>
+              <div class="arrival-name-row">
+                <h3 class="arrival-name">Braxton Fulford</h3>
+                <span class="pos-badge infielder">[C]</span>
+                <span class="txn-badge">[RECALL]</span>
+              </div>
+              <div class="arrival-meta">Age 27 // Draft 2021</div>
+            </div>
+            <div class="arrival-date">2026-03-27</div>
+          </div>
+
+          <div class="arrival-route">
+            <span>[ABQ]</span>
+            <span>➔</span>
+            <span class="arrival-dest">[COL]</span>
+          </div>
+
+          <div class="arrival-meta">2025-04-16</div>
+          <div class="arrival-note">Colorado Rockies recalled C Braxton Fulford from Albuquerque Isotopes.</div>
+        </article>
+        
+        <article class="arrival-card">
+          <div class="arrival-head">
+            <div>
+              <div class="arrival-name-row">
+                <h3 class="arrival-name">Anthony Nunez</h3>
+                <span class="pos-badge pitcher">[RHP]</span>
+                <span class="txn-badge">[DEBUT]</span>
+              </div>
+              <div class="arrival-meta">Age 24 // Draft 2019</div>
+            </div>
+            <div class="arrival-date">2026-03-25</div>
+          </div>
+
+          <div class="arrival-route">
+            <span>[NOR]</span>
+            <span>➔</span>
+            <span class="arrival-dest">[BAL]</span>
+          </div>
+
+          <div class="arrival-meta">2026-03-28</div>
+          <div class="arrival-note">Baltimore Orioles recalled RHP Anthony Nunez from Norfolk Tides.</div>
+        </article>
+        
+        <article class="arrival-card">
+          <div class="arrival-head">
+            <div>
+              <div class="arrival-name-row">
+                <h3 class="arrival-name">TJ Rumfield</h3>
+                <span class="pos-badge infielder">[1B]</span>
+                <span class="txn-badge">[DEBUT]</span>
+              </div>
+              <div class="arrival-meta">Age 25 // Draft 2021</div>
+            </div>
+            <div class="arrival-date">2026-03-25</div>
+          </div>
+
+          <div class="arrival-route">
+            <span>[ABQ]</span>
+            <span>➔</span>
+            <span class="arrival-dest">[COL]</span>
+          </div>
+
+          <div class="arrival-meta">2026-03-27</div>
+          <div class="arrival-note">Colorado Rockies selected the contract of 1B TJ Rumfield from Albuquerque Isotopes.</div>
+        </article>
+        
+        <article class="arrival-card">
+          <div class="arrival-head">
+            <div>
+              <div class="arrival-name-row">
+                <h3 class="arrival-name">Justin Crawford</h3>
+                <span class="pos-badge outfielder">[CF]</span>
+                <span class="txn-badge">[DEBUT]</span>
+              </div>
+              <div class="arrival-meta">Age 22 // Draft 2022</div>
+            </div>
+            <div class="arrival-date">2026-03-25</div>
+          </div>
+
+          <div class="arrival-route">
+            <span>[LHV]</span>
+            <span>➔</span>
+            <span class="arrival-dest">[PHI]</span>
+          </div>
+
+          <div class="arrival-meta">2026-03-26</div>
+          <div class="arrival-note">Philadelphia Phillies selected the contract of CF Justin Crawford from Lehigh Valley IronPigs.</div>
+        </article>
+        
+        <article class="arrival-card">
+          <div class="arrival-head">
+            <div>
+              <div class="arrival-name-row">
+                <h3 class="arrival-name">JJ Wetherholt</h3>
+                <span class="pos-badge infielder">[SS]</span>
+                <span class="txn-badge">[DEBUT]</span>
+              </div>
+              <div class="arrival-meta">Age 23 // Draft 2024</div>
+            </div>
+            <div class="arrival-date">2026-03-25</div>
+          </div>
+
+          <div class="arrival-route">
+            <span>[MEM]</span>
+            <span>➔</span>
+            <span class="arrival-dest">[STL]</span>
+          </div>
+
+          <div class="arrival-meta">2026-03-26</div>
+          <div class="arrival-note">St. Louis Cardinals selected the contract of SS JJ Wetherholt from Memphis Redbirds.</div>
+        </article>
+        
+        <article class="arrival-card">
+          <div class="arrival-head">
+            <div>
+              <div class="arrival-name-row">
+                <h3 class="arrival-name">Carson Benge</h3>
+                <span class="pos-badge outfielder">[OF]</span>
+                <span class="txn-badge">[DEBUT]</span>
+              </div>
+              <div class="arrival-meta">Age 23 // Draft 2024</div>
+            </div>
+            <div class="arrival-date">2026-03-25</div>
+          </div>
+
+          <div class="arrival-route">
+            <span>[SYR]</span>
+            <span>➔</span>
+            <span class="arrival-dest">[NYM]</span>
+          </div>
+
+          <div class="arrival-meta">2026-03-26</div>
+          <div class="arrival-note">New York Mets selected the contract of OF Carson Benge from Syracuse Mets.</div>
+        </article>
+        
+        <article class="arrival-card">
+          <div class="arrival-head">
+            <div>
+              <div class="arrival-name-row">
+                <h3 class="arrival-name">Cody Laweryson</h3>
+                <span class="pos-badge pitcher">[RHP]</span>
+                <span class="txn-badge">[RECALL]</span>
+              </div>
+              <div class="arrival-meta">Age 27 // Draft 2019</div>
+            </div>
+            <div class="arrival-date">2026-03-25</div>
+          </div>
+
+          <div class="arrival-route">
+            <span>[STP]</span>
+            <span>➔</span>
+            <span class="arrival-dest">[MIN]</span>
+          </div>
+
+          <div class="arrival-meta">2025-09-13</div>
+          <div class="arrival-note">Minnesota Twins selected the contract of RHP Cody Laweryson from St. Paul Saints.</div>
+        </article>
+        
+        <article class="arrival-card">
+          <div class="arrival-head">
+            <div>
+              <div class="arrival-name-row">
+                <h3 class="arrival-name">Christian Roa</h3>
+                <span class="pos-badge pitcher">[RHP]</span>
+                <span class="txn-badge">[RECALL]</span>
+              </div>
+              <div class="arrival-meta">Age 26 // Draft 2020</div>
+            </div>
+            <div class="arrival-date">2026-03-25</div>
+          </div>
+
+          <div class="arrival-route">
+            <span>[SL]</span>
+            <span>➔</span>
+            <span class="arrival-dest">[HOU]</span>
+          </div>
+
+          <div class="arrival-meta">2025-09-06</div>
+          <div class="arrival-note">Houston Astros selected the contract of RHP Christian Roa from Sugar Land Space Cowboys.</div>
+        </article>
+        
+        <article class="arrival-card">
+          <div class="arrival-head">
+            <div>
+              <div class="arrival-name-row">
+                <h3 class="arrival-name">Jose Franco</h3>
+                <span class="pos-badge pitcher">[RHP]</span>
+                <span class="txn-badge">[DEBUT]</span>
+              </div>
+              <div class="arrival-meta">Age 25</div>
+            </div>
+            <div class="arrival-date">2026-03-25</div>
+          </div>
+
+          <div class="arrival-route">
+            <span>[LOU]</span>
+            <span>➔</span>
+            <span class="arrival-dest">[CIN]</span>
+          </div>
+
+          <div class="arrival-meta">MLB debut pending</div>
+          <div class="arrival-note">Cincinnati Reds recalled RHP Jose Franco from Louisville Bats.</div>
+        </article>
+        
+      </div>
+    </section>
+    
+
+    <section class="signal-grid">
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Signal Layer</div>
+            <h2 class="section-title">Pitching Prospect Signals</h2>
+          </div>
+          <div class="section-badge">Top 5</div>
+        </div>
+
+        <div class="cards">
+          
+          <article class="player-card ">
+            <div class="player-top">
+              <div class="avatar">WI</div>
+              <div class="player-ident">
+                <div class="rankline">#1 Pitcher Trigger</div>
+                <h3 class="player-name">William Fleming</h3>
+                <div class="signal-line">Pitcher // Live Edge Signal // 39 BF</div>
+              </div>
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value ">43.8</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="pitcherGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#00e5ff" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline class="sparkline-path " stroke="url(#pitcherGradient1)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge positive">Bat-Miss Ready</span>
+              
+              <span class="status-badge positive">Command Hold</span>
+              
+              <span class="status-badge neutral">Promotion Watch</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">K/BB</div>
+                <div class="metric-value">4.50</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">K</div>
+                <div class="metric-value">9</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">BB</div>
+                <div class="metric-value">2</div>
+              </div>
+            </div>
+
+            <div class="why">K/BB 4.50, 9 K, 2 BB over 39 BF.</div>
+          </article>
+          
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Signal Layer</div>
+            <h2 class="section-title">Hitting Prospect Signals</h2>
+          </div>
+          <div class="section-badge">Top 5</div>
+        </div>
+
+        <div class="cards">
+          
+          <article class="player-card high-edge">
+            <div class="player-top">
+              <div class="avatar">SP</div>
+              <div class="player-ident">
+                <div class="rankline">#1 Hitter Trigger</div>
+                <h3 class="player-name">Spencer Packard</h3>
+                <div class="signal-line">Hitter // Live Edge Signal // 26 PA</div>
+              </div>
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value edge-up">79.7</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="hitterGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline class="sparkline-path glow" stroke="url(#hitterGradient1)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge positive">Impact Bat</span>
+              
+              <span class="status-badge positive">Zone Control</span>
+              
+              <span class="status-badge positive">HR Surge</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">ISO</div>
+                <div class="metric-value">0.300</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">K/BB</div>
+                <div class="metric-value">0.80</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">HR</div>
+                <div class="metric-value">2</div>
+              </div>
+            </div>
+
+            <div class="why">ISO 0.300, HR 2, BB 5 vs K 4 over 26 PA.</div>
+          </article>
+          
+          <article class="player-card high-edge">
+            <div class="player-top">
+              <div class="avatar">CH</div>
+              <div class="player-ident">
+                <div class="rankline">#2 Hitter Trigger</div>
+                <h3 class="player-name">Christian Franklin</h3>
+                <div class="signal-line">Hitter // Live Edge Signal // 33 PA</div>
+              </div>
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value edge-up">70.5</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="hitterGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline class="sparkline-path glow" stroke="url(#hitterGradient2)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge positive">Impact Bat</span>
+              
+              <span class="status-badge positive">Zone Control</span>
+              
+              <span class="status-badge neutral">Promotion Watch</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">ISO</div>
+                <div class="metric-value">0.269</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">K/BB</div>
+                <div class="metric-value">1.33</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">HR</div>
+                <div class="metric-value">1</div>
+              </div>
+            </div>
+
+            <div class="why">ISO 0.269, HR 1, BB 6 vs K 8 over 33 PA.</div>
+          </article>
+          
+          <article class="player-card ">
+            <div class="player-top">
+              <div class="avatar">JO</div>
+              <div class="player-ident">
+                <div class="rankline">#3 Hitter Trigger</div>
+                <h3 class="player-name">Jonathon Long</h3>
+                <div class="signal-line">Hitter // Live Edge Signal // 30 PA</div>
+              </div>
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value ">49.3</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="hitterGradient3" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#00e5ff" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline class="sparkline-path " stroke="url(#hitterGradient3)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge positive">Zone Control</span>
+              
+              <span class="status-badge neutral">Promotion Watch</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">ISO</div>
+                <div class="metric-value">0.000</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">K/BB</div>
+                <div class="metric-value">0.25</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">HR</div>
+                <div class="metric-value">0</div>
+              </div>
+            </div>
+
+            <div class="why">ISO 0.000, HR 0, BB 4 vs K 1 over 30 PA.</div>
+          </article>
+          
+          <article class="player-card ">
+            <div class="player-top">
+              <div class="avatar">T.</div>
+              <div class="player-ident">
+                <div class="rankline">#4 Hitter Trigger</div>
+                <h3 class="player-name">T.j. Rumfield</h3>
+                <div class="signal-line">Hitter // Live Edge Signal // 25 PA</div>
+              </div>
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value ">44.9</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="hitterGradient4" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#00e5ff" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline class="sparkline-path " stroke="url(#hitterGradient4)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge positive">Impact Bat</span>
+              
+              <span class="status-badge positive">HR Surge</span>
+              
+              <span class="status-badge neutral">Promotion Watch</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">ISO</div>
+                <div class="metric-value">0.261</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">K/BB</div>
+                <div class="metric-value">3.00</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">HR</div>
+                <div class="metric-value">2</div>
+              </div>
+            </div>
+
+            <div class="why">ISO 0.261, HR 2, BB 2 vs K 6 over 25 PA.</div>
+          </article>
+          
+          <article class="player-card ">
+            <div class="player-top">
+              <div class="avatar">JE</div>
+              <div class="player-ident">
+                <div class="rankline">#5 Hitter Trigger</div>
+                <h3 class="player-name">Jesus Rodriguez</h3>
+                <div class="signal-line">Hitter // Live Edge Signal // 27 PA</div>
+              </div>
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value ">28.0</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="hitterGradient5" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#00e5ff" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline class="sparkline-path " stroke="url(#hitterGradient5)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge neutral">Promotion Watch</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">ISO</div>
+                <div class="metric-value">0.000</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">K/BB</div>
+                <div class="metric-value">1.67</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">HR</div>
+                <div class="metric-value">0</div>
+              </div>
+            </div>
+
+            <div class="why">ISO 0.000, HR 0, BB 3 vs K 5 over 27 PA.</div>
+          </article>
+          
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      DiamondSignals Prospect Tracker // Generated During Netlify Build // America/New_York
+    </div>
+  </div>
+
+  <script>
+    function openGlossary() {
+      const overlay = document.getElementById("glossaryOverlay");
+      const drawer = document.getElementById("glossaryDrawer");
+      if (overlay) overlay.classList.add("open");
+      if (drawer) {
+        drawer.classList.add("open");
+        drawer.setAttribute("aria-hidden", "false");
+      }
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeGlossary() {
+      const overlay = document.getElementById("glossaryOverlay");
+      const drawer = document.getElementById("glossaryDrawer");
+      if (overlay) overlay.classList.remove("open");
+      if (drawer) {
+        drawer.classList.remove("open");
+        drawer.setAttribute("aria-hidden", "true");
+      }
+      document.body.style.overflow = "";
+    }
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeGlossary();
+      }
+    });
+  </script>
+</body>
+</html>
