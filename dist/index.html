@@ -1,0 +1,1771 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DiamondSignals — Signal Wall</title>
+  <style>
+    :root {
+      --bg: #080808;
+      --surface: #121212;
+      --surface-deep: #080808;
+      --card-radial: radial-gradient(circle at top left, #1a1a1a 0%, #080808 100%);
+      --border: #2d2d2d;
+      --text: #f0f0f0;
+      --muted: #71717a;
+      --soft: #a1a1aa;
+      --tiny: #8a8a93;
+      --emerald: #4ade80;
+      --lime-hot: #b6ff00;
+      --cyan-hot: #00e5ff;
+      --ghost-grey: #444444;
+      --crimson: #f87171;
+      --blue: #6aa6ff;
+      --shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
+      --radius: 18px;
+      --mono: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(106,166,255,0.06), transparent 24%),
+        radial-gradient(circle at top right, rgba(239,68,68,0.04), transparent 20%),
+        linear-gradient(180deg, #101010 0%, #080808 34%, #050505 100%);
+      line-height: 1.35;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(8, 8, 8, 0.90);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .topbar-inner,
+    .app {
+      width: min(1180px, calc(100% - 24px));
+      margin: 0 auto;
+    }
+
+    .topbar-inner {
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      background: var(--lime-hot);
+      box-shadow: 0 0 10px rgba(182,255,0,0.35);
+      animation: heartbeatPulse 2.2s infinite ease-in-out;
+      flex: 0 0 auto;
+    }
+
+    @keyframes heartbeatPulse {
+      0% {
+        opacity: 0.55;
+        transform: scale(0.88);
+        box-shadow: 0 0 0 0 rgba(182,255,0,0.00), 0 0 8px rgba(182,255,0,0.18);
+      }
+      35% {
+        opacity: 1;
+        transform: scale(1.18);
+        box-shadow: 0 0 0 6px rgba(182,255,0,0.10), 0 0 14px rgba(182,255,0,0.38);
+      }
+      70% {
+        opacity: 0.9;
+        transform: scale(1.00);
+        box-shadow: 0 0 0 12px rgba(182,255,0,0.00), 0 0 10px rgba(182,255,0,0.22);
+      }
+      100% {
+        opacity: 0.55;
+        transform: scale(0.88);
+        box-shadow: 0 0 0 0 rgba(182,255,0,0.00), 0 0 8px rgba(182,255,0,0.18);
+      }
+    }
+
+    @keyframes badgePulse {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
+    }
+
+    .brand-text {
+      min-width: 0;
+    }
+
+    .brand-kicker {
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .brand-white {
+      color: var(--text);
+    }
+
+    .brand-blue {
+      color: var(--blue);
+    }
+
+    .brand-title {
+      font-size: 16px;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+
+        .info-trigger {
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(182,255,0,0.22);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(182,255,0,0.08);
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .info-trigger:hover {
+      transform: translateY(-1px);
+      border-color: rgba(182,255,0,0.34);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .livebox {
+      text-align: right;
+      flex: 0 0 auto;
+    }
+
+    .topnav {
+      border-top: 1px solid rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.015);
+    }
+
+    .topnav-inner {
+      width: min(1180px, calc(100% - 24px));
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 10px 0;
+      scrollbar-width: none;
+    }
+
+    .topnav-inner::-webkit-scrollbar {
+      display: none;
+    }
+
+    .topnav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--soft);
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+      transition: opacity 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+    }
+
+    .topnav-link:hover {
+      opacity: 1;
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .topnav-link.active {
+      color: var(--text);
+      border-color: rgba(182,255,0,0.20);
+      box-shadow: 0 0 8px rgba(182,255,0,0.08);
+    }
+
+    .topnav-tag {
+      color: var(--lime-hot);
+    }
+
+    .live-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--lime-hot);
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--lime-hot);
+      box-shadow: 0 0 10px rgba(182,255,0,0.35);
+      animation: heartbeatPulse 2.2s infinite ease-in-out;
+    }
+
+    .live-time {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .glossary-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.52);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+      z-index: 80;
+    }
+
+    .glossary-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .glossary-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(560px, 100vw);
+      height: 100vh;
+      background: linear-gradient(180deg, #101010 0%, #080808 100%);
+      border-left: 1px solid rgba(255,255,255,0.08);
+      box-shadow: -12px 0 40px rgba(0,0,0,0.42);
+      transform: translateX(100%);
+      transition: transform 0.24s ease;
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .glossary-drawer.open {
+      transform: translateX(0);
+    }
+
+    .glossary-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .glossary-kicker {
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--blue);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .glossary-title {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .glossary-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .glossary-body {
+      overflow-y: auto;
+      padding: 18px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .glossary-section {
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      padding: 14px;
+    }
+
+    .glossary-section-title {
+      margin: 0 0 12px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--lime-hot);
+      font-weight: 800;
+      font-family: var(--mono);
+    }
+
+    .glossary-item {
+      margin-bottom: 12px;
+    }
+
+    .glossary-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .glossary-term {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      font-weight: 800;
+      font-family: var(--mono);
+    }
+
+    .glossary-definition {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--soft);
+    }
+
+    .app {
+      padding: 18px 0 34px;
+    }
+
+    .hero {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .hero-card,
+    .meta-card,
+    .section,
+    .player-card {
+      background: var(--card-radial);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before,
+    .meta-card::before,
+    .section::before,
+    .player-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      padding: 0.5px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.01));
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      opacity: 0.55;
+    }
+
+    .hero-card {
+      padding: 18px;
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--blue);
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .hero-title {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 7vw, 50px);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .hero-copy {
+      margin: 0;
+      max-width: 760px;
+      color: var(--soft);
+      font-size: 14px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .meta-card {
+      padding: 14px;
+    }
+
+    .meta-label,
+    .metric-label,
+    .sparkline-label,
+    .section-kicker,
+    .score-label,
+    .rankline,
+    .status-badge {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .meta-label {
+      margin-bottom: 6px;
+    }
+
+    .meta-value {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+      word-break: break-word;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .slate-heat-card {
+      padding: 14px;
+    }
+
+    .slate-heat-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .slate-heat-bar {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.04);
+      overflow: hidden;
+    }
+
+    .slate-heat-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #444444 0%, #b6ff00 100%);
+      box-shadow: 0 0 8px rgba(182,255,0,0.16);
+    }
+
+    .slate-heat-value {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .section {
+      overflow: hidden;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 16px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.008));
+      position: relative;
+    }
+
+    .section-head::after {
+      content: "◆";
+      position: absolute;
+      right: 76px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 30px;
+      color: rgba(255,255,255,0.03);
+      pointer-events: none;
+      letter-spacing: 0;
+    }
+
+    .section-kicker {
+      margin-bottom: 5px;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    .section-badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--soft);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(255,255,255,0.02);
+      white-space: nowrap;
+      position: relative;
+      z-index: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cards {
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .player-card {
+      padding: 14px;
+    }
+
+    .player-card.high-edge {
+      border-color: rgba(74,222,128,0.22);
+      box-shadow: var(--shadow), 0 0 8px rgba(74,222,128,0.07);
+    }
+
+    .player-card.regression {
+      border-color: rgba(248,113,113,0.22);
+      box-shadow: var(--shadow), 0 0 8px rgba(248,113,113,0.05);
+    }
+
+    .player-top {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      flex: 0 0 auto;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .player-ident {
+      min-width: 0;
+    }
+
+    .rankline {
+      margin-bottom: 4px;
+    }
+
+    .player-name {
+      font-size: 19px;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+      margin: 0 0 4px;
+      word-break: break-word;
+    }
+
+    .signal-line {
+      font-size: 11px;
+      color: var(--soft);
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .scorebox {
+      text-align: right;
+      min-width: 88px;
+    }
+
+    .score-label {
+      margin-bottom: 4px;
+    }
+
+    .score-value {
+      font-family: var(--mono);
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 800;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .score-value.edge-up {
+      color: var(--emerald);
+      text-shadow: 0 0 6px rgba(74,222,128,0.18);
+    }
+
+    .score-value.edge-down {
+      color: var(--crimson);
+      text-shadow: 0 0 6px rgba(248,113,113,0.18);
+    }
+
+    .sparkline-wrap {
+      margin: 0 0 12px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.015);
+    }
+
+    .sparkline-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .sparkline-note {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--tiny);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    svg.sparkline {
+      display: block;
+      width: 100%;
+      height: 34px;
+    }
+
+    .sparkline-path {
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .sparkline-path.glow {
+      filter: drop-shadow(0 0 2px rgba(182, 255, 0, 0.5));
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .metric {
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 10px 10px 9px;
+      background: rgba(255,255,255,0.02);
+      min-width: 0;
+    }
+
+    .metric-label {
+      margin-bottom: 6px;
+    }
+
+    .metric-value {
+      font-family: var(--mono);
+      font-size: 15px;
+      line-height: 1.1;
+      color: var(--text);
+      font-weight: 700;
+      word-break: break-word;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 12px;
+    }
+
+    .status-badge {
+      line-height: 1;
+      border-radius: 999px;
+      padding: 7px 9px;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--soft);
+      background: rgba(255,255,255,0.02);
+      font-family: var(--mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .status-badge.positive {
+      color: var(--emerald);
+      border-color: rgba(74,222,128,0.18);
+      box-shadow: 0 0 6px rgba(74,222,128,0.08);
+      background: rgba(74,222,128,0.03);
+    }
+
+    .status-badge.negative {
+      color: var(--crimson);
+      border-color: rgba(248,113,113,0.18);
+      box-shadow: 0 0 6px rgba(248,113,113,0.06);
+      background: rgba(248,113,113,0.03);
+    }
+
+    .status-badge.neutral {
+      color: var(--soft);
+      border-color: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .status-badge.active-pulse {
+      animation: badgePulse 2.2s infinite ease-in-out;
+    }
+
+    .why {
+      font-size: 10px;
+      line-height: 1.45;
+      color: var(--tiny);
+      font-family: var(--mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .footer {
+      padding: 16px 4px 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (min-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1.35fr 0.9fr;
+        align-items: stretch;
+      }
+
+      .board {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-inner,
+      .app,
+      .topnav-inner {
+        width: min(100%, calc(100% - 16px));
+      }
+
+      .topbar-inner {
+        min-height: 58px;
+      }
+
+      .brand-title {
+        font-size: 14px;
+      }
+
+      .livebox {
+        max-width: 44%;
+      }
+
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .player-name {
+        font-size: 17px;
+      }
+
+      .score-value {
+        font-size: 24px;
+      }
+
+      .section-head::after {
+        right: 64px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div class="brand-text">
+          <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
+          <div class="brand-title">Signal Wall // Institutional Elite</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="info-trigger" type="button" onclick="openGlossary()" aria-label="Open glossary">ⓘ Glossary</button>
+        <div class="livebox">
+          <div class="live-label"><span class="live-dot"></span>LIVE</div>
+          <div class="live-time">2026-03-29 01:35 PM</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topnav">
+  <div class="topnav-inner">
+    <a class="topnav-link active" href="/"><span class="topnav-tag">[ LIVE ]</span> Signal Wall</a>
+    <a class="topnav-link " href="/typical-call-up"><span class="topnav-tag">[ SCOUT ]</span> AAA/AA Promotion Watch</a>
+    <a class="topnav-link " href="/ivb-heat-map"><span class="topnav-tag">[ LAB ]</span> IVB Heat Map</a>
+    <a class="topnav-link " href="/hidden-gems"><span class="topnav-tag">[ EDGE ]</span> Hidden Gems Pipeline</a>
+    <a class="topnav-link" href="https://diamondsignals.ai"><span class="topnav-tag">[ SITE ]</span> Back to Main Site</a>
+  </div>
+</div>
+
+  <div id="glossaryOverlay" class="glossary-overlay" onclick="closeGlossary()"></div>
+
+  <aside id="glossaryDrawer" class="glossary-drawer" aria-hidden="true">
+    <div class="glossary-head">
+      <div>
+        <div class="glossary-kicker">DiamondSignals Intelligence</div>
+        <h2 class="glossary-title">Glossary</h2>
+      </div>
+      <button class="glossary-close" type="button" onclick="closeGlossary()" aria-label="Close glossary">×</button>
+    </div>
+
+    <div class="glossary-body">
+      <section class="glossary-section">
+        <h3 class="glossary-section-title">I. Global System Metrics</h3>
+
+        <div class="glossary-item">
+          <span class="glossary-term">Slate Heat</span>
+          <div class="glossary-definition">
+            A model-driven index of total opportunity across the day's schedule. A full Neon Green bar indicates a high density of ballistic anomalies, suggesting a target-rich day for fantasy and DFS adjustments.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">System Status</span>
+          <div class="glossary-definition">
+            Confirms the state of the live data pipeline. Our Python architecture monitors 750+ Ballistic Profiles in real-time, pulling direct Statcast feeds to detect skill shifts before they hit the box score.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">Edge Score</span>
+          <div class="glossary-definition">
+            A 0–100 proprietary ranking that quantifies the strength of a signal. Higher scores indicate high-conviction buy opportunities based on rolling ballistic data.
+          </div>
+        </div>
+      </section>
+
+      <section class="glossary-section">
+        <h3 class="glossary-section-title">II. The Ballistic Terminal (Pitching)</h3>
+
+        <div class="glossary-item">
+          <span class="glossary-term">IVB (Induced Vertical Break)</span>
+          <div class="glossary-definition">
+            The secret sauce of pitching. It measures how much a pitch defies gravity and rises. Spikes in IVB are the primary indicator of increased whiff rates.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">VAA (Vertical Approach Angle)</span>
+          <div class="glossary-definition">
+            The angle at which a pitch enters the zone. Flat VAAs at the top of the zone create an elite look that hitters cannot adjust to in time.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">FB Velo / Extension</span>
+          <div class="glossary-definition">
+            We track raw velocity alongside physical extension, or how close to the plate the ball is released. Higher extension creates perceived velocity, making a 95 mph pitch feel closer to 98.
+          </div>
+        </div>
+      </section>
+
+      <section class="glossary-section">
+        <h3 class="glossary-section-title">III. Impact & Power Metrics (Hitting)</h3>
+
+        <div class="glossary-item">
+          <span class="glossary-term">Avg / Max EV (Exit Velocity)</span>
+          <div class="glossary-definition">
+            The speed of the ball off the bat. Sudden jumps in Max EV indicate a physical breakthrough in a player’s raw power ceiling.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">Barrel-Like %</span>
+          <div class="glossary-definition">
+            Hits that fall into the optimal launch-angle-plus-velocity bucket. This is one of the strongest leading indicators for upcoming home run production.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">EV Burst</span>
+          <div class="glossary-definition">
+            An automated trigger that fires when a player’s hard-hit profile deviates significantly from their 30-day baseline.
+          </div>
+        </div>
+      </section>
+
+      <section class="glossary-section">
+        <h3 class="glossary-section-title">IV. Understanding the Player Trend Cards</h3>
+
+        <div class="glossary-item">
+          <span class="glossary-term">7 Day Rolling Trend Analysis</span>
+          <div class="glossary-definition">
+            Each player card features a 7-day rolling trend view. Read the visual data as a signal context tool, not a full historical chart.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">The Baseline</span>
+          <div class="glossary-definition">
+            The dimmer or gray line represents the player’s established seasonal average. It is the market value of the player.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">The Signal</span>
+          <div class="glossary-definition">
+            The bright Neon Green line tracks the actual data from the last 7 days.
+          </div>
+        </div>
+
+        <div class="glossary-item">
+          <span class="glossary-term">The Edge</span>
+          <div class="glossary-definition">
+            When you see the Neon Green line pull away from the gray baseline, the system has confirmed a breakout signal. The gap between those two lines is the working edge between what the player is doing now and what the market still thinks they are doing.
+          </div>
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <div class="app">
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-card">
+          <div class="eyebrow">Executive Terminal</div>
+          <h1 class="hero-title">Today’s Signal Wall</h1>
+          <p class="hero-copy">
+            A live, mobile-first DiamondSignals board built for fast scan readability.
+            Institutional dark surfaces, terminal-grade data density, and restrained signal emphasis.
+          </p>
+        </div>
+
+        <div class="meta-grid">
+          <div class="meta-card">
+            <div class="meta-label">Last Updated</div>
+            <div class="meta-value">2026-03-29 01:35 PM</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Lookback</div>
+            <div class="meta-value">28D / 7D Split</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Alert Threshold</div>
+            <div class="meta-value">65+</div>
+          </div>
+        </div>
+
+        <div class="meta-card slate-heat-card">
+          <div class="meta-label">Slate Heat</div>
+          <div class="slate-heat-row">
+            <div class="slate-heat-bar">
+              <div class="slate-heat-fill" style="width: 74%;"></div>
+            </div>
+            <div class="slate-heat-value">74</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Pitching Board</div>
+            <h2 class="section-title">Top 5 Pitchers</h2>
+          </div>
+          <div class="section-badge">Live Ranked</div>
+        </div>
+
+        <div class="cards">
+          
+          <article class="player-card high-edge">
+            <div class="player-top">
+              <div class="avatar">MI</div>
+
+              <div class="player-ident">
+                <div class="rankline">#1 Pitcher Trigger</div>
+                <h3 class="player-name">Misiorowski, Jacob</h3>
+                <div class="signal-line">Pitcher // Live Edge Signal // 95 P</div>
+              </div>
+
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value edge-up">75.2</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="pitcherGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline
+                  class="sparkline-path glow"
+                  stroke="url(#pitcherGradient1)"
+                  points="0,26.0 20,23.3 40,20.7 60,18.0 80,15.3 100,12.7 120,10.0" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge positive">Whiff Lift</span>
+              
+              <span class="status-badge neutral">Trend Confirming</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">Whiff %</div>
+                <div class="metric-value">25.3</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">FB Velo</div>
+                <div class="metric-value">98.3</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Extension</div>
+                <div class="metric-value">7.2 ft</div>
+              </div>
+            </div>
+
+            <div class="why">Whiff rate 25.3% (+0.1 pts vs baseline), FB velo 98.3 mph (+0.2).</div>
+          </article>
+          
+          <article class="player-card high-edge">
+            <div class="player-top">
+              <div class="avatar">BO</div>
+
+              <div class="player-ident">
+                <div class="rankline">#2 Pitcher Trigger</div>
+                <h3 class="player-name">Boyd, Matthew</h3>
+                <div class="signal-line">Pitcher // Live Edge Signal // 63 P</div>
+              </div>
+
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value edge-up">70.8</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="pitcherGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline
+                  class="sparkline-path glow"
+                  stroke="url(#pitcherGradient2)"
+                  points="0,26.0 20,23.3 40,20.7 60,18.0 80,15.3 100,12.7 120,10.0" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge positive">Whiff Lift</span>
+              
+              <span class="status-badge positive">Extension Gain</span>
+              
+              <span class="status-badge neutral">Trend Confirming</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">Whiff %</div>
+                <div class="metric-value">28.6</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">FB Velo</div>
+                <div class="metric-value">93.3</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Extension</div>
+                <div class="metric-value">6.4 ft</div>
+              </div>
+            </div>
+
+            <div class="why">Whiff rate 28.6% (+0.2 pts vs baseline), FB velo 93.3 mph (-0.1).</div>
+          </article>
+          
+          <article class="player-card high-edge">
+            <div class="player-top">
+              <div class="avatar">SC</div>
+
+              <div class="player-ident">
+                <div class="rankline">#3 Pitcher Trigger</div>
+                <h3 class="player-name">Schlittler, Cam</h3>
+                <div class="signal-line">Pitcher // Live Edge Signal // 69 P</div>
+              </div>
+
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value edge-up">68.7</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="pitcherGradient3" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline
+                  class="sparkline-path glow"
+                  stroke="url(#pitcherGradient3)"
+                  points="0,26.0 20,23.3 40,20.7 60,18.0 80,15.3 100,12.7 120,10.0" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge positive">Whiff Lift</span>
+              
+              <span class="status-badge positive">Extension Gain</span>
+              
+              <span class="status-badge neutral">Trend Confirming</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">Whiff %</div>
+                <div class="metric-value">18.8</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">FB Velo</div>
+                <div class="metric-value">97.2</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Extension</div>
+                <div class="metric-value">6.7 ft</div>
+              </div>
+            </div>
+
+            <div class="why">Whiff rate 18.8% (+0.1 pts vs baseline), FB velo 97.2 mph (+0.6).</div>
+          </article>
+          
+          <article class="player-card high-edge">
+            <div class="player-top">
+              <div class="avatar">CE</div>
+
+              <div class="player-ident">
+                <div class="rankline">#4 Pitcher Trigger</div>
+                <h3 class="player-name">Cease, Dylan</h3>
+                <div class="signal-line">Pitcher // Live Edge Signal // 173 P</div>
+              </div>
+
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value edge-up">65.7</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="pitcherGradient4" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline
+                  class="sparkline-path "
+                  stroke="url(#pitcherGradient4)"
+                  points="0,26.0 20,26.0 40,26.0 60,26.0 80,26.0 100,26.0 120,10.0" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge neutral">Trend Confirming</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">Whiff %</div>
+                <div class="metric-value">22.0</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">FB Velo</div>
+                <div class="metric-value">97.6</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Extension</div>
+                <div class="metric-value">6.4 ft</div>
+              </div>
+            </div>
+
+            <div class="why">Whiff rate 22.0% (+0.0 pts vs baseline), FB velo 97.6 mph (+0.0).</div>
+          </article>
+          
+          <article class="player-card high-edge">
+            <div class="player-top">
+              <div class="avatar">BL</div>
+
+              <div class="player-ident">
+                <div class="rankline">#5 Pitcher Trigger</div>
+                <h3 class="player-name">Blubaugh, Aj</h3>
+                <div class="signal-line">Pitcher // Live Edge Signal // 72 P</div>
+              </div>
+
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value edge-up">65.2</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="pitcherGradient5" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline
+                  class="sparkline-path glow"
+                  stroke="url(#pitcherGradient5)"
+                  points="0,26.0 20,26.0 40,26.0 60,26.0 80,26.0 100,26.0 120,10.0" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge positive">Whiff Lift</span>
+              
+              <span class="status-badge positive">Velo Jump</span>
+              
+              <span class="status-badge neutral">Trend Confirming</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">Whiff %</div>
+                <div class="metric-value">16.7</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">FB Velo</div>
+                <div class="metric-value">94.8</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Extension</div>
+                <div class="metric-value">6.5 ft</div>
+              </div>
+            </div>
+
+            <div class="why">Whiff rate 16.7% (+0.1 pts vs baseline), FB velo 94.8 mph (+2.4).</div>
+          </article>
+          
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Hitting Board</div>
+            <h2 class="section-title">Top 5 Hitters</h2>
+          </div>
+          <div class="section-badge">Live Ranked</div>
+        </div>
+
+        <div class="cards">
+          
+          <article class="player-card high-edge">
+            <div class="player-top">
+              <div class="avatar">RI</div>
+
+              <div class="player-ident">
+                <div class="rankline">#1 Hitter Trigger</div>
+                <h3 class="player-name">Richie Palacios</h3>
+                <div class="signal-line">Hitter // Live Edge Signal // 10 BBE</div>
+              </div>
+
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value edge-up">81.5</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="hitterGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline
+                  class="sparkline-path glow"
+                  stroke="url(#hitterGradient1)"
+                  points="0,26.0 20,26.0 40,26.0 60,26.0 80,10.0 100,17.9 120,11.9" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge positive active-pulse">EV Burst</span>
+              
+              <span class="status-badge positive active-pulse">Barrel Jump</span>
+              
+              <span class="status-badge neutral ">Trend Confirming</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">Avg EV</div>
+                <div class="metric-value">89.0</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Barrel-like %</div>
+                <div class="metric-value">20.0</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Max EV</div>
+                <div class="metric-value">106.5</div>
+              </div>
+            </div>
+
+            <div class="why">Avg EV 89.0 mph (+12.5 vs baseline), barrel-like rate 20.0%.</div>
+          </article>
+          
+          <article class="player-card high-edge">
+            <div class="player-top">
+              <div class="avatar">AN</div>
+
+              <div class="player-ident">
+                <div class="rankline">#2 Hitter Trigger</div>
+                <h3 class="player-name">Andrés Chaparro</h3>
+                <div class="signal-line">Hitter // Live Edge Signal // 6 BBE</div>
+              </div>
+
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value edge-up">81.0</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="hitterGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline
+                  class="sparkline-path glow"
+                  stroke="url(#hitterGradient2)"
+                  points="0,10.0 20,10.0 40,10.0 60,10.0 80,26.0 100,21.8 120,22.1" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge positive active-pulse">EV Burst</span>
+              
+              <span class="status-badge positive active-pulse">Barrel Jump</span>
+              
+              <span class="status-badge positive ">Impact EV</span>
+              
+              <span class="status-badge neutral ">Trend Confirming</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">Avg EV</div>
+                <div class="metric-value">95.3</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Barrel-like %</div>
+                <div class="metric-value">16.7</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Max EV</div>
+                <div class="metric-value">108.9</div>
+              </div>
+            </div>
+
+            <div class="why">Avg EV 95.3 mph (+7.3 vs baseline), barrel-like rate 16.7%.</div>
+          </article>
+          
+          <article class="player-card high-edge">
+            <div class="player-top">
+              <div class="avatar">AL</div>
+
+              <div class="player-ident">
+                <div class="rankline">#3 Hitter Trigger</div>
+                <h3 class="player-name">Alex Bregman</h3>
+                <div class="signal-line">Hitter // Live Edge Signal // 17 BBE</div>
+              </div>
+
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value edge-up">78.7</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="hitterGradient3" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline
+                  class="sparkline-path glow"
+                  stroke="url(#hitterGradient3)"
+                  points="0,18.4 20,18.4 40,18.4 60,10.0 80,10.2 100,26.0 120,21.8" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge positive active-pulse">EV Burst</span>
+              
+              <span class="status-badge positive active-pulse">Barrel Jump</span>
+              
+              <span class="status-badge positive ">Impact EV</span>
+              
+              <span class="status-badge neutral ">Trend Confirming</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">Avg EV</div>
+                <div class="metric-value">94.9</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Barrel-like %</div>
+                <div class="metric-value">11.8</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Max EV</div>
+                <div class="metric-value">108.3</div>
+              </div>
+            </div>
+
+            <div class="why">Avg EV 94.9 mph (+7.6 vs baseline), barrel-like rate 11.8%.</div>
+          </article>
+          
+          <article class="player-card high-edge">
+            <div class="player-top">
+              <div class="avatar">J.</div>
+
+              <div class="player-ident">
+                <div class="rankline">#4 Hitter Trigger</div>
+                <h3 class="player-name">J. T. Realmuto</h3>
+                <div class="signal-line">Hitter // Live Edge Signal // 10 BBE</div>
+              </div>
+
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value edge-up">77.2</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="hitterGradient4" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline
+                  class="sparkline-path glow"
+                  stroke="url(#hitterGradient4)"
+                  points="0,18.5 20,18.5 40,18.5 60,18.5 80,10.0 100,26.0 120,17.2" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge positive active-pulse">EV Burst</span>
+              
+              <span class="status-badge positive active-pulse">Barrel Jump</span>
+              
+              <span class="status-badge positive ">Impact EV</span>
+              
+              <span class="status-badge neutral ">Trend Confirming</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">Avg EV</div>
+                <div class="metric-value">89.0</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Barrel-like %</div>
+                <div class="metric-value">20.0</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Max EV</div>
+                <div class="metric-value">108.4</div>
+              </div>
+            </div>
+
+            <div class="why">Avg EV 89.0 mph (+4.5 vs baseline), barrel-like rate 20.0%.</div>
+          </article>
+          
+          <article class="player-card high-edge">
+            <div class="player-top">
+              <div class="avatar">DI</div>
+
+              <div class="player-ident">
+                <div class="rankline">#5 Hitter Trigger</div>
+                <h3 class="player-name">Dillon Dingler</h3>
+                <div class="signal-line">Hitter // Live Edge Signal // 14 BBE</div>
+              </div>
+
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value edge-up">76.5</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="hitterGradient5" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline
+                  class="sparkline-path glow"
+                  stroke="url(#hitterGradient5)"
+                  points="0,12.4 20,12.4 40,12.4 60,25.7 80,10.0 100,22.9 120,26.0" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge positive active-pulse">EV Burst</span>
+              
+              <span class="status-badge positive active-pulse">Barrel Jump</span>
+              
+              <span class="status-badge positive ">Impact EV</span>
+              
+              <span class="status-badge neutral ">Trend Confirming</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric">
+                <div class="metric-label">Avg EV</div>
+                <div class="metric-value">89.6</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Barrel-like %</div>
+                <div class="metric-value">14.3</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Max EV</div>
+                <div class="metric-value">109.0</div>
+              </div>
+            </div>
+
+            <div class="why">Avg EV 89.6 mph (+8.8 vs baseline), barrel-like rate 14.3%.</div>
+          </article>
+          
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      DiamondSignals Signal Wall // Generated During Netlify Build // America/New_York
+    </div>
+  </div>
+
+  <script>
+    function openGlossary() {
+      const overlay = document.getElementById("glossaryOverlay");
+      const drawer = document.getElementById("glossaryDrawer");
+      if (overlay) overlay.classList.add("open");
+      if (drawer) {
+        drawer.classList.add("open");
+        drawer.setAttribute("aria-hidden", "false");
+      }
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeGlossary() {
+      const overlay = document.getElementById("glossaryOverlay");
+      const drawer = document.getElementById("glossaryDrawer");
+      if (overlay) overlay.classList.remove("open");
+      if (drawer) {
+        drawer.classList.remove("open");
+        drawer.setAttribute("aria-hidden", "true");
+      }
+      document.body.style.overflow = "";
+    }
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeGlossary();
+      }
+    });
+  </script>
+</body>
+</html>
