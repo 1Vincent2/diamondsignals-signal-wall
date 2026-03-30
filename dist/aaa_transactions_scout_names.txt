@@ -1,0 +1,21 @@
+2026-03-25 | JJ Wetherholt | arrival_to_mlb | Memphis Redbirds -> St. Louis Cardinals
+2026-03-25 | Cody Laweryson | arrival_to_mlb | St. Paul Saints -> Minnesota Twins
+2026-03-25 | Christian Cairo | arrival_to_mlb | Lehigh Valley IronPigs -> Philadelphia Phillies
+2026-03-25 | Chase Lee | returned_to_aaa | Toronto Blue Jays -> Buffalo Bisons
+2026-03-25 | Carson Benge | arrival_to_mlb | Syracuse Mets -> New York Mets
+2026-03-25 | Alex Hoppe | returned_to_aaa | Seattle Mariners -> Tacoma Rainiers
+2026-03-25 | Justin Crawford | arrival_to_mlb | Lehigh Valley IronPigs -> Philadelphia Phillies
+2026-03-25 | Christian Cairo | returned_to_aaa | Philadelphia Phillies -> Lehigh Valley IronPigs
+2026-03-25 | Jose Franco | arrival_to_mlb | Louisville Bats -> Cincinnati Reds
+2026-03-25 | Zach Cole | returned_to_aaa | Houston Astros -> Sugar Land Space Cowboys
+2026-03-25 | Brandyn Garcia | returned_to_aaa | Arizona Diamondbacks -> Reno Aces
+2026-03-25 | TJ Rumfield | arrival_to_mlb | Albuquerque Isotopes -> Colorado Rockies
+2026-03-25 | Seth Halvorsen | returned_to_aaa | Colorado Rockies -> Albuquerque Isotopes
+2026-03-25 | Christian Roa | arrival_to_mlb | Sugar Land Space Cowboys -> Houston Astros
+2026-03-25 | Anthony Nunez | arrival_to_mlb | Norfolk Tides -> Baltimore Orioles
+2026-03-26 | Bryan Ramos | returned_to_aaa | Baltimore Orioles -> Norfolk Tides
+2026-03-27 | Braxton Fulford | arrival_to_mlb | Albuquerque Isotopes -> Colorado Rockies
+2026-03-27 | Cole Wilcox | arrival_to_mlb | Tacoma Rainiers -> Seattle Mariners
+2026-03-28 | Deyvison De Los Santos | arrival_to_mlb | Jacksonville Jumbo Shrimp -> Miami Marlins
+2026-03-28 | Jeferson Quero | arrival_to_mlb | Nashville Sounds -> Milwaukee Brewers
+2026-03-29 | Walbert Urena | returned_to_aaa | Los Angeles Angels -> Salt Lake Bees
