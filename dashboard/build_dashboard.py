@@ -2557,18 +2557,21 @@ def write_scout_shell() -> None:
     </section>
 
     <section class="section-card player-id-grid">
-      <div class="headshot-shell">Headshot</div>
+      <div class="headshot-shell" id="scoutHeadshotWrap">
+  <img id="scoutHeadshot" alt="Player headshot" style="width:100%;height:100%;object-fit:cover;border-radius:24px;display:none;" />
+  <span id="scoutHeadshotFallback">Headshot</span>
+</div>
 
       <div>
         <div class="player-kicker">Player ID Card</div>
-        <h2 class="player-name">Player Name</h2>
+        <h2 class="player-name" id="scoutPlayerName">Player Name</h2>
 
         <div class="player-meta">
-          <span class="meta-pill">Team</span>
-          <span class="meta-pill">Position</span>
-          <span class="meta-pill">B/T</span>
-          <span class="meta-pill">Status</span>
-        </div>
+  <span class="meta-pill" id="scoutTeam">Team</span>
+  <span class="meta-pill" id="scoutPosition">Position</span>
+  <span class="meta-pill" id="scoutBT">B/T</span>
+  <span class="meta-pill" id="scoutStatus">Status</span>
+</div>
       </div>
 
       <div class="signal-stack">
@@ -2651,6 +2654,48 @@ def write_scout_shell() -> None:
       </p>
     </section>
   </div>
+  <script>
+  async function loadScoutPlayer() {
+    const pathParts = window.location.pathname.split("/").filter(Boolean);
+    const playerId = pathParts.length >= 2 ? pathParts[1] : null;
+
+    if (!playerId) {
+      return;
+    }
+
+    try {
+      const res = await fetch("/player_index.json");
+      const payload = await res.json();
+      const players = Array.isArray(payload.players) ? payload.players : [];
+      const player = players.find((p) => String(p.player_id) === String(playerId));
+
+      if (!player) {
+        document.getElementById("scoutPlayerName").textContent = "Player Not Found";
+        return;
+      }
+
+      document.title = `DiamondSignals // ${player.full_name}`;
+      document.getElementById("scoutPlayerName").textContent = player.full_name || "Unknown Player";
+      document.getElementById("scoutTeam").textContent = player.team || "Team";
+      document.getElementById("scoutPosition").textContent = player.position || "Position";
+      document.getElementById("scoutBT").textContent = `${player.bats || "-"} / ${player.throws || "-"}`;
+      document.getElementById("scoutStatus").textContent = player.status || "Status";
+
+      const img = document.getElementById("scoutHeadshot");
+      const fallback = document.getElementById("scoutHeadshotFallback");
+
+      if (player.headshot_url) {
+        img.src = player.headshot_url;
+        img.style.display = "block";
+        fallback.style.display = "none";
+      }
+    } catch (error) {
+      document.getElementById("scoutPlayerName").textContent = "Scout Load Error";
+    }
+  }
+
+  loadScoutPlayer();
+</script>
 </body>
 </html>
 """
