@@ -749,52 +749,96 @@
     </section>
   </div>
   <script src="/player-search.js"></script>
-  <script>
-    function formatPct(value) {
-      if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
-      return `${Number(value).toFixed(1)}%`;
+<script>
+  function formatPct(value) {
+    if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
+    return `${Number(value).toFixed(1)}%`;
+  }
+
+  function format1(value) {
+    if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
+    return Number(value).toFixed(1);
+  }
+
+  function formatAvg(value) {
+    if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
+    return Number(value).toFixed(3).replace(/^0/, "");
+  }
+
+  function formatSigned3(value) {
+    if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
+    const n = Number(value);
+    const s = n.toFixed(3).replace(/^0/, "");
+    return n > 0 ? `+${s}` : s;
+  }
+
+  async function loadScoutPlayer() {
+    const pathParts = window.location.pathname.split("/").filter(Boolean);
+    const playerId = pathParts.length >= 2 ? pathParts[1] : null;
+
+    if (!playerId) {
+      return;
     }
 
-    function format1(value) {
-      if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
-      return Number(value).toFixed(1);
-    }
+    try {
+      const [playerRes, metricsRes] = await Promise.all([
+        fetch("/player_index.json"),
+        fetch("/scout_metrics.json")
+      ]);
 
-    async function loadScoutPlayer() {
-      const pathParts = window.location.pathname.split("/").filter(Boolean);
-      const playerId = pathParts.length >= 2 ? pathParts[1] : null;
+      const playerPayload = await playerRes.json();
+      const metricsPayload = await metricsRes.json();
 
-      if (!playerId) {
+      const players = Array.isArray(playerPayload.players) ? playerPayload.players : [];
+      const player = players.find((p) => String(p.player_id) === String(playerId));
+      const scoutMetrics = metricsPayload && metricsPayload.players
+        ? metricsPayload.players[String(playerId)]
+        : null;
+
+      if (!player) {
+        document.getElementById("scoutPlayerName").textContent = "Player Not Found";
         return;
       }
 
-      try {
-        const res = await fetch("/player_index.json");
-        const payload = await res.json();
-        const players = Array.isArray(payload.players) ? payload.players : [];
-        const player = players.find((p) => String(p.player_id) === String(playerId));
+      document.title = `DiamondSignals // ${player.full_name}`;
+      document.getElementById("scoutPlayerName").textContent = player.full_name || "Unknown Player";
+      document.getElementById("scoutTeam").textContent = player.team || "Team";
+      document.getElementById("scoutPosition").textContent = player.position || "Position";
+      document.getElementById("scoutBT").textContent = `${player.bats || "-"} / ${player.throws || "-"}`;
+      document.getElementById("scoutStatus").textContent = player.status || "Status";
 
-        if (!player) {
-          document.getElementById("scoutPlayerName").textContent = "Player Not Found";
-          return;
-        }
+      const img = document.getElementById("scoutHeadshot");
+      const fallback = document.getElementById("scoutHeadshotFallback");
 
-        document.title = `DiamondSignals // ${player.full_name}`;
-        document.getElementById("scoutPlayerName").textContent = player.full_name || "Unknown Player";
-        document.getElementById("scoutTeam").textContent = player.team || "Team";
-        document.getElementById("scoutPosition").textContent = player.position || "Position";
-        document.getElementById("scoutBT").textContent = `${player.bats || "-"} / ${player.throws || "-"}`;
-        document.getElementById("scoutStatus").textContent = player.status || "Status";
+      if (player.headshot_url) {
+        img.src = player.headshot_url;
+        img.style.display = "block";
+        fallback.style.display = "none";
+      }
 
-        const img = document.getElementById("scoutHeadshot");
-        const fallback = document.getElementById("scoutHeadshotFallback");
+      document.getElementById("scoutSignalPill").textContent = player.position === "P" ? "PITCHER DOSSIER" : "HITTER DOSSIER";
+      document.getElementById("scoutTrendPill").textContent = "LIVE PROFILE";
+      document.getElementById("scoutConfidencePill").textContent = "DATA V1";
 
-        if (player.headshot_url) {
-          img.src = player.headshot_url;
-          img.style.display = "block";
-          fallback.style.display = "none";
-        }
+      if (scoutMetrics && scoutMetrics.player_type === "hitter") {
+        document.getElementById("metricAvgEv").textContent = format1(scoutMetrics.ballistics.avg_ev);
+        document.getElementById("metricMaxEv").textContent = format1(scoutMetrics.ballistics.max_ev);
+        document.getElementById("metricHardHit").textContent = formatPct(scoutMetrics.ballistics.hard_hit_pct);
+        document.getElementById("metricExtension").textContent = "--";
 
+        document.getElementById("metricSweetSpot").textContent = formatPct(scoutMetrics.movement.sweet_spot_pct);
+        document.getElementById("metricBarrel").textContent = formatPct(scoutMetrics.movement.barrel_pct);
+        document.getElementById("metricLaunchAngle").textContent = format1(scoutMetrics.movement.launch_angle);
+        document.getElementById("metricMovementEdge").textContent = formatSigned3(scoutMetrics.movement.movement_edge);
+
+        document.getElementById("metricAvg").textContent = formatAvg(scoutMetrics.results.avg);
+        document.getElementById("metricKRate").textContent = formatPct(scoutMetrics.results.k_rate);
+        document.getElementById("metricWrcPlus").textContent = scoutMetrics.results.wrc_plus ?? "--";
+        document.getElementById("metricSignalLabel").textContent = scoutMetrics.results.signal_label || "NEUTRAL";
+
+        document.getElementById("scoutBriefingCopy").textContent =
+          scoutMetrics.briefing || "Live hitter profile loaded.";
+      } else {
         document.getElementById("metricAvgEv").textContent = "--";
         document.getElementById("metricMaxEv").textContent = "--";
         document.getElementById("metricHardHit").textContent = "--";
@@ -810,20 +854,17 @@
         document.getElementById("metricWrcPlus").textContent = "--";
         document.getElementById("metricSignalLabel").textContent = "PROFILE LOADING";
 
-        document.getElementById("scoutSignalPill").textContent = player.position === "P" ? "PITCHER DOSSIER" : "HITTER DOSSIER";
-        document.getElementById("scoutTrendPill").textContent = "LIVE PROFILE";
-        document.getElementById("scoutConfidencePill").textContent = "DATA V1";
-
         document.getElementById("scoutBriefingCopy").textContent =
           player.position === "P"
             ? "Pitcher dossier shell is live. Next step is hydrating fastball velocity, extension, IVB, VAA, whiff rate, strikeout rate, and DiamondSignals pitcher assessment logic."
             : "Hitter dossier shell is live. Next step is hydrating avg EV, max EV, hard-hit rate, sweet-spot rate, barrel rate, launch angle, results metrics, and DiamondSignals hitter assessment logic.";
-      } catch (error) {
-        document.getElementById("scoutPlayerName").textContent = "Scout Load Error";
       }
+    } catch (error) {
+      document.getElementById("scoutPlayerName").textContent = "Scout Load Error";
     }
+  }
 
-    loadScoutPlayer();
-  </script>
+  loadScoutPlayer();
+</script>
 </body>
 </html>
