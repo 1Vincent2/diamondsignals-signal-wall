@@ -11,6 +11,8 @@ export default async (request: Request, context: any) => {
     "/favicon",
     "/robots.txt",
     "/signals.json",
+    "/player_index.json",
+    "/.netlify/functions/",
   ]
 
   const isPublic = publicPrefixes.some((prefix) => path.startsWith(prefix))
