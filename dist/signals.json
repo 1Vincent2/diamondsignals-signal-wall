@@ -1,79 +1,169 @@
 {
-  "generated_at": "2026-03-30T10:18:52.572861",
+  "generated_at": "2026-03-31T17:30:17.435888",
   "top_pitchers": [
     {
-      "player_name": "William Fleming",
-      "org": "Seattle Mariners",
-      "edge_score": 43.8,
-      "metric_1_label": "K/BB",
-      "metric_1": "4.50",
-      "metric_2_label": "K",
-      "metric_2": "9",
-      "metric_3_label": "BB",
-      "metric_3": "2",
-      "why": "K/BB 4.50, 9 K, 2 BB over 39 BF."
+      "player_name": "Misiorowski, Jacob",
+      "edge_score": 78.0,
+      "metric_1_label": "Whiff %",
+      "metric_1": 25.3,
+      "metric_2_label": "FB Velo",
+      "metric_2": 98.3,
+      "metric_3_label": "Extension",
+      "metric_3": "7.2 ft",
+      "why": "Whiff rate 25.3% (+0.1 pts vs baseline), FB velo 98.3 mph (+0.2).",
+      "badges": [
+        "Whiff Lift",
+        "Trend Confirming"
+      ]
+    },
+    {
+      "player_name": "Cease, Dylan",
+      "edge_score": 77.8,
+      "metric_1_label": "Whiff %",
+      "metric_1": 26.7,
+      "metric_2_label": "FB Velo",
+      "metric_2": 98.2,
+      "metric_3_label": "Extension",
+      "metric_3": "6.3 ft",
+      "why": "Whiff rate 26.7% (+0.1 pts vs baseline), FB velo 98.2 mph (+1.2).",
+      "badges": [
+        "Whiff Lift",
+        "Velo Jump",
+        "Trend Confirming"
+      ]
+    },
+    {
+      "player_name": "Blubaugh, Aj",
+      "edge_score": 75.6,
+      "metric_1_label": "Whiff %",
+      "metric_1": 18.8,
+      "metric_2_label": "FB Velo",
+      "metric_2": 96.5,
+      "metric_3_label": "Extension",
+      "metric_3": "6.5 ft",
+      "why": "Whiff rate 18.8% (+0.1 pts vs baseline), FB velo 96.5 mph (+3.9).",
+      "badges": [
+        "Whiff Lift",
+        "Velo Jump",
+        "Trend Confirming"
+      ]
+    },
+    {
+      "player_name": "Boyd, Matthew",
+      "edge_score": 73.3,
+      "metric_1_label": "Whiff %",
+      "metric_1": 28.6,
+      "metric_2_label": "FB Velo",
+      "metric_2": 93.3,
+      "metric_3_label": "Extension",
+      "metric_3": "6.4 ft",
+      "why": "Whiff rate 28.6% (+0.2 pts vs baseline), FB velo 93.3 mph (-0.1).",
+      "badges": [
+        "Whiff Lift",
+        "Extension Gain",
+        "Trend Confirming"
+      ]
+    },
+    {
+      "player_name": "Schlittler, Cam",
+      "edge_score": 70.4,
+      "metric_1_label": "Whiff %",
+      "metric_1": 18.8,
+      "metric_2_label": "FB Velo",
+      "metric_2": 97.2,
+      "metric_3_label": "Extension",
+      "metric_3": "6.7 ft",
+      "why": "Whiff rate 18.8% (+0.1 pts vs baseline), FB velo 97.2 mph (+0.6).",
+      "badges": [
+        "Whiff Lift",
+        "Extension Gain",
+        "Trend Confirming"
+      ]
     }
   ],
   "top_hitters": [
     {
-      "player_name": "Spencer Packard",
-      "org": "Seattle Mariners",
-      "edge_score": 79.7,
-      "metric_1_label": "ISO",
-      "metric_1": "0.300",
-      "metric_2_label": "K/BB",
-      "metric_2": "0.80",
-      "metric_3_label": "HR",
-      "metric_3": "2",
-      "why": "ISO 0.300, HR 2, BB 5 vs K 4 over 26 PA."
+      "player_name": "Dominic Canzone",
+      "edge_score": 85.5,
+      "metric_1_label": "Avg EV",
+      "metric_1": 93.5,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 16.7,
+      "metric_3_label": "Max EV",
+      "metric_3": 109.3,
+      "why": "Avg EV 93.5 mph (+6.4 vs baseline), barrel-like rate 16.7%.",
+      "badges": [
+        "EV Burst",
+        "Barrel Jump",
+        "Impact EV",
+        "Trend Confirming"
+      ]
     },
     {
-      "player_name": "Christian Franklin",
-      "org": "Chicago Cubs",
-      "edge_score": 70.5,
-      "metric_1_label": "ISO",
-      "metric_1": "0.269",
-      "metric_2_label": "K/BB",
-      "metric_2": "1.33",
-      "metric_3_label": "HR",
-      "metric_3": "1",
-      "why": "ISO 0.269, HR 1, BB 6 vs K 8 over 33 PA."
+      "player_name": "Jordan Walker",
+      "edge_score": 78.6,
+      "metric_1_label": "Avg EV",
+      "metric_1": 89.8,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 11.1,
+      "metric_3_label": "Max EV",
+      "metric_3": 114.9,
+      "why": "Avg EV 89.8 mph (+4.8 vs baseline), barrel-like rate 11.1%.",
+      "badges": [
+        "EV Burst",
+        "Barrel Jump",
+        "Impact EV",
+        "Trend Confirming"
+      ]
     },
     {
-      "player_name": "Jonathon Long",
-      "org": "Chicago Cubs",
-      "edge_score": 49.3,
-      "metric_1_label": "ISO",
-      "metric_1": "0.000",
-      "metric_2_label": "K/BB",
-      "metric_2": "0.25",
-      "metric_3_label": "HR",
-      "metric_3": "0",
-      "why": "ISO 0.000, HR 0, BB 4 vs K 1 over 30 PA."
+      "player_name": "Dillon Dingler",
+      "edge_score": 77.0,
+      "metric_1_label": "Avg EV",
+      "metric_1": 88.4,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 13.3,
+      "metric_3_label": "Max EV",
+      "metric_3": 109.0,
+      "why": "Avg EV 88.4 mph (+6.5 vs baseline), barrel-like rate 13.3%.",
+      "badges": [
+        "EV Burst",
+        "Barrel Jump",
+        "Impact EV",
+        "Trend Confirming"
+      ]
     },
     {
-      "player_name": "T.j. Rumfield",
-      "org": "New York Yankees",
-      "edge_score": 44.9,
-      "metric_1_label": "ISO",
-      "metric_1": "0.261",
-      "metric_2_label": "K/BB",
-      "metric_2": "3.00",
-      "metric_3_label": "HR",
-      "metric_3": "2",
-      "why": "ISO 0.261, HR 2, BB 2 vs K 6 over 25 PA."
+      "player_name": "Brice Matthews",
+      "edge_score": 72.3,
+      "metric_1_label": "Avg EV",
+      "metric_1": 86.0,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 11.1,
+      "metric_3_label": "Max EV",
+      "metric_3": 111.1,
+      "why": "Avg EV 86.0 mph (+7.4 vs baseline), barrel-like rate 11.1%.",
+      "badges": [
+        "EV Burst",
+        "Barrel Jump",
+        "Impact EV",
+        "Trend Confirming"
+      ]
     },
     {
-      "player_name": "Jesus Rodriguez",
-      "org": "New York Yankees",
-      "edge_score": 28.0,
-      "metric_1_label": "ISO",
-      "metric_1": "0.000",
-      "metric_2_label": "K/BB",
-      "metric_2": "1.67",
-      "metric_3_label": "HR",
-      "metric_3": "0",
-      "why": "ISO 0.000, HR 0, BB 3 vs K 5 over 27 PA."
+      "player_name": "Richie Palacios",
+      "edge_score": 72.1,
+      "metric_1_label": "Avg EV",
+      "metric_1": 90.2,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 11.1,
+      "metric_3_label": "Max EV",
+      "metric_3": 106.5,
+      "why": "Avg EV 90.2 mph (+12.3 vs baseline), barrel-like rate 11.1%.",
+      "badges": [
+        "EV Burst",
+        "Trend Confirming"
+      ]
     }
   ]
 }

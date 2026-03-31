@@ -2261,7 +2261,6 @@ HTML_TEMPLATE = Template("""
 </html>
 """)
 
-
 def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
     combined = pd.concat([pitchers, hitters], ignore_index=True)
     slate_heat = 0
@@ -2277,6 +2276,7 @@ def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
         pitchers=pitchers.to_dict(orient="records"),
         hitters=hitters.to_dict(orient="records"),
     )
+
 
 def main() -> None:
     raw = fetch_statcast_window(START_DATE, END_DATE)
@@ -2340,6 +2340,7 @@ def main() -> None:
     )
     print("Wrote dist/player_index.json")
 
+    write_scout_metrics(raw)
     copy_static_assets()
     write_scout_shell()
     send_telegram_alerts(combined_alerts)
@@ -2436,6 +2437,169 @@ def build_player_index(df: pd.DataFrame) -> dict:
     }
 
 
+def build_scout_hitter_metrics(df: pd.DataFrame) -> dict:
+    hitters = df.copy()
+
+    if hitters.empty or "batter" not in hitters.columns:
+        return {}
+
+    hitters["launch_speed"] = pd.to_numeric(hitters["launch_speed"], errors="coerce")
+    hitters["launch_angle"] = pd.to_numeric(hitters["launch_angle"], errors="coerce")
+    hitters["estimated_ba_using_speedangle"] = pd.to_numeric(
+        hitters.get("estimated_ba_using_speedangle"), errors="coerce"
+    )
+
+    hitters["is_ab"] = hitters["events"].isin(
+        [
+            "single",
+            "double",
+            "triple",
+            "home_run",
+            "field_out",
+            "force_out",
+            "grounded_into_double_play",
+            "fielders_choice_out",
+            "strikeout",
+            "strikeout_double_play",
+            "double_play",
+            "triple_play",
+            "lineout",
+            "flyout",
+            "pop_out",
+            "groundout",
+        ]
+    )
+
+    hitters["is_hit"] = hitters["events"].isin(["single", "double", "triple", "home_run"])
+    hitters["is_so"] = hitters["events"].isin(["strikeout", "strikeout_double_play"])
+    hitters["is_bb"] = hitters["events"].isin(["walk", "intent_walk"])
+    hitters["is_sf"] = hitters["events"].eq("sac_fly")
+
+    bbe = hitters[hitters["launch_speed"].notna()].copy()
+    if bbe.empty:
+      return {}
+
+    bbe["hard_hit"] = (bbe["launch_speed"] >= 95).astype(int)
+    bbe["sweet_spot"] = bbe["launch_angle"].between(8, 32, inclusive="both").astype(int)
+    bbe["barrel_like"] = (
+        (bbe["launch_speed"] >= 98)
+        & (bbe["launch_angle"].between(26, 30, inclusive="both"))
+    ).astype(int)
+
+    bbe_grouped = (
+        bbe.groupby("batter", dropna=False)
+        .agg(
+            avg_ev=("launch_speed", "mean"),
+            max_ev=("launch_speed", "max"),
+            hard_hit_pct=("hard_hit", "mean"),
+            sweet_spot_pct=("sweet_spot", "mean"),
+            barrel_pct=("barrel_like", "mean"),
+            launch_angle=("launch_angle", "mean"),
+            xba=("estimated_ba_using_speedangle", "mean"),
+            bbe_count=("launch_speed", "size"),
+        )
+        .reset_index()
+    )
+
+    result_grouped = (
+        hitters.groupby("batter", dropna=False)
+        .agg(
+            ab=("is_ab", "sum"),
+            hits=("is_hit", "sum"),
+            strikeouts=("is_so", "sum"),
+            walks=("is_bb", "sum"),
+            sac_fly=("is_sf", "sum"),
+            pa=("batter", "size"),
+        )
+        .reset_index()
+    )
+
+    merged = bbe_grouped.merge(result_grouped, on="batter", how="left")
+
+    out = {}
+    for _, row in merged.iterrows():
+        try:
+            player_id = int(row["batter"])
+        except Exception:
+            continue
+
+        ab = int(row["ab"]) if pd.notna(row["ab"]) else 0
+        hits = int(row["hits"]) if pd.notna(row["hits"]) else 0
+        strikeouts = int(row["strikeouts"]) if pd.notna(row["strikeouts"]) else 0
+        pa = int(row["pa"]) if pd.notna(row["pa"]) else 0
+
+        avg = (hits / ab) if ab > 0 else None
+        k_rate = (strikeouts / pa * 100.0) if pa > 0 else None
+        xba = float(row["xba"]) if pd.notna(row["xba"]) else None
+        xba_delta = (xba - avg) if (xba is not None and avg is not None) else None
+
+        avg_ev = float(row["avg_ev"]) if pd.notna(row["avg_ev"]) else None
+        max_ev = float(row["max_ev"]) if pd.notna(row["max_ev"]) else None
+        hard_hit_pct = float(row["hard_hit_pct"] * 100.0) if pd.notna(row["hard_hit_pct"]) else None
+        sweet_spot_pct = float(row["sweet_spot_pct"] * 100.0) if pd.notna(row["sweet_spot_pct"]) else None
+        barrel_pct = float(row["barrel_pct"] * 100.0) if pd.notna(row["barrel_pct"]) else None
+        launch_angle = float(row["launch_angle"]) if pd.notna(row["launch_angle"]) else None
+
+        if xba_delta is not None and xba_delta > 0.100 and (max_ev is not None and max_ev > 110):
+            signal_label = "PLATINUM BUY"
+        elif xba_delta is not None and xba_delta > 0.050:
+            signal_label = "GOLD BUY"
+        elif xba_delta is not None and xba_delta < -0.050:
+            signal_label = "CAUTION"
+        else:
+            signal_label = "NEUTRAL"
+
+        parts = []
+        if avg is not None and xba is not None and xba_delta is not None:
+            parts.append(f"AVG {avg:.3f}, xBA {xba:.3f}, delta {xba_delta:+.3f}")
+        if max_ev is not None:
+            parts.append(f"Max EV {max_ev:.1f}")
+        if barrel_pct is not None:
+            parts.append(f"Barrel {barrel_pct:.1f}%")
+        if hard_hit_pct is not None:
+            parts.append(f"Hard Hit {hard_hit_pct:.1f}%")
+
+        out[str(player_id)] = {
+            "player_type": "hitter",
+            "ballistics": {
+                "avg_ev": avg_ev,
+                "max_ev": max_ev,
+                "hard_hit_pct": hard_hit_pct,
+                "extension": None,
+            },
+            "movement": {
+                "sweet_spot_pct": sweet_spot_pct,
+                "barrel_pct": barrel_pct,
+                "launch_angle": launch_angle,
+                "movement_edge": xba_delta,
+            },
+            "results": {
+                "avg": avg,
+                "k_rate": k_rate,
+                "wrc_plus": None,
+                "signal_label": signal_label,
+            },
+            "briefing": " | ".join(parts) if parts else "Live hitter profile loaded.",
+        }
+
+    return out
+
+
+def write_scout_metrics(df: pd.DataFrame) -> None:
+    hitter_metrics = build_scout_hitter_metrics(df)
+
+    payload = {
+        "generated_at": datetime.now().isoformat(),
+        "players": hitter_metrics,
+    }
+
+    (DIST_DIR / "scout_metrics.json").write_text(
+        json.dumps(payload, indent=2),
+        encoding="utf-8",
+    )
+    print("Wrote dist/scout_metrics.json")
+
+
 def copy_static_assets() -> None:
     js_src = Path("src/js/player-search.js")
     js_dest = DIST_DIR / "player-search.js"
@@ -2448,7 +2612,6 @@ def copy_static_assets() -> None:
 def write_scout_shell() -> None:
     scout_dir = DIST_DIR / "scout"
     scout_dir.mkdir(parents=True, exist_ok=True)
-
     html = """<!doctype html>
 <html lang="en">
 <head>
