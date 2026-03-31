@@ -10,7 +10,8 @@ export default async (req) => {
       });
     }
 
-    const indexUrl = new URL("/player_index.json", req.url).toString();
+    const requestUrl = new URL(req.url);
+const indexUrl = `${requestUrl.origin}/player_index.json`;
 
     const res = await fetch(indexUrl, {
       headers: { "content-type": "application/json" }
