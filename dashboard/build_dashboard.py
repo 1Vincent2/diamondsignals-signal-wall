@@ -1322,33 +1322,216 @@ HTML_TEMPLATE = Template("""
   </div>
 
   <script src="/player-search.js"></script>
-  <script>
-    function openGlossary() {
-      const overlay = document.getElementById("glossaryOverlay");
-      const drawer = document.getElementById("glossaryDrawer");
-      if (overlay) overlay.classList.add("open");
-      if (drawer) {
-        drawer.classList.add("open");
-        drawer.setAttribute("aria-hidden", "false");
-      }
-      document.body.style.overflow = "hidden";
+<script>
+  function formatPct(value) {
+    if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
+    return `${Number(value).toFixed(1)}%`;
+  }
+
+  function format1(value) {
+    if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
+    return Number(value).toFixed(1);
+  }
+
+  function formatAvg(value) {
+    if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
+    return Number(value).toFixed(3).replace(/^0/, "");
+  }
+
+  function formatSigned3(value) {
+    if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
+    const n = Number(value);
+    const s = n.toFixed(3).replace(/^0/, "");
+    return n > 0 ? `+${s}` : s;
+  }
+
+  function formatValue(label, value) {
+    const upper = String(label || "").toUpperCase();
+
+    if (value === null || value === undefined || value === "") return "--";
+    if (typeof value === "string") return value;
+
+    if (upper.includes("%")) return formatPct(value);
+    if (upper.includes("AVG") || upper.includes("XBA")) return formatAvg(value);
+    if (upper.includes("SPIN")) return Number(value).toFixed(0);
+    if (upper.includes("EXTENSION")) return `${Number(value).toFixed(1)} ft`;
+    if (upper.includes("IVB")) return `${Number(value).toFixed(1)} in`;
+    if (upper.includes("DELTA") || upper.includes("EDGE")) return formatSigned3(value);
+
+    return format1(value);
+  }
+
+  function normalizeZone(prefix, zoneData, playerType) {
+    if (!zoneData) return {};
+
+    if ("label_1" in zoneData || "value_1" in zoneData) {
+      return zoneData;
     }
 
-    function closeGlossary() {
-      const overlay = document.getElementById("glossaryOverlay");
-      const drawer = document.getElementById("glossaryDrawer");
-      if (overlay) overlay.classList.remove("open");
-      if (drawer) {
-        drawer.classList.remove("open");
-        drawer.setAttribute("aria-hidden", "true");
+    if (playerType === "hitter") {
+      if (prefix === "zone1") {
+        return {
+          label_1: "Avg Exit Velo",
+          value_1: zoneData.avg_ev,
+          label_2: "Max Exit Velo",
+          value_2: zoneData.max_ev,
+          label_3: "Hard Hit %",
+          value_3: zoneData.hard_hit_pct,
+          label_4: "Extension",
+          value_4: zoneData.extension
+        };
       }
-      document.body.style.overflow = "";
+
+      if (prefix === "zone2") {
+        return {
+          label_1: "Sweet Spot %",
+          value_1: zoneData.sweet_spot_pct,
+          label_2: "Barrel %",
+          value_2: zoneData.barrel_pct,
+          label_3: "Launch Angle",
+          value_3: zoneData.launch_angle,
+          label_4: "Movement Edge",
+          value_4: zoneData.movement_edge
+        };
+      }
+
+      if (prefix === "zone3") {
+        return {
+          label_1: "Batting Avg",
+          value_1: zoneData.avg,
+          label_2: "K Rate",
+          value_2: zoneData.k_rate,
+          label_3: "wRC+",
+          value_3: zoneData.wrc_plus,
+          label_4: "Signal",
+          value_4: zoneData.signal_label
+        };
+      }
     }
 
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape") closeGlossary();
-    });
-  </script>
+    if (playerType === "pitcher") {
+      if (prefix === "zone1") {
+        return {
+          label_1: "FB Avg Velo",
+          value_1: zoneData.fb_avg_velo ?? zoneData.avg_velo ?? zoneData.value_1,
+          label_2: "FB Max Velo",
+          value_2: zoneData.fb_max_velo ?? zoneData.max_velo ?? zoneData.value_2,
+          label_3: "Extension",
+          value_3: zoneData.extension ?? zoneData.value_3,
+          label_4: "Pitch Count",
+          value_4: zoneData.pitch_count ?? zoneData.value_4
+        };
+      }
+
+      if (prefix === "zone2") {
+        return {
+          label_1: "Slider Spin",
+          value_1: zoneData.slider_spin ?? zoneData.value_1,
+          label_2: "FB IVB",
+          value_2: zoneData.ivb ?? zoneData.value_2,
+          label_3: "VAA",
+          value_3: zoneData.vaa ?? zoneData.value_3,
+          label_4: "Movement Edge",
+          value_4: zoneData.movement_edge ?? zoneData.value_4
+        };
+      }
+
+      if (prefix === "zone3") {
+        return {
+          label_1: "K %",
+          value_1: zoneData.k_rate ?? zoneData.value_1,
+          label_2: "Whiff %",
+          value_2: zoneData.whiff_pct ?? zoneData.whiff_rate ?? zoneData.value_2,
+          label_3: "K-BB %",
+          value_3: zoneData.kbb ?? zoneData.k_bb_pct ?? zoneData.value_3,
+          label_4: "Signal",
+          value_4: zoneData.signal_label ?? zoneData.value_4
+        };
+      }
+    }
+
+    return {};
+  }
+
+  function setZone(prefix, zoneData) {
+    for (let i = 1; i <= 4; i++) {
+      const labelEl = document.getElementById(`${prefix}Label${i}`);
+      const valueEl = document.getElementById(`${prefix}Value${i}`);
+      const label = zoneData[`label_${i}`] || `Metric ${i}`;
+      const value = zoneData[`value_${i}`];
+
+      if (labelEl) labelEl.textContent = label;
+      if (valueEl) valueEl.textContent = formatValue(label, value);
+    }
+  }
+
+  async function loadScoutPlayer() {
+    const pathParts = window.location.pathname.split("/").filter(Boolean);
+    const playerId = pathParts.length >= 2 ? pathParts[1] : null;
+    if (!playerId) return;
+
+    try {
+      const [playerRes, metricsRes] = await Promise.all([
+        fetch("/player_index.json"),
+        fetch("/scout_metrics.json")
+      ]);
+
+      const playerPayload = await playerRes.json();
+      const metricsPayload = await metricsRes.json();
+
+      const players = Array.isArray(playerPayload.players) ? playerPayload.players : [];
+      const player = players.find((p) => String(p.player_id) === String(playerId));
+      const scoutMetrics = metricsPayload && metricsPayload.players
+        ? metricsPayload.players[String(playerId)]
+        : null;
+
+      if (!player) {
+        document.getElementById("scoutPlayerName").textContent = "Player Not Found";
+        return;
+      }
+
+      document.title = `DiamondSignals // ${player.full_name}`;
+      document.getElementById("scoutPlayerName").textContent = player.full_name || "Unknown Player";
+      document.getElementById("scoutTeam").textContent = player.team || "Team";
+      document.getElementById("scoutPosition").textContent = player.position || "Position";
+      document.getElementById("scoutBT").textContent = `${player.bats || "-"} / ${player.throws || "-"}`;
+      document.getElementById("scoutStatus").textContent = player.status || "Status";
+
+      const img = document.getElementById("scoutHeadshot");
+      const fallback = document.getElementById("scoutHeadshotFallback");
+      if (player.headshot_url) {
+        img.src = player.headshot_url;
+        img.style.display = "block";
+        fallback.style.display = "none";
+      }
+
+      const playerType = scoutMetrics?.player_type || (player.position === "P" ? "pitcher" : "hitter");
+
+      document.getElementById("scoutSignalPill").textContent =
+        playerType === "pitcher" ? "PITCHER DOSSIER" : "HITTER DOSSIER";
+      document.getElementById("scoutTrendPill").textContent = "LIVE PROFILE";
+      document.getElementById("scoutConfidencePill").textContent = "DATA V1";
+
+      if (scoutMetrics) {
+        setZone("zone1", normalizeZone("zone1", scoutMetrics.ballistics || {}, playerType));
+        setZone("zone2", normalizeZone("zone2", scoutMetrics.movement || {}, playerType));
+        setZone("zone3", normalizeZone("zone3", scoutMetrics.results || {}, playerType));
+
+        document.getElementById("scoutBriefingCopy").textContent =
+          scoutMetrics.briefing || "Live player profile loaded.";
+      } else {
+        document.getElementById("scoutBriefingCopy").textContent =
+          playerType === "pitcher"
+            ? "Pitcher dossier shell is live. Metrics payload not found for this player yet."
+            : "Hitter dossier shell is live. Metrics payload not found for this player yet.";
+      }
+    } catch (error) {
+      document.getElementById("scoutPlayerName").textContent = "Scout Load Error";
+    }
+  }
+
+  loadScoutPlayer();
+</script>
 </body>
 </html>
 """)
