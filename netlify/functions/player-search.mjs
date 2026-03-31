@@ -60,7 +60,6 @@ try {
   );
 }
 
-    const payload = await res.json();
     const players = Array.isArray(payload?.players) ? payload.players : [];
 
     const normalizedQuery = normalizeText(query);
