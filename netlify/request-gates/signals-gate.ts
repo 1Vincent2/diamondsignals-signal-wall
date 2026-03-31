@@ -12,10 +12,16 @@ export default async (request: Request, context: any) => {
     "/robots.txt",
     "/signals.json",
     "/player_index.json",
+    "/scout_metrics.json",
+    "/player-search.js",
     "/.netlify/functions/",
   ]
 
-  const isPublic = publicPrefixes.some((prefix) => path.startsWith(prefix))
+  const isPublic =
+    publicPrefixes.some((prefix) => path.startsWith(prefix)) ||
+    path === "/" ||
+    path.startsWith("/scout/")
+
   if (isPublic) {
     return context.next()
   }
