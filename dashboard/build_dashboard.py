@@ -890,12 +890,61 @@ HTML_TEMPLATE = Template("""
 .topnav-links::-webkit-scrollbar {
   display: none;
 }
-
-.topnav-search {
-  position: relative;
-  width: min(340px, 34vw);
-  flex: 0 0 auto;
+.search-strip {
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.015);
 }
+
+.search-strip-inner {
+  width: min(1180px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 12px 0 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.player-search {
+  position: relative;
+  width: min(420px, 100%);
+}
+
+.player-search-input {
+  width: 100%;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.07);
+  color: var(--text);
+  padding: 0 16px;
+  font-family: var(--sans);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.player-search-input::placeholder {
+  color: rgba(255,255,255,0.50);
+}
+
+.player-search-input:focus {
+  border-color: rgba(106,166,255,0.52);
+  background: rgba(255,255,255,0.09);
+  box-shadow: 0 0 0 3px rgba(106,166,255,0.12);
+}
+
+.player-search-results {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 70;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #121212 0%, #080808 100%);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
+  overflow: hidden;
+}
+
 
 .player-search-input {
   width: 100%;
@@ -1562,7 +1611,24 @@ HTML_TEMPLATE = Template("""
       .topnav-inner {
         width: min(100%, calc(100% - 16px));
       }
+           .search-strip-inner {
+        width: min(100%, calc(100% - 16px));
+        justify-content: stretch;
+      }
 
+      .player-search {
+        width: 100%;
+      }
+
+      .player-search-input {
+        height: 36px;
+        font-size: 12px;
+      }
+
+      .player-search-input {
+        height: 36px;
+        font-size: 12px;
+      }
       .topbar-inner {
         min-height: 58px;
       }
@@ -1619,7 +1685,25 @@ HTML_TEMPLATE = Template("""
   </div>
 
   {{ nav_html | safe }}
+  {{ nav_html | safe }}
 
+  <div class="search-strip">
+    <div class="search-strip-inner">
+      <div class="player-search" id="playerSearch">
+        <input
+          type="text"
+          id="playerSearchInput"
+          class="player-search-input"
+          placeholder="Search players..."
+          autocomplete="off"
+          aria-label="Search players"
+        />
+        <div class="player-search-results" id="playerSearchResults" hidden></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="glossaryOverlay" class="glossary-overlay" onclick="closeGlossary()"></div>
   <div id="glossaryOverlay" class="glossary-overlay" onclick="closeGlossary()"></div>
 
   <aside id="glossaryDrawer" class="glossary-drawer" aria-hidden="true">
