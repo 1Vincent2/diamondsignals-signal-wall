@@ -711,7 +711,120 @@ HTML_TEMPLATE = Template("""
       gap: 10px;
       flex: 0 0 auto;
     }
+.player-search {
+  position: relative;
+  width: min(320px, 38vw);
+  flex: 0 1 320px;
+}
 
+.player-search-input {
+  width: 100%;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  padding: 0 14px;
+  font-family: var(--sans);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.player-search-input::placeholder {
+  color: var(--muted);
+}
+
+.player-search-input:focus {
+  border-color: rgba(106,166,255,0.45);
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 0 0 3px rgba(106,166,255,0.10);
+}
+
+.player-search-results {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 70;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #121212 0%, #080808 100%);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
+  overflow: hidden;
+}
+
+.player-search-result {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: var(--text);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.player-search-result:last-child {
+  border-bottom: 0;
+}
+
+.player-search-result:hover,
+.player-search-result.active {
+  background: rgba(255,255,255,0.05);
+}
+
+.player-search-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.10);
+  object-fit: cover;
+  background: rgba(255,255,255,0.03);
+}
+
+.player-search-meta {
+  min-width: 0;
+}
+
+.player-search-name {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--text);
+}
+
+.player-search-sub {
+  margin-top: 3px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.player-search-empty,
+.player-search-loading,
+.player-search-error {
+  padding: 12px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--soft);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 640px) {
+  .player-search {
+    width: min(100%, 220px);
+    flex: 1 1 220px;
+  }
+
+  .player-search-input {
+    height: 34px;
+    font-size: 12px;
+  }
+}
         .info-trigger {
       height: 34px;
       border-radius: 999px;
@@ -1450,8 +1563,21 @@ HTML_TEMPLATE = Template("""
         </div>
       </div>
       <div class="header-actions">
-        <button class="info-trigger" type="button" onclick="openGlossary()" aria-label="Open glossary">ⓘ Glossary</button>
-        <div class="livebox">
+  <div class="player-search" id="playerSearch">
+    <input
+      type="text"
+      id="playerSearchInput"
+      class="player-search-input"
+      placeholder="Search players..."
+      autocomplete="off"
+      aria-label="Search players"
+    />
+    <div class="player-search-results" id="playerSearchResults" hidden></div>
+  </div>
+
+  <button class="info-trigger" type="button" onclick="openGlossary()" aria-label="Open glossary">ⓘ Glossary</button>
+
+  <div class="livebox">
           <div class="live-label"><span class="live-dot"></span>LIVE</div>
           <div class="live-time">{{ generated_at }}</div>
         </div>
@@ -1773,7 +1899,7 @@ HTML_TEMPLATE = Template("""
       DiamondSignals Signal Wall // Generated During Netlify Build // {{ timezone_label }}
     </div>
   </div>
-
+  <script src="/player-search.js"></script>
   <script>
     function openGlossary() {
       const overlay = document.getElementById("glossaryOverlay");
@@ -1885,6 +2011,7 @@ def main() -> None:
         encoding="utf-8"
     )
     print("Wrote dist/player_index.json")
+    copy_static_assets()
     send_telegram_alerts(combined_alerts)
 def build_headshot_url(player_id: int) -> str:
     return (
@@ -1975,7 +2102,14 @@ def build_player_index(df: pd.DataFrame) -> dict:
         "generated_at": datetime.now().isoformat(),
         "players": players,
     }
+def copy_static_assets() -> None:
+    js_src = Path("src/js/player-search.js")
+    js_dest = DIST_DIR / "player-search.js"
 
+    if js_src.exists():
+        js_dest.write_text(js_src.read_text(encoding="utf-8"), encoding="utf-8")
+        print("Wrote dist/player-search.js")
+        
 
 if __name__ == "__main__":
     main()
