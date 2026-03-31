@@ -3,7 +3,7 @@ import os
 import json
 from datetime import date, datetime, timedelta
 from pathlib import Path
-
+from typing import Optional
 import pandas as pd
 import requests
 from jinja2 import Template
@@ -1879,8 +1879,102 @@ def main() -> None:
 
     (DIST_DIR / "signals.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print("Wrote dist/signals.json")
-
+    player_index = build_player_index(raw)
+    (DIST_DIR / "player_index.json").write_text(
+        json.dumps(player_index, indent=2),
+        encoding="utf-8"
+    )
+    print("Wrote dist/player_index.json")
     send_telegram_alerts(combined_alerts)
+def build_headshot_url(player_id: int) -> str:
+    return (
+        f"https://img.mlbstatic.com/mlb-photos/image/upload/"
+        f"w_180,q_100/v1/people/{player_id}/headshot/67/current"
+    )
+
+
+def safe_int(value):
+    try:
+        if pd.notna(value):
+            return int(value)
+    except Exception:
+        pass
+    return None
+
+
+def extract_player_ids(df: pd.DataFrame) -> list[int]:
+    ids = set()
+
+    if "batter" in df.columns:
+        for value in df["batter"].dropna().tolist():
+            pid = safe_int(value)
+            if pid is not None:
+                ids.add(pid)
+
+    if "pitcher" in df.columns:
+        for value in df["pitcher"].dropna().tolist():
+            pid = safe_int(value)
+            if pid is not None:
+                ids.add(pid)
+
+    return sorted(ids)
+
+
+def fetch_player_identity(player_id: int) -> Optional[dict]:
+    try:
+        url = f"https://statsapi.mlb.com/api/v1/people/{player_id}"
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        payload = response.json()
+
+        people = payload.get("people", [])
+        if not people:
+            return None
+
+        person = people[0]
+
+        full_name = str(person.get("fullName", "")).strip()
+        first_name = str(person.get("firstName", "")).strip()
+        last_name = str(person.get("lastName", "")).strip()
+
+        current_team = person.get("currentTeam") or {}
+        primary_position = person.get("primaryPosition") or {}
+        bat_side = person.get("batSide") or {}
+        pitch_hand = person.get("pitchHand") or {}
+        status = person.get("status") or {}
+
+        return {
+            "player_id": player_id,
+            "full_name": full_name,
+            "first_name": first_name,
+            "last_name": last_name,
+            "team": str(current_team.get("abbreviation", "")).strip(),
+            "team_name": str(current_team.get("name", "")).strip(),
+            "position": str(primary_position.get("abbreviation", "")).strip(),
+            "bats": str(bat_side.get("code", "")).strip(),
+            "throws": str(pitch_hand.get("code", "")).strip(),
+            "status": str(status.get("description", "")).strip(),
+            "headshot_url": build_headshot_url(player_id),
+        }
+    except Exception:
+        return None
+
+
+def build_player_index(df: pd.DataFrame) -> dict:
+    player_ids = extract_player_ids(df)
+    players = []
+
+    for player_id in player_ids:
+        identity = fetch_player_identity(player_id)
+        if identity:
+            players.append(identity)
+
+    players.sort(key=lambda row: (row.get("last_name", ""), row.get("first_name", "")))
+
+    return {
+        "generated_at": datetime.now().isoformat(),
+        "players": players,
+    }
 
 
 if __name__ == "__main__":
