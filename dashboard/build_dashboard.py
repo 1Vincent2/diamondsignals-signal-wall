@@ -1001,7 +1001,58 @@ HTML_TEMPLATE = Template("""
     .topnav-tag {
       color: var(--lime-hot);
     }
+    .topnav {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(8, 8, 8, 0.90);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      margin: 0 0 18px;
+    }
 
+    .topnav-inner {
+      width: min(1180px, calc(100% - 24px));
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 12px 0;
+      scrollbar-width: none;
+    }
+
+    .topnav-inner::-webkit-scrollbar {
+      display: none;
+    }
+
+    .topnav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--soft);
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .topnav-link.active {
+      color: var(--text);
+      border-color: rgba(182,255,0,0.20);
+      box-shadow: 0 0 8px rgba(182,255,0,0.08);
+    }
+
+    .topnav-tag {
+      color: var(--lime-hot);
+    }
     .live-label {
       display: inline-flex;
       align-items: center;
@@ -2546,6 +2597,13 @@ def write_scout_shell() -> None:
   </style>
 </head>
 <body>
+  <div class="topnav">
+    <div class="topnav-inner">
+      <a class="topnav-link" href="/"><span class="topnav-tag">[ LIVE ]</span> Signal Wall</a>
+      <a class="topnav-link active" href="#"><span class="topnav-tag">[ SCOUT ]</span> Player Dossier</a>
+      <a class="topnav-link" href="https://diamondsignals.ai"><span class="topnav-tag">[ SITE ]</span> Back to Main Site</a>
+    </div>
+  </div>
   <div class="app">
     <section class="hero-card">
       <div class="eyebrow">Scout Terminal</div>
