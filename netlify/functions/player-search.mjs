@@ -1,170 +1,173 @@
-export default async (req) => {
-  try {
-    const url = new URL(req.url);
-    const query = (url.searchParams.get("q") || "").trim();
+function initPlayerSearch() {
+  const searchRoot = document.getElementById("playerSearch");
+  const input = document.getElementById("playerSearchInput");
+  const resultsEl = document.getElementById("playerSearchResults");
 
-    if (query.length < 2) {
-      return json({
-        query,
-        results: []
-      });
+  if (!searchRoot || !input || !resultsEl) {
+    return;
+  }
+
+  let debounceTimer = null;
+  let activeIndex = -1;
+  let currentResults = [];
+
+  function closeResults() {
+    resultsEl.hidden = true;
+    resultsEl.innerHTML = "";
+    activeIndex = -1;
+    currentResults = [];
+  }
+
+  function setLoading() {
+    resultsEl.hidden = false;
+    resultsEl.innerHTML = `<div class="player-search-loading">Searching players...</div>`;
+    activeIndex = -1;
+    currentResults = [];
+  }
+
+  function setEmpty() {
+    resultsEl.hidden = false;
+    resultsEl.innerHTML = `<div class="player-search-empty">No players found</div>`;
+    activeIndex = -1;
+    currentResults = [];
+  }
+
+  function setError() {
+    resultsEl.hidden = false;
+    resultsEl.innerHTML = `<div class="player-search-error">Search temporarily unavailable</div>`;
+    activeIndex = -1;
+    currentResults = [];
+  }
+
+  function renderResults(results) {
+    currentResults = results.slice();
+    activeIndex = -1;
+
+    if (!results.length) {
+      setEmpty();
+      return;
     }
 
-    const requestUrl = new URL(req.url);
-    const indexUrl = `${requestUrl.origin}/player_index.json`;
-
-    const res = await fetch(indexUrl, {
-  headers: {
-    "accept": "application/json"
+    resultsEl.hidden = false;
+    resultsEl.innerHTML = results
+      .map((player, index) => {
+        const sub = [player.team, player.position].filter(Boolean).join(" • ");
+        return `
+          <a class="player-search-result" href="${player.profile_url}" data-index="${index}">
+            <img
+              class="player-search-avatar"
+              src="${player.headshot_url}"
+              alt="${escapeHtml(player.full_name)}"
+              loading="lazy"
+            />
+            <div class="player-search-meta">
+              <div class="player-search-name">${escapeHtml(player.full_name)}</div>
+              <div class="player-search-sub">${escapeHtml(sub || "PLAYER")}</div>
+            </div>
+          </a>
+        `;
+      })
+      .join("");
   }
-});
 
-const rawText = await res.text();
-const contentType = res.headers.get("content-type") || "";
-
-if (!res.ok) {
-  return json(
-    {
-      query,
-      results: [],
-      error: "player_index_unavailable",
-      debug: {
-        indexUrl,
-        status: res.status,
-        contentType,
-        preview: rawText.slice(0, 200)
-      }
-    },
-    500
-  );
-}
-
-let payload;
-
-try {
-  payload = JSON.parse(rawText);
-} catch (error) {
-  return json(
-    {
-      query,
-      results: [],
-      error: String(error),
-      debug: {
-        indexUrl,
-        status: res.status,
-        contentType,
-        preview: rawText.slice(0, 200)
-      }
-    },
-    500
-  );
-}
-
-    const players = Array.isArray(payload?.players) ? payload.players : [];
-
-    const normalizedQuery = normalizeText(query);
-
-    const scored = players
-      .map((player) => ({
-        ...player,
-        _score: scorePlayerMatch(normalizedQuery, player)
-      }))
-      .filter((player) => player._score !== null)
-      .sort((a, b) => compareScores(a._score, b._score))
-      .slice(0, 6)
-      .map(({ _score, ...player }) => ({
-        player_id: player.player_id,
-        full_name: player.full_name,
-        team: player.team || "",
-        team_name: player.team_name || "",
-        position: player.position || "",
-        bats: player.bats || "",
-        throws: player.throws || "",
-        status: player.status || "",
-        headshot_url: player.headshot_url || buildHeadshotUrl(player.player_id),
-        profile_url: `/scout/${player.player_id}`
-      }));
-
-    return json({
-      query,
-      results: scored
+  function updateActiveResult() {
+    const nodes = Array.from(resultsEl.querySelectorAll(".player-search-result"));
+    nodes.forEach((node, index) => {
+      node.classList.toggle("active", index === activeIndex);
     });
-  } catch (error) {
-    return json(
-      {
-        query: "",
-        results: [],
-        error: String(error)
-      },
-      500
-    );
   }
-};
 
-function json(body, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { "content-type": "application/json" }
+  async function runSearch(query) {
+    if (query.length < 2) {
+      closeResults();
+      return;
+    }
+
+    setLoading();
+
+    try {
+      const res = await fetch(`/.netlify/functions/player-search?q=${encodeURIComponent(query)}`);
+      const payload = await res.json();
+
+      if (!res.ok) {
+        setError();
+        return;
+      }
+
+      renderResults(Array.isArray(payload.results) ? payload.results : []);
+    } catch (error) {
+      setError();
+    }
+  }
+
+  input.addEventListener("input", () => {
+    const query = input.value.trim();
+
+    window.clearTimeout(debounceTimer);
+    debounceTimer = window.setTimeout(() => {
+      runSearch(query);
+    }, 250);
   });
-}
 
-function normalizeText(value) {
-  return String(value || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/\./g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+  input.addEventListener("keydown", (event) => {
+    const nodes = Array.from(resultsEl.querySelectorAll(".player-search-result"));
 
-function buildHeadshotUrl(playerId) {
-  return `https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/${playerId}/headshot/67/current`;
-}
+    if (event.key === "Escape") {
+      closeResults();
+      return;
+    }
 
-function scorePlayerMatch(query, player) {
-  const fullName = normalizeText(player.full_name || "");
-  const firstName = normalizeText(player.first_name || "");
-  const lastName = normalizeText(player.last_name || "");
-  const team = normalizeText(player.team || "");
-  const status = normalizeText(player.status || "");
+    if (!nodes.length) {
+      return;
+    }
 
-  if (!fullName && !lastName) {
-    return null;
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      activeIndex = activeIndex < nodes.length - 1 ? activeIndex + 1 : 0;
+      updateActiveResult();
+      return;
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      activeIndex = activeIndex > 0 ? activeIndex - 1 : nodes.length - 1;
+      updateActiveResult();
+      return;
+    }
+
+    if (event.key === "Enter") {
+      event.preventDefault();
+      const targetNode = activeIndex >= 0 ? nodes[activeIndex] : nodes[0];
+      if (targetNode) {
+        window.location.href = targetNode.getAttribute("href");
+      }
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!searchRoot.contains(event.target)) {
+      closeResults();
+    }
+  });
+
+  input.addEventListener("focus", () => {
+    if (currentResults.length) {
+      resultsEl.hidden = false;
+    }
+  });
+
+  function escapeHtml(value) {
+    return String(value || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
   }
-
-  let tier = null;
-
-  if (fullName === query) {
-    tier = 0;
-  } else if (lastName === query) {
-    tier = 1;
-  } else if (fullName.startsWith(query)) {
-    tier = 2;
-  } else if (lastName.startsWith(query)) {
-    tier = 3;
-  } else if (`${firstName} ${lastName}`.startsWith(query)) {
-    tier = 4;
-  } else if (fullName.includes(query)) {
-    tier = 5;
-  } else if (lastName.includes(query)) {
-    tier = 6;
-  } else if (team && team === query) {
-    tier = 7;
-  } else {
-    return null;
-  }
-
-  const activeBoost = status === "active" ? 0 : 1;
-  const nameLengthPenalty = Math.abs(fullName.length - query.length);
-
-  return [tier, activeBoost, nameLengthPenalty, fullName];
 }
 
-function compareScores(a, b) {
-  for (let i = 0; i < Math.max(a.length, b.length); i += 1) {
-    if (a[i] < b[i]) return -1;
-    if (a[i] > b[i]) return 1;
-  }
-  return 0;
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initPlayerSearch);
+} else {
+  initPlayerSearch();
 }
