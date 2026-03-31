@@ -2126,6 +2126,16 @@ def main() -> None:
         encoding="utf-8"
     )
     print("Wrote dist/player_index.json")
+
+    copy_static_assets()
+    write_scout_shell()
+    send_telegram_alerts(combined_alerts)
+    player_index = build_player_index(raw)
+    (DIST_DIR / "player_index.json").write_text(
+        json.dumps(player_index, indent=2),
+        encoding="utf-8"
+    )
+    print("Wrote dist/player_index.json")
     copy_static_assets()
     send_telegram_alerts(combined_alerts)
 def build_headshot_url(player_id: int) -> str:
@@ -2224,7 +2234,8 @@ def copy_static_assets() -> None:
     if js_src.exists():
         js_dest.write_text(js_src.read_text(encoding="utf-8"), encoding="utf-8")
         print("Wrote dist/player-search.js")
-        
+
+
 def write_scout_shell() -> None:
     scout_dir = DIST_DIR / "scout"
     scout_dir.mkdir(parents=True, exist_ok=True)
@@ -2236,26 +2247,415 @@ def write_scout_shell() -> None:
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>DiamondSignals // Scout</title>
   <style>
-    body {
+    :root {
+      --bg: #080808;
+      --surface: #121212;
+      --surface-deep: #080808;
+      --card-radial: radial-gradient(circle at top left, #1a1a1a 0%, #080808 100%);
+      --border: #2d2d2d;
+      --text: #f0f0f0;
+      --muted: #71717a;
+      --soft: #a1a1aa;
+      --tiny: #8a8a93;
+      --emerald: #4ade80;
+      --lime-hot: #b6ff00;
+      --blue: #6aa6ff;
+      --shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
+      --radius: 18px;
+      --mono: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
       margin: 0;
-      padding: 40px;
-      background: #080808;
-      color: #f0f0f0;
-      font-family: Inter, Arial, sans-serif;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(106,166,255,0.06), transparent 24%),
+        radial-gradient(circle at top right, rgba(239,68,68,0.04), transparent 20%),
+        linear-gradient(180deg, #101010 0%, #080808 34%, #050505 100%);
+      line-height: 1.35;
+    }
+
+    .app {
+      width: min(1180px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 28px 0 40px;
+    }
+
+    .hero-card,
+    .section-card,
+    .metric-card,
+    .briefing-card {
+      background: var(--card-radial);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before,
+    .section-card::before,
+    .metric-card::before,
+    .briefing-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      padding: 0.5px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.01));
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      opacity: 0.55;
+    }
+
+    .hero-card {
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--blue);
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .hero-title {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 6vw, 56px);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .hero-copy {
+      margin: 0;
+      max-width: 760px;
+      color: var(--soft);
+      font-size: 14px;
+    }
+
+    .player-id-grid {
+      display: grid;
+      grid-template-columns: 120px 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .headshot-shell {
+      width: 120px;
+      height: 120px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--soft);
+      font-family: var(--mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .player-kicker {
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--blue);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .player-name {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .player-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .meta-pill,
+    .signal-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--soft);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .signal-stack {
+      display: grid;
+      gap: 8px;
+      justify-items: end;
+      min-width: 120px;
+    }
+
+    .signal-pill.strong {
+      color: var(--lime-hot);
+      border-color: rgba(182,255,0,0.22);
+      box-shadow: 0 0 8px rgba(182,255,0,0.08);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .metric-card {
+      padding: 16px;
+    }
+
+    .metric-kicker {
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--lime-hot);
+      font-weight: 800;
+      margin-bottom: 12px;
+      font-family: var(--mono);
+    }
+
+    .metric-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .metric-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--soft);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-family: var(--mono);
+    }
+
+    .metric-value {
+      font-size: 18px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .briefing-card {
+      padding: 18px;
+    }
+
+    .briefing-kicker {
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--blue);
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .briefing-copy {
+      margin: 0;
+      color: var(--soft);
+      font-size: 15px;
+      line-height: 1.6;
+      max-width: 900px;
+    }
+
+    @media (max-width: 900px) {
+      .player-id-grid {
+        grid-template-columns: 1fr;
+        justify-items: start;
+      }
+
+      .signal-stack {
+        justify-items: start;
+        min-width: 0;
+      }
+
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app {
+        width: min(100%, calc(100% - 16px));
+      }
+
+      .hero-card,
+      .metric-card,
+      .briefing-card {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .headshot-shell {
+        width: 92px;
+        height: 92px;
+        border-radius: 18px;
+      }
+
+      .player-name {
+        font-size: 28px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Scout Page Shell</h1>
-  <p>If you can see this, the scout route shell exists.</p>
+  <div class="app">
+    <section class="hero-card">
+      <div class="eyebrow">Scout Terminal</div>
+      <h1 class="hero-title">Player Dossier</h1>
+      <p class="hero-copy">
+        DiamondSignals scout shell v1. This page will hold the player ID card, three-zone metrics layout,
+        and analyst briefing built from the player lookup route.
+      </p>
+    </section>
+
+    <section class="section-card player-id-grid">
+      <div class="headshot-shell">Headshot</div>
+
+      <div>
+        <div class="player-kicker">Player ID Card</div>
+        <h2 class="player-name">Player Name</h2>
+
+        <div class="player-meta">
+          <span class="meta-pill">Team</span>
+          <span class="meta-pill">Position</span>
+          <span class="meta-pill">B/T</span>
+          <span class="meta-pill">Status</span>
+        </div>
+      </div>
+
+      <div class="signal-stack">
+        <span class="signal-pill strong">Signal Score</span>
+        <span class="signal-pill">Trend</span>
+        <span class="signal-pill">Confidence</span>
+      </div>
+    </section>
+
+    <section class="metrics-grid">
+      <article class="metric-card">
+        <div class="metric-kicker">Ballistics</div>
+
+        <div class="metric-row">
+          <div class="metric-label">Avg Velo</div>
+          <div class="metric-value">--</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Max Velo</div>
+          <div class="metric-value">--</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Velo Delta</div>
+          <div class="metric-value">--</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Extension</div>
+          <div class="metric-value">--</div>
+        </div>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-kicker">Movement</div>
+
+        <div class="metric-row">
+          <div class="metric-label">IVB</div>
+          <div class="metric-value">--</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">VAA</div>
+          <div class="metric-value">--</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Shape Rank</div>
+          <div class="metric-value">--</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Movement Edge</div>
+          <div class="metric-value">--</div>
+        </div>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-kicker">Results</div>
+
+        <div class="metric-row">
+          <div class="metric-label">Whiff %</div>
+          <div class="metric-value">--</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">K-BB %</div>
+          <div class="metric-value">--</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">K/BB</div>
+          <div class="metric-value">--</div>
+        </div>
+        <div class="metric-row">
+          <div class="metric-label">Confidence</div>
+          <div class="metric-value">--</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="briefing-card">
+      <div class="briefing-kicker">Analyst Briefing</div>
+      <p class="briefing-copy">
+        This area will hold the short DiamondSignals analyst summary generated from structured player data.
+        The layout is now in place for the live route.
+      </p>
+    </section>
+  </div>
 </body>
 </html>
 """
     (scout_dir / "index.html").write_text(html, encoding="utf-8")
     print("Wrote dist/scout/index.html")
-
-    print("Wrote dist/player-search.js")
-    write_scout_shell()
 
 if __name__ == "__main__":
     main()
