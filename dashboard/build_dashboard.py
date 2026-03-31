@@ -2278,7 +2278,6 @@ def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
         hitters=hitters.to_dict(orient="records"),
     )
 
-
 def main() -> None:
     raw = fetch_statcast_window(START_DATE, END_DATE)
 
@@ -2333,24 +2332,19 @@ def main() -> None:
 
     (DIST_DIR / "signals.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print("Wrote dist/signals.json")
+
     player_index = build_player_index(raw)
     (DIST_DIR / "player_index.json").write_text(
         json.dumps(player_index, indent=2),
-        encoding="utf-8"
+        encoding="utf-8",
     )
     print("Wrote dist/player_index.json")
 
     copy_static_assets()
     write_scout_shell()
     send_telegram_alerts(combined_alerts)
-    player_index = build_player_index(raw)
-    (DIST_DIR / "player_index.json").write_text(
-        json.dumps(player_index, indent=2),
-        encoding="utf-8"
-    )
-    print("Wrote dist/player_index.json")
-    copy_static_assets()
-    send_telegram_alerts(combined_alerts)
+
+
 def build_headshot_url(player_id: int) -> str:
     return (
         f"https://img.mlbstatic.com/mlb-photos/image/upload/"
@@ -2440,6 +2434,8 @@ def build_player_index(df: pd.DataFrame) -> dict:
         "generated_at": datetime.now().isoformat(),
         "players": players,
     }
+
+
 def copy_static_assets() -> None:
     js_src = Path("src/js/player-search.js")
     js_dest = DIST_DIR / "player-search.js"
@@ -2489,7 +2485,7 @@ def write_scout_shell() -> None:
       font-family: var(--sans);
     }
 
-        body {
+    body {
       background:
         radial-gradient(circle at top left, rgba(106,166,255,0.06), transparent 24%),
         radial-gradient(circle at top right, rgba(239,68,68,0.04), transparent 20%),
@@ -2857,6 +2853,7 @@ def write_scout_shell() -> None:
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
+      overflow: hidden;
     }
 
     .player-kicker {
@@ -3004,8 +3001,32 @@ def write_scout_shell() -> None:
     }
 
     @media (max-width: 640px) {
-      .app {
+      .topbar-inner,
+      .app,
+      .topnav-inner,
+      .search-strip-inner {
         width: min(100%, calc(100% - 16px));
+      }
+
+      .search-strip-inner {
+        justify-content: stretch;
+      }
+
+      .player-search {
+        width: 100%;
+      }
+
+      .player-search-input {
+        height: 36px;
+        font-size: 12px;
+      }
+
+      .topbar-inner {
+        min-height: 58px;
+      }
+
+      .brand-title {
+        font-size: 14px;
       }
 
       .hero-card,
@@ -3082,26 +3103,26 @@ def write_scout_shell() -> None:
 
     <section class="section-card player-id-grid">
       <div class="headshot-shell" id="scoutHeadshotWrap">
-  <img id="scoutHeadshot" alt="Player headshot" style="width:100%;height:100%;object-fit:cover;border-radius:24px;display:none;" />
-  <span id="scoutHeadshotFallback">Headshot</span>
-</div>
+        <img id="scoutHeadshot" alt="Player headshot" style="width:100%;height:100%;object-fit:cover;border-radius:24px;display:none;" />
+        <span id="scoutHeadshotFallback">Headshot</span>
+      </div>
 
       <div>
         <div class="player-kicker">Player ID Card</div>
         <h2 class="player-name" id="scoutPlayerName">Player Name</h2>
 
         <div class="player-meta">
-  <span class="meta-pill" id="scoutTeam">Team</span>
-  <span class="meta-pill" id="scoutPosition">Position</span>
-  <span class="meta-pill" id="scoutBT">B/T</span>
-  <span class="meta-pill" id="scoutStatus">Status</span>
-</div>
+          <span class="meta-pill" id="scoutTeam">Team</span>
+          <span class="meta-pill" id="scoutPosition">Position</span>
+          <span class="meta-pill" id="scoutBT">B/T</span>
+          <span class="meta-pill" id="scoutStatus">Status</span>
+        </div>
       </div>
 
       <div class="signal-stack">
-        <span class="signal-pill strong">Signal Score</span>
-        <span class="signal-pill">Trend</span>
-        <span class="signal-pill">Confidence</span>
+        <span class="signal-pill strong" id="scoutSignalPill">Signal Score</span>
+        <span class="signal-pill" id="scoutTrendPill">Trend</span>
+        <span class="signal-pill" id="scoutConfidencePill">Confidence</span>
       </div>
     </section>
 
@@ -3111,19 +3132,19 @@ def write_scout_shell() -> None:
 
         <div class="metric-row">
           <div class="metric-label">Avg Velo</div>
-          <div class="metric-value">--</div>
+          <div class="metric-value" id="metricAvgEv">--</div>
         </div>
         <div class="metric-row">
           <div class="metric-label">Max Velo</div>
-          <div class="metric-value">--</div>
+          <div class="metric-value" id="metricMaxEv">--</div>
         </div>
         <div class="metric-row">
           <div class="metric-label">Velo Delta</div>
-          <div class="metric-value">--</div>
+          <div class="metric-value" id="metricHardHit">--</div>
         </div>
         <div class="metric-row">
           <div class="metric-label">Extension</div>
-          <div class="metric-value">--</div>
+          <div class="metric-value" id="metricExtension">--</div>
         </div>
       </article>
 
@@ -3132,19 +3153,19 @@ def write_scout_shell() -> None:
 
         <div class="metric-row">
           <div class="metric-label">IVB</div>
-          <div class="metric-value">--</div>
+          <div class="metric-value" id="metricSweetSpot">--</div>
         </div>
         <div class="metric-row">
           <div class="metric-label">VAA</div>
-          <div class="metric-value">--</div>
+          <div class="metric-value" id="metricBarrel">--</div>
         </div>
         <div class="metric-row">
           <div class="metric-label">Shape Rank</div>
-          <div class="metric-value">--</div>
+          <div class="metric-value" id="metricLaunchAngle">--</div>
         </div>
         <div class="metric-row">
           <div class="metric-label">Movement Edge</div>
-          <div class="metric-value">--</div>
+          <div class="metric-value" id="metricMovementEdge">--</div>
         </div>
       </article>
 
@@ -3153,78 +3174,114 @@ def write_scout_shell() -> None:
 
         <div class="metric-row">
           <div class="metric-label">Whiff %</div>
-          <div class="metric-value">--</div>
+          <div class="metric-value" id="metricAvg">--</div>
         </div>
         <div class="metric-row">
           <div class="metric-label">K-BB %</div>
-          <div class="metric-value">--</div>
+          <div class="metric-value" id="metricKRate">--</div>
         </div>
         <div class="metric-row">
           <div class="metric-label">K/BB</div>
-          <div class="metric-value">--</div>
+          <div class="metric-value" id="metricWrcPlus">--</div>
         </div>
         <div class="metric-row">
           <div class="metric-label">Confidence</div>
-          <div class="metric-value">--</div>
+          <div class="metric-value" id="metricSignalLabel">--</div>
         </div>
       </article>
     </section>
 
     <section class="briefing-card">
       <div class="briefing-kicker">Analyst Briefing</div>
-      <p class="briefing-copy">
+      <p class="briefing-copy" id="scoutBriefingCopy">
         This area will hold the short DiamondSignals analyst summary generated from structured player data.
         The layout is now in place for the live route.
       </p>
     </section>
   </div>
+  <script src="/player-search.js"></script>
   <script>
-  async function loadScoutPlayer() {
-    const pathParts = window.location.pathname.split("/").filter(Boolean);
-    const playerId = pathParts.length >= 2 ? pathParts[1] : null;
-
-    if (!playerId) {
-      return;
+    function formatPct(value) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
+      return `${Number(value).toFixed(1)}%`;
     }
 
-    try {
-      const res = await fetch("/player_index.json");
-      const payload = await res.json();
-      const players = Array.isArray(payload.players) ? payload.players : [];
-      const player = players.find((p) => String(p.player_id) === String(playerId));
+    function format1(value) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
+      return Number(value).toFixed(1);
+    }
 
-      if (!player) {
-        document.getElementById("scoutPlayerName").textContent = "Player Not Found";
+    async function loadScoutPlayer() {
+      const pathParts = window.location.pathname.split("/").filter(Boolean);
+      const playerId = pathParts.length >= 2 ? pathParts[1] : null;
+
+      if (!playerId) {
         return;
       }
 
-      document.title = `DiamondSignals // ${player.full_name}`;
-      document.getElementById("scoutPlayerName").textContent = player.full_name || "Unknown Player";
-      document.getElementById("scoutTeam").textContent = player.team || "Team";
-      document.getElementById("scoutPosition").textContent = player.position || "Position";
-      document.getElementById("scoutBT").textContent = `${player.bats || "-"} / ${player.throws || "-"}`;
-      document.getElementById("scoutStatus").textContent = player.status || "Status";
+      try {
+        const res = await fetch("/player_index.json");
+        const payload = await res.json();
+        const players = Array.isArray(payload.players) ? payload.players : [];
+        const player = players.find((p) => String(p.player_id) === String(playerId));
 
-      const img = document.getElementById("scoutHeadshot");
-      const fallback = document.getElementById("scoutHeadshotFallback");
+        if (!player) {
+          document.getElementById("scoutPlayerName").textContent = "Player Not Found";
+          return;
+        }
 
-      if (player.headshot_url) {
-        img.src = player.headshot_url;
-        img.style.display = "block";
-        fallback.style.display = "none";
+        document.title = `DiamondSignals // ${player.full_name}`;
+        document.getElementById("scoutPlayerName").textContent = player.full_name || "Unknown Player";
+        document.getElementById("scoutTeam").textContent = player.team || "Team";
+        document.getElementById("scoutPosition").textContent = player.position || "Position";
+        document.getElementById("scoutBT").textContent = `${player.bats || "-"} / ${player.throws || "-"}`;
+        document.getElementById("scoutStatus").textContent = player.status || "Status";
+
+        const img = document.getElementById("scoutHeadshot");
+        const fallback = document.getElementById("scoutHeadshotFallback");
+
+        if (player.headshot_url) {
+          img.src = player.headshot_url;
+          img.style.display = "block";
+          fallback.style.display = "none";
+        }
+
+        document.getElementById("metricAvgEv").textContent = "--";
+        document.getElementById("metricMaxEv").textContent = "--";
+        document.getElementById("metricHardHit").textContent = "--";
+        document.getElementById("metricExtension").textContent = player.position === "P" ? "-- ft" : "--";
+
+        document.getElementById("metricSweetSpot").textContent = "--";
+        document.getElementById("metricBarrel").textContent = "--";
+        document.getElementById("metricLaunchAngle").textContent = "--";
+        document.getElementById("metricMovementEdge").textContent = "--";
+
+        document.getElementById("metricAvg").textContent = "--";
+        document.getElementById("metricKRate").textContent = "--";
+        document.getElementById("metricWrcPlus").textContent = "--";
+        document.getElementById("metricSignalLabel").textContent = "PROFILE LOADING";
+
+        document.getElementById("scoutSignalPill").textContent = player.position === "P" ? "PITCHER DOSSIER" : "HITTER DOSSIER";
+        document.getElementById("scoutTrendPill").textContent = "LIVE PROFILE";
+        document.getElementById("scoutConfidencePill").textContent = "DATA V1";
+
+        document.getElementById("scoutBriefingCopy").textContent =
+          player.position === "P"
+            ? "Pitcher dossier shell is live. Next step is hydrating fastball velocity, extension, IVB, VAA, whiff rate, strikeout rate, and DiamondSignals pitcher assessment logic."
+            : "Hitter dossier shell is live. Next step is hydrating avg EV, max EV, hard-hit rate, sweet-spot rate, barrel rate, launch angle, results metrics, and DiamondSignals hitter assessment logic.";
+      } catch (error) {
+        document.getElementById("scoutPlayerName").textContent = "Scout Load Error";
       }
-    } catch (error) {
-      document.getElementById("scoutPlayerName").textContent = "Scout Load Error";
     }
-  }
 
-  loadScoutPlayer();
-</script>
+    loadScoutPlayer();
+  </script>
 </body>
 </html>
 """
     (scout_dir / "index.html").write_text(html, encoding="utf-8")
     print("Wrote dist/scout/index.html")
+
 
 if __name__ == "__main__":
     main()
