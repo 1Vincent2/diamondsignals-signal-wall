@@ -11,22 +11,54 @@ export default async (req) => {
     }
 
     const requestUrl = new URL(req.url);
-const indexUrl = `${requestUrl.origin}/player_index.json`;
+    const indexUrl = `${requestUrl.origin}/player_index.json`;
 
     const res = await fetch(indexUrl, {
-      headers: { "content-type": "application/json" }
-    });
+  headers: {
+    "accept": "application/json"
+  }
+});
 
-    if (!res.ok) {
-      return json(
-        {
-          query,
-          results: [],
-          error: "player_index_unavailable"
-        },
-        500
-      );
-    }
+const rawText = await res.text();
+const contentType = res.headers.get("content-type") || "";
+
+if (!res.ok) {
+  return json(
+    {
+      query,
+      results: [],
+      error: "player_index_unavailable",
+      debug: {
+        indexUrl,
+        status: res.status,
+        contentType,
+        preview: rawText.slice(0, 200)
+      }
+    },
+    500
+  );
+}
+
+let payload;
+
+try {
+  payload = JSON.parse(rawText);
+} catch (error) {
+  return json(
+    {
+      query,
+      results: [],
+      error: String(error),
+      debug: {
+        indexUrl,
+        status: res.status,
+        contentType,
+        preview: rawText.slice(0, 200)
+      }
+    },
+    500
+  );
+}
 
     const payload = await res.json();
     const players = Array.isArray(payload?.players) ? payload.players : [];
