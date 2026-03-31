@@ -1,9 +1,23 @@
 <div class="topnav">
   <div class="topnav-inner">
-    <a class="topnav-link {% if active_nav == 'signal_wall' %}active{% endif %}" href="/"><span class="topnav-tag">[ LIVE ]</span> Signal Wall</a>
-    <a class="topnav-link {% if active_nav == 'promotion_watch' %}active{% endif %}" href="/typical-call-up"><span class="topnav-tag">[ SCOUT ]</span> AAA/AA Promotion Watch</a>
-    <a class="topnav-link {% if active_nav == 'ivb_heat_map' %}active{% endif %}" href="/ivb-heat-map"><span class="topnav-tag">[ LAB ]</span> IVB Heat Map</a>
-    <a class="topnav-link {% if active_nav == 'hidden_gems' %}active{% endif %}" href="/hidden-gems"><span class="topnav-tag">[ EDGE ]</span> Hidden Gems Pipeline</a>
-    <a class="topnav-link" href="https://diamondsignals.ai"><span class="topnav-tag">[ SITE ]</span> Back to Main Site</a>
+    <div class="topnav-links">
+      <a class="topnav-link {% if active_nav == 'signal_wall' %}active{% endif %}" href="/"><span class="topnav-tag">[ LIVE ]</span> Signal Wall</a>
+      <a class="topnav-link {% if active_nav == 'promotion_watch' %}active{% endif %}" href="/typical-call-up"><span class="topnav-tag">[ SCOUT ]</span> AAA/AA Promotion Watch</a>
+      <a class="topnav-link {% if active_nav == 'ivb_heat_map' %}active{% endif %}" href="/ivb-heat-map"><span class="topnav-tag">[ LAB ]</span> IVB Heat Map</a>
+      <a class="topnav-link {% if active_nav == 'hidden_gems' %}active{% endif %}" href="/hidden-gems"><span class="topnav-tag">[ EDGE ]</span> Hidden Gems Pipeline</a>
+      <a class="topnav-link" href="https://diamondsignals.ai"><span class="topnav-tag">[ SITE ]</span> Back to Main Site</a>
+    </div>
+
+    <div class="topnav-search" id="playerSearch">
+      <input
+        type="text"
+        id="playerSearchInput"
+        class="player-search-input"
+        placeholder="Search players..."
+        autocomplete="off"
+        aria-label="Search players"
+      />
+      <div class="player-search-results" id="playerSearchResults" hidden></div>
+    </div>
   </div>
 </div>

@@ -864,21 +864,62 @@ HTML_TEMPLATE = Template("""
     }
 
     .topnav-inner {
-      width: min(1180px, calc(100% - 24px));
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      overflow-x: auto;
-      white-space: nowrap;
-      padding: 10px 0;
-      scrollbar-width: none;
-    }
+  width: min(1180px, calc(100% - 24px));
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  scrollbar-width: none;
+}
 
     .topnav-inner::-webkit-scrollbar {
       display: none;
     }
+.topnav-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  min-width: 0;
+}
 
+.topnav-links::-webkit-scrollbar {
+  display: none;
+}
+
+.topnav-search {
+  position: relative;
+  width: min(340px, 34vw);
+  flex: 0 0 auto;
+}
+
+.player-search-input {
+  width: 100%;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  padding: 0 14px;
+  font-family: var(--sans);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.player-search-input::placeholder {
+  color: rgba(255,255,255,0.48);
+}
+
+.player-search-input:focus {
+  border-color: rgba(106,166,255,0.52);
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 0 0 3px rgba(106,166,255,0.12);
+}
     .topnav-link {
       display: inline-flex;
       align-items: center;
@@ -1563,15 +1604,7 @@ HTML_TEMPLATE = Template("""
         </div>
       </div>
       <div class="header-actions">
-  <div class="player-search" id="playerSearch">
-    <input
-      type="text"
-      id="playerSearchInput"
-      class="player-search-input"
-      placeholder="Search players..."
-      autocomplete="off"
-      aria-label="Search players"
-    />
+  
     <div class="player-search-results" id="playerSearchResults" hidden></div>
   </div>
 
