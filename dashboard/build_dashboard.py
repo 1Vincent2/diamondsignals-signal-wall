@@ -1671,7 +1671,6 @@ HTML_TEMPLATE = Template("""
       </div>
       <div class="header-actions">
   
-    <div class="player-search-results" id="playerSearchResults" hidden></div>
   </div>
 
   <button class="info-trigger" type="button" onclick="openGlossary()" aria-label="Open glossary">ⓘ Glossary</button>
@@ -1684,7 +1683,6 @@ HTML_TEMPLATE = Template("""
     </div>
   </div>
 
-  {{ nav_html | safe }}
   {{ nav_html | safe }}
 
   <div class="search-strip">
