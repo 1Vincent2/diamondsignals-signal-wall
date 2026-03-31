@@ -1692,7 +1692,7 @@ HTML_TEMPLATE = Template("""
           type="text"
           id="playerSearchInput"
           class="player-search-input"
-          placeholder="Search players..."
+          placeholder=">_ EXECUTE PLAYER SEARCH...".
           autocomplete="off"
           aria-label="Search players"
         />
@@ -2225,6 +2225,37 @@ def copy_static_assets() -> None:
         js_dest.write_text(js_src.read_text(encoding="utf-8"), encoding="utf-8")
         print("Wrote dist/player-search.js")
         
+def write_scout_shell() -> None:
+    scout_dir = DIST_DIR / "scout"
+    scout_dir.mkdir(parents=True, exist_ok=True)
+
+    html = """<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DiamondSignals // Scout</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      background: #080808;
+      color: #f0f0f0;
+      font-family: Inter, Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <h1>Scout Page Shell</h1>
+  <p>If you can see this, the scout route shell exists.</p>
+</body>
+</html>
+"""
+    (scout_dir / "index.html").write_text(html, encoding="utf-8")
+    print("Wrote dist/scout/index.html")
+
+    print("Wrote dist/player-search.js")
+    write_scout_shell()
 
 if __name__ == "__main__":
     main()
