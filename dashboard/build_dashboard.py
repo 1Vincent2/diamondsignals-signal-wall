@@ -15,7 +15,7 @@ DIST_DIR.mkdir(parents=True, exist_ok=True)
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
-
+SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
 ALERT_THRESHOLD = float(os.getenv("ALERT_THRESHOLD", "65"))
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "").strip()
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
@@ -1251,14 +1251,7 @@ HTML_TEMPLATE = Template(
 
   {{ nav_html | safe }}
 
-  <div class="search-strip">
-    <div class="search-strip-inner">
-      <div class="player-search" id="playerSearch">
-        <input type="text" id="playerSearchInput" class="player-search-input" placeholder=">_ EXECUTE PLAYER SEARCH..." autocomplete="off" aria-label="Search players" />
-        <div class="player-search-results" id="playerSearchResults" hidden></div>
-      </div>
-    </div>
-  </div>
+ {{ search_html | safe }}
 
   <div id="glossaryOverlay" class="glossary-overlay" onclick="closeGlossary()"></div>
 
@@ -1483,7 +1476,6 @@ html = html.replace("{{ nav_html | safe }}", nav_html)
 """
 )
 
-
 def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
     combined = pd.concat([pitchers, hitters], ignore_index=True)
     slate_heat = 0
@@ -1496,6 +1488,7 @@ def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
         timezone_label=TIMEZONE_LABEL,
         slate_heat=slate_heat,
         nav_html=Template(NAV_TEMPLATE).render(active_nav="signal_wall"),
+        search_html=SEARCH_TEMPLATE,
         pitchers=pitchers.to_dict(orient="records"),
         hitters=hitters.to_dict(orient="records"),
     )
