@@ -16,6 +16,7 @@ DIST_DIR.mkdir(parents=True, exist_ok=True)
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
 SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
+FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
 ALERT_THRESHOLD = float(os.getenv("ALERT_THRESHOLD", "65"))
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "").strip()
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
@@ -1439,8 +1440,7 @@ HTML_TEMPLATE = Template(
       </div>
     </section>
 
-    <div class="footer">DiamondSignals Signal Wall // Generated During Netlify Build // {{ timezone_label }}</div>
-  </div>
+    {{ footer_html | safe }}
 
   <script src="/player-search.js"></script>
   <script>
@@ -1473,8 +1473,7 @@ HTML_TEMPLATE = Template(
 </body>
 </html>
 """)
-
-
+    
 def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
     combined = pd.concat([pitchers, hitters], ignore_index=True)
     slate_heat = 0
@@ -1488,6 +1487,7 @@ def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
         slate_heat=slate_heat,
         nav_html=Template(NAV_TEMPLATE).render(active_nav="signal_wall"),
         search_html=SEARCH_TEMPLATE,
+        footer_html=FOOTER_TEMPLATE,
         pitchers=pitchers.to_dict(orient="records"),
         hitters=hitters.to_dict(orient="records"),
     )
