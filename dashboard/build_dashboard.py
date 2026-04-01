@@ -1472,9 +1472,8 @@ HTML_TEMPLATE = Template(
   </script>
 </body>
 </html>
-html = html.replace("{{ nav_html | safe }}", nav_html)
-"""
-)
+""")
+
 
 def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
     combined = pd.concat([pitchers, hitters], ignore_index=True)
@@ -1542,33 +1541,35 @@ def write_scout_shell() -> None:
     .brand-title { font-size: 16px; line-height: 1.05; letter-spacing: -0.02em; font-weight: 800; }
     .header-actions { display: flex; align-items: center; gap: 10px; }
     .info-trigger { height: 34px; border-radius: 999px; border: 1px solid rgba(182,255,0,0.22); background: rgba(255,255,255,0.05); color: var(--text); display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; font-family: var(--mono); font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; box-shadow: 0 0 10px rgba(182,255,0,0.08); }
-    .topnav { border-top: 1px solid rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); }
-.topnav-inner { width: min(1180px, calc(100% - 24px)); margin: 0 auto; display: flex; align-items: center; gap: 10px; overflow-x: auto; white-space: nowrap; padding: 10px 0; scrollbar-width: none; }
-.topnav-inner::-webkit-scrollbar { display: none; }
-.topnav-links { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; }
-.topnav-link { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--soft); padding: 8px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); transition: opacity 0.18s ease, transform 0.18s ease, border-color 0.18s ease, color 0.18s ease; }
-.topnav-link:visited { color: var(--soft); }
-.topnav-link:hover { opacity: 1; transform: translateY(-1px); border-color: rgba(255,255,255,0.12); color: var(--text); }
-.topnav-link.active { color: var(--text); border-color: rgba(182,255,0,0.20); box-shadow: 0 0 8px rgba(182,255,0,0.08); }
-.topnav-link.active:visited { color: var(--text); }
-.topnav-tag { color: var(--lime-hot); }
 
-.search-strip { border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); }
-.search-strip-inner { width: min(1180px, calc(100% - 24px)); margin: 0 auto; padding: 12px 0 10px; display: flex; justify-content: flex-end; }
-.player-search { position: relative; width: min(420px, 100%); }
-.player-search-input { width: 100%; height: 40px; border-radius: 999px; border: 1px solid rgba(182,255,0,0.22); background: rgba(255,255,255,0.07); color: var(--text); padding: 0 16px; font-family: var(--sans); font-size: 14px; outline: none; box-shadow: 0 0 10px rgba(182,255,0,0.05); }
-.player-search-input::placeholder { color: rgba(255,255,255,0.50); }
-.player-search-input:focus { border-color: rgba(182,255,0,0.45); background: rgba(255,255,255,0.09); box-shadow: 0 0 0 3px rgba(182,255,0,0.10), 0 0 12px rgba(182,255,0,0.12); }
-.player-search-results { position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 70; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; background: linear-gradient(180deg, #121212 0%, #080808 100%); box-shadow: 0 14px 34px rgba(0,0,0,0.34); overflow: hidden; }
-.player-search-result { display: grid; grid-template-columns: 180px 1fr; gap: 12px; align-items: center; padding: 0; text-decoration: none; color: var(--text); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02); }
-.player-search-result:visited { color: var(--text); }
-.player-search-result:last-child { border-bottom: 0; }
-.player-search-result:hover, .player-search-result.active { background: rgba(255,255,255,0.05); }
-.player-search-avatar { width: 180px; height: 180px; object-fit: cover; display: block; background: rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.06); }
-.player-search-meta { min-width: 0; padding: 14px 14px 14px 0; }
-.player-search-name { font-size: 16px; font-weight: 800; line-height: 1.1; color: var(--text); text-decoration: none; }
-.player-search-sub { margin-top: 6px; font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.06em; }
-.player-search-empty, .player-search-loading, .player-search-error { padding: 12px 14px; font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.08em; }
+    .topnav { border-top: 1px solid rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); }
+    .topnav-inner { width: min(1180px, calc(100% - 24px)); margin: 0 auto; display: flex; align-items: center; gap: 10px; overflow-x: auto; white-space: nowrap; padding: 10px 0; scrollbar-width: none; }
+    .topnav-inner::-webkit-scrollbar { display: none; }
+    .topnav-links { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; }
+    .topnav-link { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--soft); padding: 8px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); transition: opacity 0.18s ease, transform 0.18s ease, border-color 0.18s ease, color 0.18s ease; }
+    .topnav-link:visited { color: var(--soft); }
+    .topnav-link:hover { opacity: 1; transform: translateY(-1px); border-color: rgba(255,255,255,0.12); color: var(--text); }
+    .topnav-link.active { color: var(--text); border-color: rgba(182,255,0,0.20); box-shadow: 0 0 8px rgba(182,255,0,0.08); }
+    .topnav-link.active:visited { color: var(--text); }
+    .topnav-tag { color: var(--lime-hot); }
+
+    .search-strip { border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); }
+    .search-strip-inner { width: min(1180px, calc(100% - 24px)); margin: 0 auto; padding: 12px 0 10px; display: flex; justify-content: flex-end; }
+    .player-search { position: relative; width: min(420px, 100%); }
+    .player-search-input { width: 100%; height: 40px; border-radius: 999px; border: 1px solid rgba(182,255,0,0.22); background: rgba(255,255,255,0.07); color: var(--text); padding: 0 16px; font-family: var(--sans); font-size: 14px; outline: none; box-shadow: 0 0 10px rgba(182,255,0,0.05); }
+    .player-search-input::placeholder { color: rgba(255,255,255,0.50); }
+    .player-search-input:focus { border-color: rgba(182,255,0,0.45); background: rgba(255,255,255,0.09); box-shadow: 0 0 0 3px rgba(182,255,0,0.10), 0 0 12px rgba(182,255,0,0.12); }
+    .player-search-results { position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 70; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; background: linear-gradient(180deg, #121212 0%, #080808 100%); box-shadow: 0 14px 34px rgba(0,0,0,0.34); overflow: hidden; }
+    .player-search-result { display: grid; grid-template-columns: 180px 1fr; gap: 12px; align-items: center; padding: 0; text-decoration: none; color: var(--text); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02); }
+    .player-search-result:visited { color: var(--text); }
+    .player-search-result:last-child { border-bottom: 0; }
+    .player-search-result:hover, .player-search-result.active { background: rgba(255,255,255,0.05); }
+    .player-search-avatar { width: 180px; height: 180px; object-fit: cover; display: block; background: rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.06); }
+    .player-search-meta { min-width: 0; padding: 14px 14px 14px 0; }
+    .player-search-name { font-size: 16px; font-weight: 800; line-height: 1.1; color: var(--text); text-decoration: none; }
+    .player-search-sub { margin-top: 6px; font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.06em; }
+    .player-search-empty, .player-search-loading, .player-search-error { padding: 12px 14px; font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.08em; }
+
     .app { padding: 28px 0 40px; }
     .hero-card, .section-card, .metric-card, .briefing-card {
       background: var(--card-radial);
@@ -1636,7 +1637,7 @@ def write_scout_shell() -> None:
   </style>
 </head>
 <body>
-    <div class="topbar">
+  <div class="topbar">
     <div class="topbar-inner">
       <div class="brand">
         <div class="brand-mark"></div>
@@ -1653,21 +1654,7 @@ def write_scout_shell() -> None:
 
   {nav_html}
 
-  <div class="search-strip">
-    <div class="search-strip-inner">
-      <div class="player-search" id="playerSearch">
-        <input
-          type="text"
-          id="playerSearchInput"
-          class="player-search-input"
-          placeholder=">_ EXECUTE PLAYER SEARCH..."
-          autocomplete="off"
-          aria-label="Search players"
-        />
-        <div class="player-search-results" id="playerSearchResults" hidden></div>
-      </div>
-    </div>
-  </div>
+  {search_html}
 
   <div class="app">
     <section class="hero-card">
@@ -1706,65 +1693,26 @@ def write_scout_shell() -> None:
     <section class="metrics-grid">
       <article class="metric-card">
         <div class="metric-kicker" id="zone1Title">Ballistics</div>
-
-        <div class="metric-row">
-          <div class="metric-label" id="zone1Label1">Metric 1</div>
-          <div class="metric-value" id="zone1Value1">--</div>
-        </div>
-        <div class="metric-row">
-          <div class="metric-label" id="zone1Label2">Metric 2</div>
-          <div class="metric-value" id="zone1Value2">--</div>
-        </div>
-        <div class="metric-row">
-          <div class="metric-label" id="zone1Label3">Metric 3</div>
-          <div class="metric-value" id="zone1Value3">--</div>
-        </div>
-        <div class="metric-row">
-          <div class="metric-label" id="zone1Label4">Metric 4</div>
-          <div class="metric-value" id="zone1Value4">--</div>
-        </div>
+        <div class="metric-row"><div class="metric-label" id="zone1Label1">Metric 1</div><div class="metric-value" id="zone1Value1">--</div></div>
+        <div class="metric-row"><div class="metric-label" id="zone1Label2">Metric 2</div><div class="metric-value" id="zone1Value2">--</div></div>
+        <div class="metric-row"><div class="metric-label" id="zone1Label3">Metric 3</div><div class="metric-value" id="zone1Value3">--</div></div>
+        <div class="metric-row"><div class="metric-label" id="zone1Label4">Metric 4</div><div class="metric-value" id="zone1Value4">--</div></div>
       </article>
 
       <article class="metric-card">
         <div class="metric-kicker" id="zone2Title">Movement</div>
-
-        <div class="metric-row">
-          <div class="metric-label" id="zone2Label1">Metric 1</div>
-          <div class="metric-value" id="zone2Value1">--</div>
-        </div>
-        <div class="metric-row">
-          <div class="metric-label" id="zone2Label2">Metric 2</div>
-          <div class="metric-value" id="zone2Value2">--</div>
-        </div>
-        <div class="metric-row">
-          <div class="metric-label" id="zone2Label3">Metric 3</div>
-          <div class="metric-value" id="zone2Value3">--</div>
-        </div>
-        <div class="metric-row">
-          <div class="metric-label" id="zone2Label4">Metric 4</div>
-          <div class="metric-value" id="zone2Value4">--</div>
-        </div>
+        <div class="metric-row"><div class="metric-label" id="zone2Label1">Metric 1</div><div class="metric-value" id="zone2Value1">--</div></div>
+        <div class="metric-row"><div class="metric-label" id="zone2Label2">Metric 2</div><div class="metric-value" id="zone2Value2">--</div></div>
+        <div class="metric-row"><div class="metric-label" id="zone2Label3">Metric 3</div><div class="metric-value" id="zone2Value3">--</div></div>
+        <div class="metric-row"><div class="metric-label" id="zone2Label4">Metric 4</div><div class="metric-value" id="zone2Value4">--</div></div>
       </article>
 
       <article class="metric-card">
         <div class="metric-kicker" id="zone3Title">Results</div>
-
-        <div class="metric-row">
-          <div class="metric-label" id="zone3Label1">Metric 1</div>
-          <div class="metric-value" id="zone3Value1">--</div>
-        </div>
-        <div class="metric-row">
-          <div class="metric-label" id="zone3Label2">Metric 2</div>
-          <div class="metric-value" id="zone3Value2">--</div>
-        </div>
-        <div class="metric-row">
-          <div class="metric-label" id="zone3Label3">Metric 3</div>
-          <div class="metric-value" id="zone3Value3">--</div>
-        </div>
-        <div class="metric-row">
-          <div class="metric-label" id="zone3Label4">Metric 4</div>
-          <div class="metric-value" id="zone3Value4">--</div>
-        </div>
+        <div class="metric-row"><div class="metric-label" id="zone3Label1">Metric 1</div><div class="metric-value" id="zone3Value1">--</div></div>
+        <div class="metric-row"><div class="metric-label" id="zone3Label2">Metric 2</div><div class="metric-value" id="zone3Value2">--</div></div>
+        <div class="metric-row"><div class="metric-label" id="zone3Label3">Metric 3</div><div class="metric-value" id="zone3Value3">--</div></div>
+        <div class="metric-row"><div class="metric-label" id="zone3Label4">Metric 4</div><div class="metric-value" id="zone3Value4">--</div></div>
       </article>
     </section>
 
@@ -1804,44 +1752,14 @@ def write_scout_shell() -> None:
       if (!data) return {};
 
       if (zoneName === "ballistics") {
-        return {
-          label_1: "Avg Exit Velo",
-          value_1: data.avg_ev,
-          label_2: "Max Exit Velo",
-          value_2: data.max_ev,
-          label_3: "Hard Hit %",
-          value_3: data.hard_hit_pct,
-          label_4: "Diamond Delta",
-          value_4: data.extension ?? null
-        };
+        return { label_1: "Avg Exit Velo", value_1: data.avg_ev, label_2: "Max Exit Velo", value_2: data.max_ev, label_3: "Hard Hit %", value_3: data.hard_hit_pct, label_4: "Diamond Delta", value_4: data.extension ?? null };
       }
-
       if (zoneName === "movement") {
-        return {
-          label_1: "Sweet Spot %",
-          value_1: data.sweet_spot_pct,
-          label_2: "Barrel %",
-          value_2: data.barrel_pct,
-          label_3: "Launch Angle",
-          value_3: data.launch_angle,
-          label_4: "xBA / Edge",
-          value_4: data.movement_edge
-        };
+        return { label_1: "Sweet Spot %", value_1: data.sweet_spot_pct, label_2: "Barrel %", value_2: data.barrel_pct, label_3: "Launch Angle", value_3: data.launch_angle, label_4: "xBA / Edge", value_4: data.movement_edge };
       }
-
       if (zoneName === "results") {
-        return {
-          label_1: "Batting Avg",
-          value_1: data.avg,
-          label_2: "K Rate",
-          value_2: data.k_rate,
-          label_3: "wRC+",
-          value_3: data.wrc_plus,
-          label_4: "Signal",
-          value_4: data.signal_label
-        };
+        return { label_1: "Batting Avg", value_1: data.avg, label_2: "K Rate", value_2: data.k_rate, label_3: "wRC+", value_3: data.wrc_plus, label_4: "Signal", value_4: data.signal_label };
       }
-
       return {};
     }
 
@@ -1853,7 +1771,6 @@ def write_scout_shell() -> None:
 
     function formatValue(label, value) {
       const upper = String(label || "").toUpperCase();
-
       if (value === null || value === undefined || value === "") return "--";
       if (typeof value === "string") return value;
       if (upper.includes("%")) return formatPct(value);
@@ -1862,7 +1779,6 @@ def write_scout_shell() -> None:
       if (upper.includes("EXTENSION")) return `${Number(value).toFixed(1)} ft`;
       if (upper.includes("IVB")) return `${Number(value).toFixed(1)} in`;
       if (upper.includes("DELTA") || upper.includes("EDGE")) return formatSigned3(value);
-
       return format1(value);
     }
 
@@ -1872,7 +1788,6 @@ def write_scout_shell() -> None:
         const valueEl = document.getElementById(`${prefix}Value${i}`);
         const label = zoneData[`label_${i}`] || `Metric ${i}`;
         const value = zoneData[`value_${i}`];
-
         if (labelEl) labelEl.textContent = label;
         if (valueEl) valueEl.textContent = formatValue(label, value);
       }
@@ -1881,26 +1796,16 @@ def write_scout_shell() -> None:
     async function loadScoutPlayer() {
       const pathParts = window.location.pathname.split("/").filter(Boolean);
       const scoutIndex = pathParts.indexOf("scout");
-      const playerId = scoutIndex >= 0 && pathParts[scoutIndex + 1]
-        ? pathParts[scoutIndex + 1]
-        : null;
-
+      const playerId = scoutIndex >= 0 && pathParts[scoutIndex + 1] ? pathParts[scoutIndex + 1] : null;
       if (!playerId) return;
 
       try {
-        const [playerRes, metricsRes] = await Promise.all([
-          fetch("/player_index.json"),
-          fetch("/scout_metrics.json")
-        ]);
-
+        const [playerRes, metricsRes] = await Promise.all([fetch("/player_index.json"), fetch("/scout_metrics.json")]);
         const playerPayload = await playerRes.json();
         const metricsPayload = await metricsRes.json();
-
         const players = Array.isArray(playerPayload.players) ? playerPayload.players : [];
         const player = players.find((p) => String(p.player_id) === String(playerId));
-        const scoutMetrics = metricsPayload && metricsPayload.players
-          ? metricsPayload.players[String(playerId)]
-          : null;
+        const scoutMetrics = metricsPayload && metricsPayload.players ? metricsPayload.players[String(playerId)] : null;
 
         if (!player) {
           document.getElementById("scoutPlayerName").textContent = "Player Not Found";
@@ -1922,8 +1827,7 @@ def write_scout_shell() -> None:
           fallback.style.display = "none";
         }
 
-        document.getElementById("scoutSignalPill").textContent =
-          player.position === "P" ? "PITCHER DOSSIER" : "HITTER DOSSIER";
+        document.getElementById("scoutSignalPill").textContent = player.position === "P" ? "PITCHER DOSSIER" : "HITTER DOSSIER";
         document.getElementById("scoutTrendPill").textContent = "LIVE PROFILE";
         document.getElementById("scoutConfidencePill").textContent = "DATA V1";
 
@@ -1931,8 +1835,7 @@ def write_scout_shell() -> None:
           setZone("zone1", normalizeZone("ballistics", scoutMetrics.ballistics || {}));
           setZone("zone2", normalizeZone("movement", scoutMetrics.movement || {}));
           setZone("zone3", normalizeZone("results", scoutMetrics.results || {}));
-          document.getElementById("scoutBriefingCopy").textContent =
-            scoutMetrics.briefing || "Live player profile loaded.";
+          document.getElementById("scoutBriefingCopy").textContent = scoutMetrics.briefing || "Live player profile loaded.";
         } else {
           document.getElementById("scoutBriefingCopy").textContent =
             player.position === "P"
@@ -1949,6 +1852,10 @@ def write_scout_shell() -> None:
 </body>
 </html>
 """
+    nav_html = Template(NAV_TEMPLATE).render(active_nav="scout_dossier")
+    search_html = SEARCH_TEMPLATE
+    html = html.replace("{nav_html}", nav_html).replace("{search_html}", search_html)
+
     (scout_dir / "index.html").write_text(html, encoding="utf-8")
     print("Wrote dist/scout/index.html")
 
