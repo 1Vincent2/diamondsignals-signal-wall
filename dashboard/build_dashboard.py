@@ -1479,6 +1479,7 @@ HTML_TEMPLATE = Template(
   </script>
 </body>
 </html>
+html = html.replace("{{ nav_html | safe }}", nav_html)
 """
 )
 
@@ -1657,7 +1658,7 @@ def write_scout_shell() -> None:
     </div>
   </div>
 
-  {{ nav_html | safe }}
+  {nav_html}
 
   <div class="search-strip">
     <div class="search-strip-inner">
