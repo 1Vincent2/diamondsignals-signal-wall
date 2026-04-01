@@ -74,7 +74,10 @@ def safe_float(value):
 
 def fetch_statcast_window(start_dt: date, end_dt: date) -> pd.DataFrame:
     print(f"Fetching Statcast from {start_dt} to {end_dt}...")
-    df = statcast(start_dt=start_dt.strftime("%Y-%m-%d"), end_dt=end_dt.strftime("%Y-%m-%d"))
+    df = statcast(
+        start_dt=start_dt.strftime("%Y-%m-%d"),
+        end_dt=end_dt.strftime("%Y-%m-%d"),
+    )
     if df is None or df.empty:
         raise RuntimeError("Statcast returned no data for the requested window.")
     return df
@@ -120,7 +123,9 @@ def build_batter_name_map(batter_ids) -> dict[int, str]:
     return name_map
 
 
-def fill_missing_batter_names_with_statsapi(name_map: dict[int, str], batter_ids) -> dict[int, str]:
+def fill_missing_batter_names_with_statsapi(
+    name_map: dict[int, str], batter_ids
+) -> dict[int, str]:
     ids = []
     for value in batter_ids:
         try:
@@ -157,9 +162,13 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
 
     batter_ids = hitters["batter"].dropna().unique()
     batter_name_map = build_batter_name_map(batter_ids)
-    batter_name_map = fill_missing_batter_names_with_statsapi(batter_name_map, batter_ids)
+    batter_name_map = fill_missing_batter_names_with_statsapi(
+        batter_name_map, batter_ids
+    )
 
-    pitcher_ids = set(pd.to_numeric(df["pitcher"], errors="coerce").dropna().astype(int).tolist())
+    pitcher_ids = set(
+        pd.to_numeric(df["pitcher"], errors="coerce").dropna().astype(int).tolist()
+    )
 
     bbe = hitters[hitters["launch_speed"].notna()].copy()
 
@@ -185,14 +194,20 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
         return pd.DataFrame()
 
     bbe["game_date"] = pd.to_datetime(bbe["game_date"])
-    bbe["is_recent"] = bbe["game_date"] >= pd.Timestamp(TODAY - timedelta(days=RECENT_DAYS))
-    bbe["is_baseline"] = (bbe["game_date"] < pd.Timestamp(TODAY - timedelta(days=RECENT_DAYS))) & (
-        bbe["game_date"] >= pd.Timestamp(TODAY - timedelta(days=BASELINE_DAYS))
+    bbe["is_recent"] = bbe["game_date"] >= pd.Timestamp(
+        TODAY - timedelta(days=RECENT_DAYS)
     )
+    bbe["is_baseline"] = (
+        bbe["game_date"] < pd.Timestamp(TODAY - timedelta(days=RECENT_DAYS))
+    ) & (bbe["game_date"] >= pd.Timestamp(TODAY - timedelta(days=BASELINE_DAYS)))
 
     bbe["barrel_like"] = (
         (pd.to_numeric(bbe["launch_speed"], errors="coerce") >= 98)
-        & (pd.to_numeric(bbe["launch_angle"], errors="coerce").between(26, 30, inclusive="both"))
+        & (
+            pd.to_numeric(bbe["launch_angle"], errors="coerce").between(
+                26, 30, inclusive="both"
+            )
+        )
     ).astype(int)
 
     recent = (
@@ -220,15 +235,20 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     merged = recent.merge(baseline, on=["batter"], how="left", suffixes=("", "_base"))
-    merged = merged[(merged["recent_bbe"] >= 6) & (merged["recent_max_ev"] >= 95)].copy()
+    merged = merged[
+        (merged["recent_bbe"] >= 6) & (merged["recent_max_ev"] >= 95)
+    ].copy()
 
     if merged.empty:
         return pd.DataFrame()
 
     merged["baseline_bbe"] = merged["baseline_bbe"].fillna(0)
-    merged["ev_delta"] = merged["recent_ev"] - merged["baseline_ev"].fillna(merged["recent_ev"])
+    merged["ev_delta"] = merged["recent_ev"] - merged["baseline_ev"].fillna(
+        merged["recent_ev"]
+    )
     merged["barrel_rate_delta"] = (
-        merged["recent_barrel_rate"] - merged["baseline_barrel_rate"].fillna(merged["recent_barrel_rate"])
+        merged["recent_barrel_rate"]
+        - merged["baseline_barrel_rate"].fillna(merged["recent_barrel_rate"])
     )
 
     merged["quality_index"] = (
@@ -242,11 +262,20 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
         + 0.35 * zscore(merged["barrel_rate_delta"])
     )
 
-    merged["edge_score_raw"] = 50 + 11 * merged["quality_index"] + 8 * merged["delta_index"] + 2 * zscore(merged["recent_bbe"])
-    merged["edge_score"] = (50 + (merged["edge_score_raw"] - 50) * 0.82).clip(5, 95).round(1)
+    merged["edge_score_raw"] = (
+        50
+        + 11 * merged["quality_index"]
+        + 8 * merged["delta_index"]
+        + 2 * zscore(merged["recent_bbe"])
+    )
+    merged["edge_score"] = (
+        50 + (merged["edge_score_raw"] - 50) * 0.82
+    ).clip(5, 95).round(1)
 
     merged["player_name"] = merged["batter"].apply(
-        lambda x: batter_name_map.get(int(x), f"Player {int(x)}") if pd.notna(x) else "Unknown"
+        lambda x: batter_name_map.get(int(x), f"Player {int(x)}")
+        if pd.notna(x)
+        else "Unknown"
     )
     merged["player_name"] = merged["player_name"].apply(safe_name)
     merged["signal_type"] = "Hitter"
@@ -282,7 +311,11 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
     def hitter_badge_classes(row: pd.Series) -> list[str]:
         classes = []
         for badge in row["badges"]:
-            classes.append("positive" if badge in ["EV Burst", "Barrel Jump", "Impact EV"] else "neutral")
+            classes.append(
+                "positive"
+                if badge in ["EV Burst", "Barrel Jump", "Impact EV"]
+                else "neutral"
+            )
         return classes
 
     merged["badges"] = merged.apply(hitter_badges, axis=1)
@@ -299,17 +332,24 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
         player_days = recent_daily_ev[recent_daily_ev["batter"] == player_id].copy()
         if player_days.empty:
             return "0,24 20,22 40,21 60,19 80,18 100,16 120,14"
+
         player_days = player_days.sort_values("game_date")
         vals = player_days["day_ev"].tolist()
+
         if len(vals) == 1:
             vals = vals * 7
         elif len(vals) < 7:
             vals = [vals[0]] * (7 - len(vals)) + vals
         else:
             vals = vals[-7:]
+
         vmin = min(vals)
         vmax = max(vals)
-        yvals = [17 for _ in vals] if vmax == vmin else [26 - ((v - vmin) / (vmax - vmin)) * 16 for v in vals]
+        yvals = (
+            [17 for _ in vals]
+            if vmax == vmin
+            else [26 - ((v - vmin) / (vmax - vmin)) * 16 for v in vals]
+        )
         xvals = [0, 20, 40, 60, 80, 100, 120]
         return " ".join(f"{x},{round(y, 1)}" for x, y in zip(xvals, yvals))
 
@@ -322,16 +362,22 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
 def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
     pitchers = df.copy()
     pitchers["game_date"] = pd.to_datetime(pitchers["game_date"])
-    pitchers["is_whiff"] = pitchers["description"].isin(["swinging_strike", "swinging_strike_blocked"]).astype(int)
+    pitchers["is_whiff"] = pitchers["description"].isin(
+        ["swinging_strike", "swinging_strike_blocked"]
+    ).astype(int)
 
     fastballs = {"FF", "FT", "SI", "FC"}
     pitchers["is_fastball"] = pitchers["pitch_type"].isin(fastballs).astype(int)
-    pitchers["fastball_speed"] = pd.to_numeric(pitchers["release_speed"], errors="coerce").where(pitchers["is_fastball"] == 1)
+    pitchers["fastball_speed"] = pd.to_numeric(
+        pitchers["release_speed"], errors="coerce"
+    ).where(pitchers["is_fastball"] == 1)
 
-    pitchers["is_recent"] = pitchers["game_date"] >= pd.Timestamp(TODAY - timedelta(days=RECENT_DAYS))
-    pitchers["is_baseline"] = (pitchers["game_date"] < pd.Timestamp(TODAY - timedelta(days=RECENT_DAYS))) & (
-        pitchers["game_date"] >= pd.Timestamp(TODAY - timedelta(days=BASELINE_DAYS))
+    pitchers["is_recent"] = pitchers["game_date"] >= pd.Timestamp(
+        TODAY - timedelta(days=RECENT_DAYS)
     )
+    pitchers["is_baseline"] = (
+        pitchers["game_date"] < pd.Timestamp(TODAY - timedelta(days=RECENT_DAYS))
+    ) & (pitchers["game_date"] >= pd.Timestamp(TODAY - timedelta(days=BASELINE_DAYS)))
 
     recent = (
         pitchers[pitchers["is_recent"]]
@@ -358,14 +404,22 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     merged = recent.merge(baseline, on=["pitcher", "player_name"], how="left")
-    merged = merged[(merged["recent_pitches"] >= 60) & (merged["recent_fb_velo"].fillna(0) >= 90)].copy()
+    merged = merged[
+        (merged["recent_pitches"] >= 60) & (merged["recent_fb_velo"].fillna(0) >= 90)
+    ].copy()
 
     if merged.empty:
         return pd.DataFrame()
 
-    merged["velo_delta"] = merged["recent_fb_velo"] - merged["baseline_fb_velo"].fillna(merged["recent_fb_velo"])
-    merged["whiff_delta"] = merged["recent_whiff_rate"] - merged["baseline_whiff_rate"].fillna(merged["recent_whiff_rate"])
-    merged["extension_delta"] = merged["recent_extension"] - merged["baseline_extension"].fillna(merged["recent_extension"])
+    merged["velo_delta"] = merged["recent_fb_velo"] - merged[
+        "baseline_fb_velo"
+    ].fillna(merged["recent_fb_velo"])
+    merged["whiff_delta"] = merged["recent_whiff_rate"] - merged[
+        "baseline_whiff_rate"
+    ].fillna(merged["recent_whiff_rate"])
+    merged["extension_delta"] = merged["recent_extension"] - merged[
+        "baseline_extension"
+    ].fillna(merged["recent_extension"])
 
     merged["quality_index"] = (
         0.50 * zscore(merged["recent_whiff_rate"])
@@ -378,8 +432,15 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
         + 0.15 * zscore(merged["extension_delta"])
     )
 
-    merged["edge_score_raw"] = 50 + 11 * merged["quality_index"] + 9 * merged["delta_index"] + 2 * zscore(merged["recent_pitches"])
-    merged["edge_score"] = (50 + (merged["edge_score_raw"] - 50) * 0.84).clip(5, 95).round(1)
+    merged["edge_score_raw"] = (
+        50
+        + 11 * merged["quality_index"]
+        + 9 * merged["delta_index"]
+        + 2 * zscore(merged["recent_pitches"])
+    )
+    merged["edge_score"] = (
+        50 + (merged["edge_score_raw"] - 50) * 0.84
+    ).clip(5, 95).round(1)
 
     merged["player_name"] = merged["player_name"].apply(safe_name)
     merged["signal_type"] = "Pitcher"
@@ -396,7 +457,9 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
     merged["metric_1_label"] = "Whiff %"
     merged["metric_2"] = merged["recent_fb_velo"].round(1)
     merged["metric_2_label"] = "FB Velo"
-    merged["metric_3"] = merged["recent_extension"].round(1).map(lambda x: f"{x:.1f} ft" if pd.notna(x) else "—")
+    merged["metric_3"] = merged["recent_extension"].round(1).map(
+        lambda x: f"{x:.1f} ft" if pd.notna(x) else "—"
+    )
     merged["metric_3_label"] = "Extension"
     merged["sample_note"] = merged["recent_pitches"].apply(lambda x: f"{int(x)} P")
 
@@ -415,7 +478,11 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
     def pitcher_badge_classes(row: pd.Series) -> list[str]:
         classes = []
         for badge in row["badges"]:
-            classes.append("positive" if badge in ["Whiff Lift", "Velo Jump", "Extension Gain"] else "neutral")
+            classes.append(
+                "positive"
+                if badge in ["Whiff Lift", "Velo Jump", "Extension Gain"]
+                else "neutral"
+            )
         return classes
 
     merged["badges"] = merged.apply(pitcher_badges, axis=1)
@@ -429,21 +496,38 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     def build_pitcher_trend_points(player_id) -> str:
-        player_days = recent_daily_whiff[recent_daily_whiff["pitcher"] == player_id].copy()
+        player_days = recent_daily_whiff[
+            recent_daily_whiff["pitcher"] == player_id
+        ].copy()
         if player_days.empty:
             return "0,25 20,23 40,21 60,19 80,17 100,15 120,13"
+
         player_days = player_days.sort_values("game_date")
         vals = player_days["day_whiff"].tolist()
+
         if len(vals) == 1:
             base = vals[0]
-            vals = [base * 0.985, base * 0.99, base * 0.995, base, base * 1.005, base * 1.01, base * 1.015]
+            vals = [
+                base * 0.985,
+                base * 0.99,
+                base * 0.995,
+                base,
+                base * 1.005,
+                base * 1.01,
+                base * 1.015,
+            ]
         elif len(vals) < 7:
             vals = [vals[0]] * (7 - len(vals)) + vals
         else:
             vals = vals[-7:]
+
         vmin = min(vals)
         vmax = max(vals)
-        yvals = [24, 22, 21, 19, 18, 16, 14] if vmax == vmin else [26 - ((v - vmin) / (vmax - vmin)) * 16 for v in vals]
+        yvals = (
+            [24, 22, 21, 19, 18, 16, 14]
+            if vmax == vmin
+            else [26 - ((v - vmin) / (vmax - vmin)) * 16 for v in vals]
+        )
         xvals = [0, 20, 40, 60, 80, 100, 120]
         return " ".join(f"{x},{round(y, 1)}" for x, y in zip(xvals, yvals))
 
@@ -522,12 +606,14 @@ def fetch_player_identity(player_id: int) -> Optional[dict]:
         people = payload.get("people", [])
         if not people:
             return None
+
         person = people[0]
         current_team = person.get("currentTeam") or {}
         primary_position = person.get("primaryPosition") or {}
         bat_side = person.get("batSide") or {}
         pitch_hand = person.get("pitchHand") or {}
         status = person.get("status") or {}
+
         return {
             "player_id": player_id,
             "full_name": str(person.get("fullName", "")).strip(),
@@ -546,27 +632,50 @@ def fetch_player_identity(player_id: int) -> Optional[dict]:
 
 
 def build_player_index(df: pd.DataFrame) -> dict:
+    print("Gathering player lookup table. This may take a moment.")
     player_ids = extract_player_ids(df)
     players = []
     for player_id in player_ids:
         identity = fetch_player_identity(player_id)
         if identity:
             players.append(identity)
+
     players.sort(key=lambda row: (row.get("last_name", ""), row.get("first_name", "")))
     return {"generated_at": datetime.now().isoformat(), "players": players}
 
 
 def _build_hitter_result_frame(df: pd.DataFrame) -> pd.DataFrame:
     hitters = df.copy()
-    hitters["launch_speed"] = pd.to_numeric(hitters.get("launch_speed"), errors="coerce")
-    hitters["launch_angle"] = pd.to_numeric(hitters.get("launch_angle"), errors="coerce")
-    hitters["estimated_ba_using_speedangle"] = pd.to_numeric(hitters.get("estimated_ba_using_speedangle"), errors="coerce")
+    hitters["launch_speed"] = pd.to_numeric(
+        hitters.get("launch_speed"), errors="coerce"
+    )
+    hitters["launch_angle"] = pd.to_numeric(
+        hitters.get("launch_angle"), errors="coerce"
+    )
+    hitters["estimated_ba_using_speedangle"] = pd.to_numeric(
+        hitters.get("estimated_ba_using_speedangle"), errors="coerce"
+    )
 
-    hitters["is_ab"] = hitters["events"].isin([
-        "single", "double", "triple", "home_run", "field_out", "force_out", "grounded_into_double_play",
-        "fielders_choice_out", "strikeout", "strikeout_double_play", "double_play", "triple_play",
-        "lineout", "flyout", "pop_out", "groundout",
-    ])
+    hitters["is_ab"] = hitters["events"].isin(
+        [
+            "single",
+            "double",
+            "triple",
+            "home_run",
+            "field_out",
+            "force_out",
+            "grounded_into_double_play",
+            "fielders_choice_out",
+            "strikeout",
+            "strikeout_double_play",
+            "double_play",
+            "triple_play",
+            "lineout",
+            "flyout",
+            "pop_out",
+            "groundout",
+        ]
+    )
     hitters["is_hit"] = hitters["events"].isin(["single", "double", "triple", "home_run"])
     hitters["is_so"] = hitters["events"].isin(["strikeout", "strikeout_double_play"])
     hitters["is_bb"] = hitters["events"].isin(["walk", "intent_walk"])
@@ -578,7 +687,10 @@ def _build_hitter_result_frame(df: pd.DataFrame) -> pd.DataFrame:
 
     bbe["hard_hit"] = (bbe["launch_speed"] >= 95).astype(int)
     bbe["sweet_spot"] = bbe["launch_angle"].between(8, 32, inclusive="both").astype(int)
-    bbe["barrel_like"] = ((bbe["launch_speed"] >= 98) & (bbe["launch_angle"].between(26, 30, inclusive="both"))).astype(int)
+    bbe["barrel_like"] = (
+        (bbe["launch_speed"] >= 98)
+        & (bbe["launch_angle"].between(26, 30, inclusive="both"))
+    ).astype(int)
 
     bbe_grouped = (
         bbe.groupby("batter", dropna=False)
@@ -642,7 +754,9 @@ def build_scout_hitter_metrics(df: pd.DataFrame) -> dict:
         barrel_pct = (barrel_pct * 100.0) if barrel_pct is not None else None
         launch_angle = safe_float(row.get("launch_angle"))
 
-        if xba_delta is not None and xba_delta > 0.100 and (max_ev is not None and max_ev > 110):
+        if xba_delta is not None and xba_delta > 0.100 and (
+            max_ev is not None and max_ev > 110
+        ):
             signal_label = "PLATINUM BUY"
         elif xba_delta is not None and xba_delta > 0.050:
             signal_label = "GOLD BUY"
@@ -652,14 +766,72 @@ def build_scout_hitter_metrics(df: pd.DataFrame) -> dict:
             signal_label = "NEUTRAL"
 
         parts = []
+
         if avg is not None and xba is not None and xba_delta is not None:
-            parts.append(f"AVG {avg:.3f}, xBA {xba:.3f}, delta {xba_delta:+.3f}")
+            if xba_delta >= 0.100:
+                parts.append(
+                    f"He materially outperformed his surface AVG quality this week. "
+                    f"The profile shows AVG {avg:.3f} against xBA {xba:.3f}, a strong +{xba_delta:.3f} gap that points to better underlying contact than the box score suggests."
+                )
+            elif xba_delta >= 0.050:
+                parts.append(
+                    f"He showed positive separation between results and contact quality this week. "
+                    f"AVG came in at {avg:.3f} with xBA at {xba:.3f}, a +{xba_delta:.3f} edge that supports a constructive buy signal."
+                )
+            elif xba_delta <= -0.050:
+                parts.append(
+                    f"His surface AVG ran ahead of the quality-of-contact profile this week. "
+                    f"AVG was {avg:.3f} versus xBA {xba:.3f}, a {xba_delta:.3f} gap that suggests some caution."
+                )
+            else:
+                parts.append(
+                    f"His results and contact-quality profile were mostly in line this week, "
+                    f"with AVG at {avg:.3f} and xBA at {xba:.3f}."
+                )
+
         if max_ev is not None:
-            parts.append(f"Max EV {max_ev:.1f}")
-        if barrel_pct is not None:
-            parts.append(f"Barrel {barrel_pct:.1f}%")
-        if hard_hit_pct is not None:
-            parts.append(f"Hard Hit {hard_hit_pct:.1f}%")
+            if max_ev >= 110:
+                parts.append(
+                    f"The top-end damage was real, with a max exit velocity of {max_ev:.1f} mph, which is premium impact territory."
+                )
+            elif max_ev >= 105:
+                parts.append(
+                    f"He still showed legitimate impact ability, reaching {max_ev:.1f} mph at peak exit velocity."
+                )
+            else:
+                parts.append(
+                    f"The max exit velocity checked in at {max_ev:.1f} mph, which was more solid than explosive."
+                )
+
+        if barrel_pct is not None and hard_hit_pct is not None:
+            parts.append(
+                f"The contact mix was supported by a {barrel_pct:.1f}% barrel rate and {hard_hit_pct:.1f}% hard-hit rate over the recent window."
+            )
+        elif barrel_pct is not None:
+            parts.append(
+                f"Barrel rate registered at {barrel_pct:.1f}% over the recent window."
+            )
+        elif hard_hit_pct is not None:
+            parts.append(
+                f"Hard-hit rate registered at {hard_hit_pct:.1f}% over the recent window."
+            )
+
+        if signal_label == "PLATINUM BUY":
+            parts.append(
+                "Net assessment: Platinum Buy. The past week looks stronger under the hood than the surface line, with enough impact authority to support a bullish forward read."
+            )
+        elif signal_label == "GOLD BUY":
+            parts.append(
+                "Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category."
+            )
+        elif signal_label == "CAUTION":
+            parts.append(
+                "Net assessment: Caution. Recent results appear less trustworthy once the underlying contact quality is weighed."
+            )
+        else:
+            parts.append(
+                "Net assessment: Neutral. There are some usable signs here, but not enough separation yet for a stronger conviction label."
+            )
 
         out[str(player_id)] = {
             "player_type": "hitter",
@@ -693,7 +865,7 @@ def build_scout_hitter_metrics(df: pd.DataFrame) -> dict:
                 "label_4": "Signal",
                 "value_4": signal_label,
             },
-            "briefing": " | ".join(parts) if parts else "Live hitter profile loaded.",
+            "briefing": " ".join(parts) if parts else "Live hitter profile loaded.",
         }
 
     return out
@@ -705,12 +877,22 @@ def build_scout_pitcher_metrics(df: pd.DataFrame) -> dict:
         return {}
 
     pitchers["game_date"] = pd.to_datetime(pitchers["game_date"])
-    pitchers["release_speed"] = pd.to_numeric(pitchers.get("release_speed"), errors="coerce")
-    pitchers["release_extension"] = pd.to_numeric(pitchers.get("release_extension"), errors="coerce")
-    pitchers["release_spin_rate"] = pd.to_numeric(pitchers.get("release_spin_rate"), errors="coerce")
+    pitchers["release_speed"] = pd.to_numeric(
+        pitchers.get("release_speed"), errors="coerce"
+    )
+    pitchers["release_extension"] = pd.to_numeric(
+        pitchers.get("release_extension"), errors="coerce"
+    )
+    pitchers["release_spin_rate"] = pd.to_numeric(
+        pitchers.get("release_spin_rate"), errors="coerce"
+    )
     pitchers["pfx_z"] = pd.to_numeric(pitchers.get("pfx_z"), errors="coerce")
-    pitchers["is_whiff"] = pitchers["description"].isin(["swinging_strike", "swinging_strike_blocked"]).astype(int)
-    pitchers["is_so"] = pitchers["events"].isin(["strikeout", "strikeout_double_play"]).astype(int)
+    pitchers["is_whiff"] = pitchers["description"].isin(
+        ["swinging_strike", "swinging_strike_blocked"]
+    ).astype(int)
+    pitchers["is_so"] = pitchers["events"].isin(
+        ["strikeout", "strikeout_double_play"]
+    ).astype(int)
     pitchers["is_bb"] = pitchers["events"].isin(["walk", "intent_walk"]).astype(int)
     pitchers["is_pa_event"] = pitchers["events"].notna().astype(int)
 
@@ -722,9 +904,15 @@ def build_scout_pitcher_metrics(df: pd.DataFrame) -> dict:
     if recent.empty:
         return {}
 
-    recent["fastball_speed"] = recent["release_speed"].where(recent["pitch_type"].isin(fastballs))
-    recent["slider_spin"] = recent["release_spin_rate"].where(recent["pitch_type"].isin(sliders))
-    recent["ivb_inches"] = (recent["pfx_z"] * 12.0).where(recent["pitch_type"].isin(fastballs))
+    recent["fastball_speed"] = recent["release_speed"].where(
+        recent["pitch_type"].isin(fastballs)
+    )
+    recent["slider_spin"] = recent["release_spin_rate"].where(
+        recent["pitch_type"].isin(sliders)
+    )
+    recent["ivb_inches"] = (recent["pfx_z"] * 12.0).where(
+        recent["pitch_type"].isin(fastballs)
+    )
 
     grouped = (
         recent.groupby("pitcher", dropna=False)
@@ -762,7 +950,9 @@ def build_scout_pitcher_metrics(df: pd.DataFrame) -> dict:
         k_rate = (strikeouts / pa * 100.0) if pa > 0 else None
         kbb = ((strikeouts - walks) / pa * 100.0) if pa > 0 else None
 
-        if fb_avg_velo is not None and fb_avg_velo >= 97.5 and (whiff_rate is not None and whiff_rate >= 0.40):
+        if fb_avg_velo is not None and fb_avg_velo >= 97.5 and (
+            whiff_rate is not None and whiff_rate >= 0.40
+        ):
             signal_label = "APEX POWER"
         elif whiff_rate is not None and whiff_rate >= 0.32:
             signal_label = "TIER 1 ACE"
@@ -770,14 +960,57 @@ def build_scout_pitcher_metrics(df: pd.DataFrame) -> dict:
             signal_label = "LIVE PROFILE"
 
         parts = []
+
         if fb_avg_velo is not None:
-            parts.append(f"FB avg velo {fb_avg_velo:.1f}")
-        if slider_spin is not None:
-            parts.append(f"Slider spin {slider_spin:.0f}")
+            if fb_avg_velo >= 97.5:
+                parts.append(
+                    f"He carried premium fastball power this week, averaging {fb_avg_velo:.1f} mph."
+                )
+            elif fb_avg_velo >= 95:
+                parts.append(
+                    f"Fastball velocity held in a strong working range at {fb_avg_velo:.1f} mph."
+                )
+            else:
+                parts.append(
+                    f"Fastball velocity averaged {fb_avg_velo:.1f} mph, giving the profile more of a command-and-shape read than pure overpowering force."
+                )
+
+        if extension is not None:
+            parts.append(
+                f"Release extension averaged {extension:.1f} feet, which helps frame how the raw velocity may be playing to hitters."
+            )
+
         if ivb is not None:
-            parts.append(f"IVB {ivb:.1f}")
+            parts.append(
+                f"Fastball IVB checked in at {ivb:.1f} inches, adding needed context to the carry profile."
+            )
+
         if whiff_pct is not None:
-            parts.append(f"Whiff {whiff_pct:.1f}%")
+            if whiff_pct >= 40:
+                parts.append(
+                    f"The whiff output was dominant at {whiff_pct:.1f}%, which supports a true bat-missing profile."
+                )
+            elif whiff_pct >= 30:
+                parts.append(
+                    f"Whiff rate came in at {whiff_pct:.1f}%, strong enough to support a high-end swing-and-miss read."
+                )
+            else:
+                parts.append(
+                    f"Whiff rate was {whiff_pct:.1f}%, useful but not overwhelming."
+                )
+
+        if signal_label == "APEX POWER":
+            parts.append(
+                "Net assessment: Apex Power. The recent arsenal shape and bat-missing output support a premium power-pitcher read."
+            )
+        elif signal_label == "TIER 1 ACE":
+            parts.append(
+                "Net assessment: Tier 1 Ace. The recent mix supports a high-conviction starter profile with real dominance traits."
+            )
+        else:
+            parts.append(
+                "Net assessment: Live Profile. There are actionable traits here, but not enough separation yet for the top labels."
+            )
 
         out[str(player_id)] = {
             "player_type": "pitcher",
@@ -811,7 +1044,7 @@ def build_scout_pitcher_metrics(df: pd.DataFrame) -> dict:
                 "label_4": "Signal",
                 "value_4": signal_label,
             },
-            "briefing": " | ".join(parts) if parts else "Live pitcher profile loaded.",
+            "briefing": " ".join(parts) if parts else "Live pitcher profile loaded.",
         }
 
     return out
@@ -825,7 +1058,9 @@ def write_scout_metrics(df: pd.DataFrame) -> None:
             **build_scout_pitcher_metrics(df),
         },
     }
-    (DIST_DIR / "scout_metrics.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    (DIST_DIR / "scout_metrics.json").write_text(
+        json.dumps(payload, indent=2), encoding="utf-8"
+    )
     print("Wrote dist/scout_metrics.json")
 
 
@@ -837,17 +1072,17 @@ def copy_static_assets() -> None:
         print("Wrote dist/player-search.js")
 
 
-HTML_TEMPLATE = Template("""
+HTML_TEMPLATE = Template(
+    r"""
 <!doctype html>
-<html lang=\"en\">
+<html lang="en">
 <head>
-  <meta charset=\"utf-8\" />
-  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>DiamondSignals — Signal Wall</title>
   <style>
     :root {
       --bg: #080808;
-      --surface: #121212;
       --card-radial: radial-gradient(circle at top left, #1a1a1a 0%, #080808 100%);
       --border: #2d2d2d;
       --text: #f0f0f0;
@@ -861,8 +1096,8 @@ HTML_TEMPLATE = Template("""
       --blue: #6aa6ff;
       --shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
       --radius: 18px;
-      --mono: \"JetBrains Mono\", \"Roboto Mono\", \"SFMono-Regular\", Menlo, Consolas, monospace;
-      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif;
+      --mono: "JetBrains Mono","Roboto Mono","SFMono-Regular",Menlo,Consolas,monospace;
+      --sans: Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
@@ -873,47 +1108,30 @@ HTML_TEMPLATE = Template("""
         linear-gradient(180deg, #101010 0%, #080808 34%, #050505 100%);
       line-height: 1.35;
     }
-    .topbar { position: sticky; top: 0; z-index: 50; background: rgba(8, 8, 8, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .topbar { position: sticky; top: 0; z-index: 50; background: rgba(8,8,8,0.90); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); }
     .topbar-inner, .app { width: min(1180px, calc(100% - 24px)); margin: 0 auto; }
     .topbar-inner { min-height: 62px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; }
-    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
-    .brand-mark { width: 11px; height: 11px; border-radius: 999px; background: var(--lime-hot); box-shadow: 0 0 10px rgba(182,255,0,0.35); flex: 0 0 auto; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-mark { width: 11px; height: 11px; border-radius: 999px; background: var(--lime-hot); box-shadow: 0 0 10px rgba(182,255,0,0.35); }
     .brand-kicker { font-size: 10px; line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 800; margin-bottom: 4px; }
     .brand-white { color: var(--text); }
     .brand-blue { color: var(--blue); }
     .brand-title { font-size: 16px; line-height: 1.05; letter-spacing: -0.02em; font-weight: 800; }
-    .header-actions { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
     .info-trigger { height: 34px; border-radius: 999px; border: 1px solid rgba(182,255,0,0.22); background: rgba(255,255,255,0.05); color: var(--text); display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; font-family: var(--mono); font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; box-shadow: 0 0 10px rgba(182,255,0,0.08); }
     .livebox { text-align: right; }
     .live-label { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--lime-hot); font-weight: 800; margin-bottom: 4px; }
     .live-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--lime-hot); box-shadow: 0 0 10px rgba(182,255,0,0.35); }
     .live-time { font-family: var(--mono); font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
-    .topnav { border-top: 1px solid rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); }
-    .topnav-inner { width: min(1180px, calc(100% - 24px)); margin: 0 auto; display: flex; align-items: center; gap: 10px; overflow-x: auto; white-space: nowrap; padding: 12px 0; scrollbar-width: none; }
-    .topnav-inner::-webkit-scrollbar { display: none; }
-    .topnav-link { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--soft); padding: 8px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); }
-    .topnav-link.active { color: var(--text); border-color: rgba(182,255,0,0.20); box-shadow: 0 0 8px rgba(182,255,0,0.08); }
-    .topnav-tag { color: var(--lime-hot); }
     .search-strip { border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); }
     .search-strip-inner { width: min(1180px, calc(100% - 24px)); margin: 0 auto; padding: 12px 0 10px; display: flex; justify-content: flex-end; }
     .player-search { position: relative; width: min(420px, 100%); }
     .player-search-input { width: 100%; height: 40px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.07); color: var(--text); padding: 0 16px; font-family: var(--sans); font-size: 14px; outline: none; }
-    .player-search-input::placeholder { color: rgba(255,255,255,0.50); }
-    .player-search-input:focus { border-color: rgba(106,166,255,0.52); background: rgba(255,255,255,0.09); box-shadow: 0 0 0 3px rgba(106,166,255,0.12); }
-    .player-search-results { position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 70; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; background: linear-gradient(180deg, #121212 0%, #080808 100%); box-shadow: 0 14px 34px rgba(0, 0, 0, 0.34); overflow: hidden; }
-    .player-search-result { display: grid; grid-template-columns: 36px 1fr; gap: 10px; align-items: center; padding: 10px 12px; text-decoration: none; color: var(--text); border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .player-search-result:last-child { border-bottom: 0; }
-    .player-search-result:hover, .player-search-result.active { background: rgba(255,255,255,0.05); }
-    .player-search-avatar { width: 36px; height: 36px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.10); object-fit: cover; background: rgba(255,255,255,0.03); }
-    .player-search-meta { min-width: 0; }
-    .player-search-name { font-size: 13px; font-weight: 700; line-height: 1.15; color: var(--text); }
-    .player-search-sub { margin-top: 3px; font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.06em; }
-    .player-search-empty, .player-search-loading, .player-search-error { padding: 12px 14px; font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.08em; }
+    .player-search-results { position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 70; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; background: linear-gradient(180deg, #121212 0%, #080808 100%); box-shadow: 0 14px 34px rgba(0,0,0,0.34); overflow: hidden; }
     .glossary-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.52); opacity: 0; pointer-events: none; transition: opacity 0.22s ease; z-index: 80; }
     .glossary-overlay.open { opacity: 1; pointer-events: auto; }
-    .glossary-drawer { position: fixed; top: 0; right: 0; width: min(560px, 100vw); height: 100vh; background: linear-gradient(180deg, #101010 0%, #080808 100%); border-left: 1px solid rgba(255,255,255,0.08); box-shadow: -12px 0 40px rgba(0,0,0,0.42); transform: translateX(100%); transition: transform 0.24s ease; z-index: 90; display: flex; flex-direction: column; }
+    .glossary-drawer { position: fixed; top: 0; right: 0; width: min(560px,100vw); height: 100vh; background: linear-gradient(180deg, #101010 0%, #080808 100%); border-left: 1px solid rgba(255,255,255,0.08); box-shadow: -12px 0 40px rgba(0,0,0,0.42); transform: translateX(100%); transition: transform 0.24s ease; z-index: 90; display: flex; flex-direction: column; }
     .glossary-drawer.open { transform: translateX(0); }
-    .glossary-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 18px 18px 14px; border-bottom: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); }
+    .glossary-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 18px; border-bottom: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); }
     .glossary-kicker { font-size: 10px; line-height: 1; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); font-weight: 800; margin-bottom: 8px; }
     .glossary-title { margin: 0; font-size: 20px; line-height: 1.05; letter-spacing: -0.03em; text-transform: uppercase; font-weight: 900; color: var(--text); }
     .glossary-close { width: 34px; height: 34px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.10); background: rgba(255,255,255,0.03); color: var(--text); display: inline-flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; }
@@ -924,10 +1142,10 @@ HTML_TEMPLATE = Template("""
     .glossary-term { display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text); font-weight: 800; font-family: var(--mono); }
     .glossary-definition { font-size: 13px; line-height: 1.5; color: var(--soft); }
     .app { padding: 18px 0 34px; }
-    .hero { display: grid; gap: 14px; margin-bottom: 16px; }
+    .hero, .board { display: grid; gap: 16px; }
     .hero-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
     .hero-card, .meta-card, .section, .player-card { background: var(--card-radial); border: 0.5px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); position: relative; overflow: hidden; }
-    .hero-card::before, .meta-card::before, .section::before, .player-card::before { content: \"\"; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; padding: 0.5px; background: linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.01)); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0.55; }
+    .hero-card::before, .meta-card::before, .section::before, .player-card::before { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; padding: 0.5px; background: linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.01)); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0.55; }
     .hero-card { padding: 18px; }
     .eyebrow { font-size: 10px; line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); font-weight: 800; margin-bottom: 10px; }
     .hero-title { margin: 0 0 10px; font-size: clamp(28px, 7vw, 50px); line-height: 0.95; letter-spacing: -0.04em; font-weight: 900; text-transform: uppercase; }
@@ -942,8 +1160,6 @@ HTML_TEMPLATE = Template("""
     .slate-heat-bar { height: 8px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.04); overflow: hidden; }
     .slate-heat-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #444444 0%, #b6ff00 100%); box-shadow: 0 0 8px rgba(182,255,0,0.16); }
     .slate-heat-value { font-family: var(--mono); font-size: 13px; color: var(--text); font-variant-numeric: tabular-nums; }
-    .board { display: grid; grid-template-columns: 1fr; gap: 16px; }
-    .section { overflow: hidden; }
     .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 16px 14px; border-bottom: 1px solid rgba(255,255,255,0.05); background: linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.008)); }
     .section-title { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.02em; text-transform: uppercase; }
     .section-badge { font-family: var(--mono); font-size: 11px; color: var(--soft); border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; padding: 7px 10px; background: rgba(255,255,255,0.02); }
@@ -963,39 +1179,28 @@ HTML_TEMPLATE = Template("""
     .sparkline-note { font-family: var(--mono); font-size: 10px; color: var(--tiny); text-transform: uppercase; letter-spacing: 0.1em; }
     svg.sparkline { display: block; width: 100%; height: 34px; }
     .sparkline-path { stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
-    .sparkline-path.glow { filter: drop-shadow(0 0 2px rgba(182, 255, 0, 0.5)); }
+    .sparkline-path.glow { filter: drop-shadow(0 0 2px rgba(182,255,0,0.5)); }
     .metric-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 12px; }
-    .metric { border:
-1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 10px 10px 9px; background: rgba(255,255,255,0.02); min-width: 0; }
-    .metric-label { margin-bottom: 6px; }
+    .metric { border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 10px 10px 9px; background: rgba(255,255,255,0.02); min-width: 0; }
     .metric-value { font-family: var(--mono); font-size: 15px; line-height: 1.1; color: var(--text); font-weight: 700; word-break: break-word; font-variant-numeric: tabular-nums; }
     .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
     .status-badge { line-height: 1; border-radius: 999px; padding: 7px 9px; border: 1px solid rgba(255,255,255,0.08); color: var(--soft); background: rgba(255,255,255,0.02); font-family: var(--mono); font-variant-numeric: tabular-nums; }
     .status-badge.positive { color: var(--emerald); border-color: rgba(74,222,128,0.18); box-shadow: 0 0 6px rgba(74,222,128,0.08); background: rgba(74,222,128,0.03); }
-    .status-badge.negative { color: var(--crimson); border-color: rgba(248,113,113,0.18); box-shadow: 0 0 6px rgba(248,113,113,0.06); background: rgba(248,113,113,0.03); }
     .status-badge.neutral { color: var(--soft); border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); }
     .status-badge.active-pulse { animation: badgePulse 2.2s infinite ease-in-out; }
     .why { font-size: 10px; line-height: 1.45; color: var(--tiny); font-family: var(--mono); font-variant-numeric: tabular-nums; }
     .footer { padding: 16px 4px 0; color: var(--muted); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
-
-    @keyframes badgePulse {
-      0%, 100% { opacity: 0.82; }
-      50% { opacity: 1; }
-    }
-
+    @keyframes badgePulse { 0%,100% { opacity: 0.82; } 50% { opacity: 1; } }
     @media (min-width: 900px) {
       .hero-grid { grid-template-columns: 1.35fr 0.9fr; align-items: stretch; }
       .board { grid-template-columns: 1fr 1fr; }
     }
-
     @media (max-width: 640px) {
-      .topbar-inner, .app, .topnav-inner, .search-strip-inner { width: min(100%, calc(100% - 16px)); }
+      .topbar-inner, .app, .search-strip-inner { width: min(100%, calc(100% - 16px)); }
       .search-strip-inner { justify-content: stretch; }
       .player-search { width: 100%; }
       .player-search-input { height: 36px; font-size: 12px; }
-      .topbar-inner { min-height: 58px; }
       .brand-title { font-size: 14px; }
-      .livebox { max-width: 44%; }
       .meta-grid { grid-template-columns: 1fr; }
       .player-name { font-size: 17px; }
       .score-value { font-size: 24px; }
@@ -1012,9 +1217,7 @@ HTML_TEMPLATE = Template("""
           <div class="brand-title">Signal Wall // Institutional Elite</div>
         </div>
       </div>
-
       <button class="info-trigger" type="button" onclick="openGlossary()" aria-label="Open glossary">ⓘ Glossary</button>
-
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
         <div class="live-time">{{ generated_at }}</div>
@@ -1027,14 +1230,7 @@ HTML_TEMPLATE = Template("""
   <div class="search-strip">
     <div class="search-strip-inner">
       <div class="player-search" id="playerSearch">
-        <input
-          type="text"
-          id="playerSearchInput"
-          class="player-search-input"
-          placeholder=">_ EXECUTE PLAYER SEARCH..."
-          autocomplete="off"
-          aria-label="Search players"
-        />
+        <input type="text" id="playerSearchInput" class="player-search-input" placeholder=">_ EXECUTE PLAYER SEARCH..." autocomplete="off" aria-label="Search players" />
         <div class="player-search-results" id="playerSearchResults" hidden></div>
       </div>
     </div>
@@ -1050,81 +1246,24 @@ HTML_TEMPLATE = Template("""
       </div>
       <button class="glossary-close" type="button" onclick="closeGlossary()" aria-label="Close glossary">×</button>
     </div>
-
     <div class="glossary-body">
       <section class="glossary-section">
         <h3 class="glossary-section-title">I. Global System Metrics</h3>
-
-        <div class="glossary-item">
-          <span class="glossary-term">Slate Heat</span>
-          <div class="glossary-definition">
-            A model-driven index of total opportunity across the day's schedule. A fuller green bar signals a denser concentration of actionable player movement.
-          </div>
-        </div>
-
-        <div class="glossary-item">
-          <span class="glossary-term">System Status</span>
-          <div class="glossary-definition">
-            Confirms the live state of the Statcast-driven pipeline and whether the board was generated successfully during the current build cycle.
-          </div>
-        </div>
-
-        <div class="glossary-item">
-          <span class="glossary-term">Edge Score</span>
-          <div class="glossary-definition">
-            A 0 to 100 ranking that summarizes the strength of the recent signal versus baseline performance.
-          </div>
-        </div>
+        <div class="glossary-item"><span class="glossary-term">Slate Heat</span><div class="glossary-definition">A model-driven index of total opportunity across the day's schedule. A fuller green bar signals a denser concentration of actionable player movement.</div></div>
+        <div class="glossary-item"><span class="glossary-term">System Status</span><div class="glossary-definition">Confirms the live state of the Statcast-driven pipeline and whether the board was generated successfully during the current build cycle.</div></div>
+        <div class="glossary-item"><span class="glossary-term">Edge Score</span><div class="glossary-definition">A 0 to 100 ranking that summarizes the strength of the recent signal versus baseline performance.</div></div>
       </section>
-
       <section class="glossary-section">
         <h3 class="glossary-section-title">II. Pitching Signal Terms</h3>
-
-        <div class="glossary-item">
-          <span class="glossary-term">Whiff %</span>
-          <div class="glossary-definition">
-            Share of pitches in the recent window that generated a swinging strike or swinging strike blocked event.
-          </div>
-        </div>
-
-        <div class="glossary-item">
-          <span class="glossary-term">FB Velo</span>
-          <div class="glossary-definition">
-            Average fastball velocity across recent appearances using four-seamers, sinkers, cutters, and two-seam variants.
-          </div>
-        </div>
-
-        <div class="glossary-item">
-          <span class="glossary-term">Extension</span>
-          <div class="glossary-definition">
-            Release extension in feet. Greater extension can increase perceived velocity and improve tunnel quality.
-          </div>
-        </div>
+        <div class="glossary-item"><span class="glossary-term">Whiff %</span><div class="glossary-definition">Share of pitches in the recent window that generated a swinging strike or swinging strike blocked event.</div></div>
+        <div class="glossary-item"><span class="glossary-term">FB Velo</span><div class="glossary-definition">Average fastball velocity across recent appearances using four-seamers, sinkers, cutters, and two-seam variants.</div></div>
+        <div class="glossary-item"><span class="glossary-term">Extension</span><div class="glossary-definition">Release extension in feet. Greater extension can increase perceived velocity and improve tunnel quality.</div></div>
       </section>
-
       <section class="glossary-section">
         <h3 class="glossary-section-title">III. Hitting Signal Terms</h3>
-
-        <div class="glossary-item">
-          <span class="glossary-term">Avg EV</span>
-          <div class="glossary-definition">
-            Mean exit velocity on tracked batted-ball events during the recent window.
-          </div>
-        </div>
-
-        <div class="glossary-item">
-          <span class="glossary-term">Barrel-like %</span>
-          <div class="glossary-definition">
-            Share of batted balls in the current DiamondSignals barrel-like bucket used for early power detection.
-          </div>
-        </div>
-
-        <div class="glossary-item">
-          <span class="glossary-term">EV Burst</span>
-          <div class="glossary-definition">
-            A recent jump in average exit velocity versus baseline that suggests an underlying quality-of-contact change.
-          </div>
-        </div>
+        <div class="glossary-item"><span class="glossary-term">Avg EV</span><div class="glossary-definition">Mean exit velocity on tracked batted-ball events during the recent window.</div></div>
+        <div class="glossary-item"><span class="glossary-term">Barrel-like %</span><div class="glossary-definition">Share of batted balls in the current DiamondSignals barrel-like bucket used for early power detection.</div></div>
+        <div class="glossary-item"><span class="glossary-term">EV Burst</span><div class="glossary-definition">A recent jump in average exit velocity versus baseline that suggests an underlying quality-of-contact change.</div></div>
       </section>
     </div>
   </aside>
@@ -1135,10 +1274,7 @@ HTML_TEMPLATE = Template("""
         <div class="hero-card">
           <div class="eyebrow">Executive Terminal</div>
           <h1 class="hero-title">Today’s Signal Wall</h1>
-          <p class="hero-copy">
-            A live, mobile-first DiamondSignals board built for fast scan readability.
-            Institutional dark surfaces, terminal-grade data density, and restrained signal emphasis.
-          </p>
+          <p class="hero-copy">A live, mobile-first DiamondSignals board built for fast scan readability. Institutional dark surfaces, terminal-grade data density, and restrained signal emphasis.</p>
         </div>
 
         <div class="meta-grid">
@@ -1159,9 +1295,7 @@ HTML_TEMPLATE = Template("""
         <div class="meta-card slate-heat-card">
           <div class="meta-label">Slate Heat</div>
           <div class="slate-heat-row">
-            <div class="slate-heat-bar">
-              <div class="slate-heat-fill" style="width: {{ slate_heat }}%;"></div>
-            </div>
+            <div class="slate-heat-bar"><div class="slate-heat-fill" style="width: {{ slate_heat }}%;"></div></div>
             <div class="slate-heat-value">{{ slate_heat }}</div>
           </div>
         </div>
@@ -1183,13 +1317,11 @@ HTML_TEMPLATE = Template("""
           <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
             <div class="player-top">
               <div class="avatar">{{ row.player_name[:2]|upper }}</div>
-
               <div class="player-ident">
                 <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
                 <h3 class="player-name">{{ row.player_name }}</h3>
                 <div class="signal-line">Pitcher // Live Edge Signal // {{ row.sample_note }}</div>
               </div>
-
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
                 <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
@@ -1208,10 +1340,7 @@ HTML_TEMPLATE = Template("""
                     <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
                   </linearGradient>
                 </defs>
-                <polyline
-                  class="sparkline-path {% if row.trend_glow %}glow{% endif %}"
-                  stroke="url(#pitcherGradient{{ loop.index }})"
-                  points="{{ row.trend_points }}" />
+                <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#pitcherGradient{{ loop.index }})" points="{{ row.trend_points }}" />
               </svg>
             </div>
 
@@ -1222,18 +1351,9 @@ HTML_TEMPLATE = Template("""
             </div>
 
             <div class="metric-grid">
-              <div class="metric">
-                <div class="metric-label">{{ row.metric_1_label }}</div>
-                <div class="metric-value">{{ row.metric_1 }}</div>
-              </div>
-              <div class="metric">
-                <div class="metric-label">{{ row.metric_2_label }}</div>
-                <div class="metric-value">{{ row.metric_2 }}</div>
-              </div>
-              <div class="metric">
-                <div class="metric-label">{{ row.metric_3_label }}</div>
-                <div class="metric-value">{{ row.metric_3 }}</div>
-              </div>
+              <div class="metric"><div class="metric-label">{{ row.metric_1_label }}</div><div class="metric-value">{{ row.metric_1 }}</div></div>
+              <div class="metric"><div class="metric-label">{{ row.metric_2_label }}</div><div class="metric-value">{{ row.metric_2 }}</div></div>
+              <div class="metric"><div class="metric-label">{{ row.metric_3_label }}</div><div class="metric-value">{{ row.metric_3 }}</div></div>
             </div>
 
             <div class="why">{{ row.why }}</div>
@@ -1256,13 +1376,11 @@ HTML_TEMPLATE = Template("""
           <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
             <div class="player-top">
               <div class="avatar">{{ row.player_name[:2]|upper }}</div>
-
               <div class="player-ident">
                 <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
                 <h3 class="player-name">{{ row.player_name }}</h3>
                 <div class="signal-line">Hitter // Live Edge Signal // {{ row.sample_note }}</div>
               </div>
-
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
                 <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
@@ -1281,10 +1399,7 @@ HTML_TEMPLATE = Template("""
                     <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
                   </linearGradient>
                 </defs>
-                <polyline
-                  class="sparkline-path {% if row.edge_score >= 65 %}glow{% endif %}"
-                  stroke="url(#hitterGradient{{ loop.index }})"
-                  points="{{ row.trend_points }}" />
+                <polyline class="sparkline-path {% if row.edge_score >= 65 %}glow{% endif %}" stroke="url(#hitterGradient{{ loop.index }})" points="{{ row.trend_points }}" />
               </svg>
             </div>
 
@@ -1295,18 +1410,9 @@ HTML_TEMPLATE = Template("""
             </div>
 
             <div class="metric-grid">
-              <div class="metric">
-                <div class="metric-label">{{ row.metric_1_label }}</div>
-                <div class="metric-value">{{ row.metric_1 }}</div>
-              </div>
-              <div class="metric">
-                <div class="metric-label">{{ row.metric_2_label }}</div>
-                <div class="metric-value">{{ row.metric_2 }}</div>
-              </div>
-              <div class="metric">
-                <div class="metric-label">{{ row.metric_3_label }}</div>
-                <div class="metric-value">{{ row.metric_3 }}</div>
-              </div>
+              <div class="metric"><div class="metric-label">{{ row.metric_1_label }}</div><div class="metric-value">{{ row.metric_1 }}</div></div>
+              <div class="metric"><div class="metric-label">{{ row.metric_2_label }}</div><div class="metric-value">{{ row.metric_2 }}</div></div>
+              <div class="metric"><div class="metric-label">{{ row.metric_3_label }}</div><div class="metric-value">{{ row.metric_3 }}</div></div>
             </div>
 
             <div class="why">{{ row.why }}</div>
@@ -1316,225 +1422,41 @@ HTML_TEMPLATE = Template("""
       </div>
     </section>
 
-    <div class="footer">
-      DiamondSignals Signal Wall // Generated During Netlify Build // {{ timezone_label }}
-    </div>
+    <div class="footer">DiamondSignals Signal Wall // Generated During Netlify Build // {{ timezone_label }}</div>
   </div>
 
   <script src="/player-search.js"></script>
-<script>
-  function formatPct(value) {
-    if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
-    return `${Number(value).toFixed(1)}%`;
-  }
-
-  function format1(value) {
-    if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
-    return Number(value).toFixed(1);
-  }
-
-  function formatAvg(value) {
-    if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
-    return Number(value).toFixed(3).replace(/^0/, "");
-  }
-
-  function formatSigned3(value) {
-    if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
-    const n = Number(value);
-    const s = n.toFixed(3).replace(/^0/, "");
-    return n > 0 ? `+${s}` : s;
-  }
-
-  function formatValue(label, value) {
-    const upper = String(label || "").toUpperCase();
-
-    if (value === null || value === undefined || value === "") return "--";
-    if (typeof value === "string") return value;
-
-    if (upper.includes("%")) return formatPct(value);
-    if (upper.includes("AVG") || upper.includes("XBA")) return formatAvg(value);
-    if (upper.includes("SPIN")) return Number(value).toFixed(0);
-    if (upper.includes("EXTENSION")) return `${Number(value).toFixed(1)} ft`;
-    if (upper.includes("IVB")) return `${Number(value).toFixed(1)} in`;
-    if (upper.includes("DELTA") || upper.includes("EDGE")) return formatSigned3(value);
-
-    return format1(value);
-  }
-
-  function normalizeZone(prefix, zoneData, playerType) {
-    if (!zoneData) return {};
-
-    if ("label_1" in zoneData || "value_1" in zoneData) {
-      return zoneData;
+  <script>
+    function openGlossary() {
+      const overlay = document.getElementById("glossaryOverlay");
+      const drawer = document.getElementById("glossaryDrawer");
+      if (overlay) overlay.classList.add("open");
+      if (drawer) {
+        drawer.classList.add("open");
+        drawer.setAttribute("aria-hidden", "false");
+      }
+      document.body.style.overflow = "hidden";
     }
 
-    if (playerType === "hitter") {
-      if (prefix === "zone1") {
-        return {
-          label_1: "Avg Exit Velo",
-          value_1: zoneData.avg_ev,
-          label_2: "Max Exit Velo",
-          value_2: zoneData.max_ev,
-          label_3: "Hard Hit %",
-          value_3: zoneData.hard_hit_pct,
-          label_4: "Extension",
-          value_4: zoneData.extension
-        };
+    function closeGlossary() {
+      const overlay = document.getElementById("glossaryOverlay");
+      const drawer = document.getElementById("glossaryDrawer");
+      if (overlay) overlay.classList.remove("open");
+      if (drawer) {
+        drawer.classList.remove("open");
+        drawer.setAttribute("aria-hidden", "true");
       }
-
-      if (prefix === "zone2") {
-        return {
-          label_1: "Sweet Spot %",
-          value_1: zoneData.sweet_spot_pct,
-          label_2: "Barrel %",
-          value_2: zoneData.barrel_pct,
-          label_3: "Launch Angle",
-          value_3: zoneData.launch_angle,
-          label_4: "Movement Edge",
-          value_4: zoneData.movement_edge
-        };
-      }
-
-      if (prefix === "zone3") {
-        return {
-          label_1: "Batting Avg",
-          value_1: zoneData.avg,
-          label_2: "K Rate",
-          value_2: zoneData.k_rate,
-          label_3: "wRC+",
-          value_3: zoneData.wrc_plus,
-          label_4: "Signal",
-          value_4: zoneData.signal_label
-        };
-      }
+      document.body.style.overflow = "";
     }
 
-    if (playerType === "pitcher") {
-      if (prefix === "zone1") {
-        return {
-          label_1: "FB Avg Velo",
-          value_1: zoneData.fb_avg_velo ?? zoneData.avg_velo ?? zoneData.value_1,
-          label_2: "FB Max Velo",
-          value_2: zoneData.fb_max_velo ?? zoneData.max_velo ?? zoneData.value_2,
-          label_3: "Extension",
-          value_3: zoneData.extension ?? zoneData.value_3,
-          label_4: "Pitch Count",
-          value_4: zoneData.pitch_count ?? zoneData.value_4
-        };
-      }
-
-      if (prefix === "zone2") {
-        return {
-          label_1: "Slider Spin",
-          value_1: zoneData.slider_spin ?? zoneData.value_1,
-          label_2: "FB IVB",
-          value_2: zoneData.ivb ?? zoneData.value_2,
-          label_3: "VAA",
-          value_3: zoneData.vaa ?? zoneData.value_3,
-          label_4: "Movement Edge",
-          value_4: zoneData.movement_edge ?? zoneData.value_4
-        };
-      }
-
-      if (prefix === "zone3") {
-        return {
-          label_1: "K %",
-          value_1: zoneData.k_rate ?? zoneData.value_1,
-          label_2: "Whiff %",
-          value_2: zoneData.whiff_pct ?? zoneData.whiff_rate ?? zoneData.value_2,
-          label_3: "K-BB %",
-          value_3: zoneData.kbb ?? zoneData.k_bb_pct ?? zoneData.value_3,
-          label_4: "Signal",
-          value_4: zoneData.signal_label ?? zoneData.value_4
-        };
-      }
-    }
-
-    return {};
-  }
-
-  function setZone(prefix, zoneData) {
-    for (let i = 1; i <= 4; i++) {
-      const labelEl = document.getElementById(`${prefix}Label${i}`);
-      const valueEl = document.getElementById(`${prefix}Value${i}`);
-      const label = zoneData[`label_${i}`] || `Metric ${i}`;
-      const value = zoneData[`value_${i}`];
-
-      if (labelEl) labelEl.textContent = label;
-      if (valueEl) valueEl.textContent = formatValue(label, value);
-    }
-  }
-
-  async function loadScoutPlayer() {
-    const pathParts = window.location.pathname.split("/").filter(Boolean);
-    const playerId = pathParts.length >= 2 ? pathParts[1] : null;
-    if (!playerId) return;
-
-    try {
-      const [playerRes, metricsRes] = await Promise.all([
-        fetch("/player_index.json"),
-        fetch("/scout_metrics.json")
-      ]);
-
-      const playerPayload = await playerRes.json();
-      const metricsPayload = await metricsRes.json();
-
-      const players = Array.isArray(playerPayload.players) ? playerPayload.players : [];
-      const player = players.find((p) => String(p.player_id) === String(playerId));
-      const scoutMetrics = metricsPayload && metricsPayload.players
-        ? metricsPayload.players[String(playerId)]
-        : null;
-
-      if (!player) {
-        document.getElementById("scoutPlayerName").textContent = "Player Not Found";
-        return;
-      }
-
-      document.title = `DiamondSignals // ${player.full_name}`;
-      document.getElementById("scoutPlayerName").textContent = player.full_name || "Unknown Player";
-      document.getElementById("scoutTeam").textContent = player.team || "Team";
-      document.getElementById("scoutPosition").textContent = player.position || "Position";
-      document.getElementById("scoutBT").textContent = `${player.bats || "-"} / ${player.throws || "-"}`;
-      document.getElementById("scoutStatus").textContent = player.status || "Status";
-
-      const img = document.getElementById("scoutHeadshot");
-      const fallback = document.getElementById("scoutHeadshotFallback");
-      if (player.headshot_url) {
-        img.src = player.headshot_url;
-        img.style.display = "block";
-        fallback.style.display = "none";
-      }
-
-      const playerType = scoutMetrics?.player_type || (player.position === "P" ? "pitcher" : "hitter");
-
-      document.getElementById("scoutSignalPill").textContent =
-        playerType === "pitcher" ? "PITCHER DOSSIER" : "HITTER DOSSIER";
-      document.getElementById("scoutTrendPill").textContent = "LIVE PROFILE";
-      document.getElementById("scoutConfidencePill").textContent = "DATA V1";
-
-      if (scoutMetrics) {
-        setZone("zone1", normalizeZone("zone1", scoutMetrics.ballistics || {}, playerType));
-        setZone("zone2", normalizeZone("zone2", scoutMetrics.movement || {}, playerType));
-        setZone("zone3", normalizeZone("zone3", scoutMetrics.results || {}, playerType));
-
-        document.getElementById("scoutBriefingCopy").textContent =
-          scoutMetrics.briefing || "Live player profile loaded.";
-      } else {
-        document.getElementById("scoutBriefingCopy").textContent =
-          playerType === "pitcher"
-            ? "Pitcher dossier shell is live. Metrics payload not found for this player yet."
-            : "Hitter dossier shell is live. Metrics payload not found for this player yet.";
-      }
-    } catch (error) {
-      document.getElementById("scoutPlayerName").textContent = "Scout Load Error";
-    }
-  }
-
-  loadScoutPlayer();
-</script>
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") closeGlossary();
+    });
+  </script>
 </body>
 </html>
-""")
+"""
+)
 
 
 def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
@@ -1558,7 +1480,7 @@ def write_scout_shell() -> None:
     scout_dir = DIST_DIR / "scout"
     scout_dir.mkdir(parents=True, exist_ok=True)
 
-    html = """<!doctype html>
+    html = r"""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -1613,14 +1535,7 @@ def write_scout_shell() -> None:
     .player-search { position: relative; width: min(420px, 100%); }
     .player-search-input { width: 100%; height: 40px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.07); color: var(--text); padding: 0 16px; font-family: var(--sans); font-size: 14px; outline: none; }
     .player-search-input::placeholder { color: rgba(255,255,255,0.50); }
-    .player-search-input:focus { border-color: rgba(106,166,255,0.52); background: rgba(255,255,255,0.09); box-shadow: 0 0 0 3px rgba(106,166,255,0.12); }
     .player-search-results { position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 70; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; background: linear-gradient(180deg, #121212 0%, #080808 100%); box-shadow: 0 14px 34px rgba(0, 0, 0, 0.34); overflow: hidden; }
-    .player-search-result { display: grid; grid-template-columns: 36px 1fr; gap: 10px; align-items: center; padding: 10px 12px; text-decoration: none; color: var(--text); border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .player-search-result:last-child { border-bottom: 0; }
-    .player-search-result:hover, .player-search-result.active { background: rgba(255,255,255,0.05); }
-    .player-search-avatar { width: 36px; height: 36px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.10); object-fit: cover; background: rgba(255,255,255,0.03); }
-    .player-search-name { font-size: 13px; font-weight: 700; line-height: 1.15; color: var(--text); }
-    .player-search-sub { margin-top: 3px; font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.06em; }
 
     .app { padding: 28px 0 40px; }
     .hero-card, .section-card, .metric-card, .briefing-card {
@@ -1862,13 +1777,62 @@ def write_scout_shell() -> None:
       return n > 0 ? `+${s}` : s;
     }
 
+    function legacyToZoneData(zoneName, data) {
+      if (!data) return {};
+
+      if (zoneName === "ballistics") {
+        return {
+          label_1: "Avg Exit Velo",
+          value_1: data.avg_ev,
+          label_2: "Max Exit Velo",
+          value_2: data.max_ev,
+          label_3: "Hard Hit %",
+          value_3: data.hard_hit_pct,
+          label_4: "Diamond Delta",
+          value_4: data.extension ?? null
+        };
+      }
+
+      if (zoneName === "movement") {
+        return {
+          label_1: "Sweet Spot %",
+          value_1: data.sweet_spot_pct,
+          label_2: "Barrel %",
+          value_2: data.barrel_pct,
+          label_3: "Launch Angle",
+          value_3: data.launch_angle,
+          label_4: "xBA / Edge",
+          value_4: data.movement_edge
+        };
+      }
+
+      if (zoneName === "results") {
+        return {
+          label_1: "Batting Avg",
+          value_1: data.avg,
+          label_2: "K Rate",
+          value_2: data.k_rate,
+          label_3: "wRC+",
+          value_3: data.wrc_plus,
+          label_4: "Signal",
+          value_4: data.signal_label
+        };
+      }
+
+      return {};
+    }
+
+    function normalizeZone(zoneName, zoneData) {
+      if (!zoneData) return {};
+      if ("label_1" in zoneData || "value_1" in zoneData) return zoneData;
+      return legacyToZoneData(zoneName, zoneData);
+    }
+
     function formatValue(label, value) {
       const upper = String(label || "").toUpperCase();
 
       if (value === null || value === undefined || value === "") return "--";
-
       if (typeof value === "string") return value;
-
       if (upper.includes("%")) return formatPct(value);
       if (upper.includes("AVG") || upper.includes("XBA")) return formatAvg(value);
       if (upper.includes("SPIN")) return Number(value).toFixed(0);
@@ -1893,7 +1857,11 @@ def write_scout_shell() -> None:
 
     async function loadScoutPlayer() {
       const pathParts = window.location.pathname.split("/").filter(Boolean);
-      const playerId = pathParts.length >= 2 ? pathParts[1] : null;
+      const scoutIndex = pathParts.indexOf("scout");
+      const playerId = scoutIndex >= 0 && pathParts[scoutIndex + 1]
+        ? pathParts[scoutIndex + 1]
+        : null;
+
       if (!playerId) return;
 
       try {
@@ -1937,9 +1905,9 @@ def write_scout_shell() -> None:
         document.getElementById("scoutConfidencePill").textContent = "DATA V1";
 
         if (scoutMetrics) {
-          setZone("zone1", scoutMetrics.ballistics || {});
-          setZone("zone2", scoutMetrics.movement || {});
-          setZone("zone3", scoutMetrics.results || {});
+          setZone("zone1", normalizeZone("ballistics", scoutMetrics.ballistics || {}));
+          setZone("zone2", normalizeZone("movement", scoutMetrics.movement || {}));
+          setZone("zone3", normalizeZone("results", scoutMetrics.results || {}));
           document.getElementById("scoutBriefingCopy").textContent =
             scoutMetrics.briefing || "Live player profile loaded.";
         } else {
@@ -1969,13 +1937,15 @@ def main() -> None:
     pitcher_signals = build_pitcher_signals(raw)
 
     if hitter_signals.empty and pitcher_signals.empty:
-      raise RuntimeError("No hitter or pitcher signals were produced.")
+        raise RuntimeError("No hitter or pitcher signals were produced.")
 
     top_hitters = hitter_signals.head(5).copy()
     top_pitchers = pitcher_signals.head(5).copy()
 
     combined_alerts = pd.concat([top_pitchers, top_hitters], ignore_index=True)
-    combined_alerts = combined_alerts.sort_values("edge_score", ascending=False).reset_index(drop=True)
+    combined_alerts = combined_alerts.sort_values(
+        "edge_score", ascending=False
+    ).reset_index(drop=True)
 
     html = render_html(top_pitchers, top_hitters)
     output_path = DIST_DIR / "index.html"
@@ -1985,17 +1955,43 @@ def main() -> None:
     summary = {
         "generated_at": datetime.now().isoformat(),
         "top_pitchers": top_pitchers[
-            ["player_name", "edge_score", "metric_1_label", "metric_1", "metric_2_label", "metric_2", "metric_3_label", "metric_3", "why", "badges"]
+            [
+                "player_name",
+                "edge_score",
+                "metric_1_label",
+                "metric_1",
+                "metric_2_label",
+                "metric_2",
+                "metric_3_label",
+                "metric_3",
+                "why",
+                "badges",
+            ]
         ].to_dict(orient="records"),
         "top_hitters": top_hitters[
-            ["player_name", "edge_score", "metric_1_label", "metric_1", "metric_2_label", "metric_2", "metric_3_label", "metric_3", "why", "badges"]
+            [
+                "player_name",
+                "edge_score",
+                "metric_1_label",
+                "metric_1",
+                "metric_2_label",
+                "metric_2",
+                "metric_3_label",
+                "metric_3",
+                "why",
+                "badges",
+            ]
         ].to_dict(orient="records"),
     }
-    (DIST_DIR / "signals.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    (DIST_DIR / "signals.json").write_text(
+        json.dumps(summary, indent=2), encoding="utf-8"
+    )
     print("Wrote dist/signals.json")
 
     player_index = build_player_index(raw)
-    (DIST_DIR / "player_index.json").write_text(json.dumps(player_index, indent=2), encoding="utf-8")
+    (DIST_DIR / "player_index.json").write_text(
+        json.dumps(player_index, indent=2), encoding="utf-8"
+    )
     print("Wrote dist/player_index.json")
 
     write_scout_metrics(raw)

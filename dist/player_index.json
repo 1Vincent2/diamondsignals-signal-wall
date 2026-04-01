@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-31T19:06:18.192682",
+  "generated_at": "2026-04-01T10:30:37.175678",
   "players": [
     {
       "player_id": 671096,
@@ -2693,6 +2693,19 @@
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/703607/headshot/67/current"
     },
     {
+      "player_id": 675989,
+      "full_name": "Cody Bolton",
+      "first_name": "Carl",
+      "last_name": "Bolton",
+      "team": "",
+      "team_name": "",
+      "position": "P",
+      "bats": "R",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/675989/headshot/67/current"
+    },
+    {
       "player_id": 592155,
       "full_name": "Cam Booser",
       "first_name": "Cameron",
@@ -4537,6 +4550,19 @@
       "throws": "L",
       "status": "",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/605177/headshot/67/current"
+    },
+    {
+      "player_id": 696149,
+      "full_name": "Bubba Chandler",
+      "first_name": "Roy",
+      "last_name": "Chandler",
+      "team": "",
+      "team_name": "",
+      "position": "P",
+      "bats": "S",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/696149/headshot/67/current"
     },
     {
       "player_id": 665953,
@@ -7774,6 +7800,19 @@
       "throws": "R",
       "status": "",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/821171/headshot/67/current"
+    },
+    {
+      "player_id": 699912,
+      "full_name": "Jose Fernandez",
+      "first_name": "Jose",
+      "last_name": "Fernandez",
+      "team": "",
+      "team_name": "",
+      "position": "SS",
+      "bats": "R",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/699912/headshot/67/current"
     },
     {
       "player_id": 691558,
@@ -15499,7 +15538,7 @@
     },
     {
       "player_id": 657675,
-      "full_name": "Rudy Martin",
+      "full_name": "Rudy Martin Jr.",
       "first_name": "Rudy",
       "last_name": "Martin",
       "team": "",
@@ -19201,6 +19240,19 @@
       "throws": "L",
       "status": "",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/669449/headshot/67/current"
+    },
+    {
+      "player_id": 669467,
+      "full_name": "Andre Pallante",
+      "first_name": "Neil",
+      "last_name": "Pallante",
+      "team": "",
+      "team_name": "",
+      "position": "P",
+      "bats": "R",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/669467/headshot/67/current"
     },
     {
       "player_id": 688883,
@@ -27393,19 +27445,6 @@
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/669224/headshot/67/current"
     },
     {
-      "player_id": 703673,
-      "full_name": "Kasen Wells",
-      "first_name": "Kasen",
-      "last_name": "Wells",
-      "team": "",
-      "team_name": "",
-      "position": "OF",
-      "bats": "L",
-      "throws": "R",
-      "status": "",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/703673/headshot/67/current"
-    },
-    {
       "player_id": 694370,
       "full_name": "Levi Wells",
       "first_name": "Levi",
@@ -28548,6 +28587,19 @@
       "throws": "R",
       "status": "",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/518595/headshot/67/current"
+    },
+    {
+      "player_id": 594798,
+      "full_name": "Jacob deGrom",
+      "first_name": "Jacob",
+      "last_name": "deGrom",
+      "team": "",
+      "team_name": "",
+      "position": "P",
+      "bats": "L",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/594798/headshot/67/current"
     }
   ]
 }

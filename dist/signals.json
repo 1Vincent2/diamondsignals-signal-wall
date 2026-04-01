@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-03-31T19:01:32.861503",
+  "generated_at": "2026-04-01T10:26:40.865711",
   "top_pitchers": [
     {
       "player_name": "Misiorowski, Jacob",
-      "edge_score": 78.0,
+      "edge_score": 78.1,
       "metric_1_label": "Whiff %",
       "metric_1": 25.3,
       "metric_2_label": "FB Velo",
@@ -18,7 +18,7 @@
     },
     {
       "player_name": "Cease, Dylan",
-      "edge_score": 77.8,
+      "edge_score": 78.1,
       "metric_1_label": "Whiff %",
       "metric_1": 26.7,
       "metric_2_label": "FB Velo",
@@ -34,7 +34,7 @@
     },
     {
       "player_name": "Blubaugh, Aj",
-      "edge_score": 75.6,
+      "edge_score": 76.0,
       "metric_1_label": "Whiff %",
       "metric_1": 18.8,
       "metric_2_label": "FB Velo",
@@ -50,7 +50,7 @@
     },
     {
       "player_name": "Boyd, Matthew",
-      "edge_score": 73.3,
+      "edge_score": 72.7,
       "metric_1_label": "Whiff %",
       "metric_1": 28.6,
       "metric_2_label": "FB Velo",
@@ -66,7 +66,7 @@
     },
     {
       "player_name": "Schlittler, Cam",
-      "edge_score": 70.4,
+      "edge_score": 70.1,
       "metric_1_label": "Whiff %",
       "metric_1": 18.8,
       "metric_2_label": "FB Velo",
@@ -84,7 +84,7 @@
   "top_hitters": [
     {
       "player_name": "Dominic Canzone",
-      "edge_score": 85.5,
+      "edge_score": 86.8,
       "metric_1_label": "Avg EV",
       "metric_1": 93.5,
       "metric_2_label": "Barrel-like %",
@@ -100,15 +100,46 @@
       ]
     },
     {
-      "player_name": "Jordan Walker",
-      "edge_score": 78.6,
+      "player_name": "Gary S\u00e1nchez",
+      "edge_score": 84.2,
       "metric_1_label": "Avg EV",
-      "metric_1": 89.8,
+      "metric_1": 85.2,
       "metric_2_label": "Barrel-like %",
-      "metric_2": 11.1,
+      "metric_2": 28.6,
+      "metric_3_label": "Max EV",
+      "metric_3": 107.0,
+      "why": "Avg EV 85.2 mph (+0.7 vs baseline), barrel-like rate 28.6%.",
+      "badges": [
+        "Barrel Jump",
+        "Trend Confirming"
+      ]
+    },
+    {
+      "player_name": "Alex Freeland",
+      "edge_score": 76.0,
+      "metric_1_label": "Avg EV",
+      "metric_1": 91.8,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 12.5,
+      "metric_3_label": "Max EV",
+      "metric_3": 106.7,
+      "why": "Avg EV 91.8 mph (+6.8 vs baseline), barrel-like rate 12.5%.",
+      "badges": [
+        "EV Burst",
+        "Barrel Jump",
+        "Trend Confirming"
+      ]
+    },
+    {
+      "player_name": "Jordan Walker",
+      "edge_score": 75.7,
+      "metric_1_label": "Avg EV",
+      "metric_1": 88.8,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 8.7,
       "metric_3_label": "Max EV",
       "metric_3": 114.9,
-      "why": "Avg EV 89.8 mph (+4.8 vs baseline), barrel-like rate 11.1%.",
+      "why": "Avg EV 88.8 mph (+3.7 vs baseline), barrel-like rate 8.7%.",
       "badges": [
         "EV Burst",
         "Barrel Jump",
@@ -117,51 +148,18 @@
       ]
     },
     {
-      "player_name": "Dillon Dingler",
-      "edge_score": 77.0,
+      "player_name": "Christian Walker",
+      "edge_score": 74.5,
       "metric_1_label": "Avg EV",
-      "metric_1": 88.4,
+      "metric_1": 90.4,
       "metric_2_label": "Barrel-like %",
-      "metric_2": 13.3,
+      "metric_2": 4.0,
       "metric_3_label": "Max EV",
-      "metric_3": 109.0,
-      "why": "Avg EV 88.4 mph (+6.5 vs baseline), barrel-like rate 13.3%.",
+      "metric_3": 108.9,
+      "why": "Avg EV 90.4 mph (+13.1 vs baseline), barrel-like rate 4.0%.",
       "badges": [
         "EV Burst",
-        "Barrel Jump",
         "Impact EV",
-        "Trend Confirming"
-      ]
-    },
-    {
-      "player_name": "Brice Matthews",
-      "edge_score": 72.3,
-      "metric_1_label": "Avg EV",
-      "metric_1": 86.0,
-      "metric_2_label": "Barrel-like %",
-      "metric_2": 11.1,
-      "metric_3_label": "Max EV",
-      "metric_3": 111.1,
-      "why": "Avg EV 86.0 mph (+7.4 vs baseline), barrel-like rate 11.1%.",
-      "badges": [
-        "EV Burst",
-        "Barrel Jump",
-        "Impact EV",
-        "Trend Confirming"
-      ]
-    },
-    {
-      "player_name": "Richie Palacios",
-      "edge_score": 72.1,
-      "metric_1_label": "Avg EV",
-      "metric_1": 90.2,
-      "metric_2_label": "Barrel-like %",
-      "metric_2": 11.1,
-      "metric_3_label": "Max EV",
-      "metric_3": 106.5,
-      "why": "Avg EV 90.2 mph (+12.3 vs baseline), barrel-like rate 11.1%.",
-      "badges": [
-        "EV Burst",
         "Trend Confirming"
       ]
     }
