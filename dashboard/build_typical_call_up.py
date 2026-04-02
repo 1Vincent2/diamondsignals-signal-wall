@@ -720,61 +720,7 @@ HTML_TEMPLATE = Template("""
       font-size: 11px;
       color: var(--muted);
       font-variant-numeric: tabular-nums;
-    }
-
-    .topnav {
-      border-top: 1px solid rgba(255,255,255,0.04);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      background: rgba(255,255,255,0.015);
-    }
-
-    .topnav-inner {
-      width: min(1180px, calc(100% - 24px));
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      overflow-x: auto;
-      white-space: nowrap;
-      padding: 10px 0;
-      scrollbar-width: none;
-    }
-
-    .topnav-inner::-webkit-scrollbar {
-      display: none;
-    }
-
-    .topnav-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      text-decoration: none;
-      font-family: var(--mono);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--soft);
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.06);
-      background: rgba(255,255,255,0.02);
-      transition: opacity 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
-    }
-
-    .topnav-link:hover {
-      opacity: 1;
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,0.12);
-    }
-
-    .topnav-link.active {
-      color: var(--text);
-      border-color: rgba(182,255,0,0.20);
-      box-shadow: 0 0 8px rgba(182,255,0,0.08);
-    }
-
-    .topnav-tag {
-      color: var(--lime-hot);
+  
     }
 
     .glossary-overlay {
@@ -1367,15 +1313,6 @@ HTML_TEMPLATE = Template("""
       font-variant-numeric: tabular-nums;
     }
 
-    .footer {
-      padding: 16px 4px 0;
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-variant-numeric: tabular-nums;
-    }
 
     @media (min-width: 900px) {
       .hero-grid {
