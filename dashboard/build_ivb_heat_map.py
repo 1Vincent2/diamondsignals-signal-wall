@@ -1,0 +1,607 @@
+from __future__ import annotations
+
+from pathlib import Path
+from datetime import datetime, timedelta
+import json
+import math
+import os
+
+import pandas as pd
+from jinja2 import Template
+from pybaseball import statcast
+
+
+BASE_DIR = Path(__file__).resolve().parent
+REPO_ROOT = BASE_DIR.parent
+DIST_DIR = REPO_ROOT / "dist"
+IVB_DIR = DIST_DIR / "ivb-heat-map"
+TEMPLATES_DIR = BASE_DIR / "templates"
+
+NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
+SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
+FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
+SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
+
+TIMEZONE_LABEL = "America/New_York"
+LOOKBACK_DAYS = 7
+MIN_FASTBALL_COUNT = 8
+
+
+HTML_TEMPLATE = Template(
+    r"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DiamondSignals // IVB Heat Map</title>
+  <style>
+    :root {
+      --bg: #080808;
+      --surface: #121212;
+      --card-radial: radial-gradient(circle at top left, #1a1a1a 0%, #080808 100%);
+      --border: #2d2d2d;
+      --text: #f0f0f0;
+      --muted: #71717a;
+      --soft: #a1a1aa;
+      --tiny: #7c7c84;
+      --blue: #6aa6ff;
+      --lime-hot: #b6ff00;
+      --red: #ef4444;
+      --orange: #fb923c;
+      --purple: #a855f7;
+      --shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
+      --radius: 18px;
+      --mono: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(106,166,255,0.06), transparent 24%),
+        radial-gradient(circle at top right, rgba(239,68,68,0.04), transparent 20%),
+        linear-gradient(180deg, #101010 0%, #080808 34%, #050505 100%);
+      line-height: 1.35;
+    }
+
+    .topbar { position: sticky; top: 0; z-index: 50; background: rgba(8, 8, 8, 0.90); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .topbar-inner, .app { width: min(1180px, calc(100% - 24px)); margin: 0 auto; }
+    .topbar-inner { min-height: 62px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; }
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .brand-mark { width: 11px; height: 11px; border-radius: 999px; background: var(--lime-hot); box-shadow: 0 0 10px rgba(182,255,0,0.35); flex: 0 0 auto; }
+    .brand-kicker { font-size: 10px; line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 800; margin-bottom: 4px; }
+    .brand-white { color: var(--text); }
+    .brand-blue { color: var(--blue); }
+    .brand-title { font-size: 16px; line-height: 1.05; letter-spacing: -0.02em; font-weight: 800; }
+    .livebox { text-align: right; }
+    .live-label { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--lime-hot); font-weight: 800; margin-bottom: 4px; }
+    .live-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--lime-hot); box-shadow: 0 0 10px rgba(182,255,0,0.35); }
+    .live-time { font-family: var(--mono); font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+    .app { padding: 20px 0 36px; }
+    .hero-card, .metric-card, .section-card, .leader-card {
+      background: var(--card-radial);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-card::before, .metric-card::before, .section-card::before, .leader-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      padding: 0.5px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.01));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.55;
+    }
+
+    .hero-card { padding: 22px; margin-bottom: 16px; }
+    .eyebrow { font-size: 10px; line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); font-weight: 800; margin-bottom: 10px; }
+    .hero-title { margin: 0 0 10px; font-size: clamp(30px, 6vw, 56px); line-height: 0.95; letter-spacing: -0.04em; font-weight: 900; text-transform: uppercase; }
+    .hero-copy { margin: 0; max-width: 800px; color: var(--soft); font-size: 14px; }
+
+    .top-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+    .metric-card { padding: 16px; }
+    .metric-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; margin-bottom: 8px; }
+    .metric-value { font-family: var(--mono); font-size: 28px; font-weight: 800; line-height: 1; }
+    .metric-note { margin-top: 8px; font-size: 12px; color: var(--soft); }
+
+    .main-grid { display: grid; grid-template-columns: 1.35fr 0.85fr; gap: 16px; }
+    .section-card, .leader-card { padding: 16px; }
+
+    .section-head, .leader-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .section-kicker { font-size: 10px; line-height: 1; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); font-weight: 800; margin-bottom: 7px; }
+    .section-title { margin: 0; font-size: 20px; line-height: 1.02; letter-spacing: -0.03em; text-transform: uppercase; font-weight: 900; }
+    .section-badge { font-family: var(--mono); font-size: 11px; color: var(--soft); border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; padding: 7px 10px; background: rgba(255,255,255,0.02); }
+
+    .heat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .heat-card {
+      border-radius: 16px;
+      padding: 14px;
+      min-height: 176px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.07);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+    }
+    .heat-card.cold {
+      background: linear-gradient(180deg, rgba(59,130,246,0.25) 0%, rgba(12,20,38,0.92) 100%);
+      border-color: rgba(96,165,250,0.32);
+    }
+    .heat-card.neutral {
+      background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(15,15,15,0.92) 100%);
+      border-color: rgba(255,255,255,0.12);
+    }
+    .heat-card.hot {
+      background: linear-gradient(180deg, rgba(251,146,60,0.30) 0%, rgba(168,85,247,0.35) 100%);
+      border-color: rgba(192,132,252,0.30);
+    }
+
+    .heat-rank { font-family: var(--mono); font-size: 11px; color: var(--soft); margin-bottom: 8px; text-transform: uppercase; }
+    .heat-name { font-size: 18px; line-height: 1.02; letter-spacing: -0.03em; font-weight: 900; margin: 0 0 6px; }
+    .heat-meta { font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+    .heat-band {
+      display: inline-flex; align-items: center; border-radius: 999px; padding: 6px 9px;
+      font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+      border: 1px solid rgba(255,255,255,0.10); background: rgba(0,0,0,0.18); margin-bottom: 12px;
+    }
+    .heat-values { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .heat-value-box {
+      border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 10px;
+      background: rgba(0,0,0,0.16);
+    }
+    .heat-value-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.10em; color: var(--muted); font-weight: 800; margin-bottom: 5px; }
+    .heat-value { font-family: var(--mono); font-size: 18px; font-weight: 800; }
+    .heat-brief { font-size: 12px; line-height: 1.45; color: var(--soft); }
+
+    .leader-list { display: grid; gap: 10px; }
+    .leader-row {
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(255,255,255,0.02);
+    }
+    .leader-name { font-size: 15px; font-weight: 800; margin-bottom: 5px; }
+    .leader-sub { font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 7px; }
+    .leader-delta { font-family: var(--mono); font-size: 18px; font-weight: 800; color: var(--lime-hot); }
+
+    .lab-note {
+      margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.05);
+      font-size: 12px; color: var(--tiny);
+    }
+
+    {{ shell_styles | safe }}
+
+    @media (max-width: 980px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .heat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .top-metrics { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-inner, .app { width: min(100%, calc(100% - 16px)); }
+      .heat-grid { grid-template-columns: 1fr; }
+      .hero-card, .metric-card, .section-card, .leader-card { padding-left: 16px; padding-right: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div class="brand-text">
+          <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
+          <div class="brand-title">LAB Terminal // IVB Heat Map</div>
+        </div>
+      </div>
+      <div class="livebox">
+        <div class="live-label"><span class="live-dot"></span>LIVE</div>
+        <div class="live-time">{{ generated_at }}</div>
+      </div>
+    </div>
+  </div>
+
+  {{ nav_html | safe }}
+  {{ search_html | safe }}
+
+  <div class="app">
+    <section class="hero-card">
+      <div class="eyebrow">Pitch Shape Intelligence</div>
+      <h1 class="hero-title">IVB Heat Map</h1>
+      <p class="hero-copy">
+        The X-Ray layer for fastball carry. This board tracks raw induced vertical break, shape relative to velocity norms, and the dead-zone risk profile where ride flattens into damage.
+      </p>
+    </section>
+
+    <section class="top-metrics">
+      <article class="metric-card">
+        <div class="metric-label">Field Tilt</div>
+        <div class="metric-value">{{ field_tilt_pct }}%</div>
+        <div class="metric-note">Share of tracked arms in the current window carrying elite 18"+ IVB.</div>
+      </article>
+      <article class="metric-card">
+        <div class="metric-label">Tracked Arms</div>
+        <div class="metric-value">{{ tracked_pitchers }}</div>
+        <div class="metric-note">Pitchers meeting the fastball sample threshold in the last {{ lookback_days }} days.</div>
+      </article>
+      <article class="metric-card">
+        <div class="metric-label">Dead Zone Count</div>
+        <div class="metric-value">{{ dead_zone_count }}</div>
+        <div class="metric-note">Pitchers sitting in the 12"–15" carry band, where contact quality risk rises.</div>
+      </article>
+    </section>
+
+    <section class="main-grid">
+      <article class="section-card">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Gradient Map</div>
+            <h2 class="section-title">Pitch Shape Board</h2>
+          </div>
+          <div class="section-badge">Top {{ heat_cards|length }}</div>
+        </div>
+
+        <div class="heat-grid">
+          {% for row in heat_cards %}
+          <article class="heat-card {{ row.heat_class }}">
+            <div class="heat-rank">#{{ loop.index }} // {{ row.band_label }}</div>
+            <h3 class="heat-name">{{ row.player_name }}</h3>
+            <div class="heat-meta">{{ row.team }} {% if row.velocity_bucket %}// {{ row.velocity_bucket }}{% endif %}</div>
+            <div class="heat-band">{{ row.heat_tag }}</div>
+
+            <div class="heat-values">
+              <div class="heat-value-box">
+                <div class="heat-value-label">IVB Raw</div>
+                <div class="heat-value">{{ row.ivb_raw }}</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">IVB vs Avg</div>
+                <div class="heat-value">{{ row.ivb_vs_avg }}</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">VAA</div>
+                <div class="heat-value">{{ row.vaa }}</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">Dead Zone</div>
+                <div class="heat-value">{{ row.dead_zone_label }}</div>
+              </div>
+            </div>
+
+            <div class="heat-brief">{{ row.brief }}</div>
+          </article>
+          {% endfor %}
+        </div>
+
+        <div class="lab-note">
+          Version 1 uses fastball IVB from current Statcast movement inputs. VAA is scaffolded until the dedicated calculation layer is added upstream.
+        </div>
+      </article>
+
+      <aside class="leader-card">
+        <div class="leader-head">
+          <div>
+            <div class="section-kicker">Movement Shift</div>
+            <h2 class="section-title">Climbers</h2>
+          </div>
+          <div class="section-badge">Recent vs Prior</div>
+        </div>
+
+        <div class="leader-list">
+          {% for row in climbers %}
+          <div class="leader-row">
+            <div class="leader-name">{{ row.player_name }}</div>
+            <div class="leader-sub">{{ row.team }} // {{ row.recent_label }}</div>
+            <div class="leader-delta">{{ row.delta_label }}</div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="lab-note">
+          Climbers compare the most recent half of the rolling window to the prior half. Later we can upgrade this to a true last-two-starts model.
+        </div>
+      </aside>
+    </section>
+
+    {{ footer_html | safe }}
+  </div>
+</body>
+</html>
+"""
+)
+
+
+def safe_float(value):
+    try:
+        if value is None or (isinstance(value, float) and math.isnan(value)):
+            return None
+        return float(value)
+    except Exception:
+        return None
+
+
+def format_signed(value: float | None, suffix: str = "") -> str:
+    if value is None:
+        return "--"
+    return f"{value:+.1f}{suffix}"
+
+
+def format_plain(value: float | None, suffix: str = "") -> str:
+    if value is None:
+        return "--"
+    return f"{value:.1f}{suffix}"
+
+
+def velocity_bucket_label(v: float | None) -> str:
+    if v is None:
+        return ""
+    low = int(math.floor(v / 2.0) * 2)
+    high = low + 1
+    return f"{low}-{high} mph"
+
+
+def heat_class(ivb: float | None) -> str:
+    if ivb is None:
+        return "neutral"
+    if 12.0 <= ivb <= 15.0:
+        return "cold"
+    if ivb >= 18.0:
+        return "hot"
+    return "neutral"
+
+
+def band_label(ivb: float | None) -> str:
+    if ivb is None:
+        return "Unclassified"
+    if 12.0 <= ivb <= 15.0:
+        return "Dead Zone"
+    if ivb >= 18.0:
+        return "Apex Carry"
+    return "Standard Carry"
+
+
+def heat_tag(ivb: float | None) -> str:
+    if ivb is None:
+        return "NO SIGNAL"
+    if 12.0 <= ivb <= 15.0:
+        return "COLD // DEAD ZONE"
+    if ivb >= 18.0:
+        return "HOT // APEX RISE"
+    return "NEUTRAL // MLB RANGE"
+
+
+def build_brief(ivb: float | None, ivb_vs_avg: float | None, vaa: float | None) -> str:
+    parts = []
+
+    if ivb is not None:
+        if 12.0 <= ivb <= 15.0:
+            parts.append("Carry profile sits inside the dead zone.")
+        elif ivb >= 18.0:
+            parts.append("Fastball shape enters apex-rise territory.")
+        else:
+            parts.append("Movement reads in the standard carry band.")
+
+    if ivb_vs_avg is not None:
+        if ivb_vs_avg >= 1.5:
+            parts.append("Shape is beating the velo bucket baseline.")
+        elif ivb_vs_avg <= -1.0:
+            parts.append("Ride trails the baseline for this velocity band.")
+
+    if vaa is None:
+        parts.append("VAA layer pending full upstream calculation.")
+    else:
+        parts.append(f"Approach angle checks in at {vaa:.1f}°.")
+
+    return " ".join(parts)
+
+
+def fetch_statcast_window(start_date: str, end_date: str) -> pd.DataFrame:
+    print(f"Fetching Statcast from {start_date} to {end_date}...")
+    print("This is a large query, it may take a moment to complete")
+    raw = statcast(start_dt=start_date, end_dt=end_date)
+    if raw is None or raw.empty:
+        return pd.DataFrame()
+    return raw.copy()
+
+
+def build_ivb_dataset(raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    if raw.empty:
+        return pd.DataFrame(), pd.DataFrame()
+
+    pitchers = raw.copy()
+
+    pitchers["release_speed"] = pd.to_numeric(pitchers.get("release_speed"), errors="coerce")
+    pitchers["pfx_z"] = pd.to_numeric(pitchers.get("pfx_z"), errors="coerce")
+    pitchers["game_date"] = pd.to_datetime(pitchers.get("game_date"), errors="coerce")
+    pitchers["pitcher"] = pd.to_numeric(pitchers.get("pitcher"), errors="coerce").astype("Int64")
+
+    fastball_types = {"FF", "SI", "FC", "FA"}
+    pitchers["pitch_type"] = pitchers.get("pitch_type").astype(str)
+    pitchers["is_fastball"] = pitchers["pitch_type"].isin(fastball_types)
+    pitchers = pitchers[pitchers["is_fastball"] == True].copy()
+
+    pitchers["ivb_inches"] = pitchers["pfx_z"] * 12.0
+    pitchers = pitchers.dropna(subset=["pitcher", "release_speed", "ivb_inches", "game_date"]).copy()
+
+    if pitchers.empty:
+        return pd.DataFrame(), pd.DataFrame()
+
+    pitchers["velocity_bucket_floor"] = (pitchers["release_speed"] // 2 * 2).astype("Int64")
+    bucket_avgs = (
+        pitchers.groupby("velocity_bucket_floor", dropna=True)["ivb_inches"]
+        .mean()
+        .reset_index()
+        .rename(columns={"ivb_inches": "bucket_ivb_avg"})
+    )
+
+    pitchers = pitchers.merge(bucket_avgs, on="velocity_bucket_floor", how="left")
+    pitchers["ivb_vs_avg"] = pitchers["ivb_inches"] - pitchers["bucket_ivb_avg"]
+    pitchers["dead_zone_flag"] = pitchers["ivb_inches"].between(12.0, 15.0, inclusive="both")
+
+    grouped = (
+        pitchers.groupby("pitcher", dropna=True)
+        .agg(
+            player_name=("player_name", "last"),
+            team=("home_team", "last"),
+            release_speed=("release_speed", "mean"),
+            ivb_raw=("ivb_inches", "mean"),
+            ivb_vs_avg=("ivb_vs_avg", "mean"),
+            pitch_count=("ivb_inches", "size"),
+            dead_zone_flag=("dead_zone_flag", "max"),
+            velocity_bucket_floor=("velocity_bucket_floor", "last"),
+        )
+        .reset_index()
+    )
+
+    grouped = grouped[grouped["pitch_count"] >= MIN_FASTBALL_COUNT].copy()
+    grouped["team"] = grouped["team"].fillna("TEAM")
+    grouped["vaa"] = pd.NA  # scaffold for v1
+
+    pitchers = pitchers[pitchers["pitcher"].isin(grouped["pitcher"])].copy()
+    return grouped, pitchers
+
+
+def build_climbers(grouped: pd.DataFrame, pitches: pd.DataFrame) -> list[dict]:
+    if grouped.empty or pitches.empty:
+        return []
+
+    max_date = pitches["game_date"].max()
+    if pd.isna(max_date):
+        return []
+
+    split_date = max_date - timedelta(days=max(1, LOOKBACK_DAYS // 2))
+
+    prior = pitches[pitches["game_date"] < split_date].copy()
+    recent = pitches[pitches["game_date"] >= split_date].copy()
+
+    if prior.empty or recent.empty:
+        return []
+
+    prior_g = (
+        prior.groupby("pitcher")["ivb_inches"].mean().reset_index().rename(columns={"ivb_inches": "prior_ivb"})
+    )
+    recent_g = (
+        recent.groupby("pitcher")["ivb_inches"].mean().reset_index().rename(columns={"ivb_inches": "recent_ivb"})
+    )
+
+    merged = grouped.merge(prior_g, on="pitcher", how="left").merge(recent_g, on="pitcher", how="left")
+    merged["delta"] = merged["recent_ivb"] - merged["prior_ivb"]
+    merged = merged.dropna(subset=["delta"]).sort_values("delta", ascending=False).head(6)
+
+    rows = []
+    for _, row in merged.iterrows():
+      delta = safe_float(row.get("delta"))
+      if delta is None:
+          continue
+      rows.append(
+          {
+              "player_name": row.get("player_name", "Unknown"),
+              "team": row.get("team", "TEAM"),
+              "recent_label": f"Last {max(1, LOOKBACK_DAYS // 2)}d vs prior window",
+              "delta_label": format_signed(delta, '"'),
+          }
+      )
+    return rows
+
+
+def to_cards(grouped: pd.DataFrame) -> list[dict]:
+    if grouped.empty:
+        return []
+
+    ordered = grouped.sort_values(["ivb_vs_avg", "ivb_raw"], ascending=[False, False]).head(12).copy()
+    rows = []
+
+    for _, row in ordered.iterrows():
+        ivb_raw = safe_float(row.get("ivb_raw"))
+        ivb_delta = safe_float(row.get("ivb_vs_avg"))
+        velo = safe_float(row.get("release_speed"))
+        vaa = safe_float(row.get("vaa"))
+        bucket_floor = safe_float(row.get("velocity_bucket_floor"))
+
+        bucket_label = ""
+        if bucket_floor is not None:
+            bucket_label = velocity_bucket_label(bucket_floor)
+
+        rows.append(
+            {
+                "player_name": row.get("player_name", "Unknown Pitcher"),
+                "team": row.get("team", "TEAM"),
+                "ivb_raw": format_plain(ivb_raw, '"'),
+                "ivb_vs_avg": format_signed(ivb_delta, '"'),
+                "vaa": "--" if vaa is None else format_plain(vaa, "°"),
+                "dead_zone_label": "COLD" if bool(row.get("dead_zone_flag")) else "CLEAR",
+                "heat_class": heat_class(ivb_raw),
+                "band_label": band_label(ivb_raw),
+                "heat_tag": heat_tag(ivb_raw),
+                "velocity_bucket": bucket_label,
+                "brief": build_brief(ivb_raw, ivb_delta, vaa),
+            }
+        )
+    return rows
+
+
+def write_ivb_heat_map() -> None:
+    DIST_DIR.mkdir(parents=True, exist_ok=True)
+    IVB_DIR.mkdir(parents=True, exist_ok=True)
+
+    end_date = datetime.now().date()
+    start_date = end_date - timedelta(days=LOOKBACK_DAYS)
+
+    raw = fetch_statcast_window(str(start_date), str(end_date))
+    grouped, pitches = build_ivb_dataset(raw)
+
+    tracked_pitchers = int(len(grouped))
+    dead_zone_count = int(grouped["dead_zone_flag"].fillna(False).sum()) if not grouped.empty else 0
+    elite_count = int((grouped["ivb_raw"].fillna(-999) >= 18.0).sum()) if not grouped.empty else 0
+    field_tilt_pct = 0 if tracked_pitchers == 0 else round((elite_count / tracked_pitchers) * 100)
+
+    heat_cards = to_cards(grouped)
+    climbers = build_climbers(grouped, pitches)
+
+    if not climbers:
+        climbers = [
+            {"player_name": "No signal yet", "team": "LAB", "recent_label": "Awaiting additional data", "delta_label": "--"}
+        ]
+
+    html = HTML_TEMPLATE.render(
+        generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
+        nav_html=Template(NAV_TEMPLATE).render(active_nav="ivb_heat_map"),
+        search_html=SEARCH_TEMPLATE,
+        footer_html=FOOTER_TEMPLATE,
+        shell_styles=SHELL_STYLES_TEMPLATE,
+        field_tilt_pct=field_tilt_pct,
+        tracked_pitchers=tracked_pitchers,
+        dead_zone_count=dead_zone_count,
+        heat_cards=heat_cards,
+        climbers=climbers,
+        lookback_days=LOOKBACK_DAYS,
+    )
+
+    (IVB_DIR / "index.html").write_text(html, encoding="utf-8")
+    print("Wrote dist/ivb-heat-map/index.html")
+
+    payload = {
+        "generated_at": datetime.now().isoformat(),
+        "field_tilt_pct": field_tilt_pct,
+        "tracked_pitchers": tracked_pitchers,
+        "dead_zone_count": dead_zone_count,
+        "heat_cards": heat_cards,
+        "climbers": climbers,
+    }
+    (DIST_DIR / "ivb_heat_map.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    print("Wrote dist/ivb_heat_map.json")
+
+
+if __name__ == "__main__":
+    write_ivb_heat_map()
