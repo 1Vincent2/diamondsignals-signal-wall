@@ -1574,13 +1574,14 @@ def write_scout_shell() -> None:
       .metrics-grid { grid-template-columns: 1fr; }
     }
 
-   @media (max-width: 640px) {
+ @media (max-width: 640px) {
   .topbar-inner, .app { width: min(100%, calc(100% - 16px)); }
   .hero-card, .metric-card, .briefing-card { padding-left: 16px; padding-right: 16px; }
   .headshot-shell { width: 92px; height: 92px; border-radius: 18px; }
   .player-name { font-size: 28px; }
 }
-  </style>
+{shell_styles}
+</style>
 </head>
 <body>
   <div class="topbar">
@@ -1800,12 +1801,17 @@ def write_scout_shell() -> None:
 """
     nav_html = Template(NAV_TEMPLATE).render(active_nav="scout_dossier")
     search_html = SEARCH_TEMPLATE
-    html = html.replace("{nav_html}", nav_html).replace("{search_html}", search_html)
+    footer_html = FOOTER_TEMPLATE
+    shell_styles = SHELL_STYLES_TEMPLATE
+    html = (
+        html.replace("{nav_html}", nav_html)
+            .replace("{search_html}", search_html)
+            .replace("{footer_html}", footer_html)
+            .replace("{shell_styles}", shell_styles)
+    )
 
     (scout_dir / "index.html").write_text(html, encoding="utf-8")
     print("Wrote dist/scout/index.html")
-
-
 def main() -> None:
     raw = fetch_statcast_window(START_DATE, END_DATE)
 
