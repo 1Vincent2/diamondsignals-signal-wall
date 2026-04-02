@@ -1717,10 +1717,11 @@ HTML_TEMPLATE = Template("""
       </div>
     </section>
 
-   {{ footer_html | safe }}
-  </div>
+    {{ footer_html | safe }}
+</div>
 
-  <script>
+<script src="/player-search.js"></script>
+<script>
     function openGlossary() {
       const overlay = document.getElementById("glossaryOverlay");
       const drawer = document.getElementById("glossaryDrawer");
