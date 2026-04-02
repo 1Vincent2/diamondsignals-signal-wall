@@ -93,6 +93,25 @@
     .section-kicker { font-size: 10px; line-height: 1; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); font-weight: 800; margin-bottom: 7px; }
     .section-title { margin: 0; font-size: 20px; line-height: 1.02; letter-spacing: -0.03em; text-transform: uppercase; font-weight: 900; }
     .section-badge { font-family: var(--mono); font-size: 11px; color: var(--soft); border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; padding: 7px 10px; background: rgba(255,255,255,0.02); }
+    .section-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    .field-guide-trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(106,166,255,0.20);
+      background: rgba(106,166,255,0.08);
+      color: var(--text);
+      padding: 0 12px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
 
     .heat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     .heat-card {
@@ -120,11 +139,28 @@
     .heat-rank { font-family: var(--mono); font-size: 11px; color: var(--soft); margin-bottom: 8px; text-transform: uppercase; }
     .heat-name { font-size: 18px; line-height: 1.02; letter-spacing: -0.03em; font-weight: 900; margin: 0 0 6px; }
     .heat-meta { font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
-    .heat-band {
-      display: inline-flex; align-items: center; border-radius: 999px; padding: 6px 9px;
-      font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
-      border: 1px solid rgba(255,255,255,0.10); background: rgba(0,0,0,0.18); margin-bottom: 12px;
+
+    .heat-header-tags {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
     }
+
+    .heat-band {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.18);
+    }
+
     .heat-climber {
       display: inline-flex;
       align-items: center;
@@ -137,28 +173,29 @@
       border: 1px solid rgba(182,255,0,0.22);
       background: rgba(182,255,0,0.08);
       color: var(--lime-hot);
-      margin-left: 8px;
-      margin-bottom: 12px;
     }
+
     .heat-values { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
     .heat-value-box {
-      border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 10px;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 10px;
       background: rgba(0,0,0,0.16);
     }
     .heat-value-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.10em; color: var(--muted); font-weight: 800; margin-bottom: 5px; }
     .heat-value { font-family: var(--mono); font-size: 18px; font-weight: 800; }
-    .heat-brief { font-size: 12px; line-height: 1.45; color: var(--soft); }
-        .heat-risk {
+    .heat-risk {
       margin-top: 10px;
       margin-bottom: 8px;
       font-size: 11px;
       line-height: 1.35;
       color: var(--red);
       font-family: var(--mono);
-      font-weight: 800;
+      font-weight: 900;
       text-transform: uppercase;
       letter-spacing: 0.08em;
     }
+    .heat-brief { font-size: 12px; line-height: 1.45; color: var(--soft); }
 
     .leader-list { display: grid; gap: 10px; }
     .leader-row {
@@ -172,8 +209,135 @@
     .leader-delta { font-family: var(--mono); font-size: 18px; font-weight: 800; color: var(--lime-hot); }
 
     .lab-note {
-      margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.05);
-      font-size: 12px; color: var(--tiny);
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      font-size: 12px;
+      color: var(--tiny);
+    }
+
+    .field-guide-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.56);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+      z-index: 80;
+    }
+
+    .field-guide-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .field-guide-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: min(720px, calc(100vw - 24px));
+      transform: translate(-50%, -46%);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.24s ease, opacity 0.24s ease;
+      z-index: 90;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      background: linear-gradient(180deg, #121212 0%, #080808 100%);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.42);
+      overflow: hidden;
+    }
+
+    .field-guide-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%);
+    }
+
+    .field-guide-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .field-guide-kicker {
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--blue);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .field-guide-title {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .field-guide-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .field-guide-body {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .field-guide-card {
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      padding: 14px;
+    }
+
+    .field-guide-term {
+      margin: 0 0 8px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: var(--mono);
+      font-weight: 800;
+    }
+
+    .field-guide-term.apex { color: var(--purple); }
+    .field-guide-term.dead { color: var(--blue); }
+    .field-guide-term.whiff { color: var(--lime-hot); }
+
+    .field-guide-copy {
+      margin: 0;
+      color: var(--soft);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .field-guide-note {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 12px;
+      color: var(--tiny);
+      font-size: 12px;
+      line-height: 1.45;
     }
 
     .topnav { border-top: 1px solid rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); }
@@ -226,6 +390,7 @@
       .topbar-inner, .app { width: min(100%, calc(100% - 16px)); }
       .heat-grid { grid-template-columns: 1fr; }
       .hero-card, .metric-card, .section-card, .leader-card { padding-left: 16px; padding-right: 16px; }
+      .field-guide-modal { width: min(100vw - 16px, 720px); }
     }
   </style>
 </head>
@@ -241,7 +406,7 @@
       </div>
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">2026-04-02 03:24 PM</div>
+        <div class="live-time">2026-04-02 03:49 PM</div>
       </div>
     </div>
   </div>
@@ -272,6 +437,45 @@
     </div>
   </div>
 </div>
+
+  <div id="fieldGuideOverlay" class="field-guide-overlay" onclick="closeFieldGuide()"></div>
+
+  <div id="fieldGuideModal" class="field-guide-modal" aria-hidden="true">
+    <div class="field-guide-head">
+      <div>
+        <div class="field-guide-kicker">Tactical Field Guide</div>
+        <h2 class="field-guide-title">How to Read the Heat</h2>
+      </div>
+      <button class="field-guide-close" type="button" onclick="closeFieldGuide()" aria-label="Close field guide">×</button>
+    </div>
+
+    <div class="field-guide-body">
+      <div class="field-guide-card">
+        <h3 class="field-guide-term apex">Apex Rise</h3>
+        <p class="field-guide-copy">
+          Fastballs with 18"+ IVB. These pitches resist gravity longer, stay above the hitter’s barrel, and create the visual illusion of rise. Tactical result: more whiffs, pop-ups, and carry-driven deception.
+        </p>
+      </div>
+
+      <div class="field-guide-card">
+        <h3 class="field-guide-term dead">The Dead Zone</h3>
+        <p class="field-guide-copy">
+          Fastballs with 12"–15" IVB. This is the flatter carry band where the ball travels into the hitter’s natural path. Tactical result: more barrels, louder contact, and elevated home-run risk.
+        </p>
+      </div>
+
+      <div class="field-guide-card">
+        <h3 class="field-guide-term whiff">Whiff Prob</h3>
+        <p class="field-guide-copy">
+          A DiamondSignals translation layer combining raw IVB, carry versus velocity-bucket norms, and eventually VAA flatness. It converts pitch-shape complexity into a direct swing-and-miss expectation.
+        </p>
+      </div>
+
+      <div class="field-guide-note">
+        VAA remains a pending upstream layer in this version. Cards continue to show IVB Raw, IVB vs Avg, Dead Zone risk, and climber behavior while the full ballistics stack is finalized.
+      </div>
+    </div>
+  </div>
 
   <div class="app">
     <section class="hero-card">
@@ -307,7 +511,10 @@
             <div class="section-kicker">Gradient Map</div>
             <h2 class="section-title">Pitch Shape Board</h2>
           </div>
-          <div class="section-badge">Top 12</div>
+          <div class="section-actions">
+            <button class="field-guide-trigger" type="button" onclick="openFieldGuide()">Field Guide</button>
+            <div class="section-badge">Top 12</div>
+          </div>
         </div>
 
         <div class="heat-grid">
@@ -316,12 +523,11 @@
             <div class="heat-rank">#1 // Apex Carry</div>
             <h3 class="heat-name">Vesia, Alex</h3>
             <div class="heat-meta">LAD // 88-89 mph</div>
-           <div>
-            <span class="heat-band">HOT // APEX RISE</span>
-            
-            <span class="heat-climber">CLIMBER</span>
-            
-        </div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">HOT // APEX RISE</span>
+              
+            </div>
 
             <div class="heat-values">
               <div class="heat-value-box">
@@ -336,7 +542,7 @@
                 <div class="heat-value-label">VAA</div>
                 <div class="heat-value">--</div>
               </div>
-            <div class="heat-value-box">
+              <div class="heat-value-box">
                 <div class="heat-value-label">Whiff Prob</div>
                 <div class="heat-value">MEDIUM</div>
               </div>
@@ -346,7 +552,7 @@
               </div>
             </div>
 
-                <div class="heat-risk">CLEAR</div>
+            
             <div class="heat-brief">Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
           </article>
           
@@ -354,12 +560,11 @@
             <div class="heat-rank">#2 // Apex Carry</div>
             <h3 class="heat-name">Lee, Dylan</h3>
             <div class="heat-meta">ATL // 92-93 mph</div>
-           <div>
-            <span class="heat-band">HOT // APEX RISE</span>
-            
-            <span class="heat-climber">CLIMBER</span>
-            
-        </div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">HOT // APEX RISE</span>
+              
+            </div>
 
             <div class="heat-values">
               <div class="heat-value-box">
@@ -374,7 +579,7 @@
                 <div class="heat-value-label">VAA</div>
                 <div class="heat-value">--</div>
               </div>
-            <div class="heat-value-box">
+              <div class="heat-value-box">
                 <div class="heat-value-label">Whiff Prob</div>
                 <div class="heat-value">MEDIUM</div>
               </div>
@@ -384,7 +589,7 @@
               </div>
             </div>
 
-                <div class="heat-risk">CLEAR</div>
+            
             <div class="heat-brief">Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
           </article>
           
@@ -392,12 +597,11 @@
             <div class="heat-rank">#3 // Apex Carry</div>
             <h3 class="heat-name">Thielbar, Caleb</h3>
             <div class="heat-meta">CHC // 92-93 mph</div>
-           <div>
-            <span class="heat-band">HOT // APEX RISE</span>
-            
-            <span class="heat-climber">CLIMBER</span>
-            
-        </div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">HOT // APEX RISE</span>
+              
+            </div>
 
             <div class="heat-values">
               <div class="heat-value-box">
@@ -412,7 +616,7 @@
                 <div class="heat-value-label">VAA</div>
                 <div class="heat-value">--</div>
               </div>
-            <div class="heat-value-box">
+              <div class="heat-value-box">
                 <div class="heat-value-label">Whiff Prob</div>
                 <div class="heat-value">MEDIUM</div>
               </div>
@@ -422,7 +626,7 @@
               </div>
             </div>
 
-                <div class="heat-risk">CLEAR</div>
+            
             <div class="heat-brief">Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
           </article>
           
@@ -430,12 +634,11 @@
             <div class="heat-rank">#4 // Dead Zone</div>
             <h3 class="heat-name">Suter, Brent</h3>
             <div class="heat-meta">HOU // 84-85 mph</div>
-           <div>
-            <span class="heat-band">COLD // DEAD ZONE</span>
-            
-            <span class="heat-climber">CLIMBER</span>
-            
-        </div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">COLD // DEAD ZONE</span>
+              
+            </div>
 
             <div class="heat-values">
               <div class="heat-value-box">
@@ -450,7 +653,7 @@
                 <div class="heat-value-label">VAA</div>
                 <div class="heat-value">--</div>
               </div>
-            <div class="heat-value-box">
+              <div class="heat-value-box">
                 <div class="heat-value-label">Whiff Prob</div>
                 <div class="heat-value">LOW</div>
               </div>
@@ -460,7 +663,9 @@
               </div>
             </div>
 
-                <div class="heat-risk">CONTACT RISK</div>
+            
+            <div class="heat-risk">BARREL MAGNET // CONTACT RISK</div>
+            
             <div class="heat-brief">Carry profile sits inside the dead zone. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
           </article>
           
@@ -468,12 +673,11 @@
             <div class="heat-rank">#5 // Apex Carry</div>
             <h3 class="heat-name">Estrada, Jeremiah</h3>
             <div class="heat-meta">SD // 96-97 mph</div>
-           <div>
-            <span class="heat-band">HOT // APEX RISE</span>
-            
-            <span class="heat-climber">CLIMBER</span>
-            
-        </div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">HOT // APEX RISE</span>
+              
+            </div>
 
             <div class="heat-values">
               <div class="heat-value-box">
@@ -488,7 +692,7 @@
                 <div class="heat-value-label">VAA</div>
                 <div class="heat-value">--</div>
               </div>
-            <div class="heat-value-box">
+              <div class="heat-value-box">
                 <div class="heat-value-label">Whiff Prob</div>
                 <div class="heat-value">MEDIUM</div>
               </div>
@@ -498,7 +702,7 @@
               </div>
             </div>
 
-                <div class="heat-risk">CLEAR</div>
+            
             <div class="heat-brief">Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
           </article>
           
@@ -506,12 +710,11 @@
             <div class="heat-rank">#6 // Apex Carry</div>
             <h3 class="heat-name">Sabrowski, Erik</h3>
             <div class="heat-meta">SEA // 94-95 mph</div>
-           <div>
-            <span class="heat-band">HOT // APEX RISE</span>
-            
-            <span class="heat-climber">CLIMBER</span>
-            
-        </div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">HOT // APEX RISE</span>
+              
+            </div>
 
             <div class="heat-values">
               <div class="heat-value-box">
@@ -526,7 +729,7 @@
                 <div class="heat-value-label">VAA</div>
                 <div class="heat-value">--</div>
               </div>
-            <div class="heat-value-box">
+              <div class="heat-value-box">
                 <div class="heat-value-label">Whiff Prob</div>
                 <div class="heat-value">MEDIUM</div>
               </div>
@@ -536,7 +739,7 @@
               </div>
             </div>
 
-                <div class="heat-risk">CLEAR</div>
+            
             <div class="heat-brief">Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
           </article>
           
@@ -544,12 +747,11 @@
             <div class="heat-rank">#7 // Standard Carry</div>
             <h3 class="heat-name">Ober, Bailey</h3>
             <div class="heat-meta">BAL // 88-89 mph</div>
-           <div>
-            <span class="heat-band">NEUTRAL // MLB RANGE</span>
-            
-            <span class="heat-climber">CLIMBER</span>
-            
-        </div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">NEUTRAL // MLB RANGE</span>
+              
+            </div>
 
             <div class="heat-values">
               <div class="heat-value-box">
@@ -564,7 +766,7 @@
                 <div class="heat-value-label">VAA</div>
                 <div class="heat-value">--</div>
               </div>
-            <div class="heat-value-box">
+              <div class="heat-value-box">
                 <div class="heat-value-label">Whiff Prob</div>
                 <div class="heat-value">LOW</div>
               </div>
@@ -574,7 +776,7 @@
               </div>
             </div>
 
-                <div class="heat-risk">CLEAR</div>
+            
             <div class="heat-brief">Movement reads in the standard carry band. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
           </article>
           
@@ -582,12 +784,11 @@
             <div class="heat-rank">#8 // Apex Carry</div>
             <h3 class="heat-name">Pivetta, Nick</h3>
             <div class="heat-meta">SD // 94-95 mph</div>
-           <div>
-            <span class="heat-band">HOT // APEX RISE</span>
-            
-            <span class="heat-climber">CLIMBER</span>
-            
-        </div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">HOT // APEX RISE</span>
+              
+            </div>
 
             <div class="heat-values">
               <div class="heat-value-box">
@@ -602,7 +803,7 @@
                 <div class="heat-value-label">VAA</div>
                 <div class="heat-value">--</div>
               </div>
-            <div class="heat-value-box">
+              <div class="heat-value-box">
                 <div class="heat-value-label">Whiff Prob</div>
                 <div class="heat-value">MEDIUM</div>
               </div>
@@ -612,7 +813,7 @@
               </div>
             </div>
 
-                <div class="heat-risk">CLEAR</div>
+            
             <div class="heat-brief">Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
           </article>
           
@@ -620,12 +821,11 @@
             <div class="heat-rank">#9 // Standard Carry</div>
             <h3 class="heat-name">Myers, Tobias</h3>
             <div class="heat-meta">NYM // 92-93 mph</div>
-           <div>
-            <span class="heat-band">NEUTRAL // MLB RANGE</span>
-            
-            <span class="heat-climber">CLIMBER</span>
-            
-        </div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">NEUTRAL // MLB RANGE</span>
+              
+            </div>
 
             <div class="heat-values">
               <div class="heat-value-box">
@@ -640,7 +840,7 @@
                 <div class="heat-value-label">VAA</div>
                 <div class="heat-value">--</div>
               </div>
-            <div class="heat-value-box">
+              <div class="heat-value-box">
                 <div class="heat-value-label">Whiff Prob</div>
                 <div class="heat-value">MEDIUM</div>
               </div>
@@ -650,7 +850,7 @@
               </div>
             </div>
 
-                <div class="heat-risk">CLEAR</div>
+            
             <div class="heat-brief">Movement reads in the standard carry band. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
           </article>
           
@@ -658,12 +858,11 @@
             <div class="heat-rank">#10 // Apex Carry</div>
             <h3 class="heat-name">Dreyer, Jack</h3>
             <div class="heat-meta">LAD // 92-93 mph</div>
-           <div>
-            <span class="heat-band">HOT // APEX RISE</span>
-            
-            <span class="heat-climber">CLIMBER</span>
-            
-        </div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">HOT // APEX RISE</span>
+              
+            </div>
 
             <div class="heat-values">
               <div class="heat-value-box">
@@ -678,7 +877,7 @@
                 <div class="heat-value-label">VAA</div>
                 <div class="heat-value">--</div>
               </div>
-            <div class="heat-value-box">
+              <div class="heat-value-box">
                 <div class="heat-value-label">Whiff Prob</div>
                 <div class="heat-value">MEDIUM</div>
               </div>
@@ -688,7 +887,7 @@
               </div>
             </div>
 
-                <div class="heat-risk">CLEAR</div>
+            
             <div class="heat-brief">Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
           </article>
           
@@ -696,12 +895,11 @@
             <div class="heat-rank">#11 // Apex Carry</div>
             <h3 class="heat-name">Latz, Jacob</h3>
             <div class="heat-meta">PHI // 92-93 mph</div>
-           <div>
-            <span class="heat-band">HOT // APEX RISE</span>
-            
-            <span class="heat-climber">CLIMBER</span>
-            
-        </div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">HOT // APEX RISE</span>
+              
+            </div>
 
             <div class="heat-values">
               <div class="heat-value-box">
@@ -716,7 +914,7 @@
                 <div class="heat-value-label">VAA</div>
                 <div class="heat-value">--</div>
               </div>
-            <div class="heat-value-box">
+              <div class="heat-value-box">
                 <div class="heat-value-label">Whiff Prob</div>
                 <div class="heat-value">MEDIUM</div>
               </div>
@@ -726,7 +924,7 @@
               </div>
             </div>
 
-                <div class="heat-risk">CLEAR</div>
+            
             <div class="heat-brief">Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
           </article>
           
@@ -734,12 +932,11 @@
             <div class="heat-rank">#12 // Apex Carry</div>
             <h3 class="heat-name">Bachar, Lake</h3>
             <div class="heat-meta">MIA // 94-95 mph</div>
-           <div>
-            <span class="heat-band">HOT // APEX RISE</span>
-            
-            <span class="heat-climber">CLIMBER</span>
-            
-        </div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">HOT // APEX RISE</span>
+              
+            </div>
 
             <div class="heat-values">
               <div class="heat-value-box">
@@ -754,7 +951,7 @@
                 <div class="heat-value-label">VAA</div>
                 <div class="heat-value">--</div>
               </div>
-            <div class="heat-value-box">
+              <div class="heat-value-box">
                 <div class="heat-value-label">Whiff Prob</div>
                 <div class="heat-value">MEDIUM</div>
               </div>
@@ -764,7 +961,7 @@
               </div>
             </div>
 
-                <div class="heat-risk">CLEAR</div>
+            
             <div class="heat-brief">Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
           </article>
           
@@ -832,6 +1029,32 @@
 
     
   </div>
+
   <script src="/player-search.js"></script>
+  <script>
+    function openFieldGuide() {
+      const overlay = document.getElementById("fieldGuideOverlay");
+      const modal = document.getElementById("fieldGuideModal");
+      if (!overlay || !modal) return;
+      overlay.classList.add("open");
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeFieldGuide() {
+      const overlay = document.getElementById("fieldGuideOverlay");
+      const modal = document.getElementById("fieldGuideModal");
+      if (!overlay || !modal) return;
+      overlay.classList.remove("open");
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeFieldGuide();
+      }
+    });
+  </script>
 </body>
 </html>

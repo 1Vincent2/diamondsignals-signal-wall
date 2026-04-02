@@ -4,7 +4,6 @@ from pathlib import Path
 from datetime import datetime, timedelta
 import json
 import math
-import os
 
 import pandas as pd
 from jinja2 import Template
@@ -25,6 +24,7 @@ SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding=
 TIMEZONE_LABEL = "America/New_York"
 LOOKBACK_DAYS = 7
 MIN_FASTBALL_COUNT = 8
+CLIMBER_THRESHOLD = 1.0
 
 
 HTML_TEMPLATE = Template(
@@ -123,6 +123,25 @@ HTML_TEMPLATE = Template(
     .section-kicker { font-size: 10px; line-height: 1; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); font-weight: 800; margin-bottom: 7px; }
     .section-title { margin: 0; font-size: 20px; line-height: 1.02; letter-spacing: -0.03em; text-transform: uppercase; font-weight: 900; }
     .section-badge { font-family: var(--mono); font-size: 11px; color: var(--soft); border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; padding: 7px 10px; background: rgba(255,255,255,0.02); }
+    .section-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    .field-guide-trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(106,166,255,0.20);
+      background: rgba(106,166,255,0.08);
+      color: var(--text);
+      padding: 0 12px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
 
     .heat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     .heat-card {
@@ -150,11 +169,28 @@ HTML_TEMPLATE = Template(
     .heat-rank { font-family: var(--mono); font-size: 11px; color: var(--soft); margin-bottom: 8px; text-transform: uppercase; }
     .heat-name { font-size: 18px; line-height: 1.02; letter-spacing: -0.03em; font-weight: 900; margin: 0 0 6px; }
     .heat-meta { font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
-    .heat-band {
-      display: inline-flex; align-items: center; border-radius: 999px; padding: 6px 9px;
-      font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
-      border: 1px solid rgba(255,255,255,0.10); background: rgba(0,0,0,0.18); margin-bottom: 12px;
+
+    .heat-header-tags {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
     }
+
+    .heat-band {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.18);
+    }
+
     .heat-climber {
       display: inline-flex;
       align-items: center;
@@ -167,28 +203,29 @@ HTML_TEMPLATE = Template(
       border: 1px solid rgba(182,255,0,0.22);
       background: rgba(182,255,0,0.08);
       color: var(--lime-hot);
-      margin-left: 8px;
-      margin-bottom: 12px;
     }
+
     .heat-values { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
     .heat-value-box {
-      border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 10px;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 10px;
       background: rgba(0,0,0,0.16);
     }
     .heat-value-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.10em; color: var(--muted); font-weight: 800; margin-bottom: 5px; }
     .heat-value { font-family: var(--mono); font-size: 18px; font-weight: 800; }
-    .heat-brief { font-size: 12px; line-height: 1.45; color: var(--soft); }
-        .heat-risk {
+    .heat-risk {
       margin-top: 10px;
       margin-bottom: 8px;
       font-size: 11px;
       line-height: 1.35;
       color: var(--red);
       font-family: var(--mono);
-      font-weight: 800;
+      font-weight: 900;
       text-transform: uppercase;
       letter-spacing: 0.08em;
     }
+    .heat-brief { font-size: 12px; line-height: 1.45; color: var(--soft); }
 
     .leader-list { display: grid; gap: 10px; }
     .leader-row {
@@ -202,8 +239,135 @@ HTML_TEMPLATE = Template(
     .leader-delta { font-family: var(--mono); font-size: 18px; font-weight: 800; color: var(--lime-hot); }
 
     .lab-note {
-      margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.05);
-      font-size: 12px; color: var(--tiny);
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      font-size: 12px;
+      color: var(--tiny);
+    }
+
+    .field-guide-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.56);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+      z-index: 80;
+    }
+
+    .field-guide-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .field-guide-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: min(720px, calc(100vw - 24px));
+      transform: translate(-50%, -46%);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.24s ease, opacity 0.24s ease;
+      z-index: 90;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      background: linear-gradient(180deg, #121212 0%, #080808 100%);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.42);
+      overflow: hidden;
+    }
+
+    .field-guide-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%);
+    }
+
+    .field-guide-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .field-guide-kicker {
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--blue);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .field-guide-title {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .field-guide-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .field-guide-body {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .field-guide-card {
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      padding: 14px;
+    }
+
+    .field-guide-term {
+      margin: 0 0 8px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: var(--mono);
+      font-weight: 800;
+    }
+
+    .field-guide-term.apex { color: var(--purple); }
+    .field-guide-term.dead { color: var(--blue); }
+    .field-guide-term.whiff { color: var(--lime-hot); }
+
+    .field-guide-copy {
+      margin: 0;
+      color: var(--soft);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .field-guide-note {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 12px;
+      color: var(--tiny);
+      font-size: 12px;
+      line-height: 1.45;
     }
 
     {{ shell_styles | safe }}
@@ -218,6 +382,7 @@ HTML_TEMPLATE = Template(
       .topbar-inner, .app { width: min(100%, calc(100% - 16px)); }
       .heat-grid { grid-template-columns: 1fr; }
       .hero-card, .metric-card, .section-card, .leader-card { padding-left: 16px; padding-right: 16px; }
+      .field-guide-modal { width: min(100vw - 16px, 720px); }
     }
   </style>
 </head>
@@ -240,6 +405,45 @@ HTML_TEMPLATE = Template(
 
   {{ nav_html | safe }}
   {{ search_html | safe }}
+
+  <div id="fieldGuideOverlay" class="field-guide-overlay" onclick="closeFieldGuide()"></div>
+
+  <div id="fieldGuideModal" class="field-guide-modal" aria-hidden="true">
+    <div class="field-guide-head">
+      <div>
+        <div class="field-guide-kicker">Tactical Field Guide</div>
+        <h2 class="field-guide-title">How to Read the Heat</h2>
+      </div>
+      <button class="field-guide-close" type="button" onclick="closeFieldGuide()" aria-label="Close field guide">×</button>
+    </div>
+
+    <div class="field-guide-body">
+      <div class="field-guide-card">
+        <h3 class="field-guide-term apex">Apex Rise</h3>
+        <p class="field-guide-copy">
+          Fastballs with 18"+ IVB. These pitches resist gravity longer, stay above the hitter’s barrel, and create the visual illusion of rise. Tactical result: more whiffs, pop-ups, and carry-driven deception.
+        </p>
+      </div>
+
+      <div class="field-guide-card">
+        <h3 class="field-guide-term dead">The Dead Zone</h3>
+        <p class="field-guide-copy">
+          Fastballs with 12"–15" IVB. This is the flatter carry band where the ball travels into the hitter’s natural path. Tactical result: more barrels, louder contact, and elevated home-run risk.
+        </p>
+      </div>
+
+      <div class="field-guide-card">
+        <h3 class="field-guide-term whiff">Whiff Prob</h3>
+        <p class="field-guide-copy">
+          A DiamondSignals translation layer combining raw IVB, carry versus velocity-bucket norms, and eventually VAA flatness. It converts pitch-shape complexity into a direct swing-and-miss expectation.
+        </p>
+      </div>
+
+      <div class="field-guide-note">
+        VAA remains a pending upstream layer in this version. Cards continue to show IVB Raw, IVB vs Avg, Dead Zone risk, and climber behavior while the full ballistics stack is finalized.
+      </div>
+    </div>
+  </div>
 
   <div class="app">
     <section class="hero-card">
@@ -275,7 +479,10 @@ HTML_TEMPLATE = Template(
             <div class="section-kicker">Gradient Map</div>
             <h2 class="section-title">Pitch Shape Board</h2>
           </div>
-          <div class="section-badge">Top {{ heat_cards|length }}</div>
+          <div class="section-actions">
+            <button class="field-guide-trigger" type="button" onclick="openFieldGuide()">Field Guide</button>
+            <div class="section-badge">Top {{ heat_cards|length }}</div>
+          </div>
         </div>
 
         <div class="heat-grid">
@@ -284,12 +491,13 @@ HTML_TEMPLATE = Template(
             <div class="heat-rank">#{{ loop.index }} // {{ row.band_label }}</div>
             <h3 class="heat-name">{{ row.player_name }}</h3>
             <div class="heat-meta">{{ row.team }} {% if row.velocity_bucket %}// {{ row.velocity_bucket }}{% endif %}</div>
-           <div>
-            <span class="heat-band">{{ row.heat_tag }}</span>
-            {% if row.climber_flag %}
-            <span class="heat-climber">CLIMBER</span>
-            {% endif %}
-        </div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">{{ row.heat_tag }}</span>
+              {% if row.climber_flag %}
+              <span class="heat-climber">CLIMBER</span>
+              {% endif %}
+            </div>
 
             <div class="heat-values">
               <div class="heat-value-box">
@@ -304,7 +512,7 @@ HTML_TEMPLATE = Template(
                 <div class="heat-value-label">VAA</div>
                 <div class="heat-value">{{ row.vaa }}</div>
               </div>
-            <div class="heat-value-box">
+              <div class="heat-value-box">
                 <div class="heat-value-label">Whiff Prob</div>
                 <div class="heat-value">{{ row.whiff_probability }}</div>
               </div>
@@ -314,7 +522,9 @@ HTML_TEMPLATE = Template(
               </div>
             </div>
 
-                <div class="heat-risk">{{ row.contact_risk }}</div>
+            {% if row.contact_risk %}
+            <div class="heat-risk">{{ row.contact_risk }}</div>
+            {% endif %}
             <div class="heat-brief">{{ row.brief }}</div>
           </article>
           {% endfor %}
@@ -352,7 +562,33 @@ HTML_TEMPLATE = Template(
 
     {{ footer_html | safe }}
   </div>
+
   <script src="/player-search.js"></script>
+  <script>
+    function openFieldGuide() {
+      const overlay = document.getElementById("fieldGuideOverlay");
+      const modal = document.getElementById("fieldGuideModal");
+      if (!overlay || !modal) return;
+      overlay.classList.add("open");
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeFieldGuide() {
+      const overlay = document.getElementById("fieldGuideOverlay");
+      const modal = document.getElementById("fieldGuideModal");
+      if (!overlay || !modal) return;
+      overlay.classList.remove("open");
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeFieldGuide();
+      }
+    });
+  </script>
 </body>
 </html>
 """
@@ -417,6 +653,7 @@ def heat_tag(ivb: float | None) -> str:
         return "HOT // APEX RISE"
     return "NEUTRAL // MLB RANGE"
 
+
 def whiff_probability_label(ivb: float | None, vaa: float | None, ivb_vs_avg: float | None) -> str:
     if ivb is None:
         return "LOW"
@@ -429,10 +666,10 @@ def whiff_probability_label(ivb: float | None, vaa: float | None, ivb_vs_avg: fl
 
 def contact_risk_label(ivb: float | None) -> str:
     if ivb is None:
-        return "CLEAR"
+        return ""
     if 12.0 <= ivb <= 15.0:
-        return "CONTACT RISK"
-    return "CLEAR"
+        return "BARREL MAGNET // CONTACT RISK"
+    return ""
 
 
 def build_brief(ivb: float | None, ivb_vs_avg: float | None, vaa: float | None) -> str:
@@ -523,16 +760,20 @@ def build_ivb_dataset(raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     grouped["vaa"] = pd.NA  # scaffold for v1
 
     pitchers = pitchers[pitchers["pitcher"].isin(grouped["pitcher"])].copy()
-    return grouped, pitchers
+    return grouped, pitches_for_climbers(pitchers)
 
 
-def build_climbers(grouped: pd.DataFrame, pitches: pd.DataFrame) -> list[dict]:
+def pitches_for_climbers(pitches: pd.DataFrame) -> pd.DataFrame:
+    return pitches.copy()
+
+
+def build_climbers(grouped: pd.DataFrame, pitches: pd.DataFrame) -> tuple[list[dict], set[int]]:
     if grouped.empty or pitches.empty:
-        return []
+        return [], set()
 
     max_date = pitches["game_date"].max()
     if pd.isna(max_date):
-        return []
+        return [], set()
 
     split_date = max_date - timedelta(days=max(1, LOOKBACK_DAYS // 2))
 
@@ -540,7 +781,7 @@ def build_climbers(grouped: pd.DataFrame, pitches: pd.DataFrame) -> list[dict]:
     recent = pitches[pitches["game_date"] >= split_date].copy()
 
     if prior.empty or recent.empty:
-        return []
+        return [], set()
 
     prior_g = (
         prior.groupby("pitcher")["ivb_inches"].mean().reset_index().rename(columns={"ivb_inches": "prior_ivb"})
@@ -551,25 +792,31 @@ def build_climbers(grouped: pd.DataFrame, pitches: pd.DataFrame) -> list[dict]:
 
     merged = grouped.merge(prior_g, on="pitcher", how="left").merge(recent_g, on="pitcher", how="left")
     merged["delta"] = merged["recent_ivb"] - merged["prior_ivb"]
-    merged = merged.dropna(subset=["delta"]).sort_values("delta", ascending=False).head(6)
+    merged = merged.dropna(subset=["delta"]).sort_values("delta", ascending=False)
+
+    climber_ids = set(
+        int(pid) for pid in merged.loc[merged["delta"] > CLIMBER_THRESHOLD, "pitcher"].dropna().tolist()
+    )
+
+    top_rows = merged.head(6)
 
     rows = []
-    for _, row in merged.iterrows():
-      delta = safe_float(row.get("delta"))
-      if delta is None:
-          continue
-      rows.append(
-          {
-              "player_name": row.get("player_name", "Unknown"),
-              "team": row.get("team", "TEAM"),
-              "recent_label": f"Last {max(1, LOOKBACK_DAYS // 2)}d vs prior window",
-              "delta_label": format_signed(delta, '"'),
-          }
-      )
-    return rows
+    for _, row in top_rows.iterrows():
+        delta = safe_float(row.get("delta"))
+        if delta is None:
+            continue
+        rows.append(
+            {
+                "player_name": row.get("player_name", "Unknown"),
+                "team": row.get("team", "TEAM"),
+                "recent_label": f"Last {max(1, LOOKBACK_DAYS // 2)}d vs prior window",
+                "delta_label": format_signed(delta, '"'),
+            }
+        )
+    return rows, climber_ids
 
 
-def to_cards(grouped: pd.DataFrame) -> list[dict]:
+def to_cards(grouped: pd.DataFrame, climber_ids: set[int]) -> list[dict]:
     if grouped.empty:
         return []
 
@@ -577,15 +824,21 @@ def to_cards(grouped: pd.DataFrame) -> list[dict]:
     rows = []
 
     for _, row in ordered.iterrows():
+        pitcher_id = row.get("pitcher")
         ivb_raw = safe_float(row.get("ivb_raw"))
         ivb_delta = safe_float(row.get("ivb_vs_avg"))
-        velo = safe_float(row.get("release_speed"))
         vaa = safe_float(row.get("vaa"))
         bucket_floor = safe_float(row.get("velocity_bucket_floor"))
 
         bucket_label = ""
         if bucket_floor is not None:
             bucket_label = velocity_bucket_label(bucket_floor)
+
+        pitcher_id_int = None
+        try:
+            pitcher_id_int = int(pitcher_id)
+        except Exception:
+            pitcher_id_int = None
 
         rows.append(
             {
@@ -596,7 +849,7 @@ def to_cards(grouped: pd.DataFrame) -> list[dict]:
                 "vaa": "--" if vaa is None else format_plain(vaa, "°"),
                 "dead_zone_label": "COLD" if bool(row.get("dead_zone_flag")) else "CLEAR",
                 "whiff_probability": whiff_probability_label(ivb_raw, vaa, ivb_delta),
-                "climber_flag": ivb_delta is not None and ivb_delta > 1.0,
+                "climber_flag": pitcher_id_int in climber_ids if pitcher_id_int is not None else False,
                 "contact_risk": contact_risk_label(ivb_raw),
                 "heat_class": heat_class(ivb_raw),
                 "band_label": band_label(ivb_raw),
@@ -623,12 +876,17 @@ def write_ivb_heat_map() -> None:
     elite_count = int((grouped["ivb_raw"].fillna(-999) >= 18.0).sum()) if not grouped.empty else 0
     field_tilt_pct = 0 if tracked_pitchers == 0 else round((elite_count / tracked_pitchers) * 100)
 
-    heat_cards = to_cards(grouped)
-    climbers = build_climbers(grouped, pitches)
+    climbers, climber_ids = build_climbers(grouped, pitches)
+    heat_cards = to_cards(grouped, climber_ids)
 
     if not climbers:
         climbers = [
-            {"player_name": "No signal yet", "team": "LAB", "recent_label": "Awaiting additional data", "delta_label": "--"}
+            {
+                "player_name": "No signal yet",
+                "team": "LAB",
+                "recent_label": "Awaiting additional data",
+                "delta_label": "--",
+            }
         ]
 
     html = HTML_TEMPLATE.render(
