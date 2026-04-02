@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-01T10:30:37.175678",
+  "generated_at": "2026-04-02T08:44:17.698925",
   "players": [
     {
       "player_id": 671096,
@@ -26463,7 +26463,7 @@
       "last_name": "Vasquez",
       "team": "",
       "team_name": "",
-      "position": "C",
+      "position": "3B",
       "bats": "R",
       "throws": "R",
       "status": "",
@@ -27443,6 +27443,19 @@
       "throws": "R",
       "status": "",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/669224/headshot/67/current"
+    },
+    {
+      "player_id": 703673,
+      "full_name": "Kasen Wells",
+      "first_name": "Kasen",
+      "last_name": "Wells",
+      "team": "",
+      "team_name": "",
+      "position": "OF",
+      "bats": "L",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/703673/headshot/67/current"
     },
     {
       "player_id": 694370,
