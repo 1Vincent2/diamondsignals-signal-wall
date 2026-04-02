@@ -13,7 +13,9 @@ DIST_DIR.mkdir(parents=True, exist_ok=True)
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
-
+SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
+FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
+SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
 ALERT_THRESHOLD = float(os.getenv("ALERT_THRESHOLD", "65"))
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "").strip()
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
@@ -1381,7 +1383,7 @@ HTML_TEMPLATE = Template("""
         align-items: stretch;
       }
     }
-
+{{ shell_styles | safe }}
     @media (max-width: 640px) {
       .topbar-inner,
       .app,
@@ -1436,6 +1438,7 @@ HTML_TEMPLATE = Template("""
   </div>
 
   {{ nav_html | safe }}
+  {{ search_html | safe }}
 
   <div id="glossaryOverlay" class="glossary-overlay" onclick="closeGlossary()"></div>
 
@@ -1714,9 +1717,7 @@ HTML_TEMPLATE = Template("""
       </div>
     </section>
 
-    <div class="footer">
-      DiamondSignals Prospect Tracker // Generated During Netlify Build // {{ timezone_label }}
-    </div>
+   {{ footer_html | safe }}
   </div>
 
   <script>
@@ -1767,6 +1768,9 @@ def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
         timezone_label=TIMEZONE_LABEL,
         slate_heat=slate_heat,
         nav_html=Template(NAV_TEMPLATE).render(active_nav="promotion_watch"),
+        search_html=SEARCH_TEMPLATE,
+        footer_html=FOOTER_TEMPLATE,
+        shell_styles=SHELL_STYLES_TEMPLATE,
         recent_arrivals=recent_arrivals,
         pitchers=pitchers.to_dict(orient="records"),
         hitters=hitters.to_dict(orient="records"),
