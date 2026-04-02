@@ -163,6 +163,17 @@ HTML_TEMPLATE = Template(
     .heat-value-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.10em; color: var(--muted); font-weight: 800; margin-bottom: 5px; }
     .heat-value { font-family: var(--mono); font-size: 18px; font-weight: 800; }
     .heat-brief { font-size: 12px; line-height: 1.45; color: var(--soft); }
+        .heat-risk {
+      margin-top: 10px;
+      margin-bottom: 8px;
+      font-size: 11px;
+      line-height: 1.35;
+      color: var(--red);
+      font-family: var(--mono);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
 
     .leader-list { display: grid; gap: 10px; }
     .leader-row {
@@ -273,12 +284,17 @@ HTML_TEMPLATE = Template(
                 <div class="heat-value-label">VAA</div>
                 <div class="heat-value">{{ row.vaa }}</div>
               </div>
+            <div class="heat-value-box">
+                <div class="heat-value-label">Whiff Prob</div>
+                <div class="heat-value">{{ row.whiff_probability }}</div>
+              </div>
               <div class="heat-value-box">
                 <div class="heat-value-label">Dead Zone</div>
                 <div class="heat-value">{{ row.dead_zone_label }}</div>
               </div>
             </div>
 
+                <div class="heat-risk">{{ row.contact_risk }}</div>
             <div class="heat-brief">{{ row.brief }}</div>
           </article>
           {% endfor %}
@@ -316,6 +332,7 @@ HTML_TEMPLATE = Template(
 
     {{ footer_html | safe }}
   </div>
+  <script src="/player-search.js"></script>
 </body>
 </html>
 """
@@ -379,6 +396,23 @@ def heat_tag(ivb: float | None) -> str:
     if ivb >= 18.0:
         return "HOT // APEX RISE"
     return "NEUTRAL // MLB RANGE"
+
+def whiff_probability_label(ivb: float | None, vaa: float | None, ivb_vs_avg: float | None) -> str:
+    if ivb is None:
+        return "LOW"
+    if ivb > 18.0 and vaa is not None and vaa < -4.0:
+        return "HIGH"
+    if ivb > 17.0 and ivb_vs_avg is not None and ivb_vs_avg > 1.0:
+        return "MEDIUM"
+    return "LOW"
+
+
+def contact_risk_label(ivb: float | None) -> str:
+    if ivb is None:
+        return "CLEAR"
+    if 12.0 <= ivb <= 15.0:
+        return "CONTACT RISK"
+    return "CLEAR"
 
 
 def build_brief(ivb: float | None, ivb_vs_avg: float | None, vaa: float | None) -> str:
@@ -541,6 +575,8 @@ def to_cards(grouped: pd.DataFrame) -> list[dict]:
                 "ivb_vs_avg": format_signed(ivb_delta, '"'),
                 "vaa": "--" if vaa is None else format_plain(vaa, "°"),
                 "dead_zone_label": "COLD" if bool(row.get("dead_zone_flag")) else "CLEAR",
+                "whiff_probability": whiff_probability_label(ivb_raw, vaa, ivb_delta),
+                "contact_risk": contact_risk_label(ivb_raw),
                 "heat_class": heat_class(ivb_raw),
                 "band_label": band_label(ivb_raw),
                 "heat_tag": heat_tag(ivb_raw),
