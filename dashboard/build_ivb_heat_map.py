@@ -421,26 +421,26 @@ HTML_TEMPLATE = Template(
       <div class="field-guide-card">
         <h3 class="field-guide-term apex">Apex Rise</h3>
         <p class="field-guide-copy">
-          Fastballs with 18"+ IVB. These pitches resist gravity longer, stay above the hitter’s barrel, and create the visual illusion of rise. Tactical result: more whiffs, pop-ups, and carry-driven deception.
+          Fastballs with 18"+ IVB. These pitches defy gravity, staying above the hitter’s barrel. The result: elevated whiff rates, weaker vertical contact quality, and more carry-driven deception.
         </p>
       </div>
 
       <div class="field-guide-card">
         <h3 class="field-guide-term dead">The Dead Zone</h3>
         <p class="field-guide-copy">
-          Fastballs with 12"–15" IVB. This is the flatter carry band where the ball travels into the hitter’s natural path. Tactical result: more barrels, louder contact, and elevated home-run risk.
+          Fastballs with 12"–15" IVB. This flatter shape sits directly in the swing path, creating a barrel-friendly entry profile. The result: louder contact, more home-run danger, and contact-risk traps.
         </p>
       </div>
 
       <div class="field-guide-card">
         <h3 class="field-guide-term whiff">Whiff Prob</h3>
         <p class="field-guide-copy">
-          A DiamondSignals translation layer combining raw IVB, carry versus velocity-bucket norms, and eventually VAA flatness. It converts pitch-shape complexity into a direct swing-and-miss expectation.
+          A proprietary DiamondSignals translation layer combining IVB rise and eventually VAA flatness. It converts pitch-shape data into a direct swing-and-miss expectation, independent of pure velocity.
         </p>
       </div>
 
       <div class="field-guide-note">
-        VAA remains a pending upstream layer in this version. Cards continue to show IVB Raw, IVB vs Avg, Dead Zone risk, and climber behavior while the full ballistics stack is finalized.
+        VAA remains a pending upstream layer in this version. That is why VAA currently displays as <strong>--</strong> on the cards. This will be upgraded later through upstream metric refinement and can cleanly live in a future Supabase-backed LAB table or view.
       </div>
     </div>
   </div>
@@ -710,38 +710,38 @@ def build_ivb_dataset(raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     if raw.empty:
         return pd.DataFrame(), pd.DataFrame()
 
-    pitchers = raw.copy()
+    pitches = raw.copy()
 
-    pitchers["release_speed"] = pd.to_numeric(pitchers.get("release_speed"), errors="coerce")
-    pitchers["pfx_z"] = pd.to_numeric(pitchers.get("pfx_z"), errors="coerce")
-    pitchers["game_date"] = pd.to_datetime(pitchers.get("game_date"), errors="coerce")
-    pitchers["pitcher"] = pd.to_numeric(pitchers.get("pitcher"), errors="coerce").astype("Int64")
+    pitches["release_speed"] = pd.to_numeric(pitches.get("release_speed"), errors="coerce")
+    pitches["pfx_z"] = pd.to_numeric(pitches.get("pfx_z"), errors="coerce")
+    pitches["game_date"] = pd.to_datetime(pitches.get("game_date"), errors="coerce")
+    pitches["pitcher"] = pd.to_numeric(pitches.get("pitcher"), errors="coerce").astype("Int64")
 
     fastball_types = {"FF", "SI", "FC", "FA"}
-    pitchers["pitch_type"] = pitchers.get("pitch_type").astype(str)
-    pitchers["is_fastball"] = pitchers["pitch_type"].isin(fastball_types)
-    pitchers = pitchers[pitchers["is_fastball"] == True].copy()
+    pitches["pitch_type"] = pitches.get("pitch_type").astype(str)
+    pitches["is_fastball"] = pitches["pitch_type"].isin(fastball_types)
+    pitches = pitches[pitches["is_fastball"] == True].copy()
 
-    pitchers["ivb_inches"] = pitchers["pfx_z"] * 12.0
-    pitchers = pitchers.dropna(subset=["pitcher", "release_speed", "ivb_inches", "game_date"]).copy()
+    pitches["ivb_inches"] = pitches["pfx_z"] * 12.0
+    pitches = pitches.dropna(subset=["pitcher", "release_speed", "ivb_inches", "game_date"]).copy()
 
-    if pitchers.empty:
+    if pitches.empty:
         return pd.DataFrame(), pd.DataFrame()
 
-    pitchers["velocity_bucket_floor"] = (pitchers["release_speed"] // 2 * 2).astype("Int64")
+    pitches["velocity_bucket_floor"] = (pitches["release_speed"] // 2 * 2).astype("Int64")
     bucket_avgs = (
-        pitchers.groupby("velocity_bucket_floor", dropna=True)["ivb_inches"]
+        pitches.groupby("velocity_bucket_floor", dropna=True)["ivb_inches"]
         .mean()
         .reset_index()
         .rename(columns={"ivb_inches": "bucket_ivb_avg"})
     )
 
-    pitchers = pitchers.merge(bucket_avgs, on="velocity_bucket_floor", how="left")
-    pitchers["ivb_vs_avg"] = pitchers["ivb_inches"] - pitchers["bucket_ivb_avg"]
-    pitchers["dead_zone_flag"] = pitchers["ivb_inches"].between(12.0, 15.0, inclusive="both")
+    pitches = pitches.merge(bucket_avgs, on="velocity_bucket_floor", how="left")
+    pitches["ivb_vs_avg"] = pitches["ivb_inches"] - pitches["bucket_ivb_avg"]
+    pitches["dead_zone_flag"] = pitches["ivb_inches"].between(12.0, 15.0, inclusive="both")
 
     grouped = (
-        pitchers.groupby("pitcher", dropna=True)
+        pitches.groupby("pitcher", dropna=True)
         .agg(
             player_name=("player_name", "last"),
             team=("home_team", "last"),
@@ -759,12 +759,8 @@ def build_ivb_dataset(raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     grouped["team"] = grouped["team"].fillna("TEAM")
     grouped["vaa"] = pd.NA  # scaffold for v1
 
-    pitchers = pitchers[pitchers["pitcher"].isin(grouped["pitcher"])].copy()
-    return grouped, pitches_for_climbers(pitchers)
-
-
-def pitches_for_climbers(pitches: pd.DataFrame) -> pd.DataFrame:
-    return pitches.copy()
+    pitches = pitches[pitches["pitcher"].isin(grouped["pitcher"])].copy()
+    return grouped, pitches
 
 
 def build_climbers(grouped: pd.DataFrame, pitches: pd.DataFrame) -> tuple[list[dict], set[int]]:

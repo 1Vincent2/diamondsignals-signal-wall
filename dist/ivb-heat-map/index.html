@@ -406,7 +406,7 @@
       </div>
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">2026-04-02 03:49 PM</div>
+        <div class="live-time">2026-04-02 04:06 PM</div>
       </div>
     </div>
   </div>
@@ -453,26 +453,26 @@
       <div class="field-guide-card">
         <h3 class="field-guide-term apex">Apex Rise</h3>
         <p class="field-guide-copy">
-          Fastballs with 18"+ IVB. These pitches resist gravity longer, stay above the hitter’s barrel, and create the visual illusion of rise. Tactical result: more whiffs, pop-ups, and carry-driven deception.
+          Fastballs with 18"+ IVB. These pitches defy gravity, staying above the hitter’s barrel. The result: elevated whiff rates, weaker vertical contact quality, and more carry-driven deception.
         </p>
       </div>
 
       <div class="field-guide-card">
         <h3 class="field-guide-term dead">The Dead Zone</h3>
         <p class="field-guide-copy">
-          Fastballs with 12"–15" IVB. This is the flatter carry band where the ball travels into the hitter’s natural path. Tactical result: more barrels, louder contact, and elevated home-run risk.
+          Fastballs with 12"–15" IVB. This flatter shape sits directly in the swing path, creating a barrel-friendly entry profile. The result: louder contact, more home-run danger, and contact-risk traps.
         </p>
       </div>
 
       <div class="field-guide-card">
         <h3 class="field-guide-term whiff">Whiff Prob</h3>
         <p class="field-guide-copy">
-          A DiamondSignals translation layer combining raw IVB, carry versus velocity-bucket norms, and eventually VAA flatness. It converts pitch-shape complexity into a direct swing-and-miss expectation.
+          A proprietary DiamondSignals translation layer combining IVB rise and eventually VAA flatness. It converts pitch-shape data into a direct swing-and-miss expectation, independent of pure velocity.
         </p>
       </div>
 
       <div class="field-guide-note">
-        VAA remains a pending upstream layer in this version. Cards continue to show IVB Raw, IVB vs Avg, Dead Zone risk, and climber behavior while the full ballistics stack is finalized.
+        VAA remains a pending upstream layer in this version. That is why VAA currently displays as <strong>--</strong> on the cards. This will be upgraded later through upstream metric refinement and can cleanly live in a future Supabase-backed LAB table or view.
       </div>
     </div>
   </div>
