@@ -3,3 +3,4 @@ pandas
 pybaseball
 jinja2
 numpy
+supabase
