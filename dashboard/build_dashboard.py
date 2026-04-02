@@ -17,6 +17,7 @@ TEMPLATES_DIR = Path(__file__).parent / "templates"
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
 SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
 FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
+SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
 ALERT_THRESHOLD = float(os.getenv("ALERT_THRESHOLD", "65"))
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "").strip()
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
@@ -1218,6 +1219,7 @@ HTML_TEMPLATE = Template(
       .hero-grid { grid-template-columns: 1.35fr 0.9fr; align-items: stretch; }
       .board { grid-template-columns: 1fr 1fr; }
     }
+    {{ shell_styles | safe }}
    @media (max-width: 640px) {
   .topbar-inner, .app, .topnav-inner, .search-strip-inner { width: min(100%, calc(100% - 16px)); }
   .search-strip-inner { justify-content: stretch; }
@@ -1488,6 +1490,7 @@ def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
         nav_html=Template(NAV_TEMPLATE).render(active_nav="signal_wall"),
         search_html=SEARCH_TEMPLATE,
         footer_html=FOOTER_TEMPLATE,
+        shell_styles=SHELL_STYLES_TEMPLATE,
         pitchers=pitchers.to_dict(orient="records"),
         hitters=hitters.to_dict(orient="records"),
     )
