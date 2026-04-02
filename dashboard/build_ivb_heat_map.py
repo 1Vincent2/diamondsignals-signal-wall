@@ -155,6 +155,21 @@ HTML_TEMPLATE = Template(
       font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
       border: 1px solid rgba(255,255,255,0.10); background: rgba(0,0,0,0.18); margin-bottom: 12px;
     }
+    .heat-climber {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(182,255,0,0.22);
+      background: rgba(182,255,0,0.08);
+      color: var(--lime-hot);
+      margin-left: 8px;
+      margin-bottom: 12px;
+    }
     .heat-values { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
     .heat-value-box {
       border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 10px;
@@ -269,7 +284,12 @@ HTML_TEMPLATE = Template(
             <div class="heat-rank">#{{ loop.index }} // {{ row.band_label }}</div>
             <h3 class="heat-name">{{ row.player_name }}</h3>
             <div class="heat-meta">{{ row.team }} {% if row.velocity_bucket %}// {{ row.velocity_bucket }}{% endif %}</div>
-            <div class="heat-band">{{ row.heat_tag }}</div>
+           <div>
+            <span class="heat-band">{{ row.heat_tag }}</span>
+            {% if row.climber_flag %}
+            <span class="heat-climber">CLIMBER</span>
+            {% endif %}
+        </div>
 
             <div class="heat-values">
               <div class="heat-value-box">
@@ -576,6 +596,7 @@ def to_cards(grouped: pd.DataFrame) -> list[dict]:
                 "vaa": "--" if vaa is None else format_plain(vaa, "°"),
                 "dead_zone_label": "COLD" if bool(row.get("dead_zone_flag")) else "CLEAR",
                 "whiff_probability": whiff_probability_label(ivb_raw, vaa, ivb_delta),
+                "climber_flag": ivb_delta is not None and ivb_delta > 1.0,
                 "contact_risk": contact_risk_label(ivb_raw),
                 "heat_class": heat_class(ivb_raw),
                 "band_label": band_label(ivb_raw),
