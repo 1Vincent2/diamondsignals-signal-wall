@@ -16,11 +16,14 @@ NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
 SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
 FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
 SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
+
 ALERT_THRESHOLD = float(os.getenv("ALERT_THRESHOLD", "65"))
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "").strip()
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
 SITE_URL = os.getenv("SITE_URL", "").strip()
 TIMEZONE_LABEL = os.getenv("TIMEZONE_LABEL", "America/New_York")
+SOURCE_BADGE = "SRC: AAA_PIPELINE_v1"
+SCORE_VERSION = "EDGE_v2.0"
 
 
 def zscore(series: pd.Series) -> pd.Series:
@@ -124,6 +127,169 @@ def fetch_latest_aaa_weekly_signal_base() -> pd.DataFrame:
     return df
 
 
+def fetch_latest_prospect_intelligence() -> tuple[pd.DataFrame, pd.DataFrame]:
+    from supabase import create_client
+
+    url = os.environ["SUPABASE_URL"]
+    key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
+
+    sb = create_client(url, key)
+
+    latest_resp = (
+        sb.table("prospect_intelligence_daily")
+        .select("snapshot_date")
+        .order("snapshot_date", desc=True)
+        .limit(1)
+        .execute()
+    )
+
+    rows = latest_resp.data or []
+    if not rows:
+        return pd.DataFrame(), pd.DataFrame()
+
+    latest_snapshot = rows[0]["snapshot_date"]
+
+    data_resp = (
+        sb.table("prospect_intelligence_daily")
+        .select("*")
+        .eq("snapshot_date", latest_snapshot)
+        .execute()
+    )
+
+    data = data_resp.data or []
+    if not data:
+        return pd.DataFrame(), pd.DataFrame()
+
+    df = pd.DataFrame(data)
+    hitters = df[df["signal_type"] == "Hitter"].copy()
+    pitchers = df[df["signal_type"] == "Pitcher"].copy()
+    return hitters, pitchers
+
+def normalize_prospect_intelligence_for_cards(df: pd.DataFrame) -> pd.DataFrame:
+    if df.empty:
+        return pd.DataFrame()
+
+    out = df.copy()
+
+    if "player_name" in out.columns:
+        out["player_name"] = out["player_name"].apply(safe_name)
+
+    out["edge_score"] = pd.to_numeric(out.get("edge_score"), errors="coerce").fillna(0).round(1)
+
+    if "trend_glow" not in out.columns:
+        out["trend_glow"] = False
+    else:
+        out["trend_glow"] = out["trend_glow"].fillna(False).astype(bool)
+
+    if "signal_type" not in out.columns:
+        out["signal_type"] = ""
+    else:
+        out["signal_type"] = out["signal_type"].fillna("")
+
+    if "sample_note" not in out.columns:
+        out["sample_note"] = ""
+    else:
+        out["sample_note"] = out["sample_note"].fillna("")
+
+    if "source_badge" not in out.columns:
+        out["source_badge"] = SOURCE_BADGE
+    else:
+        out["source_badge"] = out["source_badge"].fillna(SOURCE_BADGE)
+
+    if "score_version" not in out.columns:
+        out["score_version"] = SCORE_VERSION
+    else:
+        out["score_version"] = out["score_version"].fillna(SCORE_VERSION)
+
+    if "signal_archetype" not in out.columns:
+        out["signal_archetype"] = "Promotion Watch"
+    else:
+        out["signal_archetype"] = out["signal_archetype"].fillna("Promotion Watch")
+
+    if "scout_narrative" in out.columns:
+        out["why"] = out["scout_narrative"].fillna(out.get("why", ""))
+    elif "why" not in out.columns:
+        out["why"] = ""
+
+    if "trend_points" not in out.columns:
+        out["trend_points"] = ""
+    else:
+        out["trend_points"] = out["trend_points"].fillna("")
+
+    if "pa" in out.columns:
+        out.loc[out["signal_type"] == "Hitter", "sample_note"] = out["pa"].map(
+            lambda x: f"{int(x)} PA" if pd.notna(x) else "Sample N/A"
+        )
+
+    if "bf" in out.columns:
+        out.loc[out["signal_type"] == "Pitcher", "sample_note"] = out["bf"].map(
+            lambda x: f"{int(x)} BF" if pd.notna(x) else "Sample N/A"
+        )
+
+    hitter_mask = out["signal_type"].eq("Hitter")
+    pitcher_mask = out["signal_type"].eq("Pitcher")
+
+    out["metric_1_label"] = ""
+    out["metric_1"] = "--"
+    out["metric_2_label"] = ""
+    out["metric_2"] = "--"
+    out["metric_3_label"] = ""
+    out["metric_3"] = "--"
+
+    if hitter_mask.any():
+        out.loc[hitter_mask, "metric_1_label"] = "ISO"
+        if "last_7d_iso" in out.columns:
+            out.loc[hitter_mask, "metric_1"] = out.loc[hitter_mask, "last_7d_iso"].map(
+                lambda x: f"{float(x):.3f}" if pd.notna(x) else "--"
+            )
+
+        out.loc[hitter_mask, "metric_2_label"] = "K/BB"
+        if "k_bb_ratio" in out.columns:
+            out.loc[hitter_mask, "metric_2"] = out.loc[hitter_mask, "k_bb_ratio"].map(
+                lambda x: f"{float(x):.2f}" if pd.notna(x) else "--"
+            )
+
+        out.loc[hitter_mask, "metric_3_label"] = "BB%"
+        if "bb_rate" in out.columns:
+            out.loc[hitter_mask, "metric_3"] = out.loc[hitter_mask, "bb_rate"].map(
+                lambda x: f"{float(x) * 100:.1f}%" if pd.notna(x) else "--"
+            )
+
+    if pitcher_mask.any():
+        out.loc[pitcher_mask, "metric_1_label"] = "K/BB"
+        if "k_bb_ratio" in out.columns:
+            out.loc[pitcher_mask, "metric_1"] = out.loc[pitcher_mask, "k_bb_ratio"].map(
+                lambda x: f"{float(x):.2f}" if pd.notna(x) else "--"
+            )
+
+        out.loc[pitcher_mask, "metric_2_label"] = "K%"
+        if "k_rate_proxy" in out.columns:
+            out.loc[pitcher_mask, "metric_2"] = out.loc[pitcher_mask, "k_rate_proxy"].map(
+                lambda x: f"{float(x) * 100:.1f}%" if pd.notna(x) else "--"
+            )
+
+        out.loc[pitcher_mask, "metric_3_label"] = "BB%"
+        if "bb_rate_proxy" in out.columns:
+            out.loc[pitcher_mask, "metric_3"] = out.loc[pitcher_mask, "bb_rate_proxy"].map(
+                lambda x: f"{float(x) * 100:.1f}%" if pd.notna(x) else "--"
+            )
+
+    if "badges" not in out.columns:
+        out["badges"] = out["signal_archetype"].map(lambda x: [x] if pd.notna(x) else ["Promotion Watch"])
+
+    if "badge_classes" not in out.columns:
+        out["badge_classes"] = out["badges"].map(
+            lambda badges: ["positive" if b != "Promotion Watch" else "neutral" for b in badges]
+        )
+
+    default_hitter_trend = "0,24 20,22 40,20 60,18 80,16 100,14 120,12"
+    default_pitcher_trend = "0,24 20,22 40,19 60,17 80,15 100,13 120,11"
+
+    out.loc[hitter_mask & out["trend_points"].eq(""), "trend_points"] = default_hitter_trend
+    out.loc[pitcher_mask & out["trend_points"].eq(""), "trend_points"] = default_pitcher_trend
+
+    return out.sort_values("edge_score", ascending=False).reset_index(drop=True)
+
 def build_aaa_hitter_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
     hitters = df[df["pa"].notna()].copy()
     if hitters.empty:
@@ -175,6 +341,8 @@ def build_aaa_hitter_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
     hitters["sample_note"] = hitters["pa"].fillna(0).map(lambda x: f"{int(x)} PA")
     hitters["trend_points"] = "0,24 20,22 40,20 60,18 80,16 100,14 120,12"
     hitters["trend_glow"] = hitters["edge_score"] >= 65
+    hitters["source_badge"] = SOURCE_BADGE
+    hitters["score_version"] = SCORE_VERSION
 
     def hitter_badges(row: pd.Series) -> list[str]:
         badges = []
@@ -254,6 +422,8 @@ def build_aaa_pitcher_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
     pitchers["sample_note"] = pitchers["bf"].fillna(0).map(lambda x: f"{int(x)} BF")
     pitchers["trend_points"] = "0,24 20,22 40,19 60,17 80,15 100,13 120,11"
     pitchers["trend_glow"] = pitchers["edge_score"] >= 65
+    pitchers["source_badge"] = SOURCE_BADGE
+    pitchers["score_version"] = SCORE_VERSION
 
     def pitcher_badges(row: pd.Series) -> list[str]:
         badges = []
@@ -322,45 +492,6 @@ def fetch_mlb_debut_map(names: list[str]) -> dict[str, dict]:
             }
 
     return debut_map
-
-
-def is_recent_arrival_prospect_relevant(move: dict) -> bool:
-    age = move.get("currentAge")
-    draft_year = move.get("draftYear")
-    debut = move.get("mlbDebutDate")
-    name = str(move.get("person") or "").strip().lower()
-
-    obvious_veterans = {
-        "ty france",
-        "mitch garver",
-        "randal grichuk",
-        "adam frazier",
-        "rhys hoskins",
-        "andrew mccutchen",
-        "christian vázquez",
-        "ildemaro vargas",
-        "brett sullivan",
-        "joe ross",
-        "walker buehler",
-        "shaun anderson",
-        "jeimer candelario",
-    }
-    if name in obvious_veterans:
-        return False
-
-    if debut is None:
-        return True
-
-    if isinstance(debut, str) and debut >= "2025-01-01":
-        return True
-
-    if age is not None and age <= 26:
-        return True
-
-    if draft_year is not None and draft_year >= 2020:
-        return True
-
-    return False
 
 
 def is_recent_arrival_prospect_relevant(move: dict) -> bool:
@@ -720,7 +851,6 @@ HTML_TEMPLATE = Template("""
       font-size: 11px;
       color: var(--muted);
       font-variant-numeric: tabular-nums;
-  
     }
 
     .glossary-overlay {
@@ -847,7 +977,7 @@ HTML_TEMPLATE = Template("""
 
     .app { padding: 18px 0 34px; }
 
-    .hero {
+        .hero {
       display: grid;
       gap: 14px;
       margin-bottom: 16px;
@@ -1184,6 +1314,39 @@ HTML_TEMPLATE = Template("""
       font-variant-numeric: tabular-nums;
     }
 
+    .card-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 8px 0 0;
+    }
+
+    .card-meta-badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 9px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--soft);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .card-meta-badge.source {
+      border-color: rgba(106,166,255,0.22);
+      background: rgba(106,166,255,0.08);
+      color: var(--blue);
+    }
+
+    .card-meta-badge.model {
+      border-color: rgba(182,255,0,0.20);
+      background: rgba(182,255,0,0.08);
+      color: var(--lime-hot);
+    }
+
     .scorebox {
       text-align: right;
       min-width: 88px;
@@ -1313,22 +1476,27 @@ HTML_TEMPLATE = Template("""
       font-variant-numeric: tabular-nums;
     }
 
-
     @media (min-width: 900px) {
       .hero-grid {
         grid-template-columns: 1.35fr 0.9fr;
         align-items: stretch;
       }
     }
+
 {{ shell_styles | safe }}
-    @media (max-width: 640px) {
+
+       @media (max-width: 640px) {
       .topbar-inner,
       .app,
       .topnav-inner {
         width: min(100%, calc(100% - 16px));
       }
 
-      .meta-grid {
+      .hero-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-side {
         grid-template-columns: 1fr;
       }
 
@@ -1400,7 +1568,7 @@ HTML_TEMPLATE = Template("""
         <div class="glossary-item">
           <span class="glossary-term">Edge Score</span>
           <div class="glossary-definition">
-            A simple 0–100 ranking built from the available AAA weekly signal fields in Supabase.
+            A simple 0–100 ranking built from the available AAA weekly signal fields in Supabase and prospect intelligence rows.
           </div>
         </div>
       </section>
@@ -1440,9 +1608,9 @@ HTML_TEMPLATE = Template("""
   </aside>
 
   <div class="app">
-    <section class="hero">
-      <div class="hero-grid">
-        <div class="hero-card">
+        <section class="hero">
+      <div class="hero-layout">
+        <div class="hero-main">
           <div class="eyebrow">Executive Terminal</div>
           <h1 class="hero-title">Prospect Tracker</h1>
           <p class="hero-copy">
@@ -1450,29 +1618,31 @@ HTML_TEMPLATE = Template("""
           </p>
         </div>
 
-        <div class="meta-grid">
+        <div class="hero-side">
           <div class="meta-card">
             <div class="meta-label">Last Updated</div>
             <div class="meta-value">{{ generated_at }}</div>
           </div>
+
           <div class="meta-card">
             <div class="meta-label">Source</div>
             <div class="meta-value">AAA Weekly Signal Base + Scout Transactions</div>
           </div>
+
           <div class="meta-card">
             <div class="meta-label">Alert Threshold</div>
             <div class="meta-value">{{ threshold }}</div>
           </div>
         </div>
+      </div>
 
-        <div class="meta-card slate-heat-card">
-          <div class="meta-label">Slate Heat</div>
-          <div class="slate-heat-row">
-            <div class="slate-heat-bar">
-              <div class="slate-heat-fill" style="width: {{ slate_heat }}%;"></div>
-            </div>
-            <div class="slate-heat-value">{{ slate_heat }}</div>
+      <div class="meta-card slate-heat-card">
+        <div class="meta-label">Slate Heat</div>
+        <div class="slate-heat-row">
+          <div class="slate-heat-bar">
+            <div class="slate-heat-fill" style="width: {{ slate_heat }}%;"></div>
           </div>
+          <div class="slate-heat-value">{{ slate_heat }}</div>
         </div>
       </div>
     </section>
@@ -1528,13 +1698,17 @@ HTML_TEMPLATE = Template("""
 
         <div class="cards">
           {% for row in pitchers %}
-          <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
+          <article class="player-card {% if row.edge_score >= 65 %} high-edge{% endif %}">
             <div class="player-top">
               <div class="avatar">{{ row.player_name[:2]|upper }}</div>
               <div class="player-ident">
                 <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
                 <h3 class="player-name">{{ row.player_name }}</h3>
                 <div class="signal-line">Pitcher // Live Edge Signal // {{ row.sample_note }}</div>
+                <div class="card-meta-row">
+                  <span class="card-meta-badge source">{{ row.source_badge if row.source_badge else 'SRC: AAA_PIPELINE_v1' }}</span>
+                  <span class="card-meta-badge model">{{ row.score_version if row.score_version else 'EDGE_v2.0' }}</span>
+                </div>
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
@@ -1596,13 +1770,17 @@ HTML_TEMPLATE = Template("""
 
         <div class="cards">
           {% for row in hitters %}
-          <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
+          <article class="player-card {% if row.edge_score >= 65 %} high-edge{% endif %}">
             <div class="player-top">
               <div class="avatar">{{ row.player_name[:2]|upper }}</div>
               <div class="player-ident">
                 <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
                 <h3 class="player-name">{{ row.player_name }}</h3>
                 <div class="signal-line">Hitter // Live Edge Signal // {{ row.sample_note }}</div>
+                <div class="card-meta-row">
+                  <span class="card-meta-badge source">{{ row.source_badge if row.source_badge else 'SRC: AAA_PIPELINE_v1' }}</span>
+                  <span class="card-meta-badge model">{{ row.score_version if row.score_version else 'EDGE_v2.0' }}</span>
+                </div>
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
@@ -1655,10 +1833,10 @@ HTML_TEMPLATE = Template("""
     </section>
 
     {{ footer_html | safe }}
-</div>
+  </div>
 
-<script src="/player-search.js"></script>
-<script>
+  <script src="/player-search.js"></script>
+  <script>
     function openGlossary() {
       const overlay = document.getElementById("glossaryOverlay");
       const drawer = document.getElementById("glossaryDrawer");
@@ -1719,6 +1897,12 @@ def main() -> None:
     raw = fetch_latest_aaa_weekly_signal_base()
     hitter_signals = build_aaa_hitter_promotion_watch(raw)
     pitcher_signals = build_aaa_pitcher_promotion_watch(raw)
+
+    pi_hitters, pi_pitchers = fetch_latest_prospect_intelligence()
+    if not pi_hitters.empty:
+        hitter_signals = normalize_prospect_intelligence_for_cards(pi_hitters)
+    if not pi_pitchers.empty:
+        pitcher_signals = normalize_prospect_intelligence_for_cards(pi_pitchers)
 
     if hitter_signals.empty and pitcher_signals.empty:
         raise RuntimeError("No AAA hitter or pitcher promotion-watch signals were produced.")
