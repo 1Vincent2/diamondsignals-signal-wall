@@ -175,7 +175,37 @@
       background: rgba(182,255,0,0.08);
       color: var(--lime-hot);
     }
+    .heat-transition {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(106,166,255,0.24);
+      background: rgba(106,166,255,0.10);
+      color: var(--blue);
+    }
 
+    .heat-transition.apex {
+      border-color: rgba(168,85,247,0.28);
+      background: rgba(168,85,247,0.12);
+      color: #d8b4fe;
+    }
+
+    .heat-transition.exit {
+      border-color: rgba(182,255,0,0.24);
+      background: rgba(182,255,0,0.10);
+      color: var(--lime-hot);
+    }
+
+    .heat-transition.enter-dead {
+      border-color: rgba(239,68,68,0.24);
+      background: rgba(239,68,68,0.10);
+      color: #fca5a5;
+    }
     .heat-values { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
     .heat-value-box {
       border: 1px solid rgba(255,255,255,0.07);
@@ -436,7 +466,7 @@
       </div>
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">2026-04-03 12:25 PM</div>
+        <div class="live-time">2026-04-03 01:22 PM</div>
       </div>
     </div>
   </div>
@@ -617,8 +647,9 @@
             <h3 class="heat-name">Vesia, Alex</h3>
             <div class="heat-meta">LAD </div>
 
-            <div class="heat-header-tags">
+                        <div class="heat-header-tags">
               <span class="heat-band">HOT // APEX RISE</span>
+              
               
             </div>
 
@@ -654,8 +685,9 @@
             <h3 class="heat-name">Lee, Dylan</h3>
             <div class="heat-meta">ATL </div>
 
-            <div class="heat-header-tags">
+                        <div class="heat-header-tags">
               <span class="heat-band">HOT // APEX RISE</span>
+              
               
             </div>
 
@@ -691,8 +723,9 @@
             <h3 class="heat-name">Thielbar, Caleb</h3>
             <div class="heat-meta">CHC </div>
 
-            <div class="heat-header-tags">
+                        <div class="heat-header-tags">
               <span class="heat-band">HOT // APEX RISE</span>
+              
               
             </div>
 
@@ -728,8 +761,13 @@
             <h3 class="heat-name">Suter, Brent</h3>
             <div class="heat-meta">HOU </div>
 
-            <div class="heat-header-tags">
+                        <div class="heat-header-tags">
               <span class="heat-band">COLD // DEAD ZONE</span>
+              
+              
+                
+                <span class="heat-transition enter-dead">ENTERED DEAD ZONE</span>
+                
               
             </div>
 
@@ -767,8 +805,9 @@
             <h3 class="heat-name">Estrada, Jeremiah</h3>
             <div class="heat-meta">SD </div>
 
-            <div class="heat-header-tags">
+                        <div class="heat-header-tags">
               <span class="heat-band">HOT // APEX RISE</span>
+              
               
             </div>
 
@@ -804,8 +843,15 @@
             <h3 class="heat-name">Myers, Tobias</h3>
             <div class="heat-meta">STL </div>
 
-            <div class="heat-header-tags">
+                        <div class="heat-header-tags">
               <span class="heat-band">NEUTRAL // MLB RANGE</span>
+              
+              <span class="heat-climber">CLIMBER</span>
+              
+              
+                
+                <span class="heat-transition apex">ENTERED APEX</span>
+                
               
             </div>
 
@@ -841,8 +887,9 @@
             <h3 class="heat-name">Pivetta, Nick</h3>
             <div class="heat-meta">SD </div>
 
-            <div class="heat-header-tags">
+                        <div class="heat-header-tags">
               <span class="heat-band">HOT // APEX RISE</span>
+              
               
             </div>
 
@@ -878,8 +925,9 @@
             <h3 class="heat-name">Ober, Bailey</h3>
             <div class="heat-meta">BAL </div>
 
-            <div class="heat-header-tags">
+                        <div class="heat-header-tags">
               <span class="heat-band">NEUTRAL // MLB RANGE</span>
+              
               
             </div>
 
@@ -915,8 +963,9 @@
             <h3 class="heat-name">Dreyer, Jack</h3>
             <div class="heat-meta">LAD </div>
 
-            <div class="heat-header-tags">
+                        <div class="heat-header-tags">
               <span class="heat-band">HOT // APEX RISE</span>
+              
               
             </div>
 
@@ -952,8 +1001,9 @@
             <h3 class="heat-name">Pomeranz, Drew</h3>
             <div class="heat-meta">HOU </div>
 
-            <div class="heat-header-tags">
+                        <div class="heat-header-tags">
               <span class="heat-band">HOT // APEX RISE</span>
+              
               
             </div>
 
@@ -989,8 +1039,9 @@
             <h3 class="heat-name">Sabrowski, Erik</h3>
             <div class="heat-meta">SEA </div>
 
-            <div class="heat-header-tags">
+                        <div class="heat-header-tags">
               <span class="heat-band">HOT // APEX RISE</span>
+              
               
             </div>
 
@@ -1026,8 +1077,9 @@
             <h3 class="heat-name">Latz, Jacob</h3>
             <div class="heat-meta">PHI </div>
 
-            <div class="heat-header-tags">
+                        <div class="heat-header-tags">
               <span class="heat-band">HOT // APEX RISE</span>
+              
               
             </div>
 
@@ -1077,38 +1129,38 @@
           
           <div class="leader-row positive">
             <div class="leader-name">Faucher, Calvin</div>
-            <div class="leader-sub">MIA // Last 3d vs prior window</div>
+            <div class="leader-sub">MIA // Last appearance vs prior</div>
             <div class="leader-delta">+6.4"</div>
           </div>
           
           <div class="leader-row positive">
             <div class="leader-name">Speier, Gabe</div>
-            <div class="leader-sub">SEA // Last 3d vs prior window</div>
+            <div class="leader-sub">SEA // Last appearance vs prior</div>
             <div class="leader-delta">+5.4"</div>
           </div>
           
           <div class="leader-row positive">
-            <div class="leader-name">Strahm, Matt</div>
-            <div class="leader-sub">ATL // Last 3d vs prior window</div>
-            <div class="leader-delta">+4.8"</div>
+            <div class="leader-name">Cano, Yennier</div>
+            <div class="leader-sub">BAL // Last appearance vs prior</div>
+            <div class="leader-delta">+4.9"</div>
           </div>
           
           <div class="leader-row positive">
-            <div class="leader-name">Ross, Joe</div>
-            <div class="leader-sub">LAD // Last 3d vs prior window</div>
-            <div class="leader-delta">+4.8"</div>
+            <div class="leader-name">Funderburk, Kody</div>
+            <div class="leader-sub">KC // Last appearance vs prior</div>
+            <div class="leader-delta">+4.7"</div>
           </div>
           
           <div class="leader-row positive">
-            <div class="leader-name">Topa, Justin</div>
-            <div class="leader-sub">BAL // Last 3d vs prior window</div>
+            <div class="leader-name">Banda, Anthony</div>
+            <div class="leader-sub">KC // Last appearance vs prior</div>
             <div class="leader-delta">+4.5"</div>
           </div>
           
           <div class="leader-row positive">
-            <div class="leader-name">Anderson, Grant</div>
-            <div class="leader-sub">MIL // Last 3d vs prior window</div>
-            <div class="leader-delta">+4.4"</div>
+            <div class="leader-name">Strahm, Matt</div>
+            <div class="leader-sub">KC // Last appearance vs prior</div>
+            <div class="leader-delta">+4.2"</div>
           </div>
           
         </div>
@@ -1129,39 +1181,39 @@
           
             
             <div class="leader-row negative">
+              <div class="leader-name">Little, Brendon</div>
+              <div class="leader-sub">TOR // Last appearance vs prior</div>
+              <div class="leader-delta">-7.5"</div>
+            </div>
+            
+            <div class="leader-row negative">
               <div class="leader-name">Sands, Cole</div>
-              <div class="leader-sub">BAL // Last 3d vs prior window</div>
+              <div class="leader-sub">KC // Last appearance vs prior</div>
               <div class="leader-delta">-6.0"</div>
             </div>
             
             <div class="leader-row negative">
               <div class="leader-name">Thompson, Ryan</div>
-              <div class="leader-sub">LAD // Last 3d vs prior window</div>
+              <div class="leader-sub">AZ // Last appearance vs prior</div>
               <div class="leader-delta">-5.8"</div>
             </div>
             
             <div class="leader-row negative">
               <div class="leader-name">Medina, Luis</div>
-              <div class="leader-sub">TOR // Last 3d vs prior window</div>
+              <div class="leader-sub">ATL // Last appearance vs prior</div>
               <div class="leader-delta">-5.8"</div>
             </div>
             
             <div class="leader-row negative">
-              <div class="leader-name">Martin, Chris</div>
-              <div class="leader-sub">PHI // Last 3d vs prior window</div>
-              <div class="leader-delta">-5.0"</div>
-            </div>
-            
-            <div class="leader-row negative">
               <div class="leader-name">Bird, Jake</div>
-              <div class="leader-sub">SF // Last 3d vs prior window</div>
+              <div class="leader-sub">SEA // Last appearance vs prior</div>
               <div class="leader-delta">-4.5"</div>
             </div>
             
             <div class="leader-row negative">
-              <div class="leader-name">Bruihl, Justin</div>
-              <div class="leader-sub">STL // Last 3d vs prior window</div>
-              <div class="leader-delta">-4.3"</div>
+              <div class="leader-name">Leiter Jr., Mark</div>
+              <div class="leader-sub">ATL // Last appearance vs prior</div>
+              <div class="leader-delta">-4.5"</div>
             </div>
             
           
@@ -1185,8 +1237,8 @@
             <div class="leader-row transition">
               <div class="leader-name">Strahm, Matt</div>
               <div class="leader-sub">KC // Entered Apex Rise</div>
-              <div class="leader-sub">14.1" -> 18.9"</div>
-              <div class="leader-delta">+4.8"</div>
+              <div class="leader-sub">14.7" -> 18.9"</div>
+              <div class="leader-delta">+4.2"</div>
             </div>
             
             <div class="leader-row transition">
@@ -1204,6 +1256,13 @@
             </div>
             
             <div class="leader-row transition">
+              <div class="leader-name">Myers, Tobias</div>
+              <div class="leader-sub">STL // Entered Apex Rise</div>
+              <div class="leader-sub">16.6" -> 18.4"</div>
+              <div class="leader-delta">+1.8"</div>
+            </div>
+            
+            <div class="leader-row transition">
               <div class="leader-name">Leasure, Jordan</div>
               <div class="leader-sub">MIA // Entered Apex Rise</div>
               <div class="leader-sub">17.7" -> 19.4"</div>
@@ -1214,13 +1273,6 @@
               <div class="leader-name">Ray, Robbie</div>
               <div class="leader-sub">SF // Entered Apex Rise</div>
               <div class="leader-sub">17.7" -> 18.9"</div>
-              <div class="leader-delta">+1.2"</div>
-            </div>
-            
-            <div class="leader-row transition">
-              <div class="leader-name">Montgomery, Mason</div>
-              <div class="leader-sub">CIN // Entered Apex Rise</div>
-              <div class="leader-sub">17.6" -> 18.8"</div>
               <div class="leader-delta">+1.2"</div>
             </div>
             
@@ -1250,38 +1302,38 @@
             </div>
             
             <div class="leader-row transition">
+              <div class="leader-name">Funderburk, Kody</div>
+              <div class="leader-sub">KC // Entered Dead Zone</div>
+              <div class="leader-sub">9.1" -> 13.8"</div>
+              <div class="leader-delta">+4.7"</div>
+            </div>
+            
+            <div class="leader-row transition">
+              <div class="leader-name">Leiter Jr., Mark</div>
+              <div class="leader-sub">ATL // Entered Dead Zone</div>
+              <div class="leader-sub">16.8" -> 12.3"</div>
+              <div class="leader-delta">-4.5"</div>
+            </div>
+            
+            <div class="leader-row transition">
+              <div class="leader-name">Banda, Anthony</div>
+              <div class="leader-sub">KC // Entered Dead Zone</div>
+              <div class="leader-sub">10.4" -> 14.9"</div>
+              <div class="leader-delta">+4.5"</div>
+            </div>
+            
+            <div class="leader-row transition">
+              <div class="leader-name">Alvarado, Elvis</div>
+              <div class="leader-sub">ATL // Exited Dead Zone</div>
+              <div class="leader-sub">14.9" -> 10.5"</div>
+              <div class="leader-delta">-4.3"</div>
+            </div>
+            
+            <div class="leader-row transition">
               <div class="leader-name">Martin, Chris</div>
               <div class="leader-sub">BAL // Exited Dead Zone</div>
-              <div class="leader-sub">14.0" -> 8.9"</div>
-              <div class="leader-delta">-5.0"</div>
-            </div>
-            
-            <div class="leader-row transition">
-              <div class="leader-name">Strahm, Matt</div>
-              <div class="leader-sub">KC // Exited Dead Zone</div>
-              <div class="leader-sub">14.1" -> 18.9"</div>
-              <div class="leader-delta">+4.8"</div>
-            </div>
-            
-            <div class="leader-row transition">
-              <div class="leader-name">Waldichuk, Ken</div>
-              <div class="leader-sub">PHI // Entered Dead Zone</div>
-              <div class="leader-sub">16.5" -> 12.5"</div>
-              <div class="leader-delta">-4.0"</div>
-            </div>
-            
-            <div class="leader-row transition">
-              <div class="leader-name">Junis, Jakob</div>
-              <div class="leader-sub">BAL // Exited Dead Zone</div>
-              <div class="leader-sub">13.2" -> 9.3"</div>
-              <div class="leader-delta">-3.9"</div>
-            </div>
-            
-            <div class="leader-row transition">
-              <div class="leader-name">Burke, Brock</div>
-              <div class="leader-sub">CIN // Entered Dead Zone</div>
-              <div class="leader-sub">16.2" -> 12.7"</div>
-              <div class="leader-delta">-3.5"</div>
+              <div class="leader-sub">13.2" -> 8.9"</div>
+              <div class="leader-delta">-4.3"</div>
             </div>
             
           

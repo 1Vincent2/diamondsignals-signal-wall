@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-03T12:25:56.340276",
+  "generated_at": "2026-04-03T13:22:15.696738",
   "field_tilt_pct": 9,
   "tracked_pitchers": 383,
   "dead_zone_count": 308,
@@ -18,6 +18,7 @@
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
+      "transition_badge": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -3.8\u00b0."
     },
     {
@@ -34,6 +35,7 @@
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
+      "transition_badge": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.9\u00b0."
     },
     {
@@ -50,6 +52,7 @@
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
+      "transition_badge": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.8\u00b0."
     },
     {
@@ -66,6 +69,7 @@
       "band_label": "Dead Zone",
       "heat_tag": "COLD // DEAD ZONE",
       "velocity_bucket": "",
+      "transition_badge": "ENTERED DEAD ZONE",
       "brief": "Carry profile sits inside the dead zone. Shape is beating the velo bucket baseline. Approach angle checks in at -6.0\u00b0."
     },
     {
@@ -82,6 +86,7 @@
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
+      "transition_badge": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.0\u00b0."
     },
     {
@@ -92,12 +97,13 @@
       "vaa": "-5.5\u00b0",
       "dead_zone_label": "COLD",
       "whiff_probability": "MEDIUM",
-      "climber_flag": false,
+      "climber_flag": true,
       "contact_risk": "",
       "heat_class": "neutral",
       "band_label": "Standard Carry",
       "heat_tag": "NEUTRAL // MLB RANGE",
       "velocity_bucket": "",
+      "transition_badge": "ENTERED APEX",
       "brief": "Movement reads in the standard carry band. Shape is beating the velo bucket baseline. Approach angle checks in at -5.5\u00b0."
     },
     {
@@ -114,6 +120,7 @@
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
+      "transition_badge": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.9\u00b0."
     },
     {
@@ -130,6 +137,7 @@
       "band_label": "Standard Carry",
       "heat_tag": "NEUTRAL // MLB RANGE",
       "velocity_bucket": "",
+      "transition_badge": "",
       "brief": "Movement reads in the standard carry band. Shape is beating the velo bucket baseline. Approach angle checks in at -4.8\u00b0."
     },
     {
@@ -146,6 +154,7 @@
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
+      "transition_badge": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.3\u00b0."
     },
     {
@@ -162,6 +171,7 @@
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
+      "transition_badge": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.7\u00b0."
     },
     {
@@ -178,6 +188,7 @@
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
+      "transition_badge": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.6\u00b0."
     },
     {
@@ -194,6 +205,7 @@
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
+      "transition_badge": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -5.1\u00b0."
     }
   ],
@@ -201,38 +213,164 @@
     {
       "player_name": "Faucher, Calvin",
       "team": "MIA",
-      "recent_label": "Last 3d vs prior window",
+      "recent_label": "Last appearance vs prior",
       "delta_label": "+6.4\""
     },
     {
       "player_name": "Speier, Gabe",
       "team": "SEA",
-      "recent_label": "Last 3d vs prior window",
+      "recent_label": "Last appearance vs prior",
       "delta_label": "+5.4\""
     },
     {
-      "player_name": "Strahm, Matt",
-      "team": "ATL",
-      "recent_label": "Last 3d vs prior window",
-      "delta_label": "+4.8\""
-    },
-    {
-      "player_name": "Ross, Joe",
-      "team": "LAD",
-      "recent_label": "Last 3d vs prior window",
-      "delta_label": "+4.8\""
-    },
-    {
-      "player_name": "Topa, Justin",
+      "player_name": "Cano, Yennier",
       "team": "BAL",
-      "recent_label": "Last 3d vs prior window",
+      "recent_label": "Last appearance vs prior",
+      "delta_label": "+4.9\""
+    },
+    {
+      "player_name": "Funderburk, Kody",
+      "team": "KC",
+      "recent_label": "Last appearance vs prior",
+      "delta_label": "+4.7\""
+    },
+    {
+      "player_name": "Banda, Anthony",
+      "team": "KC",
+      "recent_label": "Last appearance vs prior",
       "delta_label": "+4.5\""
     },
     {
-      "player_name": "Anderson, Grant",
-      "team": "MIL",
-      "recent_label": "Last 3d vs prior window",
-      "delta_label": "+4.4\""
+      "player_name": "Strahm, Matt",
+      "team": "KC",
+      "recent_label": "Last appearance vs prior",
+      "delta_label": "+4.2\""
+    }
+  ],
+  "fallers": [
+    {
+      "player_name": "Little, Brendon",
+      "team": "TOR",
+      "recent_label": "Last appearance vs prior",
+      "delta_label": "-7.5\""
+    },
+    {
+      "player_name": "Sands, Cole",
+      "team": "KC",
+      "recent_label": "Last appearance vs prior",
+      "delta_label": "-6.0\""
+    },
+    {
+      "player_name": "Thompson, Ryan",
+      "team": "AZ",
+      "recent_label": "Last appearance vs prior",
+      "delta_label": "-5.8\""
+    },
+    {
+      "player_name": "Medina, Luis",
+      "team": "ATL",
+      "recent_label": "Last appearance vs prior",
+      "delta_label": "-5.8\""
+    },
+    {
+      "player_name": "Bird, Jake",
+      "team": "SEA",
+      "recent_label": "Last appearance vs prior",
+      "delta_label": "-4.5\""
+    },
+    {
+      "player_name": "Leiter Jr., Mark",
+      "team": "ATL",
+      "recent_label": "Last appearance vs prior",
+      "delta_label": "-4.5\""
+    }
+  ],
+  "entered_apex": [
+    {
+      "player_name": "Strahm, Matt",
+      "team": "KC",
+      "transition_label": "Entered Apex Rise",
+      "detail_label": "14.7\" -> 18.9\"",
+      "delta_label": "+4.2\""
+    },
+    {
+      "player_name": "Nardi, Andrew",
+      "team": "MIA",
+      "transition_label": "Entered Apex Rise",
+      "detail_label": "16.2\" -> 18.1\"",
+      "delta_label": "+1.9\""
+    },
+    {
+      "player_name": "Falter, Bailey",
+      "team": "KC",
+      "transition_label": "Entered Apex Rise",
+      "detail_label": "17.3\" -> 19.2\"",
+      "delta_label": "+1.8\""
+    },
+    {
+      "player_name": "Myers, Tobias",
+      "team": "STL",
+      "transition_label": "Entered Apex Rise",
+      "detail_label": "16.6\" -> 18.4\"",
+      "delta_label": "+1.8\""
+    },
+    {
+      "player_name": "Leasure, Jordan",
+      "team": "MIA",
+      "transition_label": "Entered Apex Rise",
+      "detail_label": "17.7\" -> 19.4\"",
+      "delta_label": "+1.7\""
+    },
+    {
+      "player_name": "Ray, Robbie",
+      "team": "SF",
+      "transition_label": "Entered Apex Rise",
+      "detail_label": "17.7\" -> 18.9\"",
+      "delta_label": "+1.2\""
+    }
+  ],
+  "zone_shift": [
+    {
+      "player_name": "Sands, Cole",
+      "team": "KC",
+      "transition_label": "Exited Dead Zone",
+      "detail_label": "13.5\" -> 7.4\"",
+      "delta_label": "-6.0\""
+    },
+    {
+      "player_name": "Funderburk, Kody",
+      "team": "KC",
+      "transition_label": "Entered Dead Zone",
+      "detail_label": "9.1\" -> 13.8\"",
+      "delta_label": "+4.7\""
+    },
+    {
+      "player_name": "Leiter Jr., Mark",
+      "team": "ATL",
+      "transition_label": "Entered Dead Zone",
+      "detail_label": "16.8\" -> 12.3\"",
+      "delta_label": "-4.5\""
+    },
+    {
+      "player_name": "Banda, Anthony",
+      "team": "KC",
+      "transition_label": "Entered Dead Zone",
+      "detail_label": "10.4\" -> 14.9\"",
+      "delta_label": "+4.5\""
+    },
+    {
+      "player_name": "Alvarado, Elvis",
+      "team": "ATL",
+      "transition_label": "Exited Dead Zone",
+      "detail_label": "14.9\" -> 10.5\"",
+      "delta_label": "-4.3\""
+    },
+    {
+      "player_name": "Martin, Chris",
+      "team": "BAL",
+      "transition_label": "Exited Dead Zone",
+      "detail_label": "13.2\" -> 8.9\"",
+      "delta_label": "-4.3\""
     }
   ]
 }

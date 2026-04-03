@@ -208,7 +208,37 @@ HTML_TEMPLATE = Template(
       background: rgba(182,255,0,0.08);
       color: var(--lime-hot);
     }
+    .heat-transition {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(106,166,255,0.24);
+      background: rgba(106,166,255,0.10);
+      color: var(--blue);
+    }
 
+    .heat-transition.apex {
+      border-color: rgba(168,85,247,0.28);
+      background: rgba(168,85,247,0.12);
+      color: #d8b4fe;
+    }
+
+    .heat-transition.exit {
+      border-color: rgba(182,255,0,0.24);
+      background: rgba(182,255,0,0.10);
+      color: var(--lime-hot);
+    }
+
+    .heat-transition.enter-dead {
+      border-color: rgba(239,68,68,0.24);
+      background: rgba(239,68,68,0.10);
+      color: #fca5a5;
+    }
     .heat-values { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
     .heat-value-box {
       border: 1px solid rgba(255,255,255,0.07);
@@ -588,10 +618,21 @@ HTML_TEMPLATE = Template(
             <h3 class="heat-name">{{ row.player_name }}</h3>
             <div class="heat-meta">{{ row.team }} {% if row.velocity_bucket %}// {{ row.velocity_bucket }}{% endif %}</div>
 
-            <div class="heat-header-tags">
+                        <div class="heat-header-tags">
               <span class="heat-band">{{ row.heat_tag }}</span>
               {% if row.climber_flag %}
               <span class="heat-climber">CLIMBER</span>
+              {% endif %}
+              {% if row.transition_badge %}
+                {% if row.transition_badge == "ENTERED APEX" %}
+                <span class="heat-transition apex">{{ row.transition_badge }}</span>
+                {% elif row.transition_badge == "EXITED DEAD ZONE" %}
+                <span class="heat-transition exit">{{ row.transition_badge }}</span>
+                {% elif row.transition_badge == "ENTERED DEAD ZONE" %}
+                <span class="heat-transition enter-dead">{{ row.transition_badge }}</span>
+                {% else %}
+                <span class="heat-transition">{{ row.transition_badge }}</span>
+                {% endif %}
               {% endif %}
             </div>
 
@@ -960,6 +1001,7 @@ def build_ivb_dataset(raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     pitches["release_speed"] = pd.to_numeric(pitches.get("release_speed"), errors="coerce")
     pitches["pfx_z"] = pd.to_numeric(pitches.get("pfx_z"), errors="coerce")
     pitches["game_date"] = pd.to_datetime(pitches.get("game_date"), errors="coerce")
+    pitches["game_pk"] = pd.to_numeric(pitches.get("game_pk"), errors="coerce").astype("Int64")
     pitches["pitcher"] = pd.to_numeric(pitches.get("pitcher"), errors="coerce").astype("Int64")
     pitches["vx0"] = pd.to_numeric(pitches.get("vx0"), errors="coerce")
     pitches["vy0"] = pd.to_numeric(pitches.get("vy0"), errors="coerce")
@@ -975,8 +1017,7 @@ def build_ivb_dataset(raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
 
     pitches["ivb_inches"] = pitches["pfx_z"] * 12.0
     pitches["vaa"] = pitches.apply(approx_vaa, axis=1)
-    pitches = pitches.dropna(subset=["pitcher", "release_speed", "ivb_inches", "game_date"]).copy()
-
+    pitches = pitches.dropna(subset=["pitcher", "game_pk", "release_speed", "ivb_inches", "game_date"]).copy()
     if pitches.empty:
         return pd.DataFrame(), pd.DataFrame()
 
@@ -1015,160 +1056,154 @@ def build_ivb_dataset(raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     pitches = pitches[pitches["pitcher"].isin(grouped["pitcher"])].copy()
     return grouped, pitches
 
+def build_pitcher_appearances(pitches: pd.DataFrame) -> pd.DataFrame:
+    if pitches.empty:
+        return pd.DataFrame()
+
+    appearances = (
+        pitches.groupby(["pitcher", "game_pk"], dropna=True)
+        .agg(
+            game_date=("game_date", "max"),
+            player_name=("player_name", "last"),
+            team=("home_team", "last"),
+            ivb_raw=("ivb_inches", "mean"),
+            vaa=("vaa", "mean"),
+            pitch_count=("ivb_inches", "size"),
+        )
+        .reset_index()
+    )
+
+    appearances = appearances.sort_values(["pitcher", "game_date", "game_pk"], ascending=[True, False, False]).copy()
+    return appearances
 
 def build_climbers(grouped: pd.DataFrame, pitches: pd.DataFrame) -> tuple[list[dict], set[int], dict[int, float]]:
     if grouped.empty or pitches.empty:
         return [], set(), {}
 
-    max_date = pitches["game_date"].max()
-    if pd.isna(max_date):
+    appearances = build_pitcher_appearances(pitches)
+    if appearances.empty:
         return [], set(), {}
-
-    split_date = max_date - timedelta(days=max(1, LOOKBACK_DAYS // 2))
-
-    prior = pitches[pitches["game_date"] < split_date].copy()
-    recent = pitches[pitches["game_date"] >= split_date].copy()
-
-    if prior.empty or recent.empty:
-        return [], set(), {}
-
-    prior_g = (
-        prior.groupby("pitcher")["ivb_inches"].mean().reset_index().rename(columns={"ivb_inches": "prior_ivb"})
-    )
-    recent_g = (
-        recent.groupby("pitcher")["ivb_inches"].mean().reset_index().rename(columns={"ivb_inches": "recent_ivb"})
-    )
-
-    merged = grouped.merge(prior_g, on="pitcher", how="left").merge(recent_g, on="pitcher", how="left")
-    merged["delta"] = merged["recent_ivb"] - merged["prior_ivb"]
-    merged = merged.dropna(subset=["delta"]).sort_values("delta", ascending=False)
-
-    climber_ids = set(
-        int(pid) for pid in merged.loc[merged["delta"] > CLIMBER_THRESHOLD, "pitcher"].dropna().tolist()
-    )
-
-    top_rows = merged.head(6)
 
     rows = []
-    for _, row in top_rows.iterrows():
-        delta = safe_float(row.get("delta"))
-        if delta is None:
+    climber_ids = set()
+    climber_delta_map = {}
+
+    for pitcher_id, pitcher_apps in appearances.groupby("pitcher", sort=False):
+        pitcher_apps = pitcher_apps.sort_values(["game_date", "game_pk"], ascending=[False, False]).reset_index(drop=True)
+        if len(pitcher_apps) < 2:
             continue
+
+        recent_ivb = safe_float(pitcher_apps.loc[0, "ivb_raw"])
+        prior_ivb = safe_float(pitcher_apps.loc[1, "ivb_raw"])
+        if recent_ivb is None or prior_ivb is None:
+            continue
+
+        delta = recent_ivb - prior_ivb
+
+        try:
+            pitcher_id_int = int(pitcher_id)
+        except Exception:
+            continue
+
+        climber_delta_map[pitcher_id_int] = delta
+
+        if delta > CLIMBER_THRESHOLD:
+            climber_ids.add(pitcher_id_int)
+
         rows.append(
             {
-                "player_name": row.get("player_name", "Unknown"),
-                "team": row.get("team", "TEAM"),
-                "recent_label": f"Last {max(1, LOOKBACK_DAYS // 2)}d vs prior window",
+                "pitcher": pitcher_id_int,
+                "player_name": pitcher_apps.loc[0, "player_name"] or "Unknown",
+                "team": pitcher_apps.loc[0, "team"] or "TEAM",
+                "recent_label": "Last appearance vs prior",
+                "delta": delta,
                 "delta_label": format_signed(delta, '"'),
             }
         )
 
-    climber_delta_map = {}
-    for _, row in merged.iterrows():
-        pid = row.get("pitcher")
-        delta = safe_float(row.get("delta"))
-        try:
-            pid_int = int(pid)
-        except Exception:
-            continue
-        climber_delta_map[pid_int] = delta
+    rows = sorted(rows, key=lambda r: r["delta"], reverse=True)
+    top_rows = rows[:6]
 
-    return rows, climber_ids, climber_delta_map
+    display_rows = [
+        {
+            "player_name": row["player_name"],
+            "team": row["team"],
+            "recent_label": row["recent_label"],
+            "delta_label": row["delta_label"],
+        }
+        for row in top_rows
+    ]
+
+    return display_rows, climber_ids, climber_delta_map
 
 def build_fallers(grouped: pd.DataFrame, pitches: pd.DataFrame) -> list[dict]:
     if grouped.empty or pitches.empty:
         return []
 
-    max_date = pitches["game_date"].max()
-    if pd.isna(max_date):
+    appearances = build_pitcher_appearances(pitches)
+    if appearances.empty:
         return []
-
-    split_date = max_date - timedelta(days=max(1, LOOKBACK_DAYS // 2))
-
-    prior = pitches[pitches["game_date"] < split_date].copy()
-    recent = pitches[pitches["game_date"] >= split_date].copy()
-
-    if prior.empty or recent.empty:
-        return []
-
-    prior_g = (
-        prior.groupby("pitcher")["ivb_inches"].mean().reset_index().rename(columns={"ivb_inches": "prior_ivb"})
-    )
-    recent_g = (
-        recent.groupby("pitcher")["ivb_inches"].mean().reset_index().rename(columns={"ivb_inches": "recent_ivb"})
-    )
-
-    merged = grouped.merge(prior_g, on="pitcher", how="left").merge(recent_g, on="pitcher", how="left")
-    merged["delta"] = merged["recent_ivb"] - merged["prior_ivb"]
-    merged = merged.dropna(subset=["delta"]).sort_values("delta", ascending=True)
-
-    top_rows = merged.head(6)
 
     rows = []
-    for _, row in top_rows.iterrows():
-        delta = safe_float(row.get("delta"))
-        if delta is None:
+
+    for pitcher_id, pitcher_apps in appearances.groupby("pitcher", sort=False):
+        pitcher_apps = pitcher_apps.sort_values(["game_date", "game_pk"], ascending=[False, False]).reset_index(drop=True)
+        if len(pitcher_apps) < 2:
             continue
+
+        recent_ivb = safe_float(pitcher_apps.loc[0, "ivb_raw"])
+        prior_ivb = safe_float(pitcher_apps.loc[1, "ivb_raw"])
+        if recent_ivb is None or prior_ivb is None:
+            continue
+
+        delta = recent_ivb - prior_ivb
+
         rows.append(
             {
-                "player_name": row.get("player_name", "Unknown"),
-                "team": row.get("team", "TEAM"),
-                "recent_label": f"Last {max(1, LOOKBACK_DAYS // 2)}d vs prior window",
+                "player_name": pitcher_apps.loc[0, "player_name"] or "Unknown",
+                "team": pitcher_apps.loc[0, "team"] or "TEAM",
+                "recent_label": "Last appearance vs prior",
+                "delta": delta,
                 "delta_label": format_signed(delta, '"'),
             }
         )
 
-    return rows
+    rows = sorted(rows, key=lambda r: r["delta"])
+    top_rows = rows[:6]
+
+    return [
+        {
+            "player_name": row["player_name"],
+            "team": row["team"],
+            "recent_label": row["recent_label"],
+            "delta_label": row["delta_label"],
+        }
+        for row in top_rows
+    ]
 
 def build_zone_transitions(grouped: pd.DataFrame, pitches: pd.DataFrame) -> tuple[list[dict], list[dict]]:
     if grouped.empty or pitches.empty:
         return [], []
 
-    max_date = pitches["game_date"].max()
-    if pd.isna(max_date):
+    appearances = build_pitcher_appearances(pitches)
+    if appearances.empty:
         return [], []
-
-    split_date = max_date - timedelta(days=max(1, LOOKBACK_DAYS // 2))
-
-    prior = pitches[pitches["game_date"] < split_date].copy()
-    recent = pitches[pitches["game_date"] >= split_date].copy()
-
-    if prior.empty or recent.empty:
-        return [], []
-
-    prior_g = (
-        prior.groupby("pitcher")
-        .agg(
-            prior_ivb=("ivb_inches", "mean"),
-            player_name=("player_name", "last"),
-            team=("home_team", "last"),
-        )
-        .reset_index()
-    )
-
-    recent_g = (
-        recent.groupby("pitcher")
-        .agg(
-            recent_ivb=("ivb_inches", "mean"),
-            player_name=("player_name", "last"),
-            team=("home_team", "last"),
-        )
-        .reset_index()
-    )
-
-    merged = prior_g.merge(recent_g, on="pitcher", how="inner", suffixes=("_prior", "_recent"))
 
     entered_apex = []
     zone_shift = []
 
-    for _, row in merged.iterrows():
-        prior_ivb = safe_float(row.get("prior_ivb"))
-        recent_ivb = safe_float(row.get("recent_ivb"))
-        if prior_ivb is None or recent_ivb is None:
+    for pitcher_id, pitcher_apps in appearances.groupby("pitcher", sort=False):
+        pitcher_apps = pitcher_apps.sort_values(["game_date", "game_pk"], ascending=[False, False]).reset_index(drop=True)
+        if len(pitcher_apps) < 2:
             continue
 
-        player_name = row.get("player_name_recent") or row.get("player_name_prior") or "Unknown"
-        team = row.get("team_recent") or row.get("team_prior") or "TEAM"
+        recent_ivb = safe_float(pitcher_apps.loc[0, "ivb_raw"])
+        prior_ivb = safe_float(pitcher_apps.loc[1, "ivb_raw"])
+        if recent_ivb is None or prior_ivb is None:
+            continue
+
+        player_name = pitcher_apps.loc[0, "player_name"] or "Unknown"
+        team = pitcher_apps.loc[0, "team"] or "TEAM"
         delta = recent_ivb - prior_ivb
 
         if prior_ivb < 18.0 and recent_ivb >= 18.0:
@@ -1177,19 +1212,21 @@ def build_zone_transitions(grouped: pd.DataFrame, pitches: pd.DataFrame) -> tupl
                     "player_name": player_name,
                     "team": team,
                     "transition_label": "Entered Apex Rise",
-                    "detail_label": f"{prior_ivb:.1f}\" -> {recent_ivb:.1f}\"",
+                    "detail_label": f'{prior_ivb:.1f}" -> {recent_ivb:.1f}"',
                     "delta_label": format_signed(delta, '"'),
+                    "delta": delta,
                 }
             )
 
-        if prior_ivb >= 12.0 and prior_ivb <= 15.0 and not (12.0 <= recent_ivb <= 15.0):
+        if 12.0 <= prior_ivb <= 15.0 and not (12.0 <= recent_ivb <= 15.0):
             zone_shift.append(
                 {
                     "player_name": player_name,
                     "team": team,
                     "transition_label": "Exited Dead Zone",
-                    "detail_label": f"{prior_ivb:.1f}\" -> {recent_ivb:.1f}\"",
+                    "detail_label": f'{prior_ivb:.1f}" -> {recent_ivb:.1f}"',
                     "delta_label": format_signed(delta, '"'),
+                    "delta": delta,
                 }
             )
         elif not (12.0 <= prior_ivb <= 15.0) and (12.0 <= recent_ivb <= 15.0):
@@ -1198,22 +1235,36 @@ def build_zone_transitions(grouped: pd.DataFrame, pitches: pd.DataFrame) -> tupl
                     "player_name": player_name,
                     "team": team,
                     "transition_label": "Entered Dead Zone",
-                    "detail_label": f"{prior_ivb:.1f}\" -> {recent_ivb:.1f}\"",
+                    "detail_label": f'{prior_ivb:.1f}" -> {recent_ivb:.1f}"',
                     "delta_label": format_signed(delta, '"'),
+                    "delta": delta,
                 }
             )
 
-    entered_apex = sorted(
-        entered_apex,
-        key=lambda r: float(r["delta_label"].replace('"', "")),
-        reverse=True,
-    )[:6]
+    entered_apex = sorted(entered_apex, key=lambda r: r["delta"], reverse=True)[:6]
+    zone_shift = sorted(zone_shift, key=lambda r: abs(r["delta"]), reverse=True)[:6]
 
-    zone_shift = sorted(
-        zone_shift,
-        key=lambda r: abs(float(r["delta_label"].replace('"', ""))),
-        reverse=True,
-    )[:6]
+    entered_apex = [
+        {
+            "player_name": row["player_name"],
+            "team": row["team"],
+            "transition_label": row["transition_label"],
+            "detail_label": row["detail_label"],
+            "delta_label": row["delta_label"],
+        }
+        for row in entered_apex
+    ]
+
+    zone_shift = [
+        {
+            "player_name": row["player_name"],
+            "team": row["team"],
+            "transition_label": row["transition_label"],
+            "detail_label": row["detail_label"],
+            "delta_label": row["delta_label"],
+        }
+        for row in zone_shift
+    ]
 
     return entered_apex, zone_shift
 
@@ -1221,6 +1272,9 @@ def build_lab_rows(
     grouped: pd.DataFrame,
     climber_ids: set[int],
     climber_delta_map: dict[int, float],
+    entered_apex_ids: set[int],
+    entered_dead_zone_ids: set[int],
+    exited_dead_zone_ids: set[int],
     report_date_value,
 ) -> list[dict]:
     if grouped.empty:
@@ -1245,6 +1299,9 @@ def build_lab_rows(
         dead_zone_flag = bool(row.get("dead_zone_flag"))
         contact_risk_flag = bool(contact_risk_label(ivb_raw))
         climber_delta = climber_delta_map.get(player_id_int)
+        entered_apex_rise = player_id_int in entered_apex_ids
+        entered_dead_zone = player_id_int in entered_dead_zone_ids
+        exited_dead_zone = player_id_int in exited_dead_zone_ids
 
         rows.append(
             {
@@ -1261,6 +1318,9 @@ def build_lab_rows(
                 "whiff_probability": whiff_probability_label(ivb_raw, vaa, ivb_vs_avg),
                 "climber_delta": climber_delta,
                 "climber_flag": player_id_int in climber_ids,
+                "entered_apex_rise": entered_apex_rise,
+                "entered_dead_zone": entered_dead_zone,
+                "exited_dead_zone": exited_dead_zone,
                 "heat_band": band_label(ivb_raw),
                 "vaa": vaa,
             }
@@ -1301,6 +1361,14 @@ def lab_rows_to_cards(rows: list[dict]) -> list[dict]:
         ivb_vs_avg = safe_float(row.get("ivb_vs_avg"))
         vaa = safe_float(row.get("vaa"))
 
+        transition_badge = ""
+        if bool(row.get("entered_apex_rise")):
+            transition_badge = "ENTERED APEX"
+        elif bool(row.get("exited_dead_zone")):
+            transition_badge = "EXITED DEAD ZONE"
+        elif bool(row.get("entered_dead_zone")):
+            transition_badge = "ENTERED DEAD ZONE"
+
         cards.append(
             {
                 "player_name": row.get("player_name", "Unknown Pitcher"),
@@ -1316,12 +1384,12 @@ def lab_rows_to_cards(rows: list[dict]) -> list[dict]:
                 "band_label": row.get("heat_band") or band_label(ivb_raw),
                 "heat_tag": heat_tag(ivb_raw),
                 "velocity_bucket": "",
+                "transition_badge": transition_badge,
                 "brief": build_brief(ivb_raw, ivb_vs_avg, vaa),
             }
         )
 
     return cards
-
 
 def to_cards(grouped: pd.DataFrame, climber_ids: set[int]) -> list[dict]:
     if grouped.empty:
@@ -1362,11 +1430,50 @@ def to_cards(grouped: pd.DataFrame, climber_ids: set[int]) -> list[dict]:
                 "band_label": band_label(ivb_raw),
                 "heat_tag": heat_tag(ivb_raw),
                 "velocity_bucket": bucket_label,
+                "transition_badge": "",
                 "brief": build_brief(ivb_raw, ivb_delta, vaa),
             }
         )
 
     return rows
+
+
+def build_zone_transition_id_sets(pitches: pd.DataFrame) -> tuple[set[int], set[int], set[int]]:
+    entered_apex_ids: set[int] = set()
+    entered_dead_zone_ids: set[int] = set()
+    exited_dead_zone_ids: set[int] = set()
+
+    if pitches.empty:
+        return entered_apex_ids, entered_dead_zone_ids, exited_dead_zone_ids
+
+    appearances = build_pitcher_appearances(pitches)
+    if appearances.empty:
+        return entered_apex_ids, entered_dead_zone_ids, exited_dead_zone_ids
+
+    for pitcher_id, pitcher_apps in appearances.groupby("pitcher", sort=False):
+        pitcher_apps = pitcher_apps.sort_values(["game_date", "game_pk"], ascending=[False, False]).reset_index(drop=True)
+        if len(pitcher_apps) < 2:
+            continue
+
+        recent_ivb = safe_float(pitcher_apps.loc[0, "ivb_raw"])
+        prior_ivb = safe_float(pitcher_apps.loc[1, "ivb_raw"])
+        if recent_ivb is None or prior_ivb is None:
+            continue
+
+        try:
+            pitcher_id_int = int(pitcher_id)
+        except Exception:
+            continue
+
+        if prior_ivb < 18.0 and recent_ivb >= 18.0:
+            entered_apex_ids.add(pitcher_id_int)
+
+        if 12.0 <= prior_ivb <= 15.0 and not (12.0 <= recent_ivb <= 15.0):
+            exited_dead_zone_ids.add(pitcher_id_int)
+        elif not (12.0 <= prior_ivb <= 15.0) and (12.0 <= recent_ivb <= 15.0):
+            entered_dead_zone_ids.add(pitcher_id_int)
+
+    return entered_apex_ids, entered_dead_zone_ids, exited_dead_zone_ids
 
 
 def write_ivb_heat_map() -> None:
@@ -1387,8 +1494,19 @@ def write_ivb_heat_map() -> None:
     climbers, climber_ids, climber_delta_map = build_climbers(grouped, pitches)
     fallers = build_fallers(grouped, pitches)
     entered_apex, zone_shift = build_zone_transitions(grouped, pitches)
-    lab_rows = build_lab_rows(grouped, climber_ids, climber_delta_map, end_date)
+    entered_apex_ids, entered_dead_zone_ids, exited_dead_zone_ids = build_zone_transition_id_sets(pitches)
+
+    lab_rows = build_lab_rows(
+        grouped,
+        climber_ids,
+        climber_delta_map,
+        entered_apex_ids,
+        entered_dead_zone_ids,
+        exited_dead_zone_ids,
+        end_date,
+    )
     upsert_lab_rows(lab_rows)
+
     latest_lab_rows = fetch_latest_lab_rows(end_date)
     heat_cards = lab_rows_to_cards(latest_lab_rows) if latest_lab_rows else to_cards(grouped, climber_ids)
 
@@ -1398,6 +1516,16 @@ def write_ivb_heat_map() -> None:
                 "player_name": "No signal yet",
                 "team": "LAB",
                 "recent_label": "Awaiting additional data",
+                "delta_label": "--",
+            }
+        ]
+
+    if not fallers:
+        fallers = [
+            {
+                "player_name": "No major fallers",
+                "team": "LAB",
+                "recent_label": "Last appearance vs prior",
                 "delta_label": "--",
             }
         ]
@@ -1429,6 +1557,9 @@ def write_ivb_heat_map() -> None:
         "dead_zone_count": dead_zone_count,
         "heat_cards": heat_cards,
         "climbers": climbers,
+        "fallers": fallers,
+        "entered_apex": entered_apex,
+        "zone_shift": zone_shift,
     }
     (DIST_DIR / "ivb_heat_map.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
     print("Wrote dist/ivb_heat_map.json")
