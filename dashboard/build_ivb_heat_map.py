@@ -602,7 +602,7 @@ HTML_TEMPLATE = Template(
         </div>
       </article>
 
-      <aside class="leader-card">
+             <aside class="leader-card">
         <div class="leader-head">
           <div>
             <div class="section-kicker">Movement Shift</div>
@@ -612,7 +612,37 @@ HTML_TEMPLATE = Template(
         </div>
 
         <div class="leader-list">
-          {% for row in climbers %}
+  {% if fallers %}
+    {% for row in fallers %}
+    <div class="leader-row">
+      <div class="leader-name">{{ row.player_name }}</div>
+      <div class="leader-sub">{{ row.team }} // {{ row.recent_label }}</div>
+      <div class="leader-delta">{{ row.delta_label }}</div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="leader-row">
+      <div class="leader-name">No major fallers</div>
+      <div class="leader-sub">LAB // Recent vs prior window</div>
+      <div class="leader-delta">--</div>
+    </div>
+  {% endif %}
+</div>
+
+        <div class="lab-note">
+          Climbers compare the most recent half of the rolling window to the prior half.
+        </div>
+
+        <div class="leader-head" style="margin-top: 18px;">
+          <div>
+            <div class="section-kicker">Movement Fade</div>
+            <h2 class="section-title">Fallers</h2>
+          </div>
+          <div class="section-badge">Recent vs Prior</div>
+        </div>
+
+        <div class="leader-list">
+          {% for row in fallers %}
           <div class="leader-row">
             <div class="leader-name">{{ row.player_name }}</div>
             <div class="leader-sub">{{ row.team }} // {{ row.recent_label }}</div>
@@ -622,7 +652,69 @@ HTML_TEMPLATE = Template(
         </div>
 
         <div class="lab-note">
-          Climbers compare the most recent half of the rolling window to the prior half. Later we can upgrade this to a true last-two-starts model.
+          Fallers flag arms losing carry relative to their prior window.
+        </div>
+
+        <div class="leader-head" style="margin-top: 18px;">
+          <div>
+            <div class="section-kicker">Threshold Break</div>
+            <h2 class="section-title">Entered Apex Rise</h2>
+          </div>
+          <div class="section-badge">Zone Transition</div>
+        </div>
+
+                <div class="leader-list">
+          {% if entered_apex %}
+            {% for row in entered_apex %}
+            <div class="leader-row">
+              <div class="leader-name">{{ row.player_name }}</div>
+              <div class="leader-sub">{{ row.team }} // {{ row.transition_label }}</div>
+              <div class="leader-sub">{{ row.detail_label }}</div>
+              <div class="leader-delta">{{ row.delta_label }}</div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div class="leader-row">
+              <div class="leader-name">No new apex entries</div>
+              <div class="leader-sub">LAB // Zone transition</div>
+              <div class="leader-delta">--</div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="lab-note">
+          These arms crossed into the 18"+ elite carry tier during the recent window.
+        </div>
+
+        <div class="leader-head" style="margin-top: 18px;">
+          <div>
+            <div class="section-kicker">Zone Shift</div>
+            <h2 class="section-title">Dead Zone Changes</h2>
+          </div>
+          <div class="section-badge">Entry / Exit</div>
+        </div>
+
+                <div class="leader-list">
+          {% if zone_shift %}
+            {% for row in zone_shift %}
+            <div class="leader-row">
+              <div class="leader-name">{{ row.player_name }}</div>
+              <div class="leader-sub">{{ row.team }} // {{ row.transition_label }}</div>
+              <div class="leader-sub">{{ row.detail_label }}</div>
+              <div class="leader-delta">{{ row.delta_label }}</div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div class="leader-row">
+              <div class="leader-name">No dead-zone transitions</div>
+              <div class="leader-sub">LAB // Entry / exit</div>
+              <div class="leader-delta">--</div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="lab-note">
+          Tracks arms entering or escaping the 12"–15" dead-zone band.
         </div>
       </aside>
     </section>
@@ -955,6 +1047,148 @@ def build_climbers(grouped: pd.DataFrame, pitches: pd.DataFrame) -> tuple[list[d
 
     return rows, climber_ids, climber_delta_map
 
+def build_fallers(grouped: pd.DataFrame, pitches: pd.DataFrame) -> list[dict]:
+    if grouped.empty or pitches.empty:
+        return []
+
+    max_date = pitches["game_date"].max()
+    if pd.isna(max_date):
+        return []
+
+    split_date = max_date - timedelta(days=max(1, LOOKBACK_DAYS // 2))
+
+    prior = pitches[pitches["game_date"] < split_date].copy()
+    recent = pitches[pitches["game_date"] >= split_date].copy()
+
+    if prior.empty or recent.empty:
+        return []
+
+    prior_g = (
+        prior.groupby("pitcher")["ivb_inches"].mean().reset_index().rename(columns={"ivb_inches": "prior_ivb"})
+    )
+    recent_g = (
+        recent.groupby("pitcher")["ivb_inches"].mean().reset_index().rename(columns={"ivb_inches": "recent_ivb"})
+    )
+
+    merged = grouped.merge(prior_g, on="pitcher", how="left").merge(recent_g, on="pitcher", how="left")
+    merged["delta"] = merged["recent_ivb"] - merged["prior_ivb"]
+    merged = merged.dropna(subset=["delta"]).sort_values("delta", ascending=True)
+
+    top_rows = merged.head(6)
+
+    rows = []
+    for _, row in top_rows.iterrows():
+        delta = safe_float(row.get("delta"))
+        if delta is None:
+            continue
+        rows.append(
+            {
+                "player_name": row.get("player_name", "Unknown"),
+                "team": row.get("team", "TEAM"),
+                "recent_label": f"Last {max(1, LOOKBACK_DAYS // 2)}d vs prior window",
+                "delta_label": format_signed(delta, '"'),
+            }
+        )
+
+    return rows
+
+def build_zone_transitions(grouped: pd.DataFrame, pitches: pd.DataFrame) -> tuple[list[dict], list[dict]]:
+    if grouped.empty or pitches.empty:
+        return [], []
+
+    max_date = pitches["game_date"].max()
+    if pd.isna(max_date):
+        return [], []
+
+    split_date = max_date - timedelta(days=max(1, LOOKBACK_DAYS // 2))
+
+    prior = pitches[pitches["game_date"] < split_date].copy()
+    recent = pitches[pitches["game_date"] >= split_date].copy()
+
+    if prior.empty or recent.empty:
+        return [], []
+
+    prior_g = (
+        prior.groupby("pitcher")
+        .agg(
+            prior_ivb=("ivb_inches", "mean"),
+            player_name=("player_name", "last"),
+            team=("home_team", "last"),
+        )
+        .reset_index()
+    )
+
+    recent_g = (
+        recent.groupby("pitcher")
+        .agg(
+            recent_ivb=("ivb_inches", "mean"),
+            player_name=("player_name", "last"),
+            team=("home_team", "last"),
+        )
+        .reset_index()
+    )
+
+    merged = prior_g.merge(recent_g, on="pitcher", how="inner", suffixes=("_prior", "_recent"))
+
+    entered_apex = []
+    zone_shift = []
+
+    for _, row in merged.iterrows():
+        prior_ivb = safe_float(row.get("prior_ivb"))
+        recent_ivb = safe_float(row.get("recent_ivb"))
+        if prior_ivb is None or recent_ivb is None:
+            continue
+
+        player_name = row.get("player_name_recent") or row.get("player_name_prior") or "Unknown"
+        team = row.get("team_recent") or row.get("team_prior") or "TEAM"
+        delta = recent_ivb - prior_ivb
+
+        if prior_ivb < 18.0 and recent_ivb >= 18.0:
+            entered_apex.append(
+                {
+                    "player_name": player_name,
+                    "team": team,
+                    "transition_label": "Entered Apex Rise",
+                    "detail_label": f"{prior_ivb:.1f}\" -> {recent_ivb:.1f}\"",
+                    "delta_label": format_signed(delta, '"'),
+                }
+            )
+
+        if prior_ivb >= 12.0 and prior_ivb <= 15.0 and not (12.0 <= recent_ivb <= 15.0):
+            zone_shift.append(
+                {
+                    "player_name": player_name,
+                    "team": team,
+                    "transition_label": "Exited Dead Zone",
+                    "detail_label": f"{prior_ivb:.1f}\" -> {recent_ivb:.1f}\"",
+                    "delta_label": format_signed(delta, '"'),
+                }
+            )
+        elif not (12.0 <= prior_ivb <= 15.0) and (12.0 <= recent_ivb <= 15.0):
+            zone_shift.append(
+                {
+                    "player_name": player_name,
+                    "team": team,
+                    "transition_label": "Entered Dead Zone",
+                    "detail_label": f"{prior_ivb:.1f}\" -> {recent_ivb:.1f}\"",
+                    "delta_label": format_signed(delta, '"'),
+                }
+            )
+
+    entered_apex = sorted(
+        entered_apex,
+        key=lambda r: float(r["delta_label"].replace('"', "")),
+        reverse=True,
+    )[:6]
+
+    zone_shift = sorted(
+        zone_shift,
+        key=lambda r: abs(float(r["delta_label"].replace('"', ""))),
+        reverse=True,
+    )[:6]
+
+    return entered_apex, zone_shift
+
 def build_lab_rows(
     grouped: pd.DataFrame,
     climber_ids: set[int],
@@ -1123,6 +1357,8 @@ def write_ivb_heat_map() -> None:
     field_tilt_pct = 0 if tracked_pitchers == 0 else round((elite_count / tracked_pitchers) * 100)
 
     climbers, climber_ids, climber_delta_map = build_climbers(grouped, pitches)
+    fallers = build_fallers(grouped, pitches)
+    entered_apex, zone_shift = build_zone_transitions(grouped, pitches)
     lab_rows = build_lab_rows(grouped, climber_ids, climber_delta_map, end_date)
     upsert_lab_rows(lab_rows)
     latest_lab_rows = fetch_latest_lab_rows(end_date)
@@ -1149,6 +1385,9 @@ def write_ivb_heat_map() -> None:
         dead_zone_count=dead_zone_count,
         heat_cards=heat_cards,
         climbers=climbers,
+        fallers=fallers,
+        entered_apex=entered_apex,
+        zone_shift=zone_shift,
         lookback_days=LOOKBACK_DAYS,
     )
 
