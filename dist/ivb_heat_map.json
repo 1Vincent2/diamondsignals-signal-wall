@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-03T10:49:25.239653",
+  "generated_at": "2026-04-03T11:08:02.701667",
   "field_tilt_pct": 9,
   "tracked_pitchers": 383,
   "dead_zone_count": 308,
@@ -9,23 +9,23 @@
       "team": "LAD",
       "ivb_raw": "21.3\"",
       "ivb_vs_avg": "+9.6\"",
-      "vaa": "--",
+      "vaa": "-3.8\u00b0",
       "dead_zone_label": "CLEAR",
-      "whiff_probability": "MEDIUM",
+      "whiff_probability": "HIGH",
       "climber_flag": false,
       "contact_risk": "",
       "heat_class": "hot",
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
-      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
+      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -3.8\u00b0."
     },
     {
       "player_name": "Lee, Dylan",
       "team": "ATL",
       "ivb_raw": "20.3\"",
       "ivb_vs_avg": "+8.1\"",
-      "vaa": "--",
+      "vaa": "-4.9\u00b0",
       "dead_zone_label": "CLEAR",
       "whiff_probability": "MEDIUM",
       "climber_flag": false,
@@ -34,14 +34,14 @@
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
-      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
+      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.9\u00b0."
     },
     {
       "player_name": "Thielbar, Caleb",
       "team": "CHC",
       "ivb_raw": "21.2\"",
       "ivb_vs_avg": "+7.9\"",
-      "vaa": "--",
+      "vaa": "-4.8\u00b0",
       "dead_zone_label": "CLEAR",
       "whiff_probability": "MEDIUM",
       "climber_flag": false,
@@ -50,14 +50,14 @@
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
-      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
+      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.8\u00b0."
     },
     {
       "player_name": "Suter, Brent",
       "team": "HOU",
       "ivb_raw": "14.4\"",
       "ivb_vs_avg": "+7.1\"",
-      "vaa": "--",
+      "vaa": "-6.0\u00b0",
       "dead_zone_label": "COLD",
       "whiff_probability": "LOW",
       "climber_flag": false,
@@ -66,30 +66,30 @@
       "band_label": "Dead Zone",
       "heat_tag": "COLD // DEAD ZONE",
       "velocity_bucket": "",
-      "brief": "Carry profile sits inside the dead zone. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
+      "brief": "Carry profile sits inside the dead zone. Shape is beating the velo bucket baseline. Approach angle checks in at -6.0\u00b0."
     },
     {
       "player_name": "Estrada, Jeremiah",
       "team": "SD",
       "ivb_raw": "20.6\"",
       "ivb_vs_avg": "+6.9\"",
-      "vaa": "--",
+      "vaa": "-4.0\u00b0",
       "dead_zone_label": "CLEAR",
-      "whiff_probability": "MEDIUM",
+      "whiff_probability": "HIGH",
       "climber_flag": false,
       "contact_risk": "",
       "heat_class": "hot",
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
-      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
+      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.0\u00b0."
     },
     {
       "player_name": "Myers, Tobias",
       "team": "STL",
       "ivb_raw": "17.7\"",
       "ivb_vs_avg": "+6.8\"",
-      "vaa": "--",
+      "vaa": "-5.5\u00b0",
       "dead_zone_label": "COLD",
       "whiff_probability": "MEDIUM",
       "climber_flag": false,
@@ -98,14 +98,14 @@
       "band_label": "Standard Carry",
       "heat_tag": "NEUTRAL // MLB RANGE",
       "velocity_bucket": "",
-      "brief": "Movement reads in the standard carry band. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
+      "brief": "Movement reads in the standard carry band. Shape is beating the velo bucket baseline. Approach angle checks in at -5.5\u00b0."
     },
     {
       "player_name": "Pivetta, Nick",
       "team": "SD",
       "ivb_raw": "19.9\"",
       "ivb_vs_avg": "+6.6\"",
-      "vaa": "--",
+      "vaa": "-4.9\u00b0",
       "dead_zone_label": "COLD",
       "whiff_probability": "MEDIUM",
       "climber_flag": false,
@@ -114,14 +114,14 @@
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
-      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
+      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.9\u00b0."
     },
     {
       "player_name": "Ober, Bailey",
       "team": "BAL",
       "ivb_raw": "15.9\"",
       "ivb_vs_avg": "+6.6\"",
-      "vaa": "--",
+      "vaa": "-4.8\u00b0",
       "dead_zone_label": "COLD",
       "whiff_probability": "LOW",
       "climber_flag": false,
@@ -130,30 +130,30 @@
       "band_label": "Standard Carry",
       "heat_tag": "NEUTRAL // MLB RANGE",
       "velocity_bucket": "",
-      "brief": "Movement reads in the standard carry band. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
+      "brief": "Movement reads in the standard carry band. Shape is beating the velo bucket baseline. Approach angle checks in at -4.8\u00b0."
     },
     {
       "player_name": "Dreyer, Jack",
       "team": "LAD",
       "ivb_raw": "19.8\"",
       "ivb_vs_avg": "+6.5\"",
-      "vaa": "--",
+      "vaa": "-4.3\u00b0",
       "dead_zone_label": "CLEAR",
-      "whiff_probability": "MEDIUM",
+      "whiff_probability": "HIGH",
       "climber_flag": false,
       "contact_risk": "",
       "heat_class": "hot",
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
-      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
+      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.3\u00b0."
     },
     {
       "player_name": "Pomeranz, Drew",
       "team": "HOU",
       "ivb_raw": "19.5\"",
       "ivb_vs_avg": "+6.4\"",
-      "vaa": "--",
+      "vaa": "-4.7\u00b0",
       "dead_zone_label": "CLEAR",
       "whiff_probability": "MEDIUM",
       "climber_flag": false,
@@ -162,14 +162,14 @@
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
-      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
+      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.7\u00b0."
     },
     {
       "player_name": "Sabrowski, Erik",
       "team": "SEA",
       "ivb_raw": "19.9\"",
       "ivb_vs_avg": "+6.4\"",
-      "vaa": "--",
+      "vaa": "-4.6\u00b0",
       "dead_zone_label": "CLEAR",
       "whiff_probability": "MEDIUM",
       "climber_flag": false,
@@ -178,14 +178,14 @@
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
-      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
+      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.6\u00b0."
     },
     {
       "player_name": "Latz, Jacob",
       "team": "PHI",
       "ivb_raw": "18.9\"",
       "ivb_vs_avg": "+6.2\"",
-      "vaa": "--",
+      "vaa": "-5.1\u00b0",
       "dead_zone_label": "COLD",
       "whiff_probability": "MEDIUM",
       "climber_flag": false,
@@ -194,7 +194,7 @@
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
-      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
+      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -5.1\u00b0."
     }
   ],
   "climbers": [

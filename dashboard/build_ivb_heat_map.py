@@ -728,10 +728,23 @@ def heat_tag(ivb: float | None) -> str:
 def whiff_probability_label(ivb: float | None, vaa: float | None, ivb_vs_avg: float | None) -> str:
     if ivb is None:
         return "LOW"
-    if ivb > 18.0 and vaa is not None and vaa < -4.0:
+
+    # Dead zone should always suppress whiff expectation
+    if 12.0 <= ivb <= 15.0:
+        return "LOW"
+
+    # Premium carry + flatter approach angle
+    if ivb >= 18.0 and vaa is not None and vaa >= -4.5:
         return "HIGH"
-    if ivb > 17.0 and ivb_vs_avg is not None and ivb_vs_avg > 1.0:
+
+    # Strong carry, but not quite flat enough to be elite
+    if ivb >= 18.0 and vaa is not None and vaa < -4.5:
         return "MEDIUM"
+
+    # Shape beating the velo bucket baseline
+    if ivb >= 17.0 and ivb_vs_avg is not None and ivb_vs_avg >= 1.0:
+        return "MEDIUM"
+
     return "LOW"
 
 
@@ -767,7 +780,48 @@ def build_brief(ivb: float | None, ivb_vs_avg: float | None, vaa: float | None) 
 
     return " ".join(parts)
 
+def approx_vaa(row) -> float | None:
+    try:
+        y0 = 50.0
+        plate_y = 17.0 / 12.0
 
+        vy0 = float(row["vy0"])
+        ay = float(row["ay"])
+        vz0 = float(row["vz0"])
+        az = float(row["az"])
+
+        a = 0.5 * ay
+        b = vy0
+        c = y0 - plate_y
+
+        disc = b * b - 4 * a * c
+        if disc < 0:
+            return None
+
+        if abs(a) < 1e-9:
+            if abs(b) < 1e-9:
+                return None
+            t = -c / b
+            if t <= 0:
+                return None
+        else:
+            t1 = (-b - math.sqrt(disc)) / (2 * a)
+            t2 = (-b + math.sqrt(disc)) / (2 * a)
+            ts = [t for t in (t1, t2) if t > 0]
+            if not ts:
+                return None
+            t = min(ts)
+
+        vy_plate = vy0 + ay * t
+        vz_plate = vz0 + az * t
+
+        if vy_plate == 0:
+            return None
+
+        return math.degrees(math.atan(vz_plate / abs(vy_plate)))
+    except Exception:
+        return None
+    
 def fetch_statcast_window(start_date: str, end_date: str) -> pd.DataFrame:
     print(f"Fetching Statcast from {start_date} to {end_date}...")
     print("This is a large query, it may take a moment to complete")
@@ -787,6 +841,12 @@ def build_ivb_dataset(raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     pitches["pfx_z"] = pd.to_numeric(pitches.get("pfx_z"), errors="coerce")
     pitches["game_date"] = pd.to_datetime(pitches.get("game_date"), errors="coerce")
     pitches["pitcher"] = pd.to_numeric(pitches.get("pitcher"), errors="coerce").astype("Int64")
+    pitches["vx0"] = pd.to_numeric(pitches.get("vx0"), errors="coerce")
+    pitches["vy0"] = pd.to_numeric(pitches.get("vy0"), errors="coerce")
+    pitches["vz0"] = pd.to_numeric(pitches.get("vz0"), errors="coerce")
+    pitches["ax"] = pd.to_numeric(pitches.get("ax"), errors="coerce")
+    pitches["ay"] = pd.to_numeric(pitches.get("ay"), errors="coerce")
+    pitches["az"] = pd.to_numeric(pitches.get("az"), errors="coerce")
 
     fastball_types = {"FF", "SI", "FC", "FA"}
     pitches["pitch_type"] = pitches.get("pitch_type").astype(str)
@@ -794,6 +854,7 @@ def build_ivb_dataset(raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     pitches = pitches[pitches["is_fastball"] == True].copy()
 
     pitches["ivb_inches"] = pitches["pfx_z"] * 12.0
+    pitches["vaa"] = pitches.apply(approx_vaa, axis=1)
     pitches = pitches.dropna(subset=["pitcher", "release_speed", "ivb_inches", "game_date"]).copy()
 
     if pitches.empty:
@@ -813,12 +874,13 @@ def build_ivb_dataset(raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
 
     grouped = (
         pitches.groupby("pitcher", dropna=True)
-        .agg(
+                .agg(
             player_name=("player_name", "last"),
             team=("home_team", "last"),
             release_speed=("release_speed", "mean"),
             ivb_raw=("ivb_inches", "mean"),
             ivb_vs_avg=("ivb_vs_avg", "mean"),
+            vaa=("vaa", "mean"),
             pitch_count=("ivb_inches", "size"),
             dead_zone_flag=("dead_zone_flag", "max"),
             velocity_bucket_floor=("velocity_bucket_floor", "last"),
@@ -828,7 +890,7 @@ def build_ivb_dataset(raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
 
     grouped = grouped[grouped["pitch_count"] >= MIN_FASTBALL_COUNT].copy()
     grouped["team"] = grouped["team"].fillna("TEAM")
-    grouped["vaa"] = pd.NA  # scaffold for v1
+   
 
     pitches = pitches[pitches["pitcher"].isin(grouped["pitcher"])].copy()
     return grouped, pitches
