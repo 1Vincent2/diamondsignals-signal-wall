@@ -233,15 +233,44 @@ HTML_TEMPLATE = Template(
 
     .leader-list { display: grid; gap: 10px; }
     .leader-row {
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 14px;
-      padding: 12px;
-      background: rgba(255,255,255,0.02);
-    }
-    .leader-name { font-size: 15px; font-weight: 800; margin-bottom: 5px; }
-    .leader-sub { font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 7px; }
-    .leader-delta { font-family: var(--mono); font-size: 18px; font-weight: 800; color: var(--lime-hot); }
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(255,255,255,0.02);
+}
 
+.leader-row.positive {
+  border-color: rgba(182,255,0,0.18);
+  background: rgba(182,255,0,0.05);
+}
+
+.leader-row.negative {
+  border-color: rgba(239,68,68,0.18);
+  background: rgba(239,68,68,0.05);
+}
+
+.leader-row.transition {
+  border-color: rgba(168,85,247,0.18);
+  background: rgba(168,85,247,0.06);
+}
+
+.leader-name { font-size: 15px; font-weight: 800; margin-bottom: 5px; }
+.leader-sub { font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 7px; }
+
+.leader-delta {
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--lime-hot);
+}
+
+.leader-row.negative .leader-delta {
+  color: var(--red);
+}
+
+.leader-row.transition .leader-delta {
+  color: var(--purple);
+}
     .lab-note {
       margin-top: 14px;
       padding-top: 12px;
@@ -601,8 +630,7 @@ HTML_TEMPLATE = Template(
           Version 1 uses fastball IVB from current Statcast movement inputs. VAA is scaffolded until the dedicated calculation layer is added upstream.
         </div>
       </article>
-
-             <aside class="leader-card">
+      <aside class="leader-card">
         <div class="leader-head">
           <div>
             <div class="section-kicker">Movement Shift</div>
@@ -612,22 +640,14 @@ HTML_TEMPLATE = Template(
         </div>
 
         <div class="leader-list">
-  {% if fallers %}
-    {% for row in fallers %}
-    <div class="leader-row">
-      <div class="leader-name">{{ row.player_name }}</div>
-      <div class="leader-sub">{{ row.team }} // {{ row.recent_label }}</div>
-      <div class="leader-delta">{{ row.delta_label }}</div>
-    </div>
-    {% endfor %}
-  {% else %}
-    <div class="leader-row">
-      <div class="leader-name">No major fallers</div>
-      <div class="leader-sub">LAB // Recent vs prior window</div>
-      <div class="leader-delta">--</div>
-    </div>
-  {% endif %}
-</div>
+          {% for row in climbers %}
+          <div class="leader-row positive">
+            <div class="leader-name">{{ row.player_name }}</div>
+            <div class="leader-sub">{{ row.team }} // {{ row.recent_label }}</div>
+            <div class="leader-delta">{{ row.delta_label }}</div>
+          </div>
+          {% endfor %}
+        </div>
 
         <div class="lab-note">
           Climbers compare the most recent half of the rolling window to the prior half.
@@ -642,13 +662,21 @@ HTML_TEMPLATE = Template(
         </div>
 
         <div class="leader-list">
-          {% for row in fallers %}
-          <div class="leader-row">
-            <div class="leader-name">{{ row.player_name }}</div>
-            <div class="leader-sub">{{ row.team }} // {{ row.recent_label }}</div>
-            <div class="leader-delta">{{ row.delta_label }}</div>
-          </div>
-          {% endfor %}
+          {% if fallers %}
+            {% for row in fallers %}
+            <div class="leader-row negative">
+              <div class="leader-name">{{ row.player_name }}</div>
+              <div class="leader-sub">{{ row.team }} // {{ row.recent_label }}</div>
+              <div class="leader-delta">{{ row.delta_label }}</div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div class="leader-row">
+              <div class="leader-name">No major fallers</div>
+              <div class="leader-sub">LAB // Recent vs prior window</div>
+              <div class="leader-delta">--</div>
+            </div>
+          {% endif %}
         </div>
 
         <div class="lab-note">
@@ -663,10 +691,10 @@ HTML_TEMPLATE = Template(
           <div class="section-badge">Zone Transition</div>
         </div>
 
-                <div class="leader-list">
+        <div class="leader-list">
           {% if entered_apex %}
             {% for row in entered_apex %}
-            <div class="leader-row">
+            <div class="leader-row transition">
               <div class="leader-name">{{ row.player_name }}</div>
               <div class="leader-sub">{{ row.team }} // {{ row.transition_label }}</div>
               <div class="leader-sub">{{ row.detail_label }}</div>
@@ -694,10 +722,10 @@ HTML_TEMPLATE = Template(
           <div class="section-badge">Entry / Exit</div>
         </div>
 
-                <div class="leader-list">
+        <div class="leader-list">
           {% if zone_shift %}
             {% for row in zone_shift %}
-            <div class="leader-row">
+            <div class="leader-row transition">
               <div class="leader-name">{{ row.player_name }}</div>
               <div class="leader-sub">{{ row.team }} // {{ row.transition_label }}</div>
               <div class="leader-sub">{{ row.detail_label }}</div>
