@@ -4,10 +4,12 @@ from pathlib import Path
 from datetime import datetime, timedelta
 import json
 import math
+import os
 
 import pandas as pd
 from jinja2 import Template
 from pybaseball import statcast
+from supabase import create_client
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -25,6 +27,7 @@ TIMEZONE_LABEL = "America/New_York"
 LOOKBACK_DAYS = 7
 MIN_FASTBALL_COUNT = 8
 CLIMBER_THRESHOLD = 1.0
+IVB_LAB_TABLE = "ivb_lab_daily"
 
 
 HTML_TEMPLATE = Template(
@@ -666,7 +669,11 @@ def safe_float(value):
         return float(value)
     except Exception:
         return None
-
+    
+def get_supabase_client():
+    url = os.environ["SUPABASE_URL"]
+    key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
+    return create_client(url, key)
 
 def format_signed(value: float | None, suffix: str = "") -> str:
     if value is None:
@@ -827,13 +834,13 @@ def build_ivb_dataset(raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     return grouped, pitches
 
 
-def build_climbers(grouped: pd.DataFrame, pitches: pd.DataFrame) -> tuple[list[dict], set[int]]:
+def build_climbers(grouped: pd.DataFrame, pitches: pd.DataFrame) -> tuple[list[dict], set[int], dict[int, float]]:
     if grouped.empty or pitches.empty:
-        return [], set()
+        return [], set(), {}
 
     max_date = pitches["game_date"].max()
     if pd.isna(max_date):
-        return [], set()
+        return [], set(), {}
 
     split_date = max_date - timedelta(days=max(1, LOOKBACK_DAYS // 2))
 
@@ -841,7 +848,7 @@ def build_climbers(grouped: pd.DataFrame, pitches: pd.DataFrame) -> tuple[list[d
     recent = pitches[pitches["game_date"] >= split_date].copy()
 
     if prior.empty or recent.empty:
-        return [], set()
+        return [], set(), {}
 
     prior_g = (
         prior.groupby("pitcher")["ivb_inches"].mean().reset_index().rename(columns={"ivb_inches": "prior_ivb"})
@@ -873,7 +880,123 @@ def build_climbers(grouped: pd.DataFrame, pitches: pd.DataFrame) -> tuple[list[d
                 "delta_label": format_signed(delta, '"'),
             }
         )
-    return rows, climber_ids
+
+    climber_delta_map = {}
+    for _, row in merged.iterrows():
+        pid = row.get("pitcher")
+        delta = safe_float(row.get("delta"))
+        try:
+            pid_int = int(pid)
+        except Exception:
+            continue
+        climber_delta_map[pid_int] = delta
+
+    return rows, climber_ids, climber_delta_map
+
+def build_lab_rows(
+    grouped: pd.DataFrame,
+    climber_ids: set[int],
+    climber_delta_map: dict[int, float],
+    report_date_value,
+) -> list[dict]:
+    if grouped.empty:
+        return []
+
+    rows = []
+
+    for _, row in grouped.iterrows():
+        player_id = row.get("pitcher")
+        try:
+            player_id_int = int(player_id)
+        except Exception:
+            continue
+
+        ivb_raw = safe_float(row.get("ivb_raw"))
+        ivb_vs_avg = safe_float(row.get("ivb_vs_avg"))
+        vaa = safe_float(row.get("vaa"))
+        avg_fastball_velo = safe_float(row.get("release_speed"))
+        pitch_count = row.get("pitch_count")
+        pitch_count_int = int(pitch_count) if pd.notna(pitch_count) else None
+
+        dead_zone_flag = bool(row.get("dead_zone_flag"))
+        contact_risk_flag = bool(contact_risk_label(ivb_raw))
+        climber_delta = climber_delta_map.get(player_id_int)
+
+        rows.append(
+            {
+                "report_date": str(report_date_value),
+                "player_id": player_id_int,
+                "player_name": row.get("player_name", "Unknown Pitcher"),
+                "team": row.get("team", "TEAM"),
+                "pitch_count": pitch_count_int,
+                "avg_fastball_velo": avg_fastball_velo,
+                "ivb_raw": ivb_raw,
+                "ivb_vs_avg": ivb_vs_avg,
+                "dead_zone_flag": dead_zone_flag,
+                "contact_risk_flag": contact_risk_flag,
+                "whiff_probability": whiff_probability_label(ivb_raw, vaa, ivb_vs_avg),
+                "climber_delta": climber_delta,
+                "climber_flag": player_id_int in climber_ids,
+                "heat_band": band_label(ivb_raw),
+                "vaa": vaa,
+            }
+        )
+
+    return rows
+
+
+def upsert_lab_rows(rows: list[dict]) -> None:
+    if not rows:
+        return
+
+    client = get_supabase_client()
+    client.table(IVB_LAB_TABLE).upsert(
+        rows,
+        on_conflict="report_date,player_id",
+    ).execute()
+
+
+def fetch_latest_lab_rows(report_date_value) -> list[dict]:
+    client = get_supabase_client()
+    response = (
+        client.table(IVB_LAB_TABLE)
+        .select("*")
+        .eq("report_date", str(report_date_value))
+        .order("ivb_vs_avg", desc=True)
+        .limit(200)
+        .execute()
+    )
+    return response.data or []
+
+
+def lab_rows_to_cards(rows: list[dict]) -> list[dict]:
+    cards = []
+
+    for row in rows[:12]:
+        ivb_raw = safe_float(row.get("ivb_raw"))
+        ivb_vs_avg = safe_float(row.get("ivb_vs_avg"))
+        vaa = safe_float(row.get("vaa"))
+
+        cards.append(
+            {
+                "player_name": row.get("player_name", "Unknown Pitcher"),
+                "team": row.get("team", "TEAM"),
+                "ivb_raw": format_plain(ivb_raw, '"'),
+                "ivb_vs_avg": format_signed(ivb_vs_avg, '"'),
+                "vaa": "--" if vaa is None else format_plain(vaa, "°"),
+                "dead_zone_label": "COLD" if bool(row.get("dead_zone_flag")) else "CLEAR",
+                "whiff_probability": row.get("whiff_probability") or "LOW",
+                "climber_flag": bool(row.get("climber_flag")),
+                "contact_risk": "BARREL MAGNET // CONTACT RISK" if bool(row.get("contact_risk_flag")) else "",
+                "heat_class": heat_class(ivb_raw),
+                "band_label": row.get("heat_band") or band_label(ivb_raw),
+                "heat_tag": heat_tag(ivb_raw),
+                "velocity_bucket": "",
+                "brief": build_brief(ivb_raw, ivb_vs_avg, vaa),
+            }
+        )
+
+    return cards
 
 
 def to_cards(grouped: pd.DataFrame, climber_ids: set[int]) -> list[dict]:
@@ -918,6 +1041,7 @@ def to_cards(grouped: pd.DataFrame, climber_ids: set[int]) -> list[dict]:
                 "brief": build_brief(ivb_raw, ivb_delta, vaa),
             }
         )
+
     return rows
 
 
@@ -936,8 +1060,11 @@ def write_ivb_heat_map() -> None:
     elite_count = int((grouped["ivb_raw"].fillna(-999) >= 18.0).sum()) if not grouped.empty else 0
     field_tilt_pct = 0 if tracked_pitchers == 0 else round((elite_count / tracked_pitchers) * 100)
 
-    climbers, climber_ids = build_climbers(grouped, pitches)
-    heat_cards = to_cards(grouped, climber_ids)
+    climbers, climber_ids, climber_delta_map = build_climbers(grouped, pitches)
+    lab_rows = build_lab_rows(grouped, climber_ids, climber_delta_map, end_date)
+    upsert_lab_rows(lab_rows)
+    latest_lab_rows = fetch_latest_lab_rows(end_date)
+    heat_cards = lab_rows_to_cards(latest_lab_rows) if latest_lab_rows else to_cards(grouped, climber_ids)
 
     if not climbers:
         climbers = [

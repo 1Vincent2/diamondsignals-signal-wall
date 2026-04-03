@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-03T09:14:56.802471",
+  "generated_at": "2026-04-03T10:49:25.239653",
   "field_tilt_pct": 9,
   "tracked_pitchers": 383,
   "dead_zone_count": 308,
@@ -17,7 +17,7 @@
       "heat_class": "hot",
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
-      "velocity_bucket": "88-89 mph",
+      "velocity_bucket": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
     },
     {
@@ -33,7 +33,7 @@
       "heat_class": "hot",
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
-      "velocity_bucket": "92-93 mph",
+      "velocity_bucket": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
     },
     {
@@ -49,7 +49,7 @@
       "heat_class": "hot",
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
-      "velocity_bucket": "92-93 mph",
+      "velocity_bucket": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
     },
     {
@@ -65,7 +65,7 @@
       "heat_class": "cold",
       "band_label": "Dead Zone",
       "heat_tag": "COLD // DEAD ZONE",
-      "velocity_bucket": "84-85 mph",
+      "velocity_bucket": "",
       "brief": "Carry profile sits inside the dead zone. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
     },
     {
@@ -81,7 +81,7 @@
       "heat_class": "hot",
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
-      "velocity_bucket": "96-97 mph",
+      "velocity_bucket": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
     },
     {
@@ -97,7 +97,7 @@
       "heat_class": "neutral",
       "band_label": "Standard Carry",
       "heat_tag": "NEUTRAL // MLB RANGE",
-      "velocity_bucket": "90-91 mph",
+      "velocity_bucket": "",
       "brief": "Movement reads in the standard carry band. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
     },
     {
@@ -113,7 +113,7 @@
       "heat_class": "hot",
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
-      "velocity_bucket": "94-95 mph",
+      "velocity_bucket": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
     },
     {
@@ -129,7 +129,7 @@
       "heat_class": "neutral",
       "band_label": "Standard Carry",
       "heat_tag": "NEUTRAL // MLB RANGE",
-      "velocity_bucket": "88-89 mph",
+      "velocity_bucket": "",
       "brief": "Movement reads in the standard carry band. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
     },
     {
@@ -145,7 +145,7 @@
       "heat_class": "hot",
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
-      "velocity_bucket": "92-93 mph",
+      "velocity_bucket": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
     },
     {
@@ -161,7 +161,7 @@
       "heat_class": "hot",
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
-      "velocity_bucket": "92-93 mph",
+      "velocity_bucket": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
     },
     {
@@ -177,7 +177,7 @@
       "heat_class": "hot",
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
-      "velocity_bucket": "94-95 mph",
+      "velocity_bucket": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
     },
     {
@@ -193,7 +193,7 @@
       "heat_class": "hot",
       "band_label": "Apex Carry",
       "heat_tag": "HOT // APEX RISE",
-      "velocity_bucket": "92-93 mph",
+      "velocity_bucket": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation."
     }
   ],
