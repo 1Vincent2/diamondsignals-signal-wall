@@ -125,23 +125,24 @@ HTML_TEMPLATE = Template(
     .section-badge { font-family: var(--mono); font-size: 11px; color: var(--soft); border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; padding: 7px 10px; background: rgba(255,255,255,0.02); }
     .section-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
-    .field-guide-trigger {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      height: 34px;
-      border-radius: 999px;
-      border: 1px solid rgba(106,166,255,0.20);
-      background: rgba(106,166,255,0.08);
-      color: var(--text);
-      padding: 0 12px;
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-    }
+.field-guide-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(106,166,255,0.32);
+  background: rgba(106,166,255,0.14);
+  color: var(--text);
+  padding: 0 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(106,166,255,0.10);
+}
 
     .heat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     .heat-card {
@@ -417,13 +418,76 @@ HTML_TEMPLATE = Template(
       <button class="field-guide-close" type="button" onclick="closeFieldGuide()" aria-label="Close field guide">×</button>
     </div>
 
-    <div class="field-guide-body">
+        <div class="field-guide-body">
       <div class="field-guide-card">
-        <h3 class="field-guide-term apex">Apex Rise</h3>
+        <h3 class="field-guide-term whiff">IVB RAW</h3>
         <p class="field-guide-copy">
-          Fastballs with 18"+ IVB. These pitches defy gravity, staying above the hitter’s barrel. The result: elevated whiff rates, weaker vertical contact quality, and more carry-driven deception.
+          Induced Vertical Break measures how much a fastball resists gravity due to backspin. Higher IVB means the pitch stays above the barrel longer. In this terminal, 18"+ marks the elite carry threshold.
+          <br><strong>Result:</strong> Elevated whiff potential and weaker vertical contact.
         </p>
       </div>
+
+      <div class="field-guide-card">
+        <h3 class="field-guide-term whiff">IVB VS AVG</h3>
+        <p class="field-guide-copy">
+          A velo-bucket comparison showing how much a pitcher’s IVB beats or trails the league norm for that exact fastball speed band. Winning the bucket creates carry-driven deception because the ball moves better than the hitter expects for the velocity.
+          <br><strong>Result:</strong> Hidden shape advantage and increased swing-miss deception.
+        </p>
+      </div>
+
+      <div class="field-guide-card">
+        <h3 class="field-guide-term apex">APEX RISE</h3>
+        <p class="field-guide-copy">
+          The elite 18"+ IVB tier. These fastballs create the visual illusion of rise because they drop less than the hitter’s brain expects. That mismatch leads to swing-unders and pop-up contact.
+          <br><strong>Result:</strong> High whiff rate and premium carry profile.
+        </p>
+      </div>
+
+      <div class="field-guide-card">
+        <h3 class="field-guide-term dead">THE DEAD ZONE</h3>
+        <p class="field-guide-copy">
+          The 12"–15" IVB danger band. This flatter path intersects more directly with the hitter’s natural swing plane and behaves like a Barrel Magnet when shape quality is not strong enough to miss the barrel.
+          <br><strong>Result:</strong> Elevated hard contact and home-run risk.
+        </p>
+      </div>
+
+      <div class="field-guide-card">
+        <h3 class="field-guide-term whiff">WHIFF PROB</h3>
+        <p class="field-guide-copy">
+          The terminal’s bottom-line translation layer for bat-missing expectation. It converts IVB and, later, VAA into a direct swing-and-miss forecast instead of forcing the user to interpret raw physics manually.
+          <br><strong>Result:</strong> Faster identification of strikeout-friendly fastball shapes.
+          <br><br>As VAA is integrated, Whiff Prob will become the most predictive metric in the terminal for identifying elite swing-and-miss talent.
+        </p>
+      </div>
+
+      <div class="field-guide-card">
+        <h3 class="field-guide-term whiff">CLIMBERS</h3>
+        <p class="field-guide-copy">
+          A pitch-shape breakout signal. A gain of roughly +1.5" or more in IVB indicates a meaningful mechanical or shape-level change that fantasy managers should treat as actionable, not cosmetic.
+          <br><strong>Result:</strong> Early identification of emerging bat-missing arms.
+        </p>
+      </div>
+
+      <div class="field-guide-card">
+        <h3 class="field-guide-term whiff">STATUS KEY</h3>
+        <p class="field-guide-copy">
+          <strong>CLEAR:</strong> Signal Strength: High. The pitch has cleared the dangerous flat-path zone.
+          <br><strong>Result:</strong> Safer fastball shape profile.
+          <br><br><strong>COLD:</strong> Signal Strength: Danger. The pitch lacks vertical life and stays in the hitter’s path.
+          <br><strong>Result:</strong> Elevated contact quality and home-run risk.
+          <br><br><strong>MEDIUM:</strong> Signal Strength: Neutral. Bat-missing shape is present, but location or velocity still needs to carry part of the profile.
+          <br><strong>Result:</strong> Moderate whiff utility.
+          <br><br><strong>HIGH:</strong> Signal Strength: Premium. The shape profile is optimized for swing-and-miss.
+          <br><strong>Result:</strong> Strong strikeout potential.
+          <br><br><strong>LOW:</strong> Signal Strength: Weak. The shape does not independently generate enough bat-missing utility.
+          <br><strong>Result:</strong> Contact-driven outcome risk.
+        </p>
+      </div>
+
+      <div class="field-guide-note">
+        VAA remains a pending upstream layer in this version. That is why VAA currently displays as <strong>--</strong> on the cards. This will be upgraded later through upstream metric refinement and can cleanly live in a future Supabase-backed LAB table or view.
+      </div>
+    </div>
 
       <div class="field-guide-card">
         <h3 class="field-guide-term dead">The Dead Zone</h3>

@@ -95,23 +95,24 @@
     .section-badge { font-family: var(--mono); font-size: 11px; color: var(--soft); border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; padding: 7px 10px; background: rgba(255,255,255,0.02); }
     .section-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
-    .field-guide-trigger {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      height: 34px;
-      border-radius: 999px;
-      border: 1px solid rgba(106,166,255,0.20);
-      background: rgba(106,166,255,0.08);
-      color: var(--text);
-      padding: 0 12px;
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-    }
+.field-guide-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(106,166,255,0.32);
+  background: rgba(106,166,255,0.14);
+  color: var(--text);
+  padding: 0 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(106,166,255,0.10);
+}
 
     .heat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     .heat-card {
@@ -406,7 +407,7 @@
       </div>
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">2026-04-02 04:06 PM</div>
+        <div class="live-time">2026-04-03 09:14 AM</div>
       </div>
     </div>
   </div>
@@ -449,13 +450,76 @@
       <button class="field-guide-close" type="button" onclick="closeFieldGuide()" aria-label="Close field guide">×</button>
     </div>
 
-    <div class="field-guide-body">
+        <div class="field-guide-body">
       <div class="field-guide-card">
-        <h3 class="field-guide-term apex">Apex Rise</h3>
+        <h3 class="field-guide-term whiff">IVB RAW</h3>
         <p class="field-guide-copy">
-          Fastballs with 18"+ IVB. These pitches defy gravity, staying above the hitter’s barrel. The result: elevated whiff rates, weaker vertical contact quality, and more carry-driven deception.
+          Induced Vertical Break measures how much a fastball resists gravity due to backspin. Higher IVB means the pitch stays above the barrel longer. In this terminal, 18"+ marks the elite carry threshold.
+          <br><strong>Result:</strong> Elevated whiff potential and weaker vertical contact.
         </p>
       </div>
+
+      <div class="field-guide-card">
+        <h3 class="field-guide-term whiff">IVB VS AVG</h3>
+        <p class="field-guide-copy">
+          A velo-bucket comparison showing how much a pitcher’s IVB beats or trails the league norm for that exact fastball speed band. Winning the bucket creates carry-driven deception because the ball moves better than the hitter expects for the velocity.
+          <br><strong>Result:</strong> Hidden shape advantage and increased swing-miss deception.
+        </p>
+      </div>
+
+      <div class="field-guide-card">
+        <h3 class="field-guide-term apex">APEX RISE</h3>
+        <p class="field-guide-copy">
+          The elite 18"+ IVB tier. These fastballs create the visual illusion of rise because they drop less than the hitter’s brain expects. That mismatch leads to swing-unders and pop-up contact.
+          <br><strong>Result:</strong> High whiff rate and premium carry profile.
+        </p>
+      </div>
+
+      <div class="field-guide-card">
+        <h3 class="field-guide-term dead">THE DEAD ZONE</h3>
+        <p class="field-guide-copy">
+          The 12"–15" IVB danger band. This flatter path intersects more directly with the hitter’s natural swing plane and behaves like a Barrel Magnet when shape quality is not strong enough to miss the barrel.
+          <br><strong>Result:</strong> Elevated hard contact and home-run risk.
+        </p>
+      </div>
+
+      <div class="field-guide-card">
+        <h3 class="field-guide-term whiff">WHIFF PROB</h3>
+        <p class="field-guide-copy">
+          The terminal’s bottom-line translation layer for bat-missing expectation. It converts IVB and, later, VAA into a direct swing-and-miss forecast instead of forcing the user to interpret raw physics manually.
+          <br><strong>Result:</strong> Faster identification of strikeout-friendly fastball shapes.
+          <br><br>As VAA is integrated, Whiff Prob will become the most predictive metric in the terminal for identifying elite swing-and-miss talent.
+        </p>
+      </div>
+
+      <div class="field-guide-card">
+        <h3 class="field-guide-term whiff">CLIMBERS</h3>
+        <p class="field-guide-copy">
+          A pitch-shape breakout signal. A gain of roughly +1.5" or more in IVB indicates a meaningful mechanical or shape-level change that fantasy managers should treat as actionable, not cosmetic.
+          <br><strong>Result:</strong> Early identification of emerging bat-missing arms.
+        </p>
+      </div>
+
+      <div class="field-guide-card">
+        <h3 class="field-guide-term whiff">STATUS KEY</h3>
+        <p class="field-guide-copy">
+          <strong>CLEAR:</strong> Signal Strength: High. The pitch has cleared the dangerous flat-path zone.
+          <br><strong>Result:</strong> Safer fastball shape profile.
+          <br><br><strong>COLD:</strong> Signal Strength: Danger. The pitch lacks vertical life and stays in the hitter’s path.
+          <br><strong>Result:</strong> Elevated contact quality and home-run risk.
+          <br><br><strong>MEDIUM:</strong> Signal Strength: Neutral. Bat-missing shape is present, but location or velocity still needs to carry part of the profile.
+          <br><strong>Result:</strong> Moderate whiff utility.
+          <br><br><strong>HIGH:</strong> Signal Strength: Premium. The shape profile is optimized for swing-and-miss.
+          <br><strong>Result:</strong> Strong strikeout potential.
+          <br><br><strong>LOW:</strong> Signal Strength: Weak. The shape does not independently generate enough bat-missing utility.
+          <br><strong>Result:</strong> Contact-driven outcome risk.
+        </p>
+      </div>
+
+      <div class="field-guide-note">
+        VAA remains a pending upstream layer in this version. That is why VAA currently displays as <strong>--</strong> on the cards. This will be upgraded later through upstream metric refinement and can cleanly live in a future Supabase-backed LAB table or view.
+      </div>
+    </div>
 
       <div class="field-guide-card">
         <h3 class="field-guide-term dead">The Dead Zone</h3>
@@ -494,12 +558,12 @@
       </article>
       <article class="metric-card">
         <div class="metric-label">Tracked Arms</div>
-        <div class="metric-value">388</div>
+        <div class="metric-value">383</div>
         <div class="metric-note">Pitchers meeting the fastball sample threshold in the last 7 days.</div>
       </article>
       <article class="metric-card">
         <div class="metric-label">Dead Zone Count</div>
-        <div class="metric-value">317</div>
+        <div class="metric-value">308</div>
         <div class="metric-note">Pitchers sitting in the 12"–15" carry band, where contact quality risk rises.</div>
       </article>
     </section>
@@ -573,7 +637,7 @@
               </div>
               <div class="heat-value-box">
                 <div class="heat-value-label">IVB vs Avg</div>
-                <div class="heat-value">+8.2"</div>
+                <div class="heat-value">+8.1"</div>
               </div>
               <div class="heat-value-box">
                 <div class="heat-value-label">VAA</div>
@@ -647,7 +711,7 @@
               </div>
               <div class="heat-value-box">
                 <div class="heat-value-label">IVB vs Avg</div>
-                <div class="heat-value">+7.3"</div>
+                <div class="heat-value">+7.1"</div>
               </div>
               <div class="heat-value-box">
                 <div class="heat-value-label">VAA</div>
@@ -686,44 +750,7 @@
               </div>
               <div class="heat-value-box">
                 <div class="heat-value-label">IVB vs Avg</div>
-                <div class="heat-value">+7.0"</div>
-              </div>
-              <div class="heat-value-box">
-                <div class="heat-value-label">VAA</div>
-                <div class="heat-value">--</div>
-              </div>
-              <div class="heat-value-box">
-                <div class="heat-value-label">Whiff Prob</div>
-                <div class="heat-value">MEDIUM</div>
-              </div>
-              <div class="heat-value-box">
-                <div class="heat-value-label">Dead Zone</div>
-                <div class="heat-value">CLEAR</div>
-              </div>
-            </div>
-
-            
-            <div class="heat-brief">Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
-          </article>
-          
-          <article class="heat-card hot">
-            <div class="heat-rank">#6 // Apex Carry</div>
-            <h3 class="heat-name">Sabrowski, Erik</h3>
-            <div class="heat-meta">SEA // 94-95 mph</div>
-
-            <div class="heat-header-tags">
-              <span class="heat-band">HOT // APEX RISE</span>
-              
-            </div>
-
-            <div class="heat-values">
-              <div class="heat-value-box">
-                <div class="heat-value-label">IVB Raw</div>
-                <div class="heat-value">20.2"</div>
-              </div>
-              <div class="heat-value-box">
-                <div class="heat-value-label">IVB vs Avg</div>
-                <div class="heat-value">+6.8"</div>
+                <div class="heat-value">+6.9"</div>
               </div>
               <div class="heat-value-box">
                 <div class="heat-value-label">VAA</div>
@@ -744,7 +771,81 @@
           </article>
           
           <article class="heat-card neutral">
-            <div class="heat-rank">#7 // Standard Carry</div>
+            <div class="heat-rank">#6 // Standard Carry</div>
+            <h3 class="heat-name">Myers, Tobias</h3>
+            <div class="heat-meta">STL // 90-91 mph</div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">NEUTRAL // MLB RANGE</span>
+              
+            </div>
+
+            <div class="heat-values">
+              <div class="heat-value-box">
+                <div class="heat-value-label">IVB Raw</div>
+                <div class="heat-value">17.7"</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">IVB vs Avg</div>
+                <div class="heat-value">+6.8"</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">VAA</div>
+                <div class="heat-value">--</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">Whiff Prob</div>
+                <div class="heat-value">MEDIUM</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">Dead Zone</div>
+                <div class="heat-value">COLD</div>
+              </div>
+            </div>
+
+            
+            <div class="heat-brief">Movement reads in the standard carry band. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
+          </article>
+          
+          <article class="heat-card hot">
+            <div class="heat-rank">#7 // Apex Carry</div>
+            <h3 class="heat-name">Pivetta, Nick</h3>
+            <div class="heat-meta">SD // 94-95 mph</div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">HOT // APEX RISE</span>
+              
+            </div>
+
+            <div class="heat-values">
+              <div class="heat-value-box">
+                <div class="heat-value-label">IVB Raw</div>
+                <div class="heat-value">19.9"</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">IVB vs Avg</div>
+                <div class="heat-value">+6.6"</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">VAA</div>
+                <div class="heat-value">--</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">Whiff Prob</div>
+                <div class="heat-value">MEDIUM</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">Dead Zone</div>
+                <div class="heat-value">COLD</div>
+              </div>
+            </div>
+
+            
+            <div class="heat-brief">Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
+          </article>
+          
+          <article class="heat-card neutral">
+            <div class="heat-rank">#8 // Standard Carry</div>
             <h3 class="heat-name">Ober, Bailey</h3>
             <div class="heat-meta">BAL // 88-89 mph</div>
 
@@ -760,7 +861,7 @@
               </div>
               <div class="heat-value-box">
                 <div class="heat-value-label">IVB vs Avg</div>
-                <div class="heat-value">+6.7"</div>
+                <div class="heat-value">+6.6"</div>
               </div>
               <div class="heat-value-box">
                 <div class="heat-value-label">VAA</div>
@@ -781,81 +882,7 @@
           </article>
           
           <article class="heat-card hot">
-            <div class="heat-rank">#8 // Apex Carry</div>
-            <h3 class="heat-name">Pivetta, Nick</h3>
-            <div class="heat-meta">SD // 94-95 mph</div>
-
-            <div class="heat-header-tags">
-              <span class="heat-band">HOT // APEX RISE</span>
-              
-            </div>
-
-            <div class="heat-values">
-              <div class="heat-value-box">
-                <div class="heat-value-label">IVB Raw</div>
-                <div class="heat-value">19.9"</div>
-              </div>
-              <div class="heat-value-box">
-                <div class="heat-value-label">IVB vs Avg</div>
-                <div class="heat-value">+6.7"</div>
-              </div>
-              <div class="heat-value-box">
-                <div class="heat-value-label">VAA</div>
-                <div class="heat-value">--</div>
-              </div>
-              <div class="heat-value-box">
-                <div class="heat-value-label">Whiff Prob</div>
-                <div class="heat-value">MEDIUM</div>
-              </div>
-              <div class="heat-value-box">
-                <div class="heat-value-label">Dead Zone</div>
-                <div class="heat-value">COLD</div>
-              </div>
-            </div>
-
-            
-            <div class="heat-brief">Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
-          </article>
-          
-          <article class="heat-card neutral">
-            <div class="heat-rank">#9 // Standard Carry</div>
-            <h3 class="heat-name">Myers, Tobias</h3>
-            <div class="heat-meta">NYM // 92-93 mph</div>
-
-            <div class="heat-header-tags">
-              <span class="heat-band">NEUTRAL // MLB RANGE</span>
-              
-            </div>
-
-            <div class="heat-values">
-              <div class="heat-value-box">
-                <div class="heat-value-label">IVB Raw</div>
-                <div class="heat-value">17.1"</div>
-              </div>
-              <div class="heat-value-box">
-                <div class="heat-value-label">IVB vs Avg</div>
-                <div class="heat-value">+6.7"</div>
-              </div>
-              <div class="heat-value-box">
-                <div class="heat-value-label">VAA</div>
-                <div class="heat-value">--</div>
-              </div>
-              <div class="heat-value-box">
-                <div class="heat-value-label">Whiff Prob</div>
-                <div class="heat-value">MEDIUM</div>
-              </div>
-              <div class="heat-value-box">
-                <div class="heat-value-label">Dead Zone</div>
-                <div class="heat-value">COLD</div>
-              </div>
-            </div>
-
-            
-            <div class="heat-brief">Movement reads in the standard carry band. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
-          </article>
-          
-          <article class="heat-card hot">
-            <div class="heat-rank">#10 // Apex Carry</div>
+            <div class="heat-rank">#9 // Apex Carry</div>
             <h3 class="heat-name">Dreyer, Jack</h3>
             <div class="heat-meta">LAD // 92-93 mph</div>
 
@@ -871,7 +898,44 @@
               </div>
               <div class="heat-value-box">
                 <div class="heat-value-label">IVB vs Avg</div>
-                <div class="heat-value">+6.6"</div>
+                <div class="heat-value">+6.5"</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">VAA</div>
+                <div class="heat-value">--</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">Whiff Prob</div>
+                <div class="heat-value">MEDIUM</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">Dead Zone</div>
+                <div class="heat-value">CLEAR</div>
+              </div>
+            </div>
+
+            
+            <div class="heat-brief">Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
+          </article>
+          
+          <article class="heat-card hot">
+            <div class="heat-rank">#10 // Apex Carry</div>
+            <h3 class="heat-name">Pomeranz, Drew</h3>
+            <div class="heat-meta">HOU // 92-93 mph</div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">HOT // APEX RISE</span>
+              
+            </div>
+
+            <div class="heat-values">
+              <div class="heat-value-box">
+                <div class="heat-value-label">IVB Raw</div>
+                <div class="heat-value">19.5"</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">IVB vs Avg</div>
+                <div class="heat-value">+6.4"</div>
               </div>
               <div class="heat-value-box">
                 <div class="heat-value-label">VAA</div>
@@ -893,6 +957,43 @@
           
           <article class="heat-card hot">
             <div class="heat-rank">#11 // Apex Carry</div>
+            <h3 class="heat-name">Sabrowski, Erik</h3>
+            <div class="heat-meta">SEA // 94-95 mph</div>
+
+            <div class="heat-header-tags">
+              <span class="heat-band">HOT // APEX RISE</span>
+              
+            </div>
+
+            <div class="heat-values">
+              <div class="heat-value-box">
+                <div class="heat-value-label">IVB Raw</div>
+                <div class="heat-value">19.9"</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">IVB vs Avg</div>
+                <div class="heat-value">+6.4"</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">VAA</div>
+                <div class="heat-value">--</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">Whiff Prob</div>
+                <div class="heat-value">MEDIUM</div>
+              </div>
+              <div class="heat-value-box">
+                <div class="heat-value-label">Dead Zone</div>
+                <div class="heat-value">CLEAR</div>
+              </div>
+            </div>
+
+            
+            <div class="heat-brief">Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
+          </article>
+          
+          <article class="heat-card hot">
+            <div class="heat-rank">#12 // Apex Carry</div>
             <h3 class="heat-name">Latz, Jacob</h3>
             <div class="heat-meta">PHI // 92-93 mph</div>
 
@@ -908,7 +1009,7 @@
               </div>
               <div class="heat-value-box">
                 <div class="heat-value-label">IVB vs Avg</div>
-                <div class="heat-value">+6.3"</div>
+                <div class="heat-value">+6.2"</div>
               </div>
               <div class="heat-value-box">
                 <div class="heat-value-label">VAA</div>
@@ -921,43 +1022,6 @@
               <div class="heat-value-box">
                 <div class="heat-value-label">Dead Zone</div>
                 <div class="heat-value">COLD</div>
-              </div>
-            </div>
-
-            
-            <div class="heat-brief">Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. VAA layer pending full upstream calculation.</div>
-          </article>
-          
-          <article class="heat-card hot">
-            <div class="heat-rank">#12 // Apex Carry</div>
-            <h3 class="heat-name">Bachar, Lake</h3>
-            <div class="heat-meta">MIA // 94-95 mph</div>
-
-            <div class="heat-header-tags">
-              <span class="heat-band">HOT // APEX RISE</span>
-              
-            </div>
-
-            <div class="heat-values">
-              <div class="heat-value-box">
-                <div class="heat-value-label">IVB Raw</div>
-                <div class="heat-value">19.8"</div>
-              </div>
-              <div class="heat-value-box">
-                <div class="heat-value-label">IVB vs Avg</div>
-                <div class="heat-value">+6.3"</div>
-              </div>
-              <div class="heat-value-box">
-                <div class="heat-value-label">VAA</div>
-                <div class="heat-value">--</div>
-              </div>
-              <div class="heat-value-box">
-                <div class="heat-value-label">Whiff Prob</div>
-                <div class="heat-value">MEDIUM</div>
-              </div>
-              <div class="heat-value-box">
-                <div class="heat-value-label">Dead Zone</div>
-                <div class="heat-value">CLEAR</div>
               </div>
             </div>
 
@@ -990,33 +1054,33 @@
           </div>
           
           <div class="leader-row">
-            <div class="leader-name">Hicks, Jordan</div>
-            <div class="leader-sub">MIL // Last 3d vs prior window</div>
-            <div class="leader-delta">+4.1"</div>
+            <div class="leader-name">Speier, Gabe</div>
+            <div class="leader-sub">SEA // Last 3d vs prior window</div>
+            <div class="leader-delta">+5.4"</div>
           </div>
           
           <div class="leader-row">
-            <div class="leader-name">Rodriguez, Bradgley</div>
-            <div class="leader-sub">SD // Last 3d vs prior window</div>
-            <div class="leader-delta">+4.0"</div>
-          </div>
-          
-          <div class="leader-row">
-            <div class="leader-name">Topa, Justin</div>
-            <div class="leader-sub">BAL // Last 3d vs prior window</div>
-            <div class="leader-delta">+3.6"</div>
+            <div class="leader-name">Strahm, Matt</div>
+            <div class="leader-sub">ATL // Last 3d vs prior window</div>
+            <div class="leader-delta">+4.8"</div>
           </div>
           
           <div class="leader-row">
             <div class="leader-name">Ross, Joe</div>
             <div class="leader-sub">LAD // Last 3d vs prior window</div>
-            <div class="leader-delta">+3.6"</div>
+            <div class="leader-delta">+4.8"</div>
           </div>
           
           <div class="leader-row">
-            <div class="leader-name">Fairbanks, Pete</div>
-            <div class="leader-sub">MIA // Last 3d vs prior window</div>
-            <div class="leader-delta">+3.5"</div>
+            <div class="leader-name">Topa, Justin</div>
+            <div class="leader-sub">BAL // Last 3d vs prior window</div>
+            <div class="leader-delta">+4.5"</div>
+          </div>
+          
+          <div class="leader-row">
+            <div class="leader-name">Anderson, Grant</div>
+            <div class="leader-sub">MIL // Last 3d vs prior window</div>
+            <div class="leader-delta">+4.4"</div>
           </div>
           
         </div>
