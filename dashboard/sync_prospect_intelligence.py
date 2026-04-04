@@ -52,7 +52,6 @@ def fetch_source_frame() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
 
     return base_df, hitters, pitchers
 
-
 def build_prospect_intelligence_rows(
     base_df: pd.DataFrame,
     hitters: pd.DataFrame,
@@ -85,6 +84,8 @@ def build_prospect_intelligence_rows(
 
     rows: list[dict] = []
 
+    snapshot_ts = pd.Timestamp(snapshot_date)
+
     for _, row in base_df.iterrows():
         player_id = row.get("player_id") or row.get("mlbam_id") or row.get("mlb_id")
         try:
@@ -116,6 +117,17 @@ def build_prospect_intelligence_rows(
         pa = None
         trend_points = None
         trend_glow = False
+
+        source_date = row.get("week_start")
+        source_ts = pd.to_datetime(source_date, errors="coerce")
+        data_freshness_hours = None
+        latency_warning = False
+
+        if pd.notna(source_ts):
+            freshness_hours = (snapshot_ts - source_ts).total_seconds() / 3600.0
+            if freshness_hours >= 0:
+                data_freshness_hours = round(freshness_hours, 1)
+                latency_warning = data_freshness_hours > 48
 
         if hitter_row is not None:
             signal_type = "Hitter"
@@ -230,8 +242,8 @@ def build_prospect_intelligence_rows(
                 "edge_score": as_float_or_none(edge_score),
                 "score_version": SCORE_VERSION,
                 "source_badge": SOURCE_BADGE,
-                "data_freshness_hours": None,
-                "latency_warning": False,
+                "data_freshness_hours": as_float_or_none(data_freshness_hours),
+                "latency_warning": bool(latency_warning),
                 "signal_archetype": signal_archetype,
                 "is_recent_arrival": False,
                 "arrival_type": None,
@@ -252,7 +264,6 @@ def build_prospect_intelligence_rows(
         )
 
     return rows
-
 
 def upsert_rows(rows: list[dict]) -> None:
     if not rows:

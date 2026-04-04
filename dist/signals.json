@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-02T12:03:53.573606",
+  "generated_at": "2026-04-04T11:13:20.901951",
   "top_pitchers": [
     {
       "player_name": "William Fleming",
@@ -7,11 +7,11 @@
       "edge_score": 43.8,
       "metric_1_label": "K/BB",
       "metric_1": "4.50",
-      "metric_2_label": "K",
-      "metric_2": "9",
-      "metric_3_label": "BB",
-      "metric_3": "2",
-      "why": "K/BB 4.50, 9 K, 2 BB over 39 BF."
+      "metric_2_label": "K%",
+      "metric_2": "23.1%",
+      "metric_3_label": "BB%",
+      "metric_3": "5.1%",
+      "why": "William Fleming's 43.8 Edge Score is driven by K/BB of 4.50, K rate proxy of 23.1%, and BB rate proxy of 5.1%."
     }
   ],
   "top_hitters": [
@@ -23,9 +23,9 @@
       "metric_1": "0.300",
       "metric_2_label": "K/BB",
       "metric_2": "0.80",
-      "metric_3_label": "HR",
-      "metric_3": "2",
-      "why": "ISO 0.300, HR 2, BB 5 vs K 4 over 26 PA."
+      "metric_3_label": "BB%",
+      "metric_3": "19.2%",
+      "why": "Spencer Packard's 79.7 Edge Score is driven by ISO of 0.300, K/BB of 0.80, and BB rate of 19.2%."
     },
     {
       "player_name": "Christian Franklin",
@@ -35,9 +35,9 @@
       "metric_1": "0.269",
       "metric_2_label": "K/BB",
       "metric_2": "1.33",
-      "metric_3_label": "HR",
-      "metric_3": "1",
-      "why": "ISO 0.269, HR 1, BB 6 vs K 8 over 33 PA."
+      "metric_3_label": "BB%",
+      "metric_3": "18.2%",
+      "why": "Christian Franklin's 70.5 Edge Score is driven by ISO of 0.269, K/BB of 1.33, and BB rate of 18.2%."
     },
     {
       "player_name": "Jonathon Long",
@@ -47,9 +47,9 @@
       "metric_1": "0.000",
       "metric_2_label": "K/BB",
       "metric_2": "0.25",
-      "metric_3_label": "HR",
-      "metric_3": "0",
-      "why": "ISO 0.000, HR 0, BB 4 vs K 1 over 30 PA."
+      "metric_3_label": "BB%",
+      "metric_3": "13.3%",
+      "why": "Jonathon Long's 49.3 Edge Score is driven by ISO of 0.000, K/BB of 0.25, and BB rate of 13.3%."
     },
     {
       "player_name": "T.j. Rumfield",
@@ -59,9 +59,9 @@
       "metric_1": "0.261",
       "metric_2_label": "K/BB",
       "metric_2": "3.00",
-      "metric_3_label": "HR",
-      "metric_3": "2",
-      "why": "ISO 0.261, HR 2, BB 2 vs K 6 over 25 PA."
+      "metric_3_label": "BB%",
+      "metric_3": "8.0%",
+      "why": "T.J. Rumfield's 44.9 Edge Score is driven by ISO of 0.261, K/BB of 3.00, and BB rate of 8.0%."
     },
     {
       "player_name": "Jesus Rodriguez",
@@ -71,9 +71,9 @@
       "metric_1": "0.000",
       "metric_2_label": "K/BB",
       "metric_2": "1.67",
-      "metric_3_label": "HR",
-      "metric_3": "0",
-      "why": "ISO 0.000, HR 0, BB 3 vs K 5 over 27 PA."
+      "metric_3_label": "BB%",
+      "metric_3": "11.1%",
+      "why": "Jesus Rodriguez's 28.0 Edge Score is driven by ISO of 0.000, K/BB of 1.67, and BB rate of 11.1%."
     }
   ]
 }
