@@ -818,17 +818,18 @@ HTML_TEMPLATE = Template(
       </div>
     </section>
 
-    <section class="section-card">
-           <div class="tabs">
-        <button type="button" class="tab active" id="tab-btn-72h">72 HR</button>
-        <button type="button" class="tab" id="tab-btn-14d">14 DAY</button>
+   <section class="section-card">
+      <div class="tabs" role="tablist" aria-label="Promotion watch windows">
+        <button type="button" class="tab active" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
+        <button type="button" class="tab" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
       </div>
 
-      {% if total_signals == 0 %}
+            {% if total_signals == 0 %}
       <div class="placeholder">
         No live AAA promotion-watch signals available yet.
       </div>
       {% else %}
+      <div id="tab-72h">
       <section class="signal-grid">
         <div class="section">
           <div class="section-head">
@@ -973,7 +974,8 @@ HTML_TEMPLATE = Template(
               {% endfor %}
             </div>
           </div>
-        </section>
+                </section>
+        </div>
 
         <div id="tab-14d" style="display:none;">
           <section class="signal-grid">
@@ -1128,36 +1130,26 @@ HTML_TEMPLATE = Template(
     {{ footer_html | safe }}
   </div>
 
-     <script src="/player-search.js"></script>
+         <script src="/player-search.js"></script>
     <script>
-      (function () {
-        const btn72 = document.getElementById("tab-btn-72h");
-        const btn14 = document.getElementById("tab-btn-14d");
-        const tab72 = document.getElementById("tab-72h");
-        const tab14 = document.getElementById("tab-14d");
-
-        if (!btn72 || !btn14 || !tab72 || !tab14) return;
-
-        function activateTab(which) {
-          const show72 = which === "72h";
-
-          tab72.style.display = show72 ? "block" : "none";
-          tab14.style.display = show72 ? "none" : "block";
-
-          btn72.classList.toggle("active", show72);
-          btn14.classList.toggle("active", !show72);
-        }
-
-        btn72.addEventListener("click", function () {
-          activateTab("72h");
+      function switchPromotionTab(panelId, buttonEl) {
+        document.querySelectorAll("#tab-72h, #tab-14d").forEach((panel) => {
+          panel.style.display = "none";
         });
 
-        btn14.addEventListener("click", function () {
-          activateTab("14d");
+        document.querySelectorAll(".tabs .tab").forEach((btn) => {
+          btn.classList.remove("active");
         });
 
-        activateTab("72h");
-      })();
+        const activePanel = document.getElementById(panelId);
+        if (activePanel) activePanel.style.display = "block";
+        if (buttonEl) buttonEl.classList.add("active");
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const defaultTab = document.getElementById("tab-72h");
+        if (defaultTab) defaultTab.style.display = "block";
+      });
     </script>
 </body>
 </html>
