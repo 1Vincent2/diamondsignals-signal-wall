@@ -1,5 +1,5 @@
 [build]
-  command = "python dashboard/build_all.py"
+  command = "python3 dashboard/build_all.py"
   publish = "dist"
   edge_functions = "netlify/request-gates"
 
