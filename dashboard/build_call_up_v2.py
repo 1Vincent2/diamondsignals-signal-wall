@@ -1,4 +1,25 @@
-<!doctype html>
+from __future__ import annotations
+
+from datetime import datetime
+from pathlib import Path
+
+from jinja2 import Template
+
+BASE_DIR = Path(__file__).resolve().parent
+REPO_ROOT = BASE_DIR.parent
+DIST_DIR = REPO_ROOT / "dist"
+CALL_UP_DIR = DIST_DIR / "typical-call-up"
+TEMPLATES_DIR = BASE_DIR / "templates"
+
+NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
+SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
+FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
+SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
+
+TIMEZONE_LABEL = "America/New_York"
+
+HTML_TEMPLATE = Template(
+    r"""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -237,45 +258,7 @@
       background: rgba(255,255,255,0.02);
     }
 
-    .topnav { border-top: 1px solid rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); }
-.topnav-inner { width: min(1180px, calc(100% - 24px)); margin: 0 auto; display: flex; align-items: center; gap: 10px; overflow-x: auto; white-space: nowrap; padding: 10px 0; scrollbar-width: none; }
-.topnav-inner::-webkit-scrollbar { display: none; }
-.topnav-links { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; }
-.topnav-link { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--soft); padding: 8px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); transition: opacity 0.18s ease, transform 0.18s ease, border-color 0.18s ease, color 0.18s ease; }
-.topnav-link:visited { color: var(--soft); }
-.topnav-link:hover { opacity: 1; transform: translateY(-1px); border-color: rgba(255,255,255,0.12); color: var(--text); }
-.topnav-link.active { color: var(--text); border-color: rgba(182,255,0,0.20); box-shadow: 0 0 8px rgba(182,255,0,0.08); }
-.topnav-link.active:visited { color: var(--text); }
-.topnav-tag { color: var(--lime-hot); }
-
-.search-strip { border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); }
-.search-strip-inner { width: min(1180px, calc(100% - 24px)); margin: 0 auto; padding: 12px 0 10px; display: flex; justify-content: flex-end; }
-.player-search { position: relative; width: min(420px, 100%); }
-.player-search-input { width: 100%; height: 40px; border-radius: 999px; border: 1px solid rgba(182,255,0,0.22); background: rgba(255,255,255,0.07); color: var(--text); padding: 0 16px; font-family: var(--sans); font-size: 14px; outline: none; box-shadow: 0 0 10px rgba(182,255,0,0.05); }
-.player-search-input::placeholder { color: rgba(255,255,255,0.50); }
-.player-search-input:focus { border-color: rgba(182,255,0,0.45); background: rgba(255,255,255,0.09); box-shadow: 0 0 0 3px rgba(182,255,0,0.10), 0 0 12px rgba(182,255,0,0.12); }
-.player-search-results { position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 70; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; background: linear-gradient(180deg, #121212 0%, #080808 100%); box-shadow: 0 14px 34px rgba(0,0,0,0.34); overflow: hidden; }
-.player-search-result { display: grid; grid-template-columns: 180px 1fr; gap: 12px; align-items: center; padding: 0; text-decoration: none; color: var(--text); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02); }
-.player-search-result:visited { color: var(--text); }
-.player-search-result:last-child { border-bottom: 0; }
-.player-search-result:hover, .player-search-result.active { background: rgba(255,255,255,0.05); }
-.player-search-avatar { width: 180px; height: 180px; object-fit: cover; display: block; background: rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.06); }
-.player-search-meta { min-width: 0; padding: 14px 14px 14px 0; }
-.player-search-name { font-size: 16px; font-weight: 800; line-height: 1.1; color: var(--text); text-decoration: none; }
-.player-search-sub { margin-top: 6px; font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.06em; }
-.player-search-empty, .player-search-loading, .player-search-error { padding: 12px 14px; font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.08em; }
-
-.footer { padding: 16px 4px 0; color: var(--muted); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
-
-@media (max-width: 640px) {
-  .topnav-inner, .search-strip-inner { width: min(100%, calc(100% - 16px)); }
-  .search-strip-inner { justify-content: stretch; }
-  .player-search { width: 100%; }
-  .player-search-input { height: 36px; font-size: 12px; }
-  .player-search-result { grid-template-columns: 120px 1fr; }
-  .player-search-avatar { width: 120px; height: 120px; }
-}
-
+    {{ shell_styles | safe }}
 
     @media (max-width: 900px) {
       .hero {
@@ -315,38 +298,13 @@
       </div>
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">2026-04-07 11:22 AM</div>
+        <div class="live-time">{{ generated_at }}</div>
       </div>
     </div>
   </div>
 
-  <div class="topnav">
-  <div class="topnav-inner">
-    <div class="topnav-links">
-      <a class="topnav-link " href="/"><span class="topnav-tag">[ LIVE ]</span> Signal Wall</a>
-      <a class="topnav-link active" href="/typical-call-up"><span class="topnav-tag">[ SCOUT ]</span> AAA/AA Promotion Watch</a>
-      <a class="topnav-link " href="/ivb-heat-map"><span class="topnav-tag">[ LAB ]</span> IVB Heat Map</a>
-      <a class="topnav-link " href="/hidden-gems"><span class="topnav-tag">[ EDGE ]</span> Hidden Gems Pipeline</a>
-      <a class="topnav-link" href="http://localhost:3000/terminal"><span class="topnav-tag">[ TERMINAL ]</span> Roster Terminal</a>
-      <a class="topnav-link" href="https://diamondsignals.ai"><span class="topnav-tag">[ SITE ]</span> Back to Main Site</a>
-    </div>
-  </div>
-</div>
-  <div class="search-strip">
-  <div class="search-strip-inner">
-    <div class="player-search" id="playerSearch">
-      <input
-        type="text"
-        id="playerSearchInput"
-        class="player-search-input"
-        placeholder=">_ EXECUTE PLAYER SEARCH..."
-        autocomplete="off"
-        aria-label="Search players"
-      />
-      <div class="player-search-results" id="playerSearchResults" hidden></div>
-    </div>
-  </div>
-</div>
+  {{ nav_html | safe }}
+  {{ search_html | safe }}
 
   <div class="app">
     <section class="hero">
@@ -370,7 +328,7 @@
         </div>
         <div>
           <div class="summary-label">Timezone</div>
-          <div class="summary-value">America/New_York</div>
+          <div class="summary-value">{{ timezone_label }}</div>
         </div>
       </div>
     </section>
@@ -388,7 +346,29 @@
       </div>
     </section>
 
-    
+    {{ footer_html | safe }}
   </div>
 </body>
 </html>
+"""
+)
+
+def render_html() -> str:
+    return HTML_TEMPLATE.render(
+        generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
+        timezone_label=TIMEZONE_LABEL,
+        nav_html=Template(NAV_TEMPLATE).render(active_nav="promotion_watch"),
+        search_html=SEARCH_TEMPLATE,
+        footer_html=FOOTER_TEMPLATE,
+        shell_styles=SHELL_STYLES_TEMPLATE,
+    )
+
+def main() -> None:
+    CALL_UP_DIR.mkdir(parents=True, exist_ok=True)
+    html = render_html()
+    output_path = CALL_UP_DIR / "index.html"
+    output_path.write_text(html, encoding="utf-8")
+    print(f"Wrote {output_path}")
+
+if __name__ == "__main__":
+    main()
