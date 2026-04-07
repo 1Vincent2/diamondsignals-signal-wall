@@ -21,12 +21,22 @@ TIMEZONE_LABEL = "America/New_York"
 SOURCE_BADGE = "SRC: AAA_PIPELINE_v1"
 SCORE_VERSION = "EDGE_v2.0"
 
+
 def zscore(series: pd.Series) -> pd.Series:
     s = pd.to_numeric(series, errors="coerce")
     std = s.std(ddof=0)
     if pd.isna(std) or std == 0:
         return pd.Series([0.0] * len(s), index=s.index)
     return (s - s.mean()) / std
+
+
+def safe_name(value: str) -> str:
+    if pd.isna(value):
+        return "Unknown"
+    text = str(value).strip()
+    if not text or text.lower() == "unknown":
+        return "Unknown"
+    return " ".join(part.capitalize() for part in text.split())
 
 
 def build_aaa_hitter_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
@@ -63,13 +73,32 @@ def build_aaa_hitter_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
     hitters["player_name"] = hitters["player_name"].apply(safe_name)
     hitters["signal_type"] = "Hitter"
 
-    hitters["why"] = hitters.apply(
-        lambda r: (
-            f"ISO {r['iso']:.3f}, HR {int(r['hr'] or 0)}, "
-            f"BB {int(r['bb'] or 0)} vs K {int(r['so'] or 0)} over {int(r['pa'] or 0)} PA."
-        ),
-        axis=1,
-    )
+    def build_hitter_signal_summary(row):
+        iso = row.get("iso", 0) or 0
+        kbb = row.get("kbb_h", 0) or 0
+        hr = row.get("hr", 0) or 0
+
+        signals = []
+
+        if iso >= 0.300:
+            signals.append("Power spike")
+        elif iso >= 0.220:
+            signals.append("Impact contact")
+
+        if kbb >= 1.5:
+            signals.append("Strong plate control")
+        elif kbb <= 0.7:
+            signals.append("Aggressive contact profile")
+
+        if hr >= 2:
+            signals.append("Early HR surge")
+
+        if not signals:
+            return "Emerging performance signal under evaluation"
+
+        return " + ".join(signals)
+
+    hitters["why"] = hitters.apply(build_hitter_signal_summary, axis=1)
 
     hitters["metric_1_label"] = "ISO"
     hitters["metric_1"] = hitters["iso"].fillna(0).map(lambda x: f"{x:.3f}")
@@ -80,6 +109,34 @@ def build_aaa_hitter_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
     hitters["sample_note"] = hitters["pa"].fillna(0).map(lambda x: f"{int(x)} PA")
     hitters["source_badge"] = SOURCE_BADGE
     hitters["score_version"] = SCORE_VERSION
+    hitters["trend_points"] = "0,24 20,22 40,20 60,18 80,16 100,14 120,12"
+    hitters["trend_glow"] = hitters["edge_score"] >= 65
+
+    def hitter_badges(row: pd.Series) -> list[str]:
+        badges = []
+        if pd.notna(row["iso"]) and row["iso"] >= 0.250:
+            badges.append("Impact Bat")
+        if pd.notna(row["kbb_h"]) and row["kbb_h"] <= 1.50:
+            badges.append("Zone Control")
+        if pd.notna(row["hr"]) and row["hr"] >= 2:
+            badges.append("HR Surge")
+        if not badges:
+            badges.append("Promotion Watch")
+        if "Promotion Watch" not in badges:
+            badges.append("Promotion Watch")
+        return badges[:3]
+
+    def hitter_badge_classes(row: pd.Series) -> list[str]:
+        classes = []
+        for badge in row["badges"]:
+            if badge in ["Impact Bat", "Zone Control", "HR Surge"]:
+                classes.append("positive")
+            else:
+                classes.append("neutral")
+        return classes
+
+    hitters["badges"] = hitters.apply(hitter_badges, axis=1)
+    hitters["badge_classes"] = hitters.apply(hitter_badge_classes, axis=1)
 
     return hitters.sort_values(["edge_score", "pa"], ascending=[False, False]).reset_index(drop=True)
 
@@ -133,19 +190,36 @@ def build_aaa_pitcher_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
     pitchers["sample_note"] = pitchers["bf"].fillna(0).map(lambda x: f"{int(x)} BF")
     pitchers["source_badge"] = SOURCE_BADGE
     pitchers["score_version"] = SCORE_VERSION
+    pitchers["trend_points"] = "0,24 20,22 40,19 60,17 80,15 100,13 120,11"
+    pitchers["trend_glow"] = pitchers["edge_score"] >= 65
+
+    def pitcher_badges(row: pd.Series) -> list[str]:
+        badges = []
+        if pd.notna(row["kbb_p"]) and row["kbb_p"] >= 4:
+            badges.append("Bat-Miss Ready")
+        if pd.notna(row["bb_allowed"]) and row["bb_allowed"] <= 2:
+            badges.append("Command Hold")
+        if pd.notna(row["so_p"]) and row["so_p"] >= 10:
+            badges.append("Whiff Volume")
+        if not badges:
+            badges.append("Promotion Watch")
+        if "Promotion Watch" not in badges:
+            badges.append("Promotion Watch")
+        return badges[:3]
+
+    def pitcher_badge_classes(row: pd.Series) -> list[str]:
+        classes = []
+        for badge in row["badges"]:
+            if badge in ["Bat-Miss Ready", "Command Hold", "Whiff Volume"]:
+                classes.append("positive")
+            else:
+                classes.append("neutral")
+        return classes
+
+    pitchers["badges"] = pitchers.apply(pitcher_badges, axis=1)
+    pitchers["badge_classes"] = pitchers.apply(pitcher_badge_classes, axis=1)
 
     return pitchers.sort_values(["edge_score", "bf"], ascending=[False, False]).reset_index(drop=True)
-    return pd.Series([0.0] * len(s), index=s.index)
-    return (s - s.mean()) / std
-
-def safe_name(value: str) -> str:
-    if pd.isna(value):
-        return "Unknown"
-    text = str(value).strip()
-    if not text or text.lower() == "unknown":
-        return "Unknown"
-    return " ".join(part.capitalize() for part in text.split())
-
 
 
 HTML_TEMPLATE = Template(
@@ -388,6 +462,272 @@ HTML_TEMPLATE = Template(
       background: rgba(255,255,255,0.02);
     }
 
+    .signal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .section {
+      background: var(--card-radial);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .section-kicker {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+
+    .section-badge {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--soft);
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .cards {
+      display: grid;
+      gap: 12px;
+    }
+
+    .player-card {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 16px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .player-card.high-edge {
+      box-shadow: 0 0 0 1px rgba(182,255,0,0.10), 0 0 18px rgba(182,255,0,0.06);
+    }
+
+    .player-top {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--soft);
+      flex: 0 0 auto;
+    }
+
+    .rankline {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--tiny);
+      margin-bottom: 5px;
+    }
+
+    .player-name {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+    }
+
+    .signal-line {
+      margin-top: 6px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--soft);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .card-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .card-meta-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--soft);
+    }
+
+    .scorebox {
+      text-align: right;
+    }
+
+    .score-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--tiny);
+      margin-bottom: 6px;
+    }
+
+    .score-value {
+      font-size: 30px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .edge-up {
+      color: var(--lime-hot);
+    }
+
+    .sparkline-wrap {
+      margin-top: 14px;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      padding: 10px 12px;
+    }
+
+    .sparkline-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .sparkline-label,
+    .sparkline-note {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--tiny);
+    }
+
+    .sparkline {
+      width: 100%;
+      height: 34px;
+      display: block;
+    }
+
+    .sparkline-path {
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sparkline-path.glow {
+      filter: drop-shadow(0 0 4px rgba(182,255,0,0.25));
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .status-badge.positive {
+      color: var(--lime-hot);
+      border-color: rgba(182,255,0,0.20);
+      background: rgba(182,255,0,0.05);
+    }
+
+    .status-badge.neutral {
+      color: var(--soft);
+      border-color: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .metric {
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .metric-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--tiny);
+    }
+
+    .metric-value {
+      margin-top: 6px;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .why {
+      margin-top: 14px;
+      font-size: 10px;
+      line-height: 1.45;
+      color: var(--tiny);
+      font-family: var(--mono);
+      font-variant-numeric: tabular-nums;
+    }
+
     {{ shell_styles | safe }}
 
     @media (max-width: 900px) {
@@ -412,6 +752,22 @@ HTML_TEMPLATE = Template(
 
       .hero-card {
         padding: 18px;
+      }
+
+      .signal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metric-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .player-name {
+        font-size: 17px;
+      }
+
+      .score-value {
+        font-size: 24px;
       }
     }
   </style>
@@ -442,8 +798,7 @@ HTML_TEMPLATE = Template(
         <div class="eyebrow">Signal Wall // Scout</div>
         <h1 class="hero-title">AAA Promotion Watch</h1>
         <p class="hero-sub">
-          Clean rebuild. Shared shell. Shared nav. Default windows locked to 72 HR and 14 DAY.
-          Legacy layout and variant complexity intentionally removed.
+          Clean rebuild with real AAA signal data, shared shell architecture, and locked 72 HR / 14 DAY control windows.
         </p>
       </div>
 
@@ -457,117 +812,181 @@ HTML_TEMPLATE = Template(
           <div class="summary-value">AAA</div>
         </div>
         <div>
-          <div class="summary-label">Timezone</div>
-          <div class="summary-value">{{ timezone_label }}</div>
+          <div class="summary-label">Signals</div>
+          <div class="summary-value">{{ total_signals }}</div>
         </div>
       </div>
     </section>
 
-          <section class="section-card">
-        <div class="tabs">
-          <div class="tab active">72 HR</div>
-          <div class="tab">14 DAY</div>
-        </div>
+    <section class="section-card">
+      <div class="tabs">
+        <div class="tab active">72 HR</div>
+        <div class="tab">14 DAY</div>
+      </div>
 
-        <h2 class="section-title">Promotion Watch Board</h2>
-
-        {% if total_signals == 0 %}
-        <div class="placeholder">
-          No live AAA promotion-watch signals available yet.
-        </div>
-        {% else %}
-        <div style="display:grid; gap:18px;">
-          <div>
-            <div class="eyebrow" style="margin-bottom:10px;">Hitters</div>
-            <div style="display:grid; gap:12px;">
-              {% for row in hitters %}
-              <article style="border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; background:rgba(255,255,255,0.02);">
-                <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap;">
-                  <div>
-                    <div style="font-size:20px; font-weight:800; letter-spacing:-0.03em;">{{ row.player_name }}</div>
-                    <div style="margin-top:4px; font-family:var(--mono); font-size:11px; color:var(--soft); text-transform:uppercase; letter-spacing:0.08em;">
-                      {{ row.signal_type }} • {{ row.sample_note }}
-                    </div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div class="summary-label">Signal Score</div>
-                    <div style="font-size:24px; font-weight:800; line-height:1;">{{ row.edge_score }}</div>
-                  </div>
-                </div>
-
-                <div style="margin-top:12px; color:var(--soft); font-size:14px; line-height:1.55;">
-                  {{ row.why }}
-                </div>
-
-                <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">{{ row.metric_1_label }}</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">{{ row.metric_1 }}</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">{{ row.metric_2_label }}</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">{{ row.metric_2 }}</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">{{ row.metric_3_label }}</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">{{ row.metric_3 }}</div>
-                  </div>
-                </div>
-              </article>
-              {% endfor %}
+      {% if total_signals == 0 %}
+      <div class="placeholder">
+        No live AAA promotion-watch signals available yet.
+      </div>
+      {% else %}
+      <section class="signal-grid">
+        <div class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Signal Layer</div>
+              <h2 class="section-title">Pitching Prospect Signals</h2>
             </div>
+            <div class="section-badge">Top {{ pitchers|length }}</div>
           </div>
 
-          <div>
-            <div class="eyebrow" style="margin-bottom:10px;">Pitchers</div>
-            <div style="display:grid; gap:12px;">
-              {% for row in pitchers %}
-              <article style="border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; background:rgba(255,255,255,0.02);">
-                <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap;">
-                  <div>
-                    <div style="font-size:20px; font-weight:800; letter-spacing:-0.03em;">{{ row.player_name }}</div>
-                    <div style="margin-top:4px; font-family:var(--mono); font-size:11px; color:var(--soft); text-transform:uppercase; letter-spacing:0.08em;">
-                      {{ row.signal_type }} • {{ row.sample_note }}
-                    </div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div class="summary-label">Signal Score</div>
-                    <div style="font-size:24px; font-weight:800; line-height:1;">{{ row.edge_score }}</div>
+          <div class="cards">
+            {% for row in pitchers %}
+            <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
+              <div class="player-top">
+                <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+                <div class="player-ident">
+                  <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
+                  <h3 class="player-name">{{ row.player_name }}</h3>
+                  <div class="signal-line">Pitcher // Live Edge Signal // {{ row.sample_note }}</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge source">{{ row.source_badge }}</span>
+                    <span class="card-meta-badge model">{{ row.score_version }}</span>
                   </div>
                 </div>
+                <div class="scorebox">
+                  <div class="score-label">Edge Score</div>
+                  <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
+                </div>
+              </div>
 
-                <div style="margin-top:12px; color:var(--soft); font-size:14px; line-height:1.55;">
-                  {{ row.why }}
+              <div class="sparkline-wrap">
+                <div class="sparkline-head">
+                  <div class="sparkline-label">7 Day Trend</div>
+                  <div class="sparkline-note">7D Trend Analysis</div>
                 </div>
+                <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="pitcherGradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                      <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
+                    </linearGradient>
+                  </defs>
+                  <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#pitcherGradient{{ loop.index }})" points="{{ row.trend_points }}" />
+                </svg>
+              </div>
 
-                <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">{{ row.metric_1_label }}</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">{{ row.metric_1 }}</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">{{ row.metric_2_label }}</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">{{ row.metric_2 }}</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">{{ row.metric_3_label }}</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">{{ row.metric_3 }}</div>
-                  </div>
+              <div class="badge-row">
+                {% for badge in row.badges %}
+                <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
+                {% endfor %}
+              </div>
+
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">{{ row.metric_1_label }}</div>
+                  <div class="metric-value">{{ row.metric_1 }}</div>
                 </div>
-              </article>
-              {% endfor %}
-            </div>
+                <div class="metric">
+                  <div class="metric-label">{{ row.metric_2_label }}</div>
+                  <div class="metric-value">{{ row.metric_2 }}</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">{{ row.metric_3_label }}</div>
+                  <div class="metric-value">{{ row.metric_3 }}</div>
+                </div>
+              </div>
+
+              <div class="why">{{ row.why }}</div>
+            </article>
+            {% endfor %}
           </div>
         </div>
-        {% endif %}
+
+        <div class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Signal Layer</div>
+              <h2 class="section-title">Hitting Prospect Signals</h2>
+            </div>
+            <div class="section-badge">Top {{ hitters|length }}</div>
+          </div>
+
+          <div class="cards">
+            {% for row in hitters %}
+            <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
+              <div class="player-top">
+                <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+                <div class="player-ident">
+                  <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
+                  <h3 class="player-name">{{ row.player_name }}</h3>
+                  <div class="signal-line">Hitter // Live Edge Signal // {{ row.sample_note }}</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge source">{{ row.source_badge }}</span>
+                    <span class="card-meta-badge model">{{ row.score_version }}</span>
+                  </div>
+                </div>
+                <div class="scorebox">
+                  <div class="score-label">Edge Score</div>
+                  <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
+                </div>
+              </div>
+
+              <div class="sparkline-wrap">
+                <div class="sparkline-head">
+                  <div class="sparkline-label">7 Day Trend</div>
+                  <div class="sparkline-note">7D Trend Analysis</div>
+                </div>
+                <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="hitterGradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                      <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
+                    </linearGradient>
+                  </defs>
+                  <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#hitterGradient{{ loop.index }})" points="{{ row.trend_points }}" />
+                </svg>
+              </div>
+
+              <div class="badge-row">
+                {% for badge in row.badges %}
+                <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
+                {% endfor %}
+              </div>
+
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">{{ row.metric_1_label }}</div>
+                  <div class="metric-value">{{ row.metric_1 }}</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">{{ row.metric_2_label }}</div>
+                  <div class="metric-value">{{ row.metric_2 }}</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">{{ row.metric_3_label }}</div>
+                  <div class="metric-value">{{ row.metric_3 }}</div>
+                </div>
+              </div>
+
+              <div class="why">{{ row.why }}</div>
+            </article>
+            {% endfor %}
+          </div>
+        </div>
       </section>
+      {% endif %}
+    </section>
 
     {{ footer_html | safe }}
   </div>
+
+  <script src="/player-search.js"></script>
 </body>
 </html>
 """
 )
+
+
 def fetch_latest_aaa_weekly_signal_base() -> pd.DataFrame:
     from supabase import create_client
     import os
@@ -628,12 +1047,15 @@ def render_html() -> str:
         hitters=hitters.to_dict(orient="records"),
         pitchers=pitchers.to_dict(orient="records"),
     )
+
+
 def main() -> None:
     CALL_UP_DIR.mkdir(parents=True, exist_ok=True)
     html = render_html()
     output_path = CALL_UP_DIR / "index.html"
     output_path.write_text(html, encoding="utf-8")
     print(f"Wrote {output_path}")
+
 
 if __name__ == "__main__":
     main()

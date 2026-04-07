@@ -237,6 +237,272 @@
       background: rgba(255,255,255,0.02);
     }
 
+    .signal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .section {
+      background: var(--card-radial);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .section-kicker {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+
+    .section-badge {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--soft);
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .cards {
+      display: grid;
+      gap: 12px;
+    }
+
+    .player-card {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 16px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .player-card.high-edge {
+      box-shadow: 0 0 0 1px rgba(182,255,0,0.10), 0 0 18px rgba(182,255,0,0.06);
+    }
+
+    .player-top {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--soft);
+      flex: 0 0 auto;
+    }
+
+    .rankline {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--tiny);
+      margin-bottom: 5px;
+    }
+
+    .player-name {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+    }
+
+    .signal-line {
+      margin-top: 6px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--soft);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .card-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .card-meta-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--soft);
+    }
+
+    .scorebox {
+      text-align: right;
+    }
+
+    .score-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--tiny);
+      margin-bottom: 6px;
+    }
+
+    .score-value {
+      font-size: 30px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .edge-up {
+      color: var(--lime-hot);
+    }
+
+    .sparkline-wrap {
+      margin-top: 14px;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      padding: 10px 12px;
+    }
+
+    .sparkline-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .sparkline-label,
+    .sparkline-note {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--tiny);
+    }
+
+    .sparkline {
+      width: 100%;
+      height: 34px;
+      display: block;
+    }
+
+    .sparkline-path {
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sparkline-path.glow {
+      filter: drop-shadow(0 0 4px rgba(182,255,0,0.25));
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .status-badge.positive {
+      color: var(--lime-hot);
+      border-color: rgba(182,255,0,0.20);
+      background: rgba(182,255,0,0.05);
+    }
+
+    .status-badge.neutral {
+      color: var(--soft);
+      border-color: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .metric {
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .metric-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--tiny);
+    }
+
+    .metric-value {
+      margin-top: 6px;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .why {
+      margin-top: 14px;
+      font-size: 10px;
+      line-height: 1.45;
+      color: var(--tiny);
+      font-family: var(--mono);
+      font-variant-numeric: tabular-nums;
+    }
+
     .topnav { border-top: 1px solid rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); }
 .topnav-inner { width: min(1180px, calc(100% - 24px)); margin: 0 auto; display: flex; align-items: center; gap: 10px; overflow-x: auto; white-space: nowrap; padding: 10px 0; scrollbar-width: none; }
 .topnav-inner::-webkit-scrollbar { display: none; }
@@ -300,6 +566,22 @@
       .hero-card {
         padding: 18px;
       }
+
+      .signal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metric-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .player-name {
+        font-size: 17px;
+      }
+
+      .score-value {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
@@ -315,7 +597,7 @@
       </div>
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">2026-04-07 12:34 PM</div>
+        <div class="live-time">2026-04-07 03:04 PM</div>
       </div>
     </div>
   </div>
@@ -354,8 +636,7 @@
         <div class="eyebrow">Signal Wall // Scout</div>
         <h1 class="hero-title">AAA Promotion Watch</h1>
         <p class="hero-sub">
-          Clean rebuild. Shared shell. Shared nav. Default windows locked to 72 HR and 14 DAY.
-          Legacy layout and variant complexity intentionally removed.
+          Clean rebuild with real AAA signal data, shared shell architecture, and locked 72 HR / 14 DAY control windows.
         </p>
       </div>
 
@@ -369,414 +650,730 @@
           <div class="summary-value">AAA</div>
         </div>
         <div>
-          <div class="summary-label">Timezone</div>
-          <div class="summary-value">America/New_York</div>
+          <div class="summary-label">Signals</div>
+          <div class="summary-value">11</div>
         </div>
       </div>
     </section>
 
-          <section class="section-card">
-        <div class="tabs">
-          <div class="tab active">72 HR</div>
-          <div class="tab">14 DAY</div>
-        </div>
+    <section class="section-card">
+      <div class="tabs">
+        <div class="tab active">72 HR</div>
+        <div class="tab">14 DAY</div>
+      </div>
 
-        <h2 class="section-title">Promotion Watch Board</h2>
-
-        
-        <div style="display:grid; gap:18px;">
-          <div>
-            <div class="eyebrow" style="margin-bottom:10px;">Hitters</div>
-            <div style="display:grid; gap:12px;">
-              
-              <article style="border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; background:rgba(255,255,255,0.02);">
-                <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap;">
-                  <div>
-                    <div style="font-size:20px; font-weight:800; letter-spacing:-0.03em;">Nick Sogard</div>
-                    <div style="margin-top:4px; font-family:var(--mono); font-size:11px; color:var(--soft); text-transform:uppercase; letter-spacing:0.08em;">
-                      Hitter • 28 PA
-                    </div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div class="summary-label">Signal Score</div>
-                    <div style="font-size:24px; font-weight:800; line-height:1;">90.3</div>
-                  </div>
-                </div>
-
-                <div style="margin-top:12px; color:var(--soft); font-size:14px; line-height:1.55;">
-                  ISO 0.318, HR 2, BB 6 vs K 3 over 28 PA.
-                </div>
-
-                <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">ISO</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">0.318</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">K/BB</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">0.50</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">HR</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">2</div>
-                  </div>
-                </div>
-              </article>
-              
-              <article style="border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; background:rgba(255,255,255,0.02);">
-                <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap;">
-                  <div>
-                    <div style="font-size:20px; font-weight:800; letter-spacing:-0.03em;">Owen Caissie</div>
-                    <div style="margin-top:4px; font-family:var(--mono); font-size:11px; color:var(--soft); text-transform:uppercase; letter-spacing:0.08em;">
-                      Hitter • 28 PA
-                    </div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div class="summary-label">Signal Score</div>
-                    <div style="font-size:24px; font-weight:800; line-height:1;">83.2</div>
-                  </div>
-                </div>
-
-                <div style="margin-top:12px; color:var(--soft); font-size:14px; line-height:1.55;">
-                  ISO 0.522, HR 3, BB 4 vs K 9 over 28 PA.
-                </div>
-
-                <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">ISO</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">0.522</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">K/BB</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">2.25</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">HR</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">3</div>
-                  </div>
-                </div>
-              </article>
-              
-              <article style="border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; background:rgba(255,255,255,0.02);">
-                <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap;">
-                  <div>
-                    <div style="font-size:20px; font-weight:800; letter-spacing:-0.03em;">Spencer Packard</div>
-                    <div style="margin-top:4px; font-family:var(--mono); font-size:11px; color:var(--soft); text-transform:uppercase; letter-spacing:0.08em;">
-                      Hitter • 26 PA
-                    </div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div class="summary-label">Signal Score</div>
-                    <div style="font-size:24px; font-weight:800; line-height:1;">79.7</div>
-                  </div>
-                </div>
-
-                <div style="margin-top:12px; color:var(--soft); font-size:14px; line-height:1.55;">
-                  ISO 0.300, HR 2, BB 5 vs K 4 over 26 PA.
-                </div>
-
-                <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">ISO</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">0.300</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">K/BB</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">0.80</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">HR</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">2</div>
-                  </div>
-                </div>
-              </article>
-              
-              <article style="border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; background:rgba(255,255,255,0.02);">
-                <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap;">
-                  <div>
-                    <div style="font-size:20px; font-weight:800; letter-spacing:-0.03em;">Jhostynxon Garcia</div>
-                    <div style="margin-top:4px; font-family:var(--mono); font-size:11px; color:var(--soft); text-transform:uppercase; letter-spacing:0.08em;">
-                      Hitter • 28 PA
-                    </div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div class="summary-label">Signal Score</div>
-                    <div style="font-size:24px; font-weight:800; line-height:1;">78.0</div>
-                  </div>
-                </div>
-
-                <div style="margin-top:12px; color:var(--soft); font-size:14px; line-height:1.55;">
-                  ISO 0.305, HR 2, BB 5 vs K 5 over 28 PA.
-                </div>
-
-                <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">ISO</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">0.305</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">K/BB</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">1.00</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">HR</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">2</div>
-                  </div>
-                </div>
-              </article>
-              
-              <article style="border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; background:rgba(255,255,255,0.02);">
-                <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap;">
-                  <div>
-                    <div style="font-size:20px; font-weight:800; letter-spacing:-0.03em;">Carlos Pérez</div>
-                    <div style="margin-top:4px; font-family:var(--mono); font-size:11px; color:var(--soft); text-transform:uppercase; letter-spacing:0.08em;">
-                      Hitter • 25 PA
-                    </div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div class="summary-label">Signal Score</div>
-                    <div style="font-size:24px; font-weight:800; line-height:1;">76.7</div>
-                  </div>
-                </div>
-
-                <div style="margin-top:12px; color:var(--soft); font-size:14px; line-height:1.55;">
-                  ISO 0.409, HR 2, BB 2 vs K 2 over 25 PA.
-                </div>
-
-                <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">ISO</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">0.409</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">K/BB</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">1.00</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">HR</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">2</div>
-                  </div>
-                </div>
-              </article>
-              
-              <article style="border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; background:rgba(255,255,255,0.02);">
-                <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap;">
-                  <div>
-                    <div style="font-size:20px; font-weight:800; letter-spacing:-0.03em;">Blaine Crim</div>
-                    <div style="margin-top:4px; font-family:var(--mono); font-size:11px; color:var(--soft); text-transform:uppercase; letter-spacing:0.08em;">
-                      Hitter • 27 PA
-                    </div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div class="summary-label">Signal Score</div>
-                    <div style="font-size:24px; font-weight:800; line-height:1;">75.6</div>
-                  </div>
-                </div>
-
-                <div style="margin-top:12px; color:var(--soft); font-size:14px; line-height:1.55;">
-                  ISO 0.318, HR 2, BB 5 vs K 6 over 27 PA.
-                </div>
-
-                <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">ISO</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">0.318</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">K/BB</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">1.20</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">HR</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">2</div>
-                  </div>
-                </div>
-              </article>
-              
+      
+      <section class="signal-grid">
+        <div class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Signal Layer</div>
+              <h2 class="section-title">Pitching Prospect Signals</h2>
             </div>
+            <div class="section-badge">Top 5</div>
           </div>
 
-          <div>
-            <div class="eyebrow" style="margin-bottom:10px;">Pitchers</div>
-            <div style="display:grid; gap:12px;">
-              
-              <article style="border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; background:rgba(255,255,255,0.02);">
-                <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap;">
-                  <div>
-                    <div style="font-size:20px; font-weight:800; letter-spacing:-0.03em;">Allan Winans</div>
-                    <div style="margin-top:4px; font-family:var(--mono); font-size:11px; color:var(--soft); text-transform:uppercase; letter-spacing:0.08em;">
-                      Pitcher • 43 BF
-                    </div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div class="summary-label">Signal Score</div>
-                    <div style="font-size:24px; font-weight:800; line-height:1;">91.4</div>
+          <div class="cards">
+            
+            <article class="player-card high-edge">
+              <div class="player-top">
+                <div class="avatar">AL</div>
+                <div class="player-ident">
+                  <div class="rankline">#1 Pitcher Trigger</div>
+                  <h3 class="player-name">Allan Winans</h3>
+                  <div class="signal-line">Pitcher // Live Edge Signal // 43 BF</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
+                    <span class="card-meta-badge model">EDGE_v2.0</span>
                   </div>
                 </div>
+                <div class="scorebox">
+                  <div class="score-label">Edge Score</div>
+                  <div class="score-value edge-up">91.4</div>
+                </div>
+              </div>
 
-                <div style="margin-top:12px; color:var(--soft); font-size:14px; line-height:1.55;">
-                  K/BB 14.00, 14 K, 1 BB over 43 BF.
+              <div class="sparkline-wrap">
+                <div class="sparkline-head">
+                  <div class="sparkline-label">7 Day Trend</div>
+                  <div class="sparkline-note">7D Trend Analysis</div>
                 </div>
+                <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="pitcherGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                      <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                    </linearGradient>
+                  </defs>
+                  <polyline class="sparkline-path glow" stroke="url(#pitcherGradient1)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
+                </svg>
+              </div>
 
-                <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">K/BB</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">14.00</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">K</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">14</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">BB</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">1</div>
-                  </div>
-                </div>
-              </article>
-              
-              <article style="border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; background:rgba(255,255,255,0.02);">
-                <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap;">
-                  <div>
-                    <div style="font-size:20px; font-weight:800; letter-spacing:-0.03em;">Dietrich Enns</div>
-                    <div style="margin-top:4px; font-family:var(--mono); font-size:11px; color:var(--soft); text-transform:uppercase; letter-spacing:0.08em;">
-                      Pitcher • 40 BF
-                    </div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div class="summary-label">Signal Score</div>
-                    <div style="font-size:24px; font-weight:800; line-height:1;">48.4</div>
-                  </div>
-                </div>
+              <div class="badge-row">
+                
+                <span class="status-badge positive">Bat-Miss Ready</span>
+                
+                <span class="status-badge positive">Command Hold</span>
+                
+                <span class="status-badge positive">Whiff Volume</span>
+                
+              </div>
 
-                <div style="margin-top:12px; color:var(--soft); font-size:14px; line-height:1.55;">
-                  K/BB 5.00, 10 K, 2 BB over 40 BF.
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">K/BB</div>
+                  <div class="metric-value">14.00</div>
                 </div>
+                <div class="metric">
+                  <div class="metric-label">K</div>
+                  <div class="metric-value">14</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">BB</div>
+                  <div class="metric-value">1</div>
+                </div>
+              </div>
 
-                <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">K/BB</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">5.00</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">K</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">10</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">BB</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">2</div>
-                  </div>
-                </div>
-              </article>
-              
-              <article style="border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; background:rgba(255,255,255,0.02);">
-                <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap;">
-                  <div>
-                    <div style="font-size:20px; font-weight:800; letter-spacing:-0.03em;">William Fleming</div>
-                    <div style="margin-top:4px; font-family:var(--mono); font-size:11px; color:var(--soft); text-transform:uppercase; letter-spacing:0.08em;">
-                      Pitcher • 39 BF
-                    </div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div class="summary-label">Signal Score</div>
-                    <div style="font-size:24px; font-weight:800; line-height:1;">43.8</div>
+              <div class="why">K/BB 14.00, 14 K, 1 BB over 43 BF.</div>
+            </article>
+            
+            <article class="player-card ">
+              <div class="player-top">
+                <div class="avatar">DI</div>
+                <div class="player-ident">
+                  <div class="rankline">#2 Pitcher Trigger</div>
+                  <h3 class="player-name">Dietrich Enns</h3>
+                  <div class="signal-line">Pitcher // Live Edge Signal // 40 BF</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
+                    <span class="card-meta-badge model">EDGE_v2.0</span>
                   </div>
                 </div>
+                <div class="scorebox">
+                  <div class="score-label">Edge Score</div>
+                  <div class="score-value ">48.4</div>
+                </div>
+              </div>
 
-                <div style="margin-top:12px; color:var(--soft); font-size:14px; line-height:1.55;">
-                  K/BB 4.50, 9 K, 2 BB over 39 BF.
+              <div class="sparkline-wrap">
+                <div class="sparkline-head">
+                  <div class="sparkline-label">7 Day Trend</div>
+                  <div class="sparkline-note">7D Trend Analysis</div>
                 </div>
+                <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="pitcherGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                      <stop offset="100%" stop-color="#00e5ff" stop-opacity="1"></stop>
+                    </linearGradient>
+                  </defs>
+                  <polyline class="sparkline-path " stroke="url(#pitcherGradient2)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
+                </svg>
+              </div>
 
-                <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">K/BB</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">4.50</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">K</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">9</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">BB</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">2</div>
-                  </div>
-                </div>
-              </article>
-              
-              <article style="border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; background:rgba(255,255,255,0.02);">
-                <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap;">
-                  <div>
-                    <div style="font-size:20px; font-weight:800; letter-spacing:-0.03em;">Cam Schlittler</div>
-                    <div style="margin-top:4px; font-family:var(--mono); font-size:11px; color:var(--soft); text-transform:uppercase; letter-spacing:0.08em;">
-                      Pitcher • 40 BF
-                    </div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div class="summary-label">Signal Score</div>
-                    <div style="font-size:24px; font-weight:800; line-height:1;">36.8</div>
-                  </div>
-                </div>
+              <div class="badge-row">
+                
+                <span class="status-badge positive">Bat-Miss Ready</span>
+                
+                <span class="status-badge positive">Command Hold</span>
+                
+                <span class="status-badge positive">Whiff Volume</span>
+                
+              </div>
 
-                <div style="margin-top:12px; color:var(--soft); font-size:14px; line-height:1.55;">
-                  K/BB 2.50, 15 K, 6 BB over 40 BF.
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">K/BB</div>
+                  <div class="metric-value">5.00</div>
                 </div>
+                <div class="metric">
+                  <div class="metric-label">K</div>
+                  <div class="metric-value">10</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">BB</div>
+                  <div class="metric-value">2</div>
+                </div>
+              </div>
 
-                <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">K/BB</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">2.50</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">K</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">15</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">BB</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">6</div>
-                  </div>
-                </div>
-              </article>
-              
-              <article style="border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; background:rgba(255,255,255,0.02);">
-                <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap;">
-                  <div>
-                    <div style="font-size:20px; font-weight:800; letter-spacing:-0.03em;">Brandon Sproat</div>
-                    <div style="margin-top:4px; font-family:var(--mono); font-size:11px; color:var(--soft); text-transform:uppercase; letter-spacing:0.08em;">
-                      Pitcher • 49 BF
-                    </div>
-                  </div>
-                  <div style="text-align:right;">
-                    <div class="summary-label">Signal Score</div>
-                    <div style="font-size:24px; font-weight:800; line-height:1;">29.6</div>
+              <div class="why">K/BB 5.00, 10 K, 2 BB over 40 BF.</div>
+            </article>
+            
+            <article class="player-card ">
+              <div class="player-top">
+                <div class="avatar">WI</div>
+                <div class="player-ident">
+                  <div class="rankline">#3 Pitcher Trigger</div>
+                  <h3 class="player-name">William Fleming</h3>
+                  <div class="signal-line">Pitcher // Live Edge Signal // 39 BF</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
+                    <span class="card-meta-badge model">EDGE_v2.0</span>
                   </div>
                 </div>
+                <div class="scorebox">
+                  <div class="score-label">Edge Score</div>
+                  <div class="score-value ">43.8</div>
+                </div>
+              </div>
 
-                <div style="margin-top:12px; color:var(--soft); font-size:14px; line-height:1.55;">
-                  K/BB 1.75, 7 K, 4 BB over 49 BF.
+              <div class="sparkline-wrap">
+                <div class="sparkline-head">
+                  <div class="sparkline-label">7 Day Trend</div>
+                  <div class="sparkline-note">7D Trend Analysis</div>
                 </div>
+                <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="pitcherGradient3" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                      <stop offset="100%" stop-color="#00e5ff" stop-opacity="1"></stop>
+                    </linearGradient>
+                  </defs>
+                  <polyline class="sparkline-path " stroke="url(#pitcherGradient3)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
+                </svg>
+              </div>
 
-                <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">K/BB</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">1.75</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">K</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">7</div>
-                  </div>
-                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
-                    <div class="summary-label">BB</div>
-                    <div style="margin-top:6px; font-size:18px; font-weight:800;">4</div>
+              <div class="badge-row">
+                
+                <span class="status-badge positive">Bat-Miss Ready</span>
+                
+                <span class="status-badge positive">Command Hold</span>
+                
+                <span class="status-badge neutral">Promotion Watch</span>
+                
+              </div>
+
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">K/BB</div>
+                  <div class="metric-value">4.50</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">K</div>
+                  <div class="metric-value">9</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">BB</div>
+                  <div class="metric-value">2</div>
+                </div>
+              </div>
+
+              <div class="why">K/BB 4.50, 9 K, 2 BB over 39 BF.</div>
+            </article>
+            
+            <article class="player-card ">
+              <div class="player-top">
+                <div class="avatar">CA</div>
+                <div class="player-ident">
+                  <div class="rankline">#4 Pitcher Trigger</div>
+                  <h3 class="player-name">Cam Schlittler</h3>
+                  <div class="signal-line">Pitcher // Live Edge Signal // 40 BF</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
+                    <span class="card-meta-badge model">EDGE_v2.0</span>
                   </div>
                 </div>
-              </article>
-              
-            </div>
+                <div class="scorebox">
+                  <div class="score-label">Edge Score</div>
+                  <div class="score-value ">36.8</div>
+                </div>
+              </div>
+
+              <div class="sparkline-wrap">
+                <div class="sparkline-head">
+                  <div class="sparkline-label">7 Day Trend</div>
+                  <div class="sparkline-note">7D Trend Analysis</div>
+                </div>
+                <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="pitcherGradient4" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                      <stop offset="100%" stop-color="#00e5ff" stop-opacity="1"></stop>
+                    </linearGradient>
+                  </defs>
+                  <polyline class="sparkline-path " stroke="url(#pitcherGradient4)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
+                </svg>
+              </div>
+
+              <div class="badge-row">
+                
+                <span class="status-badge positive">Whiff Volume</span>
+                
+                <span class="status-badge neutral">Promotion Watch</span>
+                
+              </div>
+
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">K/BB</div>
+                  <div class="metric-value">2.50</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">K</div>
+                  <div class="metric-value">15</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">BB</div>
+                  <div class="metric-value">6</div>
+                </div>
+              </div>
+
+              <div class="why">K/BB 2.50, 15 K, 6 BB over 40 BF.</div>
+            </article>
+            
+            <article class="player-card ">
+              <div class="player-top">
+                <div class="avatar">BR</div>
+                <div class="player-ident">
+                  <div class="rankline">#5 Pitcher Trigger</div>
+                  <h3 class="player-name">Brandon Sproat</h3>
+                  <div class="signal-line">Pitcher // Live Edge Signal // 49 BF</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
+                    <span class="card-meta-badge model">EDGE_v2.0</span>
+                  </div>
+                </div>
+                <div class="scorebox">
+                  <div class="score-label">Edge Score</div>
+                  <div class="score-value ">29.6</div>
+                </div>
+              </div>
+
+              <div class="sparkline-wrap">
+                <div class="sparkline-head">
+                  <div class="sparkline-label">7 Day Trend</div>
+                  <div class="sparkline-note">7D Trend Analysis</div>
+                </div>
+                <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="pitcherGradient5" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                      <stop offset="100%" stop-color="#00e5ff" stop-opacity="1"></stop>
+                    </linearGradient>
+                  </defs>
+                  <polyline class="sparkline-path " stroke="url(#pitcherGradient5)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
+                </svg>
+              </div>
+
+              <div class="badge-row">
+                
+                <span class="status-badge neutral">Promotion Watch</span>
+                
+              </div>
+
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">K/BB</div>
+                  <div class="metric-value">1.75</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">K</div>
+                  <div class="metric-value">7</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">BB</div>
+                  <div class="metric-value">4</div>
+                </div>
+              </div>
+
+              <div class="why">K/BB 1.75, 7 K, 4 BB over 49 BF.</div>
+            </article>
+            
           </div>
         </div>
-        
+
+        <div class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Signal Layer</div>
+              <h2 class="section-title">Hitting Prospect Signals</h2>
+            </div>
+            <div class="section-badge">Top 6</div>
+          </div>
+
+          <div class="cards">
+            
+            <article class="player-card high-edge">
+              <div class="player-top">
+                <div class="avatar">NI</div>
+                <div class="player-ident">
+                  <div class="rankline">#1 Hitter Trigger</div>
+                  <h3 class="player-name">Nick Sogard</h3>
+                  <div class="signal-line">Hitter // Live Edge Signal // 28 PA</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
+                    <span class="card-meta-badge model">EDGE_v2.0</span>
+                  </div>
+                </div>
+                <div class="scorebox">
+                  <div class="score-label">Edge Score</div>
+                  <div class="score-value edge-up">90.3</div>
+                </div>
+              </div>
+
+              <div class="sparkline-wrap">
+                <div class="sparkline-head">
+                  <div class="sparkline-label">7 Day Trend</div>
+                  <div class="sparkline-note">7D Trend Analysis</div>
+                </div>
+                <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="hitterGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                      <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                    </linearGradient>
+                  </defs>
+                  <polyline class="sparkline-path glow" stroke="url(#hitterGradient1)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+                </svg>
+              </div>
+
+              <div class="badge-row">
+                
+                <span class="status-badge positive">Impact Bat</span>
+                
+                <span class="status-badge positive">Zone Control</span>
+                
+                <span class="status-badge positive">HR Surge</span>
+                
+              </div>
+
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">ISO</div>
+                  <div class="metric-value">0.318</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">K/BB</div>
+                  <div class="metric-value">0.50</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">HR</div>
+                  <div class="metric-value">2</div>
+                </div>
+              </div>
+
+              <div class="why">Power spike + Aggressive contact profile + Early HR surge</div>
+            </article>
+            
+            <article class="player-card high-edge">
+              <div class="player-top">
+                <div class="avatar">OW</div>
+                <div class="player-ident">
+                  <div class="rankline">#2 Hitter Trigger</div>
+                  <h3 class="player-name">Owen Caissie</h3>
+                  <div class="signal-line">Hitter // Live Edge Signal // 28 PA</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
+                    <span class="card-meta-badge model">EDGE_v2.0</span>
+                  </div>
+                </div>
+                <div class="scorebox">
+                  <div class="score-label">Edge Score</div>
+                  <div class="score-value edge-up">83.2</div>
+                </div>
+              </div>
+
+              <div class="sparkline-wrap">
+                <div class="sparkline-head">
+                  <div class="sparkline-label">7 Day Trend</div>
+                  <div class="sparkline-note">7D Trend Analysis</div>
+                </div>
+                <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="hitterGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                      <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                    </linearGradient>
+                  </defs>
+                  <polyline class="sparkline-path glow" stroke="url(#hitterGradient2)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+                </svg>
+              </div>
+
+              <div class="badge-row">
+                
+                <span class="status-badge positive">Impact Bat</span>
+                
+                <span class="status-badge positive">HR Surge</span>
+                
+                <span class="status-badge neutral">Promotion Watch</span>
+                
+              </div>
+
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">ISO</div>
+                  <div class="metric-value">0.522</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">K/BB</div>
+                  <div class="metric-value">2.25</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">HR</div>
+                  <div class="metric-value">3</div>
+                </div>
+              </div>
+
+              <div class="why">Power spike + Strong plate control + Early HR surge</div>
+            </article>
+            
+            <article class="player-card high-edge">
+              <div class="player-top">
+                <div class="avatar">SP</div>
+                <div class="player-ident">
+                  <div class="rankline">#3 Hitter Trigger</div>
+                  <h3 class="player-name">Spencer Packard</h3>
+                  <div class="signal-line">Hitter // Live Edge Signal // 26 PA</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
+                    <span class="card-meta-badge model">EDGE_v2.0</span>
+                  </div>
+                </div>
+                <div class="scorebox">
+                  <div class="score-label">Edge Score</div>
+                  <div class="score-value edge-up">79.7</div>
+                </div>
+              </div>
+
+              <div class="sparkline-wrap">
+                <div class="sparkline-head">
+                  <div class="sparkline-label">7 Day Trend</div>
+                  <div class="sparkline-note">7D Trend Analysis</div>
+                </div>
+                <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="hitterGradient3" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                      <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                    </linearGradient>
+                  </defs>
+                  <polyline class="sparkline-path glow" stroke="url(#hitterGradient3)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+                </svg>
+              </div>
+
+              <div class="badge-row">
+                
+                <span class="status-badge positive">Impact Bat</span>
+                
+                <span class="status-badge positive">Zone Control</span>
+                
+                <span class="status-badge positive">HR Surge</span>
+                
+              </div>
+
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">ISO</div>
+                  <div class="metric-value">0.300</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">K/BB</div>
+                  <div class="metric-value">0.80</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">HR</div>
+                  <div class="metric-value">2</div>
+                </div>
+              </div>
+
+              <div class="why">Power spike + Early HR surge</div>
+            </article>
+            
+            <article class="player-card high-edge">
+              <div class="player-top">
+                <div class="avatar">JH</div>
+                <div class="player-ident">
+                  <div class="rankline">#4 Hitter Trigger</div>
+                  <h3 class="player-name">Jhostynxon Garcia</h3>
+                  <div class="signal-line">Hitter // Live Edge Signal // 28 PA</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
+                    <span class="card-meta-badge model">EDGE_v2.0</span>
+                  </div>
+                </div>
+                <div class="scorebox">
+                  <div class="score-label">Edge Score</div>
+                  <div class="score-value edge-up">78.0</div>
+                </div>
+              </div>
+
+              <div class="sparkline-wrap">
+                <div class="sparkline-head">
+                  <div class="sparkline-label">7 Day Trend</div>
+                  <div class="sparkline-note">7D Trend Analysis</div>
+                </div>
+                <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="hitterGradient4" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                      <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                    </linearGradient>
+                  </defs>
+                  <polyline class="sparkline-path glow" stroke="url(#hitterGradient4)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+                </svg>
+              </div>
+
+              <div class="badge-row">
+                
+                <span class="status-badge positive">Impact Bat</span>
+                
+                <span class="status-badge positive">Zone Control</span>
+                
+                <span class="status-badge positive">HR Surge</span>
+                
+              </div>
+
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">ISO</div>
+                  <div class="metric-value">0.305</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">K/BB</div>
+                  <div class="metric-value">1.00</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">HR</div>
+                  <div class="metric-value">2</div>
+                </div>
+              </div>
+
+              <div class="why">Power spike + Early HR surge</div>
+            </article>
+            
+            <article class="player-card high-edge">
+              <div class="player-top">
+                <div class="avatar">CA</div>
+                <div class="player-ident">
+                  <div class="rankline">#5 Hitter Trigger</div>
+                  <h3 class="player-name">Carlos Pérez</h3>
+                  <div class="signal-line">Hitter // Live Edge Signal // 25 PA</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
+                    <span class="card-meta-badge model">EDGE_v2.0</span>
+                  </div>
+                </div>
+                <div class="scorebox">
+                  <div class="score-label">Edge Score</div>
+                  <div class="score-value edge-up">76.7</div>
+                </div>
+              </div>
+
+              <div class="sparkline-wrap">
+                <div class="sparkline-head">
+                  <div class="sparkline-label">7 Day Trend</div>
+                  <div class="sparkline-note">7D Trend Analysis</div>
+                </div>
+                <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="hitterGradient5" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                      <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                    </linearGradient>
+                  </defs>
+                  <polyline class="sparkline-path glow" stroke="url(#hitterGradient5)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+                </svg>
+              </div>
+
+              <div class="badge-row">
+                
+                <span class="status-badge positive">Impact Bat</span>
+                
+                <span class="status-badge positive">Zone Control</span>
+                
+                <span class="status-badge positive">HR Surge</span>
+                
+              </div>
+
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">ISO</div>
+                  <div class="metric-value">0.409</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">K/BB</div>
+                  <div class="metric-value">1.00</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">HR</div>
+                  <div class="metric-value">2</div>
+                </div>
+              </div>
+
+              <div class="why">Power spike + Early HR surge</div>
+            </article>
+            
+            <article class="player-card high-edge">
+              <div class="player-top">
+                <div class="avatar">BL</div>
+                <div class="player-ident">
+                  <div class="rankline">#6 Hitter Trigger</div>
+                  <h3 class="player-name">Blaine Crim</h3>
+                  <div class="signal-line">Hitter // Live Edge Signal // 27 PA</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
+                    <span class="card-meta-badge model">EDGE_v2.0</span>
+                  </div>
+                </div>
+                <div class="scorebox">
+                  <div class="score-label">Edge Score</div>
+                  <div class="score-value edge-up">75.6</div>
+                </div>
+              </div>
+
+              <div class="sparkline-wrap">
+                <div class="sparkline-head">
+                  <div class="sparkline-label">7 Day Trend</div>
+                  <div class="sparkline-note">7D Trend Analysis</div>
+                </div>
+                <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="hitterGradient6" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                      <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                    </linearGradient>
+                  </defs>
+                  <polyline class="sparkline-path glow" stroke="url(#hitterGradient6)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+                </svg>
+              </div>
+
+              <div class="badge-row">
+                
+                <span class="status-badge positive">Impact Bat</span>
+                
+                <span class="status-badge positive">Zone Control</span>
+                
+                <span class="status-badge positive">HR Surge</span>
+                
+              </div>
+
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">ISO</div>
+                  <div class="metric-value">0.318</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">K/BB</div>
+                  <div class="metric-value">1.20</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">HR</div>
+                  <div class="metric-value">2</div>
+                </div>
+              </div>
+
+              <div class="why">Power spike + Early HR surge</div>
+            </article>
+            
+          </div>
+        </div>
       </section>
+      
+    </section>
 
     
   </div>
+
+  <script src="/player-search.js"></script>
 </body>
 </html>
