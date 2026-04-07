@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 
+import pandas as pd
 from jinja2 import Template
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -17,6 +18,135 @@ FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-
 SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
 
 TIMEZONE_LABEL = "America/New_York"
+SOURCE_BADGE = "SRC: AAA_PIPELINE_v1"
+SCORE_VERSION = "EDGE_v2.0"
+
+def zscore(series: pd.Series) -> pd.Series:
+    s = pd.to_numeric(series, errors="coerce")
+    std = s.std(ddof=0)
+    if pd.isna(std) or std == 0:
+        return pd.Series([0.0] * len(s), index=s.index)
+    return (s - s.mean()) / std
+
+
+def build_aaa_hitter_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
+    hitters = df[df["pa"].notna()].copy()
+    if hitters.empty:
+        return pd.DataFrame()
+
+    for col in ["pa", "bb", "so", "hr", "iso", "kbb_h"]:
+        hitters[col] = pd.to_numeric(hitters[col], errors="coerce")
+
+    hitters = hitters[hitters["pa"] >= 12].copy()
+    if hitters.empty:
+        return pd.DataFrame()
+
+    hitters["bb_rate"] = (hitters["bb"] / hitters["pa"]).fillna(0)
+    hitters["k_rate"] = (hitters["so"] / hitters["pa"]).fillna(0)
+
+    kbb_series = hitters["kbb_h"].replace(0, pd.NA)
+    kbb_fill = kbb_series.dropna().median()
+    if pd.isna(kbb_fill):
+        kbb_fill = 1.0
+
+    hitters["edge_score_raw"] = (
+        50
+        + 12 * zscore(hitters["iso"].fillna(0))
+        - 10 * zscore(kbb_series.fillna(kbb_fill))
+        + 8 * zscore(hitters["bb_rate"])
+        - 6 * zscore(hitters["k_rate"])
+        + 4 * zscore(hitters["hr"].fillna(0))
+        + 2 * zscore(hitters["pa"].fillna(0))
+    )
+
+    hitters["edge_score"] = hitters["edge_score_raw"].clip(5, 95).round(1)
+    hitters["player_name"] = hitters["player_name"].apply(safe_name)
+    hitters["signal_type"] = "Hitter"
+
+    hitters["why"] = hitters.apply(
+        lambda r: (
+            f"ISO {r['iso']:.3f}, HR {int(r['hr'] or 0)}, "
+            f"BB {int(r['bb'] or 0)} vs K {int(r['so'] or 0)} over {int(r['pa'] or 0)} PA."
+        ),
+        axis=1,
+    )
+
+    hitters["metric_1_label"] = "ISO"
+    hitters["metric_1"] = hitters["iso"].fillna(0).map(lambda x: f"{x:.3f}")
+    hitters["metric_2_label"] = "K/BB"
+    hitters["metric_2"] = hitters["kbb_h"].fillna(0).map(lambda x: f"{x:.2f}")
+    hitters["metric_3_label"] = "HR"
+    hitters["metric_3"] = hitters["hr"].fillna(0).map(lambda x: f"{int(x)}")
+    hitters["sample_note"] = hitters["pa"].fillna(0).map(lambda x: f"{int(x)} PA")
+    hitters["source_badge"] = SOURCE_BADGE
+    hitters["score_version"] = SCORE_VERSION
+
+    return hitters.sort_values(["edge_score", "pa"], ascending=[False, False]).reset_index(drop=True)
+
+
+def build_aaa_pitcher_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
+    pitchers = df[df["bf"].notna()].copy()
+    if pitchers.empty:
+        return pd.DataFrame()
+
+    for col in ["bf", "so_p", "bb_allowed", "kbb_p"]:
+        pitchers[col] = pd.to_numeric(pitchers[col], errors="coerce")
+
+    pitchers = pitchers[pitchers["bf"] >= 15].copy()
+    if pitchers.empty:
+        return pd.DataFrame()
+
+    kbb_series = pitchers["kbb_p"].replace(0, pd.NA)
+    kbb_fill = kbb_series.dropna().median()
+    if pd.isna(kbb_fill):
+        kbb_fill = 1.0
+
+    pitchers["k_rate_proxy"] = (pitchers["so_p"] / pitchers["bf"]).fillna(0)
+    pitchers["bb_rate_proxy"] = (pitchers["bb_allowed"] / pitchers["bf"]).fillna(0)
+
+    pitchers["edge_score_raw"] = (
+        50
+        + 14 * zscore(kbb_series.fillna(kbb_fill))
+        + 8 * zscore(pitchers["k_rate_proxy"])
+        - 7 * zscore(pitchers["bb_rate_proxy"])
+        + 3 * zscore(pitchers["bf"].fillna(0))
+    )
+
+    pitchers["edge_score"] = pitchers["edge_score_raw"].clip(5, 95).round(1)
+    pitchers["player_name"] = pitchers["player_name"].apply(safe_name)
+    pitchers["signal_type"] = "Pitcher"
+
+    pitchers["why"] = pitchers.apply(
+        lambda r: (
+            f"K/BB {r['kbb_p']:.2f}, {int(r['so_p'] or 0)} K, "
+            f"{int(r['bb_allowed'] or 0)} BB over {int(r['bf'] or 0)} BF."
+        ),
+        axis=1,
+    )
+
+    pitchers["metric_1_label"] = "K/BB"
+    pitchers["metric_1"] = pitchers["kbb_p"].fillna(0).map(lambda x: f"{x:.2f}")
+    pitchers["metric_2_label"] = "K"
+    pitchers["metric_2"] = pitchers["so_p"].fillna(0).map(lambda x: f"{int(x)}")
+    pitchers["metric_3_label"] = "BB"
+    pitchers["metric_3"] = pitchers["bb_allowed"].fillna(0).map(lambda x: f"{int(x)}")
+    pitchers["sample_note"] = pitchers["bf"].fillna(0).map(lambda x: f"{int(x)} BF")
+    pitchers["source_badge"] = SOURCE_BADGE
+    pitchers["score_version"] = SCORE_VERSION
+
+    return pitchers.sort_values(["edge_score", "bf"], ascending=[False, False]).reset_index(drop=True)
+    return pd.Series([0.0] * len(s), index=s.index)
+    return (s - s.mean()) / std
+
+def safe_name(value: str) -> str:
+    if pd.isna(value):
+        return "Unknown"
+    text = str(value).strip()
+    if not text or text.lower() == "unknown":
+        return "Unknown"
+    return " ".join(part.capitalize() for part in text.split())
+
+
 
 HTML_TEMPLATE = Template(
     r"""<!doctype html>
@@ -333,18 +463,104 @@ HTML_TEMPLATE = Template(
       </div>
     </section>
 
-    <section class="section-card">
-      <div class="tabs">
-        <div class="tab active">72 HR</div>
-        <div class="tab">14 DAY</div>
-      </div>
+          <section class="section-card">
+        <div class="tabs">
+          <div class="tab active">72 HR</div>
+          <div class="tab">14 DAY</div>
+        </div>
 
-      <h2 class="section-title">Promotion Watch Board</h2>
+        <h2 class="section-title">Promotion Watch Board</h2>
 
-      <div class="placeholder">
-        Call-Up v2 shell is live. Data board comes next.
-      </div>
-    </section>
+        {% if total_signals == 0 %}
+        <div class="placeholder">
+          No live AAA promotion-watch signals available yet.
+        </div>
+        {% else %}
+        <div style="display:grid; gap:18px;">
+          <div>
+            <div class="eyebrow" style="margin-bottom:10px;">Hitters</div>
+            <div style="display:grid; gap:12px;">
+              {% for row in hitters %}
+              <article style="border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; background:rgba(255,255,255,0.02);">
+                <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap;">
+                  <div>
+                    <div style="font-size:20px; font-weight:800; letter-spacing:-0.03em;">{{ row.player_name }}</div>
+                    <div style="margin-top:4px; font-family:var(--mono); font-size:11px; color:var(--soft); text-transform:uppercase; letter-spacing:0.08em;">
+                      {{ row.signal_type }} • {{ row.sample_note }}
+                    </div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div class="summary-label">Signal Score</div>
+                    <div style="font-size:24px; font-weight:800; line-height:1;">{{ row.edge_score }}</div>
+                  </div>
+                </div>
+
+                <div style="margin-top:12px; color:var(--soft); font-size:14px; line-height:1.55;">
+                  {{ row.why }}
+                </div>
+
+                <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
+                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
+                    <div class="summary-label">{{ row.metric_1_label }}</div>
+                    <div style="margin-top:6px; font-size:18px; font-weight:800;">{{ row.metric_1 }}</div>
+                  </div>
+                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
+                    <div class="summary-label">{{ row.metric_2_label }}</div>
+                    <div style="margin-top:6px; font-size:18px; font-weight:800;">{{ row.metric_2 }}</div>
+                  </div>
+                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
+                    <div class="summary-label">{{ row.metric_3_label }}</div>
+                    <div style="margin-top:6px; font-size:18px; font-weight:800;">{{ row.metric_3 }}</div>
+                  </div>
+                </div>
+              </article>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div>
+            <div class="eyebrow" style="margin-bottom:10px;">Pitchers</div>
+            <div style="display:grid; gap:12px;">
+              {% for row in pitchers %}
+              <article style="border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:16px; background:rgba(255,255,255,0.02);">
+                <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start; flex-wrap:wrap;">
+                  <div>
+                    <div style="font-size:20px; font-weight:800; letter-spacing:-0.03em;">{{ row.player_name }}</div>
+                    <div style="margin-top:4px; font-family:var(--mono); font-size:11px; color:var(--soft); text-transform:uppercase; letter-spacing:0.08em;">
+                      {{ row.signal_type }} • {{ row.sample_note }}
+                    </div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div class="summary-label">Signal Score</div>
+                    <div style="font-size:24px; font-weight:800; line-height:1;">{{ row.edge_score }}</div>
+                  </div>
+                </div>
+
+                <div style="margin-top:12px; color:var(--soft); font-size:14px; line-height:1.55;">
+                  {{ row.why }}
+                </div>
+
+                <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
+                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
+                    <div class="summary-label">{{ row.metric_1_label }}</div>
+                    <div style="margin-top:6px; font-size:18px; font-weight:800;">{{ row.metric_1 }}</div>
+                  </div>
+                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
+                    <div class="summary-label">{{ row.metric_2_label }}</div>
+                    <div style="margin-top:6px; font-size:18px; font-weight:800;">{{ row.metric_2 }}</div>
+                  </div>
+                  <div style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px; background:rgba(255,255,255,0.02);">
+                    <div class="summary-label">{{ row.metric_3_label }}</div>
+                    <div style="margin-top:6px; font-size:18px; font-weight:800;">{{ row.metric_3 }}</div>
+                  </div>
+                </div>
+              </article>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </section>
 
     {{ footer_html | safe }}
   </div>
@@ -352,8 +568,55 @@ HTML_TEMPLATE = Template(
 </html>
 """
 )
+def fetch_latest_aaa_weekly_signal_base() -> pd.DataFrame:
+    from supabase import create_client
+    import os
+
+    url = os.environ["SUPABASE_URL"]
+    key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
+
+    sb = create_client(url, key)
+
+    latest_resp = (
+        sb.table("milb_aaa_weekly_signal_base")
+        .select("week_start")
+        .order("week_start", desc=True)
+        .limit(1)
+        .execute()
+    )
+
+    rows = latest_resp.data or []
+    if not rows:
+        return pd.DataFrame()
+
+    latest_week = rows[0]["week_start"]
+
+    data_resp = (
+        sb.table("milb_aaa_weekly_signal_base")
+        .select("*")
+        .eq("week_start", latest_week)
+        .execute()
+    )
+
+    data = data_resp.data or []
+    if not data:
+        return pd.DataFrame()
+
+    return pd.DataFrame(data)
+
+
+def load_source_frame() -> pd.DataFrame:
+    return fetch_latest_aaa_weekly_signal_base()
+
 
 def render_html() -> str:
+    df = load_source_frame()
+
+    hitters = build_aaa_hitter_promotion_watch(df).head(6) if not df.empty else pd.DataFrame()
+    pitchers = build_aaa_pitcher_promotion_watch(df).head(6) if not df.empty else pd.DataFrame()
+
+    total_signals = len(hitters) + len(pitchers)
+
     return HTML_TEMPLATE.render(
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
         timezone_label=TIMEZONE_LABEL,
@@ -361,8 +624,10 @@ def render_html() -> str:
         search_html=SEARCH_TEMPLATE,
         footer_html=FOOTER_TEMPLATE,
         shell_styles=SHELL_STYLES_TEMPLATE,
+        total_signals=total_signals,
+        hitters=hitters.to_dict(orient="records"),
+        pitchers=pitchers.to_dict(orient="records"),
     )
-
 def main() -> None:
     CALL_UP_DIR.mkdir(parents=True, exist_ok=True)
     html = render_html()
