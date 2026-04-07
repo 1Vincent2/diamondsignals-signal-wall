@@ -902,80 +902,228 @@ HTML_TEMPLATE = Template(
           </div>
         </div>
 
-        <div class="section">
-          <div class="section-head">
-            <div>
-              <div class="section-kicker">Signal Layer</div>
-              <h2 class="section-title">Hitting Prospect Signals</h2>
+               <div class="section">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">Signal Layer</div>
+                <h2 class="section-title">Hitting Prospect Signals</h2>
+              </div>
+              <div class="section-badge">Top {{ hitters|length }}</div>
             </div>
-            <div class="section-badge">Top {{ hitters|length }}</div>
-          </div>
 
-          <div class="cards">
-            {% for row in hitters %}
-            <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
-              <div class="player-top">
-                <div class="avatar">{{ row.player_name[:2]|upper }}</div>
-                <div class="player-ident">
-                  <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
-                  <h3 class="player-name">{{ row.player_name }}</h3>
-                  <div class="signal-line">Hitter // Live Edge Signal // {{ row.sample_note }}</div>
-                  <div class="card-meta-row">
-                    <span class="card-meta-badge source">{{ row.source_badge }}</span>
-                    <span class="card-meta-badge model">{{ row.score_version }}</span>
+            <div class="cards">
+              {% for row in hitters %}
+              <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
+                <div class="player-top">
+                  <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+                  <div class="player-ident">
+                    <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
+                    <h3 class="player-name">{{ row.player_name }}</h3>
+                    <div class="signal-line">{{ row.org }} // Hitter // {{ row.sample_note }}</div>
+                    <div class="card-meta-row">
+                      <span class="card-meta-badge source">{{ row.source_badge }}</span>
+                      <span class="card-meta-badge model">{{ row.score_version }}</span>
+                    </div>
+                  </div>
+                  <div class="scorebox">
+                    <div class="score-label">Edge Score</div>
+                    <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
                   </div>
                 </div>
-                <div class="scorebox">
-                  <div class="score-label">Edge Score</div>
-                  <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
+
+                <div class="sparkline-wrap">
+                  <div class="sparkline-head">
+                    <div class="sparkline-label">7 Day Trend</div>
+                    <div class="sparkline-note">7D Trend Analysis</div>
+                  </div>
+                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="hitterGradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                        <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
+                      </linearGradient>
+                    </defs>
+                    <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#hitterGradient{{ loop.index }})" points="{{ row.trend_points }}" />
+                  </svg>
                 </div>
+
+                <div class="badge-row">
+                  {% for badge in row.badges %}
+                  <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
+                  {% endfor %}
+                </div>
+
+                <div class="metric-grid">
+                  <div class="metric">
+                    <div class="metric-label">{{ row.metric_1_label }}</div>
+                    <div class="metric-value">{{ row.metric_1 }}</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">{{ row.metric_2_label }}</div>
+                    <div class="metric-value">{{ row.metric_2 }}</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">{{ row.metric_3_label }}</div>
+                    <div class="metric-value">{{ row.metric_3 }}</div>
+                  </div>
+                </div>
+
+                <div class="why">{{ row.why }}</div>
+              </article>
+              {% endfor %}
+            </div>
+          </div>
+        </section>
+
+        <div id="tab-14d" style="display:none;">
+          <section class="signal-grid">
+            <div class="section">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">Signal Layer</div>
+                  <h2 class="section-title">Pitching Prospect Signals</h2>
+                </div>
+                <div class="section-badge">Top {{ pitchers_14|length }}</div>
               </div>
 
-              <div class="sparkline-wrap">
-                <div class="sparkline-head">
-                  <div class="sparkline-label">7 Day Trend</div>
-                  <div class="sparkline-note">7D Trend Analysis</div>
-                </div>
-                <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="hitterGradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                      <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
-                    </linearGradient>
-                  </defs>
-                  <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#hitterGradient{{ loop.index }})" points="{{ row.trend_points }}" />
-                </svg>
-              </div>
+              <div class="cards">
+                {% for row in pitchers_14 %}
+                <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
+                  <div class="player-top">
+                    <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+                    <div class="player-ident">
+                      <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
+                      <h3 class="player-name">{{ row.player_name }}</h3>
+                      <div class="signal-line">{{ row.org }} // Pitcher // {{ row.sample_note }}</div>
+                      <div class="card-meta-row">
+                        <span class="card-meta-badge source">{{ row.source_badge }}</span>
+                        <span class="card-meta-badge model">{{ row.score_version }}</span>
+                      </div>
+                    </div>
+                    <div class="scorebox">
+                      <div class="score-label">Edge Score</div>
+                      <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
+                    </div>
+                  </div>
 
-              <div class="badge-row">
-                {% for badge in row.badges %}
-                <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
+                  <div class="sparkline-wrap">
+                    <div class="sparkline-head">
+                      <div class="sparkline-label">14 Day Trend</div>
+                      <div class="sparkline-note">2 Week Analysis</div>
+                    </div>
+                    <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="pitcherGradient14{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                          <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
+                        </linearGradient>
+                      </defs>
+                      <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#pitcherGradient14{{ loop.index }})" points="{{ row.trend_points }}" />
+                    </svg>
+                  </div>
+
+                  <div class="badge-row">
+                    {% for badge in row.badges %}
+                    <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
+                    {% endfor %}
+                  </div>
+
+                  <div class="metric-grid">
+                    <div class="metric">
+                      <div class="metric-label">{{ row.metric_1_label }}</div>
+                      <div class="metric-value">{{ row.metric_1 }}</div>
+                    </div>
+                    <div class="metric">
+                      <div class="metric-label">{{ row.metric_2_label }}</div>
+                      <div class="metric-value">{{ row.metric_2 }}</div>
+                    </div>
+                    <div class="metric">
+                      <div class="metric-label">{{ row.metric_3_label }}</div>
+                      <div class="metric-value">{{ row.metric_3 }}</div>
+                    </div>
+                  </div>
+
+                  <div class="why">{{ row.why }}</div>
+                </article>
                 {% endfor %}
               </div>
+            </div>
 
-              <div class="metric-grid">
-                <div class="metric">
-                  <div class="metric-label">{{ row.metric_1_label }}</div>
-                  <div class="metric-value">{{ row.metric_1 }}</div>
+            <div class="section">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">Signal Layer</div>
+                  <h2 class="section-title">Hitting Prospect Signals</h2>
                 </div>
-                <div class="metric">
-                  <div class="metric-label">{{ row.metric_2_label }}</div>
-                  <div class="metric-value">{{ row.metric_2 }}</div>
-                </div>
-                <div class="metric">
-                  <div class="metric-label">{{ row.metric_3_label }}</div>
-                  <div class="metric-value">{{ row.metric_3 }}</div>
-                </div>
+                <div class="section-badge">Top {{ hitters_14|length }}</div>
               </div>
 
-              <div class="why">{{ row.why }}</div>
-            </article>
-            {% endfor %}
-          </div>
+              <div class="cards">
+                {% for row in hitters_14 %}
+                <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
+                  <div class="player-top">
+                    <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+                    <div class="player-ident">
+                      <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
+                      <h3 class="player-name">{{ row.player_name }}</h3>
+                      <div class="signal-line">{{ row.org }} // Hitter // {{ row.sample_note }}</div>
+                      <div class="card-meta-row">
+                        <span class="card-meta-badge source">{{ row.source_badge }}</span>
+                        <span class="card-meta-badge model">{{ row.score_version }}</span>
+                      </div>
+                    </div>
+                    <div class="scorebox">
+                      <div class="score-label">Edge Score</div>
+                      <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
+                    </div>
+                  </div>
+
+                  <div class="sparkline-wrap">
+                    <div class="sparkline-head">
+                      <div class="sparkline-label">14 Day Trend</div>
+                      <div class="sparkline-note">2 Week Analysis</div>
+                    </div>
+                    <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="hitterGradient14{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                          <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
+                        </linearGradient>
+                      </defs>
+                      <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#hitterGradient14{{ loop.index }})" points="{{ row.trend_points }}" />
+                    </svg>
+                  </div>
+
+                  <div class="badge-row">
+                    {% for badge in row.badges %}
+                    <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
+                    {% endfor %}
+                  </div>
+
+                  <div class="metric-grid">
+                    <div class="metric">
+                      <div class="metric-label">{{ row.metric_1_label }}</div>
+                      <div class="metric-value">{{ row.metric_1 }}</div>
+                    </div>
+                    <div class="metric">
+                      <div class="metric-label">{{ row.metric_2_label }}</div>
+                      <div class="metric-value">{{ row.metric_2 }}</div>
+                    </div>
+                    <div class="metric">
+                      <div class="metric-label">{{ row.metric_3_label }}</div>
+                      <div class="metric-value">{{ row.metric_3 }}</div>
+                    </div>
+                  </div>
+
+                  <div class="why">{{ row.why }}</div>
+                </article>
+                {% endfor %}
+              </div>
+            </div>
+          </section>
         </div>
-      </section>
-      {% endif %}
-    </section>
+        {% endif %}
+      </section>   
 
     {{ footer_html | safe }}
   </div>
@@ -987,7 +1135,7 @@ HTML_TEMPLATE = Template(
 )
 
 
-def fetch_latest_aaa_weekly_signal_base() -> pd.DataFrame:
+def fetch_recent_aaa_weekly_signal_base(limit_weeks: int = 2) -> tuple[pd.DataFrame, str, str | None]:
     from supabase import create_client
     import os
 
@@ -1000,41 +1148,62 @@ def fetch_latest_aaa_weekly_signal_base() -> pd.DataFrame:
         sb.table("milb_aaa_weekly_signal_base")
         .select("week_start")
         .order("week_start", desc=True)
-        .limit(1)
+        .limit(limit_weeks)
         .execute()
     )
 
     rows = latest_resp.data or []
     if not rows:
-        return pd.DataFrame()
+        return pd.DataFrame(), "", None
 
-    latest_week = rows[0]["week_start"]
+    week_starts = [row["week_start"] for row in rows if row.get("week_start")]
+    if not week_starts:
+        return pd.DataFrame(), "", None
+
+    latest_week = week_starts[0]
+    prior_week = week_starts[1] if len(week_starts) > 1 else None
 
     data_resp = (
         sb.table("milb_aaa_weekly_signal_base")
         .select("*")
-        .eq("week_start", latest_week)
+        .in_("week_start", week_starts)
         .execute()
     )
 
     data = data_resp.data or []
     if not data:
-        return pd.DataFrame()
+        return pd.DataFrame(), latest_week, prior_week
 
-    return pd.DataFrame(data)
+    return pd.DataFrame(data), latest_week, prior_week
 
 
-def load_source_frame() -> pd.DataFrame:
-    return fetch_latest_aaa_weekly_signal_base()
-
+def load_source_frame() -> tuple[pd.DataFrame, str, str | None]:
+    return fetch_recent_aaa_weekly_signal_base()
 
 def render_html() -> str:
-    df = load_source_frame()
+    df, latest_week, prior_week = load_source_frame()
 
-    hitters = build_aaa_hitter_promotion_watch(df).head(6) if not df.empty else pd.DataFrame()
-    pitchers = build_aaa_pitcher_promotion_watch(df).head(6) if not df.empty else pd.DataFrame()
+    if df.empty or not latest_week:
+        hitters_72 = pd.DataFrame()
+        pitchers_72 = pd.DataFrame()
+        hitters_14 = pd.DataFrame()
+        pitchers_14 = pd.DataFrame()
+    else:
+        latest_df = df[df["week_start"] == latest_week].copy()
+        prior_df = df[df["week_start"] == prior_week].copy() if prior_week else pd.DataFrame()
 
-    total_signals = len(hitters) + len(pitchers)
+        hitters_72 = build_aaa_hitter_promotion_watch(latest_df).head(6) if not latest_df.empty else pd.DataFrame()
+        pitchers_72 = build_aaa_pitcher_promotion_watch(latest_df).head(6) if not latest_df.empty else pd.DataFrame()
+
+        if not prior_df.empty:
+            two_week_df = pd.concat([latest_df, prior_df], ignore_index=True)
+        else:
+            two_week_df = latest_df.copy()
+
+        hitters_14 = build_aaa_hitter_promotion_watch(two_week_df).head(6) if not two_week_df.empty else pd.DataFrame()
+        pitchers_14 = build_aaa_pitcher_promotion_watch(two_week_df).head(6) if not two_week_df.empty else pd.DataFrame()
+
+    total_signals = len(hitters_72) + len(pitchers_72)
 
     return HTML_TEMPLATE.render(
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
@@ -1044,8 +1213,10 @@ def render_html() -> str:
         footer_html=FOOTER_TEMPLATE,
         shell_styles=SHELL_STYLES_TEMPLATE,
         total_signals=total_signals,
-        hitters=hitters.to_dict(orient="records"),
-        pitchers=pitchers.to_dict(orient="records"),
+        hitters=hitters_72.to_dict(orient="records"),
+        pitchers=pitchers_72.to_dict(orient="records"),
+        hitters_14=hitters_14.to_dict(orient="records"),
+        pitchers_14=pitchers_14.to_dict(orient="records"),
     )
 
 
