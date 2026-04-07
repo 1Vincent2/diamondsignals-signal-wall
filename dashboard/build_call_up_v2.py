@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 from jinja2 import Template
+import json
 
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
@@ -221,7 +222,222 @@ def build_aaa_pitcher_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
 
     return pitchers.sort_values(["edge_score", "bf"], ascending=[False, False]).reset_index(drop=True)
 
+def is_recent_arrival_prospect_relevant(move: dict) -> bool:
+    age = move.get("currentAge")
+    draft_year = move.get("draftYear")
+    debut = move.get("mlbDebutDate")
+    name = str(move.get("person") or "").strip().lower()
 
+    obvious_veterans = {
+        "ty france",
+        "mitch garver",
+        "randal grichuk",
+        "adam frazier",
+        "rhys hoskins",
+        "andrew mccutchen",
+        "christian vázquez",
+        "ildemaro vargas",
+        "brett sullivan",
+        "joe ross",
+        "walker buehler",
+        "shaun anderson",
+        "jeimer candelario",
+    }
+    if name in obvious_veterans:
+        return False
+
+    if debut is None:
+        return True
+
+    if isinstance(debut, str) and debut >= "2025-01-01":
+        return True
+
+    if age is not None and age <= 26:
+        return True
+
+    if draft_year is not None and draft_year >= 2020:
+        return True
+
+    return False
+
+
+def infer_position_badge(move: dict) -> str:
+    desc = str(move.get("description") or "").upper()
+
+    if " RHP " in f" {desc} ":
+        return "RHP"
+    if " LHP " in f" {desc} ":
+        return "LHP"
+    if " C " in f" {desc} ":
+        return "C"
+    if " SS " in f" {desc} ":
+        return "SS"
+    if " 2B " in f" {desc} ":
+        return "2B"
+    if " 3B " in f" {desc} ":
+        return "3B"
+    if " 1B " in f" {desc} ":
+        return "1B"
+    if " CF " in f" {desc} ":
+        return "CF"
+    if " LF " in f" {desc} ":
+        return "LF"
+    if " RF " in f" {desc} ":
+        return "RF"
+    if " OF " in f" {desc} ":
+        return "OF"
+    return "P" if "HP " in desc else "POS"
+
+
+def infer_position_class(position_badge: str) -> str:
+    if position_badge in {"RHP", "LHP", "P", "SP", "RP"}:
+        return "pitcher"
+    if position_badge in {"SS", "2B", "3B", "1B", "C"}:
+        return "infielder"
+    if position_badge in {"LF", "CF", "RF", "OF"}:
+        return "outfielder"
+    return "neutral"
+
+
+def infer_transaction_label(move: dict) -> str:
+    type_desc = str(move.get("typeDesc") or "").strip().lower()
+    debut = move.get("mlbDebutDate")
+    date = move.get("date")
+
+    if type_desc in {"selected", "recalled"}:
+        if debut and date and str(debut) >= str(date):
+            return "DEBUT"
+        if debut is None:
+            return "DEBUT"
+        return "RECALL"
+
+    if type_desc in {"optioned", "outrighted"}:
+        return "RETURN"
+
+    if type_desc == "assigned":
+        return "ASSIGN"
+
+    return "MOVE"
+
+
+AAA_TO_MLB_CODES = {
+    "Memphis Redbirds": ("MEM", "STL"),
+    "St. Paul Saints": ("STP", "MIN"),
+    "Lehigh Valley IronPigs": ("LHV", "PHI"),
+    "Buffalo Bisons": ("BUF", "TOR"),
+    "Syracuse Mets": ("SYR", "NYM"),
+    "Tacoma Rainiers": ("TAC", "SEA"),
+    "Louisville Bats": ("LOU", "CIN"),
+    "Sugar Land Space Cowboys": ("SL", "HOU"),
+    "Reno Aces": ("REN", "ARI"),
+    "Albuquerque Isotopes": ("ABQ", "COL"),
+    "Norfolk Tides": ("NOR", "BAL"),
+    "Jacksonville Jumbo Shrimp": ("JAX", "MIA"),
+    "Nashville Sounds": ("NAS", "MIL"),
+    "Salt Lake Bees": ("SLB", "LAA"),
+    "Charlotte Knights": ("CHA", "CWS"),
+    "El Paso Chihuahuas": ("ELP", "SD"),
+    "Columbus Clippers": ("CLP", "CLE"),
+    "Rochester Red Wings": ("ROC", "WSH"),
+}
+
+
+def infer_team_codes(move: dict) -> tuple[str, str]:
+    from_team = str(move.get("fromTeam") or "")
+    to_team = str(move.get("toTeam") or "")
+
+    if from_team in AAA_TO_MLB_CODES:
+        return AAA_TO_MLB_CODES[from_team]
+
+    from_code = from_team[:3].upper() if from_team else "AAA"
+    to_code = to_team[:3].upper() if to_team else "MLB"
+    return from_code, to_code
+
+
+def load_arrivals_windows(live_limit: int = 8, archive_limit: int = 16) -> tuple[list[dict], list[dict]]:
+    path = DIST_DIR / "aaa_transactions_scout_only.json"
+    if not path.exists():
+        return [], []
+
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        moves = payload.get("scout_relevant_moves", []) or []
+    except Exception:
+        return [], []
+
+    arrivals = [m for m in moves if m.get("classification") == "arrival_to_mlb"]
+    arrivals = [m for m in arrivals if is_recent_arrival_prospect_relevant(m)]
+
+    now_ts = pd.Timestamp.now().normalize()
+
+    live_cutoff = now_ts - pd.Timedelta(hours=72)
+    archive_cutoff = now_ts - pd.Timedelta(days=14)
+
+    live_arrivals = []
+    archive_arrivals = []
+
+    for move in arrivals:
+        move_date_raw = move.get("date")
+        move_ts = pd.to_datetime(move_date_raw, errors="coerce")
+        if pd.isna(move_ts):
+            continue
+
+        move_ts = pd.Timestamp(move_ts).normalize()
+
+        if move_ts >= live_cutoff:
+            live_arrivals.append(move)
+
+        if move_ts >= archive_cutoff:
+            archive_arrivals.append(move)
+
+    def format_arrivals(arrivals_subset: list[dict], limit: int) -> list[dict]:
+        arrivals_subset = sorted(
+            arrivals_subset,
+            key=lambda m: (
+                str(m.get("date") or ""),
+                str(m.get("mlbDebutDate") or ""),
+                str(m.get("person") or ""),
+            ),
+            reverse=True,
+        )
+
+        formatted = []
+        for move in arrivals_subset[:limit]:
+            player = move.get("person") or "Unknown"
+            age = move.get("currentAge")
+            draft_year = move.get("draftYear")
+            debut = move.get("mlbDebutDate") or "MLB debut pending"
+
+            meta_bits = []
+            if age is not None:
+                meta_bits.append(f"Age {age}")
+            if draft_year is not None:
+                meta_bits.append(f"Draft {draft_year}")
+
+            meta_line = " // ".join(meta_bits) if meta_bits else "Upper-minors movement"
+            why = move.get("description") or player
+            pos_badge = infer_position_badge(move)
+            pos_class = infer_position_class(pos_badge)
+            txn_label = infer_transaction_label(move)
+            from_code, to_code = infer_team_codes(move)
+
+            formatted.append(
+                {
+                    "player_name": player,
+                    "date": move.get("date") or "—",
+                    "debut_label": debut,
+                    "meta_line": meta_line,
+                    "why": why,
+                    "position_badge": pos_badge,
+                    "position_class": pos_class,
+                    "transaction_label": txn_label,
+                    "from_code": from_code,
+                    "to_code": to_code,
+                }
+            )
+        return formatted
+
+    return format_arrivals(live_arrivals, live_limit), format_arrivals(archive_arrivals, archive_limit)
 HTML_TEMPLATE = Template(
     r"""<!doctype html>
 <html lang="en">
@@ -977,153 +1193,64 @@ HTML_TEMPLATE = Template(
                 </section>
         </div>
 
-        <div id="tab-14d" style="display:none;">
-          <section class="signal-grid">
-            <div class="section">
-              <div class="section-head">
-                <div>
-                  <div class="section-kicker">Signal Layer</div>
-                  <h2 class="section-title">Pitching Prospect Signals</h2>
-                </div>
-                <div class="section-badge">Top {{ pitchers_14|length }}</div>
+           <div id="tab-14d" style="display:none;">
+          <div class="section">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">Movement Layer</div>
+                <h2 class="section-title">Archive Arrivals — Last 14 Days</h2>
               </div>
-
-              <div class="cards">
-                {% for row in pitchers_14 %}
-                <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
-                  <div class="player-top">
-                    <div class="avatar">{{ row.player_name[:2]|upper }}</div>
-                    <div class="player-ident">
-                      <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
-                      <h3 class="player-name">{{ row.player_name }}</h3>
-                      <div class="signal-line">{{ row.org }} // Pitcher // {{ row.sample_note }}</div>
-                      <div class="card-meta-row">
-                        <span class="card-meta-badge source">{{ row.source_badge }}</span>
-                        <span class="card-meta-badge model">{{ row.score_version }}</span>
-                      </div>
-                    </div>
-                    <div class="scorebox">
-                      <div class="score-label">Edge Score</div>
-                      <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
-                    </div>
-                  </div>
-
-                  <div class="sparkline-wrap">
-                    <div class="sparkline-head">
-                      <div class="sparkline-label">14 Day Trend</div>
-                      <div class="sparkline-note">2 Week Analysis</div>
-                    </div>
-                    <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                      <defs>
-                        <linearGradient id="pitcherGradient14{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                          <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
-                        </linearGradient>
-                      </defs>
-                      <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#pitcherGradient14{{ loop.index }})" points="{{ row.trend_points }}" />
-                    </svg>
-                  </div>
-
-                  <div class="badge-row">
-                    {% for badge in row.badges %}
-                    <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
-                    {% endfor %}
-                  </div>
-
-                  <div class="metric-grid">
-                    <div class="metric">
-                      <div class="metric-label">{{ row.metric_1_label }}</div>
-                      <div class="metric-value">{{ row.metric_1 }}</div>
-                    </div>
-                    <div class="metric">
-                      <div class="metric-label">{{ row.metric_2_label }}</div>
-                      <div class="metric-value">{{ row.metric_2 }}</div>
-                    </div>
-                    <div class="metric">
-                      <div class="metric-label">{{ row.metric_3_label }}</div>
-                      <div class="metric-value">{{ row.metric_3 }}</div>
-                    </div>
-                  </div>
-
-                  <div class="why">{{ row.why }}</div>
-                </article>
-                {% endfor %}
-              </div>
+              <div class="section-badge">{{ archive_arrivals|length }} Players</div>
             </div>
 
-            <div class="section">
-              <div class="section-head">
-                <div>
-                  <div class="section-kicker">Signal Layer</div>
-                  <h2 class="section-title">Hitting Prospect Signals</h2>
+            {% if archive_arrivals %}
+            <div class="cards">
+              {% for row in archive_arrivals %}
+              <article class="player-card">
+                <div class="player-top">
+                  <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+                  <div class="player-ident">
+                    <div class="rankline">{{ row.transaction_label }}</div>
+                    <h3 class="player-name">{{ row.player_name }}</h3>
+                    <div class="signal-line">{{ row.from_code }} → {{ row.to_code }} // {{ row.date }}</div>
+                    <div class="card-meta-row">
+                      <span class="card-meta-badge source">{{ row.position_badge }}</span>
+                      <span class="card-meta-badge model">{{ row.transaction_label }}</span>
+                    </div>
+                  </div>
                 </div>
-                <div class="section-badge">Top {{ hitters_14|length }}</div>
-              </div>
 
-              <div class="cards">
-                {% for row in hitters_14 %}
-                <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
-                  <div class="player-top">
-                    <div class="avatar">{{ row.player_name[:2]|upper }}</div>
-                    <div class="player-ident">
-                      <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
-                      <h3 class="player-name">{{ row.player_name }}</h3>
-                      <div class="signal-line">{{ row.org }} // Hitter // {{ row.sample_note }}</div>
-                      <div class="card-meta-row">
-                        <span class="card-meta-badge source">{{ row.source_badge }}</span>
-                        <span class="card-meta-badge model">{{ row.score_version }}</span>
-                      </div>
-                    </div>
-                    <div class="scorebox">
-                      <div class="score-label">Edge Score</div>
-                      <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
-                    </div>
+                <div class="badge-row">
+                  <span class="status-badge {{ row.position_class }}">{{ row.position_badge }}</span>
+                  <span class="status-badge neutral">{{ row.transaction_label }}</span>
+                </div>
+
+                <div class="metric-grid">
+                  <div class="metric">
+                    <div class="metric-label">Date</div>
+                    <div class="metric-value">{{ row.date }}</div>
                   </div>
-
-                  <div class="sparkline-wrap">
-                    <div class="sparkline-head">
-                      <div class="sparkline-label">14 Day Trend</div>
-                      <div class="sparkline-note">2 Week Analysis</div>
-                    </div>
-                    <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                      <defs>
-                        <linearGradient id="hitterGradient14{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                          <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
-                        </linearGradient>
-                      </defs>
-                      <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#hitterGradient14{{ loop.index }})" points="{{ row.trend_points }}" />
-                    </svg>
+                  <div class="metric">
+                    <div class="metric-label">Age / Draft</div>
+                    <div class="metric-value">{{ row.meta_line }}</div>
                   </div>
-
-                  <div class="badge-row">
-                    {% for badge in row.badges %}
-                    <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
-                    {% endfor %}
+                  <div class="metric">
+                    <div class="metric-label">Debut</div>
+                    <div class="metric-value">{{ row.debut_label }}</div>
                   </div>
+                </div>
 
-                  <div class="metric-grid">
-                    <div class="metric">
-                      <div class="metric-label">{{ row.metric_1_label }}</div>
-                      <div class="metric-value">{{ row.metric_1 }}</div>
-                    </div>
-                    <div class="metric">
-                      <div class="metric-label">{{ row.metric_2_label }}</div>
-                      <div class="metric-value">{{ row.metric_2 }}</div>
-                    </div>
-                    <div class="metric">
-                      <div class="metric-label">{{ row.metric_3_label }}</div>
-                      <div class="metric-value">{{ row.metric_3 }}</div>
-                    </div>
-                  </div>
-
-                  <div class="why">{{ row.why }}</div>
-                </article>
-                {% endfor %}
-              </div>
+                <div class="why">{{ row.why }}</div>
+              </article>
+              {% endfor %}
             </div>
-          </section>
-        </div>
+            {% else %}
+            <div class="placeholder">
+              No prospect-relevant MLB arrivals in the last 14 days.
+            </div>
+            {% endif %}
+          </div>
+        </div>     <
         {% endif %}
       </section>   
 
@@ -1224,8 +1351,9 @@ def render_html() -> str:
 
         hitters_14 = build_aaa_hitter_promotion_watch(two_week_df).head(6) if not two_week_df.empty else pd.DataFrame()
         pitchers_14 = build_aaa_pitcher_promotion_watch(two_week_df).head(6) if not two_week_df.empty else pd.DataFrame()
-
+      
     total_signals = len(hitters_72) + len(pitchers_72)
+    live_arrivals, archive_arrivals = load_arrivals_windows(live_limit=8, archive_limit=16)
 
     return HTML_TEMPLATE.render(
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
@@ -1239,6 +1367,8 @@ def render_html() -> str:
         pitchers=pitchers_72.to_dict(orient="records"),
         hitters_14=hitters_14.to_dict(orient="records"),
         pitchers_14=pitchers_14.to_dict(orient="records"),
+        live_arrivals=live_arrivals,
+        archive_arrivals=archive_arrivals,
     )
 
 
