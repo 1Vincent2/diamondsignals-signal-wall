@@ -819,9 +819,9 @@ HTML_TEMPLATE = Template(
     </section>
 
     <section class="section-card">
-      <div class="tabs">
-        <div class="tab active">72 HR</div>
-        <div class="tab">14 DAY</div>
+           <div class="tabs">
+        <button type="button" class="tab active" id="tab-btn-72h">72 HR</button>
+        <button type="button" class="tab" id="tab-btn-14d">14 DAY</button>
       </div>
 
       {% if total_signals == 0 %}
@@ -1128,7 +1128,37 @@ HTML_TEMPLATE = Template(
     {{ footer_html | safe }}
   </div>
 
-  <script src="/player-search.js"></script>
+     <script src="/player-search.js"></script>
+    <script>
+      (function () {
+        const btn72 = document.getElementById("tab-btn-72h");
+        const btn14 = document.getElementById("tab-btn-14d");
+        const tab72 = document.getElementById("tab-72h");
+        const tab14 = document.getElementById("tab-14d");
+
+        if (!btn72 || !btn14 || !tab72 || !tab14) return;
+
+        function activateTab(which) {
+          const show72 = which === "72h";
+
+          tab72.style.display = show72 ? "block" : "none";
+          tab14.style.display = show72 ? "none" : "block";
+
+          btn72.classList.toggle("active", show72);
+          btn14.classList.toggle("active", !show72);
+        }
+
+        btn72.addEventListener("click", function () {
+          activateTab("72h");
+        });
+
+        btn14.addEventListener("click", function () {
+          activateTab("14d");
+        });
+
+        activateTab("72h");
+      })();
+    </script>
 </body>
 </html>
 """
