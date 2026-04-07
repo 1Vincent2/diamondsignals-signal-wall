@@ -1561,6 +1561,76 @@ HTML_TEMPLATE = Template("""
     }
 
 {{ shell_styles | safe }}
+                               .topnav { 
+        border-top: 1px solid rgba(255,255,255,0.04); 
+        border-bottom: 1px solid rgba(255,255,255,0.05); 
+        background: rgba(255,255,255,0.015); 
+      }
+
+      .topnav-inner { 
+        width: min(1180px, calc(100% - 24px)); 
+        margin: 0 auto; 
+        display: flex; 
+        align-items: center; 
+        gap: 10px; 
+        overflow-x: auto; 
+        white-space: nowrap; 
+        padding: 10px 0; 
+        scrollbar-width: none; 
+      }
+
+      .topnav-inner::-webkit-scrollbar { 
+        display: none; 
+      }
+
+      .topnav-links { 
+        display: flex; 
+        align-items: center; 
+        gap: 10px; 
+        flex-wrap: nowrap; 
+      }
+
+      .topnav-link { 
+        display: inline-flex !important; 
+        align-items: center; 
+        gap: 6px; 
+        text-decoration: none !important; 
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; 
+        font-size: 11px; 
+        text-transform: uppercase; 
+        letter-spacing: 0.08em; 
+        color: rgba(255,255,255,0.72) !important; 
+        padding: 8px 10px; 
+        border-radius: 999px; 
+        border: 1px solid rgba(255,255,255,0.06); 
+        background: rgba(255,255,255,0.02); 
+        transition: opacity 0.18s ease, transform 0.18s ease, border-color 0.18s ease, color 0.18s ease; 
+      }
+
+      .topnav-link:visited { 
+        color: rgba(255,255,255,0.72) !important; 
+      }
+
+      .topnav-link:hover { 
+        opacity: 1; 
+        transform: translateY(-1px); 
+        border-color: rgba(255,255,255,0.12); 
+        color: #ffffff !important; 
+      }
+
+      .topnav-link.active { 
+        color: #ffffff !important; 
+        border-color: rgba(182,255,0,0.20); 
+        box-shadow: 0 0 8px rgba(182,255,0,0.08); 
+      }
+
+      .topnav-link.active:visited { 
+        color: #ffffff !important; 
+      }
+
+      .topnav-tag { 
+        color: #ccff00 !important; 
+      }
 
        @media (max-width: 640px) {
       .topbar-inner,
