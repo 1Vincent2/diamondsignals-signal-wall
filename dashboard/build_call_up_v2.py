@@ -1670,7 +1670,7 @@ HTML_TEMPLATE = Template(
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
                       <span class="card-meta-badge">{{ row.score_version }}</span>
-                      {% if row.display_team != "—" %}<span class="card-meta-badge team">{{ row.display_team }}</span>{% endif %}
+                      
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1743,7 +1743,7 @@ HTML_TEMPLATE = Template(
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
                       <span class="card-meta-badge">{{ row.score_version }}</span>
-                      {% if row.display_team != "—" %}<span class="card-meta-badge team">{{ row.display_team }}</span>{% endif %}
+                      
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1821,7 +1821,7 @@ HTML_TEMPLATE = Template(
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
                       <span class="card-meta-badge">{{ row.score_version }}</span>
-                      {% if row.display_team != "—" %}<span class="card-meta-badge team">{{ row.display_team }}</span>{% endif %}
+                      
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1898,7 +1898,7 @@ HTML_TEMPLATE = Template(
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
                       <span class="card-meta-badge">{{ row.score_version }}</span>
-                      {% if row.display_team != "—" %}<span class="card-meta-badge team">{{ row.display_team }}</span>{% endif %}
+                      
                     </div>
                   </div>
                   <div class="scorebox">
