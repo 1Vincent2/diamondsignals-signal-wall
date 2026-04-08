@@ -1622,7 +1622,7 @@ HTML_TEMPLATE = Template(
                   <div class="player-ident">
                     <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
                     <h3 class="player-name">{{ row.player_name }}</h3>
-                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // Pitcher // {{ row.sample_note }}</div>
+                    <<div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // Pitching Signal // {{ row.sample_note }}</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
                       <span class="card-meta-badge">{{ row.score_version }}</span>
@@ -1695,7 +1695,7 @@ HTML_TEMPLATE = Template(
                   <div class="player-ident">
                     <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
                     <h3 class="player-name">{{ row.player_name }}</h3>
-                   <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // Hitter // {{ row.sample_note }}</div>
+                   <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // Hitting Signal // {{ row.sample_note }}</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
                       <span class="card-meta-badge">{{ row.score_version }}</span>
@@ -1773,7 +1773,7 @@ HTML_TEMPLATE = Template(
                   <div class="player-ident">
                     <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
                     <h3 class="player-name">{{ row.player_name }}</h3>
-                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // 14 Day Window // {{ row.sample_note }}</div>
+                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // 14 Day Scout Window // {{ row.sample_note }}</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
                       <span class="card-meta-badge">{{ row.score_version }}</span>
@@ -1850,7 +1850,7 @@ HTML_TEMPLATE = Template(
                   <div class="player-ident">
                     <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
                     <h3 class="player-name">{{ row.player_name }}</h3>
-                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // 14 Day Window // {{ row.sample_note }}</div>
+                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // 14 Day Scout Window // {{ row.sample_note }}</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
                       <span class="card-meta-badge">{{ row.score_version }}</span>
@@ -1930,8 +1930,8 @@ HTML_TEMPLATE = Template(
                   <h3 class="player-name">{{ row.player_name }}</h3>
                   <div class="rankline">{{ row.transaction_label }} // Movement Layer</div>
                   <div class="card-meta-row">
-                    <span class="card-meta-badge">Arrival</span>
-                    <span class="card-meta-badge team">{{ row.from_code }}</span>
+                    <span class="card-meta-badge">Recent Arrival</span>
+                   <span class="card-meta-badge team">FROM {{ row.from_code }}</span>
                     <span class="card-meta-badge team">{{ row.to_code }}</span>
                   </div>
                 </div>
@@ -1944,20 +1944,20 @@ HTML_TEMPLATE = Template(
 
               <div class="metric-grid">
                 <div class="metric">
-                  <div class="metric-label">Move Date</div>
+                  <div class="metric-label">Transaction Date</div>
                   <div class="metric-value">{{ row.date }}</div>
                 </div>
                 <div class="metric">
-                  <div class="metric-label">Profile</div>
+                  <div class="metric-label">Prospect Context</div>
                   <div class="metric-value">{{ row.meta_line }}</div>
                 </div>
                 <div class="metric">
-                  <div class="metric-label">Debut Status</div>
+                  <div class="metric-label">MLB Status</div>
                   <div class="metric-value">{{ row.debut_label }}</div>
                 </div>
               </div>
 
-              <div class="why">{{ row.why }}</div>
+              <div class="why">{{ row.why }} // {{ row.event_line }}</div>
             </article>
             {% endfor %}
           </div>
@@ -1982,37 +1982,37 @@ HTML_TEMPLATE = Template(
         <div class="guide-list">
           <div class="guide-item">
             <div class="guide-term">72 HR</div>
-            <div class="guide-def">This window prioritizes near-term promotion pressure and immediate movement signals.</div>
+            <div class="guide-def">This view prioritizes near-term promotion pressure, fast-rising signal quality, and immediate opportunity changes.</div>
           </div>
 
           <div class="guide-item">
             <div class="guide-term">14 DAY</div>
-            <div class="guide-def">This window gives the broader scout view: recent signal strength plus transaction-layer movement and arrivals.</div>
+            <div class="guide-def">This view gives the broader scout window: stronger recent signal context plus recalls, debuts, call-ups, and arrivals.</div>
           </div>
 
           <div class="guide-item">
             <div class="guide-term">Edge Score</div>
-            <div class="guide-def">A ranking score used to surface the strongest current signal candidates inside each board.</div>
+            <div class="guide-def">A ranking score used to surface the strongest current promotion-watch candidates inside each board.</div>
           </div>
 
           <div class="guide-item">
             <div class="guide-term">Signal Layer</div>
-            <div class="guide-def">Players ranked by recent underlying signal quality rather than simple public-facing box-score reputation.</div>
+            <div class="guide-def">Players ranked by recent underlying signal quality, not just public-facing box-score reputation or surface stats.</div>
           </div>
 
           <div class="guide-item">
             <div class="guide-term">Movement Layer</div>
-            <div class="guide-def">Recent arrivals, recalls, debuts, and related transitions that matter for prospect timing and opportunity.</div>
+            <div class="guide-def">Recent arrivals, recalls, debuts, and movement events that matter for prospect timing, roster opportunity, and market reaction.</div>
           </div>
 
           <div class="guide-item">
             <div class="guide-term">How to Read Team Labels</div>
-            <div class="guide-def">This board should emphasize the minor-league affiliate context first, with the MLB parent organization used as secondary context.</div>
+            <div class="guide-def">This terminal should emphasize minor-league affiliate context first, with the MLB parent organization used as secondary context.</div>
           </div>
 
           <div class="guide-item">
             <div class="guide-term">Why This Page Exists</div>
-            <div class="guide-def">Promotion Watch is designed to identify actionable player movement before the broader market fully adjusts.</div>
+            <div class="guide-def">Promotion Watch is designed to identify actionable player movement before the broader market fully adjusts to role, timing, and talent signals.</div>
           </div>
         </div>
       </aside>
