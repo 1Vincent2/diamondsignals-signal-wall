@@ -597,7 +597,7 @@
       </div>
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">2026-04-07 07:27 PM</div>
+        <div class="live-time">2026-04-07 08:15 PM</div>
       </div>
     </div>
   </div>
@@ -640,20 +640,20 @@
         </p>
       </div>
 
-      <div class="summary-card">
+         <div class="summary-card">
         <div>
           <div class="summary-label">Window</div>
-          <div class="summary-value">72 HR</div>
+          <div class="summary-value" id="summary-window">72 HR</div>
         </div>
         <div>
           <div class="summary-label">Mode</div>
-          <div class="summary-value">AAA</div>
+          <div class="summary-value" id="summary-mode">AAA</div>
         </div>
         <div>
           <div class="summary-label">Signals</div>
-          <div class="summary-value">11</div>
+          <div class="summary-value" id="summary-signals">11</div>
         </div>
-      </div>
+      </div>   
     </section>
 
    <section class="section-card">
@@ -1877,7 +1877,7 @@
 
          <script src="/player-search.js"></script>
     <script>
-      function switchPromotionTab(panelId, buttonEl) {
+       function switchPromotionTab(panelId, buttonEl) {
         document.querySelectorAll("#tab-72h, #tab-14d").forEach((panel) => {
           panel.style.display = "none";
         });
@@ -1889,7 +1889,21 @@
         const activePanel = document.getElementById(panelId);
         if (activePanel) activePanel.style.display = "block";
         if (buttonEl) buttonEl.classList.add("active");
-      }
+
+        const summaryWindow = document.getElementById("summary-window");
+        const summaryMode = document.getElementById("summary-mode");
+        const summarySignals = document.getElementById("summary-signals");
+
+        if (panelId === "tab-14d") {
+          if (summaryWindow) summaryWindow.textContent = "14 DAY";
+          if (summaryMode) summaryMode.textContent = "ARCHIVE";
+          if (summarySignals) summarySignals.textContent = "13";
+        } else {
+          if (summaryWindow) summaryWindow.textContent = "72 HR";
+          if (summaryMode) summaryMode.textContent = "AAA";
+          if (summarySignals) summarySignals.textContent = "11";
+        }
+      }  
 
       document.addEventListener("DOMContentLoaded", function () {
         const defaultTab = document.getElementById("tab-72h");

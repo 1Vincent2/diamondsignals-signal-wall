@@ -1018,20 +1018,20 @@ HTML_TEMPLATE = Template(
         </p>
       </div>
 
-      <div class="summary-card">
+         <div class="summary-card">
         <div>
           <div class="summary-label">Window</div>
-          <div class="summary-value">72 HR</div>
+          <div class="summary-value" id="summary-window">72 HR</div>
         </div>
         <div>
           <div class="summary-label">Mode</div>
-          <div class="summary-value">AAA</div>
+          <div class="summary-value" id="summary-mode">AAA</div>
         </div>
         <div>
           <div class="summary-label">Signals</div>
-          <div class="summary-value">{{ total_signals }}</div>
+          <div class="summary-value" id="summary-signals">{{ total_signals }}</div>
         </div>
-      </div>
+      </div>   
     </section>
 
    <section class="section-card">
@@ -1259,7 +1259,7 @@ HTML_TEMPLATE = Template(
 
          <script src="/player-search.js"></script>
     <script>
-      function switchPromotionTab(panelId, buttonEl) {
+       function switchPromotionTab(panelId, buttonEl) {
         document.querySelectorAll("#tab-72h, #tab-14d").forEach((panel) => {
           panel.style.display = "none";
         });
@@ -1271,7 +1271,21 @@ HTML_TEMPLATE = Template(
         const activePanel = document.getElementById(panelId);
         if (activePanel) activePanel.style.display = "block";
         if (buttonEl) buttonEl.classList.add("active");
-      }
+
+        const summaryWindow = document.getElementById("summary-window");
+        const summaryMode = document.getElementById("summary-mode");
+        const summarySignals = document.getElementById("summary-signals");
+
+        if (panelId === "tab-14d") {
+          if (summaryWindow) summaryWindow.textContent = "14 DAY";
+          if (summaryMode) summaryMode.textContent = "ARCHIVE";
+          if (summarySignals) summarySignals.textContent = "{{ archive_arrivals|length }}";
+        } else {
+          if (summaryWindow) summaryWindow.textContent = "72 HR";
+          if (summaryMode) summaryMode.textContent = "AAA";
+          if (summarySignals) summarySignals.textContent = "{{ total_signals }}";
+        }
+      }  
 
       document.addEventListener("DOMContentLoaded", function () {
         const defaultTab = document.getElementById("tab-72h");
