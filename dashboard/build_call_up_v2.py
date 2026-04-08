@@ -222,6 +222,7 @@ def build_aaa_pitcher_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
 
     return pitchers.sort_values(["edge_score", "bf"], ascending=[False, False]).reset_index(drop=True)
 
+
 def is_recent_arrival_prospect_relevant(move: dict) -> bool:
     age = move.get("currentAge")
     draft_year = move.get("draftYear")
@@ -438,6 +439,8 @@ def load_arrivals_windows(live_limit: int = 8, archive_limit: int = 16) -> tuple
         return formatted
 
     return format_arrivals(live_arrivals, live_limit), format_arrivals(archive_arrivals, archive_limit)
+
+
 HTML_TEMPLATE = Template(
     r"""<!doctype html>
 <html lang="en">
@@ -653,6 +656,7 @@ HTML_TEMPLATE = Template(
       font-size: 11px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
+      cursor: pointer;
     }
 
     .tab.active {
@@ -906,6 +910,19 @@ HTML_TEMPLATE = Template(
       background: rgba(255,255,255,0.02);
     }
 
+    .status-badge.pitcher {
+      color: var(--blue);
+      border-color: rgba(106,166,255,0.22);
+      background: rgba(106,166,255,0.06);
+    }
+
+    .status-badge.infielder,
+    .status-badge.outfielder {
+      color: var(--soft);
+      border-color: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+    }
+
     .metric-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -918,6 +935,7 @@ HTML_TEMPLATE = Template(
       border-radius: 12px;
       padding: 10px;
       background: rgba(255,255,255,0.02);
+      min-width: 0;
     }
 
     .metric-label {
@@ -932,7 +950,8 @@ HTML_TEMPLATE = Template(
       margin-top: 6px;
       font-size: 18px;
       font-weight: 800;
-      line-height: 1;
+      line-height: 1.15;
+      word-break: break-word;
     }
 
     .why {
@@ -950,6 +969,10 @@ HTML_TEMPLATE = Template(
       .hero {
         grid-template-columns: 1fr;
       }
+
+      .signal-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 640px) {
@@ -962,16 +985,14 @@ HTML_TEMPLATE = Template(
 
       .hero-card,
       .summary-card,
-      .section-card {
+      .section-card,
+      .section,
+      .player-card {
         border-radius: 16px;
       }
 
       .hero-card {
         padding: 18px;
-      }
-
-      .signal-grid {
-        grid-template-columns: 1fr;
       }
 
       .metric-grid {
@@ -984,6 +1005,16 @@ HTML_TEMPLATE = Template(
 
       .score-value {
         font-size: 24px;
+      }
+
+      .player-top {
+        grid-template-columns: auto 1fr;
+      }
+
+      .scorebox {
+        grid-column: 2;
+        text-align: left;
+        margin-top: 8px;
       }
     }
   </style>
@@ -1018,7 +1049,7 @@ HTML_TEMPLATE = Template(
         </p>
       </div>
 
-         <div class="summary-card">
+      <div class="summary-card">
         <div>
           <div class="summary-label">Window</div>
           <div class="summary-value" id="summary-window">72 HR</div>
@@ -1031,95 +1062,95 @@ HTML_TEMPLATE = Template(
           <div class="summary-label">Signals</div>
           <div class="summary-value" id="summary-signals">{{ total_signals }}</div>
         </div>
-      </div>   
+      </div>
     </section>
 
-   <section class="section-card">
+    <section class="section-card">
       <div class="tabs" role="tablist" aria-label="Promotion watch windows">
         <button type="button" class="tab active" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
         <button type="button" class="tab" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
       </div>
 
-            {% if total_signals == 0 %}
+      {% if total_signals == 0 %}
       <div class="placeholder">
         No live AAA promotion-watch signals available yet.
       </div>
       {% else %}
       <div id="tab-72h">
-      <section class="signal-grid">
-        <div class="section">
-          <div class="section-head">
-            <div>
-              <div class="section-kicker">Signal Layer</div>
-              <h2 class="section-title">Pitching Prospect Signals</h2>
+        <section class="signal-grid">
+          <div class="section">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">Signal Layer</div>
+                <h2 class="section-title">Pitching Prospect Signals</h2>
+              </div>
+              <div class="section-badge">Top {{ pitchers|length }}</div>
             </div>
-            <div class="section-badge">Top {{ pitchers|length }}</div>
-          </div>
 
-          <div class="cards">
-            {% for row in pitchers %}
-            <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
-              <div class="player-top">
-                <div class="avatar">{{ row.player_name[:2]|upper }}</div>
-                <div class="player-ident">
-                  <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
-                  <h3 class="player-name">{{ row.player_name }}</h3>
-                  <div class="signal-line">Pitcher // Live Edge Signal // {{ row.sample_note }}</div>
-                  <div class="card-meta-row">
-                    <span class="card-meta-badge source">{{ row.source_badge }}</span>
-                    <span class="card-meta-badge model">{{ row.score_version }}</span>
+            <div class="cards">
+              {% for row in pitchers %}
+              <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
+                <div class="player-top">
+                  <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+                  <div class="player-ident">
+                    <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
+                    <h3 class="player-name">{{ row.player_name }}</h3>
+                    <div class="signal-line">Pitcher // Live Edge Signal // {{ row.sample_note }}</div>
+                    <div class="card-meta-row">
+                      <span class="card-meta-badge source">{{ row.source_badge }}</span>
+                      <span class="card-meta-badge model">{{ row.score_version }}</span>
+                    </div>
+                  </div>
+                  <div class="scorebox">
+                    <div class="score-label">Edge Score</div>
+                    <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
                   </div>
                 </div>
-                <div class="scorebox">
-                  <div class="score-label">Edge Score</div>
-                  <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
-                </div>
-              </div>
 
-              <div class="sparkline-wrap">
-                <div class="sparkline-head">
-                  <div class="sparkline-label">7 Day Trend</div>
-                  <div class="sparkline-note">7D Trend Analysis</div>
+                <div class="sparkline-wrap">
+                  <div class="sparkline-head">
+                    <div class="sparkline-label">7 Day Trend</div>
+                    <div class="sparkline-note">7D Trend Analysis</div>
+                  </div>
+                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="pitcherGradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                        <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
+                      </linearGradient>
+                    </defs>
+                    <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#pitcherGradient{{ loop.index }})" points="{{ row.trend_points }}" />
+                  </svg>
                 </div>
-                <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="pitcherGradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                      <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
-                    </linearGradient>
-                  </defs>
-                  <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#pitcherGradient{{ loop.index }})" points="{{ row.trend_points }}" />
-                </svg>
-              </div>
 
-              <div class="badge-row">
-                {% for badge in row.badges %}
-                <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
-                {% endfor %}
-              </div>
+                <div class="badge-row">
+                  {% for badge in row.badges %}
+                  <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
+                  {% endfor %}
+                </div>
 
-              <div class="metric-grid">
-                <div class="metric">
-                  <div class="metric-label">{{ row.metric_1_label }}</div>
-                  <div class="metric-value">{{ row.metric_1 }}</div>
+                <div class="metric-grid">
+                  <div class="metric">
+                    <div class="metric-label">{{ row.metric_1_label }}</div>
+                    <div class="metric-value">{{ row.metric_1 }}</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">{{ row.metric_2_label }}</div>
+                    <div class="metric-value">{{ row.metric_2 }}</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">{{ row.metric_3_label }}</div>
+                    <div class="metric-value">{{ row.metric_3 }}</div>
+                  </div>
                 </div>
-                <div class="metric">
-                  <div class="metric-label">{{ row.metric_2_label }}</div>
-                  <div class="metric-value">{{ row.metric_2 }}</div>
-                </div>
-                <div class="metric">
-                  <div class="metric-label">{{ row.metric_3_label }}</div>
-                  <div class="metric-value">{{ row.metric_3 }}</div>
-                </div>
-              </div>
 
-              <div class="why">{{ row.why }}</div>
-            </article>
-            {% endfor %}
+                <div class="why">{{ row.why }}</div>
+              </article>
+              {% endfor %}
+            </div>
           </div>
-        </div>
 
-               <div class="section">
+          <div class="section">
             <div class="section-head">
               <div>
                 <div class="section-kicker">Signal Layer</div>
@@ -1190,53 +1221,75 @@ HTML_TEMPLATE = Template(
               {% endfor %}
             </div>
           </div>
-                </section>
-        </div>
+        </section>
+      </div>
 
-           <div id="tab-14d" style="display:none;">
+      <div id="tab-14d" style="display:none;">
+        <section class="signal-grid">
           <div class="section">
             <div class="section-head">
               <div>
-                <div class="section-kicker">Movement Layer</div>
-                <h2 class="section-title">Archive Arrivals — Last 14 Days</h2>
+                <div class="section-kicker">Signal Layer</div>
+                <h2 class="section-title">Pitching Prospect Signals — Last 14 Days</h2>
               </div>
-              <div class="section-badge">{{ archive_arrivals|length }} Players</div>
+              <div class="section-badge">Top {{ pitchers_14|length }}</div>
             </div>
 
-            {% if archive_arrivals %}
+            {% if pitchers_14 %}
             <div class="cards">
-              {% for row in archive_arrivals %}
-              <article class="player-card">
+              {% for row in pitchers_14 %}
+              <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
                 <div class="player-top">
                   <div class="avatar">{{ row.player_name[:2]|upper }}</div>
                   <div class="player-ident">
-                    <div class="rankline">{{ row.transaction_label }}</div>
+                    <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
                     <h3 class="player-name">{{ row.player_name }}</h3>
-                    <div class="signal-line">{{ row.from_code }} → {{ row.to_code }} // {{ row.date }}</div>
+                    <div class="signal-line">Pitcher // 14 Day Window // {{ row.sample_note }}</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">{{ row.position_badge }}</span>
-                      <span class="card-meta-badge model">{{ row.transaction_label }}</span>
+                      <span class="card-meta-badge source">{{ row.source_badge }}</span>
+                      <span class="card-meta-badge model">{{ row.score_version }}</span>
                     </div>
+                  </div>
+                  <div class="scorebox">
+                    <div class="score-label">Edge Score</div>
+                    <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
                   </div>
                 </div>
 
+                <div class="sparkline-wrap">
+                  <div class="sparkline-head">
+                    <div class="sparkline-label">14 Day Trend</div>
+                    <div class="sparkline-note">2 Week Signal Window</div>
+                  </div>
+                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="pitcher14Gradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                        <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
+                      </linearGradient>
+                    </defs>
+                    <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#pitcher14Gradient{{ loop.index }})" points="{{ row.trend_points }}" />
+                  </svg>
+                </div>
+
                 <div class="badge-row">
-                  <span class="status-badge {{ row.position_class }}">{{ row.position_badge }}</span>
-                  <span class="status-badge neutral">{{ row.transaction_label }}</span>
+                  {% for badge in row.badges %}
+                  <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
+                  {% endfor %}
                 </div>
 
                 <div class="metric-grid">
                   <div class="metric">
-                    <div class="metric-label">Date</div>
-                    <div class="metric-value">{{ row.date }}</div>
+                    <div class="metric-label">{{ row.metric_1_label }}</div>
+                    <div class="metric-value">{{ row.metric_1 }}</div>
                   </div>
                   <div class="metric">
-                    <div class="metric-label">Age / Draft</div>
-                    <div class="metric-value">{{ row.meta_line }}</div>
+                    <div class="metric-label">{{ row.metric_2_label }}</div>
+                    <div class="metric-value">{{ row.metric_2 }}</div>
                   </div>
                   <div class="metric">
-                    <div class="metric-label">Debut</div>
-                    <div class="metric-value">{{ row.debut_label }}</div>
+                    <div class="metric-label">{{ row.metric_3_label }}</div>
+                    <div class="metric-value">{{ row.metric_3 }}</div>
                   </div>
                 </div>
 
@@ -1246,52 +1299,189 @@ HTML_TEMPLATE = Template(
             </div>
             {% else %}
             <div class="placeholder">
-              No prospect-relevant MLB arrivals in the last 14 days.
+              No 14 day pitching prospect signals available.
             </div>
             {% endif %}
           </div>
-        </div>     <
-        {% endif %}
-      </section>   
+
+          <div class="section">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">Signal Layer</div>
+                <h2 class="section-title">Hitting Prospect Signals — Last 14 Days</h2>
+              </div>
+              <div class="section-badge">Top {{ hitters_14|length }}</div>
+            </div>
+
+            {% if hitters_14 %}
+            <div class="cards">
+              {% for row in hitters_14 %}
+              <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
+                <div class="player-top">
+                  <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+                  <div class="player-ident">
+                    <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
+                    <h3 class="player-name">{{ row.player_name }}</h3>
+                    <div class="signal-line">{{ row.org }} // 14 Day Window // {{ row.sample_note }}</div>
+                    <div class="card-meta-row">
+                      <span class="card-meta-badge source">{{ row.source_badge }}</span>
+                      <span class="card-meta-badge model">{{ row.score_version }}</span>
+                    </div>
+                  </div>
+                  <div class="scorebox">
+                    <div class="score-label">Edge Score</div>
+                    <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
+                  </div>
+                </div>
+
+                <div class="sparkline-wrap">
+                  <div class="sparkline-head">
+                    <div class="sparkline-label">14 Day Trend</div>
+                    <div class="sparkline-note">2 Week Signal Window</div>
+                  </div>
+                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="hitter14Gradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                        <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
+                      </linearGradient>
+                    </defs>
+                    <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#hitter14Gradient{{ loop.index }})" points="{{ row.trend_points }}" />
+                  </svg>
+                </div>
+
+                <div class="badge-row">
+                  {% for badge in row.badges %}
+                  <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
+                  {% endfor %}
+                </div>
+
+                <div class="metric-grid">
+                  <div class="metric">
+                    <div class="metric-label">{{ row.metric_1_label }}</div>
+                    <div class="metric-value">{{ row.metric_1 }}</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">{{ row.metric_2_label }}</div>
+                    <div class="metric-value">{{ row.metric_2 }}</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">{{ row.metric_3_label }}</div>
+                    <div class="metric-value">{{ row.metric_3 }}</div>
+                  </div>
+                </div>
+
+                <div class="why">{{ row.why }}</div>
+              </article>
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="placeholder">
+              No 14 day hitting prospect signals available.
+            </div>
+            {% endif %}
+          </div>
+        </section>
+
+        <div class="section" style="margin-top: 16px;">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Movement Layer</div>
+              <h2 class="section-title">Recent MLB Arrivals — Last 14 Days</h2>
+            </div>
+            <div class="section-badge">{{ archive_arrivals|length }} Players</div>
+          </div>
+
+          {% if archive_arrivals %}
+          <div class="cards">
+           {% for row in archive_arrivals %}
+<article class="player-card">
+  <div class="player-top">
+    <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+    <div class="player-ident">
+      <div class="rankline">Movement Trigger // {{ row.transaction_label }}</div>
+      <h3 class="player-name">{{ row.player_name }}</h3>
+      <div class="signal-line">{{ row.from_code }} → {{ row.to_code }} // {{ row.date }}</div>
+      <div class="card-meta-row">
+        <span class="card-meta-badge source">ARRIVAL</span>
+        <span class="card-meta-badge model">{{ row.position_badge }}</span>
+        <span class="card-meta-badge model">{{ row.transaction_label }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="badge-row">
+    <span class="status-badge {{ row.position_class }}">{{ row.position_badge }}</span>
+    <span class="status-badge neutral">{{ row.transaction_label }}</span>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric">
+      <div class="metric-label">Date</div>
+      <div class="metric-value">{{ row.date }}</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Profile</div>
+      <div class="metric-value">{{ row.meta_line }}</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Debut Status</div>
+      <div class="metric-value">{{ row.debut_label }}</div>
+    </div>
+  </div>
+
+  <div class="why">{{ row.why }}</div>
+</article>
+{% endfor %}
+          </div>
+          {% else %}
+          <div class="placeholder">
+            No prospect-relevant MLB arrivals in the last 14 days.
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </section>
 
     {{ footer_html | safe }}
   </div>
 
-         <script src="/player-search.js"></script>
-    <script>
-       function switchPromotionTab(panelId, buttonEl) {
-        document.querySelectorAll("#tab-72h, #tab-14d").forEach((panel) => {
-          panel.style.display = "none";
-        });
-
-        document.querySelectorAll(".tabs .tab").forEach((btn) => {
-          btn.classList.remove("active");
-        });
-
-        const activePanel = document.getElementById(panelId);
-        if (activePanel) activePanel.style.display = "block";
-        if (buttonEl) buttonEl.classList.add("active");
-
-        const summaryWindow = document.getElementById("summary-window");
-        const summaryMode = document.getElementById("summary-mode");
-        const summarySignals = document.getElementById("summary-signals");
-
-        if (panelId === "tab-14d") {
-          if (summaryWindow) summaryWindow.textContent = "14 DAY";
-          if (summaryMode) summaryMode.textContent = "ARCHIVE";
-          if (summarySignals) summarySignals.textContent = "{{ archive_arrivals|length }}";
-        } else {
-          if (summaryWindow) summaryWindow.textContent = "72 HR";
-          if (summaryMode) summaryMode.textContent = "AAA";
-          if (summarySignals) summarySignals.textContent = "{{ total_signals }}";
-        }
-      }  
-
-      document.addEventListener("DOMContentLoaded", function () {
-        const defaultTab = document.getElementById("tab-72h");
-        if (defaultTab) defaultTab.style.display = "block";
+  <script src="/player-search.js"></script>
+  <script>
+    function switchPromotionTab(panelId, buttonEl) {
+      document.querySelectorAll("#tab-72h, #tab-14d").forEach((panel) => {
+        panel.style.display = "none";
       });
-    </script>
+
+      document.querySelectorAll(".tabs .tab").forEach((btn) => {
+        btn.classList.remove("active");
+      });
+
+      const activePanel = document.getElementById(panelId);
+      if (activePanel) activePanel.style.display = "block";
+      if (buttonEl) buttonEl.classList.add("active");
+
+      const summaryWindow = document.getElementById("summary-window");
+      const summaryMode = document.getElementById("summary-mode");
+      const summarySignals = document.getElementById("summary-signals");
+
+      if (panelId === "tab-14d") {
+        if (summaryWindow) summaryWindow.textContent = "14 DAY";
+        if (summaryMode) summaryMode.textContent = "SCOUT";
+        if (summarySignals) summarySignals.textContent = "{{ hitters_14|length + pitchers_14|length }}";
+    } else {
+      if (summaryWindow) summaryWindow.textContent = "72 HR";
+      if (summaryMode) summaryMode.textContent = "AAA";
+      if (summarySignals) summarySignals.textContent = "{{ total_signals }}";
+}
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const defaultTab = document.getElementById("tab-72h");
+      if (defaultTab) defaultTab.style.display = "block";
+    });
+  </script>
 </body>
 </html>
 """
@@ -1343,6 +1533,7 @@ def fetch_recent_aaa_weekly_signal_base(limit_weeks: int = 2) -> tuple[pd.DataFr
 def load_source_frame() -> tuple[pd.DataFrame, str, str | None]:
     return fetch_recent_aaa_weekly_signal_base()
 
+
 def render_html() -> str:
     df, latest_week, prior_week = load_source_frame()
 
@@ -1365,7 +1556,7 @@ def render_html() -> str:
 
         hitters_14 = build_aaa_hitter_promotion_watch(two_week_df).head(6) if not two_week_df.empty else pd.DataFrame()
         pitchers_14 = build_aaa_pitcher_promotion_watch(two_week_df).head(6) if not two_week_df.empty else pd.DataFrame()
-      
+
     total_signals = len(hitters_72) + len(pitchers_72)
     live_arrivals, archive_arrivals = load_arrivals_windows(live_limit=8, archive_limit=16)
 
