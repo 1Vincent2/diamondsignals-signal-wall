@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-02T12:03:46.592037",
+  "generated_at": "2026-04-08T07:38:51.398167",
   "players": [
     {
       "player_id": 671096,
@@ -1315,6 +1315,19 @@
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/702720/headshot/67/current"
     },
     {
+      "player_id": 679883,
+      "full_name": "Luinder Avila",
+      "first_name": "Luinder",
+      "last_name": "Avila",
+      "team": "",
+      "team_name": "",
+      "position": "P",
+      "bats": "R",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/679883/headshot/67/current"
+    },
+    {
       "player_id": 701778,
       "full_name": "Jace Avina",
       "first_name": "Jace",
@@ -1508,6 +1521,19 @@
       "throws": "R",
       "status": "",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/681333/headshot/67/current"
+    },
+    {
+      "player_id": 663609,
+      "full_name": "Luken Baker",
+      "first_name": "Luken",
+      "last_name": "Baker",
+      "team": "",
+      "team_name": "",
+      "position": "1B",
+      "bats": "R",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/663609/headshot/67/current"
     },
     {
       "player_id": 694536,
@@ -5462,6 +5488,19 @@
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/814837/headshot/67/current"
     },
     {
+      "player_id": 641487,
+      "full_name": "J.P. Crawford",
+      "first_name": "John",
+      "last_name": "Crawford",
+      "team": "",
+      "team_name": "",
+      "position": "SS",
+      "bats": "L",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/641487/headshot/67/current"
+    },
+    {
       "player_id": 702222,
       "full_name": "Justin Crawford",
       "first_name": "Justin",
@@ -6279,6 +6318,19 @@
       "throws": "R",
       "status": "",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/671600/headshot/67/current"
+    },
+    {
+      "player_id": 680728,
+      "full_name": "Adrian Del Castillo",
+      "first_name": "Adrian",
+      "last_name": "Del Castillo",
+      "team": "",
+      "team_name": "",
+      "position": "C",
+      "bats": "L",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/680728/headshot/67/current"
     },
     {
       "player_id": 641511,
@@ -8367,7 +8419,7 @@
       "last_name": "Freeland",
       "team": "",
       "team_name": "",
-      "position": "SS",
+      "position": "2B",
       "bats": "S",
       "throws": "R",
       "status": "",
@@ -15537,6 +15589,19 @@
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/621006/headshot/67/current"
     },
     {
+      "player_id": 702303,
+      "full_name": "Riley Martin",
+      "first_name": "Riley",
+      "last_name": "Martin",
+      "team": "",
+      "team_name": "",
+      "position": "P",
+      "bats": "L",
+      "throws": "L",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/702303/headshot/67/current"
+    },
+    {
       "player_id": 657675,
       "full_name": "Rudy Martin Jr.",
       "first_name": "Rudy",
@@ -17420,6 +17485,19 @@
       "throws": "L",
       "status": "",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/681387/headshot/67/current"
+    },
+    {
+      "player_id": 672456,
+      "full_name": "Keider Montero",
+      "first_name": "Keider",
+      "last_name": "Montero",
+      "team": "",
+      "team_name": "",
+      "position": "P",
+      "bats": "R",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/672456/headshot/67/current"
     },
     {
       "player_id": 695603,
@@ -20295,6 +20373,19 @@
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/676571/headshot/67/current"
     },
     {
+      "player_id": 700249,
+      "full_name": "Cade Povich",
+      "first_name": "Cade",
+      "last_name": "Povich",
+      "team": "",
+      "team_name": "",
+      "position": "P",
+      "bats": "L",
+      "throws": "L",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/700249/headshot/67/current"
+    },
+    {
       "player_id": 702547,
       "full_name": "Caden Powell",
       "first_name": "Caden",
@@ -23088,6 +23179,19 @@
       "throws": "R",
       "status": "",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/680474/headshot/67/current"
+    },
+    {
+      "player_id": 687606,
+      "full_name": "Paxton Schultz",
+      "first_name": "Paxton",
+      "last_name": "Schultz",
+      "team": "",
+      "team_name": "",
+      "position": "P",
+      "bats": "L",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/687606/headshot/67/current"
     },
     {
       "player_id": 668845,
@@ -26444,19 +26548,6 @@
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/662139/headshot/67/current"
     },
     {
-      "player_id": 679029,
-      "full_name": "Samuel Vasquez",
-      "first_name": "Samuel",
-      "last_name": "Vasquez",
-      "team": "",
-      "team_name": "",
-      "position": "P",
-      "bats": "R",
-      "throws": "R",
-      "status": "",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/679029/headshot/67/current"
-    },
-    {
       "player_id": 691938,
       "full_name": "Willy Vasquez",
       "first_name": "Willy",
@@ -26808,6 +26899,19 @@
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/680767/headshot/67/current"
     },
     {
+      "player_id": 608723,
+      "full_name": "Austin Voth",
+      "first_name": "Austin",
+      "last_name": "Voth",
+      "team": "",
+      "team_name": "",
+      "position": "P",
+      "bats": "R",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/608723/headshot/67/current"
+    },
+    {
       "player_id": 809844,
       "full_name": "Kien Vu",
       "first_name": "Kien",
@@ -26845,6 +26949,19 @@
       "throws": "R",
       "status": "",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/681190/headshot/67/current"
+    },
+    {
+      "player_id": 679029,
+      "full_name": "Samuel V\u00e1squez",
+      "first_name": "Samuel",
+      "last_name": "V\u00e1squez",
+      "team": "",
+      "team_name": "",
+      "position": "P",
+      "bats": "R",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/679029/headshot/67/current"
     },
     {
       "player_id": 543877,
@@ -28366,6 +28483,19 @@
       "throws": "R",
       "status": "",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/803723/headshot/67/current"
+    },
+    {
+      "player_id": 687064,
+      "full_name": "Brandon Young",
+      "first_name": "Brandon",
+      "last_name": "Young",
+      "team": "",
+      "team_name": "",
+      "position": "P",
+      "bats": "R",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/687064/headshot/67/current"
     },
     {
       "player_id": 702284,

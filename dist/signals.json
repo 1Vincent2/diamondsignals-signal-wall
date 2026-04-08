@@ -1,79 +1,166 @@
 {
-  "generated_at": "2026-04-04T11:13:20.901951",
+  "generated_at": "2026-04-08T07:35:40.307980",
   "top_pitchers": [
     {
-      "player_name": "William Fleming",
-      "org": "Seattle Mariners",
-      "edge_score": 43.8,
-      "metric_1_label": "K/BB",
-      "metric_1": "4.50",
-      "metric_2_label": "K%",
-      "metric_2": "23.1%",
-      "metric_3_label": "BB%",
-      "metric_3": "5.1%",
-      "why": "William Fleming's 43.8 Edge Score is driven by K/BB of 4.50, K rate proxy of 23.1%, and BB rate proxy of 5.1%."
+      "player_name": "Luzardo, Jes\u00fas",
+      "edge_score": 77.5,
+      "metric_1_label": "Whiff %",
+      "metric_1": 22.2,
+      "metric_2_label": "FB Velo",
+      "metric_2": 96.7,
+      "metric_3_label": "Extension",
+      "metric_3": "5.6 ft",
+      "why": "Whiff rate 22.2% (+0.1 pts vs baseline), FB velo 96.7 mph (+1.2).",
+      "badges": [
+        "Whiff Lift",
+        "Velo Jump",
+        "Extension Gain",
+        "Trend Confirming"
+      ]
+    },
+    {
+      "player_name": "Burns, Chase",
+      "edge_score": 76.9,
+      "metric_1_label": "Whiff %",
+      "metric_1": 23.0,
+      "metric_2_label": "FB Velo",
+      "metric_2": 98.7,
+      "metric_3_label": "Extension",
+      "metric_3": "6.3 ft",
+      "why": "Whiff rate 23.0% (+0.1 pts vs baseline), FB velo 98.7 mph (+0.5).",
+      "badges": [
+        "Whiff Lift",
+        "Trend Confirming"
+      ]
+    },
+    {
+      "player_name": "Burke, Sean",
+      "edge_score": 75.4,
+      "metric_1_label": "Whiff %",
+      "metric_1": 16.5,
+      "metric_2_label": "FB Velo",
+      "metric_2": 95.3,
+      "metric_3_label": "Extension",
+      "metric_3": "6.9 ft",
+      "why": "Whiff rate 16.5% (+0.1 pts vs baseline), FB velo 95.3 mph (+1.6).",
+      "badges": [
+        "Whiff Lift",
+        "Velo Jump",
+        "Trend Confirming"
+      ]
+    },
+    {
+      "player_name": "Bradish, Kyle",
+      "edge_score": 70.0,
+      "metric_1_label": "Whiff %",
+      "metric_1": 17.3,
+      "metric_2_label": "FB Velo",
+      "metric_2": 94.7,
+      "metric_3_label": "Extension",
+      "metric_3": "6.4 ft",
+      "why": "Whiff rate 17.3% (+0.1 pts vs baseline), FB velo 94.7 mph (+1.1).",
+      "badges": [
+        "Whiff Lift",
+        "Velo Jump",
+        "Extension Gain",
+        "Trend Confirming"
+      ]
+    },
+    {
+      "player_name": "Misiorowski, Jacob",
+      "edge_score": 69.4,
+      "metric_1_label": "Whiff %",
+      "metric_1": 12.3,
+      "metric_2_label": "FB Velo",
+      "metric_2": 98.8,
+      "metric_3_label": "Extension",
+      "metric_3": "7.4 ft",
+      "why": "Whiff rate 12.3% (-0.1 pts vs baseline), FB velo 98.8 mph (+0.6).",
+      "badges": [
+        "Extension Gain",
+        "Trend Confirming"
+      ]
     }
   ],
   "top_hitters": [
     {
-      "player_name": "Spencer Packard",
-      "org": "Seattle Mariners",
-      "edge_score": 79.7,
-      "metric_1_label": "ISO",
-      "metric_1": "0.300",
-      "metric_2_label": "K/BB",
-      "metric_2": "0.80",
-      "metric_3_label": "BB%",
-      "metric_3": "19.2%",
-      "why": "Spencer Packard's 79.7 Edge Score is driven by ISO of 0.300, K/BB of 0.80, and BB rate of 19.2%."
+      "player_name": "Kyle Higashioka",
+      "edge_score": 88.0,
+      "metric_1_label": "Avg EV",
+      "metric_1": 92.1,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 20.0,
+      "metric_3_label": "Max EV",
+      "metric_3": 107.1,
+      "why": "Avg EV 92.1 mph (+5.1 vs baseline), barrel-like rate 20.0%.",
+      "badges": [
+        "EV Burst",
+        "Barrel Jump",
+        "Trend Confirming"
+      ]
     },
     {
-      "player_name": "Christian Franklin",
-      "org": "Chicago Cubs",
-      "edge_score": 70.5,
-      "metric_1_label": "ISO",
-      "metric_1": "0.269",
-      "metric_2_label": "K/BB",
-      "metric_2": "1.33",
-      "metric_3_label": "BB%",
-      "metric_3": "18.2%",
-      "why": "Christian Franklin's 70.5 Edge Score is driven by ISO of 0.269, K/BB of 1.33, and BB rate of 18.2%."
+      "player_name": "Amed Rosario",
+      "edge_score": 80.2,
+      "metric_1_label": "Avg EV",
+      "metric_1": 92.6,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 16.7,
+      "metric_3_label": "Max EV",
+      "metric_3": 107.3,
+      "why": "Avg EV 92.6 mph (+1.2 vs baseline), barrel-like rate 16.7%.",
+      "badges": [
+        "Barrel Jump",
+        "Trend Confirming"
+      ]
     },
     {
-      "player_name": "Jonathon Long",
-      "org": "Chicago Cubs",
-      "edge_score": 49.3,
-      "metric_1_label": "ISO",
-      "metric_1": "0.000",
-      "metric_2_label": "K/BB",
-      "metric_2": "0.25",
-      "metric_3_label": "BB%",
-      "metric_3": "13.3%",
-      "why": "Jonathon Long's 49.3 Edge Score is driven by ISO of 0.000, K/BB of 0.25, and BB rate of 13.3%."
+      "player_name": "Colt Keith",
+      "edge_score": 78.3,
+      "metric_1_label": "Avg EV",
+      "metric_1": 96.3,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 5.9,
+      "metric_3_label": "Max EV",
+      "metric_3": 105.9,
+      "why": "Avg EV 96.3 mph (+9.6 vs baseline), barrel-like rate 5.9%.",
+      "badges": [
+        "EV Burst",
+        "Trend Confirming"
+      ]
     },
     {
-      "player_name": "T.j. Rumfield",
-      "org": "New York Yankees",
-      "edge_score": 44.9,
-      "metric_1_label": "ISO",
-      "metric_1": "0.261",
-      "metric_2_label": "K/BB",
-      "metric_2": "3.00",
-      "metric_3_label": "BB%",
-      "metric_3": "8.0%",
-      "why": "T.J. Rumfield's 44.9 Edge Score is driven by ISO of 0.261, K/BB of 3.00, and BB rate of 8.0%."
+      "player_name": "Samuel Basallo",
+      "edge_score": 78.2,
+      "metric_1_label": "Avg EV",
+      "metric_1": 91.6,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 11.8,
+      "metric_3_label": "Max EV",
+      "metric_3": 110.6,
+      "why": "Avg EV 91.6 mph (+4.9 vs baseline), barrel-like rate 11.8%.",
+      "badges": [
+        "EV Burst",
+        "Barrel Jump",
+        "Impact EV",
+        "Trend Confirming"
+      ]
     },
     {
-      "player_name": "Jesus Rodriguez",
-      "org": "New York Yankees",
-      "edge_score": 28.0,
-      "metric_1_label": "ISO",
-      "metric_1": "0.000",
-      "metric_2_label": "K/BB",
-      "metric_2": "1.67",
-      "metric_3_label": "BB%",
-      "metric_3": "11.1%",
-      "why": "Jesus Rodriguez's 28.0 Edge Score is driven by ISO of 0.000, K/BB of 1.67, and BB rate of 11.1%."
+      "player_name": "Jac Caglianone",
+      "edge_score": 76.4,
+      "metric_1_label": "Avg EV",
+      "metric_1": 88.7,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 0.0,
+      "metric_3_label": "Max EV",
+      "metric_3": 116.1,
+      "why": "Avg EV 88.7 mph (+14.9 vs baseline), barrel-like rate 0.0%.",
+      "badges": [
+        "EV Burst",
+        "Impact EV",
+        "Trend Confirming"
+      ]
     }
   ]
 }
