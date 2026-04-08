@@ -8,15 +8,17 @@
     :root {
       --bg: #080808;
       --surface: #121212;
-      --card-radial: radial-gradient(circle at top left, #1a1a1a 0%, #080808 100%);
+      --card-radial: radial-gradient(circle at top left, #171717 0%, #080808 100%);
       --border: #2d2d2d;
       --text: #f0f0f0;
       --muted: #71717a;
       --soft: #a1a1aa;
       --tiny: #7c7c84;
       --blue: #6aa6ff;
+      --blue-soft: #8ab4ff;
       --lime-hot: #b6ff00;
       --red: #ef4444;
+      --gold: #fbbf24;
       --shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
       --radius: 18px;
       --mono: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
@@ -213,12 +215,19 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
       cursor: pointer;
+      transition: 160ms ease;
+    }
+
+    .tab:hover {
+      color: var(--text);
+      border-color: rgba(255,255,255,0.14);
     }
 
     .tab.active {
       color: var(--text);
       border-color: rgba(182,255,0,0.20);
       box-shadow: 0 0 8px rgba(182,255,0,0.08);
+      background: rgba(182,255,0,0.04);
     }
 
     .section-title {
@@ -280,10 +289,17 @@
       font-size: 11px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
+      white-space: nowrap;
     }
 
     .cards {
       display: grid;
+      gap: 12px;
+    }
+
+    .arrival-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
 
@@ -292,10 +308,29 @@
       border-radius: 16px;
       padding: 16px;
       background: rgba(255,255,255,0.02);
+      transition: 180ms ease;
+    }
+
+    .player-card:hover {
+      border-color: rgba(255,255,255,0.13);
+      transform: translateY(-1px);
     }
 
     .player-card.high-edge {
       box-shadow: 0 0 0 1px rgba(182,255,0,0.10), 0 0 18px rgba(182,255,0,0.06);
+    }
+
+    .player-card.elite-edge {
+      box-shadow: 0 0 0 1px rgba(182,255,0,0.16), 0 0 20px rgba(182,255,0,0.10);
+    }
+
+    #tab-14d .player-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.028) 0%, rgba(255,255,255,0.018) 100%);
+      border-color: rgba(255,255,255,0.10);
+    }
+
+    #tab-14d .section-kicker {
+      color: var(--blue-soft);
     }
 
     .player-top {
@@ -364,12 +399,19 @@
       letter-spacing: 0.06em;
       text-transform: uppercase;
       border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
+      background: rgba(255,255,255,0.04);
       color: var(--soft);
+    }
+
+    .card-meta-badge.team {
+      color: var(--blue-soft);
+      border-color: rgba(106,166,255,0.18);
+      background: rgba(106,166,255,0.06);
     }
 
     .scorebox {
       text-align: right;
+      min-width: 72px;
     }
 
     .score-label {
@@ -388,15 +430,24 @@
       letter-spacing: -0.04em;
     }
 
-    .edge-up {
+    .score-value.positive,
+    .score-value.elite {
       color: var(--lime-hot);
+    }
+
+    .score-value.watch {
+      color: var(--gold);
+    }
+
+    .score-value.neutral {
+      color: var(--text);
     }
 
     .sparkline-wrap {
       margin-top: 14px;
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: 14px;
-      background: rgba(255,255,255,0.02);
+      background: rgba(255,255,255,0.025);
       padding: 10px 12px;
     }
 
@@ -430,7 +481,7 @@
     }
 
     .sparkline-path.glow {
-      filter: drop-shadow(0 0 4px rgba(182,255,0,0.25));
+      filter: drop-shadow(0 0 4px rgba(182,255,0,0.22));
     }
 
     .badge-row {
@@ -452,12 +503,25 @@
       letter-spacing: 0.06em;
       text-transform: uppercase;
       border: 1px solid rgba(255,255,255,0.10);
+      white-space: nowrap;
     }
 
     .status-badge.positive {
       color: var(--lime-hot);
       border-color: rgba(182,255,0,0.20);
       background: rgba(182,255,0,0.05);
+    }
+
+    .status-badge.watch {
+      color: var(--gold);
+      border-color: rgba(251,191,36,0.22);
+      background: rgba(251,191,36,0.06);
+    }
+
+    .status-badge.team {
+      color: var(--blue-soft);
+      border-color: rgba(106,166,255,0.20);
+      background: rgba(106,166,255,0.06);
     }
 
     .status-badge.neutral {
@@ -467,7 +531,7 @@
     }
 
     .status-badge.pitcher {
-      color: var(--blue);
+      color: var(--blue-soft);
       border-color: rgba(106,166,255,0.22);
       background: rgba(106,166,255,0.06);
     }
@@ -477,6 +541,25 @@
       color: var(--soft);
       border-color: rgba(255,255,255,0.08);
       background: rgba(255,255,255,0.02);
+    }
+
+    .status-badge.debut {
+      color: var(--lime-hot);
+      border-color: rgba(182,255,0,0.22);
+      background: rgba(182,255,0,0.05);
+    }
+
+    .status-badge.recall,
+    .status-badge.callup {
+      color: var(--blue-soft);
+      border-color: rgba(106,166,255,0.22);
+      background: rgba(106,166,255,0.06);
+    }
+
+    .status-badge.return {
+      color: var(--gold);
+      border-color: rgba(251,191,36,0.22);
+      background: rgba(251,191,36,0.06);
     }
 
     .metric-grid {
@@ -513,8 +596,8 @@
     .why {
       margin-top: 14px;
       font-size: 10px;
-      line-height: 1.45;
-      color: var(--tiny);
+      line-height: 1.5;
+      color: #8b8b94;
       font-family: var(--mono);
       font-variant-numeric: tabular-nums;
     }
@@ -559,12 +642,13 @@
 }
 
 
-    @media (max-width: 900px) {
+    @media (max-width: 980px) {
       .hero {
         grid-template-columns: 1fr;
       }
 
-      .signal-grid {
+      .signal-grid,
+      .arrival-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -590,7 +674,7 @@
       }
 
       .metric-grid {
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr;
       }
 
       .player-name {
@@ -625,7 +709,7 @@
       </div>
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">2026-04-08 10:48 AM</div>
+        <div class="live-time">2026-04-08 11:51 AM</div>
       </div>
     </div>
   </div>
@@ -664,18 +748,18 @@
         <div class="eyebrow">Signal Wall // Scout</div>
         <h1 class="hero-title">AAA Promotion Watch</h1>
         <p class="hero-sub">
-          Clean rebuild with real AAA signal data, shared shell architecture, and locked 72 HR / 14 DAY control windows.
+          Real AAA signal intelligence with 72 HR urgency, 14 DAY movement context, stronger player cards, and live transaction-layer arrivals.
         </p>
       </div>
 
       <div class="summary-card">
         <div>
           <div class="summary-label">Window</div>
-          <div class="summary-value" id="summary-window">72 HR</div>
+          <div class="summary-value" id="summary-window">14 DAY</div>
         </div>
         <div>
           <div class="summary-label">Mode</div>
-          <div class="summary-value" id="summary-mode">AAA</div>
+          <div class="summary-value" id="summary-mode">SCOUT</div>
         </div>
         <div>
           <div class="summary-label">Signals</div>
@@ -686,46 +770,48 @@
 
     <section class="section-card">
       <div class="tabs" role="tablist" aria-label="Promotion watch windows">
-        <button type="button" class="tab active" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
-        <button type="button" class="tab" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
+        <button type="button" class="tab" id="tab-btn-72h" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
+        <button type="button" class="tab active" id="tab-btn-14d" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
       </div>
 
       
-      <div id="tab-72h">
+
+      <div id="tab-72h" style="display:none;">
         <section class="signal-grid">
           <div class="section">
             <div class="section-head">
               <div>
                 <div class="section-kicker">Signal Layer</div>
-                <h2 class="section-title">Pitching Prospect Signals</h2>
+                <h2 class="section-title">Pitching Prospect Signals — 72 HR</h2>
               </div>
               <div class="section-badge">Top 5</div>
             </div>
 
             <div class="cards">
               
-              <article class="player-card high-edge">
+              <article class="player-card elite-edge">
                 <div class="player-top">
-                  <div class="avatar">AL</div>
+                  <div class="avatar">AW</div>
                   <div class="player-ident">
                     <div class="rankline">#1 Pitcher Trigger</div>
                     <h3 class="player-name">Allan Winans</h3>
-                    <div class="signal-line">Pitcher // Live Edge Signal // 43 BF</div>
+                    <div class="signal-line">NYY // Pitcher // 43 BF</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">NYY</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value edge-up">91.4</div>
+                    <div class="score-value elite">91.4</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">7 Day Trend</div>
-                    <div class="sparkline-note">7D Trend Analysis</div>
+                    <div class="sparkline-label">Recent Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
@@ -734,7 +820,7 @@
                         <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path glow" stroke="url(#pitcherGradient1)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
+                    <polyline class="sparkline-path " stroke="url(#pitcherGradient1)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
@@ -745,6 +831,8 @@
                   <span class="status-badge positive">Command Hold</span>
                   
                   <span class="status-badge positive">Whiff Volume</span>
+                  
+                  <span class="status-badge team">NYY</span>
                   
                 </div>
 
@@ -763,40 +851,41 @@
                   </div>
                 </div>
 
-                <div class="why">K/BB 14.00, 14 K, 1 BB over 43 BF.</div>
+                <div class="why">K/BB 14.00 • 14 K • 1 BB over 43 BF</div>
               </article>
               
               <article class="player-card ">
                 <div class="player-top">
-                  <div class="avatar">DI</div>
+                  <div class="avatar">DE</div>
                   <div class="player-ident">
                     <div class="rankline">#2 Pitcher Trigger</div>
                     <h3 class="player-name">Dietrich Enns</h3>
-                    <div class="signal-line">Pitcher // Live Edge Signal // 40 BF</div>
+                    <div class="signal-line">DET // Pitcher // 40 BF</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">DET</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value ">48.4</div>
+                    <div class="score-value neutral">48.4</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">7 Day Trend</div>
-                    <div class="sparkline-note">7D Trend Analysis</div>
+                    <div class="sparkline-label">Recent Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
                       <linearGradient id="pitcherGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="#00e5ff" stop-opacity="1"></stop>
+                        <stop offset="100%" stop-color="#6aa6ff" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path " stroke="url(#pitcherGradient2)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
+                    <polyline class="sparkline-path " stroke="url(#pitcherGradient2)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
@@ -807,6 +896,8 @@
                   <span class="status-badge positive">Command Hold</span>
                   
                   <span class="status-badge positive">Whiff Volume</span>
+                  
+                  <span class="status-badge team">DET</span>
                   
                 </div>
 
@@ -825,40 +916,41 @@
                   </div>
                 </div>
 
-                <div class="why">K/BB 5.00, 10 K, 2 BB over 40 BF.</div>
+                <div class="why">K/BB 5.00 • 10 K • 2 BB over 40 BF</div>
               </article>
               
               <article class="player-card ">
                 <div class="player-top">
-                  <div class="avatar">WI</div>
+                  <div class="avatar">WF</div>
                   <div class="player-ident">
                     <div class="rankline">#3 Pitcher Trigger</div>
                     <h3 class="player-name">William Fleming</h3>
-                    <div class="signal-line">Pitcher // Live Edge Signal // 39 BF</div>
+                    <div class="signal-line">SEA // Pitcher // 39 BF</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">SEA</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value ">43.8</div>
+                    <div class="score-value neutral">43.8</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">7 Day Trend</div>
-                    <div class="sparkline-note">7D Trend Analysis</div>
+                    <div class="sparkline-label">Recent Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
                       <linearGradient id="pitcherGradient3" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="#00e5ff" stop-opacity="1"></stop>
+                        <stop offset="100%" stop-color="#6aa6ff" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path " stroke="url(#pitcherGradient3)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
+                    <polyline class="sparkline-path " stroke="url(#pitcherGradient3)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
@@ -868,7 +960,7 @@
                   
                   <span class="status-badge positive">Command Hold</span>
                   
-                  <span class="status-badge neutral">Promotion Watch</span>
+                  <span class="status-badge team">SEA</span>
                   
                 </div>
 
@@ -887,40 +979,41 @@
                   </div>
                 </div>
 
-                <div class="why">K/BB 4.50, 9 K, 2 BB over 39 BF.</div>
+                <div class="why">K/BB 4.50 • 9 K • 2 BB over 39 BF</div>
               </article>
               
               <article class="player-card ">
                 <div class="player-top">
-                  <div class="avatar">CA</div>
+                  <div class="avatar">CS</div>
                   <div class="player-ident">
                     <div class="rankline">#4 Pitcher Trigger</div>
                     <h3 class="player-name">Cam Schlittler</h3>
-                    <div class="signal-line">Pitcher // Live Edge Signal // 40 BF</div>
+                    <div class="signal-line">NYY // Pitcher // 40 BF</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">NYY</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value ">36.8</div>
+                    <div class="score-value neutral">36.8</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">7 Day Trend</div>
-                    <div class="sparkline-note">7D Trend Analysis</div>
+                    <div class="sparkline-label">Recent Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
                       <linearGradient id="pitcherGradient4" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="#00e5ff" stop-opacity="1"></stop>
+                        <stop offset="100%" stop-color="#6aa6ff" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path " stroke="url(#pitcherGradient4)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
+                    <polyline class="sparkline-path " stroke="url(#pitcherGradient4)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
@@ -928,7 +1021,7 @@
                   
                   <span class="status-badge positive">Whiff Volume</span>
                   
-                  <span class="status-badge neutral">Promotion Watch</span>
+                  <span class="status-badge team">NYY</span>
                   
                 </div>
 
@@ -947,46 +1040,47 @@
                   </div>
                 </div>
 
-                <div class="why">K/BB 2.50, 15 K, 6 BB over 40 BF.</div>
+                <div class="why">K/BB 2.50 • 15 K • 6 BB over 40 BF</div>
               </article>
               
               <article class="player-card ">
                 <div class="player-top">
-                  <div class="avatar">BR</div>
+                  <div class="avatar">BS</div>
                   <div class="player-ident">
                     <div class="rankline">#5 Pitcher Trigger</div>
                     <h3 class="player-name">Brandon Sproat</h3>
-                    <div class="signal-line">Pitcher // Live Edge Signal // 49 BF</div>
+                    <div class="signal-line">NYM // Pitcher // 49 BF</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">NYM</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value ">29.6</div>
+                    <div class="score-value neutral">29.6</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">7 Day Trend</div>
-                    <div class="sparkline-note">7D Trend Analysis</div>
+                    <div class="sparkline-label">Recent Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
                       <linearGradient id="pitcherGradient5" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="#00e5ff" stop-opacity="1"></stop>
+                        <stop offset="100%" stop-color="#6aa6ff" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path " stroke="url(#pitcherGradient5)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
+                    <polyline class="sparkline-path " stroke="url(#pitcherGradient5)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
                 <div class="badge-row">
                   
-                  <span class="status-badge neutral">Promotion Watch</span>
+                  <span class="status-badge team">NYM</span>
                   
                 </div>
 
@@ -1005,7 +1099,7 @@
                   </div>
                 </div>
 
-                <div class="why">K/BB 1.75, 7 K, 4 BB over 49 BF.</div>
+                <div class="why">K/BB 1.75 • 7 K • 4 BB over 49 BF</div>
               </article>
               
             </div>
@@ -1015,35 +1109,36 @@
             <div class="section-head">
               <div>
                 <div class="section-kicker">Signal Layer</div>
-                <h2 class="section-title">Hitting Prospect Signals</h2>
+                <h2 class="section-title">Hitting Prospect Signals — 72 HR</h2>
               </div>
               <div class="section-badge">Top 6</div>
             </div>
 
             <div class="cards">
               
-              <article class="player-card high-edge">
+              <article class="player-card elite-edge">
                 <div class="player-top">
-                  <div class="avatar">NI</div>
+                  <div class="avatar">NS</div>
                   <div class="player-ident">
                     <div class="rankline">#1 Hitter Trigger</div>
                     <h3 class="player-name">Nick Sogard</h3>
-                    <div class="signal-line">Boston Red Sox // Hitter // 28 PA</div>
+                    <div class="signal-line">BOS // Hitter // 28 PA</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">BOS</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value edge-up">90.3</div>
+                    <div class="score-value elite">90.6</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">7 Day Trend</div>
-                    <div class="sparkline-note">7D Trend Analysis</div>
+                    <div class="sparkline-label">Recent Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
@@ -1052,7 +1147,7 @@
                         <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path glow" stroke="url(#hitterGradient1)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+                    <polyline class="sparkline-path " stroke="url(#hitterGradient1)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
@@ -1063,6 +1158,8 @@
                   <span class="status-badge positive">Zone Control</span>
                   
                   <span class="status-badge positive">HR Surge</span>
+                  
+                  <span class="status-badge team">BOS</span>
                   
                 </div>
 
@@ -1081,31 +1178,32 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike + Aggressive contact profile + Early HR surge</div>
+                <div class="why">Power spike • Aggressive contact profile • Early HR surge</div>
               </article>
               
-              <article class="player-card high-edge">
+              <article class="player-card elite-edge">
                 <div class="player-top">
-                  <div class="avatar">OW</div>
+                  <div class="avatar">OC</div>
                   <div class="player-ident">
                     <div class="rankline">#2 Hitter Trigger</div>
                     <h3 class="player-name">Owen Caissie</h3>
-                    <div class="signal-line">Chicago Cubs // Hitter // 28 PA</div>
+                    <div class="signal-line">CHC // Hitter // 28 PA</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">CHC</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value edge-up">83.2</div>
+                    <div class="score-value elite">83.7</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">7 Day Trend</div>
-                    <div class="sparkline-note">7D Trend Analysis</div>
+                    <div class="sparkline-label">Recent Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
@@ -1114,7 +1212,7 @@
                         <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path glow" stroke="url(#hitterGradient2)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+                    <polyline class="sparkline-path " stroke="url(#hitterGradient2)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
@@ -1124,7 +1222,7 @@
                   
                   <span class="status-badge positive">HR Surge</span>
                   
-                  <span class="status-badge neutral">Promotion Watch</span>
+                  <span class="status-badge team">CHC</span>
                   
                 </div>
 
@@ -1143,31 +1241,32 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike + Strong plate control + Early HR surge</div>
+                <div class="why">Power spike • Strong plate control • Early HR surge</div>
               </article>
               
-              <article class="player-card high-edge">
+              <article class="player-card elite-edge">
                 <div class="player-top">
                   <div class="avatar">SP</div>
                   <div class="player-ident">
                     <div class="rankline">#3 Hitter Trigger</div>
                     <h3 class="player-name">Spencer Packard</h3>
-                    <div class="signal-line">Seattle Mariners // Hitter // 26 PA</div>
+                    <div class="signal-line">SEA // Hitter // 26 PA</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">SEA</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value edge-up">79.7</div>
+                    <div class="score-value elite">80.0</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">7 Day Trend</div>
-                    <div class="sparkline-note">7D Trend Analysis</div>
+                    <div class="sparkline-label">Recent Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
@@ -1176,7 +1275,7 @@
                         <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path glow" stroke="url(#hitterGradient3)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+                    <polyline class="sparkline-path " stroke="url(#hitterGradient3)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
@@ -1187,6 +1286,8 @@
                   <span class="status-badge positive">Zone Control</span>
                   
                   <span class="status-badge positive">HR Surge</span>
+                  
+                  <span class="status-badge team">SEA</span>
                   
                 </div>
 
@@ -1205,31 +1306,32 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike + Early HR surge</div>
+                <div class="why">Power spike • Early HR surge</div>
               </article>
               
               <article class="player-card high-edge">
                 <div class="player-top">
-                  <div class="avatar">JH</div>
+                  <div class="avatar">JG</div>
                   <div class="player-ident">
                     <div class="rankline">#4 Hitter Trigger</div>
                     <h3 class="player-name">Jhostynxon Garcia</h3>
-                    <div class="signal-line">Boston Red Sox // Hitter // 28 PA</div>
+                    <div class="signal-line">BOS // Hitter // 28 PA</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">BOS</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value edge-up">78.0</div>
+                    <div class="score-value positive">78.3</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">7 Day Trend</div>
-                    <div class="sparkline-note">7D Trend Analysis</div>
+                    <div class="sparkline-label">Recent Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
@@ -1238,7 +1340,7 @@
                         <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path glow" stroke="url(#hitterGradient4)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+                    <polyline class="sparkline-path " stroke="url(#hitterGradient4)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
@@ -1249,6 +1351,8 @@
                   <span class="status-badge positive">Zone Control</span>
                   
                   <span class="status-badge positive">HR Surge</span>
+                  
+                  <span class="status-badge team">BOS</span>
                   
                 </div>
 
@@ -1267,31 +1371,32 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike + Early HR surge</div>
+                <div class="why">Power spike • Early HR surge</div>
               </article>
               
               <article class="player-card high-edge">
                 <div class="player-top">
-                  <div class="avatar">CA</div>
+                  <div class="avatar">CP</div>
                   <div class="player-ident">
                     <div class="rankline">#5 Hitter Trigger</div>
                     <h3 class="player-name">Carlos Pérez</h3>
-                    <div class="signal-line">Chicago Cubs // Hitter // 25 PA</div>
+                    <div class="signal-line">CHC // Hitter // 25 PA</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">CHC</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value edge-up">76.7</div>
+                    <div class="score-value positive">77.0</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">7 Day Trend</div>
-                    <div class="sparkline-note">7D Trend Analysis</div>
+                    <div class="sparkline-label">Recent Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
@@ -1300,7 +1405,7 @@
                         <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path glow" stroke="url(#hitterGradient5)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+                    <polyline class="sparkline-path " stroke="url(#hitterGradient5)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
@@ -1311,6 +1416,8 @@
                   <span class="status-badge positive">Zone Control</span>
                   
                   <span class="status-badge positive">HR Surge</span>
+                  
+                  <span class="status-badge team">CHC</span>
                   
                 </div>
 
@@ -1329,31 +1436,32 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike + Early HR surge</div>
+                <div class="why">Power spike • Early HR surge</div>
               </article>
               
               <article class="player-card high-edge">
                 <div class="player-top">
-                  <div class="avatar">BL</div>
+                  <div class="avatar">BC</div>
                   <div class="player-ident">
                     <div class="rankline">#6 Hitter Trigger</div>
                     <h3 class="player-name">Blaine Crim</h3>
-                    <div class="signal-line">Texas Rangers // Hitter // 27 PA</div>
+                    <div class="signal-line">TEX // Hitter // 27 PA</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">TEX</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value edge-up">75.6</div>
+                    <div class="score-value positive">76.0</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">7 Day Trend</div>
-                    <div class="sparkline-note">7D Trend Analysis</div>
+                    <div class="sparkline-label">Recent Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
@@ -1362,7 +1470,7 @@
                         <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path glow" stroke="url(#hitterGradient6)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+                    <polyline class="sparkline-path " stroke="url(#hitterGradient6)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
@@ -1373,6 +1481,8 @@
                   <span class="status-badge positive">Zone Control</span>
                   
                   <span class="status-badge positive">HR Surge</span>
+                  
+                  <span class="status-badge team">TEX</span>
                   
                 </div>
 
@@ -1391,7 +1501,7 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike + Early HR surge</div>
+                <div class="why">Power spike • Early HR surge</div>
               </article>
               
             </div>
@@ -1399,7 +1509,7 @@
         </section>
       </div>
 
-      <div id="tab-14d" style="display:none;">
+      <div id="tab-14d">
         <section class="signal-grid">
           <div class="section">
             <div class="section-head">
@@ -1407,34 +1517,35 @@
                 <div class="section-kicker">Signal Layer</div>
                 <h2 class="section-title">Pitching Prospect Signals — Last 14 Days</h2>
               </div>
-              <div class="section-badge">Top 6</div>
+              <div class="section-badge">Top 5</div>
             </div>
 
             
             <div class="cards">
               
-              <article class="player-card high-edge">
+              <article class="player-card elite-edge">
                 <div class="player-top">
-                  <div class="avatar">AL</div>
+                  <div class="avatar">AW</div>
                   <div class="player-ident">
                     <div class="rankline">#1 Pitcher Trigger</div>
                     <h3 class="player-name">Allan Winans</h3>
-                    <div class="signal-line">Pitcher // 14 Day Window // 43 BF</div>
+                    <div class="signal-line">NYY // 14 Day Window // 43 BF</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">NYY</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value edge-up">91.4</div>
+                    <div class="score-value elite">91.4</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">14 Day Trend</div>
-                    <div class="sparkline-note">2 Week Signal Window</div>
+                    <div class="sparkline-label">Real Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
@@ -1443,7 +1554,7 @@
                         <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path glow" stroke="url(#pitcher14Gradient1)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
+                    <polyline class="sparkline-path " stroke="url(#pitcher14Gradient1)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
@@ -1454,6 +1565,8 @@
                   <span class="status-badge positive">Command Hold</span>
                   
                   <span class="status-badge positive">Whiff Volume</span>
+                  
+                  <span class="status-badge team">NYY</span>
                   
                 </div>
 
@@ -1472,40 +1585,41 @@
                   </div>
                 </div>
 
-                <div class="why">K/BB 14.00, 14 K, 1 BB over 43 BF.</div>
+                <div class="why">K/BB 14.00 • 14 K • 1 BB over 43 BF</div>
               </article>
               
-              <article class="player-card high-edge">
+              <article class="player-card ">
                 <div class="player-top">
-                  <div class="avatar">AL</div>
+                  <div class="avatar">DE</div>
                   <div class="player-ident">
                     <div class="rankline">#2 Pitcher Trigger</div>
-                    <h3 class="player-name">Allan Winans</h3>
-                    <div class="signal-line">Pitcher // 14 Day Window // 43 BF</div>
+                    <h3 class="player-name">Dietrich Enns</h3>
+                    <div class="signal-line">DET // 14 Day Window // 40 BF</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">DET</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value edge-up">91.4</div>
+                    <div class="score-value neutral">48.4</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">14 Day Trend</div>
-                    <div class="sparkline-note">2 Week Signal Window</div>
+                    <div class="sparkline-label">Real Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
                       <linearGradient id="pitcher14Gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                        <stop offset="100%" stop-color="#6aa6ff" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path glow" stroke="url(#pitcher14Gradient2)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
+                    <polyline class="sparkline-path " stroke="url(#pitcher14Gradient2)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
@@ -1517,57 +1631,60 @@
                   
                   <span class="status-badge positive">Whiff Volume</span>
                   
+                  <span class="status-badge team">DET</span>
+                  
                 </div>
 
                 <div class="metric-grid">
                   <div class="metric">
                     <div class="metric-label">K/BB</div>
-                    <div class="metric-value">14.00</div>
+                    <div class="metric-value">5.00</div>
                   </div>
                   <div class="metric">
                     <div class="metric-label">K</div>
-                    <div class="metric-value">14</div>
+                    <div class="metric-value">10</div>
                   </div>
                   <div class="metric">
                     <div class="metric-label">BB</div>
-                    <div class="metric-value">1</div>
+                    <div class="metric-value">2</div>
                   </div>
                 </div>
 
-                <div class="why">K/BB 14.00, 14 K, 1 BB over 43 BF.</div>
+                <div class="why">K/BB 5.00 • 10 K • 2 BB over 40 BF</div>
               </article>
               
               <article class="player-card ">
                 <div class="player-top">
-                  <div class="avatar">DI</div>
+                  <div class="avatar">WF</div>
                   <div class="player-ident">
                     <div class="rankline">#3 Pitcher Trigger</div>
-                    <h3 class="player-name">Dietrich Enns</h3>
-                    <div class="signal-line">Pitcher // 14 Day Window // 40 BF</div>
+                    <h3 class="player-name">William Fleming</h3>
+                    <div class="signal-line">SEA // 14 Day Window // 39 BF</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">SEA</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value ">48.4</div>
+                    <div class="score-value neutral">43.8</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">14 Day Trend</div>
-                    <div class="sparkline-note">2 Week Signal Window</div>
+                    <div class="sparkline-label">Real Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
                       <linearGradient id="pitcher14Gradient3" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="#00e5ff" stop-opacity="1"></stop>
+                        <stop offset="100%" stop-color="#6aa6ff" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path " stroke="url(#pitcher14Gradient3)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
+                    <polyline class="sparkline-path " stroke="url(#pitcher14Gradient3)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
@@ -1577,18 +1694,18 @@
                   
                   <span class="status-badge positive">Command Hold</span>
                   
-                  <span class="status-badge positive">Whiff Volume</span>
+                  <span class="status-badge team">SEA</span>
                   
                 </div>
 
                 <div class="metric-grid">
                   <div class="metric">
                     <div class="metric-label">K/BB</div>
-                    <div class="metric-value">5.00</div>
+                    <div class="metric-value">4.50</div>
                   </div>
                   <div class="metric">
                     <div class="metric-label">K</div>
-                    <div class="metric-value">10</div>
+                    <div class="metric-value">9</div>
                   </div>
                   <div class="metric">
                     <div class="metric-label">BB</div>
@@ -1596,193 +1713,127 @@
                   </div>
                 </div>
 
-                <div class="why">K/BB 5.00, 10 K, 2 BB over 40 BF.</div>
+                <div class="why">K/BB 4.50 • 9 K • 2 BB over 39 BF</div>
               </article>
               
               <article class="player-card ">
                 <div class="player-top">
-                  <div class="avatar">DI</div>
+                  <div class="avatar">CS</div>
                   <div class="player-ident">
                     <div class="rankline">#4 Pitcher Trigger</div>
-                    <h3 class="player-name">Dietrich Enns</h3>
-                    <div class="signal-line">Pitcher // 14 Day Window // 40 BF</div>
+                    <h3 class="player-name">Cam Schlittler</h3>
+                    <div class="signal-line">NYY // 14 Day Window // 40 BF</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">NYY</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value ">48.4</div>
+                    <div class="score-value neutral">36.8</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">14 Day Trend</div>
-                    <div class="sparkline-note">2 Week Signal Window</div>
+                    <div class="sparkline-label">Real Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
                       <linearGradient id="pitcher14Gradient4" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="#00e5ff" stop-opacity="1"></stop>
+                        <stop offset="100%" stop-color="#6aa6ff" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path " stroke="url(#pitcher14Gradient4)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
+                    <polyline class="sparkline-path " stroke="url(#pitcher14Gradient4)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
                 <div class="badge-row">
                   
-                  <span class="status-badge positive">Bat-Miss Ready</span>
-                  
-                  <span class="status-badge positive">Command Hold</span>
-                  
                   <span class="status-badge positive">Whiff Volume</span>
+                  
+                  <span class="status-badge team">NYY</span>
                   
                 </div>
 
                 <div class="metric-grid">
                   <div class="metric">
                     <div class="metric-label">K/BB</div>
-                    <div class="metric-value">5.00</div>
+                    <div class="metric-value">2.50</div>
                   </div>
                   <div class="metric">
                     <div class="metric-label">K</div>
-                    <div class="metric-value">10</div>
+                    <div class="metric-value">15</div>
                   </div>
                   <div class="metric">
                     <div class="metric-label">BB</div>
-                    <div class="metric-value">2</div>
+                    <div class="metric-value">6</div>
                   </div>
                 </div>
 
-                <div class="why">K/BB 5.00, 10 K, 2 BB over 40 BF.</div>
+                <div class="why">K/BB 2.50 • 15 K • 6 BB over 40 BF</div>
               </article>
               
               <article class="player-card ">
                 <div class="player-top">
-                  <div class="avatar">WI</div>
+                  <div class="avatar">BS</div>
                   <div class="player-ident">
                     <div class="rankline">#5 Pitcher Trigger</div>
-                    <h3 class="player-name">William Fleming</h3>
-                    <div class="signal-line">Pitcher // 14 Day Window // 39 BF</div>
+                    <h3 class="player-name">Brandon Sproat</h3>
+                    <div class="signal-line">NYM // 14 Day Window // 49 BF</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">NYM</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value ">43.8</div>
+                    <div class="score-value neutral">29.6</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">14 Day Trend</div>
-                    <div class="sparkline-note">2 Week Signal Window</div>
+                    <div class="sparkline-label">Real Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
                       <linearGradient id="pitcher14Gradient5" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="#00e5ff" stop-opacity="1"></stop>
+                        <stop offset="100%" stop-color="#6aa6ff" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path " stroke="url(#pitcher14Gradient5)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
+                    <polyline class="sparkline-path " stroke="url(#pitcher14Gradient5)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
                 <div class="badge-row">
                   
-                  <span class="status-badge positive">Bat-Miss Ready</span>
-                  
-                  <span class="status-badge positive">Command Hold</span>
-                  
-                  <span class="status-badge neutral">Promotion Watch</span>
+                  <span class="status-badge team">NYM</span>
                   
                 </div>
 
                 <div class="metric-grid">
                   <div class="metric">
                     <div class="metric-label">K/BB</div>
-                    <div class="metric-value">4.50</div>
+                    <div class="metric-value">1.75</div>
                   </div>
                   <div class="metric">
                     <div class="metric-label">K</div>
-                    <div class="metric-value">9</div>
+                    <div class="metric-value">7</div>
                   </div>
                   <div class="metric">
                     <div class="metric-label">BB</div>
-                    <div class="metric-value">2</div>
+                    <div class="metric-value">4</div>
                   </div>
                 </div>
 
-                <div class="why">K/BB 4.50, 9 K, 2 BB over 39 BF.</div>
-              </article>
-              
-              <article class="player-card ">
-                <div class="player-top">
-                  <div class="avatar">WI</div>
-                  <div class="player-ident">
-                    <div class="rankline">#6 Pitcher Trigger</div>
-                    <h3 class="player-name">William Fleming</h3>
-                    <div class="signal-line">Pitcher // 14 Day Window // 39 BF</div>
-                    <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
-                    </div>
-                  </div>
-                  <div class="scorebox">
-                    <div class="score-label">Edge Score</div>
-                    <div class="score-value ">43.8</div>
-                  </div>
-                </div>
-
-                <div class="sparkline-wrap">
-                  <div class="sparkline-head">
-                    <div class="sparkline-label">14 Day Trend</div>
-                    <div class="sparkline-note">2 Week Signal Window</div>
-                  </div>
-                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="pitcher14Gradient6" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="#00e5ff" stop-opacity="1"></stop>
-                      </linearGradient>
-                    </defs>
-                    <polyline class="sparkline-path " stroke="url(#pitcher14Gradient6)" points="0,24 20,22 40,19 60,17 80,15 100,13 120,11" />
-                  </svg>
-                </div>
-
-                <div class="badge-row">
-                  
-                  <span class="status-badge positive">Bat-Miss Ready</span>
-                  
-                  <span class="status-badge positive">Command Hold</span>
-                  
-                  <span class="status-badge neutral">Promotion Watch</span>
-                  
-                </div>
-
-                <div class="metric-grid">
-                  <div class="metric">
-                    <div class="metric-label">K/BB</div>
-                    <div class="metric-value">4.50</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">K</div>
-                    <div class="metric-value">9</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">BB</div>
-                    <div class="metric-value">2</div>
-                  </div>
-                </div>
-
-                <div class="why">K/BB 4.50, 9 K, 2 BB over 39 BF.</div>
+                <div class="why">K/BB 1.75 • 7 K • 4 BB over 49 BF</div>
               </article>
               
             </div>
@@ -1801,28 +1852,29 @@
             
             <div class="cards">
               
-              <article class="player-card high-edge">
+              <article class="player-card elite-edge">
                 <div class="player-top">
-                  <div class="avatar">NI</div>
+                  <div class="avatar">NS</div>
                   <div class="player-ident">
                     <div class="rankline">#1 Hitter Trigger</div>
                     <h3 class="player-name">Nick Sogard</h3>
-                    <div class="signal-line">Boston Red Sox // 14 Day Window // 28 PA</div>
+                    <div class="signal-line">BOS // 14 Day Window // 28 PA</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">BOS</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value edge-up">90.3</div>
+                    <div class="score-value elite">90.6</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">14 Day Trend</div>
-                    <div class="sparkline-note">2 Week Signal Window</div>
+                    <div class="sparkline-label">Real Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
@@ -1831,7 +1883,7 @@
                         <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path glow" stroke="url(#hitter14Gradient1)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+                    <polyline class="sparkline-path " stroke="url(#hitter14Gradient1)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
@@ -1842,6 +1894,8 @@
                   <span class="status-badge positive">Zone Control</span>
                   
                   <span class="status-badge positive">HR Surge</span>
+                  
+                  <span class="status-badge team">BOS</span>
                   
                 </div>
 
@@ -1860,31 +1914,32 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike + Aggressive contact profile + Early HR surge</div>
+                <div class="why">Power spike • Aggressive contact profile • Early HR surge</div>
               </article>
               
-              <article class="player-card high-edge">
+              <article class="player-card elite-edge">
                 <div class="player-top">
-                  <div class="avatar">NI</div>
+                  <div class="avatar">OC</div>
                   <div class="player-ident">
                     <div class="rankline">#2 Hitter Trigger</div>
-                    <h3 class="player-name">Nick Sogard</h3>
-                    <div class="signal-line">Boston Red Sox // 14 Day Window // 28 PA</div>
+                    <h3 class="player-name">Owen Caissie</h3>
+                    <div class="signal-line">CHC // 14 Day Window // 28 PA</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">CHC</span>
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value edge-up">90.3</div>
+                    <div class="score-value elite">83.7</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">14 Day Trend</div>
-                    <div class="sparkline-note">2 Week Signal Window</div>
+                    <div class="sparkline-label">Real Trend</div>
+                    <div class="sparkline-note">1W</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
@@ -1893,7 +1948,70 @@
                         <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
-                    <polyline class="sparkline-path glow" stroke="url(#hitter14Gradient2)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
+                    <polyline class="sparkline-path " stroke="url(#hitter14Gradient2)" points="0.0,31.0 120.0,31.0" />
+                  </svg>
+                </div>
+
+                <div class="badge-row">
+                  
+                  <span class="status-badge positive">Impact Bat</span>
+                  
+                  <span class="status-badge positive">HR Surge</span>
+                  
+                  <span class="status-badge team">CHC</span>
+                  
+                </div>
+
+                <div class="metric-grid">
+                  <div class="metric">
+                    <div class="metric-label">ISO</div>
+                    <div class="metric-value">0.522</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">K/BB</div>
+                    <div class="metric-value">2.25</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">HR</div>
+                    <div class="metric-value">3</div>
+                  </div>
+                </div>
+
+                <div class="why">Power spike • Strong plate control • Early HR surge</div>
+              </article>
+              
+              <article class="player-card elite-edge">
+                <div class="player-top">
+                  <div class="avatar">SP</div>
+                  <div class="player-ident">
+                    <div class="rankline">#3 Hitter Trigger</div>
+                    <h3 class="player-name">Spencer Packard</h3>
+                    <div class="signal-line">SEA // 14 Day Window // 26 PA</div>
+                    <div class="card-meta-row">
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">SEA</span>
+                    </div>
+                  </div>
+                  <div class="scorebox">
+                    <div class="score-label">Edge Score</div>
+                    <div class="score-value elite">80.0</div>
+                  </div>
+                </div>
+
+                <div class="sparkline-wrap">
+                  <div class="sparkline-head">
+                    <div class="sparkline-label">Real Trend</div>
+                    <div class="sparkline-note">1W</div>
+                  </div>
+                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="hitter14Gradient3" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                        <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                      </linearGradient>
+                    </defs>
+                    <polyline class="sparkline-path " stroke="url(#hitter14Gradient3)" points="0.0,31.0 120.0,31.0" />
                   </svg>
                 </div>
 
@@ -1904,6 +2022,203 @@
                   <span class="status-badge positive">Zone Control</span>
                   
                   <span class="status-badge positive">HR Surge</span>
+                  
+                  <span class="status-badge team">SEA</span>
+                  
+                </div>
+
+                <div class="metric-grid">
+                  <div class="metric">
+                    <div class="metric-label">ISO</div>
+                    <div class="metric-value">0.300</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">K/BB</div>
+                    <div class="metric-value">0.80</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">HR</div>
+                    <div class="metric-value">2</div>
+                  </div>
+                </div>
+
+                <div class="why">Power spike • Early HR surge</div>
+              </article>
+              
+              <article class="player-card high-edge">
+                <div class="player-top">
+                  <div class="avatar">JG</div>
+                  <div class="player-ident">
+                    <div class="rankline">#4 Hitter Trigger</div>
+                    <h3 class="player-name">Jhostynxon Garcia</h3>
+                    <div class="signal-line">BOS // 14 Day Window // 28 PA</div>
+                    <div class="card-meta-row">
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">BOS</span>
+                    </div>
+                  </div>
+                  <div class="scorebox">
+                    <div class="score-label">Edge Score</div>
+                    <div class="score-value positive">78.3</div>
+                  </div>
+                </div>
+
+                <div class="sparkline-wrap">
+                  <div class="sparkline-head">
+                    <div class="sparkline-label">Real Trend</div>
+                    <div class="sparkline-note">1W</div>
+                  </div>
+                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="hitter14Gradient4" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                        <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                      </linearGradient>
+                    </defs>
+                    <polyline class="sparkline-path " stroke="url(#hitter14Gradient4)" points="0.0,31.0 120.0,31.0" />
+                  </svg>
+                </div>
+
+                <div class="badge-row">
+                  
+                  <span class="status-badge positive">Impact Bat</span>
+                  
+                  <span class="status-badge positive">Zone Control</span>
+                  
+                  <span class="status-badge positive">HR Surge</span>
+                  
+                  <span class="status-badge team">BOS</span>
+                  
+                </div>
+
+                <div class="metric-grid">
+                  <div class="metric">
+                    <div class="metric-label">ISO</div>
+                    <div class="metric-value">0.305</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">K/BB</div>
+                    <div class="metric-value">1.00</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">HR</div>
+                    <div class="metric-value">2</div>
+                  </div>
+                </div>
+
+                <div class="why">Power spike • Early HR surge</div>
+              </article>
+              
+              <article class="player-card high-edge">
+                <div class="player-top">
+                  <div class="avatar">CP</div>
+                  <div class="player-ident">
+                    <div class="rankline">#5 Hitter Trigger</div>
+                    <h3 class="player-name">Carlos Pérez</h3>
+                    <div class="signal-line">CHC // 14 Day Window // 25 PA</div>
+                    <div class="card-meta-row">
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">CHC</span>
+                    </div>
+                  </div>
+                  <div class="scorebox">
+                    <div class="score-label">Edge Score</div>
+                    <div class="score-value positive">77.0</div>
+                  </div>
+                </div>
+
+                <div class="sparkline-wrap">
+                  <div class="sparkline-head">
+                    <div class="sparkline-label">Real Trend</div>
+                    <div class="sparkline-note">1W</div>
+                  </div>
+                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="hitter14Gradient5" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                        <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                      </linearGradient>
+                    </defs>
+                    <polyline class="sparkline-path " stroke="url(#hitter14Gradient5)" points="0.0,31.0 120.0,31.0" />
+                  </svg>
+                </div>
+
+                <div class="badge-row">
+                  
+                  <span class="status-badge positive">Impact Bat</span>
+                  
+                  <span class="status-badge positive">Zone Control</span>
+                  
+                  <span class="status-badge positive">HR Surge</span>
+                  
+                  <span class="status-badge team">CHC</span>
+                  
+                </div>
+
+                <div class="metric-grid">
+                  <div class="metric">
+                    <div class="metric-label">ISO</div>
+                    <div class="metric-value">0.409</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">K/BB</div>
+                    <div class="metric-value">1.00</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric-label">HR</div>
+                    <div class="metric-value">2</div>
+                  </div>
+                </div>
+
+                <div class="why">Power spike • Early HR surge</div>
+              </article>
+              
+              <article class="player-card high-edge">
+                <div class="player-top">
+                  <div class="avatar">BC</div>
+                  <div class="player-ident">
+                    <div class="rankline">#6 Hitter Trigger</div>
+                    <h3 class="player-name">Blaine Crim</h3>
+                    <div class="signal-line">TEX // 14 Day Window // 27 PA</div>
+                    <div class="card-meta-row">
+                      <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
+                      <span class="card-meta-badge">EDGE_v2.1</span>
+                      <span class="card-meta-badge team">TEX</span>
+                    </div>
+                  </div>
+                  <div class="scorebox">
+                    <div class="score-label">Edge Score</div>
+                    <div class="score-value positive">76.0</div>
+                  </div>
+                </div>
+
+                <div class="sparkline-wrap">
+                  <div class="sparkline-head">
+                    <div class="sparkline-label">Real Trend</div>
+                    <div class="sparkline-note">1W</div>
+                  </div>
+                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="hitter14Gradient6" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                        <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                      </linearGradient>
+                    </defs>
+                    <polyline class="sparkline-path " stroke="url(#hitter14Gradient6)" points="0.0,31.0 120.0,31.0" />
+                  </svg>
+                </div>
+
+                <div class="badge-row">
+                  
+                  <span class="status-badge positive">Impact Bat</span>
+                  
+                  <span class="status-badge positive">Zone Control</span>
+                  
+                  <span class="status-badge positive">HR Surge</span>
+                  
+                  <span class="status-badge team">TEX</span>
                   
                 </div>
 
@@ -1914,7 +2229,7 @@
                   </div>
                   <div class="metric">
                     <div class="metric-label">K/BB</div>
-                    <div class="metric-value">0.50</div>
+                    <div class="metric-value">1.20</div>
                   </div>
                   <div class="metric">
                     <div class="metric-label">HR</div>
@@ -1922,255 +2237,7 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike + Aggressive contact profile + Early HR surge</div>
-              </article>
-              
-              <article class="player-card high-edge">
-                <div class="player-top">
-                  <div class="avatar">OW</div>
-                  <div class="player-ident">
-                    <div class="rankline">#3 Hitter Trigger</div>
-                    <h3 class="player-name">Owen Caissie</h3>
-                    <div class="signal-line">Chicago Cubs // 14 Day Window // 28 PA</div>
-                    <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
-                    </div>
-                  </div>
-                  <div class="scorebox">
-                    <div class="score-label">Edge Score</div>
-                    <div class="score-value edge-up">83.2</div>
-                  </div>
-                </div>
-
-                <div class="sparkline-wrap">
-                  <div class="sparkline-head">
-                    <div class="sparkline-label">14 Day Trend</div>
-                    <div class="sparkline-note">2 Week Signal Window</div>
-                  </div>
-                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="hitter14Gradient3" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
-                      </linearGradient>
-                    </defs>
-                    <polyline class="sparkline-path glow" stroke="url(#hitter14Gradient3)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
-                  </svg>
-                </div>
-
-                <div class="badge-row">
-                  
-                  <span class="status-badge positive">Impact Bat</span>
-                  
-                  <span class="status-badge positive">HR Surge</span>
-                  
-                  <span class="status-badge neutral">Promotion Watch</span>
-                  
-                </div>
-
-                <div class="metric-grid">
-                  <div class="metric">
-                    <div class="metric-label">ISO</div>
-                    <div class="metric-value">0.522</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">K/BB</div>
-                    <div class="metric-value">2.25</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">HR</div>
-                    <div class="metric-value">3</div>
-                  </div>
-                </div>
-
-                <div class="why">Power spike + Strong plate control + Early HR surge</div>
-              </article>
-              
-              <article class="player-card high-edge">
-                <div class="player-top">
-                  <div class="avatar">OW</div>
-                  <div class="player-ident">
-                    <div class="rankline">#4 Hitter Trigger</div>
-                    <h3 class="player-name">Owen Caissie</h3>
-                    <div class="signal-line">Chicago Cubs // 14 Day Window // 28 PA</div>
-                    <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
-                    </div>
-                  </div>
-                  <div class="scorebox">
-                    <div class="score-label">Edge Score</div>
-                    <div class="score-value edge-up">83.2</div>
-                  </div>
-                </div>
-
-                <div class="sparkline-wrap">
-                  <div class="sparkline-head">
-                    <div class="sparkline-label">14 Day Trend</div>
-                    <div class="sparkline-note">2 Week Signal Window</div>
-                  </div>
-                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="hitter14Gradient4" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
-                      </linearGradient>
-                    </defs>
-                    <polyline class="sparkline-path glow" stroke="url(#hitter14Gradient4)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
-                  </svg>
-                </div>
-
-                <div class="badge-row">
-                  
-                  <span class="status-badge positive">Impact Bat</span>
-                  
-                  <span class="status-badge positive">HR Surge</span>
-                  
-                  <span class="status-badge neutral">Promotion Watch</span>
-                  
-                </div>
-
-                <div class="metric-grid">
-                  <div class="metric">
-                    <div class="metric-label">ISO</div>
-                    <div class="metric-value">0.522</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">K/BB</div>
-                    <div class="metric-value">2.25</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">HR</div>
-                    <div class="metric-value">3</div>
-                  </div>
-                </div>
-
-                <div class="why">Power spike + Strong plate control + Early HR surge</div>
-              </article>
-              
-              <article class="player-card high-edge">
-                <div class="player-top">
-                  <div class="avatar">SP</div>
-                  <div class="player-ident">
-                    <div class="rankline">#5 Hitter Trigger</div>
-                    <h3 class="player-name">Spencer Packard</h3>
-                    <div class="signal-line">Seattle Mariners // 14 Day Window // 26 PA</div>
-                    <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
-                    </div>
-                  </div>
-                  <div class="scorebox">
-                    <div class="score-label">Edge Score</div>
-                    <div class="score-value edge-up">79.7</div>
-                  </div>
-                </div>
-
-                <div class="sparkline-wrap">
-                  <div class="sparkline-head">
-                    <div class="sparkline-label">14 Day Trend</div>
-                    <div class="sparkline-note">2 Week Signal Window</div>
-                  </div>
-                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="hitter14Gradient5" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
-                      </linearGradient>
-                    </defs>
-                    <polyline class="sparkline-path glow" stroke="url(#hitter14Gradient5)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
-                  </svg>
-                </div>
-
-                <div class="badge-row">
-                  
-                  <span class="status-badge positive">Impact Bat</span>
-                  
-                  <span class="status-badge positive">Zone Control</span>
-                  
-                  <span class="status-badge positive">HR Surge</span>
-                  
-                </div>
-
-                <div class="metric-grid">
-                  <div class="metric">
-                    <div class="metric-label">ISO</div>
-                    <div class="metric-value">0.300</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">K/BB</div>
-                    <div class="metric-value">0.80</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">HR</div>
-                    <div class="metric-value">2</div>
-                  </div>
-                </div>
-
-                <div class="why">Power spike + Early HR surge</div>
-              </article>
-              
-              <article class="player-card high-edge">
-                <div class="player-top">
-                  <div class="avatar">SP</div>
-                  <div class="player-ident">
-                    <div class="rankline">#6 Hitter Trigger</div>
-                    <h3 class="player-name">Spencer Packard</h3>
-                    <div class="signal-line">Seattle Mariners // 14 Day Window // 26 PA</div>
-                    <div class="card-meta-row">
-                      <span class="card-meta-badge source">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge model">EDGE_v2.0</span>
-                    </div>
-                  </div>
-                  <div class="scorebox">
-                    <div class="score-label">Edge Score</div>
-                    <div class="score-value edge-up">79.7</div>
-                  </div>
-                </div>
-
-                <div class="sparkline-wrap">
-                  <div class="sparkline-head">
-                    <div class="sparkline-label">14 Day Trend</div>
-                    <div class="sparkline-note">2 Week Signal Window</div>
-                  </div>
-                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="hitter14Gradient6" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
-                      </linearGradient>
-                    </defs>
-                    <polyline class="sparkline-path glow" stroke="url(#hitter14Gradient6)" points="0,24 20,22 40,20 60,18 80,16 100,14 120,12" />
-                  </svg>
-                </div>
-
-                <div class="badge-row">
-                  
-                  <span class="status-badge positive">Impact Bat</span>
-                  
-                  <span class="status-badge positive">Zone Control</span>
-                  
-                  <span class="status-badge positive">HR Surge</span>
-                  
-                </div>
-
-                <div class="metric-grid">
-                  <div class="metric">
-                    <div class="metric-label">ISO</div>
-                    <div class="metric-value">0.300</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">K/BB</div>
-                    <div class="metric-value">0.80</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">HR</div>
-                    <div class="metric-value">2</div>
-                  </div>
-                </div>
-
-                <div class="why">Power spike + Early HR surge</div>
+                <div class="why">Power spike • Early HR surge</div>
               </article>
               
             </div>
@@ -2188,502 +2255,502 @@
           </div>
 
           
-          <div class="cards">
-           
-<article class="player-card">
-  <div class="player-top">
-    <div class="avatar">JE</div>
-    <div class="player-ident">
-      <div class="rankline">Movement Trigger // DEBUT</div>
-      <h3 class="player-name">Jeferson Quero</h3>
-      <div class="signal-line">NAS → MIL // 2026-03-28</div>
-      <div class="card-meta-row">
-        <span class="card-meta-badge source">ARRIVAL</span>
-        <span class="card-meta-badge model">C</span>
-        <span class="card-meta-badge model">DEBUT</span>
-      </div>
-    </div>
-  </div>
+          <div class="arrival-grid">
+            
+            <article class="player-card">
+              <div class="player-top">
+                <div class="avatar">JQ</div>
+                <div class="player-ident">
+                  <div class="rankline">Movement Trigger // DEBUT</div>
+                  <h3 class="player-name">Jeferson Quero</h3>
+                  <div class="signal-line">NAS → MIL // MLB debut sequence</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge">Arrival</span>
+                    <span class="card-meta-badge team">NAS</span>
+                    <span class="card-meta-badge team">MIL</span>
+                  </div>
+                </div>
+              </div>
 
-  <div class="badge-row">
-    <span class="status-badge infielder">C</span>
-    <span class="status-badge neutral">DEBUT</span>
-  </div>
+              <div class="badge-row">
+                <span class="status-badge infielder">C</span>
+                <span class="status-badge debut">DEBUT</span>
+              </div>
 
-  <div class="metric-grid">
-    <div class="metric">
-      <div class="metric-label">Date</div>
-      <div class="metric-value">2026-03-28</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Profile</div>
-      <div class="metric-value">Age 23</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Debut Status</div>
-      <div class="metric-value">2026-03-29</div>
-    </div>
-  </div>
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">Move Date</div>
+                  <div class="metric-value">2026-03-28</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Profile</div>
+                  <div class="metric-value">Age 23</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Debut Status</div>
+                  <div class="metric-value">2026-03-29</div>
+                </div>
+              </div>
 
-  <div class="why">Milwaukee Brewers recalled C Jeferson Quero from Nashville Sounds.</div>
-</article>
+              <div class="why">Milwaukee Brewers recalled C Jeferson Quero from Nashville Sounds.</div>
+            </article>
+            
+            <article class="player-card">
+              <div class="player-top">
+                <div class="avatar">DS</div>
+                <div class="player-ident">
+                  <div class="rankline">Movement Trigger // DEBUT</div>
+                  <h3 class="player-name">Deyvison De Los Santos</h3>
+                  <div class="signal-line">JAX → MIA // MLB debut sequence</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge">Arrival</span>
+                    <span class="card-meta-badge team">JAX</span>
+                    <span class="card-meta-badge team">MIA</span>
+                  </div>
+                </div>
+              </div>
 
-<article class="player-card">
-  <div class="player-top">
-    <div class="avatar">DE</div>
-    <div class="player-ident">
-      <div class="rankline">Movement Trigger // DEBUT</div>
-      <h3 class="player-name">Deyvison De Los Santos</h3>
-      <div class="signal-line">JAX → MIA // 2026-03-28</div>
-      <div class="card-meta-row">
-        <span class="card-meta-badge source">ARRIVAL</span>
-        <span class="card-meta-badge model">3B</span>
-        <span class="card-meta-badge model">DEBUT</span>
-      </div>
-    </div>
-  </div>
+              <div class="badge-row">
+                <span class="status-badge infielder">3B</span>
+                <span class="status-badge debut">DEBUT</span>
+              </div>
 
-  <div class="badge-row">
-    <span class="status-badge infielder">3B</span>
-    <span class="status-badge neutral">DEBUT</span>
-  </div>
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">Move Date</div>
+                  <div class="metric-value">2026-03-28</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Profile</div>
+                  <div class="metric-value">Age 22</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Debut Status</div>
+                  <div class="metric-value">2026-03-29</div>
+                </div>
+              </div>
 
-  <div class="metric-grid">
-    <div class="metric">
-      <div class="metric-label">Date</div>
-      <div class="metric-value">2026-03-28</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Profile</div>
-      <div class="metric-value">Age 22</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Debut Status</div>
-      <div class="metric-value">2026-03-29</div>
-    </div>
-  </div>
+              <div class="why">Miami Marlins recalled 3B Deyvison De Los Santos from Jacksonville Jumbo Shrimp.</div>
+            </article>
+            
+            <article class="player-card">
+              <div class="player-top">
+                <div class="avatar">CW</div>
+                <div class="player-ident">
+                  <div class="rankline">Movement Trigger // RECALL</div>
+                  <h3 class="player-name">Cole Wilcox</h3>
+                  <div class="signal-line">TAC → SEA // Return to MLB roster</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge">Arrival</span>
+                    <span class="card-meta-badge team">TAC</span>
+                    <span class="card-meta-badge team">SEA</span>
+                  </div>
+                </div>
+              </div>
 
-  <div class="why">Miami Marlins recalled 3B Deyvison De Los Santos from Jacksonville Jumbo Shrimp.</div>
-</article>
+              <div class="badge-row">
+                <span class="status-badge pitcher">RHP</span>
+                <span class="status-badge recall">RECALL</span>
+              </div>
 
-<article class="player-card">
-  <div class="player-top">
-    <div class="avatar">CO</div>
-    <div class="player-ident">
-      <div class="rankline">Movement Trigger // RECALL</div>
-      <h3 class="player-name">Cole Wilcox</h3>
-      <div class="signal-line">TAC → SEA // 2026-03-27</div>
-      <div class="card-meta-row">
-        <span class="card-meta-badge source">ARRIVAL</span>
-        <span class="card-meta-badge model">RHP</span>
-        <span class="card-meta-badge model">RECALL</span>
-      </div>
-    </div>
-  </div>
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">Move Date</div>
+                  <div class="metric-value">2026-03-27</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Profile</div>
+                  <div class="metric-value">Age 26 / Draft 2020</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Debut Status</div>
+                  <div class="metric-value">2025-09-19</div>
+                </div>
+              </div>
 
-  <div class="badge-row">
-    <span class="status-badge pitcher">RHP</span>
-    <span class="status-badge neutral">RECALL</span>
-  </div>
+              <div class="why">Seattle Mariners recalled RHP Cole Wilcox from Tacoma Rainiers.</div>
+            </article>
+            
+            <article class="player-card">
+              <div class="player-top">
+                <div class="avatar">BF</div>
+                <div class="player-ident">
+                  <div class="rankline">Movement Trigger // RECALL</div>
+                  <h3 class="player-name">Braxton Fulford</h3>
+                  <div class="signal-line">ABQ → COL // Return to MLB roster</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge">Arrival</span>
+                    <span class="card-meta-badge team">ABQ</span>
+                    <span class="card-meta-badge team">COL</span>
+                  </div>
+                </div>
+              </div>
 
-  <div class="metric-grid">
-    <div class="metric">
-      <div class="metric-label">Date</div>
-      <div class="metric-value">2026-03-27</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Profile</div>
-      <div class="metric-value">Age 26 // Draft 2020</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Debut Status</div>
-      <div class="metric-value">2025-09-19</div>
-    </div>
-  </div>
+              <div class="badge-row">
+                <span class="status-badge infielder">C</span>
+                <span class="status-badge recall">RECALL</span>
+              </div>
 
-  <div class="why">Seattle Mariners recalled RHP Cole Wilcox from Tacoma Rainiers.</div>
-</article>
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">Move Date</div>
+                  <div class="metric-value">2026-03-27</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Profile</div>
+                  <div class="metric-value">Age 27 / Draft 2021</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Debut Status</div>
+                  <div class="metric-value">2025-04-16</div>
+                </div>
+              </div>
 
-<article class="player-card">
-  <div class="player-top">
-    <div class="avatar">BR</div>
-    <div class="player-ident">
-      <div class="rankline">Movement Trigger // RECALL</div>
-      <h3 class="player-name">Braxton Fulford</h3>
-      <div class="signal-line">ABQ → COL // 2026-03-27</div>
-      <div class="card-meta-row">
-        <span class="card-meta-badge source">ARRIVAL</span>
-        <span class="card-meta-badge model">C</span>
-        <span class="card-meta-badge model">RECALL</span>
-      </div>
-    </div>
-  </div>
+              <div class="why">Colorado Rockies recalled C Braxton Fulford from Albuquerque Isotopes.</div>
+            </article>
+            
+            <article class="player-card">
+              <div class="player-top">
+                <div class="avatar">AN</div>
+                <div class="player-ident">
+                  <div class="rankline">Movement Trigger // DEBUT</div>
+                  <h3 class="player-name">Anthony Nunez</h3>
+                  <div class="signal-line">NOR → BAL // MLB debut sequence</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge">Arrival</span>
+                    <span class="card-meta-badge team">NOR</span>
+                    <span class="card-meta-badge team">BAL</span>
+                  </div>
+                </div>
+              </div>
 
-  <div class="badge-row">
-    <span class="status-badge infielder">C</span>
-    <span class="status-badge neutral">RECALL</span>
-  </div>
+              <div class="badge-row">
+                <span class="status-badge pitcher">RHP</span>
+                <span class="status-badge debut">DEBUT</span>
+              </div>
 
-  <div class="metric-grid">
-    <div class="metric">
-      <div class="metric-label">Date</div>
-      <div class="metric-value">2026-03-27</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Profile</div>
-      <div class="metric-value">Age 27 // Draft 2021</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Debut Status</div>
-      <div class="metric-value">2025-04-16</div>
-    </div>
-  </div>
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">Move Date</div>
+                  <div class="metric-value">2026-03-25</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Profile</div>
+                  <div class="metric-value">Age 24 / Draft 2019</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Debut Status</div>
+                  <div class="metric-value">2026-03-28</div>
+                </div>
+              </div>
 
-  <div class="why">Colorado Rockies recalled C Braxton Fulford from Albuquerque Isotopes.</div>
-</article>
+              <div class="why">Baltimore Orioles recalled RHP Anthony Nunez from Norfolk Tides.</div>
+            </article>
+            
+            <article class="player-card">
+              <div class="player-top">
+                <div class="avatar">TR</div>
+                <div class="player-ident">
+                  <div class="rankline">Movement Trigger // DEBUT</div>
+                  <h3 class="player-name">Tj Rumfield</h3>
+                  <div class="signal-line">ABQ → COL // MLB debut sequence</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge">Arrival</span>
+                    <span class="card-meta-badge team">ABQ</span>
+                    <span class="card-meta-badge team">COL</span>
+                  </div>
+                </div>
+              </div>
 
-<article class="player-card">
-  <div class="player-top">
-    <div class="avatar">AN</div>
-    <div class="player-ident">
-      <div class="rankline">Movement Trigger // DEBUT</div>
-      <h3 class="player-name">Anthony Nunez</h3>
-      <div class="signal-line">NOR → BAL // 2026-03-25</div>
-      <div class="card-meta-row">
-        <span class="card-meta-badge source">ARRIVAL</span>
-        <span class="card-meta-badge model">RHP</span>
-        <span class="card-meta-badge model">DEBUT</span>
-      </div>
-    </div>
-  </div>
+              <div class="badge-row">
+                <span class="status-badge infielder">1B</span>
+                <span class="status-badge debut">DEBUT</span>
+              </div>
 
-  <div class="badge-row">
-    <span class="status-badge pitcher">RHP</span>
-    <span class="status-badge neutral">DEBUT</span>
-  </div>
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">Move Date</div>
+                  <div class="metric-value">2026-03-25</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Profile</div>
+                  <div class="metric-value">Age 25 / Draft 2021</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Debut Status</div>
+                  <div class="metric-value">2026-03-27</div>
+                </div>
+              </div>
 
-  <div class="metric-grid">
-    <div class="metric">
-      <div class="metric-label">Date</div>
-      <div class="metric-value">2026-03-25</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Profile</div>
-      <div class="metric-value">Age 24 // Draft 2019</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Debut Status</div>
-      <div class="metric-value">2026-03-28</div>
-    </div>
-  </div>
+              <div class="why">Colorado Rockies selected the contract of 1B TJ Rumfield from Albuquerque Isotopes.</div>
+            </article>
+            
+            <article class="player-card">
+              <div class="player-top">
+                <div class="avatar">JC</div>
+                <div class="player-ident">
+                  <div class="rankline">Movement Trigger // DEBUT</div>
+                  <h3 class="player-name">Justin Crawford</h3>
+                  <div class="signal-line">LHV → PHI // MLB debut sequence</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge">Arrival</span>
+                    <span class="card-meta-badge team">LHV</span>
+                    <span class="card-meta-badge team">PHI</span>
+                  </div>
+                </div>
+              </div>
 
-  <div class="why">Baltimore Orioles recalled RHP Anthony Nunez from Norfolk Tides.</div>
-</article>
+              <div class="badge-row">
+                <span class="status-badge outfielder">CF</span>
+                <span class="status-badge debut">DEBUT</span>
+              </div>
 
-<article class="player-card">
-  <div class="player-top">
-    <div class="avatar">TJ</div>
-    <div class="player-ident">
-      <div class="rankline">Movement Trigger // DEBUT</div>
-      <h3 class="player-name">TJ Rumfield</h3>
-      <div class="signal-line">ABQ → COL // 2026-03-25</div>
-      <div class="card-meta-row">
-        <span class="card-meta-badge source">ARRIVAL</span>
-        <span class="card-meta-badge model">1B</span>
-        <span class="card-meta-badge model">DEBUT</span>
-      </div>
-    </div>
-  </div>
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">Move Date</div>
+                  <div class="metric-value">2026-03-25</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Profile</div>
+                  <div class="metric-value">Age 22 / Draft 2022</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Debut Status</div>
+                  <div class="metric-value">2026-03-26</div>
+                </div>
+              </div>
 
-  <div class="badge-row">
-    <span class="status-badge infielder">1B</span>
-    <span class="status-badge neutral">DEBUT</span>
-  </div>
+              <div class="why">Philadelphia Phillies selected the contract of CF Justin Crawford from Lehigh Valley IronPigs.</div>
+            </article>
+            
+            <article class="player-card">
+              <div class="player-top">
+                <div class="avatar">JW</div>
+                <div class="player-ident">
+                  <div class="rankline">Movement Trigger // DEBUT</div>
+                  <h3 class="player-name">Jj Wetherholt</h3>
+                  <div class="signal-line">MEM → STL // MLB debut sequence</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge">Arrival</span>
+                    <span class="card-meta-badge team">MEM</span>
+                    <span class="card-meta-badge team">STL</span>
+                  </div>
+                </div>
+              </div>
 
-  <div class="metric-grid">
-    <div class="metric">
-      <div class="metric-label">Date</div>
-      <div class="metric-value">2026-03-25</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Profile</div>
-      <div class="metric-value">Age 25 // Draft 2021</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Debut Status</div>
-      <div class="metric-value">2026-03-27</div>
-    </div>
-  </div>
+              <div class="badge-row">
+                <span class="status-badge infielder">SS</span>
+                <span class="status-badge debut">DEBUT</span>
+              </div>
 
-  <div class="why">Colorado Rockies selected the contract of 1B TJ Rumfield from Albuquerque Isotopes.</div>
-</article>
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">Move Date</div>
+                  <div class="metric-value">2026-03-25</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Profile</div>
+                  <div class="metric-value">Age 23 / Draft 2024</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Debut Status</div>
+                  <div class="metric-value">2026-03-26</div>
+                </div>
+              </div>
 
-<article class="player-card">
-  <div class="player-top">
-    <div class="avatar">JU</div>
-    <div class="player-ident">
-      <div class="rankline">Movement Trigger // DEBUT</div>
-      <h3 class="player-name">Justin Crawford</h3>
-      <div class="signal-line">LHV → PHI // 2026-03-25</div>
-      <div class="card-meta-row">
-        <span class="card-meta-badge source">ARRIVAL</span>
-        <span class="card-meta-badge model">CF</span>
-        <span class="card-meta-badge model">DEBUT</span>
-      </div>
-    </div>
-  </div>
+              <div class="why">St. Louis Cardinals selected the contract of SS JJ Wetherholt from Memphis Redbirds.</div>
+            </article>
+            
+            <article class="player-card">
+              <div class="player-top">
+                <div class="avatar">CB</div>
+                <div class="player-ident">
+                  <div class="rankline">Movement Trigger // DEBUT</div>
+                  <h3 class="player-name">Carson Benge</h3>
+                  <div class="signal-line">SYR → NYM // MLB debut sequence</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge">Arrival</span>
+                    <span class="card-meta-badge team">SYR</span>
+                    <span class="card-meta-badge team">NYM</span>
+                  </div>
+                </div>
+              </div>
 
-  <div class="badge-row">
-    <span class="status-badge outfielder">CF</span>
-    <span class="status-badge neutral">DEBUT</span>
-  </div>
+              <div class="badge-row">
+                <span class="status-badge outfielder">OF</span>
+                <span class="status-badge debut">DEBUT</span>
+              </div>
 
-  <div class="metric-grid">
-    <div class="metric">
-      <div class="metric-label">Date</div>
-      <div class="metric-value">2026-03-25</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Profile</div>
-      <div class="metric-value">Age 22 // Draft 2022</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Debut Status</div>
-      <div class="metric-value">2026-03-26</div>
-    </div>
-  </div>
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">Move Date</div>
+                  <div class="metric-value">2026-03-25</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Profile</div>
+                  <div class="metric-value">Age 23 / Draft 2024</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Debut Status</div>
+                  <div class="metric-value">2026-03-26</div>
+                </div>
+              </div>
 
-  <div class="why">Philadelphia Phillies selected the contract of CF Justin Crawford from Lehigh Valley IronPigs.</div>
-</article>
+              <div class="why">New York Mets selected the contract of OF Carson Benge from Syracuse Mets.</div>
+            </article>
+            
+            <article class="player-card">
+              <div class="player-top">
+                <div class="avatar">CL</div>
+                <div class="player-ident">
+                  <div class="rankline">Movement Trigger // RECALL</div>
+                  <h3 class="player-name">Cody Laweryson</h3>
+                  <div class="signal-line">STP → MIN // Return to MLB roster</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge">Arrival</span>
+                    <span class="card-meta-badge team">STP</span>
+                    <span class="card-meta-badge team">MIN</span>
+                  </div>
+                </div>
+              </div>
 
-<article class="player-card">
-  <div class="player-top">
-    <div class="avatar">JJ</div>
-    <div class="player-ident">
-      <div class="rankline">Movement Trigger // DEBUT</div>
-      <h3 class="player-name">JJ Wetherholt</h3>
-      <div class="signal-line">MEM → STL // 2026-03-25</div>
-      <div class="card-meta-row">
-        <span class="card-meta-badge source">ARRIVAL</span>
-        <span class="card-meta-badge model">SS</span>
-        <span class="card-meta-badge model">DEBUT</span>
-      </div>
-    </div>
-  </div>
+              <div class="badge-row">
+                <span class="status-badge pitcher">RHP</span>
+                <span class="status-badge recall">RECALL</span>
+              </div>
 
-  <div class="badge-row">
-    <span class="status-badge infielder">SS</span>
-    <span class="status-badge neutral">DEBUT</span>
-  </div>
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">Move Date</div>
+                  <div class="metric-value">2026-03-25</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Profile</div>
+                  <div class="metric-value">Age 27 / Draft 2019</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Debut Status</div>
+                  <div class="metric-value">2025-09-13</div>
+                </div>
+              </div>
 
-  <div class="metric-grid">
-    <div class="metric">
-      <div class="metric-label">Date</div>
-      <div class="metric-value">2026-03-25</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Profile</div>
-      <div class="metric-value">Age 23 // Draft 2024</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Debut Status</div>
-      <div class="metric-value">2026-03-26</div>
-    </div>
-  </div>
+              <div class="why">Minnesota Twins selected the contract of RHP Cody Laweryson from St. Paul Saints.</div>
+            </article>
+            
+            <article class="player-card">
+              <div class="player-top">
+                <div class="avatar">CR</div>
+                <div class="player-ident">
+                  <div class="rankline">Movement Trigger // RECALL</div>
+                  <h3 class="player-name">Christian Roa</h3>
+                  <div class="signal-line">SUG → HOU // Return to MLB roster</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge">Arrival</span>
+                    <span class="card-meta-badge team">SUG</span>
+                    <span class="card-meta-badge team">HOU</span>
+                  </div>
+                </div>
+              </div>
 
-  <div class="why">St. Louis Cardinals selected the contract of SS JJ Wetherholt from Memphis Redbirds.</div>
-</article>
+              <div class="badge-row">
+                <span class="status-badge pitcher">RHP</span>
+                <span class="status-badge recall">RECALL</span>
+              </div>
 
-<article class="player-card">
-  <div class="player-top">
-    <div class="avatar">CA</div>
-    <div class="player-ident">
-      <div class="rankline">Movement Trigger // DEBUT</div>
-      <h3 class="player-name">Carson Benge</h3>
-      <div class="signal-line">SYR → NYM // 2026-03-25</div>
-      <div class="card-meta-row">
-        <span class="card-meta-badge source">ARRIVAL</span>
-        <span class="card-meta-badge model">OF</span>
-        <span class="card-meta-badge model">DEBUT</span>
-      </div>
-    </div>
-  </div>
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">Move Date</div>
+                  <div class="metric-value">2026-03-25</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Profile</div>
+                  <div class="metric-value">Age 26 / Draft 2020</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Debut Status</div>
+                  <div class="metric-value">2025-09-06</div>
+                </div>
+              </div>
 
-  <div class="badge-row">
-    <span class="status-badge outfielder">OF</span>
-    <span class="status-badge neutral">DEBUT</span>
-  </div>
+              <div class="why">Houston Astros selected the contract of RHP Christian Roa from Sugar Land Space Cowboys.</div>
+            </article>
+            
+            <article class="player-card">
+              <div class="player-top">
+                <div class="avatar">JF</div>
+                <div class="player-ident">
+                  <div class="rankline">Movement Trigger // DEBUT</div>
+                  <h3 class="player-name">Jose Franco</h3>
+                  <div class="signal-line">LOU → CIN // MLB debut sequence</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge">Arrival</span>
+                    <span class="card-meta-badge team">LOU</span>
+                    <span class="card-meta-badge team">CIN</span>
+                  </div>
+                </div>
+              </div>
 
-  <div class="metric-grid">
-    <div class="metric">
-      <div class="metric-label">Date</div>
-      <div class="metric-value">2026-03-25</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Profile</div>
-      <div class="metric-value">Age 23 // Draft 2024</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Debut Status</div>
-      <div class="metric-value">2026-03-26</div>
-    </div>
-  </div>
+              <div class="badge-row">
+                <span class="status-badge pitcher">RHP</span>
+                <span class="status-badge debut">DEBUT</span>
+              </div>
 
-  <div class="why">New York Mets selected the contract of OF Carson Benge from Syracuse Mets.</div>
-</article>
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">Move Date</div>
+                  <div class="metric-value">2026-03-25</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Profile</div>
+                  <div class="metric-value">Age 25</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Debut Status</div>
+                  <div class="metric-value">Pending</div>
+                </div>
+              </div>
 
-<article class="player-card">
-  <div class="player-top">
-    <div class="avatar">CO</div>
-    <div class="player-ident">
-      <div class="rankline">Movement Trigger // RECALL</div>
-      <h3 class="player-name">Cody Laweryson</h3>
-      <div class="signal-line">STP → MIN // 2026-03-25</div>
-      <div class="card-meta-row">
-        <span class="card-meta-badge source">ARRIVAL</span>
-        <span class="card-meta-badge model">RHP</span>
-        <span class="card-meta-badge model">RECALL</span>
-      </div>
-    </div>
-  </div>
+              <div class="why">Cincinnati Reds recalled RHP Jose Franco from Louisville Bats.</div>
+            </article>
+            
+            <article class="player-card">
+              <div class="player-top">
+                <div class="avatar">CC</div>
+                <div class="player-ident">
+                  <div class="rankline">Movement Trigger // DEBUT</div>
+                  <h3 class="player-name">Christian Cairo</h3>
+                  <div class="signal-line">LHV → PHI // MLB debut sequence</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge">Arrival</span>
+                    <span class="card-meta-badge team">LHV</span>
+                    <span class="card-meta-badge team">PHI</span>
+                  </div>
+                </div>
+              </div>
 
-  <div class="badge-row">
-    <span class="status-badge pitcher">RHP</span>
-    <span class="status-badge neutral">RECALL</span>
-  </div>
+              <div class="badge-row">
+                <span class="status-badge infielder">SS</span>
+                <span class="status-badge debut">DEBUT</span>
+              </div>
 
-  <div class="metric-grid">
-    <div class="metric">
-      <div class="metric-label">Date</div>
-      <div class="metric-value">2026-03-25</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Profile</div>
-      <div class="metric-value">Age 27 // Draft 2019</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Debut Status</div>
-      <div class="metric-value">2025-09-13</div>
-    </div>
-  </div>
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">Move Date</div>
+                  <div class="metric-value">2026-03-25</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Profile</div>
+                  <div class="metric-value">Age 24 / Draft 2019</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Debut Status</div>
+                  <div class="metric-value">Pending</div>
+                </div>
+              </div>
 
-  <div class="why">Minnesota Twins selected the contract of RHP Cody Laweryson from St. Paul Saints.</div>
-</article>
-
-<article class="player-card">
-  <div class="player-top">
-    <div class="avatar">CH</div>
-    <div class="player-ident">
-      <div class="rankline">Movement Trigger // RECALL</div>
-      <h3 class="player-name">Christian Roa</h3>
-      <div class="signal-line">SL → HOU // 2026-03-25</div>
-      <div class="card-meta-row">
-        <span class="card-meta-badge source">ARRIVAL</span>
-        <span class="card-meta-badge model">RHP</span>
-        <span class="card-meta-badge model">RECALL</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="badge-row">
-    <span class="status-badge pitcher">RHP</span>
-    <span class="status-badge neutral">RECALL</span>
-  </div>
-
-  <div class="metric-grid">
-    <div class="metric">
-      <div class="metric-label">Date</div>
-      <div class="metric-value">2026-03-25</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Profile</div>
-      <div class="metric-value">Age 26 // Draft 2020</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Debut Status</div>
-      <div class="metric-value">2025-09-06</div>
-    </div>
-  </div>
-
-  <div class="why">Houston Astros selected the contract of RHP Christian Roa from Sugar Land Space Cowboys.</div>
-</article>
-
-<article class="player-card">
-  <div class="player-top">
-    <div class="avatar">JO</div>
-    <div class="player-ident">
-      <div class="rankline">Movement Trigger // DEBUT</div>
-      <h3 class="player-name">Jose Franco</h3>
-      <div class="signal-line">LOU → CIN // 2026-03-25</div>
-      <div class="card-meta-row">
-        <span class="card-meta-badge source">ARRIVAL</span>
-        <span class="card-meta-badge model">RHP</span>
-        <span class="card-meta-badge model">DEBUT</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="badge-row">
-    <span class="status-badge pitcher">RHP</span>
-    <span class="status-badge neutral">DEBUT</span>
-  </div>
-
-  <div class="metric-grid">
-    <div class="metric">
-      <div class="metric-label">Date</div>
-      <div class="metric-value">2026-03-25</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Profile</div>
-      <div class="metric-value">Age 25</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Debut Status</div>
-      <div class="metric-value">MLB debut pending</div>
-    </div>
-  </div>
-
-  <div class="why">Cincinnati Reds recalled RHP Jose Franco from Louisville Bats.</div>
-</article>
-
-<article class="player-card">
-  <div class="player-top">
-    <div class="avatar">CH</div>
-    <div class="player-ident">
-      <div class="rankline">Movement Trigger // DEBUT</div>
-      <h3 class="player-name">Christian Cairo</h3>
-      <div class="signal-line">LHV → PHI // 2026-03-25</div>
-      <div class="card-meta-row">
-        <span class="card-meta-badge source">ARRIVAL</span>
-        <span class="card-meta-badge model">SS</span>
-        <span class="card-meta-badge model">DEBUT</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="badge-row">
-    <span class="status-badge infielder">SS</span>
-    <span class="status-badge neutral">DEBUT</span>
-  </div>
-
-  <div class="metric-grid">
-    <div class="metric">
-      <div class="metric-label">Date</div>
-      <div class="metric-value">2026-03-25</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Profile</div>
-      <div class="metric-value">Age 24 // Draft 2019</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Debut Status</div>
-      <div class="metric-value">MLB debut pending</div>
-    </div>
-  </div>
-
-  <div class="why">Philadelphia Phillies selected the contract of SS Christian Cairo from Lehigh Valley IronPigs.</div>
-</article>
-
+              <div class="why">Philadelphia Phillies selected the contract of SS Christian Cairo from Lehigh Valley IronPigs.</div>
+            </article>
+            
           </div>
           
         </div>
@@ -2716,17 +2783,17 @@
       if (panelId === "tab-14d") {
         if (summaryWindow) summaryWindow.textContent = "14 DAY";
         if (summaryMode) summaryMode.textContent = "SCOUT";
-        if (summarySignals) summarySignals.textContent = "12";
-    } else {
-      if (summaryWindow) summaryWindow.textContent = "72 HR";
-      if (summaryMode) summaryMode.textContent = "AAA";
-      if (summarySignals) summarySignals.textContent = "11";
-}
+        if (summarySignals) summarySignals.textContent = "11";
+      } else {
+        if (summaryWindow) summaryWindow.textContent = "72 HR";
+        if (summaryMode) summaryMode.textContent = "AAA";
+        if (summarySignals) summarySignals.textContent = "11";
+      }
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-      const defaultTab = document.getElementById("tab-72h");
-      if (defaultTab) defaultTab.style.display = "block";
+      const btn14 = document.getElementById("tab-btn-14d");
+      switchPromotionTab("tab-14d", btn14);
     });
   </script>
 </body>

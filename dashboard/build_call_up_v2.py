@@ -2,10 +2,12 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
+import json
+import math
+import re
 
 import pandas as pd
 from jinja2 import Template
-import json
 
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
@@ -20,7 +22,81 @@ SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding=
 
 TIMEZONE_LABEL = "America/New_York"
 SOURCE_BADGE = "SRC: AAA_PIPELINE_v1"
-SCORE_VERSION = "EDGE_v2.0"
+SCORE_VERSION = "EDGE_v2.1"
+
+MLB_CODES = {
+    "ARI", "ATL", "BAL", "BOS", "CHC", "CWS", "CIN", "CLE", "COL", "DET",
+    "HOU", "KC", "LAA", "LAD", "MIA", "MIL", "MIN", "NYM", "NYY", "ATH",
+    "PHI", "PIT", "SD", "SEA", "SF", "STL", "TB", "TEX", "TOR", "WSH",
+}
+
+MLB_NAME_TO_CODE = {
+    "diamondbacks": "ARI",
+    "braves": "ATL",
+    "orioles": "BAL",
+    "red sox": "BOS",
+    "cubs": "CHC",
+    "white sox": "CWS",
+    "reds": "CIN",
+    "guardians": "CLE",
+    "rockies": "COL",
+    "tigers": "DET",
+    "astros": "HOU",
+    "royals": "KC",
+    "angels": "LAA",
+    "dodgers": "LAD",
+    "marlins": "MIA",
+    "brewers": "MIL",
+    "twins": "MIN",
+    "mets": "NYM",
+    "yankees": "NYY",
+    "athletics": "ATH",
+    "phillies": "PHI",
+    "pirates": "PIT",
+    "padres": "SD",
+    "mariners": "SEA",
+    "giants": "SF",
+    "cardinals": "STL",
+    "rays": "TB",
+    "rangers": "TEX",
+    "blue jays": "TOR",
+    "nationals": "WSH",
+}
+
+AAA_TO_MLB_CODES = {
+    "Memphis Redbirds": ("MEM", "STL"),
+    "St. Paul Saints": ("STP", "MIN"),
+    "Lehigh Valley IronPigs": ("LHV", "PHI"),
+    "Buffalo Bisons": ("BUF", "TOR"),
+    "Syracuse Mets": ("SYR", "NYM"),
+    "Tacoma Rainiers": ("TAC", "SEA"),
+    "Louisville Bats": ("LOU", "CIN"),
+    "Sugar Land Space Cowboys": ("SUG", "HOU"),
+    "Reno Aces": ("REN", "ARI"),
+    "Albuquerque Isotopes": ("ABQ", "COL"),
+    "Norfolk Tides": ("NOR", "BAL"),
+    "Jacksonville Jumbo Shrimp": ("JAX", "MIA"),
+    "Nashville Sounds": ("NAS", "MIL"),
+    "Salt Lake Bees": ("SLB", "LAA"),
+    "Charlotte Knights": ("CLT", "CWS"),
+    "El Paso Chihuahuas": ("ELP", "SD"),
+    "Columbus Clippers": ("CLP", "CLE"),
+    "Rochester Red Wings": ("ROC", "WSH"),
+    "Iowa Cubs": ("IOW", "CHC"),
+    "Oklahoma City Baseball Club": ("OKC", "LAD"),
+    "Toledo Mud Hens": ("TOL", "DET"),
+    "Indianapolis Indians": ("IND", "PIT"),
+    "Worcester Red Sox": ("WOR", "BOS"),
+    "Scranton/Wilkes-Barre RailRiders": ("SWB", "NYY"),
+    "Las Vegas Aviators": ("LV", "ATH"),
+    "Sacramento River Cats": ("SAC", "SF"),
+    "Gwinnett Stripers": ("GWN", "ATL"),
+    "Round Rock Express": ("RR", "TEX"),
+    "Durham Bulls": ("DUR", "TB"),
+}
+
+AAA_CODES = {v[0] for v in AAA_TO_MLB_CODES.values()}
+VALID_TEAM_CODES = MLB_CODES | AAA_CODES
 
 
 def zscore(series: pd.Series) -> pd.Series:
@@ -40,13 +116,248 @@ def safe_name(value: str) -> str:
     return " ".join(part.capitalize() for part in text.split())
 
 
-def build_aaa_hitter_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
+def safe_text(value, fallback="—") -> str:
+    if value is None or pd.isna(value):
+        return fallback
+    text = str(value).strip()
+    return text if text else fallback
+
+
+def first_non_empty(row: pd.Series, candidates: list[str], fallback="—") -> str:
+    for col in candidates:
+        if col in row.index:
+            val = row.get(col)
+            if val is None or pd.isna(val):
+                continue
+            text = str(val).strip()
+            if text and text.lower() not in {"nan", "none", "null"}:
+                return text
+    return fallback
+
+
+def initials(name: str) -> str:
+    parts = [p for p in str(name).split() if p]
+    if not parts:
+        return "—"
+    if len(parts) == 1:
+        return parts[0][:2].upper()
+    return (parts[0][:1] + parts[-1][:1]).upper()
+
+
+def classify_score(score: float) -> str:
+    try:
+        score = float(score)
+    except Exception:
+        return "neutral"
+    if score >= 80:
+        return "elite"
+    if score >= 65:
+        return "positive"
+    if score >= 50:
+        return "watch"
+    return "neutral"
+
+
+def clean_candidate_code(value: str) -> str:
+    text = re.sub(r"[^A-Za-z]", "", str(value or "")).upper()
+    return text[:4] if text else ""
+
+
+def map_team_to_code(raw: str) -> str:
+    if not raw:
+        return "—"
+
+    raw_text = str(raw).strip()
+    code = clean_candidate_code(raw_text)
+
+    if code in VALID_TEAM_CODES:
+        return code
+
+    lowered = raw_text.lower()
+
+    if raw_text in AAA_TO_MLB_CODES:
+        return AAA_TO_MLB_CODES[raw_text][0]
+
+    for k, v in MLB_NAME_TO_CODE.items():
+        if k in lowered:
+            return v
+
+    # Guardrail against junk like "BU"
+    return "—"
+
+
+def derive_display_team(row: pd.Series) -> str:
+    candidates = [
+        "team_abbrev",
+        "org_code",
+        "parent_org_code",
+        "mlb_org_code",
+        "org_abbrev",
+        "team_code",
+        "team",
+        "org",
+        "parent_org",
+        "mlb_org",
+    ]
+    for col in candidates:
+        if col in row.index:
+            code = map_team_to_code(row.get(col))
+            if code != "—":
+                return code
+    return "—"
+
+
+def derive_display_org(row: pd.Series) -> str:
+    candidates = [
+        "org",
+        "parent_org",
+        "mlb_org",
+        "team",
+        "team_name",
+        "affiliate_name",
+    ]
+    text = first_non_empty(row, candidates, fallback="—")
+    code = map_team_to_code(text)
+    return code if code != "—" else text
+
+
+def build_polyline(values: list[float], width: int = 120, height: int = 34, pad: int = 3) -> str:
+    cleaned = []
+    for v in values:
+        try:
+            f = float(v)
+            if math.isfinite(f):
+                cleaned.append(f)
+        except Exception:
+            continue
+
+    if not cleaned:
+        cleaned = [0.0, 0.0]
+    if len(cleaned) == 1:
+        cleaned = [cleaned[0], cleaned[0]]
+
+    vmin = min(cleaned)
+    vmax = max(cleaned)
+    if vmax == vmin:
+        vmax = vmin + 1.0
+
+    xs = []
+    if len(cleaned) == 2:
+        xs = [0, width]
+    else:
+        xs = [i * width / (len(cleaned) - 1) for i in range(len(cleaned))]
+
+    points = []
+    for x, v in zip(xs, cleaned):
+        pct = (v - vmin) / (vmax - vmin)
+        y = (height - pad) - (pct * (height - pad * 2))
+        points.append(f"{x:.1f},{y:.1f}")
+    return " ".join(points)
+
+
+def build_trend_lookup(df: pd.DataFrame, metric_field: str) -> dict[str, dict]:
+    if df.empty or metric_field not in df.columns:
+        return {}
+
+    trend = {}
+    work = df.copy()
+    work["player_name"] = work["player_name"].apply(safe_name)
+
+    if "week_start" in work.columns:
+        work["week_start"] = pd.to_datetime(work["week_start"], errors="coerce")
+
+    for player, group in work.groupby("player_name"):
+        if "week_start" in group.columns:
+            group = group.sort_values("week_start")
+        values = pd.to_numeric(group[metric_field], errors="coerce").dropna().tolist()
+        if not values:
+            continue
+        polyline = build_polyline(values)
+        glow = len(values) >= 2 and values[-1] > values[-2]
+        trend[player] = {
+            "trend_points": polyline,
+            "trend_glow": glow,
+            "trend_label": f"{len(values)}W",
+        }
+    return trend
+
+
+def aggregate_hitter_frame(df: pd.DataFrame) -> pd.DataFrame:
     hitters = df[df["pa"].notna()].copy()
     if hitters.empty:
         return pd.DataFrame()
 
-    for col in ["pa", "bb", "so", "hr", "iso", "kbb_h"]:
-        hitters[col] = pd.to_numeric(hitters[col], errors="coerce")
+    numeric_cols = ["pa", "bb", "so", "hr", "iso", "kbb_h"]
+    for col in numeric_cols:
+        if col in hitters.columns:
+            hitters[col] = pd.to_numeric(hitters[col], errors="coerce")
+
+    hitters["player_name"] = hitters["player_name"].apply(safe_name)
+
+    group_cols = ["player_name"]
+    agg_map = {
+        "pa": "sum",
+        "bb": "sum",
+        "so": "sum",
+        "hr": "sum",
+        "iso": "mean",
+    }
+
+    optional_text_cols = [
+        "org", "team", "team_abbrev", "org_code", "parent_org", "mlb_org", "week_start"
+    ]
+    for col in optional_text_cols:
+        if col in hitters.columns:
+            agg_map[col] = "last"
+
+    agg = hitters.groupby(group_cols, dropna=False).agg(agg_map).reset_index()
+
+    agg["kbb_h"] = agg.apply(
+        lambda r: (float(r["so"]) / float(r["bb"])) if pd.notna(r["bb"]) and float(r["bb"]) > 0 else float(r["so"]) if pd.notna(r["so"]) else 0.0,
+        axis=1,
+    )
+    return agg
+
+
+def aggregate_pitcher_frame(df: pd.DataFrame) -> pd.DataFrame:
+    pitchers = df[df["bf"].notna()].copy()
+    if pitchers.empty:
+        return pd.DataFrame()
+
+    numeric_cols = ["bf", "so_p", "bb_allowed", "kbb_p"]
+    for col in numeric_cols:
+        if col in pitchers.columns:
+            pitchers[col] = pd.to_numeric(pitchers[col], errors="coerce")
+
+    pitchers["player_name"] = pitchers["player_name"].apply(safe_name)
+
+    group_cols = ["player_name"]
+    agg_map = {
+        "bf": "sum",
+        "so_p": "sum",
+        "bb_allowed": "sum",
+    }
+
+    optional_text_cols = [
+        "org", "team", "team_abbrev", "org_code", "parent_org", "mlb_org", "week_start"
+    ]
+    for col in optional_text_cols:
+        if col in pitchers.columns:
+            agg_map[col] = "last"
+
+    agg = pitchers.groupby(group_cols, dropna=False).agg(agg_map).reset_index()
+
+    agg["kbb_p"] = agg.apply(
+        lambda r: (float(r["so_p"]) / float(r["bb_allowed"])) if pd.notna(r["bb_allowed"]) and float(r["bb_allowed"]) > 0 else float(r["so_p"]) if pd.notna(r["so_p"]) else 0.0,
+        axis=1,
+    )
+    return agg
+
+
+def build_aaa_hitter_promotion_watch(df: pd.DataFrame, trend_lookup: dict[str, dict] | None = None) -> pd.DataFrame:
+    hitters = aggregate_hitter_frame(df)
+    if hitters.empty:
+        return pd.DataFrame()
 
     hitters = hitters[hitters["pa"] >= 12].copy()
     if hitters.empty:
@@ -71,8 +382,10 @@ def build_aaa_hitter_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     hitters["edge_score"] = hitters["edge_score_raw"].clip(5, 95).round(1)
-    hitters["player_name"] = hitters["player_name"].apply(safe_name)
     hitters["signal_type"] = "Hitter"
+    hitters["score_class"] = hitters["edge_score"].apply(classify_score)
+    hitters["display_team"] = hitters.apply(derive_display_team, axis=1)
+    hitters["display_org"] = hitters.apply(derive_display_org, axis=1)
 
     def build_hitter_signal_summary(row):
         iso = row.get("iso", 0) or 0
@@ -80,7 +393,6 @@ def build_aaa_hitter_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
         hr = row.get("hr", 0) or 0
 
         signals = []
-
         if iso >= 0.300:
             signals.append("Power spike")
         elif iso >= 0.220:
@@ -94,10 +406,7 @@ def build_aaa_hitter_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
         if hr >= 2:
             signals.append("Early HR surge")
 
-        if not signals:
-            return "Emerging performance signal under evaluation"
-
-        return " + ".join(signals)
+        return " • ".join(signals) if signals else "Emerging performance signal under evaluation"
 
     hitters["why"] = hitters.apply(build_hitter_signal_summary, axis=1)
 
@@ -110,45 +419,43 @@ def build_aaa_hitter_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
     hitters["sample_note"] = hitters["pa"].fillna(0).map(lambda x: f"{int(x)} PA")
     hitters["source_badge"] = SOURCE_BADGE
     hitters["score_version"] = SCORE_VERSION
-    hitters["trend_points"] = "0,24 20,22 40,20 60,18 80,16 100,14 120,12"
-    hitters["trend_glow"] = hitters["edge_score"] >= 65
+    hitters["avatar"] = hitters["player_name"].map(initials)
 
-    def hitter_badges(row: pd.Series) -> list[str]:
+    def hitter_badges(row: pd.Series) -> list[tuple[str, str]]:
         badges = []
         if pd.notna(row["iso"]) and row["iso"] >= 0.250:
-            badges.append("Impact Bat")
+            badges.append(("Impact Bat", "positive"))
         if pd.notna(row["kbb_h"]) and row["kbb_h"] <= 1.50:
-            badges.append("Zone Control")
+            badges.append(("Zone Control", "positive"))
         if pd.notna(row["hr"]) and row["hr"] >= 2:
-            badges.append("HR Surge")
+            badges.append(("HR Surge", "positive"))
+        if row["display_team"] != "—":
+            badges.append((row["display_team"], "team"))
         if not badges:
-            badges.append("Promotion Watch")
-        if "Promotion Watch" not in badges:
-            badges.append("Promotion Watch")
-        return badges[:3]
-
-    def hitter_badge_classes(row: pd.Series) -> list[str]:
-        classes = []
-        for badge in row["badges"]:
-            if badge in ["Impact Bat", "Zone Control", "HR Surge"]:
-                classes.append("positive")
-            else:
-                classes.append("neutral")
-        return classes
+            badges.append(("Promotion Watch", "watch"))
+        return badges[:4]
 
     hitters["badges"] = hitters.apply(hitter_badges, axis=1)
-    hitters["badge_classes"] = hitters.apply(hitter_badge_classes, axis=1)
+
+    hitters["trend_points"] = "0,20 40,18 80,16 120,14"
+    hitters["trend_glow"] = False
+    hitters["trend_note"] = "Recent Form"
+
+    trend_lookup = trend_lookup or {}
+    for idx, row in hitters.iterrows():
+        info = trend_lookup.get(row["player_name"])
+        if info:
+            hitters.at[idx, "trend_points"] = info["trend_points"]
+            hitters.at[idx, "trend_glow"] = bool(info["trend_glow"])
+            hitters.at[idx, "trend_note"] = info.get("trend_label", "Trend")
 
     return hitters.sort_values(["edge_score", "pa"], ascending=[False, False]).reset_index(drop=True)
 
 
-def build_aaa_pitcher_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
-    pitchers = df[df["bf"].notna()].copy()
+def build_aaa_pitcher_promotion_watch(df: pd.DataFrame, trend_lookup: dict[str, dict] | None = None) -> pd.DataFrame:
+    pitchers = aggregate_pitcher_frame(df)
     if pitchers.empty:
         return pd.DataFrame()
-
-    for col in ["bf", "so_p", "bb_allowed", "kbb_p"]:
-        pitchers[col] = pd.to_numeric(pitchers[col], errors="coerce")
 
     pitchers = pitchers[pitchers["bf"] >= 15].copy()
     if pitchers.empty:
@@ -171,13 +478,15 @@ def build_aaa_pitcher_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     pitchers["edge_score"] = pitchers["edge_score_raw"].clip(5, 95).round(1)
-    pitchers["player_name"] = pitchers["player_name"].apply(safe_name)
     pitchers["signal_type"] = "Pitcher"
+    pitchers["score_class"] = pitchers["edge_score"].apply(classify_score)
+    pitchers["display_team"] = pitchers.apply(derive_display_team, axis=1)
+    pitchers["display_org"] = pitchers.apply(derive_display_org, axis=1)
 
     pitchers["why"] = pitchers.apply(
         lambda r: (
-            f"K/BB {r['kbb_p']:.2f}, {int(r['so_p'] or 0)} K, "
-            f"{int(r['bb_allowed'] or 0)} BB over {int(r['bf'] or 0)} BF."
+            f"K/BB {r['kbb_p']:.2f} • {int(r['so_p'] or 0)} K • "
+            f"{int(r['bb_allowed'] or 0)} BB over {int(r['bf'] or 0)} BF"
         ),
         axis=1,
     )
@@ -191,34 +500,35 @@ def build_aaa_pitcher_promotion_watch(df: pd.DataFrame) -> pd.DataFrame:
     pitchers["sample_note"] = pitchers["bf"].fillna(0).map(lambda x: f"{int(x)} BF")
     pitchers["source_badge"] = SOURCE_BADGE
     pitchers["score_version"] = SCORE_VERSION
-    pitchers["trend_points"] = "0,24 20,22 40,19 60,17 80,15 100,13 120,11"
-    pitchers["trend_glow"] = pitchers["edge_score"] >= 65
+    pitchers["avatar"] = pitchers["player_name"].map(initials)
 
-    def pitcher_badges(row: pd.Series) -> list[str]:
+    def pitcher_badges(row: pd.Series) -> list[tuple[str, str]]:
         badges = []
         if pd.notna(row["kbb_p"]) and row["kbb_p"] >= 4:
-            badges.append("Bat-Miss Ready")
+            badges.append(("Bat-Miss Ready", "positive"))
         if pd.notna(row["bb_allowed"]) and row["bb_allowed"] <= 2:
-            badges.append("Command Hold")
+            badges.append(("Command Hold", "positive"))
         if pd.notna(row["so_p"]) and row["so_p"] >= 10:
-            badges.append("Whiff Volume")
+            badges.append(("Whiff Volume", "positive"))
+        if row["display_team"] != "—":
+            badges.append((row["display_team"], "team"))
         if not badges:
-            badges.append("Promotion Watch")
-        if "Promotion Watch" not in badges:
-            badges.append("Promotion Watch")
-        return badges[:3]
-
-    def pitcher_badge_classes(row: pd.Series) -> list[str]:
-        classes = []
-        for badge in row["badges"]:
-            if badge in ["Bat-Miss Ready", "Command Hold", "Whiff Volume"]:
-                classes.append("positive")
-            else:
-                classes.append("neutral")
-        return classes
+            badges.append(("Promotion Watch", "watch"))
+        return badges[:4]
 
     pitchers["badges"] = pitchers.apply(pitcher_badges, axis=1)
-    pitchers["badge_classes"] = pitchers.apply(pitcher_badge_classes, axis=1)
+
+    pitchers["trend_points"] = "0,21 40,19 80,16 120,14"
+    pitchers["trend_glow"] = False
+    pitchers["trend_note"] = "Recent Form"
+
+    trend_lookup = trend_lookup or {}
+    for idx, row in pitchers.iterrows():
+        info = trend_lookup.get(row["player_name"])
+        if info:
+            pitchers.at[idx, "trend_points"] = info["trend_points"]
+            pitchers.at[idx, "trend_glow"] = bool(info["trend_glow"])
+            pitchers.at[idx, "trend_note"] = info.get("trend_label", "Trend")
 
     return pitchers.sort_values(["edge_score", "bf"], ascending=[False, False]).reset_index(drop=True)
 
@@ -249,44 +559,22 @@ def is_recent_arrival_prospect_relevant(move: dict) -> bool:
 
     if debut is None:
         return True
-
     if isinstance(debut, str) and debut >= "2025-01-01":
         return True
-
     if age is not None and age <= 26:
         return True
-
     if draft_year is not None and draft_year >= 2020:
         return True
-
     return False
 
 
 def infer_position_badge(move: dict) -> str:
     desc = str(move.get("description") or "").upper()
 
-    if " RHP " in f" {desc} ":
-        return "RHP"
-    if " LHP " in f" {desc} ":
-        return "LHP"
-    if " C " in f" {desc} ":
-        return "C"
-    if " SS " in f" {desc} ":
-        return "SS"
-    if " 2B " in f" {desc} ":
-        return "2B"
-    if " 3B " in f" {desc} ":
-        return "3B"
-    if " 1B " in f" {desc} ":
-        return "1B"
-    if " CF " in f" {desc} ":
-        return "CF"
-    if " LF " in f" {desc} ":
-        return "LF"
-    if " RF " in f" {desc} ":
-        return "RF"
-    if " OF " in f" {desc} ":
-        return "OF"
+    checks = ["RHP", "LHP", "C", "SS", "2B", "3B", "1B", "CF", "LF", "RF", "OF"]
+    for token in checks:
+        if f" {token} " in f" {desc} ":
+            return token
     return "P" if "HP " in desc else "POS"
 
 
@@ -312,6 +600,9 @@ def infer_transaction_label(move: dict) -> str:
             return "DEBUT"
         return "RECALL"
 
+    if type_desc in {"contract selected", "purchased"}:
+        return "CALL-UP"
+
     if type_desc in {"optioned", "outrighted"}:
         return "RETURN"
 
@@ -321,26 +612,16 @@ def infer_transaction_label(move: dict) -> str:
     return "MOVE"
 
 
-AAA_TO_MLB_CODES = {
-    "Memphis Redbirds": ("MEM", "STL"),
-    "St. Paul Saints": ("STP", "MIN"),
-    "Lehigh Valley IronPigs": ("LHV", "PHI"),
-    "Buffalo Bisons": ("BUF", "TOR"),
-    "Syracuse Mets": ("SYR", "NYM"),
-    "Tacoma Rainiers": ("TAC", "SEA"),
-    "Louisville Bats": ("LOU", "CIN"),
-    "Sugar Land Space Cowboys": ("SL", "HOU"),
-    "Reno Aces": ("REN", "ARI"),
-    "Albuquerque Isotopes": ("ABQ", "COL"),
-    "Norfolk Tides": ("NOR", "BAL"),
-    "Jacksonville Jumbo Shrimp": ("JAX", "MIA"),
-    "Nashville Sounds": ("NAS", "MIL"),
-    "Salt Lake Bees": ("SLB", "LAA"),
-    "Charlotte Knights": ("CHA", "CWS"),
-    "El Paso Chihuahuas": ("ELP", "SD"),
-    "Columbus Clippers": ("CLP", "CLE"),
-    "Rochester Red Wings": ("ROC", "WSH"),
-}
+def transaction_class(txn_label: str) -> str:
+    mapping = {
+        "DEBUT": "debut",
+        "RECALL": "recall",
+        "CALL-UP": "callup",
+        "RETURN": "return",
+        "ASSIGN": "neutral",
+        "MOVE": "neutral",
+    }
+    return mapping.get(txn_label, "neutral")
 
 
 def infer_team_codes(move: dict) -> tuple[str, str]:
@@ -350,9 +631,10 @@ def infer_team_codes(move: dict) -> tuple[str, str]:
     if from_team in AAA_TO_MLB_CODES:
         return AAA_TO_MLB_CODES[from_team]
 
-    from_code = from_team[:3].upper() if from_team else "AAA"
-    to_code = to_team[:3].upper() if to_team else "MLB"
-    return from_code, to_code
+    from_code = map_team_to_code(from_team)
+    to_code = map_team_to_code(to_team)
+
+    return (from_code if from_code != "—" else "AAA", to_code if to_code != "—" else "MLB")
 
 
 def load_arrivals_windows(live_limit: int = 8, archive_limit: int = 16) -> tuple[list[dict], list[dict]]:
@@ -370,7 +652,6 @@ def load_arrivals_windows(live_limit: int = 8, archive_limit: int = 16) -> tuple
     arrivals = [m for m in arrivals if is_recent_arrival_prospect_relevant(m)]
 
     now_ts = pd.Timestamp.now().normalize()
-
     live_cutoff = now_ts - pd.Timedelta(hours=72)
     archive_cutoff = now_ts - pd.Timedelta(days=14)
 
@@ -382,12 +663,10 @@ def load_arrivals_windows(live_limit: int = 8, archive_limit: int = 16) -> tuple
         move_ts = pd.to_datetime(move_date_raw, errors="coerce")
         if pd.isna(move_ts):
             continue
-
         move_ts = pd.Timestamp(move_ts).normalize()
 
         if move_ts >= live_cutoff:
             live_arrivals.append(move)
-
         if move_ts >= archive_cutoff:
             archive_arrivals.append(move)
 
@@ -404,36 +683,51 @@ def load_arrivals_windows(live_limit: int = 8, archive_limit: int = 16) -> tuple
 
         formatted = []
         for move in arrivals_subset[:limit]:
-            player = move.get("person") or "Unknown"
+            player = safe_name(move.get("person") or "Unknown")
             age = move.get("currentAge")
             draft_year = move.get("draftYear")
-            debut = move.get("mlbDebutDate") or "MLB debut pending"
+            debut = move.get("mlbDebutDate") or "Pending"
+            pos_badge = infer_position_badge(move)
+            pos_class = infer_position_class(pos_badge)
+            txn_label = infer_transaction_label(move)
+            txn_class = transaction_class(txn_label)
+            from_code, to_code = infer_team_codes(move)
 
             meta_bits = []
             if age is not None:
                 meta_bits.append(f"Age {age}")
             if draft_year is not None:
                 meta_bits.append(f"Draft {draft_year}")
+            meta_line = " / ".join(meta_bits) if meta_bits else "Upper-minors movement"
 
-            meta_line = " // ".join(meta_bits) if meta_bits else "Upper-minors movement"
-            why = move.get("description") or player
-            pos_badge = infer_position_badge(move)
-            pos_class = infer_position_class(pos_badge)
-            txn_label = infer_transaction_label(move)
-            from_code, to_code = infer_team_codes(move)
+            desc = safe_text(move.get("description"), fallback=player)
+
+            if txn_label == "DEBUT":
+                event_line = "MLB debut sequence"
+            elif txn_label == "RECALL":
+                event_line = "Return to MLB roster"
+            elif txn_label == "CALL-UP":
+                event_line = "Contract selected / call-up"
+            elif txn_label == "RETURN":
+                event_line = "Returned through transaction cycle"
+            else:
+                event_line = "Roster movement"
 
             formatted.append(
                 {
                     "player_name": player,
+                    "avatar": initials(player),
                     "date": move.get("date") or "—",
                     "debut_label": debut,
                     "meta_line": meta_line,
-                    "why": why,
+                    "why": desc,
                     "position_badge": pos_badge,
                     "position_class": pos_class,
                     "transaction_label": txn_label,
+                    "transaction_class": txn_class,
                     "from_code": from_code,
                     "to_code": to_code,
+                    "event_line": event_line,
                 }
             )
         return formatted
@@ -452,15 +746,17 @@ HTML_TEMPLATE = Template(
     :root {
       --bg: #080808;
       --surface: #121212;
-      --card-radial: radial-gradient(circle at top left, #1a1a1a 0%, #080808 100%);
+      --card-radial: radial-gradient(circle at top left, #171717 0%, #080808 100%);
       --border: #2d2d2d;
       --text: #f0f0f0;
       --muted: #71717a;
       --soft: #a1a1aa;
       --tiny: #7c7c84;
       --blue: #6aa6ff;
+      --blue-soft: #8ab4ff;
       --lime-hot: #b6ff00;
       --red: #ef4444;
+      --gold: #fbbf24;
       --shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
       --radius: 18px;
       --mono: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
@@ -657,12 +953,19 @@ HTML_TEMPLATE = Template(
       letter-spacing: 0.12em;
       text-transform: uppercase;
       cursor: pointer;
+      transition: 160ms ease;
+    }
+
+    .tab:hover {
+      color: var(--text);
+      border-color: rgba(255,255,255,0.14);
     }
 
     .tab.active {
       color: var(--text);
       border-color: rgba(182,255,0,0.20);
       box-shadow: 0 0 8px rgba(182,255,0,0.08);
+      background: rgba(182,255,0,0.04);
     }
 
     .section-title {
@@ -724,10 +1027,17 @@ HTML_TEMPLATE = Template(
       font-size: 11px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
+      white-space: nowrap;
     }
 
     .cards {
       display: grid;
+      gap: 12px;
+    }
+
+    .arrival-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
 
@@ -736,10 +1046,29 @@ HTML_TEMPLATE = Template(
       border-radius: 16px;
       padding: 16px;
       background: rgba(255,255,255,0.02);
+      transition: 180ms ease;
+    }
+
+    .player-card:hover {
+      border-color: rgba(255,255,255,0.13);
+      transform: translateY(-1px);
     }
 
     .player-card.high-edge {
       box-shadow: 0 0 0 1px rgba(182,255,0,0.10), 0 0 18px rgba(182,255,0,0.06);
+    }
+
+    .player-card.elite-edge {
+      box-shadow: 0 0 0 1px rgba(182,255,0,0.16), 0 0 20px rgba(182,255,0,0.10);
+    }
+
+    #tab-14d .player-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.028) 0%, rgba(255,255,255,0.018) 100%);
+      border-color: rgba(255,255,255,0.10);
+    }
+
+    #tab-14d .section-kicker {
+      color: var(--blue-soft);
     }
 
     .player-top {
@@ -808,12 +1137,19 @@ HTML_TEMPLATE = Template(
       letter-spacing: 0.06em;
       text-transform: uppercase;
       border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
+      background: rgba(255,255,255,0.04);
       color: var(--soft);
+    }
+
+    .card-meta-badge.team {
+      color: var(--blue-soft);
+      border-color: rgba(106,166,255,0.18);
+      background: rgba(106,166,255,0.06);
     }
 
     .scorebox {
       text-align: right;
+      min-width: 72px;
     }
 
     .score-label {
@@ -832,15 +1168,24 @@ HTML_TEMPLATE = Template(
       letter-spacing: -0.04em;
     }
 
-    .edge-up {
+    .score-value.positive,
+    .score-value.elite {
       color: var(--lime-hot);
+    }
+
+    .score-value.watch {
+      color: var(--gold);
+    }
+
+    .score-value.neutral {
+      color: var(--text);
     }
 
     .sparkline-wrap {
       margin-top: 14px;
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: 14px;
-      background: rgba(255,255,255,0.02);
+      background: rgba(255,255,255,0.025);
       padding: 10px 12px;
     }
 
@@ -874,7 +1219,7 @@ HTML_TEMPLATE = Template(
     }
 
     .sparkline-path.glow {
-      filter: drop-shadow(0 0 4px rgba(182,255,0,0.25));
+      filter: drop-shadow(0 0 4px rgba(182,255,0,0.22));
     }
 
     .badge-row {
@@ -896,12 +1241,25 @@ HTML_TEMPLATE = Template(
       letter-spacing: 0.06em;
       text-transform: uppercase;
       border: 1px solid rgba(255,255,255,0.10);
+      white-space: nowrap;
     }
 
     .status-badge.positive {
       color: var(--lime-hot);
       border-color: rgba(182,255,0,0.20);
       background: rgba(182,255,0,0.05);
+    }
+
+    .status-badge.watch {
+      color: var(--gold);
+      border-color: rgba(251,191,36,0.22);
+      background: rgba(251,191,36,0.06);
+    }
+
+    .status-badge.team {
+      color: var(--blue-soft);
+      border-color: rgba(106,166,255,0.20);
+      background: rgba(106,166,255,0.06);
     }
 
     .status-badge.neutral {
@@ -911,7 +1269,7 @@ HTML_TEMPLATE = Template(
     }
 
     .status-badge.pitcher {
-      color: var(--blue);
+      color: var(--blue-soft);
       border-color: rgba(106,166,255,0.22);
       background: rgba(106,166,255,0.06);
     }
@@ -921,6 +1279,25 @@ HTML_TEMPLATE = Template(
       color: var(--soft);
       border-color: rgba(255,255,255,0.08);
       background: rgba(255,255,255,0.02);
+    }
+
+    .status-badge.debut {
+      color: var(--lime-hot);
+      border-color: rgba(182,255,0,0.22);
+      background: rgba(182,255,0,0.05);
+    }
+
+    .status-badge.recall,
+    .status-badge.callup {
+      color: var(--blue-soft);
+      border-color: rgba(106,166,255,0.22);
+      background: rgba(106,166,255,0.06);
+    }
+
+    .status-badge.return {
+      color: var(--gold);
+      border-color: rgba(251,191,36,0.22);
+      background: rgba(251,191,36,0.06);
     }
 
     .metric-grid {
@@ -957,20 +1334,21 @@ HTML_TEMPLATE = Template(
     .why {
       margin-top: 14px;
       font-size: 10px;
-      line-height: 1.45;
-      color: var(--tiny);
+      line-height: 1.5;
+      color: #8b8b94;
       font-family: var(--mono);
       font-variant-numeric: tabular-nums;
     }
 
     {{ shell_styles | safe }}
 
-    @media (max-width: 900px) {
+    @media (max-width: 980px) {
       .hero {
         grid-template-columns: 1fr;
       }
 
-      .signal-grid {
+      .signal-grid,
+      .arrival-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -996,7 +1374,7 @@ HTML_TEMPLATE = Template(
       }
 
       .metric-grid {
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr;
       }
 
       .player-name {
@@ -1045,78 +1423,80 @@ HTML_TEMPLATE = Template(
         <div class="eyebrow">Signal Wall // Scout</div>
         <h1 class="hero-title">AAA Promotion Watch</h1>
         <p class="hero-sub">
-          Clean rebuild with real AAA signal data, shared shell architecture, and locked 72 HR / 14 DAY control windows.
+          Real AAA signal intelligence with 72 HR urgency, 14 DAY movement context, stronger player cards, and live transaction-layer arrivals.
         </p>
       </div>
 
       <div class="summary-card">
         <div>
           <div class="summary-label">Window</div>
-          <div class="summary-value" id="summary-window">72 HR</div>
+          <div class="summary-value" id="summary-window">14 DAY</div>
         </div>
         <div>
           <div class="summary-label">Mode</div>
-          <div class="summary-value" id="summary-mode">AAA</div>
+          <div class="summary-value" id="summary-mode">SCOUT</div>
         </div>
         <div>
           <div class="summary-label">Signals</div>
-          <div class="summary-value" id="summary-signals">{{ total_signals }}</div>
+          <div class="summary-value" id="summary-signals">{{ total_14_signals }}</div>
         </div>
       </div>
     </section>
 
     <section class="section-card">
       <div class="tabs" role="tablist" aria-label="Promotion watch windows">
-        <button type="button" class="tab active" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
-        <button type="button" class="tab" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
+        <button type="button" class="tab" id="tab-btn-72h" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
+        <button type="button" class="tab active" id="tab-btn-14d" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
       </div>
 
-      {% if total_signals == 0 %}
+      {% if total_signals == 0 and total_14_signals == 0 %}
       <div class="placeholder">
         No live AAA promotion-watch signals available yet.
       </div>
       {% else %}
-      <div id="tab-72h">
+
+      <div id="tab-72h" style="display:none;">
         <section class="signal-grid">
           <div class="section">
             <div class="section-head">
               <div>
                 <div class="section-kicker">Signal Layer</div>
-                <h2 class="section-title">Pitching Prospect Signals</h2>
+                <h2 class="section-title">Pitching Prospect Signals — 72 HR</h2>
               </div>
               <div class="section-badge">Top {{ pitchers|length }}</div>
             </div>
 
             <div class="cards">
               {% for row in pitchers %}
-              <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
+              <article class="player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}">
                 <div class="player-top">
-                  <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+                  <div class="avatar">{{ row.avatar }}</div>
                   <div class="player-ident">
                     <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
                     <h3 class="player-name">{{ row.player_name }}</h3>
-                    <div class="signal-line">Pitcher // Live Edge Signal // {{ row.sample_note }}</div>
+                    <div class="signal-line">{{ row.display_org }} // Pitcher // {{ row.sample_note }}</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">{{ row.source_badge }}</span>
-                      <span class="card-meta-badge model">{{ row.score_version }}</span>
+                      <span class="card-meta-badge">{{ row.source_badge }}</span>
+                      <span class="card-meta-badge">{{ row.score_version }}</span>
+                      {% if row.display_team != "—" %}<span class="card-meta-badge team">{{ row.display_team }}</span>{% endif %}
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
+                    <div class="score-value {{ row.score_class }}">{{ row.edge_score }}</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">7 Day Trend</div>
-                    <div class="sparkline-note">7D Trend Analysis</div>
+                    <div class="sparkline-label">Recent Trend</div>
+                    <div class="sparkline-note">{{ row.trend_note }}</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
                       <linearGradient id="pitcherGradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
+                        <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#6aa6ff{% endif %}" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
                     <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#pitcherGradient{{ loop.index }})" points="{{ row.trend_points }}" />
@@ -1124,8 +1504,8 @@ HTML_TEMPLATE = Template(
                 </div>
 
                 <div class="badge-row">
-                  {% for badge in row.badges %}
-                  <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
+                  {% for badge, badge_class in row.badges %}
+                  <span class="status-badge {{ badge_class }}">{{ badge }}</span>
                   {% endfor %}
                 </div>
 
@@ -1154,41 +1534,42 @@ HTML_TEMPLATE = Template(
             <div class="section-head">
               <div>
                 <div class="section-kicker">Signal Layer</div>
-                <h2 class="section-title">Hitting Prospect Signals</h2>
+                <h2 class="section-title">Hitting Prospect Signals — 72 HR</h2>
               </div>
               <div class="section-badge">Top {{ hitters|length }}</div>
             </div>
 
             <div class="cards">
               {% for row in hitters %}
-              <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
+              <article class="player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}">
                 <div class="player-top">
-                  <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+                  <div class="avatar">{{ row.avatar }}</div>
                   <div class="player-ident">
                     <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
                     <h3 class="player-name">{{ row.player_name }}</h3>
-                    <div class="signal-line">{{ row.org }} // Hitter // {{ row.sample_note }}</div>
+                    <div class="signal-line">{{ row.display_org }} // Hitter // {{ row.sample_note }}</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">{{ row.source_badge }}</span>
-                      <span class="card-meta-badge model">{{ row.score_version }}</span>
+                      <span class="card-meta-badge">{{ row.source_badge }}</span>
+                      <span class="card-meta-badge">{{ row.score_version }}</span>
+                      {% if row.display_team != "—" %}<span class="card-meta-badge team">{{ row.display_team }}</span>{% endif %}
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
+                    <div class="score-value {{ row.score_class }}">{{ row.edge_score }}</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">7 Day Trend</div>
-                    <div class="sparkline-note">7D Trend Analysis</div>
+                    <div class="sparkline-label">Recent Trend</div>
+                    <div class="sparkline-note">{{ row.trend_note }}</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
                       <linearGradient id="hitterGradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
+                        <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#6aa6ff{% endif %}" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
                     <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#hitterGradient{{ loop.index }})" points="{{ row.trend_points }}" />
@@ -1196,8 +1577,8 @@ HTML_TEMPLATE = Template(
                 </div>
 
                 <div class="badge-row">
-                  {% for badge in row.badges %}
-                  <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
+                  {% for badge, badge_class in row.badges %}
+                  <span class="status-badge {{ badge_class }}">{{ badge }}</span>
                   {% endfor %}
                 </div>
 
@@ -1224,7 +1605,7 @@ HTML_TEMPLATE = Template(
         </section>
       </div>
 
-      <div id="tab-14d" style="display:none;">
+      <div id="tab-14d">
         <section class="signal-grid">
           <div class="section">
             <div class="section-head">
@@ -1238,34 +1619,35 @@ HTML_TEMPLATE = Template(
             {% if pitchers_14 %}
             <div class="cards">
               {% for row in pitchers_14 %}
-              <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
+              <article class="player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}">
                 <div class="player-top">
-                  <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+                  <div class="avatar">{{ row.avatar }}</div>
                   <div class="player-ident">
                     <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
                     <h3 class="player-name">{{ row.player_name }}</h3>
-                    <div class="signal-line">Pitcher // 14 Day Window // {{ row.sample_note }}</div>
+                    <div class="signal-line">{{ row.display_org }} // 14 Day Window // {{ row.sample_note }}</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">{{ row.source_badge }}</span>
-                      <span class="card-meta-badge model">{{ row.score_version }}</span>
+                      <span class="card-meta-badge">{{ row.source_badge }}</span>
+                      <span class="card-meta-badge">{{ row.score_version }}</span>
+                      {% if row.display_team != "—" %}<span class="card-meta-badge team">{{ row.display_team }}</span>{% endif %}
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
+                    <div class="score-value {{ row.score_class }}">{{ row.edge_score }}</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">14 Day Trend</div>
-                    <div class="sparkline-note">2 Week Signal Window</div>
+                    <div class="sparkline-label">Real Trend</div>
+                    <div class="sparkline-note">{{ row.trend_note }}</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
                       <linearGradient id="pitcher14Gradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
+                        <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#6aa6ff{% endif %}" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
                     <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#pitcher14Gradient{{ loop.index }})" points="{{ row.trend_points }}" />
@@ -1273,8 +1655,8 @@ HTML_TEMPLATE = Template(
                 </div>
 
                 <div class="badge-row">
-                  {% for badge in row.badges %}
-                  <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
+                  {% for badge, badge_class in row.badges %}
+                  <span class="status-badge {{ badge_class }}">{{ badge }}</span>
                   {% endfor %}
                 </div>
 
@@ -1298,9 +1680,7 @@ HTML_TEMPLATE = Template(
               {% endfor %}
             </div>
             {% else %}
-            <div class="placeholder">
-              No 14 day pitching prospect signals available.
-            </div>
+            <div class="placeholder">No 14 day pitching prospect signals available.</div>
             {% endif %}
           </div>
 
@@ -1316,34 +1696,35 @@ HTML_TEMPLATE = Template(
             {% if hitters_14 %}
             <div class="cards">
               {% for row in hitters_14 %}
-              <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
+              <article class="player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}">
                 <div class="player-top">
-                  <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+                  <div class="avatar">{{ row.avatar }}</div>
                   <div class="player-ident">
                     <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
                     <h3 class="player-name">{{ row.player_name }}</h3>
-                    <div class="signal-line">{{ row.org }} // 14 Day Window // {{ row.sample_note }}</div>
+                    <div class="signal-line">{{ row.display_org }} // 14 Day Window // {{ row.sample_note }}</div>
                     <div class="card-meta-row">
-                      <span class="card-meta-badge source">{{ row.source_badge }}</span>
-                      <span class="card-meta-badge model">{{ row.score_version }}</span>
+                      <span class="card-meta-badge">{{ row.source_badge }}</span>
+                      <span class="card-meta-badge">{{ row.score_version }}</span>
+                      {% if row.display_team != "—" %}<span class="card-meta-badge team">{{ row.display_team }}</span>{% endif %}
                     </div>
                   </div>
                   <div class="scorebox">
                     <div class="score-label">Edge Score</div>
-                    <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
+                    <div class="score-value {{ row.score_class }}">{{ row.edge_score }}</div>
                   </div>
                 </div>
 
                 <div class="sparkline-wrap">
                   <div class="sparkline-head">
-                    <div class="sparkline-label">14 Day Trend</div>
-                    <div class="sparkline-note">2 Week Signal Window</div>
+                    <div class="sparkline-label">Real Trend</div>
+                    <div class="sparkline-note">{{ row.trend_note }}</div>
                   </div>
                   <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
                     <defs>
                       <linearGradient id="hitter14Gradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
+                        <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#6aa6ff{% endif %}" stop-opacity="1"></stop>
                       </linearGradient>
                     </defs>
                     <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#hitter14Gradient{{ loop.index }})" points="{{ row.trend_points }}" />
@@ -1351,8 +1732,8 @@ HTML_TEMPLATE = Template(
                 </div>
 
                 <div class="badge-row">
-                  {% for badge in row.badges %}
-                  <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
+                  {% for badge, badge_class in row.badges %}
+                  <span class="status-badge {{ badge_class }}">{{ badge }}</span>
                   {% endfor %}
                 </div>
 
@@ -1376,9 +1757,7 @@ HTML_TEMPLATE = Template(
               {% endfor %}
             </div>
             {% else %}
-            <div class="placeholder">
-              No 14 day hitting prospect signals available.
-            </div>
+            <div class="placeholder">No 14 day hitting prospect signals available.</div>
             {% endif %}
           </div>
         </section>
@@ -1393,51 +1772,49 @@ HTML_TEMPLATE = Template(
           </div>
 
           {% if archive_arrivals %}
-          <div class="cards">
-           {% for row in archive_arrivals %}
-<article class="player-card">
-  <div class="player-top">
-    <div class="avatar">{{ row.player_name[:2]|upper }}</div>
-    <div class="player-ident">
-      <div class="rankline">Movement Trigger // {{ row.transaction_label }}</div>
-      <h3 class="player-name">{{ row.player_name }}</h3>
-      <div class="signal-line">{{ row.from_code }} → {{ row.to_code }} // {{ row.date }}</div>
-      <div class="card-meta-row">
-        <span class="card-meta-badge source">ARRIVAL</span>
-        <span class="card-meta-badge model">{{ row.position_badge }}</span>
-        <span class="card-meta-badge model">{{ row.transaction_label }}</span>
-      </div>
-    </div>
-  </div>
+          <div class="arrival-grid">
+            {% for row in archive_arrivals %}
+            <article class="player-card">
+              <div class="player-top">
+                <div class="avatar">{{ row.avatar }}</div>
+                <div class="player-ident">
+                  <div class="rankline">Movement Trigger // {{ row.transaction_label }}</div>
+                  <h3 class="player-name">{{ row.player_name }}</h3>
+                  <div class="signal-line">{{ row.from_code }} → {{ row.to_code }} // {{ row.event_line }}</div>
+                  <div class="card-meta-row">
+                    <span class="card-meta-badge">Arrival</span>
+                    <span class="card-meta-badge team">{{ row.from_code }}</span>
+                    <span class="card-meta-badge team">{{ row.to_code }}</span>
+                  </div>
+                </div>
+              </div>
 
-  <div class="badge-row">
-    <span class="status-badge {{ row.position_class }}">{{ row.position_badge }}</span>
-    <span class="status-badge neutral">{{ row.transaction_label }}</span>
-  </div>
+              <div class="badge-row">
+                <span class="status-badge {{ row.position_class }}">{{ row.position_badge }}</span>
+                <span class="status-badge {{ row.transaction_class }}">{{ row.transaction_label }}</span>
+              </div>
 
-  <div class="metric-grid">
-    <div class="metric">
-      <div class="metric-label">Date</div>
-      <div class="metric-value">{{ row.date }}</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Profile</div>
-      <div class="metric-value">{{ row.meta_line }}</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">Debut Status</div>
-      <div class="metric-value">{{ row.debut_label }}</div>
-    </div>
-  </div>
+              <div class="metric-grid">
+                <div class="metric">
+                  <div class="metric-label">Move Date</div>
+                  <div class="metric-value">{{ row.date }}</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Profile</div>
+                  <div class="metric-value">{{ row.meta_line }}</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-label">Debut Status</div>
+                  <div class="metric-value">{{ row.debut_label }}</div>
+                </div>
+              </div>
 
-  <div class="why">{{ row.why }}</div>
-</article>
-{% endfor %}
+              <div class="why">{{ row.why }}</div>
+            </article>
+            {% endfor %}
           </div>
           {% else %}
-          <div class="placeholder">
-            No prospect-relevant MLB arrivals in the last 14 days.
-          </div>
+          <div class="placeholder">No prospect-relevant MLB arrivals in the last 14 days.</div>
           {% endif %}
         </div>
       </div>
@@ -1469,17 +1846,17 @@ HTML_TEMPLATE = Template(
       if (panelId === "tab-14d") {
         if (summaryWindow) summaryWindow.textContent = "14 DAY";
         if (summaryMode) summaryMode.textContent = "SCOUT";
-        if (summarySignals) summarySignals.textContent = "{{ hitters_14|length + pitchers_14|length }}";
-    } else {
-      if (summaryWindow) summaryWindow.textContent = "72 HR";
-      if (summaryMode) summaryMode.textContent = "AAA";
-      if (summarySignals) summarySignals.textContent = "{{ total_signals }}";
-}
+        if (summarySignals) summarySignals.textContent = "{{ total_14_signals }}";
+      } else {
+        if (summaryWindow) summaryWindow.textContent = "72 HR";
+        if (summaryMode) summaryMode.textContent = "AAA";
+        if (summarySignals) summarySignals.textContent = "{{ total_signals }}";
+      }
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-      const defaultTab = document.getElementById("tab-72h");
-      if (defaultTab) defaultTab.style.display = "block";
+      const btn14 = document.getElementById("tab-btn-14d");
+      switchPromotionTab("tab-14d", btn14);
     });
   </script>
 </body>
@@ -1488,7 +1865,7 @@ HTML_TEMPLATE = Template(
 )
 
 
-def fetch_recent_aaa_weekly_signal_base(limit_weeks: int = 2) -> tuple[pd.DataFrame, str, str | None]:
+def fetch_recent_aaa_weekly_signal_base(limit_weeks: int = 4) -> tuple[pd.DataFrame, list[str]]:
     from supabase import create_client
     import os
 
@@ -1506,15 +1883,9 @@ def fetch_recent_aaa_weekly_signal_base(limit_weeks: int = 2) -> tuple[pd.DataFr
     )
 
     rows = latest_resp.data or []
-    if not rows:
-        return pd.DataFrame(), "", None
-
     week_starts = [row["week_start"] for row in rows if row.get("week_start")]
     if not week_starts:
-        return pd.DataFrame(), "", None
-
-    latest_week = week_starts[0]
-    prior_week = week_starts[1] if len(week_starts) > 1 else None
+        return pd.DataFrame(), []
 
     data_resp = (
         sb.table("milb_aaa_weekly_signal_base")
@@ -1525,39 +1896,42 @@ def fetch_recent_aaa_weekly_signal_base(limit_weeks: int = 2) -> tuple[pd.DataFr
 
     data = data_resp.data or []
     if not data:
-        return pd.DataFrame(), latest_week, prior_week
+        return pd.DataFrame(), week_starts
 
-    return pd.DataFrame(data), latest_week, prior_week
+    return pd.DataFrame(data), week_starts
 
 
-def load_source_frame() -> tuple[pd.DataFrame, str, str | None]:
+def load_source_frame() -> tuple[pd.DataFrame, list[str]]:
     return fetch_recent_aaa_weekly_signal_base()
 
 
 def render_html() -> str:
-    df, latest_week, prior_week = load_source_frame()
+    df, week_starts = load_source_frame()
 
-    if df.empty or not latest_week:
+    if df.empty or not week_starts:
         hitters_72 = pd.DataFrame()
         pitchers_72 = pd.DataFrame()
         hitters_14 = pd.DataFrame()
         pitchers_14 = pd.DataFrame()
     else:
+        df["week_start"] = pd.to_datetime(df["week_start"], errors="coerce")
+        latest_week = pd.to_datetime(week_starts[0], errors="coerce")
         latest_df = df[df["week_start"] == latest_week].copy()
-        prior_df = df[df["week_start"] == prior_week].copy() if prior_week else pd.DataFrame()
 
-        hitters_72 = build_aaa_hitter_promotion_watch(latest_df).head(6) if not latest_df.empty else pd.DataFrame()
-        pitchers_72 = build_aaa_pitcher_promotion_watch(latest_df).head(6) if not latest_df.empty else pd.DataFrame()
+        two_week_cut = sorted(df["week_start"].dropna().unique(), reverse=True)[:2]
+        two_week_df = df[df["week_start"].isin(two_week_cut)].copy()
 
-        if not prior_df.empty:
-            two_week_df = pd.concat([latest_df, prior_df], ignore_index=True)
-        else:
-            two_week_df = latest_df.copy()
+        hitter_trends_all = build_trend_lookup(df[df["pa"].notna()].copy(), "iso")
+        pitcher_trends_all = build_trend_lookup(df[df["bf"].notna()].copy(), "kbb_p")
 
-        hitters_14 = build_aaa_hitter_promotion_watch(two_week_df).head(6) if not two_week_df.empty else pd.DataFrame()
-        pitchers_14 = build_aaa_pitcher_promotion_watch(two_week_df).head(6) if not two_week_df.empty else pd.DataFrame()
+        hitters_72 = build_aaa_hitter_promotion_watch(latest_df, trend_lookup=hitter_trends_all).head(6) if not latest_df.empty else pd.DataFrame()
+        pitchers_72 = build_aaa_pitcher_promotion_watch(latest_df, trend_lookup=pitcher_trends_all).head(6) if not latest_df.empty else pd.DataFrame()
+
+        hitters_14 = build_aaa_hitter_promotion_watch(two_week_df, trend_lookup=hitter_trends_all).head(6) if not two_week_df.empty else pd.DataFrame()
+        pitchers_14 = build_aaa_pitcher_promotion_watch(two_week_df, trend_lookup=pitcher_trends_all).head(6) if not two_week_df.empty else pd.DataFrame()
 
     total_signals = len(hitters_72) + len(pitchers_72)
+    total_14_signals = len(hitters_14) + len(pitchers_14)
     live_arrivals, archive_arrivals = load_arrivals_windows(live_limit=8, archive_limit=16)
 
     return HTML_TEMPLATE.render(
@@ -1568,6 +1942,7 @@ def render_html() -> str:
         footer_html=FOOTER_TEMPLATE,
         shell_styles=SHELL_STYLES_TEMPLATE,
         total_signals=total_signals,
+        total_14_signals=total_14_signals,
         hitters=hitters_72.to_dict(orient="records"),
         pitchers=pitchers_72.to_dict(orient="records"),
         hitters_14=hitters_14.to_dict(orient="records"),
