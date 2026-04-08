@@ -182,7 +182,6 @@ def map_team_to_code(raw: str) -> str:
         if k in lowered:
             return v
 
-    # Guardrail against junk like "BU"
     return "—"
 
 
@@ -935,10 +934,37 @@ HTML_TEMPLATE = Template(
       padding: 18px;
     }
 
+    .board-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .guide-btn {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--soft);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: 160ms ease;
+    }
+
+    .guide-btn:hover {
+      color: var(--text);
+      border-color: rgba(106,166,255,0.18);
+      background: rgba(106,166,255,0.06);
+    }
+
     .tabs {
       display: inline-flex;
       gap: 8px;
-      margin-bottom: 18px;
       flex-wrap: wrap;
     }
 
@@ -1340,6 +1366,117 @@ HTML_TEMPLATE = Template(
       font-variant-numeric: tabular-nums;
     }
 
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.48);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease;
+      z-index: 120;
+    }
+
+    .drawer-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .drawer-panel {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      width: min(460px, calc(100vw - 24px));
+      max-height: calc(100vh - 36px);
+      overflow: auto;
+      padding: 18px;
+      background: var(--card-radial);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transform: translateX(108%);
+      transition: transform 220ms ease;
+      z-index: 130;
+    }
+
+    .drawer-panel.open {
+      transform: translateX(0);
+    }
+
+    .drawer-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .drawer-title-wrap {
+      min-width: 0;
+    }
+
+    .drawer-kicker {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+
+    .drawer-title {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .drawer-close {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--soft);
+      border-radius: 999px;
+      padding: 8px 11px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .drawer-close:hover {
+      color: var(--text);
+      border-color: rgba(255,255,255,0.14);
+    }
+
+    .guide-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .guide-item {
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      padding: 12px;
+    }
+
+    .guide-term {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .guide-def {
+      color: var(--soft);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
     {{ shell_styles | safe }}
 
     @media (max-width: 980px) {
@@ -1394,6 +1531,13 @@ HTML_TEMPLATE = Template(
         text-align: left;
         margin-top: 8px;
       }
+
+      .drawer-panel {
+        top: 8px;
+        right: 8px;
+        width: calc(100vw - 16px);
+        max-height: calc(100vh - 16px);
+      }
     }
   </style>
 </head>
@@ -1444,9 +1588,13 @@ HTML_TEMPLATE = Template(
     </section>
 
     <section class="section-card">
-      <div class="tabs" role="tablist" aria-label="Promotion watch windows">
-        <button type="button" class="tab" id="tab-btn-72h" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
-        <button type="button" class="tab active" id="tab-btn-14d" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
+      <div class="board-controls">
+        <button type="button" class="guide-btn" onclick="openTerminalGuide()">How to Use This Terminal</button>
+
+        <div class="tabs" role="tablist" aria-label="Promotion watch windows">
+          <button type="button" class="tab" id="tab-btn-72h" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
+          <button type="button" class="tab active" id="tab-btn-14d" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
+        </div>
       </div>
 
       {% if total_signals == 0 and total_14_signals == 0 %}
@@ -1819,13 +1967,81 @@ HTML_TEMPLATE = Template(
         </div>
       </div>
       {% endif %}
-    </section>
+
+      <div id="terminalGuideOverlay" class="drawer-overlay" onclick="closeTerminalGuide()"></div>
+
+      <aside id="terminalGuideDrawer" class="drawer-panel" aria-hidden="true">
+        <div class="drawer-head">
+          <div class="drawer-title-wrap">
+            <div class="drawer-kicker">Promotion Watch // Field Guide</div>
+            <h2 class="drawer-title">How to Use This Terminal</h2>
+          </div>
+          <button type="button" class="drawer-close" onclick="closeTerminalGuide()">Close</button>
+        </div>
+
+        <div class="guide-list">
+          <div class="guide-item">
+            <div class="guide-term">72 HR</div>
+            <div class="guide-def">This window prioritizes near-term promotion pressure and immediate movement signals.</div>
+          </div>
+
+          <div class="guide-item">
+            <div class="guide-term">14 DAY</div>
+            <div class="guide-def">This window gives the broader scout view: recent signal strength plus transaction-layer movement and arrivals.</div>
+          </div>
+
+          <div class="guide-item">
+            <div class="guide-term">Edge Score</div>
+            <div class="guide-def">A ranking score used to surface the strongest current signal candidates inside each board.</div>
+          </div>
+
+          <div class="guide-item">
+            <div class="guide-term">Signal Layer</div>
+            <div class="guide-def">Players ranked by recent underlying signal quality rather than simple public-facing box-score reputation.</div>
+          </div>
+
+          <div class="guide-item">
+            <div class="guide-term">Movement Layer</div>
+            <div class="guide-def">Recent arrivals, recalls, debuts, and related transitions that matter for prospect timing and opportunity.</div>
+          </div>
+
+          <div class="guide-item">
+            <div class="guide-term">How to Read Team Labels</div>
+            <div class="guide-def">This board should emphasize the minor-league affiliate context first, with the MLB parent organization used as secondary context.</div>
+          </div>
+
+          <div class="guide-item">
+            <div class="guide-term">Why This Page Exists</div>
+            <div class="guide-def">Promotion Watch is designed to identify actionable player movement before the broader market fully adjusts.</div>
+          </div>
+        </div>
+      </aside>
 
     {{ footer_html | safe }}
   </div>
 
   <script src="/player-search.js"></script>
   <script>
+    function openTerminalGuide() {
+      const overlay = document.getElementById("terminalGuideOverlay");
+      const drawer = document.getElementById("terminalGuideDrawer");
+      if (overlay) overlay.classList.add("open");
+      if (drawer) {
+        drawer.classList.add("open");
+        drawer.setAttribute("aria-hidden", "false");
+      }
+    }
+
+    function closeTerminalGuide() {
+      const overlay = document.getElementById("terminalGuideOverlay");
+      const drawer = document.getElementById("terminalGuideDrawer");
+      if (overlay) overlay.classList.remove("open");
+      if (drawer) {
+        drawer.classList.remove("open");
+        drawer.setAttribute("aria-hidden", "true");
+      }
+    }
+
     function switchPromotionTab(panelId, buttonEl) {
       document.querySelectorAll("#tab-72h, #tab-14d").forEach((panel) => {
         panel.style.display = "none";
@@ -1853,6 +2069,10 @@ HTML_TEMPLATE = Template(
         if (summarySignals) summarySignals.textContent = "{{ total_signals }}";
       }
     }
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") closeTerminalGuide();
+    });
 
     document.addEventListener("DOMContentLoaded", function () {
       const btn14 = document.getElementById("tab-btn-14d");
