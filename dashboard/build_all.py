@@ -7,8 +7,8 @@ ROOT = Path(__file__).resolve().parent
 SCRIPTS = [
     ROOT / "build_dashboard.py",
     ROOT / "build_call_up_v2.py",
+    ROOT / "build_hidden_gems.py",
     ROOT / "build_ivb_heat_map.py",
-
 ]
 
 def run_script(path: Path) -> None:
