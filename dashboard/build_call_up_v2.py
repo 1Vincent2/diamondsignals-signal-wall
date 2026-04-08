@@ -94,7 +94,7 @@ AAA_TO_MLB_CODES = {
     "Round Rock Express": ("RR", "TEX"),
     "Durham Bulls": ("DUR", "TB"),
 }
-
+MLB_TO_AAA_NAME = {mlb: name for name, (_, mlb) in AAA_TO_MLB_CODES.items()}
 AAA_CODES = {v[0] for v in AAA_TO_MLB_CODES.values()}
 VALID_TEAM_CODES = MLB_CODES | AAA_CODES
 
@@ -183,7 +183,48 @@ def map_team_to_code(raw: str) -> str:
             return v
 
     return "—"
+def affiliate_label_from_mlb_code(code: str) -> str:
+    code = str(code or "").strip().upper()
+    if not code:
+        return "—"
 
+    full_name = MLB_TO_AAA_NAME.get(code)
+    if not full_name:
+        return code
+
+    shorten_map = {
+        "Louisville Bats": "Louisville",
+        "Iowa Cubs": "Iowa Cubs",
+        "Tacoma Rainiers": "Tacoma",
+        "Oklahoma City Baseball Club": "Oklahoma City",
+        "St. Paul Saints": "St. Paul",
+        "Memphis Redbirds": "Memphis",
+        "Scranton/Wilkes-Barre RailRiders": "Scranton/WB",
+        "Worcester Red Sox": "Worcester",
+        "Jacksonville Jumbo Shrimp": "Jacksonville",
+        "Sugar Land Space Cowboys": "Sugar Land",
+        "Albuquerque Isotopes": "Albuquerque",
+        "Rochester Red Wings": "Rochester",
+        "Charlotte Knights": "Charlotte",
+        "Lehigh Valley IronPigs": "Lehigh Valley",
+        "Norfolk Tides": "Norfolk",
+        "El Paso Chihuahuas": "El Paso",
+        "Columbus Clippers": "Columbus",
+        "Round Rock Express": "Round Rock",
+        "Gwinnett Stripers": "Gwinnett",
+        "Indianapolis Indians": "Indianapolis",
+        "Toledo Mud Hens": "Toledo",
+        "Las Vegas Aviators": "Las Vegas",
+        "Sacramento River Cats": "Sacramento",
+        "Durham Bulls": "Durham",
+        "Nashville Sounds": "Nashville",
+        "Buffalo Bisons": "Buffalo",
+        "Syracuse Mets": "Syracuse",
+        "Salt Lake Bees": "Salt Lake",
+        "Reno Aces": "Reno",
+    }
+
+    return shorten_map.get(full_name, full_name)
 
 def derive_display_team(row: pd.Series) -> str:
     candidates = [
@@ -207,17 +248,20 @@ def derive_display_team(row: pd.Series) -> str:
 
 
 def derive_display_org(row: pd.Series) -> str:
+    primary_code = derive_display_team(row)
+    affiliate_label = affiliate_label_from_mlb_code(primary_code)
+    if affiliate_label != "—":
+        return affiliate_label
+
     candidates = [
+        "affiliate_name",
+        "team_name",
+        "team",
         "org",
         "parent_org",
         "mlb_org",
-        "team",
-        "team_name",
-        "affiliate_name",
     ]
-    text = first_non_empty(row, candidates, fallback="—")
-    code = map_team_to_code(text)
-    return code if code != "—" else text
+    return first_non_empty(row, candidates, fallback="—")
 
 
 def build_polyline(values: list[float], width: int = 120, height: int = 34, pad: int = 3) -> str:
