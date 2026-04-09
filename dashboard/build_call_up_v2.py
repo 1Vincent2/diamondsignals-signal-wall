@@ -473,7 +473,6 @@ def build_aaa_hitter_promotion_watch(df: pd.DataFrame, trend_lookup: dict[str, d
         if pd.notna(row["hr"]) and row["hr"] >= 2:
             badges.append(("HR Surge", "positive"))
         if row["display_team"] != "—":
-            badges.append((row["display_team"], "team"))
         if not badges:
             badges.append(("Promotion Watch", "watch"))
         return badges[:4]
@@ -554,7 +553,6 @@ def build_aaa_pitcher_promotion_watch(df: pd.DataFrame, trend_lookup: dict[str, 
         if pd.notna(row["so_p"]) and row["so_p"] >= 10:
             badges.append(("Whiff Volume", "positive"))
         if row["display_team"] != "—":
-            badges.append((row["display_team"], "team"))
         if not badges:
             badges.append(("Promotion Watch", "watch"))
         return badges[:4]
@@ -1666,7 +1664,7 @@ HTML_TEMPLATE = Template(
                   <div class="player-ident">
                     <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
                     <h3 class="player-name">{{ row.player_name }}</h3>
-                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // Pitching Signal // {{ row.sample_note }}</div>
+                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // Pitching Signal • {{ row.sample_note }}</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
                       <span class="card-meta-badge">{{ row.score_version }}</span>
@@ -1739,7 +1737,7 @@ HTML_TEMPLATE = Template(
                   <div class="player-ident">
                     <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
                     <h3 class="player-name">{{ row.player_name }}</h3>
-                   <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // Hitting Signal // {{ row.sample_note }}</div>
+                   <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // Hitting Signal • {{ row.sample_note }}</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
                       <span class="card-meta-badge">{{ row.score_version }}</span>
@@ -1817,7 +1815,7 @@ HTML_TEMPLATE = Template(
                   <div class="player-ident">
                     <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
                     <h3 class="player-name">{{ row.player_name }}</h3>
-                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // 14 Day Scout Window // {{ row.sample_note }}</div>
+                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // 14 Day Scout Window • {{ row.sample_note }}</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
                       <span class="card-meta-badge">{{ row.score_version }}</span>
