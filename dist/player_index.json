@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-09T09:25:03.665516",
+  "generated_at": "2026-04-09T10:02:53.188202",
   "players": [
     {
       "player_id": 671096,
@@ -12306,7 +12306,7 @@
       "last_name": "Joe",
       "team": "",
       "team_name": "",
-      "position": "RF",
+      "position": "1B",
       "bats": "R",
       "throws": "R",
       "status": "",
@@ -23798,7 +23798,7 @@
       "last_name": "Simpson",
       "team": "",
       "team_name": "",
-      "position": "CF",
+      "position": "LF",
       "bats": "L",
       "throws": "R",
       "status": "",

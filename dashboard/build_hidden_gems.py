@@ -191,8 +191,9 @@ def derive_display_org(row: pd.Series) -> str:
         ["org", "parent_org", "mlb_org", "team", "team_name", "affiliate_name"],
         fallback="—",
     )
-    code = map_team_to_code(text)
-    return code if code != "—" else text
+    if text != "—":
+        return text
+    return derive_display_team(row)
 
 
 def tooltip_attr(text: str) -> str:
@@ -891,21 +892,24 @@ HTML_TEMPLATE = Template(
     .score-value.watch { color: var(--gold); }
     .score-value.neutral { color: var(--text); }
 
-    .sparkline-wrap {
-      margin-top: 14px;
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.025);
-      padding: 10px 12px;
-    }
+  .sparkline-wrap {
+  margin-top: 12px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.025);
+  padding: 8px 10px;
+}
 
-    .sparkline-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
+.sparkline.compact {
+  height: 22px;
+}
 
+.sparkline-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
     .sparkline-label,
     .sparkline-note {
       font-family: var(--mono);
@@ -1002,27 +1006,29 @@ HTML_TEMPLATE = Template(
       color: var(--tiny);
     }
 
-    .info-chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 16px;
-      height: 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-      color: var(--soft);
-      font-family: var(--mono);
-      font-size: 10px;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .info-chip:hover {
-      color: var(--text);
-      border-color: rgba(106,166,255,0.18);
-      background: rgba(106,166,255,0.06);
-    }
+.info-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: #d4d4da;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+.info-chip:hover {
+  color: var(--text);
+  border-color: rgba(106,166,255,0.26);
+  background: rgba(106,166,255,0.10);
+}
 
     .metric-value {
       margin-top: 6px;
@@ -1344,7 +1350,7 @@ HTML_TEMPLATE = Template(
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">{{ row.trend_note }}</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="pitcherGemGradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -1393,7 +1399,7 @@ HTML_TEMPLATE = Template(
             </div>
           </div>
 
-          <div class="why">{{ row.why_hidden }}</div>
+          <div class="why"><strong>Edge Note:</strong> {{ row.why_hidden }}</div>
         </article>
         {% endfor %}
       </div>
@@ -1440,7 +1446,7 @@ HTML_TEMPLATE = Template(
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">{{ row.trend_note }}</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="hitterGemGradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -1489,7 +1495,7 @@ HTML_TEMPLATE = Template(
             </div>
           </div>
 
-          <div class="why">{{ row.why_hidden }}</div>
+          <div class="why"><strong>Edge Note:</strong> {{ row.why_hidden }}</div>
         </article>
         {% endfor %}
       </div>

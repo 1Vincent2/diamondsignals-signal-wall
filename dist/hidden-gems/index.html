@@ -369,21 +369,24 @@
     .score-value.watch { color: var(--gold); }
     .score-value.neutral { color: var(--text); }
 
-    .sparkline-wrap {
-      margin-top: 14px;
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.025);
-      padding: 10px 12px;
-    }
+  .sparkline-wrap {
+  margin-top: 12px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.025);
+  padding: 8px 10px;
+}
 
-    .sparkline-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
+.sparkline.compact {
+  height: 22px;
+}
 
+.sparkline-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
     .sparkline-label,
     .sparkline-note {
       font-family: var(--mono);
@@ -480,27 +483,29 @@
       color: var(--tiny);
     }
 
-    .info-chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 16px;
-      height: 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-      color: var(--soft);
-      font-family: var(--mono);
-      font-size: 10px;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .info-chip:hover {
-      color: var(--text);
-      border-color: rgba(106,166,255,0.18);
-      background: rgba(106,166,255,0.06);
-    }
+.info-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: #d4d4da;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+.info-chip:hover {
+  color: var(--text);
+  border-color: rgba(106,166,255,0.26);
+  background: rgba(106,166,255,0.10);
+}
 
     .metric-value {
       margin-top: 6px;
@@ -785,7 +790,7 @@
       </div>
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">2026-04-09 09:25 AM</div>
+        <div class="live-time">2026-04-09 10:02 AM</div>
       </div>
     </div>
   </div>
@@ -868,7 +873,7 @@
             <div class="player-ident">
               <div class="rankline">#1 Divergence Pitcher</div>
               <h3 class="player-name">Allan Winans</h3>
-              <div class="signal-line">NYY // NYY // Pitcher // Hidden Gems</div>
+              <div class="signal-line">New York Yankees // NYY // Pitcher // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">SRC: EDGE_PIPELINE_v1</span>
                 <span class="card-meta-badge">HIDDEN_GEMS_v2</span>
@@ -885,7 +890,7 @@
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">1W K/BB</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="pitcherGemGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -934,7 +939,7 @@
             </div>
           </div>
 
-          <div class="why">Strong trait support underneath; surface results are still suppressing the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Strong trait support underneath; surface results are still suppressing the profile.</div>
         </article>
         
         <article class="player-card">
@@ -943,7 +948,7 @@
             <div class="player-ident">
               <div class="rankline">#2 Divergence Pitcher</div>
               <h3 class="player-name">Dietrich Enns</h3>
-              <div class="signal-line">DET // DET // Pitcher // Hidden Gems</div>
+              <div class="signal-line">Detroit Tigers // DET // Pitcher // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">SRC: EDGE_PIPELINE_v1</span>
                 <span class="card-meta-badge">HIDDEN_GEMS_v2</span>
@@ -960,7 +965,7 @@
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">1W K/BB</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="pitcherGemGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -1009,7 +1014,7 @@
             </div>
           </div>
 
-          <div class="why">Strong trait support underneath; public-facing value may still be lagging.</div>
+          <div class="why"><strong>Edge Note:</strong> Strong trait support underneath; public-facing value may still be lagging.</div>
         </article>
         
         <article class="player-card">
@@ -1018,7 +1023,7 @@
             <div class="player-ident">
               <div class="rankline">#3 Divergence Pitcher</div>
               <h3 class="player-name">William Fleming</h3>
-              <div class="signal-line">SEA // SEA // Pitcher // Hidden Gems</div>
+              <div class="signal-line">Seattle Mariners // SEA // Pitcher // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">SRC: EDGE_PIPELINE_v1</span>
                 <span class="card-meta-badge">HIDDEN_GEMS_v2</span>
@@ -1035,7 +1040,7 @@
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">1W K/BB</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="pitcherGemGradient3" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -1084,7 +1089,7 @@
             </div>
           </div>
 
-          <div class="why">Strong trait support underneath; public-facing value may still be lagging.</div>
+          <div class="why"><strong>Edge Note:</strong> Strong trait support underneath; public-facing value may still be lagging.</div>
         </article>
         
         <article class="player-card">
@@ -1093,7 +1098,7 @@
             <div class="player-ident">
               <div class="rankline">#4 Divergence Pitcher</div>
               <h3 class="player-name">Cam Schlittler</h3>
-              <div class="signal-line">NYY // NYY // Pitcher // Hidden Gems</div>
+              <div class="signal-line">New York Yankees // NYY // Pitcher // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">SRC: EDGE_PIPELINE_v1</span>
                 <span class="card-meta-badge">HIDDEN_GEMS_v2</span>
@@ -1110,7 +1115,7 @@
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">1W K/BB</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="pitcherGemGradient4" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -1159,7 +1164,7 @@
             </div>
           </div>
 
-          <div class="why">Strong trait support underneath; public-facing value may still be lagging.</div>
+          <div class="why"><strong>Edge Note:</strong> Strong trait support underneath; public-facing value may still be lagging.</div>
         </article>
         
         <article class="player-card">
@@ -1168,7 +1173,7 @@
             <div class="player-ident">
               <div class="rankline">#5 Divergence Pitcher</div>
               <h3 class="player-name">Brandon Sproat</h3>
-              <div class="signal-line">NYM // NYM // Pitcher // Hidden Gems</div>
+              <div class="signal-line">New York Mets // NYM // Pitcher // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">SRC: EDGE_PIPELINE_v1</span>
                 <span class="card-meta-badge">HIDDEN_GEMS_v2</span>
@@ -1185,7 +1190,7 @@
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">1W K/BB</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="pitcherGemGradient5" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -1234,7 +1239,7 @@
             </div>
           </div>
 
-          <div class="why">Strong trait support underneath; public-facing value may still be lagging.</div>
+          <div class="why"><strong>Edge Note:</strong> Strong trait support underneath; public-facing value may still be lagging.</div>
         </article>
         
         <article class="player-card">
@@ -1243,7 +1248,7 @@
             <div class="player-ident">
               <div class="rankline">#6 Divergence Pitcher</div>
               <h3 class="player-name">Wilkel Hernandez</h3>
-              <div class="signal-line">DET // DET // Pitcher // Hidden Gems</div>
+              <div class="signal-line">Detroit Tigers // DET // Pitcher // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">SRC: EDGE_PIPELINE_v1</span>
                 <span class="card-meta-badge">HIDDEN_GEMS_v2</span>
@@ -1260,7 +1265,7 @@
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">1W K/BB</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="pitcherGemGradient6" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -1309,7 +1314,7 @@
             </div>
           </div>
 
-          <div class="why">Strong trait support underneath; public-facing value may still be lagging.</div>
+          <div class="why"><strong>Edge Note:</strong> Strong trait support underneath; public-facing value may still be lagging.</div>
         </article>
         
       </div>
@@ -1337,7 +1342,7 @@
             <div class="player-ident">
               <div class="rankline">#1 Divergence Hitter</div>
               <h3 class="player-name">Owen Caissie</h3>
-              <div class="signal-line">CHC // CHC // Hitter // Hidden Gems</div>
+              <div class="signal-line">Chicago Cubs // CHC // Hitter // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">SRC: EDGE_PIPELINE_v1</span>
                 <span class="card-meta-badge">HIDDEN_GEMS_v2</span>
@@ -1354,7 +1359,7 @@
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">1W ISO</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="hitterGemGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -1403,7 +1408,7 @@
             </div>
           </div>
 
-          <div class="why">Strong power shape, damage output underneath; surface production still looks behind the underlying bat.</div>
+          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; surface production still looks behind the underlying bat.</div>
         </article>
         
         <article class="player-card">
@@ -1412,7 +1417,7 @@
             <div class="player-ident">
               <div class="rankline">#2 Divergence Hitter</div>
               <h3 class="player-name">Carlos Pérez</h3>
-              <div class="signal-line">CHC // CHC // Hitter // Hidden Gems</div>
+              <div class="signal-line">Chicago Cubs // CHC // Hitter // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">SRC: EDGE_PIPELINE_v1</span>
                 <span class="card-meta-badge">HIDDEN_GEMS_v2</span>
@@ -1429,7 +1434,7 @@
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">1W ISO</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="hitterGemGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -1478,7 +1483,7 @@
             </div>
           </div>
 
-          <div class="why">Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
         </article>
         
         <article class="player-card">
@@ -1487,7 +1492,7 @@
             <div class="player-ident">
               <div class="rankline">#3 Divergence Hitter</div>
               <h3 class="player-name">Harry Ford</h3>
-              <div class="signal-line">SEA // SEA // Hitter // Hidden Gems</div>
+              <div class="signal-line">Seattle Mariners // SEA // Hitter // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">SRC: EDGE_PIPELINE_v1</span>
                 <span class="card-meta-badge">HIDDEN_GEMS_v2</span>
@@ -1504,7 +1509,7 @@
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">1W ISO</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="hitterGemGradient3" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -1553,7 +1558,7 @@
             </div>
           </div>
 
-          <div class="why">Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
         </article>
         
         <article class="player-card">
@@ -1562,7 +1567,7 @@
             <div class="player-ident">
               <div class="rankline">#4 Divergence Hitter</div>
               <h3 class="player-name">Blaine Crim</h3>
-              <div class="signal-line">TEX // TEX // Hitter // Hidden Gems</div>
+              <div class="signal-line">Texas Rangers // TEX // Hitter // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">SRC: EDGE_PIPELINE_v1</span>
                 <span class="card-meta-badge">HIDDEN_GEMS_v2</span>
@@ -1579,7 +1584,7 @@
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">1W ISO</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="hitterGemGradient4" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -1628,7 +1633,7 @@
             </div>
           </div>
 
-          <div class="why">Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
         </article>
         
         <article class="player-card">
@@ -1637,7 +1642,7 @@
             <div class="player-ident">
               <div class="rankline">#5 Divergence Hitter</div>
               <h3 class="player-name">Nick Sogard</h3>
-              <div class="signal-line">BOS // BOS // Hitter // Hidden Gems</div>
+              <div class="signal-line">Boston Red Sox // BOS // Hitter // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">SRC: EDGE_PIPELINE_v1</span>
                 <span class="card-meta-badge">HIDDEN_GEMS_v2</span>
@@ -1654,7 +1659,7 @@
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">1W ISO</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="hitterGemGradient5" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -1703,7 +1708,7 @@
             </div>
           </div>
 
-          <div class="why">Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
         </article>
         
         <article class="player-card">
@@ -1712,7 +1717,7 @@
             <div class="player-ident">
               <div class="rankline">#6 Divergence Hitter</div>
               <h3 class="player-name">Drew Gilbert</h3>
-              <div class="signal-line">NYM // NYM // Hitter // Hidden Gems</div>
+              <div class="signal-line">New York Mets // NYM // Hitter // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">SRC: EDGE_PIPELINE_v1</span>
                 <span class="card-meta-badge">HIDDEN_GEMS_v2</span>
@@ -1729,7 +1734,7 @@
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">1W ISO</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="hitterGemGradient6" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -1778,7 +1783,7 @@
             </div>
           </div>
 
-          <div class="why">Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
         </article>
         
         <article class="player-card">
@@ -1787,7 +1792,7 @@
             <div class="player-ident">
               <div class="rankline">#7 Divergence Hitter</div>
               <h3 class="player-name">Jhostynxon Garcia</h3>
-              <div class="signal-line">BOS // BOS // Hitter // Hidden Gems</div>
+              <div class="signal-line">Boston Red Sox // BOS // Hitter // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">SRC: EDGE_PIPELINE_v1</span>
                 <span class="card-meta-badge">HIDDEN_GEMS_v2</span>
@@ -1804,7 +1809,7 @@
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">1W ISO</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="hitterGemGradient7" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -1853,7 +1858,7 @@
             </div>
           </div>
 
-          <div class="why">Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
         </article>
         
         <article class="player-card">
@@ -1862,7 +1867,7 @@
             <div class="player-ident">
               <div class="rankline">#8 Divergence Hitter</div>
               <h3 class="player-name">Spencer Packard</h3>
-              <div class="signal-line">SEA // SEA // Hitter // Hidden Gems</div>
+              <div class="signal-line">Seattle Mariners // SEA // Hitter // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">SRC: EDGE_PIPELINE_v1</span>
                 <span class="card-meta-badge">HIDDEN_GEMS_v2</span>
@@ -1879,7 +1884,7 @@
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">1W ISO</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="hitterGemGradient8" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -1928,7 +1933,7 @@
             </div>
           </div>
 
-          <div class="why">Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
         </article>
         
         <article class="player-card">
@@ -1937,7 +1942,7 @@
             <div class="player-ident">
               <div class="rankline">#9 Divergence Hitter</div>
               <h3 class="player-name">T.j. Rumfield</h3>
-              <div class="signal-line">NYY // NYY // Hitter // Hidden Gems</div>
+              <div class="signal-line">New York Yankees // NYY // Hitter // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">SRC: EDGE_PIPELINE_v1</span>
                 <span class="card-meta-badge">HIDDEN_GEMS_v2</span>
@@ -1954,7 +1959,7 @@
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">1W ISO</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="hitterGemGradient9" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -2003,7 +2008,7 @@
             </div>
           </div>
 
-          <div class="why">Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
         </article>
         
         <article class="player-card">
@@ -2012,7 +2017,7 @@
             <div class="player-ident">
               <div class="rankline">#10 Divergence Hitter</div>
               <h3 class="player-name">Christian Franklin</h3>
-              <div class="signal-line">CHC // CHC // Hitter // Hidden Gems</div>
+              <div class="signal-line">Chicago Cubs // CHC // Hitter // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">SRC: EDGE_PIPELINE_v1</span>
                 <span class="card-meta-badge">HIDDEN_GEMS_v2</span>
@@ -2029,7 +2034,7 @@
               <div class="sparkline-label">Ballistics vs Surface</div>
               <div class="sparkline-note">1W ISO</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+            <svg class="sparkline compact" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
               <defs>
                 <linearGradient id="hitterGemGradient10" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
@@ -2078,7 +2083,7 @@
             </div>
           </div>
 
-          <div class="why">Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
         </article>
         
       </div>
