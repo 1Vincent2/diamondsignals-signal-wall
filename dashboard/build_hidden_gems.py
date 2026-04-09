@@ -331,6 +331,10 @@ def build_hidden_gems_pitchers(df: pd.DataFrame) -> pd.DataFrame:
     latest["score_class"] = latest["hidden_gems_score"].apply(classify_score)
     latest["avatar"] = latest["player_name"].map(initials)
     latest["player_type"] = "Pitcher"
+    if "player_id" in latest.columns:
+     latest["player_id"] = latest["player_id"].fillna("").astype(str)
+    else:
+        latest["player_id"] = ""
     latest["display_team"] = latest.apply(derive_display_team, axis=1)
     latest["display_org"] = latest.apply(derive_display_org, axis=1)
 
@@ -453,6 +457,10 @@ def build_hidden_gems_hitters(df: pd.DataFrame) -> pd.DataFrame:
     latest["score_class"] = latest["hidden_gems_score"].apply(classify_score)
     latest["avatar"] = latest["player_name"].map(initials)
     latest["player_type"] = "Hitter"
+    if "player_id" in latest.columns:
+        latest["player_id"] = latest["player_id"].fillna("").astype(str)
+    else:
+        latest["player_id"] = ""
     latest["display_team"] = latest.apply(derive_display_team, axis=1)
     latest["display_org"] = latest.apply(derive_display_org, axis=1)
 
@@ -876,7 +884,15 @@ HTML_TEMPLATE = Template(
     }
 
     .scorebox { text-align: right; min-width: 78px; }
+    .js-add-to-roster {
+      cursor: pointer;
+    }
 
+    .js-add-to-roster:hover {
+      color: var(--text);
+      border-color: rgba(182,255,0,0.20);
+      background: rgba(182,255,0,0.06);
+    }
     .score-label {
       font-family: var(--mono);
       font-size: 10px;
@@ -1335,7 +1351,14 @@ HTML_TEMPLATE = Template(
       {% if pitchers %}
       <div class="cards-grid">
         {% for row in pitchers %}
-        <article class="player-card">
+        <article
+  class="player-card js-player-card"
+  data-player-id="{{ row.player_id }}"
+  data-player-name="{{ row.player_name }}"
+  data-player-type="pitcher"
+  data-player-team="{{ row.display_team }}"
+  data-profile-url="{% if row.player_id %}/scout/{{ row.player_id }}/{% else %}/scout/{% endif %}"
+>
           <div class="player-top">
             <div class="avatar">{{ row.avatar }}</div>
             <div class="player-ident">
@@ -1344,7 +1367,8 @@ HTML_TEMPLATE = Template(
               <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %} // {{ row.display_team }}{% endif %} // Pitcher // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">{{ row.source_badge }}</span>
-                <span class="card-meta-badge">{{ row.model_badge }}</span>
+<span class="card-meta-badge">{{ row.model_badge }}</span>
+<button type="button" class="card-meta-badge js-add-to-roster">Add to Roster</button>
               </div>
             </div>
             <div class="scorebox">
@@ -1431,7 +1455,14 @@ HTML_TEMPLATE = Template(
       {% if hitters %}
       <div class="cards-grid">
         {% for row in hitters %}
-        <article class="player-card">
+        <article
+  class="player-card js-player-card"
+  data-player-id="{{ row.player_id }}"
+  data-player-name="{{ row.player_name }}"
+  data-player-type="hitter"
+  data-player-team="{{ row.display_team }}"
+  data-profile-url="{% if row.player_id %}/scout/{{ row.player_id }}/{% else %}/scout/{% endif %}"
+>
           <div class="player-top">
             <div class="avatar">{{ row.avatar }}</div>
             <div class="player-ident">
@@ -1440,7 +1471,8 @@ HTML_TEMPLATE = Template(
               <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %} // {{ row.display_team }}{% endif %} // Hitter // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">{{ row.source_badge }}</span>
-                <span class="card-meta-badge">{{ row.model_badge }}</span>
+<span class="card-meta-badge">{{ row.model_badge }}</span>
+<button type="button" class="card-meta-badge js-add-to-roster">Add to Roster</button>
               </div>
             </div>
             <div class="scorebox">
