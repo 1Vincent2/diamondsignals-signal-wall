@@ -2003,6 +2003,7 @@ HTML_TEMPLATE = Template(
   </div>
 
   <script src="/player-search.js"></script>
+  <script src="/player-card-actions.js"></script>
   <script>
     function openTerminalGuide() {
       const overlay = document.getElementById("terminalGuideOverlay");

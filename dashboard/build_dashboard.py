@@ -1072,7 +1072,11 @@ def copy_static_assets() -> None:
     if js_src.exists():
         js_dest.write_text(js_src.read_text(encoding="utf-8"), encoding="utf-8")
         print("Wrote dist/player-search.js")
-
+    actions_src = Path("src/js/player-card-actions.js")
+    actions_dest = DIST_DIR / "player-card-actions.js"
+    if actions_src.exists():
+        actions_dest.write_text(actions_src.read_text(encoding="utf-8"), encoding="utf-8")
+        print("Wrote dist/player-card-actions.js")
 
 HTML_TEMPLATE = Template(
     r"""
@@ -1419,6 +1423,7 @@ HTML_TEMPLATE = Template(
     {{ footer_html | safe }}
 
   <script src="/player-search.js"></script>
+  <script src="/player-card-actions.js"></script>
   <script>
     function openGlossary() {
       const overlay = document.getElementById("glossaryOverlay");
@@ -1672,6 +1677,7 @@ def write_scout_shell() -> None:
   </div>
 
   <script src="/player-search.js"></script>
+  <script src="/player-card-actions.js"></script>
   <script>
     function formatPct(value) {
       if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";

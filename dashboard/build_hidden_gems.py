@@ -1586,7 +1586,9 @@ HTML_TEMPLATE = Template(
     </div>
   </aside>
 
-  <script>
+<script src="/player-search.js"></script>
+<script src="/player-card-actions.js"></script>
+<script>
     function openGlossary() {
       const overlay = document.getElementById("drawerOverlay");
       const drawer = document.getElementById("glossaryDrawer");
