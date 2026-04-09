@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-08T18:04:59.644790",
+  "generated_at": "2026-04-09T07:48:52.761791",
   "players": [
     {
       "player_id": 671096,
@@ -9921,6 +9921,19 @@
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/691944/headshot/67/current"
     },
     {
+      "player_id": 687473,
+      "full_name": "Ryan Gusto",
+      "first_name": "Ryan",
+      "last_name": "Gusto",
+      "team": "",
+      "team_name": "",
+      "position": "P",
+      "bats": "R",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/687473/headshot/67/current"
+    },
+    {
       "player_id": 694203,
       "full_name": "Denzer Guzman",
       "first_name": "Denzer",
@@ -15808,6 +15821,19 @@
       "throws": "R",
       "status": "",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/682657/headshot/67/current"
+    },
+    {
+      "player_id": 686681,
+      "full_name": "Michael Massey",
+      "first_name": "Michael",
+      "last_name": "Massey",
+      "team": "",
+      "team_name": "",
+      "position": "2B",
+      "bats": "L",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/686681/headshot/67/current"
     },
     {
       "player_id": 800377,
@@ -23114,6 +23140,19 @@
       "throws": "L",
       "status": "",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/676881/headshot/67/current"
+    },
+    {
+      "player_id": 669947,
+      "full_name": "Jesse Scholtens",
+      "first_name": "Jesse",
+      "last_name": "Scholtens",
+      "team": "",
+      "team_name": "",
+      "position": "P",
+      "bats": "R",
+      "throws": "R",
+      "status": "",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/669947/headshot/67/current"
     },
     {
       "player_id": 702302,
