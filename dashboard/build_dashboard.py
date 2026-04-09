@@ -76,12 +76,20 @@ def safe_float(value):
 
 def fetch_statcast_window(start_dt: date, end_dt: date) -> pd.DataFrame:
     print(f"Fetching Statcast from {start_dt} to {end_dt}...")
-    df = statcast(
-        start_dt=start_dt.strftime("%Y-%m-%d"),
-        end_dt=end_dt.strftime("%Y-%m-%d"),
-    )
+    try:
+        df = statcast(
+            start_dt=start_dt.strftime("%Y-%m-%d"),
+            end_dt=end_dt.strftime("%Y-%m-%d"),
+        )
+    except Exception as exc:
+        print(f"Statcast fetch failed: {exc}")
+        print("Falling back to existing dist/signals.json build artifacts.")
+        return pd.DataFrame()
+
     if df is None or df.empty:
-        raise RuntimeError("Statcast returned no data for the requested window.")
+        print("Statcast returned no data; falling back to existing dist/signals.json build artifacts.")
+        return pd.DataFrame()
+
     return df
 
 
@@ -1818,8 +1826,12 @@ def write_scout_shell() -> None:
 
     (scout_dir / "index.html").write_text(html, encoding="utf-8")
     print("Wrote dist/scout/index.html")
+    
 def main() -> None:
     raw = fetch_statcast_window(START_DATE, END_DATE)
+    if raw.empty:
+        print("Skipping dashboard rebuild because Statcast fallback returned no fresh data. Keeping existing dist assets.")
+        return
 
     hitter_signals = build_hitter_signals(raw)
     pitcher_signals = build_pitcher_signals(raw)
