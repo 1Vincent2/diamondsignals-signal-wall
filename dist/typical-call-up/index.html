@@ -141,9 +141,7 @@
       box-shadow: var(--shadow);
     }
 
-    .hero-card {
-      padding: 22px 22px 20px;
-    }
+    .hero-card { padding: 22px 22px 20px; }
 
     .eyebrow {
       font-family: var(--mono);
@@ -193,9 +191,7 @@
       letter-spacing: -0.03em;
     }
 
-    .section-card {
-      padding: 18px;
-    }
+    .section-card { padding: 18px; }
 
     .board-controls {
       display: flex;
@@ -336,6 +332,7 @@
       padding: 16px;
       background: rgba(255,255,255,0.02);
       transition: 180ms ease;
+      position: relative;
     }
 
     .player-card:hover {
@@ -356,9 +353,7 @@
       border-color: rgba(255,255,255,0.10);
     }
 
-    #tab-14d .section-kicker {
-      color: var(--blue-soft);
-    }
+    #tab-14d .section-kicker { color: var(--blue-soft); }
 
     .player-top {
       display: grid;
@@ -458,17 +453,9 @@
     }
 
     .score-value.positive,
-    .score-value.elite {
-      color: var(--lime-hot);
-    }
-
-    .score-value.watch {
-      color: var(--gold);
-    }
-
-    .score-value.neutral {
-      color: var(--text);
-    }
+    .score-value.elite { color: var(--lime-hot); }
+    .score-value.watch { color: var(--gold); }
+    .score-value.neutral { color: var(--text); }
 
     .sparkline-wrap {
       margin-top: 14px;
@@ -543,12 +530,6 @@
       color: var(--gold);
       border-color: rgba(251,191,36,0.22);
       background: rgba(251,191,36,0.06);
-    }
-
-    .status-badge.team {
-      color: var(--blue-soft);
-      border-color: rgba(106,166,255,0.20);
-      background: rgba(106,166,255,0.06);
     }
 
     .status-badge.neutral {
@@ -661,9 +642,7 @@
       z-index: 130;
     }
 
-    .drawer-panel.open {
-      transform: translateX(0);
-    }
+    .drawer-panel.open { transform: translateX(0); }
 
     .drawer-head {
       display: flex;
@@ -673,9 +652,7 @@
       margin-bottom: 14px;
     }
 
-    .drawer-title-wrap {
-      min-width: 0;
-    }
+    .drawer-title-wrap { min-width: 0; }
 
     .drawer-kicker {
       font-family: var(--mono);
@@ -781,14 +758,9 @@
 
 
     @media (max-width: 980px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-
+      .hero { grid-template-columns: 1fr; }
       .signal-grid,
-      .arrival-grid {
-        grid-template-columns: 1fr;
-      }
+      .arrival-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
@@ -807,32 +779,16 @@
         border-radius: 16px;
       }
 
-      .hero-card {
-        padding: 18px;
-      }
-
-      .metric-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .player-name {
-        font-size: 17px;
-      }
-
-      .score-value {
-        font-size: 24px;
-      }
-
-      .player-top {
-        grid-template-columns: auto 1fr;
-      }
-
+      .hero-card { padding: 18px; }
+      .metric-grid { grid-template-columns: 1fr; }
+      .player-name { font-size: 17px; }
+      .score-value { font-size: 24px; }
+      .player-top { grid-template-columns: auto 1fr; }
       .scorebox {
         grid-column: 2;
         text-align: left;
         margin-top: 8px;
       }
-
       .drawer-panel {
         top: 8px;
         right: 8px;
@@ -854,7 +810,7 @@
       </div>
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">2026-04-09 08:00 AM</div>
+        <div class="live-time">2026-04-09 08:58 AM</div>
       </div>
     </div>
   </div>
@@ -944,11 +900,10 @@
                   <div class="player-ident">
                     <div class="rankline">#1 Pitcher Trigger</div>
                     <h3 class="player-name">Allan Winans</h3>
-                    <div class="signal-line">Scranton/WB // NYY // Pitching Signal // 43 BF</div>
+                    <div class="signal-line">Scranton/WB // NYY // Pitching Signal • 43 BF</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -981,8 +936,6 @@
                   
                   <span class="status-badge positive">Whiff Volume</span>
                   
-                  <span class="status-badge team">NYY</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -1009,11 +962,10 @@
                   <div class="player-ident">
                     <div class="rankline">#2 Pitcher Trigger</div>
                     <h3 class="player-name">Dietrich Enns</h3>
-                    <div class="signal-line">Toledo // DET // Pitching Signal // 40 BF</div>
+                    <div class="signal-line">Toledo // DET // Pitching Signal • 40 BF</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1046,8 +998,6 @@
                   
                   <span class="status-badge positive">Whiff Volume</span>
                   
-                  <span class="status-badge team">DET</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -1074,11 +1024,10 @@
                   <div class="player-ident">
                     <div class="rankline">#3 Pitcher Trigger</div>
                     <h3 class="player-name">William Fleming</h3>
-                    <div class="signal-line">Tacoma // SEA // Pitching Signal // 39 BF</div>
+                    <div class="signal-line">Tacoma // SEA // Pitching Signal • 39 BF</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1109,8 +1058,6 @@
                   
                   <span class="status-badge positive">Command Hold</span>
                   
-                  <span class="status-badge team">SEA</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -1137,11 +1084,10 @@
                   <div class="player-ident">
                     <div class="rankline">#4 Pitcher Trigger</div>
                     <h3 class="player-name">Cam Schlittler</h3>
-                    <div class="signal-line">Scranton/WB // NYY // Pitching Signal // 40 BF</div>
+                    <div class="signal-line">Scranton/WB // NYY // Pitching Signal • 40 BF</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1170,8 +1116,6 @@
                   
                   <span class="status-badge positive">Whiff Volume</span>
                   
-                  <span class="status-badge team">NYY</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -1198,11 +1142,10 @@
                   <div class="player-ident">
                     <div class="rankline">#5 Pitcher Trigger</div>
                     <h3 class="player-name">Brandon Sproat</h3>
-                    <div class="signal-line">Syracuse // NYM // Pitching Signal // 49 BF</div>
+                    <div class="signal-line">Syracuse // NYM // Pitching Signal • 49 BF</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1229,7 +1172,7 @@
 
                 <div class="badge-row">
                   
-                  <span class="status-badge team">NYM</span>
+                  <span class="status-badge watch">Promotion Watch</span>
                   
                 </div>
 
@@ -1271,11 +1214,10 @@
                   <div class="player-ident">
                     <div class="rankline">#1 Hitter Trigger</div>
                     <h3 class="player-name">Nick Sogard</h3>
-                   <div class="signal-line">Worcester // BOS // Hitting Signal // 28 PA</div>
+                    <div class="signal-line">Worcester // BOS // Hitting Signal • 28 PA</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1308,8 +1250,6 @@
                   
                   <span class="status-badge positive">HR Surge</span>
                   
-                  <span class="status-badge team">BOS</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -1327,7 +1267,7 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike • Aggressive contact profile • Early HR surge</div>
+                <div class="why">Power spike • Aggressive contact shape • Recent HR pressure</div>
               </article>
               
               <article class="player-card elite-edge">
@@ -1336,11 +1276,10 @@
                   <div class="player-ident">
                     <div class="rankline">#2 Hitter Trigger</div>
                     <h3 class="player-name">Owen Caissie</h3>
-                   <div class="signal-line">Iowa Cubs // CHC // Hitting Signal // 28 PA</div>
+                    <div class="signal-line">Iowa Cubs // CHC // Hitting Signal • 28 PA</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1371,8 +1310,6 @@
                   
                   <span class="status-badge positive">HR Surge</span>
                   
-                  <span class="status-badge team">CHC</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -1390,7 +1327,7 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike • Strong plate control • Early HR surge</div>
+                <div class="why">Power spike • Plate skill support • Recent HR pressure</div>
               </article>
               
               <article class="player-card elite-edge">
@@ -1399,11 +1336,10 @@
                   <div class="player-ident">
                     <div class="rankline">#3 Hitter Trigger</div>
                     <h3 class="player-name">Spencer Packard</h3>
-                   <div class="signal-line">Tacoma // SEA // Hitting Signal // 26 PA</div>
+                    <div class="signal-line">Tacoma // SEA // Hitting Signal • 26 PA</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1436,8 +1372,6 @@
                   
                   <span class="status-badge positive">HR Surge</span>
                   
-                  <span class="status-badge team">SEA</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -1455,7 +1389,7 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike • Early HR surge</div>
+                <div class="why">Power spike • Recent HR pressure</div>
               </article>
               
               <article class="player-card high-edge">
@@ -1464,11 +1398,10 @@
                   <div class="player-ident">
                     <div class="rankline">#4 Hitter Trigger</div>
                     <h3 class="player-name">Jhostynxon Garcia</h3>
-                   <div class="signal-line">Worcester // BOS // Hitting Signal // 28 PA</div>
+                    <div class="signal-line">Worcester // BOS // Hitting Signal • 28 PA</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1501,8 +1434,6 @@
                   
                   <span class="status-badge positive">HR Surge</span>
                   
-                  <span class="status-badge team">BOS</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -1520,7 +1451,7 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike • Early HR surge</div>
+                <div class="why">Power spike • Recent HR pressure</div>
               </article>
               
               <article class="player-card high-edge">
@@ -1529,11 +1460,10 @@
                   <div class="player-ident">
                     <div class="rankline">#5 Hitter Trigger</div>
                     <h3 class="player-name">Carlos Pérez</h3>
-                   <div class="signal-line">Iowa Cubs // CHC // Hitting Signal // 25 PA</div>
+                    <div class="signal-line">Iowa Cubs // CHC // Hitting Signal • 25 PA</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1566,8 +1496,6 @@
                   
                   <span class="status-badge positive">HR Surge</span>
                   
-                  <span class="status-badge team">CHC</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -1585,7 +1513,7 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike • Early HR surge</div>
+                <div class="why">Power spike • Recent HR pressure</div>
               </article>
               
               <article class="player-card high-edge">
@@ -1594,11 +1522,10 @@
                   <div class="player-ident">
                     <div class="rankline">#6 Hitter Trigger</div>
                     <h3 class="player-name">Blaine Crim</h3>
-                   <div class="signal-line">Round Rock // TEX // Hitting Signal // 27 PA</div>
+                    <div class="signal-line">Round Rock // TEX // Hitting Signal • 27 PA</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1631,8 +1558,6 @@
                   
                   <span class="status-badge positive">HR Surge</span>
                   
-                  <span class="status-badge team">TEX</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -1650,7 +1575,7 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike • Early HR surge</div>
+                <div class="why">Power spike • Recent HR pressure</div>
               </article>
               
             </div>
@@ -1678,11 +1603,10 @@
                   <div class="player-ident">
                     <div class="rankline">#1 Pitcher Trigger</div>
                     <h3 class="player-name">Allan Winans</h3>
-                    <div class="signal-line">Scranton/WB // NYY // 14 Day Scout Window // 43 BF</div>
+                    <div class="signal-line">Scranton/WB // NYY // 14 Day Scout Window • 43 BF</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1715,8 +1639,6 @@
                   
                   <span class="status-badge positive">Whiff Volume</span>
                   
-                  <span class="status-badge team">NYY</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -1743,11 +1665,10 @@
                   <div class="player-ident">
                     <div class="rankline">#2 Pitcher Trigger</div>
                     <h3 class="player-name">Dietrich Enns</h3>
-                    <div class="signal-line">Toledo // DET // 14 Day Scout Window // 40 BF</div>
+                    <div class="signal-line">Toledo // DET // 14 Day Scout Window • 40 BF</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1780,8 +1701,6 @@
                   
                   <span class="status-badge positive">Whiff Volume</span>
                   
-                  <span class="status-badge team">DET</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -1808,11 +1727,10 @@
                   <div class="player-ident">
                     <div class="rankline">#3 Pitcher Trigger</div>
                     <h3 class="player-name">William Fleming</h3>
-                    <div class="signal-line">Tacoma // SEA // 14 Day Scout Window // 39 BF</div>
+                    <div class="signal-line">Tacoma // SEA // 14 Day Scout Window • 39 BF</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1843,8 +1761,6 @@
                   
                   <span class="status-badge positive">Command Hold</span>
                   
-                  <span class="status-badge team">SEA</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -1871,11 +1787,10 @@
                   <div class="player-ident">
                     <div class="rankline">#4 Pitcher Trigger</div>
                     <h3 class="player-name">Cam Schlittler</h3>
-                    <div class="signal-line">Scranton/WB // NYY // 14 Day Scout Window // 40 BF</div>
+                    <div class="signal-line">Scranton/WB // NYY // 14 Day Scout Window • 40 BF</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1904,8 +1819,6 @@
                   
                   <span class="status-badge positive">Whiff Volume</span>
                   
-                  <span class="status-badge team">NYY</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -1932,11 +1845,10 @@
                   <div class="player-ident">
                     <div class="rankline">#5 Pitcher Trigger</div>
                     <h3 class="player-name">Brandon Sproat</h3>
-                    <div class="signal-line">Syracuse // NYM // 14 Day Scout Window // 49 BF</div>
+                    <div class="signal-line">Syracuse // NYM // 14 Day Scout Window • 49 BF</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1963,7 +1875,7 @@
 
                 <div class="badge-row">
                   
-                  <span class="status-badge team">NYM</span>
+                  <span class="status-badge watch">Promotion Watch</span>
                   
                 </div>
 
@@ -2007,11 +1919,10 @@
                   <div class="player-ident">
                     <div class="rankline">#1 Hitter Trigger</div>
                     <h3 class="player-name">Nick Sogard</h3>
-                    <div class="signal-line">Worcester // BOS // 14 Day Scout Window // 28 PA</div>
+                    <div class="signal-line">Worcester // BOS // 14 Day Scout Window • 28 PA</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -2044,8 +1955,6 @@
                   
                   <span class="status-badge positive">HR Surge</span>
                   
-                  <span class="status-badge team">BOS</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -2063,7 +1972,7 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike • Aggressive contact profile • Early HR surge</div>
+                <div class="why">Power spike • Aggressive contact shape • Recent HR pressure</div>
               </article>
               
               <article class="player-card elite-edge">
@@ -2072,11 +1981,10 @@
                   <div class="player-ident">
                     <div class="rankline">#2 Hitter Trigger</div>
                     <h3 class="player-name">Owen Caissie</h3>
-                    <div class="signal-line">Iowa Cubs // CHC // 14 Day Scout Window // 28 PA</div>
+                    <div class="signal-line">Iowa Cubs // CHC // 14 Day Scout Window • 28 PA</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -2107,8 +2015,6 @@
                   
                   <span class="status-badge positive">HR Surge</span>
                   
-                  <span class="status-badge team">CHC</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -2126,7 +2032,7 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike • Strong plate control • Early HR surge</div>
+                <div class="why">Power spike • Plate skill support • Recent HR pressure</div>
               </article>
               
               <article class="player-card elite-edge">
@@ -2135,11 +2041,10 @@
                   <div class="player-ident">
                     <div class="rankline">#3 Hitter Trigger</div>
                     <h3 class="player-name">Spencer Packard</h3>
-                    <div class="signal-line">Tacoma // SEA // 14 Day Scout Window // 26 PA</div>
+                    <div class="signal-line">Tacoma // SEA // 14 Day Scout Window • 26 PA</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -2172,8 +2077,6 @@
                   
                   <span class="status-badge positive">HR Surge</span>
                   
-                  <span class="status-badge team">SEA</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -2191,7 +2094,7 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike • Early HR surge</div>
+                <div class="why">Power spike • Recent HR pressure</div>
               </article>
               
               <article class="player-card high-edge">
@@ -2200,11 +2103,10 @@
                   <div class="player-ident">
                     <div class="rankline">#4 Hitter Trigger</div>
                     <h3 class="player-name">Jhostynxon Garcia</h3>
-                    <div class="signal-line">Worcester // BOS // 14 Day Scout Window // 28 PA</div>
+                    <div class="signal-line">Worcester // BOS // 14 Day Scout Window • 28 PA</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -2237,8 +2139,6 @@
                   
                   <span class="status-badge positive">HR Surge</span>
                   
-                  <span class="status-badge team">BOS</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -2256,7 +2156,7 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike • Early HR surge</div>
+                <div class="why">Power spike • Recent HR pressure</div>
               </article>
               
               <article class="player-card high-edge">
@@ -2265,11 +2165,10 @@
                   <div class="player-ident">
                     <div class="rankline">#5 Hitter Trigger</div>
                     <h3 class="player-name">Carlos Pérez</h3>
-                    <div class="signal-line">Iowa Cubs // CHC // 14 Day Scout Window // 25 PA</div>
+                    <div class="signal-line">Iowa Cubs // CHC // 14 Day Scout Window • 25 PA</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -2302,8 +2201,6 @@
                   
                   <span class="status-badge positive">HR Surge</span>
                   
-                  <span class="status-badge team">CHC</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -2321,7 +2218,7 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike • Early HR surge</div>
+                <div class="why">Power spike • Recent HR pressure</div>
               </article>
               
               <article class="player-card high-edge">
@@ -2330,11 +2227,10 @@
                   <div class="player-ident">
                     <div class="rankline">#6 Hitter Trigger</div>
                     <h3 class="player-name">Blaine Crim</h3>
-                    <div class="signal-line">Round Rock // TEX // 14 Day Scout Window // 27 PA</div>
+                    <div class="signal-line">Round Rock // TEX // 14 Day Scout Window • 27 PA</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">SRC: AAA_PIPELINE_v1</span>
-                      <span class="card-meta-badge">EDGE_v2.1</span>
-                      
+                      <span class="card-meta-badge">EDGE_v2.2</span>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -2367,8 +2263,6 @@
                   
                   <span class="status-badge positive">HR Surge</span>
                   
-                  <span class="status-badge team">TEX</span>
-                  
                 </div>
 
                 <div class="metric-grid">
@@ -2386,7 +2280,7 @@
                   </div>
                 </div>
 
-                <div class="why">Power spike • Early HR surge</div>
+                <div class="why">Power spike • Recent HR pressure</div>
               </article>
               
             </div>
@@ -2412,9 +2306,10 @@
                 <div class="player-ident">
                   <div class="rankline">DEBUT // Movement Layer</div>
                   <h3 class="player-name">Jeferson Quero</h3>
+                  <div class="signal-line">From NAS // To MIL // MLB debut sequence</div>
                   <div class="card-meta-row">
                     <span class="card-meta-badge">Recent Arrival</span>
-                   <span class="card-meta-badge team">FROM NAS</span>
+                    <span class="card-meta-badge team">FROM NAS</span>
                     <span class="card-meta-badge team">TO MIL</span>
                   </div>
                 </div>
@@ -2436,7 +2331,7 @@
                 </div>
                 <div class="metric">
                   <div class="metric-label">MLB Status</div>
-                  <div class="metric-value">2026-03-29</div>
+                  <div class="metric-value">DEBUT // 2026-03-29</div>
                 </div>
               </div>
 
@@ -2449,9 +2344,10 @@
                 <div class="player-ident">
                   <div class="rankline">DEBUT // Movement Layer</div>
                   <h3 class="player-name">Deyvison De Los Santos</h3>
+                  <div class="signal-line">From JAX // To MIA // MLB debut sequence</div>
                   <div class="card-meta-row">
                     <span class="card-meta-badge">Recent Arrival</span>
-                   <span class="card-meta-badge team">FROM JAX</span>
+                    <span class="card-meta-badge team">FROM JAX</span>
                     <span class="card-meta-badge team">TO MIA</span>
                   </div>
                 </div>
@@ -2473,7 +2369,7 @@
                 </div>
                 <div class="metric">
                   <div class="metric-label">MLB Status</div>
-                  <div class="metric-value">2026-03-29</div>
+                  <div class="metric-value">DEBUT // 2026-03-29</div>
                 </div>
               </div>
 
@@ -2486,9 +2382,10 @@
                 <div class="player-ident">
                   <div class="rankline">RECALL // Movement Layer</div>
                   <h3 class="player-name">Cole Wilcox</h3>
+                  <div class="signal-line">From TAC // To SEA // Return to MLB roster</div>
                   <div class="card-meta-row">
                     <span class="card-meta-badge">Recent Arrival</span>
-                   <span class="card-meta-badge team">FROM TAC</span>
+                    <span class="card-meta-badge team">FROM TAC</span>
                     <span class="card-meta-badge team">TO SEA</span>
                   </div>
                 </div>
@@ -2510,7 +2407,7 @@
                 </div>
                 <div class="metric">
                   <div class="metric-label">MLB Status</div>
-                  <div class="metric-value">2025-09-19</div>
+                  <div class="metric-value">RECALL // 2025-09-19</div>
                 </div>
               </div>
 
@@ -2523,9 +2420,10 @@
                 <div class="player-ident">
                   <div class="rankline">RECALL // Movement Layer</div>
                   <h3 class="player-name">Braxton Fulford</h3>
+                  <div class="signal-line">From ABQ // To COL // Return to MLB roster</div>
                   <div class="card-meta-row">
                     <span class="card-meta-badge">Recent Arrival</span>
-                   <span class="card-meta-badge team">FROM ABQ</span>
+                    <span class="card-meta-badge team">FROM ABQ</span>
                     <span class="card-meta-badge team">TO COL</span>
                   </div>
                 </div>
@@ -2547,7 +2445,7 @@
                 </div>
                 <div class="metric">
                   <div class="metric-label">MLB Status</div>
-                  <div class="metric-value">2025-04-16</div>
+                  <div class="metric-value">RECALL // 2025-04-16</div>
                 </div>
               </div>
 
@@ -2598,8 +2496,8 @@
           </div>
 
           <div class="guide-item">
-            <div class="guide-term">How to Read Team Labels</div>
-            <div class="guide-def">This terminal should emphasize minor-league affiliate context first, with the MLB parent organization used as secondary context.</div>
+            <div class="guide-term">Team Labels</div>
+            <div class="guide-def">This terminal emphasizes minor-league affiliate context first, with the MLB parent organization used as secondary context.</div>
           </div>
 
           <div class="guide-item">

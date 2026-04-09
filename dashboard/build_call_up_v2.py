@@ -22,7 +22,7 @@ SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding=
 
 TIMEZONE_LABEL = "America/New_York"
 SOURCE_BADGE = "SRC: AAA_PIPELINE_v1"
-SCORE_VERSION = "EDGE_v2.1"
+SCORE_VERSION = "EDGE_v2.2"
 
 MLB_CODES = {
     "ARI", "ATL", "BAL", "BOS", "CHC", "CWS", "CIN", "CLE", "COL", "DET",
@@ -94,6 +94,7 @@ AAA_TO_MLB_CODES = {
     "Round Rock Express": ("RR", "TEX"),
     "Durham Bulls": ("DUR", "TB"),
 }
+
 MLB_TO_AAA_NAME = {mlb: name for name, (_, mlb) in AAA_TO_MLB_CODES.items()}
 AAA_CODES = {v[0] for v in AAA_TO_MLB_CODES.values()}
 VALID_TEAM_CODES = MLB_CODES | AAA_CODES
@@ -183,6 +184,8 @@ def map_team_to_code(raw: str) -> str:
             return v
 
     return "—"
+
+
 def affiliate_label_from_mlb_code(code: str) -> str:
     code = str(code or "").strip().upper()
     if not code:
@@ -225,6 +228,7 @@ def affiliate_label_from_mlb_code(code: str) -> str:
     }
 
     return shorten_map.get(full_name, full_name)
+
 
 def derive_display_team(row: pd.Series) -> str:
     candidates = [
@@ -337,7 +341,6 @@ def aggregate_hitter_frame(df: pd.DataFrame) -> pd.DataFrame:
 
     hitters["player_name"] = hitters["player_name"].apply(safe_name)
 
-    group_cols = ["player_name"]
     agg_map = {
         "pa": "sum",
         "bb": "sum",
@@ -346,14 +349,12 @@ def aggregate_hitter_frame(df: pd.DataFrame) -> pd.DataFrame:
         "iso": "mean",
     }
 
-    optional_text_cols = [
-        "org", "team", "team_abbrev", "org_code", "parent_org", "mlb_org", "week_start"
-    ]
+    optional_text_cols = ["org", "team", "team_abbrev", "org_code", "parent_org", "mlb_org", "week_start"]
     for col in optional_text_cols:
         if col in hitters.columns:
             agg_map[col] = "last"
 
-    agg = hitters.groupby(group_cols, dropna=False).agg(agg_map).reset_index()
+    agg = hitters.groupby(["player_name"], dropna=False).agg(agg_map).reset_index()
 
     agg["kbb_h"] = agg.apply(
         lambda r: (float(r["so"]) / float(r["bb"])) if pd.notna(r["bb"]) and float(r["bb"]) > 0 else float(r["so"]) if pd.notna(r["so"]) else 0.0,
@@ -374,21 +375,18 @@ def aggregate_pitcher_frame(df: pd.DataFrame) -> pd.DataFrame:
 
     pitchers["player_name"] = pitchers["player_name"].apply(safe_name)
 
-    group_cols = ["player_name"]
     agg_map = {
         "bf": "sum",
         "so_p": "sum",
         "bb_allowed": "sum",
     }
 
-    optional_text_cols = [
-        "org", "team", "team_abbrev", "org_code", "parent_org", "mlb_org", "week_start"
-    ]
+    optional_text_cols = ["org", "team", "team_abbrev", "org_code", "parent_org", "mlb_org", "week_start"]
     for col in optional_text_cols:
         if col in pitchers.columns:
             agg_map[col] = "last"
 
-    agg = pitchers.groupby(group_cols, dropna=False).agg(agg_map).reset_index()
+    agg = pitchers.groupby(["player_name"], dropna=False).agg(agg_map).reset_index()
 
     agg["kbb_p"] = agg.apply(
         lambda r: (float(r["so_p"]) / float(r["bb_allowed"])) if pd.notna(r["bb_allowed"]) and float(r["bb_allowed"]) > 0 else float(r["so_p"]) if pd.notna(r["so_p"]) else 0.0,
@@ -442,14 +440,14 @@ def build_aaa_hitter_promotion_watch(df: pd.DataFrame, trend_lookup: dict[str, d
             signals.append("Impact contact")
 
         if kbb >= 1.5:
-            signals.append("Strong plate control")
+            signals.append("Plate skill support")
         elif kbb <= 0.7:
-            signals.append("Aggressive contact profile")
+            signals.append("Aggressive contact shape")
 
         if hr >= 2:
-            signals.append("Early HR surge")
+            signals.append("Recent HR pressure")
 
-        return " • ".join(signals) if signals else "Emerging performance signal under evaluation"
+        return " • ".join(signals) if signals else "Emerging offensive signal under evaluation"
 
     hitters["why"] = hitters.apply(build_hitter_signal_summary, axis=1)
 
@@ -472,13 +470,11 @@ def build_aaa_hitter_promotion_watch(df: pd.DataFrame, trend_lookup: dict[str, d
             badges.append(("Zone Control", "positive"))
         if pd.notna(row["hr"]) and row["hr"] >= 2:
             badges.append(("HR Surge", "positive"))
-        if row["display_team"] != "—":
         if not badges:
             badges.append(("Promotion Watch", "watch"))
-        return badges[:4]
+        return badges[:3]
 
     hitters["badges"] = hitters.apply(hitter_badges, axis=1)
-
     hitters["trend_points"] = "0,20 40,18 80,16 120,14"
     hitters["trend_glow"] = False
     hitters["trend_note"] = "Recent Form"
@@ -526,10 +522,7 @@ def build_aaa_pitcher_promotion_watch(df: pd.DataFrame, trend_lookup: dict[str, 
     pitchers["display_org"] = pitchers.apply(derive_display_org, axis=1)
 
     pitchers["why"] = pitchers.apply(
-        lambda r: (
-            f"K/BB {r['kbb_p']:.2f} • {int(r['so_p'] or 0)} K • "
-            f"{int(r['bb_allowed'] or 0)} BB over {int(r['bf'] or 0)} BF"
-        ),
+        lambda r: f"K/BB {r['kbb_p']:.2f} • {int(r['so_p'] or 0)} K • {int(r['bb_allowed'] or 0)} BB over {int(r['bf'] or 0)} BF",
         axis=1,
     )
 
@@ -552,13 +545,11 @@ def build_aaa_pitcher_promotion_watch(df: pd.DataFrame, trend_lookup: dict[str, 
             badges.append(("Command Hold", "positive"))
         if pd.notna(row["so_p"]) and row["so_p"] >= 10:
             badges.append(("Whiff Volume", "positive"))
-        if row["display_team"] != "—":
         if not badges:
             badges.append(("Promotion Watch", "watch"))
-        return badges[:4]
+        return badges[:3]
 
     pitchers["badges"] = pitchers.apply(pitcher_badges, axis=1)
-
     pitchers["trend_points"] = "0,21 40,19 80,16 120,14"
     pitchers["trend_glow"] = False
     pitchers["trend_note"] = "Recent Form"
@@ -611,7 +602,6 @@ def is_recent_arrival_prospect_relevant(move: dict) -> bool:
 
 def infer_position_badge(move: dict) -> str:
     desc = str(move.get("description") or "").upper()
-
     checks = ["RHP", "LHP", "C", "SS", "2B", "3B", "1B", "CF", "LF", "RF", "OF"]
     for token in checks:
         if f" {token} " in f" {desc} ":
@@ -920,9 +910,7 @@ HTML_TEMPLATE = Template(
       box-shadow: var(--shadow);
     }
 
-    .hero-card {
-      padding: 22px 22px 20px;
-    }
+    .hero-card { padding: 22px 22px 20px; }
 
     .eyebrow {
       font-family: var(--mono);
@@ -972,9 +960,7 @@ HTML_TEMPLATE = Template(
       letter-spacing: -0.03em;
     }
 
-    .section-card {
-      padding: 18px;
-    }
+    .section-card { padding: 18px; }
 
     .board-controls {
       display: flex;
@@ -1115,6 +1101,7 @@ HTML_TEMPLATE = Template(
       padding: 16px;
       background: rgba(255,255,255,0.02);
       transition: 180ms ease;
+      position: relative;
     }
 
     .player-card:hover {
@@ -1135,9 +1122,7 @@ HTML_TEMPLATE = Template(
       border-color: rgba(255,255,255,0.10);
     }
 
-    #tab-14d .section-kicker {
-      color: var(--blue-soft);
-    }
+    #tab-14d .section-kicker { color: var(--blue-soft); }
 
     .player-top {
       display: grid;
@@ -1237,17 +1222,9 @@ HTML_TEMPLATE = Template(
     }
 
     .score-value.positive,
-    .score-value.elite {
-      color: var(--lime-hot);
-    }
-
-    .score-value.watch {
-      color: var(--gold);
-    }
-
-    .score-value.neutral {
-      color: var(--text);
-    }
+    .score-value.elite { color: var(--lime-hot); }
+    .score-value.watch { color: var(--gold); }
+    .score-value.neutral { color: var(--text); }
 
     .sparkline-wrap {
       margin-top: 14px;
@@ -1322,12 +1299,6 @@ HTML_TEMPLATE = Template(
       color: var(--gold);
       border-color: rgba(251,191,36,0.22);
       background: rgba(251,191,36,0.06);
-    }
-
-    .status-badge.team {
-      color: var(--blue-soft);
-      border-color: rgba(106,166,255,0.20);
-      background: rgba(106,166,255,0.06);
     }
 
     .status-badge.neutral {
@@ -1440,9 +1411,7 @@ HTML_TEMPLATE = Template(
       z-index: 130;
     }
 
-    .drawer-panel.open {
-      transform: translateX(0);
-    }
+    .drawer-panel.open { transform: translateX(0); }
 
     .drawer-head {
       display: flex;
@@ -1452,9 +1421,7 @@ HTML_TEMPLATE = Template(
       margin-bottom: 14px;
     }
 
-    .drawer-title-wrap {
-      min-width: 0;
-    }
+    .drawer-title-wrap { min-width: 0; }
 
     .drawer-kicker {
       font-family: var(--mono);
@@ -1522,14 +1489,9 @@ HTML_TEMPLATE = Template(
     {{ shell_styles | safe }}
 
     @media (max-width: 980px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-
+      .hero { grid-template-columns: 1fr; }
       .signal-grid,
-      .arrival-grid {
-        grid-template-columns: 1fr;
-      }
+      .arrival-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
@@ -1548,32 +1510,16 @@ HTML_TEMPLATE = Template(
         border-radius: 16px;
       }
 
-      .hero-card {
-        padding: 18px;
-      }
-
-      .metric-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .player-name {
-        font-size: 17px;
-      }
-
-      .score-value {
-        font-size: 24px;
-      }
-
-      .player-top {
-        grid-template-columns: auto 1fr;
-      }
-
+      .hero-card { padding: 18px; }
+      .metric-grid { grid-template-columns: 1fr; }
+      .player-name { font-size: 17px; }
+      .score-value { font-size: 24px; }
+      .player-top { grid-template-columns: auto 1fr; }
       .scorebox {
         grid-column: 2;
         text-align: left;
         margin-top: 8px;
       }
-
       .drawer-panel {
         top: 8px;
         right: 8px;
@@ -1640,9 +1586,7 @@ HTML_TEMPLATE = Template(
       </div>
 
       {% if total_signals == 0 and total_14_signals == 0 %}
-      <div class="placeholder">
-        No live AAA promotion-watch signals available yet.
-      </div>
+      <div class="placeholder">No live AAA promotion-watch signals available yet.</div>
       {% else %}
 
       <div id="tab-72h" style="display:none;">
@@ -1668,7 +1612,6 @@ HTML_TEMPLATE = Template(
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
                       <span class="card-meta-badge">{{ row.score_version }}</span>
-                      
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1737,11 +1680,10 @@ HTML_TEMPLATE = Template(
                   <div class="player-ident">
                     <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
                     <h3 class="player-name">{{ row.player_name }}</h3>
-                   <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // Hitting Signal • {{ row.sample_note }}</div>
+                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // Hitting Signal • {{ row.sample_note }}</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
                       <span class="card-meta-badge">{{ row.score_version }}</span>
-                      
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1819,7 +1761,6 @@ HTML_TEMPLATE = Template(
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
                       <span class="card-meta-badge">{{ row.score_version }}</span>
-                      
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1892,11 +1833,10 @@ HTML_TEMPLATE = Template(
                   <div class="player-ident">
                     <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
                     <h3 class="player-name">{{ row.player_name }}</h3>
-                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // 14 Day Scout Window // {{ row.sample_note }}</div>
+                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // 14 Day Scout Window • {{ row.sample_note }}</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
                       <span class="card-meta-badge">{{ row.score_version }}</span>
-                      
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1970,9 +1910,10 @@ HTML_TEMPLATE = Template(
                 <div class="player-ident">
                   <div class="rankline">{{ row.transaction_label }} // Movement Layer</div>
                   <h3 class="player-name">{{ row.player_name }}</h3>
+                  <div class="signal-line">From {{ row.from_code }} // To {{ row.to_code }} // {{ row.event_line }}</div>
                   <div class="card-meta-row">
                     <span class="card-meta-badge">Recent Arrival</span>
-                   <span class="card-meta-badge team">FROM {{ row.from_code }}</span>
+                    <span class="card-meta-badge team">FROM {{ row.from_code }}</span>
                     <span class="card-meta-badge team">TO {{ row.to_code }}</span>
                   </div>
                 </div>
@@ -1994,7 +1935,7 @@ HTML_TEMPLATE = Template(
                 </div>
                 <div class="metric">
                   <div class="metric-label">MLB Status</div>
-                  <div class="metric-value">{{ row.debut_label }}</div>
+                  <div class="metric-value">{{ row.transaction_label }} // {{ row.debut_label }}</div>
                 </div>
               </div>
 
@@ -2047,8 +1988,8 @@ HTML_TEMPLATE = Template(
           </div>
 
           <div class="guide-item">
-            <div class="guide-term">How to Read Team Labels</div>
-            <div class="guide-def">This terminal should emphasize minor-league affiliate context first, with the MLB parent organization used as secondary context.</div>
+            <div class="guide-term">Team Labels</div>
+            <div class="guide-def">This terminal emphasizes minor-league affiliate context first, with the MLB parent organization used as secondary context.</div>
           </div>
 
           <div class="guide-item">
@@ -2193,7 +2134,7 @@ def render_html() -> str:
 
     total_signals = len(hitters_72) + len(pitchers_72)
     total_14_signals = len(hitters_14) + len(pitchers_14)
-    live_arrivals, archive_arrivals = load_arrivals_windows(live_limit=8, archive_limit=16)
+    _live_arrivals, archive_arrivals = load_arrivals_windows(live_limit=8, archive_limit=16)
 
     return HTML_TEMPLATE.render(
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
@@ -2208,7 +2149,6 @@ def render_html() -> str:
         pitchers=pitchers_72.to_dict(orient="records"),
         hitters_14=hitters_14.to_dict(orient="records"),
         pitchers_14=pitchers_14.to_dict(orient="records"),
-        live_arrivals=live_arrivals,
         archive_arrivals=archive_arrivals,
     )
 
