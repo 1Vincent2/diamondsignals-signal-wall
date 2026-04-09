@@ -461,6 +461,10 @@ def build_aaa_hitter_promotion_watch(df: pd.DataFrame, trend_lookup: dict[str, d
     hitters["source_badge"] = SOURCE_BADGE
     hitters["score_version"] = SCORE_VERSION
     hitters["avatar"] = hitters["player_name"].map(initials)
+    if "player_id" in hitters.columns:
+      hitters["player_id"] = hitters["player_id"].fillna("").astype(str)
+    else:
+      hitters["player_id"] = ""
 
     def hitter_badges(row: pd.Series) -> list[tuple[str, str]]:
         badges = []
@@ -536,6 +540,10 @@ def build_aaa_pitcher_promotion_watch(df: pd.DataFrame, trend_lookup: dict[str, 
     pitchers["source_badge"] = SOURCE_BADGE
     pitchers["score_version"] = SCORE_VERSION
     pitchers["avatar"] = pitchers["player_name"].map(initials)
+    if "player_id" in pitchers.columns:
+        pitchers["player_id"] = pitchers["player_id"].fillna("").astype(str)
+    else:
+        pitchers["player_id"] = ""
 
     def pitcher_badges(row: pd.Series) -> list[tuple[str, str]]:
         badges = []
@@ -1199,7 +1207,15 @@ HTML_TEMPLATE = Template(
       border-color: rgba(106,166,255,0.18);
       background: rgba(106,166,255,0.06);
     }
+    .js-add-to-roster {
+      cursor: pointer;
+    }
 
+    .js-add-to-roster:hover {
+      color: var(--text);
+      border-color: rgba(182,255,0,0.20);
+      background: rgba(182,255,0,0.06);
+    }
     .scorebox {
       text-align: right;
       min-width: 72px;
@@ -1602,7 +1618,14 @@ HTML_TEMPLATE = Template(
 
             <div class="cards">
               {% for row in pitchers %}
-              <article class="player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}">
+              <article
+  class="player-card js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
+  data-player-id="{{ row.player_id }}"
+  data-player-name="{{ row.player_name }}"
+  data-player-type="pitcher"
+  data-player-team="{{ row.display_team }}"
+  data-profile-url="{% if row.player_id %}/scout/{{ row.player_id }}/{% else %}/scout/{% endif %}"
+>
                 <div class="player-top">
                   <div class="avatar">{{ row.avatar }}</div>
                   <div class="player-ident">
@@ -1611,7 +1634,8 @@ HTML_TEMPLATE = Template(
                     <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // Pitching Signal • {{ row.sample_note }}</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
-                      <span class="card-meta-badge">{{ row.score_version }}</span>
+<span class="card-meta-badge">{{ row.score_version }}</span>
+<button type="button" class="card-meta-badge js-add-to-roster">Add to Roster</button>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1674,7 +1698,14 @@ HTML_TEMPLATE = Template(
 
             <div class="cards">
               {% for row in hitters %}
-              <article class="player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}">
+              <article
+  class="player-card js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
+  data-player-id="{{ row.player_id }}"
+  data-player-name="{{ row.player_name }}"
+  data-player-type="hitter"
+  data-player-team="{{ row.display_team }}"
+  data-profile-url="{% if row.player_id %}/scout/{{ row.player_id }}/{% else %}/scout/{% endif %}"
+>
                 <div class="player-top">
                   <div class="avatar">{{ row.avatar }}</div>
                   <div class="player-ident">
@@ -1683,7 +1714,8 @@ HTML_TEMPLATE = Template(
                     <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // Hitting Signal • {{ row.sample_note }}</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
-                      <span class="card-meta-badge">{{ row.score_version }}</span>
+<span class="card-meta-badge">{{ row.score_version }}</span>
+<button type="button" class="card-meta-badge js-add-to-roster">Add to Roster</button>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1751,7 +1783,14 @@ HTML_TEMPLATE = Template(
             {% if pitchers_14 %}
             <div class="cards">
               {% for row in pitchers_14 %}
-              <article class="player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}">
+              <article
+  class="player-card js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
+  data-player-id="{{ row.player_id }}"
+  data-player-name="{{ row.player_name }}"
+  data-player-type="pitcher"
+  data-player-team="{{ row.display_team }}"
+  data-profile-url="{% if row.player_id %}/scout/{{ row.player_id }}/{% else %}/scout/{% endif %}"
+>
                 <div class="player-top">
                   <div class="avatar">{{ row.avatar }}</div>
                   <div class="player-ident">
@@ -1760,7 +1799,8 @@ HTML_TEMPLATE = Template(
                     <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // 14 Day Scout Window • {{ row.sample_note }}</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
-                      <span class="card-meta-badge">{{ row.score_version }}</span>
+<span class="card-meta-badge">{{ row.score_version }}</span>
+<button type="button" class="card-meta-badge js-add-to-roster">Add to Roster</button>
                     </div>
                   </div>
                   <div class="scorebox">
@@ -1827,7 +1867,14 @@ HTML_TEMPLATE = Template(
             {% if hitters_14 %}
             <div class="cards">
               {% for row in hitters_14 %}
-              <article class="player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}">
+              <article
+  class="player-card js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
+  data-player-id="{{ row.player_id }}"
+  data-player-name="{{ row.player_name }}"
+  data-player-type="hitter"
+  data-player-team="{{ row.display_team }}"
+  data-profile-url="{% if row.player_id %}/scout/{{ row.player_id }}/{% else %}/scout/{% endif %}"
+>
                 <div class="player-top">
                   <div class="avatar">{{ row.avatar }}</div>
                   <div class="player-ident">
@@ -1836,7 +1883,8 @@ HTML_TEMPLATE = Template(
                     <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // 14 Day Scout Window • {{ row.sample_note }}</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
-                      <span class="card-meta-badge">{{ row.score_version }}</span>
+<span class="card-meta-badge">{{ row.score_version }}</span>
+<button type="button" class="card-meta-badge js-add-to-roster">Add to Roster</button>
                     </div>
                   </div>
                   <div class="scorebox">
