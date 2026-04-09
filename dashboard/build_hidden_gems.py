@@ -356,25 +356,37 @@ def build_hidden_gems_pitchers(df: pd.DataFrame) -> pd.DataFrame:
     latest["metric_3_label"] = "Market"
     latest["metric_3"] = latest["market_score_raw"].fillna(0).map(lambda x: f"{x:.2f}")
 
-    def pitcher_summary(r: pd.Series) -> str:
-        traits = []
-        if "ivb" in r.index and pd.notna(r.get("ivb")):
-            traits.append("carry")
-        if "whiff_pct" in r.index and pd.notna(r.get("whiff_pct")):
-            traits.append("bat-miss")
-        if "velo" in r.index and pd.notna(r.get("velo")):
-            traits.append("velo support")
+def pitcher_summary(r: pd.Series) -> str:
+    trait_score = float(r.get("trait_score_raw", 0) or 0)
+    divergence_score = float(r.get("surface_pressure_raw", 0) or 0)
+    market_score = float(r.get("market_score_raw", 0) or 0)
 
-        trait_text = ", ".join(traits[:2]) if traits else "trait support"
+    ivb = r.get("ivb")
+    whiff = r.get("whiff_pct")
+    velo = r.get("velo")
+    kbb = r.get("kbb_p")
 
-        if float(r.get("surface_pressure_raw", 0) or 0) >= 0.65:
-            mask_text = "surface results are still suppressing the profile"
-        elif float(r.get("market_score_raw", 0) or 0) >= 0.15:
-            mask_text = "market attention still looks light"
-        else:
-            mask_text = "public-facing value may still be lagging"
+    lead_trait = "underlying pitch quality"
+    if pd.notna(whiff) and pd.notna(kbb):
+        lead_trait = "bat-miss and strike-efficiency support"
+    if pd.notna(ivb) and pd.notna(velo):
+        lead_trait = "shape and velocity support"
+    elif pd.notna(ivb):
+        lead_trait = "shape support"
+    elif pd.notna(velo):
+        lead_trait = "velocity support"
+    elif pd.notna(kbb):
+        lead_trait = "command and strikeout support"
 
-        return f"Strong {trait_text} underneath; {mask_text}."
+    if trait_score >= 0.55 and divergence_score >= 0.65:
+        return f"{lead_trait.capitalize()} is running materially stronger than the current visible line."
+    if divergence_score >= 0.70:
+        return f"Surface results still look weaker than the underlying {lead_trait}."
+    if market_score >= 0.20 and trait_score >= 0.30:
+        return f"{lead_trait.capitalize()} looks stronger than current market attention implies."
+    if trait_score >= 0.45:
+        return f"{lead_trait.capitalize()} gives this arm a stronger hidden profile than the public line suggests."
+    return f"Underlying support remains better than the current surface read."
 
     latest["why_hidden"] = latest.apply(pitcher_summary, axis=1)
 
@@ -467,25 +479,36 @@ def build_hidden_gems_hitters(df: pd.DataFrame) -> pd.DataFrame:
     latest["metric_3_label"] = "Market"
     latest["metric_3"] = latest["market_score_raw"].fillna(0).map(lambda x: f"{x:.2f}")
 
-    def hitter_summary(r: pd.Series) -> str:
-        traits = []
-        if ev90_col and pd.notna(r.get(ev90_col)):
-            traits.append("impact quality")
-        if "iso" in r.index and pd.notna(r.get("iso")):
-            traits.append("power shape")
-        if "hr" in r.index and pd.notna(r.get("hr")):
-            traits.append("damage output")
+def hitter_summary(r: pd.Series) -> str:
+    trait_score = float(r.get("trait_score_raw", 0) or 0)
+    divergence_score = float(r.get("surface_pressure_raw", 0) or 0)
+    market_score = float(r.get("market_score_raw", 0) or 0)
 
-        trait_text = ", ".join(traits[:2]) if traits else "ballistic support"
+    iso = r.get("iso")
+    hr = r.get("hr")
+    ev = r.get("ev90") if "ev90" in r.index else r.get("ev_90") if "ev_90" in r.index else None
 
-        if float(r.get("surface_pressure_raw", 0) or 0) >= 0.65:
-            mask_text = "surface production still looks behind the underlying bat"
-        elif float(r.get("market_score_raw", 0) or 0) >= 0.15:
-            mask_text = "market pricing still looks early"
-        else:
-            mask_text = "public-facing value may still be understating the profile"
+    lead_trait = "underlying offensive quality"
+    if pd.notna(ev) and pd.notna(iso):
+        lead_trait = "impact quality and power shape"
+    elif pd.notna(ev):
+        lead_trait = "impact quality"
+    elif pd.notna(iso) and pd.notna(hr):
+        lead_trait = "power shape and damage support"
+    elif pd.notna(iso):
+        lead_trait = "power shape"
+    elif pd.notna(hr):
+        lead_trait = "damage support"
 
-        return f"Strong {trait_text} underneath; {mask_text}."
+    if trait_score >= 0.55 and divergence_score >= 0.65:
+        return f"{lead_trait.capitalize()} is materially stronger than the current production line."
+    if divergence_score >= 0.70:
+        return f"Visible production still looks behind the deeper {lead_trait}."
+    if market_score >= 0.20 and trait_score >= 0.30:
+        return f"{lead_trait.capitalize()} looks better than current market pricing suggests."
+    if trait_score >= 0.45:
+        return f"{lead_trait.capitalize()} gives this bat more hidden value than the public line implies."
+    return f"Underlying offensive support still looks better than the current surface read."
 
     latest["why_hidden"] = latest.apply(hitter_summary, axis=1)
 
