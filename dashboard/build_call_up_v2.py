@@ -1666,7 +1666,7 @@ HTML_TEMPLATE = Template(
                   <div class="player-ident">
                     <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
                     <h3 class="player-name">{{ row.player_name }}</h3>
-                    <<div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // Pitching Signal // {{ row.sample_note }}</div>
+                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // Pitching Signal // {{ row.sample_note }}</div>
                     <div class="card-meta-row">
                       <span class="card-meta-badge">{{ row.source_badge }}</span>
                       <span class="card-meta-badge">{{ row.score_version }}</span>
@@ -1972,11 +1972,10 @@ HTML_TEMPLATE = Template(
                 <div class="player-ident">
                   <div class="rankline">{{ row.transaction_label }} // Movement Layer</div>
                   <h3 class="player-name">{{ row.player_name }}</h3>
-                  <div class="rankline">{{ row.transaction_label }} // Movement Layer</div>
                   <div class="card-meta-row">
                     <span class="card-meta-badge">Recent Arrival</span>
                    <span class="card-meta-badge team">FROM {{ row.from_code }}</span>
-                    <span class="card-meta-badge team">{{ row.to_code }}</span>
+                    <span class="card-meta-badge team">TO {{ row.to_code }}</span>
                   </div>
                 </div>
               </div>
@@ -1993,7 +1992,7 @@ HTML_TEMPLATE = Template(
                 </div>
                 <div class="metric">
                   <div class="metric-label">Prospect Context</div>
-                  <div class="metric-value">{{ row.meta_line }}</div>
+                  <div class="metric-value">{{ row.meta_line }} // {{ row.position_badge }}</div>
                 </div>
                 <div class="metric">
                   <div class="metric-label">MLB Status</div>
@@ -2001,7 +2000,7 @@ HTML_TEMPLATE = Template(
                 </div>
               </div>
 
-              <div class="why">{{ row.why }} // {{ row.event_line }}</div>
+              <div class="why">{{ row.event_line }} // {{ row.why }}</div>
             </article>
             {% endfor %}
           </div>
