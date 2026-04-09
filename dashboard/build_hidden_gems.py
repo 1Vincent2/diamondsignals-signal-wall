@@ -21,12 +21,45 @@ SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding=
 
 TIMEZONE_LABEL = "America/New_York"
 SOURCE_BADGE = "SRC: EDGE_PIPELINE_v1"
-MODEL_BADGE = "HIDDEN_GEMS_v1"
+MODEL_BADGE = "HIDDEN_GEMS_v2"
 
 MLB_CODES = {
     "ARI", "ATL", "BAL", "BOS", "CHC", "CWS", "CIN", "CLE", "COL", "DET",
     "HOU", "KC", "LAA", "LAD", "MIA", "MIL", "MIN", "NYM", "NYY", "ATH",
     "PHI", "PIT", "SD", "SEA", "SF", "STL", "TB", "TEX", "TOR", "WSH",
+}
+
+MLB_NAME_TO_CODE = {
+    "diamondbacks": "ARI",
+    "braves": "ATL",
+    "orioles": "BAL",
+    "red sox": "BOS",
+    "cubs": "CHC",
+    "white sox": "CWS",
+    "reds": "CIN",
+    "guardians": "CLE",
+    "rockies": "COL",
+    "tigers": "DET",
+    "astros": "HOU",
+    "royals": "KC",
+    "angels": "LAA",
+    "dodgers": "LAD",
+    "marlins": "MIA",
+    "brewers": "MIL",
+    "twins": "MIN",
+    "mets": "NYM",
+    "yankees": "NYY",
+    "athletics": "ATH",
+    "phillies": "PHI",
+    "pirates": "PIT",
+    "padres": "SD",
+    "mariners": "SEA",
+    "giants": "SF",
+    "cardinals": "STL",
+    "rays": "TB",
+    "rangers": "TEX",
+    "blue jays": "TOR",
+    "nationals": "WSH",
 }
 
 
@@ -122,6 +155,12 @@ def map_team_to_code(raw: str) -> str:
     code = clean_candidate_code(text)
     if code in MLB_CODES:
         return code
+
+    lowered = text.lower()
+    for name, abbr in MLB_NAME_TO_CODE.items():
+        if name in lowered:
+            return abbr
+
     return "—"
 
 
@@ -138,7 +177,7 @@ def first_present(row: pd.Series, candidates: list[str], fallback="—") -> str:
 
 
 def derive_display_team(row: pd.Series) -> str:
-    for col in ["team_abbrev", "org_code", "mlb_org_code", "team_code", "team"]:
+    for col in ["team_abbrev", "org_code", "mlb_org_code", "team_code", "team", "org", "parent_org", "mlb_org"]:
         if col in row.index:
             code = map_team_to_code(row.get(col))
             if code != "—":
@@ -147,11 +186,24 @@ def derive_display_team(row: pd.Series) -> str:
 
 
 def derive_display_org(row: pd.Series) -> str:
-    return first_present(
+    text = first_present(
         row,
         ["org", "parent_org", "mlb_org", "team", "team_name", "affiliate_name"],
         fallback="—",
     )
+    code = map_team_to_code(text)
+    return code if code != "—" else text
+
+
+def tooltip_attr(text: str) -> str:
+    esc = (
+        str(text)
+        .replace("&", "&amp;")
+        .replace('"', "&quot;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+    )
+    return esc
 
 
 def load_hidden_gems_source_frame() -> pd.DataFrame:
@@ -261,32 +313,32 @@ def build_hidden_gems_pitchers(df: pd.DataFrame) -> pd.DataFrame:
     trend_lookup = build_pitcher_trend_lookup(pitchers)
     latest = pitchers.sort_values("week_start").groupby("player_name", as_index=False).tail(1).copy()
 
-    latest["trait_score"] = 0.0
+    latest["trait_score_raw"] = 0.0
     if "ivb" in latest.columns:
-        latest["trait_score"] = latest["trait_score"] + 0.30 * zscore(latest["ivb"].fillna(0))
+        latest["trait_score_raw"] += 0.30 * zscore(latest["ivb"].fillna(0))
     if "whiff_pct" in latest.columns:
-        latest["trait_score"] = latest["trait_score"] + 0.28 * zscore(latest["whiff_pct"].fillna(0))
+        latest["trait_score_raw"] += 0.28 * zscore(latest["whiff_pct"].fillna(0))
     if "velo" in latest.columns:
-        latest["trait_score"] = latest["trait_score"] + 0.22 * zscore(latest["velo"].fillna(0))
+        latest["trait_score_raw"] += 0.22 * zscore(latest["velo"].fillna(0))
     if "kbb_p" in latest.columns:
-        latest["trait_score"] = latest["trait_score"] + 0.20 * zscore(latest["kbb_p"].fillna(0))
+        latest["trait_score_raw"] += 0.20 * zscore(latest["kbb_p"].fillna(0))
 
-    latest["divergence_score"] = 0.0
+    latest["surface_pressure_raw"] = 0.0
     if "era" in latest.columns:
-        latest["divergence_score"] = latest["divergence_score"] + 0.58 * zscore(latest["era"].fillna(latest["era"].median()))
-    latest["divergence_score"] = latest["divergence_score"] + 0.42 * zscore(latest["trait_score"].fillna(0))
+        latest["surface_pressure_raw"] += 0.58 * zscore(latest["era"].fillna(latest["era"].median()))
+    latest["surface_pressure_raw"] += 0.42 * zscore(latest["trait_score_raw"].fillna(0))
 
-    latest["market_score"] = 0.0
+    latest["market_score_raw"] = 0.0
     if "rostered_pct" in latest.columns:
-        latest["market_score"] = -1.0 * zscore(latest["rostered_pct"].fillna(latest["rostered_pct"].median()))
+        latest["market_score_raw"] = -1.0 * zscore(latest["rostered_pct"].fillna(latest["rostered_pct"].median()))
 
-    latest["trigger_score"] = 0.0
+    latest["trigger_score_raw"] = 0.0
 
     latest["hidden_gems_score_raw"] = (
-        0.38 * latest["trait_score"].fillna(0)
-        + 0.30 * latest["divergence_score"].fillna(0)
-        + 0.20 * latest["market_score"].fillna(0)
-        + 0.12 * latest["trigger_score"].fillna(0)
+        0.38 * latest["trait_score_raw"].fillna(0)
+        + 0.30 * latest["surface_pressure_raw"].fillna(0)
+        + 0.20 * latest["market_score_raw"].fillna(0)
+        + 0.12 * latest["trigger_score_raw"].fillna(0)
     )
 
     latest["hidden_gems_score"] = (50 + 15 * zscore(latest["hidden_gems_score_raw"].fillna(0))).clip(5, 95).round(1)
@@ -297,33 +349,51 @@ def build_hidden_gems_pitchers(df: pd.DataFrame) -> pd.DataFrame:
     latest["display_org"] = latest.apply(derive_display_org, axis=1)
 
     latest["metric_1_label"] = "Trait"
-    latest["metric_1"] = latest["trait_score"].fillna(0).map(lambda x: f"{x:.2f}")
+    latest["metric_1"] = latest["trait_score_raw"].fillna(0).map(lambda x: f"{x:.2f}")
     latest["metric_2_label"] = "Divergence"
-    latest["metric_2"] = latest["divergence_score"].fillna(0).map(lambda x: f"{x:.2f}")
+    latest["metric_2"] = latest["surface_pressure_raw"].fillna(0).map(lambda x: f"{x:.2f}")
     latest["metric_3_label"] = "Market"
-    latest["metric_3"] = latest["market_score"].fillna(0).map(lambda x: f"{x:.2f}")
+    latest["metric_3"] = latest["market_score_raw"].fillna(0).map(lambda x: f"{x:.2f}")
 
-    latest["why_hidden"] = latest.apply(
-        lambda r: "Strong shape and bat-miss traits are running ahead of visible results; public line may still be lagging.",
-        axis=1,
-    )
+    def pitcher_summary(r: pd.Series) -> str:
+        traits = []
+        if "ivb" in r.index and pd.notna(r.get("ivb")):
+            traits.append("carry")
+        if "whiff_pct" in r.index and pd.notna(r.get("whiff_pct")):
+            traits.append("bat-miss")
+        if "velo" in r.index and pd.notna(r.get("velo")):
+            traits.append("velo support")
+
+        trait_text = ", ".join(traits[:2]) if traits else "trait support"
+
+        if float(r.get("surface_pressure_raw", 0) or 0) >= 0.65:
+            mask_text = "surface results are still suppressing the profile"
+        elif float(r.get("market_score_raw", 0) or 0) >= 0.15:
+            mask_text = "market attention still looks light"
+        else:
+            mask_text = "public-facing value may still be lagging"
+
+        return f"Strong {trait_text} underneath; {mask_text}."
+
+    latest["why_hidden"] = latest.apply(pitcher_summary, axis=1)
 
     latest["pill_1"] = latest.apply(
-        lambda r: "Ballistic Breakout" if float(r["trait_score"]) >= 0.40 else "Under-the-Hood Elite",
+        lambda r: "Ballistic Breakout" if float(r["trait_score_raw"]) >= 0.40 else "Under-the-Hood Elite",
         axis=1,
     )
     latest["pill_2"] = latest.apply(
-        lambda r: "Latent Alpha" if float(r["divergence_score"]) >= 0.50 else "Divergence Watch",
+        lambda r: "Latent Alpha" if float(r["surface_pressure_raw"]) >= 0.50 else "Divergence Watch",
         axis=1,
     )
     latest["pill_3"] = latest.apply(
-        lambda r: "Low Market Price" if float(r["market_score"]) >= 0.15 else "Market Early",
+        lambda r: "Low Market Price" if float(r["market_score_raw"]) >= 0.15 else "Market Early",
         axis=1,
     )
 
     latest["trend_points"] = "0,24 24,22 48,20 72,19 96,16 120,14"
     latest["trend_glow"] = latest["hidden_gems_score"] >= 65
     latest["trend_note"] = "Recent Form"
+    latest["trend_right_label"] = "Ballistics Track"
 
     for idx, row in latest.iterrows():
         info = trend_lookup.get(row["player_name"])
@@ -346,9 +416,7 @@ def build_hidden_gems_hitters(df: pd.DataFrame) -> pd.DataFrame:
     if hitters.empty:
         return pd.DataFrame()
 
-    numeric_cols = [
-        "pa", "iso", "hr", "avg", "ev90", "ev_90", "rostered_pct"
-    ]
+    numeric_cols = ["pa", "iso", "hr", "avg", "ev90", "ev_90", "rostered_pct"]
     for col in numeric_cols:
         if col in hitters.columns:
             hitters[col] = pd.to_numeric(hitters[col], errors="coerce")
@@ -358,30 +426,30 @@ def build_hidden_gems_hitters(df: pd.DataFrame) -> pd.DataFrame:
 
     ev90_col = "ev90" if "ev90" in latest.columns else "ev_90" if "ev_90" in latest.columns else None
 
-    latest["trait_score"] = 0.0
+    latest["trait_score_raw"] = 0.0
     if ev90_col:
-        latest["trait_score"] = latest["trait_score"] + 0.42 * zscore(latest[ev90_col].fillna(0))
+        latest["trait_score_raw"] += 0.42 * zscore(latest[ev90_col].fillna(0))
     if "iso" in latest.columns:
-        latest["trait_score"] = latest["trait_score"] + 0.34 * zscore(latest["iso"].fillna(0))
+        latest["trait_score_raw"] += 0.34 * zscore(latest["iso"].fillna(0))
     if "hr" in latest.columns:
-        latest["trait_score"] = latest["trait_score"] + 0.24 * zscore(latest["hr"].fillna(0))
+        latest["trait_score_raw"] += 0.24 * zscore(latest["hr"].fillna(0))
 
-    latest["divergence_score"] = 0.0
+    latest["surface_pressure_raw"] = 0.0
     if "avg" in latest.columns:
-        latest["divergence_score"] = latest["divergence_score"] + 0.58 * zscore((-1 * latest["avg"]).fillna(0))
-    latest["divergence_score"] = latest["divergence_score"] + 0.42 * zscore(latest["trait_score"].fillna(0))
+        latest["surface_pressure_raw"] += 0.58 * zscore((-1 * latest["avg"]).fillna(0))
+    latest["surface_pressure_raw"] += 0.42 * zscore(latest["trait_score_raw"].fillna(0))
 
-    latest["market_score"] = 0.0
+    latest["market_score_raw"] = 0.0
     if "rostered_pct" in latest.columns:
-        latest["market_score"] = -1.0 * zscore(latest["rostered_pct"].fillna(latest["rostered_pct"].median()))
+        latest["market_score_raw"] = -1.0 * zscore(latest["rostered_pct"].fillna(latest["rostered_pct"].median()))
 
-    latest["trigger_score"] = 0.0
+    latest["trigger_score_raw"] = 0.0
 
     latest["hidden_gems_score_raw"] = (
-        0.40 * latest["trait_score"].fillna(0)
-        + 0.28 * latest["divergence_score"].fillna(0)
-        + 0.22 * latest["market_score"].fillna(0)
-        + 0.10 * latest["trigger_score"].fillna(0)
+        0.40 * latest["trait_score_raw"].fillna(0)
+        + 0.28 * latest["surface_pressure_raw"].fillna(0)
+        + 0.22 * latest["market_score_raw"].fillna(0)
+        + 0.10 * latest["trigger_score_raw"].fillna(0)
     )
 
     latest["hidden_gems_score"] = (50 + 15 * zscore(latest["hidden_gems_score_raw"].fillna(0))).clip(5, 95).round(1)
@@ -392,33 +460,51 @@ def build_hidden_gems_hitters(df: pd.DataFrame) -> pd.DataFrame:
     latest["display_org"] = latest.apply(derive_display_org, axis=1)
 
     latest["metric_1_label"] = "Trait"
-    latest["metric_1"] = latest["trait_score"].fillna(0).map(lambda x: f"{x:.2f}")
+    latest["metric_1"] = latest["trait_score_raw"].fillna(0).map(lambda x: f"{x:.2f}")
     latest["metric_2_label"] = "Divergence"
-    latest["metric_2"] = latest["divergence_score"].fillna(0).map(lambda x: f"{x:.2f}")
+    latest["metric_2"] = latest["surface_pressure_raw"].fillna(0).map(lambda x: f"{x:.2f}")
     latest["metric_3_label"] = "Market"
-    latest["metric_3"] = latest["market_score"].fillna(0).map(lambda x: f"{x:.2f}")
+    latest["metric_3"] = latest["market_score_raw"].fillna(0).map(lambda x: f"{x:.2f}")
 
-    latest["why_hidden"] = latest.apply(
-        lambda r: "Ballistic quality is stronger than visible production; public-facing results may still be understating the bat.",
-        axis=1,
-    )
+    def hitter_summary(r: pd.Series) -> str:
+        traits = []
+        if ev90_col and pd.notna(r.get(ev90_col)):
+            traits.append("impact quality")
+        if "iso" in r.index and pd.notna(r.get("iso")):
+            traits.append("power shape")
+        if "hr" in r.index and pd.notna(r.get("hr")):
+            traits.append("damage output")
+
+        trait_text = ", ".join(traits[:2]) if traits else "ballistic support"
+
+        if float(r.get("surface_pressure_raw", 0) or 0) >= 0.65:
+            mask_text = "surface production still looks behind the underlying bat"
+        elif float(r.get("market_score_raw", 0) or 0) >= 0.15:
+            mask_text = "market pricing still looks early"
+        else:
+            mask_text = "public-facing value may still be understating the profile"
+
+        return f"Strong {trait_text} underneath; {mask_text}."
+
+    latest["why_hidden"] = latest.apply(hitter_summary, axis=1)
 
     latest["pill_1"] = latest.apply(
-        lambda r: "Ballistic Breakout" if float(r["trait_score"]) >= 0.40 else "Under-the-Hood Elite",
+        lambda r: "Ballistic Breakout" if float(r["trait_score_raw"]) >= 0.40 else "Under-the-Hood Elite",
         axis=1,
     )
     latest["pill_2"] = latest.apply(
-        lambda r: "Latent Alpha" if float(r["divergence_score"]) >= 0.50 else "Divergence Watch",
+        lambda r: "Latent Alpha" if float(r["surface_pressure_raw"]) >= 0.50 else "Divergence Watch",
         axis=1,
     )
     latest["pill_3"] = latest.apply(
-        lambda r: "Low Market Price" if float(r["market_score"]) >= 0.15 else "Market Early",
+        lambda r: "Low Market Price" if float(r["market_score_raw"]) >= 0.15 else "Market Early",
         axis=1,
     )
 
     latest["trend_points"] = "0,25 24,23 48,22 72,18 96,16 120,13"
     latest["trend_glow"] = latest["hidden_gems_score"] >= 65
     latest["trend_note"] = "Recent Form"
+    latest["trend_right_label"] = "Ballistics Track"
 
     for idx, row in latest.iterrows():
         info = trend_lookup.get(row["player_name"])
@@ -557,13 +643,11 @@ HTML_TEMPLATE = Template(
       color: var(--tiny);
     }
 
-    .app {
-      padding: 28px 0 56px;
-    }
+    .app { padding: 28px 0 56px; }
 
     .hero {
       display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
+      grid-template-columns: 1.25fr 0.75fr;
       gap: 18px;
       margin-bottom: 20px;
     }
@@ -571,15 +655,16 @@ HTML_TEMPLATE = Template(
     .hero-card,
     .summary-card,
     .section,
-    .drawer-panel {
+    .drawer-panel,
+    .tooltip-bubble {
       background: var(--card-radial);
       border: 1px solid rgba(255,255,255,0.07);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
 
-    .hero-card { padding: 22px 22px 20px; }
-    .summary-card { padding: 18px; display: grid; gap: 12px; align-content: start; }
+    .hero-card { padding: 24px 24px 22px; }
+    .summary-card { padding: 18px; display: grid; gap: 14px; align-content: start; }
     .section { padding: 18px; margin-bottom: 16px; }
 
     .eyebrow {
@@ -593,7 +678,7 @@ HTML_TEMPLATE = Template(
 
     .hero-title {
       margin: 0;
-      font-size: clamp(32px, 6vw, 56px);
+      font-size: clamp(32px, 6vw, 58px);
       line-height: 0.95;
       letter-spacing: -0.05em;
       text-transform: uppercase;
@@ -602,10 +687,10 @@ HTML_TEMPLATE = Template(
 
     .hero-sub {
       margin: 14px 0 0;
-      max-width: 60ch;
+      max-width: 58ch;
       color: var(--soft);
       font-size: 14px;
-      line-height: 1.6;
+      line-height: 1.65;
     }
 
     .summary-label {
@@ -621,6 +706,12 @@ HTML_TEMPLATE = Template(
       line-height: 1;
       font-weight: 800;
       letter-spacing: -0.03em;
+    }
+
+    .summary-mini {
+      color: var(--soft);
+      font-size: 12px;
+      line-height: 1.5;
     }
 
     .section-head {
@@ -681,9 +772,10 @@ HTML_TEMPLATE = Template(
       background: rgba(106,166,255,0.06);
     }
 
-    .cards {
+    .cards-grid {
       display: grid;
-      gap: 12px;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
     }
 
     .player-card {
@@ -691,6 +783,13 @@ HTML_TEMPLATE = Template(
       border-radius: 16px;
       padding: 16px;
       background: rgba(255,255,255,0.02);
+      position: relative;
+      transition: 160ms ease;
+    }
+
+    .player-card:hover {
+      border-color: rgba(255,255,255,0.13);
+      transform: translateY(-1px);
     }
 
     .player-top {
@@ -769,7 +868,7 @@ HTML_TEMPLATE = Template(
       background: rgba(106,166,255,0.06);
     }
 
-    .scorebox { text-align: right; min-width: 72px; }
+    .scorebox { text-align: right; min-width: 78px; }
 
     .score-label {
       font-family: var(--mono);
@@ -788,17 +887,9 @@ HTML_TEMPLATE = Template(
     }
 
     .score-value.positive,
-    .score-value.elite {
-      color: var(--lime-hot);
-    }
-
-    .score-value.watch {
-      color: var(--gold);
-    }
-
-    .score-value.neutral {
-      color: var(--text);
-    }
+    .score-value.elite { color: var(--lime-hot); }
+    .score-value.watch { color: var(--gold); }
+    .score-value.neutral { color: var(--text); }
 
     .sparkline-wrap {
       margin-top: 14px;
@@ -894,6 +985,13 @@ HTML_TEMPLATE = Template(
       padding: 10px;
       background: rgba(255,255,255,0.02);
       min-width: 0;
+      position: relative;
+    }
+
+    .metric-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .metric-label {
@@ -902,6 +1000,28 @@ HTML_TEMPLATE = Template(
       letter-spacing: 0.10em;
       text-transform: uppercase;
       color: var(--tiny);
+    }
+
+    .info-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--soft);
+      font-family: var(--mono);
+      font-size: 10px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .info-chip:hover {
+      color: var(--text);
+      border-color: rgba(106,166,255,0.18);
+      background: rgba(106,166,255,0.06);
     }
 
     .metric-value {
@@ -919,6 +1039,29 @@ HTML_TEMPLATE = Template(
       color: #8b8b94;
       font-family: var(--mono);
       font-variant-numeric: tabular-nums;
+    }
+
+    .tooltip-bubble {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 8px);
+      min-width: 220px;
+      max-width: 280px;
+      padding: 10px 12px;
+      opacity: 0;
+      transform: translateY(-4px);
+      pointer-events: none;
+      transition: 140ms ease;
+      z-index: 10;
+      color: var(--soft);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .info-chip:hover .tooltip-bubble {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
     }
 
     .drawer-overlay {
@@ -940,7 +1083,7 @@ HTML_TEMPLATE = Template(
       position: fixed;
       top: 18px;
       right: 18px;
-      width: min(460px, calc(100vw - 24px));
+      width: min(500px, calc(100vw - 24px));
       max-height: calc(100vh - 36px);
       overflow: auto;
       padding: 18px;
@@ -961,9 +1104,7 @@ HTML_TEMPLATE = Template(
       margin-bottom: 14px;
     }
 
-    .drawer-title-wrap {
-      min-width: 0;
-    }
+    .drawer-title-wrap { min-width: 0; }
 
     .drawer-kicker {
       font-family: var(--mono);
@@ -1001,6 +1142,29 @@ HTML_TEMPLATE = Template(
       border-color: rgba(255,255,255,0.14);
     }
 
+    .guide-intro {
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .guide-intro-title {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+
+    .guide-intro-copy {
+      color: var(--soft);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
     .guide-list {
       display: grid;
       gap: 10px;
@@ -1030,8 +1194,12 @@ HTML_TEMPLATE = Template(
 
     {{ shell_styles | safe }}
 
-    @media (max-width: 900px) {
+    @media (max-width: 980px) {
       .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .cards-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -1081,6 +1249,11 @@ HTML_TEMPLATE = Template(
         width: calc(100vw - 16px);
         max-height: calc(100vh - 16px);
       }
+
+      .tooltip-bubble {
+        min-width: 180px;
+        max-width: 240px;
+      }
     }
   </style>
 </head>
@@ -1110,7 +1283,7 @@ HTML_TEMPLATE = Template(
         <div class="eyebrow">Signal Wall // Edge</div>
         <h1 class="hero-title">Hidden Gems</h1>
         <p class="hero-sub">
-          Under-the-hood elite profiles whose visible surface results may still be masking breakout value.
+          Hidden Gems isolates under-the-hood elite profiles whose deeper traits are stronger than the visible surface line. This board is built to surface buy-low conviction candidates where ballistics, shape, and market neglect still diverge.
         </p>
       </div>
 
@@ -1127,6 +1300,9 @@ HTML_TEMPLATE = Template(
           <div class="summary-label">Hitters</div>
           <div class="summary-value">{{ hitters|length }}</div>
         </div>
+        <div class="summary-mini">
+          Buy-low lens: strong underlying traits, weaker public signal, and still-manageable market pricing.
+        </div>
       </div>
     </section>
 
@@ -1137,13 +1313,13 @@ HTML_TEMPLATE = Template(
           <h2 class="section-title">Pitcher Hidden Gems</h2>
         </div>
         <div class="section-head-actions">
-          <button type="button" class="field-guide-btn" onclick="openGlossary()">Field Guide</button>
+          <button type="button" class="field-guide-btn" onclick="openGlossary()">Field Guide / How To Use This Board</button>
           <div class="section-badge">Top {{ pitchers|length }}</div>
         </div>
       </div>
 
       {% if pitchers %}
-      <div class="cards">
+      <div class="cards-grid">
         {% for row in pitchers %}
         <article class="player-card">
           <div class="player-top">
@@ -1151,15 +1327,14 @@ HTML_TEMPLATE = Template(
             <div class="player-ident">
               <div class="rankline">#{{ loop.index }} Divergence Pitcher</div>
               <h3 class="player-name">{{ row.player_name }}</h3>
-              <div class="signal-line">{{ row.display_org }} // Pitcher // Hidden Gems</div>
+              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %} // {{ row.display_team }}{% endif %} // Pitcher // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">{{ row.source_badge }}</span>
                 <span class="card-meta-badge">{{ row.model_badge }}</span>
-                {% if row.display_team != "—" %}<span class="card-meta-badge team">{{ row.display_team }}</span>{% endif %}
               </div>
             </div>
             <div class="scorebox">
-              <div class="score-label">Edge Score</div>
+              <div class="score-label">Hidden Gem Score</div>
               <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
             </div>
           </div>
@@ -1188,15 +1363,32 @@ HTML_TEMPLATE = Template(
 
           <div class="metric-grid">
             <div class="metric">
-              <div class="metric-label">{{ row.metric_1_label }}</div>
+              <div class="metric-head">
+                <div class="metric-label">{{ row.metric_1_label }}</div>
+                <span class="info-chip">i
+                  <span class="tooltip-bubble">Trait measures the strength of the underlying skill profile, such as carry, bat-miss support, or velocity quality.</span>
+                </span>
+              </div>
               <div class="metric-value">{{ row.metric_1 }}</div>
             </div>
+
             <div class="metric">
-              <div class="metric-label">{{ row.metric_2_label }}</div>
+              <div class="metric-head">
+                <div class="metric-label">{{ row.metric_2_label }}</div>
+                <span class="info-chip">i
+                  <span class="tooltip-bubble">Divergence measures how far visible results still lag the underlying skill profile.</span>
+                </span>
+              </div>
               <div class="metric-value">{{ row.metric_2 }}</div>
             </div>
+
             <div class="metric">
-              <div class="metric-label">{{ row.metric_3_label }}</div>
+              <div class="metric-head">
+                <div class="metric-label">{{ row.metric_3_label }}</div>
+                <span class="info-chip">i
+                  <span class="tooltip-bubble">Market estimates how overlooked the profile still appears to be relative to the underlying quality.</span>
+                </span>
+              </div>
               <div class="metric-value">{{ row.metric_3 }}</div>
             </div>
           </div>
@@ -1217,13 +1409,13 @@ HTML_TEMPLATE = Template(
           <h2 class="section-title">Hitter Hidden Gems</h2>
         </div>
         <div class="section-head-actions">
-          <button type="button" class="field-guide-btn" onclick="openGlossary()">Field Guide</button>
+          <button type="button" class="field-guide-btn" onclick="openGlossary()">Field Guide / How To Use This Board</button>
           <div class="section-badge">Top {{ hitters|length }}</div>
         </div>
       </div>
 
       {% if hitters %}
-      <div class="cards">
+      <div class="cards-grid">
         {% for row in hitters %}
         <article class="player-card">
           <div class="player-top">
@@ -1231,15 +1423,14 @@ HTML_TEMPLATE = Template(
             <div class="player-ident">
               <div class="rankline">#{{ loop.index }} Divergence Hitter</div>
               <h3 class="player-name">{{ row.player_name }}</h3>
-              <div class="signal-line">{{ row.display_org }} // Hitter // Hidden Gems</div>
+              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %} // {{ row.display_team }}{% endif %} // Hitter // Hidden Gems</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">{{ row.source_badge }}</span>
                 <span class="card-meta-badge">{{ row.model_badge }}</span>
-                {% if row.display_team != "—" %}<span class="card-meta-badge team">{{ row.display_team }}</span>{% endif %}
               </div>
             </div>
             <div class="scorebox">
-              <div class="score-label">Edge Score</div>
+              <div class="score-label">Hidden Gem Score</div>
               <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
             </div>
           </div>
@@ -1268,15 +1459,32 @@ HTML_TEMPLATE = Template(
 
           <div class="metric-grid">
             <div class="metric">
-              <div class="metric-label">{{ row.metric_1_label }}</div>
+              <div class="metric-head">
+                <div class="metric-label">{{ row.metric_1_label }}</div>
+                <span class="info-chip">i
+                  <span class="tooltip-bubble">Trait measures the strength of the underlying hitting quality, such as impact, power shape, or damage support.</span>
+                </span>
+              </div>
               <div class="metric-value">{{ row.metric_1 }}</div>
             </div>
+
             <div class="metric">
-              <div class="metric-label">{{ row.metric_2_label }}</div>
+              <div class="metric-head">
+                <div class="metric-label">{{ row.metric_2_label }}</div>
+                <span class="info-chip">i
+                  <span class="tooltip-bubble">Divergence measures how far the public-facing production still lags the deeper offensive profile.</span>
+                </span>
+              </div>
               <div class="metric-value">{{ row.metric_2 }}</div>
             </div>
+
             <div class="metric">
-              <div class="metric-label">{{ row.metric_3_label }}</div>
+              <div class="metric-head">
+                <div class="metric-label">{{ row.metric_3_label }}</div>
+                <span class="info-chip">i
+                  <span class="tooltip-bubble">Market estimates how overlooked or underpriced the player still appears relative to the underlying bat.</span>
+                </span>
+              </div>
               <div class="metric-value">{{ row.metric_3 }}</div>
             </div>
           </div>
@@ -1299,60 +1507,67 @@ HTML_TEMPLATE = Template(
     <div class="drawer-head">
       <div class="drawer-title-wrap">
         <div class="drawer-kicker">Hidden Gems // Field Guide</div>
-        <h2 class="drawer-title">Field Guide</h2>
+        <h2 class="drawer-title">How To Use This Board</h2>
       </div>
       <button type="button" class="drawer-close" onclick="closeGlossary()">Close</button>
+    </div>
+
+    <div class="guide-intro">
+      <div class="guide-intro-title">Read This In 10 Seconds</div>
+      <div class="guide-intro-copy">
+        Start with the score, then check the three columns below it: Trait tells you what is strong, Divergence tells you what the market may still be missing, and Market tells you how early the profile may still be.
+      </div>
     </div>
 
     <div class="guide-list">
       <div class="guide-item">
         <div class="guide-term">Hidden Gem</div>
-        <div class="guide-def">A player whose underlying traits look stronger than the public-facing results currently suggest.</div>
+        <div class="guide-def">A player whose underlying profile looks stronger than the public-facing results and current market attention suggest.</div>
       </div>
 
       <div class="guide-item">
         <div class="guide-term">Latent Alpha</div>
-        <div class="guide-def">Unpriced upside that may not yet be reflected in roster rate, ownership, or visible surface stats.</div>
+        <div class="guide-def">Unpriced upside. This appears when strong underlying indicators have not fully translated into broad market belief.</div>
       </div>
 
       <div class="guide-item">
         <div class="guide-term">Ballistic Breakout</div>
-        <div class="guide-def">A profile where movement, shape, power, or impact quality is beginning to point toward a stronger future result set.</div>
+        <div class="guide-def">A profile where movement, shape, impact quality, or damage support points toward a stronger future result set than the current surface line implies.</div>
       </div>
 
       <div class="guide-item">
         <div class="guide-term">Divergence</div>
-        <div class="guide-def">The gap between strong underlying traits and weaker box-score outcomes. This is the core Hidden Gems lens.</div>
+        <div class="guide-def">The gap between stronger underlying traits and weaker visible outcomes. This is the core Hidden Gems lens.</div>
       </div>
 
       <div class="guide-item">
         <div class="guide-term">Under-the-Hood Elite</div>
-        <div class="guide-def">A player whose deeper traits are materially stronger than their recent public perception.</div>
+        <div class="guide-def">A player whose deeper support metrics look stronger than their current public perception or box-score line.</div>
       </div>
 
       <div class="guide-item">
-        <div class="guide-term">Trait Score</div>
-        <div class="guide-def">A composite measure of underlying quality, such as shape, whiff, velocity, or impact traits.</div>
+        <div class="guide-term">Trait</div>
+        <div class="guide-def">The quality of the underlying profile. For pitchers this may include carry, whiff support, and velocity. For hitters this may include impact, power shape, and damage support.</div>
       </div>
 
       <div class="guide-item">
         <div class="guide-term">Divergence Score</div>
-        <div class="guide-def">A measure of how much the player’s visible results lag their deeper trait profile.</div>
+        <div class="guide-def">A measure of how much the current visible results still lag the deeper profile.</div>
       </div>
 
       <div class="guide-item">
         <div class="guide-term">Market Score</div>
-        <div class="guide-def">A rough estimate of how overlooked the player still appears to be relative to the strength of the profile.</div>
+        <div class="guide-def">A rough estimate of how early the market still appears to be relative to the player’s underlying quality.</div>
       </div>
 
       <div class="guide-item">
         <div class="guide-term">Ballistics vs Surface</div>
-        <div class="guide-def">The sparkline area is meant to frame the relationship between rising underlying quality and slower-moving public results.</div>
+        <div class="guide-def">This area frames the relationship between rising skill support and slower-moving public results. It is meant to help you spot profiles where the market may still be late.</div>
       </div>
 
       <div class="guide-item">
-        <div class="guide-term">Low Market Price</div>
-        <div class="guide-def">A player who may still be available cheaply because the market has not fully recognized the profile yet.</div>
+        <div class="guide-term">How To Use This Board</div>
+        <div class="guide-def">Use this page to find buy-low candidates, not already-obvious stars. The best names here usually combine good underlying support, visible underperformance, and still-manageable market attention.</div>
       </div>
     </div>
   </aside>
