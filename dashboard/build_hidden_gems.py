@@ -196,17 +196,6 @@ def derive_display_org(row: pd.Series) -> str:
     return derive_display_team(row)
 
 
-def tooltip_attr(text: str) -> str:
-    esc = (
-        str(text)
-        .replace("&", "&amp;")
-        .replace('"', "&quot;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
-    )
-    return esc
-
-
 def load_hidden_gems_source_frame() -> pd.DataFrame:
     from supabase import create_client
     import os
@@ -240,19 +229,15 @@ def build_pitcher_trend_lookup(df: pd.DataFrame) -> dict[str, dict]:
     if df.empty:
         return {}
     pitchers = df[df["bf"].notna()].copy()
-    if pitchers.empty:
+    if pitchers.empty or "kbb_p" not in pitchers.columns:
         return {}
 
-    metric_col = "kbb_p" if "kbb_p" in pitchers.columns else None
-    if metric_col is None:
-        return {}
-
-    out = {}
+    out: dict[str, dict] = {}
     pitchers["player_name"] = pitchers["player_name"].apply(safe_name)
 
     for player, group in pitchers.groupby("player_name"):
         group = group.sort_values("week_start")
-        vals = pd.to_numeric(group[metric_col], errors="coerce").dropna().tolist()
+        vals = pd.to_numeric(group["kbb_p"], errors="coerce").dropna().tolist()
         if not vals:
             continue
         out[player] = {
@@ -279,7 +264,7 @@ def build_hitter_trend_lookup(df: pd.DataFrame) -> dict[str, dict]:
     if metric_col is None:
         return {}
 
-    out = {}
+    out: dict[str, dict] = {}
     hitters["player_name"] = hitters["player_name"].apply(safe_name)
 
     for player, group in hitters.groupby("player_name"):
@@ -356,37 +341,37 @@ def build_hidden_gems_pitchers(df: pd.DataFrame) -> pd.DataFrame:
     latest["metric_3_label"] = "Market"
     latest["metric_3"] = latest["market_score_raw"].fillna(0).map(lambda x: f"{x:.2f}")
 
-def pitcher_summary(r: pd.Series) -> str:
-    trait_score = float(r.get("trait_score_raw", 0) or 0)
-    divergence_score = float(r.get("surface_pressure_raw", 0) or 0)
-    market_score = float(r.get("market_score_raw", 0) or 0)
+    def pitcher_summary(r: pd.Series) -> str:
+        trait_score = float(r.get("trait_score_raw", 0) or 0)
+        divergence_score = float(r.get("surface_pressure_raw", 0) or 0)
+        market_score = float(r.get("market_score_raw", 0) or 0)
 
-    ivb = r.get("ivb")
-    whiff = r.get("whiff_pct")
-    velo = r.get("velo")
-    kbb = r.get("kbb_p")
+        ivb = r.get("ivb")
+        whiff = r.get("whiff_pct")
+        velo = r.get("velo")
+        kbb = r.get("kbb_p")
 
-    lead_trait = "underlying pitch quality"
-    if pd.notna(whiff) and pd.notna(kbb):
-        lead_trait = "bat-miss and strike-efficiency support"
-    if pd.notna(ivb) and pd.notna(velo):
-        lead_trait = "shape and velocity support"
-    elif pd.notna(ivb):
-        lead_trait = "shape support"
-    elif pd.notna(velo):
-        lead_trait = "velocity support"
-    elif pd.notna(kbb):
-        lead_trait = "command and strikeout support"
+        lead_trait = "underlying pitch quality"
+        if pd.notna(whiff) and pd.notna(kbb):
+            lead_trait = "bat-miss and strike-efficiency support"
+        if pd.notna(ivb) and pd.notna(velo):
+            lead_trait = "shape and velocity support"
+        elif pd.notna(ivb):
+            lead_trait = "shape support"
+        elif pd.notna(velo):
+            lead_trait = "velocity support"
+        elif pd.notna(kbb):
+            lead_trait = "command and strikeout support"
 
-    if trait_score >= 0.55 and divergence_score >= 0.65:
-        return f"{lead_trait.capitalize()} is running materially stronger than the current visible line."
-    if divergence_score >= 0.70:
-        return f"Surface results still look weaker than the underlying {lead_trait}."
-    if market_score >= 0.20 and trait_score >= 0.30:
-        return f"{lead_trait.capitalize()} looks stronger than current market attention implies."
-    if trait_score >= 0.45:
-        return f"{lead_trait.capitalize()} gives this arm a stronger hidden profile than the public line suggests."
-    return f"Underlying support remains better than the current surface read."
+        if trait_score >= 0.55 and divergence_score >= 0.65:
+            return f"{lead_trait.capitalize()} is running materially stronger than the current visible line."
+        if divergence_score >= 0.70:
+            return f"Surface results still look weaker than the underlying {lead_trait}."
+        if market_score >= 0.20 and trait_score >= 0.30:
+            return f"{lead_trait.capitalize()} looks stronger than current market attention implies."
+        if trait_score >= 0.45:
+            return f"{lead_trait.capitalize()} gives this arm a stronger hidden profile than the public line suggests."
+        return "Underlying support remains better than the current surface read."
 
     latest["why_hidden"] = latest.apply(pitcher_summary, axis=1)
 
@@ -406,7 +391,6 @@ def pitcher_summary(r: pd.Series) -> str:
     latest["trend_points"] = "0,24 24,22 48,20 72,19 96,16 120,14"
     latest["trend_glow"] = latest["hidden_gems_score"] >= 65
     latest["trend_note"] = "Recent Form"
-    latest["trend_right_label"] = "Ballistics Track"
 
     for idx, row in latest.iterrows():
         info = trend_lookup.get(row["player_name"])
@@ -479,36 +463,36 @@ def build_hidden_gems_hitters(df: pd.DataFrame) -> pd.DataFrame:
     latest["metric_3_label"] = "Market"
     latest["metric_3"] = latest["market_score_raw"].fillna(0).map(lambda x: f"{x:.2f}")
 
-def hitter_summary(r: pd.Series) -> str:
-    trait_score = float(r.get("trait_score_raw", 0) or 0)
-    divergence_score = float(r.get("surface_pressure_raw", 0) or 0)
-    market_score = float(r.get("market_score_raw", 0) or 0)
+    def hitter_summary(r: pd.Series) -> str:
+        trait_score = float(r.get("trait_score_raw", 0) or 0)
+        divergence_score = float(r.get("surface_pressure_raw", 0) or 0)
+        market_score = float(r.get("market_score_raw", 0) or 0)
 
-    iso = r.get("iso")
-    hr = r.get("hr")
-    ev = r.get("ev90") if "ev90" in r.index else r.get("ev_90") if "ev_90" in r.index else None
+        iso = r.get("iso")
+        hr = r.get("hr")
+        ev = r.get("ev90") if "ev90" in r.index else r.get("ev_90") if "ev_90" in r.index else None
 
-    lead_trait = "underlying offensive quality"
-    if pd.notna(ev) and pd.notna(iso):
-        lead_trait = "impact quality and power shape"
-    elif pd.notna(ev):
-        lead_trait = "impact quality"
-    elif pd.notna(iso) and pd.notna(hr):
-        lead_trait = "power shape and damage support"
-    elif pd.notna(iso):
-        lead_trait = "power shape"
-    elif pd.notna(hr):
-        lead_trait = "damage support"
+        lead_trait = "underlying offensive quality"
+        if pd.notna(ev) and pd.notna(iso):
+            lead_trait = "impact quality and power shape"
+        elif pd.notna(ev):
+            lead_trait = "impact quality"
+        elif pd.notna(iso) and pd.notna(hr):
+            lead_trait = "power shape and damage support"
+        elif pd.notna(iso):
+            lead_trait = "power shape"
+        elif pd.notna(hr):
+            lead_trait = "damage support"
 
-    if trait_score >= 0.55 and divergence_score >= 0.65:
-        return f"{lead_trait.capitalize()} is materially stronger than the current production line."
-    if divergence_score >= 0.70:
-        return f"Visible production still looks behind the deeper {lead_trait}."
-    if market_score >= 0.20 and trait_score >= 0.30:
-        return f"{lead_trait.capitalize()} looks better than current market pricing suggests."
-    if trait_score >= 0.45:
-        return f"{lead_trait.capitalize()} gives this bat more hidden value than the public line implies."
-    return f"Underlying offensive support still looks better than the current surface read."
+        if trait_score >= 0.55 and divergence_score >= 0.65:
+            return f"{lead_trait.capitalize()} is materially stronger than the current production line."
+        if divergence_score >= 0.70:
+            return f"Visible production still looks behind the deeper {lead_trait}."
+        if market_score >= 0.20 and trait_score >= 0.30:
+            return f"{lead_trait.capitalize()} looks better than current market pricing suggests."
+        if trait_score >= 0.45:
+            return f"{lead_trait.capitalize()} gives this bat more hidden value than the public line implies."
+        return "Underlying offensive support still looks better than the current surface read."
 
     latest["why_hidden"] = latest.apply(hitter_summary, axis=1)
 
@@ -528,7 +512,6 @@ def hitter_summary(r: pd.Series) -> str:
     latest["trend_points"] = "0,25 24,23 48,22 72,18 96,16 120,13"
     latest["trend_glow"] = latest["hidden_gems_score"] >= 65
     latest["trend_note"] = "Recent Form"
-    latest["trend_right_label"] = "Ballistics Track"
 
     for idx, row in latest.iterrows():
         info = trend_lookup.get(row["player_name"])
@@ -915,24 +898,21 @@ HTML_TEMPLATE = Template(
     .score-value.watch { color: var(--gold); }
     .score-value.neutral { color: var(--text); }
 
-  .sparkline-wrap {
-  margin-top: 12px;
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 12px;
-  background: rgba(255,255,255,0.025);
-  padding: 8px 10px;
-}
+    .sparkline-wrap {
+      margin-top: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.025);
+      padding: 8px 10px;
+    }
 
-.sparkline.compact {
-  height: 22px;
-}
+    .sparkline-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
 
-.sparkline-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 8px;
-}
     .sparkline-label,
     .sparkline-note {
       font-family: var(--mono);
@@ -946,6 +926,10 @@ HTML_TEMPLATE = Template(
       width: 100%;
       height: 34px;
       display: block;
+    }
+
+    .sparkline.compact {
+      height: 22px;
     }
 
     .sparkline-path {
@@ -1029,29 +1013,30 @@ HTML_TEMPLATE = Template(
       color: var(--tiny);
     }
 
-.info-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.06);
-  color: #d4d4da;
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 800;
-  line-height: 1;
-  cursor: pointer;
-  position: relative;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
-}
-.info-chip:hover {
-  color: var(--text);
-  border-color: rgba(106,166,255,0.26);
-  background: rgba(106,166,255,0.10);
-}
+    .info-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: #d4d4da;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1;
+      cursor: pointer;
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+    }
+
+    .info-chip:hover {
+      color: var(--text);
+      border-color: rgba(106,166,255,0.26);
+      background: rgba(106,166,255,0.10);
+    }
 
     .metric-value {
       margin-top: 6px;

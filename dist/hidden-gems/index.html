@@ -369,24 +369,21 @@
     .score-value.watch { color: var(--gold); }
     .score-value.neutral { color: var(--text); }
 
-  .sparkline-wrap {
-  margin-top: 12px;
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 12px;
-  background: rgba(255,255,255,0.025);
-  padding: 8px 10px;
-}
+    .sparkline-wrap {
+      margin-top: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.025);
+      padding: 8px 10px;
+    }
 
-.sparkline.compact {
-  height: 22px;
-}
+    .sparkline-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
 
-.sparkline-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 8px;
-}
     .sparkline-label,
     .sparkline-note {
       font-family: var(--mono);
@@ -400,6 +397,10 @@
       width: 100%;
       height: 34px;
       display: block;
+    }
+
+    .sparkline.compact {
+      height: 22px;
     }
 
     .sparkline-path {
@@ -483,29 +484,30 @@
       color: var(--tiny);
     }
 
-.info-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.06);
-  color: #d4d4da;
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 800;
-  line-height: 1;
-  cursor: pointer;
-  position: relative;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
-}
-.info-chip:hover {
-  color: var(--text);
-  border-color: rgba(106,166,255,0.26);
-  background: rgba(106,166,255,0.10);
-}
+    .info-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: #d4d4da;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1;
+      cursor: pointer;
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+    }
+
+    .info-chip:hover {
+      color: var(--text);
+      border-color: rgba(106,166,255,0.26);
+      background: rgba(106,166,255,0.10);
+    }
 
     .metric-value {
       margin-top: 6px;
@@ -790,7 +792,7 @@
       </div>
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">2026-04-09 10:02 AM</div>
+        <div class="live-time">2026-04-09 12:38 PM</div>
       </div>
     </div>
   </div>
@@ -939,7 +941,7 @@
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> Strong trait support underneath; surface results are still suppressing the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Surface results still look weaker than the underlying command and strikeout support.</div>
         </article>
         
         <article class="player-card">
@@ -1014,7 +1016,7 @@
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> Strong trait support underneath; public-facing value may still be lagging.</div>
+          <div class="why"><strong>Edge Note:</strong> Underlying support remains better than the current surface read.</div>
         </article>
         
         <article class="player-card">
@@ -1089,7 +1091,7 @@
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> Strong trait support underneath; public-facing value may still be lagging.</div>
+          <div class="why"><strong>Edge Note:</strong> Underlying support remains better than the current surface read.</div>
         </article>
         
         <article class="player-card">
@@ -1164,7 +1166,7 @@
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> Strong trait support underneath; public-facing value may still be lagging.</div>
+          <div class="why"><strong>Edge Note:</strong> Underlying support remains better than the current surface read.</div>
         </article>
         
         <article class="player-card">
@@ -1239,7 +1241,7 @@
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> Strong trait support underneath; public-facing value may still be lagging.</div>
+          <div class="why"><strong>Edge Note:</strong> Underlying support remains better than the current surface read.</div>
         </article>
         
         <article class="player-card">
@@ -1314,7 +1316,7 @@
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> Strong trait support underneath; public-facing value may still be lagging.</div>
+          <div class="why"><strong>Edge Note:</strong> Underlying support remains better than the current surface read.</div>
         </article>
         
       </div>
@@ -1408,7 +1410,7 @@
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; surface production still looks behind the underlying bat.</div>
+          <div class="why"><strong>Edge Note:</strong> Power shape and damage support is materially stronger than the current production line.</div>
         </article>
         
         <article class="player-card">
@@ -1483,7 +1485,7 @@
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Power shape and damage support gives this bat more hidden value than the public line implies.</div>
         </article>
         
         <article class="player-card">
@@ -1558,7 +1560,7 @@
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Power shape and damage support gives this bat more hidden value than the public line implies.</div>
         </article>
         
         <article class="player-card">
@@ -1633,7 +1635,7 @@
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Power shape and damage support gives this bat more hidden value than the public line implies.</div>
         </article>
         
         <article class="player-card">
@@ -1708,7 +1710,7 @@
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Power shape and damage support gives this bat more hidden value than the public line implies.</div>
         </article>
         
         <article class="player-card">
@@ -1783,7 +1785,7 @@
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Power shape and damage support gives this bat more hidden value than the public line implies.</div>
         </article>
         
         <article class="player-card">
@@ -1858,7 +1860,7 @@
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Power shape and damage support gives this bat more hidden value than the public line implies.</div>
         </article>
         
         <article class="player-card">
@@ -1933,7 +1935,7 @@
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Power shape and damage support gives this bat more hidden value than the public line implies.</div>
         </article>
         
         <article class="player-card">
@@ -2008,7 +2010,7 @@
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Underlying offensive support still looks better than the current surface read.</div>
         </article>
         
         <article class="player-card">
@@ -2083,7 +2085,7 @@
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> Strong power shape, damage output underneath; public-facing value may still be understating the profile.</div>
+          <div class="why"><strong>Edge Note:</strong> Underlying offensive support still looks better than the current surface read.</div>
         </article>
         
       </div>
