@@ -31,6 +31,62 @@ END_DATE = TODAY
 RECENT_DAYS = 7
 BASELINE_DAYS = 28
 
+_ID_RESOLUTION_CACHE: dict[str, str] = {}
+
+
+def resolve_player_id_by_name(name: str) -> str:
+    safe = str(name or "").strip()
+    if not safe:
+        return ""
+
+    cached = _ID_RESOLUTION_CACHE.get(safe)
+    if cached is not None:
+        return cached
+
+    try:
+        import requests
+
+        url = "https://statsapi.mlb.com/api/v1/people/search"
+        resp = requests.get(url, params={"names": safe}, timeout=15)
+        resp.raise_for_status()
+        payload = resp.json()
+        people = payload.get("people", []) or []
+
+        if people:
+            pid = str(people[0].get("id") or "").strip()
+            _ID_RESOLUTION_CACHE[safe] = pid
+            return pid
+    except Exception:
+        pass
+
+    _ID_RESOLUTION_CACHE[safe] = ""
+    return ""
+
+
+def backfill_resolved_player_ids(df: pd.DataFrame) -> pd.DataFrame:
+    if df.empty:
+        return df.copy()
+
+    out = df.copy()
+
+    if "player_id" in out.columns:
+        out["player_id"] = out["player_id"].fillna("").astype(str).str.strip()
+    else:
+        out["player_id"] = ""
+
+    out["resolved_player_id"] = out["player_id"]
+
+    missing_mask = out["resolved_player_id"].eq("")
+    if missing_mask.any() and "player_name" in out.columns:
+        out.loc[missing_mask, "resolved_player_id"] = (
+            out.loc[missing_mask, "player_name"]
+            .fillna("")
+            .astype(str)
+            .map(resolve_player_id_by_name)
+        )
+
+    out["resolved_player_id"] = out["resolved_player_id"].fillna("").astype(str).str.strip()
+    return out
 
 def zscore(series: pd.Series) -> pd.Series:
     s = pd.to_numeric(series, errors="coerce")
@@ -1075,7 +1131,77 @@ def write_scout_metrics(df: pd.DataFrame) -> dict:
     print("Wrote dist/scout_metrics.json")
     return payload
 
+def load_supplemental_aaa_dossier_players() -> list[dict]:
+    try:
+        from supabase import create_client
+        import os
 
+        url = os.environ["SUPABASE_URL"]
+        key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
+        sb = create_client(url, key)
+
+        resp = (
+            sb.table("milb_aaa_weekly_signal_base")
+            .select("player_id,player_name,org,week_start")
+            .order("week_start", desc=True)
+            .limit(1200)
+            .execute()
+)
+
+        data = resp.data or []
+        if not data:
+            return []
+
+        df_extra = pd.DataFrame(data)
+        if df_extra.empty or "player_id" not in df_extra.columns:
+            return []
+
+        df_extra["player_id"] = pd.to_numeric(df_extra["player_id"], errors="coerce")
+        df_extra = df_extra[df_extra["player_id"].notna()].copy()
+        if df_extra.empty:
+            return []
+
+        df_extra["player_id"] = df_extra["player_id"].astype(int)
+        if "week_start" in df_extra.columns:
+            df_extra["week_start"] = pd.to_datetime(df_extra["week_start"], errors="coerce")
+
+        df_extra = df_extra.sort_values(
+            ["player_id", "week_start"] if "week_start" in df_extra.columns else ["player_id"],
+            ascending=[True, False] if "week_start" in df_extra.columns else [True],
+        ).drop_duplicates(subset=["player_id"], keep="first")
+
+        supplemental_players: list[dict] = []
+
+        for _, row in df_extra.iterrows():
+            pid = safe_int(row.get("player_id"))
+            if pid is None:
+                continue
+
+            full_name = str(row.get("player_name") or "").strip() or f"Player {pid}"
+
+            team_value = str(row.get("org") or "").strip()  
+
+            supplemental_players.append(
+                {
+                    "player_id": pid,
+                    "full_name": full_name,
+                    "first_name": "",
+                    "last_name": "",
+                    "team": team_value,
+                    "team_name": team_value,
+                    "position": "",
+                    "bats": "",
+                    "throws": "",
+                    "status": "",
+                    "headshot_url": build_headshot_url(pid),
+                }
+            )
+
+        return supplemental_players
+
+    except Exception:
+        return []
+    
 def write_dossier_canon(
     df: pd.DataFrame,
     hitter_signals: pd.DataFrame,
@@ -1087,6 +1213,19 @@ def write_dossier_canon(
         if isinstance(player_index_payload, dict)
         else []
     )
+    supplemental_players = load_supplemental_aaa_dossier_players()
+
+    existing_ids = {
+        str(p.get("player_id") or "").strip()
+        for p in player_rows
+        if str(p.get("player_id") or "").strip()
+    }
+
+    for extra_player in supplemental_players:
+        extra_id = str(extra_player.get("player_id") or "").strip()
+        if extra_id and extra_id not in existing_ids:
+            player_rows.append(extra_player)
+            existing_ids.add(extra_id)
 
     scout_metrics = {
         **build_scout_hitter_metrics(df),

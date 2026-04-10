@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-09T15:35:54.601624",
-  "field_tilt_pct": 11,
+  "generated_at": "2026-04-10T14:22:54.140483",
+  "field_tilt_pct": 12,
   "tracked_pitchers": 399,
   "dead_zone_count": 319,
   "heat_cards": [
@@ -8,7 +8,7 @@
       "player_name": "Vesia, Alex",
       "team": "WSH",
       "ivb_raw": "22.6\"",
-      "ivb_vs_avg": "+10.3\"",
+      "ivb_vs_avg": "+10.1\"",
       "vaa": "-4.3\u00b0",
       "dead_zone_label": "CLEAR",
       "whiff_probability": "HIGH",
@@ -25,7 +25,7 @@
       "player_name": "Ober, Bailey",
       "team": "MIN",
       "ivb_raw": "16.9\"",
-      "ivb_vs_avg": "+8.6\"",
+      "ivb_vs_avg": "+8.5\"",
       "vaa": "-4.7\u00b0",
       "dead_zone_label": "COLD",
       "whiff_probability": "LOW",
@@ -42,7 +42,7 @@
       "player_name": "Myers, Tobias",
       "team": "SF",
       "ivb_raw": "20.0\"",
-      "ivb_vs_avg": "+7.8\"",
+      "ivb_vs_avg": "+7.7\"",
       "vaa": "-5.1\u00b0",
       "dead_zone_label": "CLEAR",
       "whiff_probability": "MEDIUM",
@@ -73,27 +73,10 @@
       "brief": "Movement reads in the standard carry band. Shape is beating the velo bucket baseline. Approach angle checks in at -5.7\u00b0."
     },
     {
-      "player_name": "Orze, Eric",
-      "team": "MIN",
-      "ivb_raw": "19.9\"",
-      "ivb_vs_avg": "+7.7\"",
-      "vaa": "-3.8\u00b0",
-      "dead_zone_label": "CLEAR",
-      "whiff_probability": "HIGH",
-      "climber_flag": false,
-      "contact_risk": "",
-      "heat_class": "hot",
-      "band_label": "Apex Carry",
-      "heat_tag": "HOT // APEX RISE",
-      "velocity_bucket": "",
-      "transition_badge": "",
-      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -3.8\u00b0."
-    },
-    {
       "player_name": "Sulser, Cole",
       "team": "MIN",
       "ivb_raw": "18.2\"",
-      "ivb_vs_avg": "+7.6\"",
+      "ivb_vs_avg": "+7.5\"",
       "vaa": "-4.7\u00b0",
       "dead_zone_label": "COLD",
       "whiff_probability": "MEDIUM",
@@ -105,6 +88,23 @@
       "velocity_bucket": "",
       "transition_badge": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.7\u00b0."
+    },
+    {
+      "player_name": "Nelson, Ryne",
+      "team": "NYM",
+      "ivb_raw": "20.7\"",
+      "ivb_vs_avg": "+7.4\"",
+      "vaa": "-4.9\u00b0",
+      "dead_zone_label": "CLEAR",
+      "whiff_probability": "MEDIUM",
+      "climber_flag": false,
+      "contact_risk": "",
+      "heat_class": "hot",
+      "band_label": "Apex Carry",
+      "heat_tag": "HOT // APEX RISE",
+      "velocity_bucket": "",
+      "transition_badge": "",
+      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.9\u00b0."
     },
     {
       "player_name": "Latz, Jacob",
@@ -122,6 +122,23 @@
       "velocity_bucket": "",
       "transition_badge": "",
       "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.7\u00b0."
+    },
+    {
+      "player_name": "Orze, Eric",
+      "team": "MIN",
+      "ivb_raw": "19.4\"",
+      "ivb_vs_avg": "+7.0\"",
+      "vaa": "-4.0\u00b0",
+      "dead_zone_label": "CLEAR",
+      "whiff_probability": "HIGH",
+      "climber_flag": false,
+      "contact_risk": "",
+      "heat_class": "hot",
+      "band_label": "Apex Carry",
+      "heat_tag": "HOT // APEX RISE",
+      "velocity_bucket": "",
+      "transition_badge": "",
+      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.0\u00b0."
     },
     {
       "player_name": "Peralta, Freddy",
@@ -144,7 +161,7 @@
       "player_name": "Gallen, Zac",
       "team": "NYM",
       "ivb_raw": "20.1\"",
-      "ivb_vs_avg": "+7.0\"",
+      "ivb_vs_avg": "+6.9\"",
       "vaa": "-5.1\u00b0",
       "dead_zone_label": "COLD",
       "whiff_probability": "MEDIUM",
@@ -175,13 +192,13 @@
       "brief": "Carry profile sits inside the dead zone. Shape is beating the velo bucket baseline. Approach angle checks in at -5.7\u00b0."
     },
     {
-      "player_name": "Springs, Jeffrey",
-      "team": "ATH",
-      "ivb_raw": "18.4\"",
+      "player_name": "Dreyer, Jack",
+      "team": "WSH",
+      "ivb_raw": "20.1\"",
       "ivb_vs_avg": "+6.9\"",
-      "vaa": "-4.7\u00b0",
+      "vaa": "-4.2\u00b0",
       "dead_zone_label": "CLEAR",
-      "whiff_probability": "MEDIUM",
+      "whiff_probability": "HIGH",
       "climber_flag": false,
       "contact_risk": "",
       "heat_class": "hot",
@@ -189,24 +206,7 @@
       "heat_tag": "HOT // APEX RISE",
       "velocity_bucket": "",
       "transition_badge": "",
-      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.7\u00b0."
-    },
-    {
-      "player_name": "Estrada, Lazaro",
-      "team": "CWS",
-      "ivb_raw": "19.6\"",
-      "ivb_vs_avg": "+6.9\"",
-      "vaa": "-4.9\u00b0",
-      "dead_zone_label": "CLEAR",
-      "whiff_probability": "MEDIUM",
-      "climber_flag": false,
-      "contact_risk": "",
-      "heat_class": "hot",
-      "band_label": "Apex Carry",
-      "heat_tag": "HOT // APEX RISE",
-      "velocity_bucket": "",
-      "transition_badge": "",
-      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.9\u00b0."
+      "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.2\u00b0."
     }
   ],
   "climbers": [
@@ -267,10 +267,10 @@
       "delta_label": "-4.7\""
     },
     {
-      "player_name": "Schreiber, John",
-      "team": "CLE",
+      "player_name": "Bellozo, Valente",
+      "team": "SD",
       "recent_label": "Last appearance vs prior",
-      "delta_label": "-4.0\""
+      "delta_label": "-4.4\""
     },
     {
       "player_name": "Winn, Cole",
@@ -294,20 +294,6 @@
       "delta_label": "+4.9\""
     },
     {
-      "player_name": "Weaver, Luke",
-      "team": "NYM",
-      "transition_label": "Entered Apex Rise",
-      "detail_label": "15.9\" -> 20.6\"",
-      "delta_label": "+4.7\""
-    },
-    {
-      "player_name": "Nelson, Ryne",
-      "team": "NYM",
-      "transition_label": "Entered Apex Rise",
-      "detail_label": "16.2\" -> 20.7\"",
-      "delta_label": "+4.5\""
-    },
-    {
       "player_name": "Williams, Devin",
       "team": "NYM",
       "transition_label": "Entered Apex Rise",
@@ -327,6 +313,20 @@
       "transition_label": "Entered Apex Rise",
       "detail_label": "15.9\" -> 18.7\"",
       "delta_label": "+2.8\""
+    },
+    {
+      "player_name": "Mears, Nick",
+      "team": "CLE",
+      "transition_label": "Entered Apex Rise",
+      "detail_label": "16.7\" -> 19.1\"",
+      "delta_label": "+2.4\""
+    },
+    {
+      "player_name": "Harvey, Hunter",
+      "team": "TB",
+      "transition_label": "Entered Apex Rise",
+      "detail_label": "17.1\" -> 19.0\"",
+      "delta_label": "+1.9\""
     }
   ],
   "zone_shift": [
@@ -359,18 +359,18 @@
       "delta_label": "-5.5\""
     },
     {
-      "player_name": "Ginkel, Kevin",
-      "team": "NYM",
-      "transition_label": "Exited Dead Zone",
-      "detail_label": "14.4\" -> 19.3\"",
-      "delta_label": "+4.9\""
+      "player_name": "Vodnik, Victor",
+      "team": "SD",
+      "transition_label": "Entered Dead Zone",
+      "detail_label": "9.3\" -> 14.5\"",
+      "delta_label": "+5.2\""
     },
     {
-      "player_name": "Speier, Gabe",
-      "team": "TEX",
+      "player_name": "Hill, Jaden",
+      "team": "SD",
       "transition_label": "Entered Dead Zone",
-      "detail_label": "17.2\" -> 12.5\"",
-      "delta_label": "-4.7\""
+      "detail_label": "8.9\" -> 13.8\"",
+      "delta_label": "+5.0\""
     }
   ]
 }

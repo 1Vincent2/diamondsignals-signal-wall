@@ -61,7 +61,62 @@ MLB_NAME_TO_CODE = {
     "blue jays": "TOR",
     "nationals": "WSH",
 }
+_ID_RESOLUTION_CACHE: dict[str, str] = {}
 
+
+def resolve_player_id_by_name(name: str) -> str:
+    safe = str(name or "").strip()
+    if not safe:
+        return ""
+
+    cached = _ID_RESOLUTION_CACHE.get(safe)
+    if cached is not None:
+        return cached
+
+    try:
+        import requests
+
+        url = "https://statsapi.mlb.com/api/v1/people/search"
+        resp = requests.get(url, params={"names": safe}, timeout=15)
+        resp.raise_for_status()
+        payload = resp.json()
+        people = payload.get("people", []) or []
+
+        if people:
+            pid = str(people[0].get("id") or "").strip()
+            _ID_RESOLUTION_CACHE[safe] = pid
+            return pid
+    except Exception:
+        pass
+
+    _ID_RESOLUTION_CACHE[safe] = ""
+    return ""
+
+
+def backfill_resolved_player_ids(df: pd.DataFrame) -> pd.DataFrame:
+    if df.empty:
+        return df.copy()
+
+    out = df.copy()
+
+    if "player_id" in out.columns:
+        out["player_id"] = out["player_id"].fillna("").astype(str).str.strip()
+    else:
+        out["player_id"] = ""
+
+    out["resolved_player_id"] = out["player_id"]
+
+    missing_mask = out["resolved_player_id"].eq("")
+    if missing_mask.any() and "player_name" in out.columns:
+        out.loc[missing_mask, "resolved_player_id"] = (
+            out.loc[missing_mask, "player_name"]
+            .fillna("")
+            .astype(str)
+            .map(resolve_player_id_by_name)
+        )
+
+    out["resolved_player_id"] = out["resolved_player_id"].fillna("").astype(str).str.strip()
+    return out
 
 def zscore(series: pd.Series) -> pd.Series:
     s = pd.to_numeric(series, errors="coerce")
@@ -331,10 +386,7 @@ def build_hidden_gems_pitchers(df: pd.DataFrame) -> pd.DataFrame:
     latest["score_class"] = latest["hidden_gems_score"].apply(classify_score)
     latest["avatar"] = latest["player_name"].map(initials)
     latest["player_type"] = "Pitcher"
-    if "player_id" in latest.columns:
-     latest["player_id"] = latest["player_id"].fillna("").astype(str)
-    else:
-        latest["player_id"] = ""
+    latest = backfill_resolved_player_ids(latest)
     latest["display_team"] = latest.apply(derive_display_team, axis=1)
     latest["display_org"] = latest.apply(derive_display_org, axis=1)
 
@@ -457,10 +509,7 @@ def build_hidden_gems_hitters(df: pd.DataFrame) -> pd.DataFrame:
     latest["score_class"] = latest["hidden_gems_score"].apply(classify_score)
     latest["avatar"] = latest["player_name"].map(initials)
     latest["player_type"] = "Hitter"
-    if "player_id" in latest.columns:
-        latest["player_id"] = latest["player_id"].fillna("").astype(str)
-    else:
-        latest["player_id"] = ""
+    latest = backfill_resolved_player_ids(latest)
     latest["display_team"] = latest.apply(derive_display_team, axis=1)
     latest["display_org"] = latest.apply(derive_display_org, axis=1)
 
@@ -1353,11 +1402,11 @@ HTML_TEMPLATE = Template(
         {% for row in pitchers %}
         <article
   class="player-card js-player-card"
-  data-player-id="{{ row.player_id }}"
+  data-player-id="{{ row.resolved_player_id }}"
   data-player-name="{{ row.player_name }}"
   data-player-type="pitcher"
   data-player-team="{{ row.display_team }}"
-  data-profile-url="{% if row.player_id %}/scout/{{ row.player_id }}/{% else %}/scout/{% endif %}"
+  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
           <div class="player-top">
             <div class="avatar">{{ row.avatar }}</div>
@@ -1457,11 +1506,11 @@ HTML_TEMPLATE = Template(
         {% for row in hitters %}
         <article
   class="player-card js-player-card"
-  data-player-id="{{ row.player_id }}"
+  data-player-id="{{ row.resolved_player_id }}"
   data-player-name="{{ row.player_name }}"
   data-player-type="hitter"
   data-player-team="{{ row.display_team }}"
-  data-profile-url="{% if row.player_id %}/scout/{{ row.player_id }}/{% else %}/scout/{% endif %}"
+  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
           <div class="player-top">
             <div class="avatar">{{ row.avatar }}</div>

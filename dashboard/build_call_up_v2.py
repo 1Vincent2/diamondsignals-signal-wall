@@ -99,6 +99,65 @@ MLB_TO_AAA_NAME = {mlb: name for name, (_, mlb) in AAA_TO_MLB_CODES.items()}
 AAA_CODES = {v[0] for v in AAA_TO_MLB_CODES.values()}
 VALID_TEAM_CODES = MLB_CODES | AAA_CODES
 
+# existing constants / globals above
+
+
+_ID_RESOLUTION_CACHE: dict[str, str] = {}
+
+
+def resolve_player_id_by_name(name: str) -> str:
+    safe = str(name or "").strip()
+    if not safe:
+        return ""
+
+    cached = _ID_RESOLUTION_CACHE.get(safe)
+    if cached is not None:
+        return cached
+
+    try:
+        import requests
+
+        url = "https://statsapi.mlb.com/api/v1/people/search"
+        resp = requests.get(url, params={"names": safe}, timeout=15)
+        resp.raise_for_status()
+        payload = resp.json()
+        people = payload.get("people", []) or []
+
+        if people:
+            pid = str(people[0].get("id") or "").strip()
+            _ID_RESOLUTION_CACHE[safe] = pid
+            return pid
+    except Exception:
+        pass
+
+    _ID_RESOLUTION_CACHE[safe] = ""
+    return ""
+
+
+def backfill_resolved_player_ids(df: pd.DataFrame) -> pd.DataFrame:
+    if df.empty:
+        return df.copy()
+
+    out = df.copy()
+
+    if "player_id" in out.columns:
+        out["player_id"] = out["player_id"].fillna("").astype(str).str.strip()
+    else:
+        out["player_id"] = ""
+
+    out["resolved_player_id"] = out["player_id"]
+
+    missing_mask = out["resolved_player_id"].eq("")
+    if missing_mask.any() and "player_name" in out.columns:
+        out.loc[missing_mask, "resolved_player_id"] = (
+            out.loc[missing_mask, "player_name"]
+            .fillna("")
+            .astype(str)
+            .map(resolve_player_id_by_name)
+        )
+
+    out["resolved_player_id"] = out["resolved_player_id"].fillna("").astype(str).str.strip()
+    return out
 
 def zscore(series: pd.Series) -> pd.Series:
     s = pd.to_numeric(series, errors="coerce")
@@ -461,10 +520,7 @@ def build_aaa_hitter_promotion_watch(df: pd.DataFrame, trend_lookup: dict[str, d
     hitters["source_badge"] = SOURCE_BADGE
     hitters["score_version"] = SCORE_VERSION
     hitters["avatar"] = hitters["player_name"].map(initials)
-    if "player_id" in hitters.columns:
-      hitters["player_id"] = hitters["player_id"].fillna("").astype(str)
-    else:
-      hitters["player_id"] = ""
+    hitters = backfill_resolved_player_ids(hitters)
 
     def hitter_badges(row: pd.Series) -> list[tuple[str, str]]:
         badges = []
@@ -540,10 +596,7 @@ def build_aaa_pitcher_promotion_watch(df: pd.DataFrame, trend_lookup: dict[str, 
     pitchers["source_badge"] = SOURCE_BADGE
     pitchers["score_version"] = SCORE_VERSION
     pitchers["avatar"] = pitchers["player_name"].map(initials)
-    if "player_id" in pitchers.columns:
-        pitchers["player_id"] = pitchers["player_id"].fillna("").astype(str)
-    else:
-        pitchers["player_id"] = ""
+    pitchers = backfill_resolved_player_ids(pitchers)
 
     def pitcher_badges(row: pd.Series) -> list[tuple[str, str]]:
         badges = []
@@ -1620,11 +1673,11 @@ HTML_TEMPLATE = Template(
               {% for row in pitchers %}
               <article
   class="player-card js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
-  data-player-id="{{ row.player_id }}"
+  data-player-id="{{ row.resolved_player_id }}"
   data-player-name="{{ row.player_name }}"
   data-player-type="pitcher"
   data-player-team="{{ row.display_team }}"
-  data-profile-url="{% if row.player_id %}/scout/{{ row.player_id }}/{% else %}/scout/{% endif %}"
+  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
                 <div class="player-top">
                   <div class="avatar">{{ row.avatar }}</div>
@@ -1700,11 +1753,11 @@ HTML_TEMPLATE = Template(
               {% for row in hitters %}
               <article
   class="player-card js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
-  data-player-id="{{ row.player_id }}"
+  data-player-id="{{ row.resolved_player_id }}"
   data-player-name="{{ row.player_name }}"
   data-player-type="hitter"
   data-player-team="{{ row.display_team }}"
-  data-profile-url="{% if row.player_id %}/scout/{{ row.player_id }}/{% else %}/scout/{% endif %}"
+  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
                 <div class="player-top">
                   <div class="avatar">{{ row.avatar }}</div>
@@ -1785,11 +1838,11 @@ HTML_TEMPLATE = Template(
               {% for row in pitchers_14 %}
               <article
   class="player-card js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
-  data-player-id="{{ row.player_id }}"
+  data-player-id="{{ row.resolved_player_id }}"
   data-player-name="{{ row.player_name }}"
   data-player-type="pitcher"
   data-player-team="{{ row.display_team }}"
-  data-profile-url="{% if row.player_id %}/scout/{{ row.player_id }}/{% else %}/scout/{% endif %}"
+  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
                 <div class="player-top">
                   <div class="avatar">{{ row.avatar }}</div>
@@ -1869,11 +1922,11 @@ HTML_TEMPLATE = Template(
               {% for row in hitters_14 %}
               <article
   class="player-card js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
-  data-player-id="{{ row.player_id }}"
+  data-player-id="{{ row.resolved_player_id }}"
   data-player-name="{{ row.player_name }}"
   data-player-type="hitter"
   data-player-team="{{ row.display_team }}"
-  data-profile-url="{% if row.player_id %}/scout/{{ row.player_id }}/{% else %}/scout/{% endif %}"
+  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
                 <div class="player-top">
                   <div class="avatar">{{ row.avatar }}</div>
