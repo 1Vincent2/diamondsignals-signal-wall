@@ -18,6 +18,7 @@ NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
 SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
 FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
 SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
+
 ALERT_THRESHOLD = float(os.getenv("ALERT_THRESHOLD", "65"))
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "").strip()
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
@@ -72,6 +73,13 @@ def safe_float(value):
     except Exception:
         pass
     return None
+
+
+def build_headshot_url(player_id: int) -> str:
+    return (
+        "https://img.mlbstatic.com/mlb-photos/image/upload/"
+        f"w_180,q_100/v1/people/{player_id}/headshot/67/current"
+    )
 
 
 def fetch_statcast_window(start_dt: date, end_dt: date) -> pd.DataFrame:
@@ -152,7 +160,7 @@ def fill_missing_batter_names_with_statsapi(
             continue
 
         try:
-            url = f"https://statsapi.mlb.com/api/v1/people/{pid}"
+            url = f"https://statsapi.mlb.com/api/v1/people/{pid}?hydrate=currentTeam"
             response = requests.get(url, timeout=10)
             response.raise_for_status()
             payload = response.json()
@@ -314,7 +322,7 @@ def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
             badges.append("Barrel Jump")
         if pd.notna(row["recent_max_ev"]) and row["recent_max_ev"] >= 108:
             badges.append("Impact EV")
-        if not badges or "Trend Confirming" not in badges:
+        if not badges:
             badges.append("Trend Confirming")
         return badges
 
@@ -481,7 +489,7 @@ def build_pitcher_signals(df: pd.DataFrame) -> pd.DataFrame:
             badges.append("Velo Jump")
         if pd.notna(row["extension_delta"]) and row["extension_delta"] >= 0.10:
             badges.append("Extension Gain")
-        if not badges or "Trend Confirming" not in badges:
+        if not badges:
             badges.append("Trend Confirming")
         return badges
 
@@ -585,13 +593,6 @@ def send_telegram_alerts(signals: pd.DataFrame) -> None:
         print(f"Telegram alert sent: {row['player_name']} ({row['edge_score']})")
 
 
-def build_headshot_url(player_id: int) -> str:
-    return (
-        "https://img.mlbstatic.com/mlb-photos/image/upload/"
-        f"w_180,q_100/v1/people/{player_id}/headshot/67/current"
-    )
-
-
 def extract_player_ids(df: pd.DataFrame) -> list[int]:
     ids = set()
     if "batter" in df.columns:
@@ -609,7 +610,7 @@ def extract_player_ids(df: pd.DataFrame) -> list[int]:
 
 def fetch_player_identity(player_id: int) -> Optional[dict]:
     try:
-        url = f"https://statsapi.mlb.com/api/v1/people/{player_id}"
+        url = f"https://statsapi.mlb.com/api/v1/people/{player_id}?hydrate=currentTeam"
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         payload = response.json()
@@ -629,7 +630,7 @@ def fetch_player_identity(player_id: int) -> Optional[dict]:
             "full_name": str(person.get("fullName", "")).strip(),
             "first_name": str(person.get("firstName", "")).strip(),
             "last_name": str(person.get("lastName", "")).strip(),
-            "team": str(current_team.get("abbreviation", "")).strip(),
+            "team": str(current_team.get("name", "")).strip(),
             "team_name": str(current_team.get("name", "")).strip(),
             "position": str(primary_position.get("abbreviation", "")).strip(),
             "bats": str(bat_side.get("code", "")).strip(),
@@ -1060,7 +1061,7 @@ def build_scout_pitcher_metrics(df: pd.DataFrame) -> dict:
     return out
 
 
-def write_scout_metrics(df: pd.DataFrame) -> None:
+def write_scout_metrics(df: pd.DataFrame) -> dict:
     payload = {
         "generated_at": datetime.now().isoformat(),
         "players": {
@@ -1072,6 +1073,91 @@ def write_scout_metrics(df: pd.DataFrame) -> None:
         json.dumps(payload, indent=2), encoding="utf-8"
     )
     print("Wrote dist/scout_metrics.json")
+    return payload
+
+
+def write_dossier_canon(
+    df: pd.DataFrame,
+    hitter_signals: pd.DataFrame,
+    pitcher_signals: pd.DataFrame,
+) -> dict:
+    player_index_payload = build_player_index(df)
+    player_rows = (
+        player_index_payload.get("players", [])
+        if isinstance(player_index_payload, dict)
+        else []
+    )
+
+    scout_metrics = {
+        **build_scout_hitter_metrics(df),
+        **build_scout_pitcher_metrics(df),
+    }
+
+    signal_lookup: dict[str, dict] = {}
+
+    if not hitter_signals.empty:
+        for _, row in hitter_signals.iterrows():
+            pid = safe_int(row.get("batter"))
+            if pid is not None:
+                signal_lookup[str(pid)] = {
+                    "canonical_score": safe_float(row.get("edge_score")),
+                    "canonical_score_label": "Edge Score",
+                    "trend_points_7d": row.get("trend_points") or "",
+                    "trend_note": "7-Day Trend",
+                }
+
+    if not pitcher_signals.empty:
+        for _, row in pitcher_signals.iterrows():
+            pid = safe_int(row.get("pitcher"))
+            if pid is not None:
+                signal_lookup[str(pid)] = {
+                    "canonical_score": safe_float(row.get("edge_score")),
+                    "canonical_score_label": "Edge Score",
+                    "trend_points_7d": row.get("trend_points") or "",
+                    "trend_note": "7-Day Trend",
+                }
+
+    canon_players: dict[str, dict] = {}
+
+    for player in player_rows:
+        player_id = str(player.get("player_id") or "").strip()
+        if not player_id:
+            continue
+
+        scout = scout_metrics.get(player_id, {})
+        signal = signal_lookup.get(player_id, {})
+
+        canon_players[player_id] = {
+            "player_id": player_id,
+            "player_name": player.get("full_name") or "Unknown Player",
+            "team": player.get("team") or "",
+            "current_team": player.get("team") or "",
+            "position": player.get("position") or "",
+            "age": player.get("age"),
+            "bats": player.get("bats") or "",
+            "throws": player.get("throws") or "",
+            "headshot_url": player.get("headshot_url") or "",
+            "canonical_score": signal.get("canonical_score"),
+            "canonical_score_label": signal.get("canonical_score_label"),
+            "trend_points_7d": signal.get("trend_points_7d", ""),
+            "trend_note": signal.get("trend_note"),
+            "rostered_by_user": False,
+        }
+
+        if scout:
+            canon_players[player_id]["scout_metrics"] = scout
+
+    payload = {
+        "generated_at": datetime.now().isoformat(),
+        "players": canon_players,
+    }
+
+    (DIST_DIR / "dossier_canon.json").write_text(
+        json.dumps(payload, indent=2),
+        encoding="utf-8",
+    )
+    print("Wrote dist/dossier_canon.json")
+    return payload
 
 
 def copy_static_assets() -> None:
@@ -1080,11 +1166,13 @@ def copy_static_assets() -> None:
     if js_src.exists():
         js_dest.write_text(js_src.read_text(encoding="utf-8"), encoding="utf-8")
         print("Wrote dist/player-search.js")
+
     actions_src = Path("src/js/player-card-actions.js")
     actions_dest = DIST_DIR / "player-card-actions.js"
     if actions_src.exists():
         actions_dest.write_text(actions_src.read_text(encoding="utf-8"), encoding="utf-8")
         print("Wrote dist/player-card-actions.js")
+
 
 HTML_TEMPLATE = Template(
     r"""
@@ -1106,7 +1194,6 @@ HTML_TEMPLATE = Template(
       --emerald: #4ade80;
       --lime-hot: #b6ff00;
       --cyan-hot: #00e5ff;
-      --crimson: #f87171;
       --blue: #6aa6ff;
       --shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
       --radius: 18px;
@@ -1136,7 +1223,6 @@ HTML_TEMPLATE = Template(
     .live-label { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--lime-hot); font-weight: 800; margin-bottom: 4px; }
     .live-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--lime-hot); box-shadow: 0 0 10px rgba(182,255,0,0.35); }
     .live-time { font-family: var(--mono); font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
-    
     .glossary-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.52); opacity: 0; pointer-events: none; transition: opacity 0.22s ease; z-index: 80; }
     .glossary-overlay.open { opacity: 1; pointer-events: auto; }
     .glossary-drawer { position: fixed; top: 0; right: 0; width: min(560px,100vw); height: 100vh; background: linear-gradient(180deg, #101010 0%, #080808 100%); border-left: 1px solid rgba(255,255,255,0.08); box-shadow: -12px 0 40px rgba(0,0,0,0.42); transform: translateX(100%); transition: transform 0.24s ease; z-index: 90; display: flex; flex-direction: column; }
@@ -1206,18 +1292,18 @@ HTML_TEMPLATE = Template(
       .board { grid-template-columns: 1fr 1fr; }
     }
     {{ shell_styles | safe }}
-   @media (max-width: 640px) {
-  .topbar-inner, .app, .topnav-inner, .search-strip-inner { width: min(100%, calc(100% - 16px)); }
-  .search-strip-inner { justify-content: stretch; }
-  .player-search { width: 100%; }
-  .player-search-input { height: 36px; font-size: 12px; }
-  .brand-title { font-size: 14px; }
-  .meta-grid { grid-template-columns: 1fr; }
-  .player-name { font-size: 22px; }
-  .score-value { font-size: 24px; }
-  .player-search-result { grid-template-columns: 120px 1fr; }
-  .player-search-avatar { width: 120px; height: 120px; }
-}
+    @media (max-width: 640px) {
+      .topbar-inner, .app, .topnav-inner, .search-strip-inner { width: min(100%, calc(100% - 16px)); }
+      .search-strip-inner { justify-content: stretch; }
+      .player-search { width: 100%; }
+      .player-search-input { height: 36px; font-size: 12px; }
+      .brand-title { font-size: 14px; }
+      .meta-grid { grid-template-columns: 1fr; }
+      .player-name { font-size: 22px; }
+      .score-value { font-size: 24px; }
+      .player-search-result { grid-template-columns: 120px 1fr; }
+      .player-search-avatar { width: 120px; height: 120px; }
+    }
   </style>
 </head>
 <body>
@@ -1239,11 +1325,9 @@ HTML_TEMPLATE = Template(
   </div>
 
   {{ nav_html | safe }}
-
- {{ search_html | safe }}
+  {{ search_html | safe }}
 
   <div id="glossaryOverlay" class="glossary-overlay" onclick="closeGlossary()"></div>
-
   <aside id="glossaryDrawer" class="glossary-drawer" aria-hidden="true">
     <div class="glossary-head">
       <div>
@@ -1255,21 +1339,21 @@ HTML_TEMPLATE = Template(
     <div class="glossary-body">
       <section class="glossary-section">
         <h3 class="glossary-section-title">I. Global System Metrics</h3>
-        <div class="glossary-item"><span class="glossary-term">Slate Heat</span><div class="glossary-definition">A model-driven index of total opportunity across the day's schedule. A fuller green bar signals a denser concentration of actionable player movement.</div></div>
-        <div class="glossary-item"><span class="glossary-term">System Status</span><div class="glossary-definition">Confirms the live state of the Statcast-driven pipeline and whether the board was generated successfully during the current build cycle.</div></div>
-        <div class="glossary-item"><span class="glossary-term">Edge Score</span><div class="glossary-definition">A 0 to 100 ranking that summarizes the strength of the recent signal versus baseline performance.</div></div>
+        <div class="glossary-item"><span class="glossary-term">Slate Heat</span><div class="glossary-definition">A model-driven index of total opportunity across the day's schedule.</div></div>
+        <div class="glossary-item"><span class="glossary-term">System Status</span><div class="glossary-definition">Confirms the live state of the Statcast-driven pipeline.</div></div>
+        <div class="glossary-item"><span class="glossary-term">Edge Score</span><div class="glossary-definition">A 0 to 100 ranking summarizing signal strength versus baseline.</div></div>
       </section>
       <section class="glossary-section">
         <h3 class="glossary-section-title">II. Pitching Signal Terms</h3>
-        <div class="glossary-item"><span class="glossary-term">Whiff %</span><div class="glossary-definition">Share of pitches in the recent window that generated a swinging strike or swinging strike blocked event.</div></div>
-        <div class="glossary-item"><span class="glossary-term">FB Velo</span><div class="glossary-definition">Average fastball velocity across recent appearances using four-seamers, sinkers, cutters, and two-seam variants.</div></div>
-        <div class="glossary-item"><span class="glossary-term">Extension</span><div class="glossary-definition">Release extension in feet. Greater extension can increase perceived velocity and improve tunnel quality.</div></div>
+        <div class="glossary-item"><span class="glossary-term">Whiff %</span><div class="glossary-definition">Share of recent pitches that generated a swinging strike event.</div></div>
+        <div class="glossary-item"><span class="glossary-term">FB Velo</span><div class="glossary-definition">Average recent fastball velocity.</div></div>
+        <div class="glossary-item"><span class="glossary-term">Extension</span><div class="glossary-definition">Release extension in feet.</div></div>
       </section>
       <section class="glossary-section">
         <h3 class="glossary-section-title">III. Hitting Signal Terms</h3>
-        <div class="glossary-item"><span class="glossary-term">Avg EV</span><div class="glossary-definition">Mean exit velocity on tracked batted-ball events during the recent window.</div></div>
-        <div class="glossary-item"><span class="glossary-term">Barrel-like %</span><div class="glossary-definition">Share of batted balls in the current DiamondSignals barrel-like bucket used for early power detection.</div></div>
-        <div class="glossary-item"><span class="glossary-term">EV Burst</span><div class="glossary-definition">A recent jump in average exit velocity versus baseline that suggests an underlying quality-of-contact change.</div></div>
+        <div class="glossary-item"><span class="glossary-term">Avg EV</span><div class="glossary-definition">Mean exit velocity on tracked batted-ball events.</div></div>
+        <div class="glossary-item"><span class="glossary-term">Barrel-like %</span><div class="glossary-definition">Share of batted balls in the DiamondSignals barrel-like bucket.</div></div>
+        <div class="glossary-item"><span class="glossary-term">EV Burst</span><div class="glossary-definition">A recent jump in average exit velocity versus baseline.</div></div>
       </section>
     </div>
   </aside>
@@ -1280,7 +1364,7 @@ HTML_TEMPLATE = Template(
         <div class="hero-card">
           <div class="eyebrow">Executive Terminal</div>
           <h1 class="hero-title">Today’s Signal Wall</h1>
-          <p class="hero-copy">A live, mobile-first DiamondSignals board built for fast scan readability. Institutional dark surfaces, terminal-grade data density, and restrained signal emphasis.</p>
+          <p class="hero-copy">A live, mobile-first DiamondSignals board built for fast scan readability.</p>
         </div>
 
         <div class="meta-grid">
@@ -1405,7 +1489,7 @@ HTML_TEMPLATE = Template(
                     <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
                   </linearGradient>
                 </defs>
-                <polyline class="sparkline-path {% if row.edge_score >= 65 %}glow{% endif %}" stroke="url(#hitterGradient{{ loop.index }})" points="{{ row.trend_points }}" />
+                <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#hitterGradient{{ loop.index }})" points="{{ row.trend_points }}" />
               </svg>
             </div>
 
@@ -1429,6 +1513,7 @@ HTML_TEMPLATE = Template(
     </section>
 
     {{ footer_html | safe }}
+  </div>
 
   <script src="/player-search.js"></script>
   <script src="/player-card-actions.js"></script>
@@ -1461,8 +1546,10 @@ HTML_TEMPLATE = Template(
   </script>
 </body>
 </html>
-""")
-    
+"""
+)
+
+
 def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
     combined = pd.concat([pitchers, hitters], ignore_index=True)
     slate_heat = 0
@@ -1483,10 +1570,7 @@ def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
     )
 
 
-def write_scout_shell() -> None:
-    scout_dir = DIST_DIR / "scout"
-    scout_dir.mkdir(parents=True, exist_ok=True)
-
+def scout_shell_html() -> str:
     html = r"""<!doctype html>
 <html lang="en">
 <head>
@@ -1509,7 +1593,6 @@ def write_scout_shell() -> None:
       --mono: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
       --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
-
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
     body {
@@ -1519,7 +1602,6 @@ def write_scout_shell() -> None:
         linear-gradient(180deg, #101010 0%, #080808 34%, #050505 100%);
       line-height: 1.35;
     }
-
     .topbar { position: sticky; top: 0; z-index: 50; background: rgba(8, 8, 8, 0.90); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); }
     .topbar-inner, .app { width: min(1180px, calc(100% - 24px)); margin: 0 auto; }
     .topbar-inner { min-height: 62px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; }
@@ -1587,14 +1669,17 @@ def write_scout_shell() -> None:
       .metrics-grid { grid-template-columns: 1fr; }
     }
 
- @media (max-width: 640px) {
-  .topbar-inner, .app { width: min(100%, calc(100% - 16px)); }
-  .hero-card, .metric-card, .briefing-card { padding-left: 16px; padding-right: 16px; }
-  .headshot-shell { width: 92px; height: 92px; border-radius: 18px; }
-  .player-name { font-size: 28px; }
-}
-{shell_styles}
-</style>
+    @media (max-width: 640px) {
+      .topbar-inner, .app, .topnav-inner, .search-strip-inner { width: min(100%, calc(100% - 16px)); }
+      .search-strip-inner { justify-content: stretch; }
+      .player-search { width: 100%; }
+      .player-search-input { height: 36px; font-size: 12px; }
+      .headshot-shell { width: 92px; height: 92px; border-radius: 18px; }
+      .player-name { font-size: 28px; }
+    }
+
+    {shell_styles}
+  </style>
 </head>
 <body>
   <div class="topbar">
@@ -1613,7 +1698,6 @@ def write_scout_shell() -> None:
   </div>
 
   {nav_html}
-
   {search_html}
 
   <div class="app">
@@ -1621,7 +1705,7 @@ def write_scout_shell() -> None:
       <div class="eyebrow">Scout Terminal</div>
       <h1 class="hero-title">Player Dossier</h1>
       <p class="hero-copy">
-        DiamondSignals scout shell v1. This page hydrates hitter and pitcher dossiers from generated JSON payloads.
+        DiamondSignals scout shell v2. This page hydrates dossiers from the canonical dossier JSON payload.
       </p>
     </section>
 
@@ -1709,27 +1793,6 @@ def write_scout_shell() -> None:
       return n > 0 ? `+${s}` : s;
     }
 
-    function legacyToZoneData(zoneName, data) {
-      if (!data) return {};
-
-      if (zoneName === "ballistics") {
-        return { label_1: "Avg Exit Velo", value_1: data.avg_ev, label_2: "Max Exit Velo", value_2: data.max_ev, label_3: "Hard Hit %", value_3: data.hard_hit_pct, label_4: "Diamond Delta", value_4: data.extension ?? null };
-      }
-      if (zoneName === "movement") {
-        return { label_1: "Sweet Spot %", value_1: data.sweet_spot_pct, label_2: "Barrel %", value_2: data.barrel_pct, label_3: "Launch Angle", value_3: data.launch_angle, label_4: "xBA / Edge", value_4: data.movement_edge };
-      }
-      if (zoneName === "results") {
-        return { label_1: "Batting Avg", value_1: data.avg, label_2: "K Rate", value_2: data.k_rate, label_3: "wRC+", value_3: data.wrc_plus, label_4: "Signal", value_4: data.signal_label };
-      }
-      return {};
-    }
-
-    function normalizeZone(zoneName, zoneData) {
-      if (!zoneData) return {};
-      if ("label_1" in zoneData || "value_1" in zoneData) return zoneData;
-      return legacyToZoneData(zoneName, zoneData);
-    }
-
     function formatValue(label, value) {
       const upper = String(label || "").toUpperCase();
       if (value === null || value === undefined || value === "") return "--";
@@ -1754,57 +1817,95 @@ def write_scout_shell() -> None:
       }
     }
 
+    async function fetchJsonWithFallback(paths) {
+      for (const path of paths) {
+        try {
+          const res = await fetch(path);
+          if (res.ok) {
+            console.log("[SCOUT] loaded JSON from", path);
+            return await res.json();
+          }
+        } catch (err) {
+          console.log("[SCOUT] fetch failed for", path, err);
+        }
+      }
+      throw new Error("All JSON fetch paths failed");
+    }
+
     async function loadScoutPlayer() {
       const pathParts = window.location.pathname.split("/").filter(Boolean);
       const scoutIndex = pathParts.indexOf("scout");
       const playerId = scoutIndex >= 0 && pathParts[scoutIndex + 1] ? pathParts[scoutIndex + 1] : null;
-      if (!playerId) return;
+
+      console.log("[SCOUT] pathname", window.location.pathname);
+      console.log("[SCOUT] parsed playerId", playerId);
+
+      if (!playerId) {
+        document.getElementById("scoutPlayerName").textContent = "SELECT A PLAYER";
+        document.getElementById("scoutBriefingCopy").textContent =
+          "This scout shell is live. Open a real dossier URL such as /scout/671096/ to hydrate a player profile.";
+        return;
+      }
 
       try {
-        const [playerRes, metricsRes] = await Promise.all([fetch("/player_index.json"), fetch("/scout_metrics.json")]);
-        const playerPayload = await playerRes.json();
-        const metricsPayload = await metricsRes.json();
-        const players = Array.isArray(playerPayload.players) ? playerPayload.players : [];
-        const player = players.find((p) => String(p.player_id) === String(playerId));
-        const scoutMetrics = metricsPayload && metricsPayload.players ? metricsPayload.players[String(playerId)] : null;
+        const dossierPayload = await fetchJsonWithFallback([
+          "../../dossier_canon.json",
+          "../dossier_canon.json",
+          "/dossier_canon.json",
+          "/dist/dossier_canon.json"
+        ]);
+
+        const players = dossierPayload && dossierPayload.players ? dossierPayload.players : {};
+        const player = players[String(playerId)] || null;
+        const scoutMetrics = player && player.scout_metrics ? player.scout_metrics : null;
+
+        console.log("[SCOUT] hasPlayer", !!player);
+        console.log("[SCOUT] hasScoutMetrics", !!scoutMetrics);
 
         if (!player) {
-          document.getElementById("scoutPlayerName").textContent = "Player Not Found";
+          document.getElementById("scoutPlayerName").textContent = "PLAYER NOT FOUND";
+          document.getElementById("scoutBriefingCopy").textContent =
+            "This dossier path resolved, but no player record was found in dossier_canon.json.";
           return;
         }
 
-        document.title = `DiamondSignals // ${player.full_name}`;
-        document.getElementById("scoutPlayerName").textContent = player.full_name || "Unknown Player";
-        document.getElementById("scoutTeam").textContent = player.team || "Team";
+        document.title = `DiamondSignals // ${player.player_name}`;
+        document.getElementById("scoutPlayerName").textContent = player.player_name || "Unknown Player";
+        document.getElementById("scoutTeam").textContent = player.current_team || player.team || "Team";
         document.getElementById("scoutPosition").textContent = player.position || "Position";
         document.getElementById("scoutBT").textContent = `${player.bats || "-"} / ${player.throws || "-"}`;
-        document.getElementById("scoutStatus").textContent = player.status || "Status";
+        document.getElementById("scoutStatus").textContent = player.current_team || player.team || "Status";
 
         const img = document.getElementById("scoutHeadshot");
         const fallback = document.getElementById("scoutHeadshotFallback");
         if (player.headshot_url) {
           img.src = player.headshot_url;
-          img.style.display = "block";
-          fallback.style.display = "none";
+          img.onload = () => {
+            img.style.display = "block";
+            fallback.style.display = "none";
+          };
         }
 
-        document.getElementById("scoutSignalPill").textContent = player.position === "P" ? "PITCHER DOSSIER" : "HITTER DOSSIER";
-        document.getElementById("scoutTrendPill").textContent = "LIVE PROFILE";
-        document.getElementById("scoutConfidencePill").textContent = "DATA V1";
+        document.getElementById("scoutSignalPill").textContent =
+          `${player.canonical_score_label || "Signal Score"} ${player.canonical_score ?? "--"}`;
+        document.getElementById("scoutTrendPill").textContent = player.trend_note || "Trend";
+        document.getElementById("scoutConfidencePill").textContent = "CANONICAL";
 
         if (scoutMetrics) {
-          setZone("zone1", normalizeZone("ballistics", scoutMetrics.ballistics || {}));
-          setZone("zone2", normalizeZone("movement", scoutMetrics.movement || {}));
-          setZone("zone3", normalizeZone("results", scoutMetrics.results || {}));
-          document.getElementById("scoutBriefingCopy").textContent = scoutMetrics.briefing || "Live player profile loaded.";
+          setZone("zone1", scoutMetrics.ballistics || {});
+          setZone("zone2", scoutMetrics.movement || {});
+          setZone("zone3", scoutMetrics.results || {});
+          document.getElementById("scoutBriefingCopy").textContent =
+            scoutMetrics.briefing || "Live player profile loaded.";
         } else {
           document.getElementById("scoutBriefingCopy").textContent =
-            player.position === "P"
-              ? "Pitcher dossier shell is live. Metrics payload not found for this player yet."
-              : "Hitter dossier shell is live. Metrics payload not found for this player yet.";
+            "This player loaded from dossier_canon.json, but no scout_metrics block was found yet.";
         }
       } catch (error) {
-        document.getElementById("scoutPlayerName").textContent = "Scout Load Error";
+        console.error("[SCOUT] load error", error);
+        document.getElementById("scoutPlayerName").textContent = "SCOUT LOAD ERROR";
+        document.getElementById("scoutBriefingCopy").textContent =
+          "The dossier shell loaded, but canonical dossier data could not be fetched.";
       }
     }
 
@@ -1815,22 +1916,41 @@ def write_scout_shell() -> None:
 """
     nav_html = Template(NAV_TEMPLATE).render(active_nav="scout_dossier")
     search_html = SEARCH_TEMPLATE
-    footer_html = FOOTER_TEMPLATE
     shell_styles = SHELL_STYLES_TEMPLATE
-    html = (
+
+    return (
         html.replace("{nav_html}", nav_html)
-            .replace("{search_html}", search_html)
-            .replace("{footer_html}", footer_html)
-            .replace("{shell_styles}", shell_styles)
+        .replace("{search_html}", search_html)
+        .replace("{shell_styles}", shell_styles)
     )
 
-    (scout_dir / "index.html").write_text(html, encoding="utf-8")
+
+def write_scout_pages(dossier_payload: dict) -> None:
+    scout_dir = DIST_DIR / "scout"
+    scout_dir.mkdir(parents=True, exist_ok=True)
+
+    shell_html = scout_shell_html()
+
+    (scout_dir / "index.html").write_text(shell_html, encoding="utf-8")
     print("Wrote dist/scout/index.html")
-    
+
+    players = dossier_payload.get("players", {}) if isinstance(dossier_payload, dict) else {}
+    player_ids = sorted(players.keys())
+
+    for player_id in player_ids:
+        player_dir = scout_dir / str(player_id)
+        player_dir.mkdir(parents=True, exist_ok=True)
+        (player_dir / "index.html").write_text(shell_html, encoding="utf-8")
+
+    print(f"Wrote {len(player_ids)} player dossier pages under dist/scout/<player_id>/index.html")
+
+
 def main() -> None:
     raw = fetch_statcast_window(START_DATE, END_DATE)
     if raw.empty:
-        print("Skipping dashboard rebuild because Statcast fallback returned no fresh data. Keeping existing dist assets.")
+        print(
+            "Skipping dashboard rebuild because Statcast fallback returned no fresh data. Keeping existing dist assets."
+        )
         return
 
     hitter_signals = build_hitter_signals(raw)
@@ -1883,6 +2003,7 @@ def main() -> None:
             ]
         ].to_dict(orient="records"),
     }
+
     (DIST_DIR / "signals.json").write_text(
         json.dumps(summary, indent=2), encoding="utf-8"
     )
@@ -1895,8 +2016,9 @@ def main() -> None:
     print("Wrote dist/player_index.json")
 
     write_scout_metrics(raw)
+    dossier_payload = write_dossier_canon(raw, hitter_signals, pitcher_signals)
     copy_static_assets()
-    write_scout_shell()
+    write_scout_pages(dossier_payload)
     send_telegram_alerts(combined_alerts)
 
 

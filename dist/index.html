@@ -17,7 +17,6 @@
       --emerald: #4ade80;
       --lime-hot: #b6ff00;
       --cyan-hot: #00e5ff;
-      --crimson: #f87171;
       --blue: #6aa6ff;
       --shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
       --radius: 18px;
@@ -47,7 +46,6 @@
     .live-label { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--lime-hot); font-weight: 800; margin-bottom: 4px; }
     .live-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--lime-hot); box-shadow: 0 0 10px rgba(182,255,0,0.35); }
     .live-time { font-family: var(--mono); font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
-    
     .glossary-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.52); opacity: 0; pointer-events: none; transition: opacity 0.22s ease; z-index: 80; }
     .glossary-overlay.open { opacity: 1; pointer-events: auto; }
     .glossary-drawer { position: fixed; top: 0; right: 0; width: min(560px,100vw); height: 100vh; background: linear-gradient(180deg, #101010 0%, #080808 100%); border-left: 1px solid rgba(255,255,255,0.08); box-shadow: -12px 0 40px rgba(0,0,0,0.42); transform: translateX(100%); transition: transform 0.24s ease; z-index: 90; display: flex; flex-direction: column; }
@@ -155,18 +153,18 @@
   .player-search-avatar { width: 120px; height: 120px; }
 }
 
-   @media (max-width: 640px) {
-  .topbar-inner, .app, .topnav-inner, .search-strip-inner { width: min(100%, calc(100% - 16px)); }
-  .search-strip-inner { justify-content: stretch; }
-  .player-search { width: 100%; }
-  .player-search-input { height: 36px; font-size: 12px; }
-  .brand-title { font-size: 14px; }
-  .meta-grid { grid-template-columns: 1fr; }
-  .player-name { font-size: 22px; }
-  .score-value { font-size: 24px; }
-  .player-search-result { grid-template-columns: 120px 1fr; }
-  .player-search-avatar { width: 120px; height: 120px; }
-}
+    @media (max-width: 640px) {
+      .topbar-inner, .app, .topnav-inner, .search-strip-inner { width: min(100%, calc(100% - 16px)); }
+      .search-strip-inner { justify-content: stretch; }
+      .player-search { width: 100%; }
+      .player-search-input { height: 36px; font-size: 12px; }
+      .brand-title { font-size: 14px; }
+      .meta-grid { grid-template-columns: 1fr; }
+      .player-name { font-size: 22px; }
+      .score-value { font-size: 24px; }
+      .player-search-result { grid-template-columns: 120px 1fr; }
+      .player-search-avatar { width: 120px; height: 120px; }
+    }
   </style>
 </head>
 <body>
@@ -182,7 +180,7 @@
       <button class="info-trigger" type="button" onclick="openGlossary()" aria-label="Open glossary">ⓘ Glossary</button>
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">2026-04-09 03:32 PM</div>
+        <div class="live-time">2026-04-10 10:34 AM</div>
       </div>
     </div>
   </div>
@@ -199,8 +197,7 @@
     </div>
   </div>
 </div>
-
- <div class="search-strip">
+  <div class="search-strip">
   <div class="search-strip-inner">
     <div class="player-search" id="playerSearch">
       <input
@@ -217,7 +214,6 @@
 </div>
 
   <div id="glossaryOverlay" class="glossary-overlay" onclick="closeGlossary()"></div>
-
   <aside id="glossaryDrawer" class="glossary-drawer" aria-hidden="true">
     <div class="glossary-head">
       <div>
@@ -229,21 +225,21 @@
     <div class="glossary-body">
       <section class="glossary-section">
         <h3 class="glossary-section-title">I. Global System Metrics</h3>
-        <div class="glossary-item"><span class="glossary-term">Slate Heat</span><div class="glossary-definition">A model-driven index of total opportunity across the day's schedule. A fuller green bar signals a denser concentration of actionable player movement.</div></div>
-        <div class="glossary-item"><span class="glossary-term">System Status</span><div class="glossary-definition">Confirms the live state of the Statcast-driven pipeline and whether the board was generated successfully during the current build cycle.</div></div>
-        <div class="glossary-item"><span class="glossary-term">Edge Score</span><div class="glossary-definition">A 0 to 100 ranking that summarizes the strength of the recent signal versus baseline performance.</div></div>
+        <div class="glossary-item"><span class="glossary-term">Slate Heat</span><div class="glossary-definition">A model-driven index of total opportunity across the day's schedule.</div></div>
+        <div class="glossary-item"><span class="glossary-term">System Status</span><div class="glossary-definition">Confirms the live state of the Statcast-driven pipeline.</div></div>
+        <div class="glossary-item"><span class="glossary-term">Edge Score</span><div class="glossary-definition">A 0 to 100 ranking summarizing signal strength versus baseline.</div></div>
       </section>
       <section class="glossary-section">
         <h3 class="glossary-section-title">II. Pitching Signal Terms</h3>
-        <div class="glossary-item"><span class="glossary-term">Whiff %</span><div class="glossary-definition">Share of pitches in the recent window that generated a swinging strike or swinging strike blocked event.</div></div>
-        <div class="glossary-item"><span class="glossary-term">FB Velo</span><div class="glossary-definition">Average fastball velocity across recent appearances using four-seamers, sinkers, cutters, and two-seam variants.</div></div>
-        <div class="glossary-item"><span class="glossary-term">Extension</span><div class="glossary-definition">Release extension in feet. Greater extension can increase perceived velocity and improve tunnel quality.</div></div>
+        <div class="glossary-item"><span class="glossary-term">Whiff %</span><div class="glossary-definition">Share of recent pitches that generated a swinging strike event.</div></div>
+        <div class="glossary-item"><span class="glossary-term">FB Velo</span><div class="glossary-definition">Average recent fastball velocity.</div></div>
+        <div class="glossary-item"><span class="glossary-term">Extension</span><div class="glossary-definition">Release extension in feet.</div></div>
       </section>
       <section class="glossary-section">
         <h3 class="glossary-section-title">III. Hitting Signal Terms</h3>
-        <div class="glossary-item"><span class="glossary-term">Avg EV</span><div class="glossary-definition">Mean exit velocity on tracked batted-ball events during the recent window.</div></div>
-        <div class="glossary-item"><span class="glossary-term">Barrel-like %</span><div class="glossary-definition">Share of batted balls in the current DiamondSignals barrel-like bucket used for early power detection.</div></div>
-        <div class="glossary-item"><span class="glossary-term">EV Burst</span><div class="glossary-definition">A recent jump in average exit velocity versus baseline that suggests an underlying quality-of-contact change.</div></div>
+        <div class="glossary-item"><span class="glossary-term">Avg EV</span><div class="glossary-definition">Mean exit velocity on tracked batted-ball events.</div></div>
+        <div class="glossary-item"><span class="glossary-term">Barrel-like %</span><div class="glossary-definition">Share of batted balls in the DiamondSignals barrel-like bucket.</div></div>
+        <div class="glossary-item"><span class="glossary-term">EV Burst</span><div class="glossary-definition">A recent jump in average exit velocity versus baseline.</div></div>
       </section>
     </div>
   </aside>
@@ -254,13 +250,13 @@
         <div class="hero-card">
           <div class="eyebrow">Executive Terminal</div>
           <h1 class="hero-title">Today’s Signal Wall</h1>
-          <p class="hero-copy">A live, mobile-first DiamondSignals board built for fast scan readability. Institutional dark surfaces, terminal-grade data density, and restrained signal emphasis.</p>
+          <p class="hero-copy">A live, mobile-first DiamondSignals board built for fast scan readability.</p>
         </div>
 
         <div class="meta-grid">
           <div class="meta-card">
             <div class="meta-label">Last Updated</div>
-            <div class="meta-value">2026-04-09 03:32 PM</div>
+            <div class="meta-value">2026-04-10 10:34 AM</div>
           </div>
           <div class="meta-card">
             <div class="meta-label">Lookback</div>
@@ -304,7 +300,7 @@
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">82.3</div>
+                <div class="score-value edge-up">82.1</div>
               </div>
             </div>
 
@@ -332,8 +328,6 @@
               
               <span class="status-badge positive">Extension Gain</span>
               
-              <span class="status-badge neutral">Trend Confirming</span>
-              
             </div>
 
             <div class="metric-grid">
@@ -355,7 +349,7 @@
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">77.6</div>
+                <div class="score-value edge-up">77.1</div>
               </div>
             </div>
 
@@ -383,8 +377,6 @@
               
               <span class="status-badge positive">Extension Gain</span>
               
-              <span class="status-badge neutral">Trend Confirming</span>
-              
             </div>
 
             <div class="metric-grid">
@@ -406,7 +398,7 @@
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">77.0</div>
+                <div class="score-value edge-up">76.5</div>
               </div>
             </div>
 
@@ -430,8 +422,6 @@
               
               <span class="status-badge positive">Whiff Lift</span>
               
-              <span class="status-badge neutral">Trend Confirming</span>
-              
             </div>
 
             <div class="metric-grid">
@@ -453,7 +443,7 @@
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">73.1</div>
+                <div class="score-value edge-up">72.7</div>
               </div>
             </div>
 
@@ -477,8 +467,6 @@
               
               <span class="status-badge positive">Whiff Lift</span>
               
-              <span class="status-badge neutral">Trend Confirming</span>
-              
             </div>
 
             <div class="metric-grid">
@@ -492,15 +480,15 @@
           
           <article class="player-card high-edge">
             <div class="player-top">
-              <div class="avatar">SK</div>
+              <div class="avatar">DO</div>
               <div class="player-ident">
                 <div class="rankline">#5 Pitcher Trigger</div>
-                <h3 class="player-name">Skubal, Tarik</h3>
-                <div class="signal-line">Pitcher // Live Edge Signal // 96 P</div>
+                <h3 class="player-name">Dollander, Chase</h3>
+                <div class="signal-line">Pitcher // Live Edge Signal // 152 P</div>
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">70.2</div>
+                <div class="score-value edge-up">70.1</div>
               </div>
             </div>
 
@@ -516,27 +504,23 @@
                     <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                   </linearGradient>
                 </defs>
-                <polyline class="sparkline-path glow" stroke="url(#pitcherGradient5)" points="0,26.0 20,23.3 40,20.7 60,18.0 80,15.3 100,12.7 120,10.0" />
+                <polyline class="sparkline-path " stroke="url(#pitcherGradient5)" points="0,10.0 20,10.0 40,10.0 60,10.0 80,10.0 100,10.0 120,26.0" />
               </svg>
             </div>
 
             <div class="badge-row">
               
-              <span class="status-badge positive">Whiff Lift</span>
-              
               <span class="status-badge positive">Extension Gain</span>
-              
-              <span class="status-badge neutral">Trend Confirming</span>
               
             </div>
 
             <div class="metric-grid">
-              <div class="metric"><div class="metric-label">Whiff %</div><div class="metric-value">17.7</div></div>
-              <div class="metric"><div class="metric-label">FB Velo</div><div class="metric-value">96.7</div></div>
+              <div class="metric"><div class="metric-label">Whiff %</div><div class="metric-value">13.8</div></div>
+              <div class="metric"><div class="metric-label">FB Velo</div><div class="metric-value">99.0</div></div>
               <div class="metric"><div class="metric-label">Extension</div><div class="metric-value">6.5 ft</div></div>
             </div>
 
-            <div class="why">Whiff rate 17.7% (+0.1 pts vs baseline), FB velo 96.7 mph (+0.0).</div>
+            <div class="why">Whiff rate 13.8% (+0.0 pts vs baseline), FB velo 99.0 mph (+0.7).</div>
           </article>
           
         </div>
@@ -563,7 +547,7 @@
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">90.5</div>
+                <div class="score-value edge-up">90.3</div>
               </div>
             </div>
 
@@ -589,8 +573,6 @@
               
               <span class="status-badge positive active-pulse">Barrel Jump</span>
               
-              <span class="status-badge neutral ">Trend Confirming</span>
-              
             </div>
 
             <div class="metric-grid">
@@ -612,7 +594,7 @@
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">80.2</div>
+                <div class="score-value edge-up">80.1</div>
               </div>
             </div>
 
@@ -628,7 +610,7 @@
                     <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                   </linearGradient>
                 </defs>
-                <polyline class="sparkline-path glow" stroke="url(#hitterGradient2)" points="0,26.0 20,26.0 40,26.0 60,26.0 80,26.0 100,10.0 120,15.6" />
+                <polyline class="sparkline-path " stroke="url(#hitterGradient2)" points="0,26.0 20,26.0 40,26.0 60,26.0 80,26.0 100,10.0 120,15.6" />
               </svg>
             </div>
 
@@ -637,8 +619,6 @@
               <span class="status-badge positive active-pulse">Barrel Jump</span>
               
               <span class="status-badge positive ">Impact EV</span>
-              
-              <span class="status-badge neutral ">Trend Confirming</span>
               
             </div>
 
@@ -661,7 +641,7 @@
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">77.8</div>
+                <div class="score-value edge-up">77.6</div>
               </div>
             </div>
 
@@ -687,8 +667,6 @@
               
               <span class="status-badge positive ">Impact EV</span>
               
-              <span class="status-badge neutral ">Trend Confirming</span>
-              
             </div>
 
             <div class="metric-grid">
@@ -710,7 +688,7 @@
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">76.9</div>
+                <div class="score-value edge-up">76.5</div>
               </div>
             </div>
 
@@ -736,8 +714,6 @@
               
               <span class="status-badge positive ">Impact EV</span>
               
-              <span class="status-badge neutral ">Trend Confirming</span>
-              
             </div>
 
             <div class="metric-grid">
@@ -751,15 +727,15 @@
           
           <article class="player-card high-edge">
             <div class="player-top">
-              <div class="avatar">TY</div>
+              <div class="avatar">GA</div>
               <div class="player-ident">
                 <div class="rankline">#5 Hitter Trigger</div>
-                <h3 class="player-name">Tyler Soderstrom</h3>
-                <div class="signal-line">Hitter // Live Edge Signal // 23 BBE</div>
+                <h3 class="player-name">Gabriel Moreno</h3>
+                <div class="signal-line">Hitter // Live Edge Signal // 27 BBE</div>
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">75.3</div>
+                <div class="score-value edge-up">75.9</div>
               </div>
             </div>
 
@@ -775,7 +751,7 @@
                     <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                   </linearGradient>
                 </defs>
-                <polyline class="sparkline-path glow" stroke="url(#hitterGradient5)" points="0,11.4 20,11.4 40,11.4 60,16.7 80,26.0 100,10.0 120,17.0" />
+                <polyline class="sparkline-path glow" stroke="url(#hitterGradient5)" points="0,26.0 20,26.0 40,20.4 60,15.8 80,15.2 100,22.3 120,10.0" />
               </svg>
             </div>
 
@@ -785,17 +761,15 @@
               
               <span class="status-badge positive ">Impact EV</span>
               
-              <span class="status-badge neutral ">Trend Confirming</span>
-              
             </div>
 
             <div class="metric-grid">
-              <div class="metric"><div class="metric-label">Avg EV</div><div class="metric-value">92.2</div></div>
-              <div class="metric"><div class="metric-label">Barrel-like %</div><div class="metric-value">0.0</div></div>
-              <div class="metric"><div class="metric-label">Max EV</div><div class="metric-value">113.2</div></div>
+              <div class="metric"><div class="metric-label">Avg EV</div><div class="metric-value">90.7</div></div>
+              <div class="metric"><div class="metric-label">Barrel-like %</div><div class="metric-value">7.4</div></div>
+              <div class="metric"><div class="metric-label">Max EV</div><div class="metric-value">110.2</div></div>
             </div>
 
-            <div class="why">Avg EV 92.2 mph (+13.8 vs baseline), barrel-like rate 0.0%.</div>
+            <div class="why">Avg EV 90.7 mph (+8.9 vs baseline), barrel-like rate 7.4%.</div>
           </article>
           
         </div>
@@ -803,6 +777,7 @@
     </section>
 
     
+  </div>
 
   <script src="/player-search.js"></script>
   <script src="/player-card-actions.js"></script>
