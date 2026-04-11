@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-11T10:54:54.117214",
+  "generated_at": "2026-04-11T13:09:25.388061",
   "players": {
     "671096": {
       "player_id": "671096",
@@ -29108,9 +29108,9 @@
     "694355": {
       "player_id": "694355",
       "player_name": "Tyler Gentry",
-      "team": "Omaha Storm Chasers",
-      "current_team": "Omaha Storm Chasers",
-      "position": "RF",
+      "team": "Toledo Mud Hens",
+      "current_team": "Toledo Mud Hens",
+      "position": "OF",
       "age": null,
       "bats": "R",
       "throws": "R",
@@ -42616,8 +42616,8 @@
     "518886": {
       "player_id": "518886",
       "player_name": "Craig Kimbrel",
-      "team": "St. Lucie Mets",
-      "current_team": "St. Lucie Mets",
+      "team": "New York Mets",
+      "current_team": "New York Mets",
       "position": "P",
       "age": null,
       "bats": "R",

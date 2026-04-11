@@ -1,0 +1,1222 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DiamondSignals — Stuff+ Disruption Feed</title>
+  <style>
+    :root {
+      --bg: #080808;
+      --card-radial: radial-gradient(circle at top left, #1a1a1a 0%, #080808 100%);
+      --border: #2d2d2d;
+      --text: #f0f0f0;
+      --muted: #71717a;
+      --soft: #a1a1aa;
+      --tiny: #8a8a93;
+      --blue: #6aa6ff;
+      --cyan: #22d3ee;
+      --violet: #a78bfa;
+      --lime-hot: #b6ff00;
+      --shadow: 0 14px 34px rgba(0, 0, 0, 0.34);
+      --radius: 18px;
+      --mono: "JetBrains Mono","Roboto Mono","SFMono-Regular",Menlo,Consolas,monospace;
+      --sans: Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(106,166,255,0.06), transparent 24%),
+        radial-gradient(circle at top right, rgba(167,139,250,0.06), transparent 20%),
+        linear-gradient(180deg, #101010 0%, #080808 34%, #050505 100%);
+      line-height: 1.35;
+    }
+    .app { width: min(1180px, calc(100% - 24px)); margin: 0 auto; padding: 18px 0 34px; }
+
+    .info-trigger {
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(34,211,238,0.22);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(34,211,238,0.08);
+    }
+
+    .guide-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.52);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+      z-index: 80;
+    }
+    .guide-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .guide-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(560px,100vw);
+      height: 100vh;
+      background: linear-gradient(180deg, #101010 0%, #080808 100%);
+      border-left: 1px solid rgba(255,255,255,0.08);
+      box-shadow: -12px 0 40px rgba(0,0,0,0.42);
+      transform: translateX(100%);
+      transition: transform 0.24s ease;
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+    }
+    .guide-drawer.open {
+      transform: translateX(0);
+    }
+
+    .guide-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+    }
+    .guide-kicker {
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .guide-title {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      font-weight: 900;
+      color: var(--text);
+    }
+    .guide-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .guide-body {
+      overflow-y: auto;
+      padding: 18px;
+      display: grid;
+      gap: 18px;
+    }
+    .guide-section {
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      padding: 14px;
+    }
+    .guide-section-title {
+      margin: 0 0 12px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--violet);
+      font-weight: 800;
+      font-family: var(--mono);
+    }
+    .guide-copy {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--soft);
+    }
+
+    .hero-card, .section, .player-card, .meta-card {
+      background: var(--card-radial);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-card::before, .section::before, .player-card::before, .meta-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      padding: 0.5px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.01));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.55;
+    }
+
+    .hero-card { padding: 18px; margin-bottom: 16px; }
+    .eyebrow { font-size: 10px; line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cyan); font-weight: 800; margin-bottom: 10px; }
+    .hero-title { margin: 0 0 10px; font-size: clamp(32px, 6vw, 56px); line-height: 0.95; letter-spacing: -0.04em; font-weight: 900; text-transform: uppercase; }
+    .hero-copy { margin: 0; max-width: 760px; color: var(--soft); font-size: 14px; }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .meta-card { padding: 14px; }
+    .meta-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .meta-value {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .section-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 16px 16px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.008));
+    }
+    .section-kicker { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 800; }
+    .section-title { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.02em; text-transform: uppercase; }
+    .section-badge {
+      font-family: var(--mono); font-size: 11px; color: var(--soft); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 999px; padding: 7px 10px; background: rgba(255,255,255,0.02);
+    }
+
+    .cards { display: grid; gap: 10px; padding: 10px; }
+    .player-card { padding: 14px; }
+    .player-card.apex-top {
+      border-color: rgba(34,211,238,0.22);
+      box-shadow: var(--shadow), 0 0 14px rgba(34,211,238,0.08);
+    }
+    .player-top { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; margin-bottom: 12px; }
+    .avatar {
+      width: 42px; height: 42px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.10);
+      display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03);
+      color: var(--text); font-size: 13px; font-weight: 800;
+    }
+    .rankline, .score-label, .metric-label, .sparkline-label {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 800;
+    }
+    .score-label {
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      color: var(--tiny);
+      margin-bottom: 4px;
+    }
+    .player-name {
+      margin: 0 0 4px; font-size: clamp(26px, 3.4vw, 42px); line-height: 0.95; letter-spacing: -0.04em;
+      font-weight: 900; text-transform: uppercase;
+    }
+    .signal-line {
+      font-size: 11px; color: var(--soft); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .scorebox { text-align: right; min-width: 88px; }
+    .score-value { font-family: var(--mono); font-size: 28px; line-height: 1; font-weight: 800; color: var(--cyan); }
+    .score-value.score-s-tier {
+      color: #22d3ee;
+      text-shadow: 0 0 12px rgba(34,211,238,0.20);
+    }
+    .score-value.score-a-tier {
+      color: #a78bfa;
+      text-shadow: 0 0 10px rgba(167,139,250,0.18);
+    }
+    .score-value.score-b-tier {
+      color: #b6ff00;
+      text-shadow: 0 0 8px rgba(182,255,0,0.14);
+    }
+    .score-value.score-neutral {
+      color: var(--soft);
+    }
+
+    .alert-pill {
+      display: inline-flex; align-items: center; border-radius: 999px; padding: 7px 10px;
+      border: 1px solid rgba(34,211,238,0.22); background: rgba(34,211,238,0.08);
+      color: #c9fbff; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+      text-transform: uppercase; margin: 10px 0 12px;
+    }
+    .alert-pill.alert-shape {
+      border-color: rgba(34,211,238,0.38);
+      background: rgba(34,211,238,0.12);
+      color: #d8fdff;
+      box-shadow: 0 0 10px rgba(34,211,238,0.10);
+    }
+    .alert-pill.alert-spin {
+      border-color: rgba(167,139,250,0.34);
+      background: rgba(167,139,250,0.10);
+      color: #e5dcff;
+    }
+    .alert-pill.alert-sweep {
+      border-color: rgba(182,255,0,0.30);
+      background: rgba(182,255,0,0.08);
+      color: #ecffc0;
+    }
+    .alert-pill.alert-deception {
+      border-color: rgba(106,166,255,0.34);
+      background: rgba(106,166,255,0.10);
+      color: #d6e5ff;
+    }
+    .alert-pill.alert-neutral {
+      border-color: rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      color: var(--soft);
+    }
+
+    .js-add-to-roster {
+      border-color: rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      color: var(--soft);
+      box-shadow: none;
+    }
+    .js-add-to-roster:hover {
+      border-color: rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+    }
+
+    .sparkline-wrap {
+      border-radius: 12px; background: rgba(255,255,255,0.015); padding: 10px 10px 6px;
+      margin-bottom: 14px;
+    }
+    .sparkline-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+    .sparkline-note { font-family: var(--mono); font-size: 10px; color: var(--tiny); text-transform: uppercase; letter-spacing: 0.08em; }
+    svg.sparkline { display: block; width: 100%; height: 34px; }
+    .sparkline-path { stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .sparkline-path.sparkline-shape { stroke: #22d3ee; }
+    .sparkline-path.sparkline-spin { stroke: #a78bfa; }
+    .sparkline-path.sparkline-sweep { stroke: #b6ff00; }
+    .sparkline-path.sparkline-neutral { stroke: #6aa6ff; }
+
+    .metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 16px; }
+    .metric {
+      border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 10px 10px 9px;
+      background: rgba(255,255,255,0.02); min-width: 0;
+    }
+    .metric.metric-shape {
+      border-color: rgba(34,211,238,0.20);
+      background: rgba(34,211,238,0.04);
+    }
+    .metric.metric-spin {
+      border-color: rgba(167,139,250,0.24);
+      background: rgba(167,139,250,0.06);
+      box-shadow: 0 0 10px rgba(167,139,250,0.05);
+    }
+    .metric.metric-sweep {
+      border-color: rgba(182,255,0,0.18);
+      background: rgba(182,255,0,0.04);
+    }
+    .metric.metric-warning {
+      border-color: rgba(106,166,255,0.18);
+      background: rgba(106,166,255,0.04);
+    }
+    .metric-value {
+      font-family: var(--mono); font-size: 15px; line-height: 1.1; color: var(--text);
+      font-weight: 700; word-break: break-word; font-variant-numeric: tabular-nums;
+    }
+    .why { font-size: 12px; line-height: 1.65; color: var(--soft); margin-top: 6px; }
+
+    .topnav { border-top: 1px solid rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); }
+.topnav-inner { width: min(1180px, calc(100% - 24px)); margin: 0 auto; display: flex; align-items: center; gap: 10px; overflow-x: auto; white-space: nowrap; padding: 10px 0; scrollbar-width: none; }
+.topnav-inner::-webkit-scrollbar { display: none; }
+.topnav-links { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; }
+.topnav-link { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--soft); padding: 8px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); transition: opacity 0.18s ease, transform 0.18s ease, border-color 0.18s ease, color 0.18s ease; }
+.topnav-link:visited { color: var(--soft); }
+.topnav-link:hover { opacity: 1; transform: translateY(-1px); border-color: rgba(255,255,255,0.12); color: var(--text); }
+.topnav-link.active { color: var(--text); border-color: rgba(182,255,0,0.20); box-shadow: 0 0 8px rgba(182,255,0,0.08); }
+.topnav-link.active:visited { color: var(--text); }
+.topnav-tag { color: var(--lime-hot); }
+
+.search-strip { border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); }
+.search-strip-inner { width: min(1180px, calc(100% - 24px)); margin: 0 auto; padding: 12px 0 10px; display: flex; justify-content: flex-end; }
+.player-search { position: relative; width: min(420px, 100%); }
+.player-search-input { width: 100%; height: 40px; border-radius: 999px; border: 1px solid rgba(182,255,0,0.22); background: rgba(255,255,255,0.07); color: var(--text); padding: 0 16px; font-family: var(--sans); font-size: 14px; outline: none; box-shadow: 0 0 10px rgba(182,255,0,0.05); }
+.player-search-input::placeholder { color: rgba(255,255,255,0.50); }
+.player-search-input:focus { border-color: rgba(182,255,0,0.45); background: rgba(255,255,255,0.09); box-shadow: 0 0 0 3px rgba(182,255,0,0.10), 0 0 12px rgba(182,255,0,0.12); }
+.player-search-results { position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 70; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; background: linear-gradient(180deg, #121212 0%, #080808 100%); box-shadow: 0 14px 34px rgba(0,0,0,0.34); overflow: hidden; }
+.player-search-result { display: grid; grid-template-columns: 180px 1fr; gap: 12px; align-items: center; padding: 0; text-decoration: none; color: var(--text); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02); }
+.player-search-result:visited { color: var(--text); }
+.player-search-result:last-child { border-bottom: 0; }
+.player-search-result:hover, .player-search-result.active { background: rgba(255,255,255,0.05); }
+.player-search-avatar { width: 180px; height: 180px; object-fit: cover; display: block; background: rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.06); }
+.player-search-meta { min-width: 0; padding: 14px 14px 14px 0; }
+.player-search-name { font-size: 16px; font-weight: 800; line-height: 1.1; color: var(--text); text-decoration: none; }
+.player-search-sub { margin-top: 6px; font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.06em; }
+.player-search-empty, .player-search-loading, .player-search-error { padding: 12px 14px; font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.08em; }
+
+.footer { padding: 16px 4px 0; color: var(--muted); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 640px) {
+  .topnav-inner, .search-strip-inner { width: min(100%, calc(100% - 16px)); }
+  .search-strip-inner { justify-content: stretch; }
+  .player-search { width: 100%; }
+  .player-search-input { height: 36px; font-size: 12px; }
+  .player-search-result { grid-template-columns: 120px 1fr; }
+  .player-search-avatar { width: 120px; height: 120px; }
+}
+
+
+    @media (max-width: 700px) {
+      .app { width: min(100%, calc(100% - 16px)); }
+      .player-name { font-size: 22px; }
+      .score-value { font-size: 24px; }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .meta-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="guide-overlay" id="guideOverlay" onclick="closeGuide()"></div>
+
+  <aside class="guide-drawer" id="guideDrawer" aria-hidden="true">
+    <div class="guide-head">
+      <div>
+        <div class="guide-kicker">Apex Terminal</div>
+        <h2 class="guide-title">Stuff+ Disruption Field Guide</h2>
+      </div>
+      <button class="guide-close" type="button" onclick="closeGuide()" aria-label="Close field guide">×</button>
+    </div>
+
+    <div class="guide-body">
+      <section class="guide-section">
+        <h3 class="guide-section-title">Why IVB matters</h3>
+        <div class="guide-copy">
+          IVB, or induced vertical break, is your ride signal. When a fastball gains IVB, it can play above the barrel more often and support whiff growth, especially when paired with a flatter approach angle.
+        </div>
+      </section>
+
+      <section class="guide-section">
+        <h3 class="guide-section-title">Why VAA matters</h3>
+        <div class="guide-copy">
+          VAA, or vertical approach angle, tells you how the pitch enters the zone. A flatter VAA can make a fastball look more explosive up in the zone, changing how hitters perceive the ball even before the stat line fully reacts.
+        </div>
+      </section>
+
+      <section class="guide-section">
+        <h3 class="guide-section-title">How to use this page</h3>
+        <div class="guide-copy">
+          APEX SHAPE SHIFT is the premium signal. ACTIVE SPIN GAIN highlights improving efficiency. SWEEP DISRUPTION captures sharper lateral shape changes. SHAPE MONITOR means the profile is moving, but not yet qualified enough to act aggressively.
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <div class="topnav">
+  <div class="topnav-inner">
+    <div class="topnav-links">
+      <a class="topnav-link " href="/"><span class="topnav-tag">[ LIVE ]</span> Signal Wall</a>
+      <a class="topnav-link " href="/typical-call-up"><span class="topnav-tag">[ SCOUT ]</span> Promotion Watch</a>
+      <a class="topnav-link " href="/ivb-heat-map"><span class="topnav-tag">[ LAB ]</span> IVB Heat Map</a>
+      <a class="topnav-link " href="/velocity-decay-monitor"><span class="topnav-tag">[ RISK ]</span> Velocity Decay Monitor</a>
+      <a class="topnav-link active" href="/stuff-disruption-feed"><span class="topnav-tag">[ APEX ]</span> Stuff+ Disruption Feed</a>
+      <a class="topnav-link " href="/hidden-gems"><span class="topnav-tag">[ EDGE ]</span> Hidden Gems</a>
+      <a class="topnav-link" href="https://app.diamondsignals.ai/terminal"><span class="topnav-tag">[ TERMINAL ]</span> Roster Terminal</a>
+      <a class="topnav-link" href="https://diamondsignals.ai"><span class="topnav-tag">[ SITE ]</span> Main Site</a>
+    </div>
+  </div>
+</div>
+  <div class="search-strip">
+  <div class="search-strip-inner">
+    <div class="player-search" id="playerSearch">
+      <input
+        type="text"
+        id="playerSearchInput"
+        class="player-search-input"
+        placeholder=">_ EXECUTE PLAYER SEARCH..."
+        autocomplete="off"
+        aria-label="Search players"
+      />
+      <div class="player-search-results" id="playerSearchResults" hidden></div>
+    </div>
+  </div>
+</div>
+
+  <div class="app">
+    <section class="hero-card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div>
+          <div class="eyebrow">Apex Terminal</div>
+          <h1 class="hero-title">Stuff+ Disruption Feed</h1>
+          <p class="hero-copy">
+            Diagnostic breakout feed for IVB spikes, VAA flattening, movement disruptions, and active spin gains. This page is built to surface shape-shifters before their strikeout surge shows up in the obvious places.
+          </p>
+        </div>
+        <button class="info-trigger" type="button" onclick="openGuide()">Field Guide</button>
+      </div>
+    </section>
+
+    <section class="meta-grid">
+      <div class="meta-card">
+        <div class="meta-label">Model State</div>
+        <div class="meta-value">Real Data Pass v1</div>
+      </div>
+      <div class="meta-card">
+        <div class="meta-label">Window</div>
+        <div class="meta-value">Recent Appearance vs Prior Baseline</div>
+      </div>
+      <div class="meta-card">
+        <div class="meta-label">Next Pass</div>
+        <div class="meta-value">Calibration + stronger spin logic</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Breakout Detection</div>
+          <h2 class="section-title">Apex Candidates</h2>
+        </div>
+        <div class="section-badge">12 tracked arms</div>
+      </div>
+
+      <div class="cards">
+        
+        <article
+          class="player-card js-player-card apex-top"
+          data-player-id="643410"
+          data-player-name="Leiter Jr., Mark"
+          data-player-type="pitcher"
+          data-player-team="NYM"
+          data-profile-url="/scout/643410/"
+        >
+          <div class="player-top">
+            <div class="avatar">LE</div>
+            <div class="player-ident">
+              <div class="rankline">#1 Apex Trigger</div>
+              <h3 class="player-name">Leiter Jr., Mark</h3>
+              <div class="signal-line">NYM // S-TIER // 5 start trend</div>
+            </div>
+            <div class="scorebox">
+              <div class="score-label">Disruption Score</div>
+              <div class="score-value score-s-tier">84.8</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div class="alert-pill alert-shape">APEX SHAPE SHIFT</div>
+            <button type="button" class="alert-pill js-add-to-roster">Add to Roster</button>
+          </div>
+
+          <div class="sparkline-wrap">
+            <div class="sparkline-head">
+              <div class="sparkline-label">Shape Trend</div>
+              <div class="sparkline-note">Last 5 start trend</div>
+            </div>
+            <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline class="sparkline-path sparkline-shape" points="0.00,10.00 25.00,28.44 50.00,26.87 75.00,25.72 100.00,30.00" />
+            </svg>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric metric-shape">
+              <div class="metric-label">IVB Delta</div>
+              <div class="metric-value">+4.3"</div>
+            </div>
+            <div class="metric metric-warning">
+              <div class="metric-label">VAA Delta</div>
+              <div class="metric-value">-0.4°</div>
+            </div>
+            <div class="metric metric-sweep">
+              <div class="metric-label">Move Delta</div>
+              <div class="metric-value">+2.4"</div>
+            </div>
+            <div class="metric metric-spin">
+              <div class="metric-label">Active Spin</div>
+              <div class="metric-value">+0.1%</div>
+            </div>
+          </div>
+
+          <div class="why">Elite ballistic profile detected. Ride and approach angle are both moving in the right direction, creating a high-end breakout structure.</div>
+        </article>
+        
+        <article
+          class="player-card js-player-card "
+          data-player-id="680767"
+          data-player-name="Vodnik, Victor"
+          data-player-type="pitcher"
+          data-player-team="SD"
+          data-profile-url="/scout/680767/"
+        >
+          <div class="player-top">
+            <div class="avatar">VO</div>
+            <div class="player-ident">
+              <div class="rankline">#2 Apex Trigger</div>
+              <h3 class="player-name">Vodnik, Victor</h3>
+              <div class="signal-line">SD // A-TIER // 5 start trend</div>
+            </div>
+            <div class="scorebox">
+              <div class="score-label">Disruption Score</div>
+              <div class="score-value score-a-tier">84.1</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div class="alert-pill alert-spin">ACTIVE SPIN GAIN</div>
+            <button type="button" class="alert-pill js-add-to-roster">Add to Roster</button>
+          </div>
+
+          <div class="sparkline-wrap">
+            <div class="sparkline-head">
+              <div class="sparkline-label">Shape Trend</div>
+              <div class="sparkline-note">Last 5 start trend</div>
+            </div>
+            <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline class="sparkline-path sparkline-spin" points="0.00,10.00 25.00,24.62 50.00,30.00 75.00,10.42 100.00,13.76" />
+            </svg>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric metric-shape">
+              <div class="metric-label">IVB Delta</div>
+              <div class="metric-value">+3.4"</div>
+            </div>
+            <div class="metric metric-warning">
+              <div class="metric-label">VAA Delta</div>
+              <div class="metric-value">-0.3°</div>
+            </div>
+            <div class="metric metric-sweep">
+              <div class="metric-label">Move Delta</div>
+              <div class="metric-value">+2.5"</div>
+            </div>
+            <div class="metric metric-spin">
+              <div class="metric-label">Active Spin</div>
+              <div class="metric-value">+0.2%</div>
+            </div>
+          </div>
+
+          <div class="why">Movement quality appears to be improving through more efficient spin conversion, not just raw effort. Breakout conditions are building.</div>
+        </article>
+        
+        <article
+          class="player-card js-player-card "
+          data-player-id="675848"
+          data-player-name="Mejia, Juan"
+          data-player-type="pitcher"
+          data-player-team="SD"
+          data-profile-url="/scout/675848/"
+        >
+          <div class="player-top">
+            <div class="avatar">ME</div>
+            <div class="player-ident">
+              <div class="rankline">#3 Apex Trigger</div>
+              <h3 class="player-name">Mejia, Juan</h3>
+              <div class="signal-line">SD // WATCH // 5 start trend</div>
+            </div>
+            <div class="scorebox">
+              <div class="score-label">Disruption Score</div>
+              <div class="score-value score-neutral">82.3</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div class="alert-pill alert-neutral">SHAPE MONITOR</div>
+            <button type="button" class="alert-pill js-add-to-roster">Add to Roster</button>
+          </div>
+
+          <div class="sparkline-wrap">
+            <div class="sparkline-head">
+              <div class="sparkline-label">Shape Trend</div>
+              <div class="sparkline-note">Last 5 start trend</div>
+            </div>
+            <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline class="sparkline-path sparkline-neutral" points="0.00,11.79 25.00,10.00 50.00,25.04 75.00,21.93 100.00,30.00" />
+            </svg>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric metric-shape">
+              <div class="metric-label">IVB Delta</div>
+              <div class="metric-value">+2.5"</div>
+            </div>
+            <div class="metric metric-warning">
+              <div class="metric-label">VAA Delta</div>
+              <div class="metric-value">-0.3°</div>
+            </div>
+            <div class="metric metric-sweep">
+              <div class="metric-label">Move Delta</div>
+              <div class="metric-value">+2.2"</div>
+            </div>
+            <div class="metric ">
+              <div class="metric-label">Active Spin</div>
+              <div class="metric-value">+0.1%</div>
+            </div>
+          </div>
+
+          <div class="why">Shape profile is moving, but not yet in a fully qualified disruption tier. Keep this arm on the radar for another appearance.</div>
+        </article>
+        
+        <article
+          class="player-card js-player-card "
+          data-player-id="664854"
+          data-player-name="Helsley, Ryan"
+          data-player-type="pitcher"
+          data-player-team="CWS"
+          data-profile-url="/scout/664854/"
+        >
+          <div class="player-top">
+            <div class="avatar">HE</div>
+            <div class="player-ident">
+              <div class="rankline">#4 Apex Trigger</div>
+              <h3 class="player-name">Helsley, Ryan</h3>
+              <div class="signal-line">CWS // WATCH // 5 start trend</div>
+            </div>
+            <div class="scorebox">
+              <div class="score-label">Disruption Score</div>
+              <div class="score-value score-neutral">82.1</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div class="alert-pill alert-neutral">SHAPE MONITOR</div>
+            <button type="button" class="alert-pill js-add-to-roster">Add to Roster</button>
+          </div>
+
+          <div class="sparkline-wrap">
+            <div class="sparkline-head">
+              <div class="sparkline-label">Shape Trend</div>
+              <div class="sparkline-note">Last 5 start trend</div>
+            </div>
+            <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline class="sparkline-path sparkline-neutral" points="0.00,10.00 25.00,23.11 50.00,24.94 75.00,30.00 100.00,25.41" />
+            </svg>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric metric-shape">
+              <div class="metric-label">IVB Delta</div>
+              <div class="metric-value">+2.9"</div>
+            </div>
+            <div class="metric ">
+              <div class="metric-label">VAA Delta</div>
+              <div class="metric-value">-0.1°</div>
+            </div>
+            <div class="metric metric-sweep">
+              <div class="metric-label">Move Delta</div>
+              <div class="metric-value">+2.5"</div>
+            </div>
+            <div class="metric metric-spin">
+              <div class="metric-label">Active Spin</div>
+              <div class="metric-value">+0.1%</div>
+            </div>
+          </div>
+
+          <div class="why">Shape profile is moving, but not yet in a fully qualified disruption tier. Keep this arm on the radar for another appearance.</div>
+        </article>
+        
+        <article
+          class="player-card js-player-card "
+          data-player-id="686610"
+          data-player-name="Waldichuk, Ken"
+          data-player-type="pitcher"
+          data-player-team="WSH"
+          data-profile-url="/scout/686610/"
+        >
+          <div class="player-top">
+            <div class="avatar">WA</div>
+            <div class="player-ident">
+              <div class="rankline">#5 Apex Trigger</div>
+              <h3 class="player-name">Waldichuk, Ken</h3>
+              <div class="signal-line">WSH // A-TIER // 4 start trend</div>
+            </div>
+            <div class="scorebox">
+              <div class="score-label">Disruption Score</div>
+              <div class="score-value score-a-tier">81.7</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div class="alert-pill alert-spin">ACTIVE SPIN GAIN</div>
+            <button type="button" class="alert-pill js-add-to-roster">Add to Roster</button>
+          </div>
+
+          <div class="sparkline-wrap">
+            <div class="sparkline-head">
+              <div class="sparkline-label">Shape Trend</div>
+              <div class="sparkline-note">Last 4 start trend</div>
+            </div>
+            <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline class="sparkline-path sparkline-spin" points="0.00,12.08 33.33,30.00 66.67,10.00 100.00,25.85" />
+            </svg>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric metric-shape">
+              <div class="metric-label">IVB Delta</div>
+              <div class="metric-value">+3.0"</div>
+            </div>
+            <div class="metric ">
+              <div class="metric-label">VAA Delta</div>
+              <div class="metric-value">+0.4°</div>
+            </div>
+            <div class="metric metric-sweep">
+              <div class="metric-label">Move Delta</div>
+              <div class="metric-value">+5.0"</div>
+            </div>
+            <div class="metric metric-spin">
+              <div class="metric-label">Active Spin</div>
+              <div class="metric-value">+0.2%</div>
+            </div>
+          </div>
+
+          <div class="why">Movement quality appears to be improving through more efficient spin conversion, not just raw effort. Breakout conditions are building.</div>
+        </article>
+        
+        <article
+          class="player-card js-player-card "
+          data-player-id="605488"
+          data-player-name="Springs, Jeffrey"
+          data-player-type="pitcher"
+          data-player-team="NYY"
+          data-profile-url="/scout/605488/"
+        >
+          <div class="player-top">
+            <div class="avatar">SP</div>
+            <div class="player-ident">
+              <div class="rankline">#6 Apex Trigger</div>
+              <h3 class="player-name">Springs, Jeffrey</h3>
+              <div class="signal-line">NYY // B-TIER // 5 start trend</div>
+            </div>
+            <div class="scorebox">
+              <div class="score-label">Disruption Score</div>
+              <div class="score-value score-b-tier">81.6</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div class="alert-pill alert-sweep">SWEEP DISRUPTION</div>
+            <button type="button" class="alert-pill js-add-to-roster">Add to Roster</button>
+          </div>
+
+          <div class="sparkline-wrap">
+            <div class="sparkline-head">
+              <div class="sparkline-label">Shape Trend</div>
+              <div class="sparkline-note">Last 5 start trend</div>
+            </div>
+            <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline class="sparkline-path sparkline-sweep" points="0.00,10.00 25.00,11.70 50.00,26.57 75.00,30.00 100.00,23.36" />
+            </svg>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric metric-shape">
+              <div class="metric-label">IVB Delta</div>
+              <div class="metric-value">+2.8"</div>
+            </div>
+            <div class="metric ">
+              <div class="metric-label">VAA Delta</div>
+              <div class="metric-value">+0.3°</div>
+            </div>
+            <div class="metric metric-sweep">
+              <div class="metric-label">Move Delta</div>
+              <div class="metric-value">+4.0"</div>
+            </div>
+            <div class="metric metric-spin">
+              <div class="metric-label">Active Spin</div>
+              <div class="metric-value">+0.1%</div>
+            </div>
+          </div>
+
+          <div class="why">Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.</div>
+        </article>
+        
+        <article
+          class="player-card js-player-card "
+          data-player-id="656794"
+          data-player-name="Newcomb, Sean"
+          data-player-type="pitcher"
+          data-player-team="CWS"
+          data-profile-url="/scout/656794/"
+        >
+          <div class="player-top">
+            <div class="avatar">NE</div>
+            <div class="player-ident">
+              <div class="rankline">#7 Apex Trigger</div>
+              <h3 class="player-name">Newcomb, Sean</h3>
+              <div class="signal-line">CWS // A-TIER // 5 start trend</div>
+            </div>
+            <div class="scorebox">
+              <div class="score-label">Disruption Score</div>
+              <div class="score-value score-a-tier">81.6</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div class="alert-pill alert-spin">ACTIVE SPIN GAIN</div>
+            <button type="button" class="alert-pill js-add-to-roster">Add to Roster</button>
+          </div>
+
+          <div class="sparkline-wrap">
+            <div class="sparkline-head">
+              <div class="sparkline-label">Shape Trend</div>
+              <div class="sparkline-note">Last 5 start trend</div>
+            </div>
+            <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline class="sparkline-path sparkline-spin" points="0.00,10.00 25.00,30.00 50.00,13.29 75.00,16.88 100.00,14.48" />
+            </svg>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric metric-shape">
+              <div class="metric-label">IVB Delta</div>
+              <div class="metric-value">+3.6"</div>
+            </div>
+            <div class="metric ">
+              <div class="metric-label">VAA Delta</div>
+              <div class="metric-value">+0.5°</div>
+            </div>
+            <div class="metric metric-sweep">
+              <div class="metric-label">Move Delta</div>
+              <div class="metric-value">+3.0"</div>
+            </div>
+            <div class="metric metric-spin">
+              <div class="metric-label">Active Spin</div>
+              <div class="metric-value">+0.1%</div>
+            </div>
+          </div>
+
+          <div class="why">Movement quality appears to be improving through more efficient spin conversion, not just raw effort. Breakout conditions are building.</div>
+        </article>
+        
+        <article
+          class="player-card js-player-card "
+          data-player-id="664199"
+          data-player-name="Clarke, Taylor"
+          data-player-type="pitcher"
+          data-player-team="NYM"
+          data-profile-url="/scout/664199/"
+        >
+          <div class="player-top">
+            <div class="avatar">CL</div>
+            <div class="player-ident">
+              <div class="rankline">#8 Apex Trigger</div>
+              <h3 class="player-name">Clarke, Taylor</h3>
+              <div class="signal-line">NYM // B-TIER // 3 start trend</div>
+            </div>
+            <div class="scorebox">
+              <div class="score-label">Disruption Score</div>
+              <div class="score-value score-b-tier">81.6</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div class="alert-pill alert-sweep">SWEEP DISRUPTION</div>
+            <button type="button" class="alert-pill js-add-to-roster">Add to Roster</button>
+          </div>
+
+          <div class="sparkline-wrap">
+            <div class="sparkline-head">
+              <div class="sparkline-label">Shape Trend</div>
+              <div class="sparkline-note">Last 3 start trend</div>
+            </div>
+            <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline class="sparkline-path sparkline-sweep" points="0.00,10.00 50.00,24.55 100.00,30.00" />
+            </svg>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric metric-shape">
+              <div class="metric-label">IVB Delta</div>
+              <div class="metric-value">+3.0"</div>
+            </div>
+            <div class="metric ">
+              <div class="metric-label">VAA Delta</div>
+              <div class="metric-value">+0.2°</div>
+            </div>
+            <div class="metric metric-sweep">
+              <div class="metric-label">Move Delta</div>
+              <div class="metric-value">+3.5"</div>
+            </div>
+            <div class="metric metric-spin">
+              <div class="metric-label">Active Spin</div>
+              <div class="metric-value">+0.1%</div>
+            </div>
+          </div>
+
+          <div class="why">Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.</div>
+        </article>
+        
+        <article
+          class="player-card js-player-card "
+          data-player-id="668678"
+          data-player-name="Gallen, Zac"
+          data-player-type="pitcher"
+          data-player-team="NYM"
+          data-profile-url="/scout/668678/"
+        >
+          <div class="player-top">
+            <div class="avatar">GA</div>
+            <div class="player-ident">
+              <div class="rankline">#9 Apex Trigger</div>
+              <h3 class="player-name">Gallen, Zac</h3>
+              <div class="signal-line">NYM // A-TIER // 4 start trend</div>
+            </div>
+            <div class="scorebox">
+              <div class="score-label">Disruption Score</div>
+              <div class="score-value score-a-tier">81.6</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div class="alert-pill alert-spin">ACTIVE SPIN GAIN</div>
+            <button type="button" class="alert-pill js-add-to-roster">Add to Roster</button>
+          </div>
+
+          <div class="sparkline-wrap">
+            <div class="sparkline-head">
+              <div class="sparkline-label">Shape Trend</div>
+              <div class="sparkline-note">Last 4 start trend</div>
+            </div>
+            <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline class="sparkline-path sparkline-spin" points="0.00,10.00 33.33,24.59 66.67,28.30 100.00,30.00" />
+            </svg>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric metric-shape">
+              <div class="metric-label">IVB Delta</div>
+              <div class="metric-value">+3.6"</div>
+            </div>
+            <div class="metric ">
+              <div class="metric-label">VAA Delta</div>
+              <div class="metric-value">+0.0°</div>
+            </div>
+            <div class="metric metric-sweep">
+              <div class="metric-label">Move Delta</div>
+              <div class="metric-value">+3.1"</div>
+            </div>
+            <div class="metric metric-spin">
+              <div class="metric-label">Active Spin</div>
+              <div class="metric-value">+0.1%</div>
+            </div>
+          </div>
+
+          <div class="why">Movement quality appears to be improving through more efficient spin conversion, not just raw effort. Breakout conditions are building.</div>
+        </article>
+        
+        <article
+          class="player-card js-player-card "
+          data-player-id="676440"
+          data-player-name="Bibee, Tanner"
+          data-player-type="pitcher"
+          data-player-team="CLE"
+          data-profile-url="/scout/676440/"
+        >
+          <div class="player-top">
+            <div class="avatar">BI</div>
+            <div class="player-ident">
+              <div class="rankline">#10 Apex Trigger</div>
+              <h3 class="player-name">Bibee, Tanner</h3>
+              <div class="signal-line">CLE // B-TIER // 5 start trend</div>
+            </div>
+            <div class="scorebox">
+              <div class="score-label">Disruption Score</div>
+              <div class="score-value score-b-tier">81.6</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div class="alert-pill alert-sweep">SWEEP DISRUPTION</div>
+            <button type="button" class="alert-pill js-add-to-roster">Add to Roster</button>
+          </div>
+
+          <div class="sparkline-wrap">
+            <div class="sparkline-head">
+              <div class="sparkline-label">Shape Trend</div>
+              <div class="sparkline-note">Last 5 start trend</div>
+            </div>
+            <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline class="sparkline-path sparkline-sweep" points="0.00,10.00 25.00,26.78 50.00,11.47 75.00,30.00 100.00,29.12" />
+            </svg>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric metric-shape">
+              <div class="metric-label">IVB Delta</div>
+              <div class="metric-value">+2.4"</div>
+            </div>
+            <div class="metric ">
+              <div class="metric-label">VAA Delta</div>
+              <div class="metric-value">-0.0°</div>
+            </div>
+            <div class="metric metric-sweep">
+              <div class="metric-label">Move Delta</div>
+              <div class="metric-value">+3.3"</div>
+            </div>
+            <div class="metric metric-spin">
+              <div class="metric-label">Active Spin</div>
+              <div class="metric-value">+0.1%</div>
+            </div>
+          </div>
+
+          <div class="why">Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.</div>
+        </article>
+        
+        <article
+          class="player-card js-player-card "
+          data-player-id="593958"
+          data-player-name="Rodriguez, Eduardo"
+          data-player-type="pitcher"
+          data-player-team="NYM"
+          data-profile-url="/scout/593958/"
+        >
+          <div class="player-top">
+            <div class="avatar">RO</div>
+            <div class="player-ident">
+              <div class="rankline">#11 Apex Trigger</div>
+              <h3 class="player-name">Rodriguez, Eduardo</h3>
+              <div class="signal-line">NYM // WATCH // 3 start trend</div>
+            </div>
+            <div class="scorebox">
+              <div class="score-label">Disruption Score</div>
+              <div class="score-value score-neutral">81.4</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div class="alert-pill alert-neutral">SHAPE MONITOR</div>
+            <button type="button" class="alert-pill js-add-to-roster">Add to Roster</button>
+          </div>
+
+          <div class="sparkline-wrap">
+            <div class="sparkline-head">
+              <div class="sparkline-label">Shape Trend</div>
+              <div class="sparkline-note">Last 3 start trend</div>
+            </div>
+            <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline class="sparkline-path sparkline-neutral" points="0.00,10.00 50.00,13.39 100.00,30.00" />
+            </svg>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric metric-shape">
+              <div class="metric-label">IVB Delta</div>
+              <div class="metric-value">+2.5"</div>
+            </div>
+            <div class="metric ">
+              <div class="metric-label">VAA Delta</div>
+              <div class="metric-value">+0.4°</div>
+            </div>
+            <div class="metric metric-sweep">
+              <div class="metric-label">Move Delta</div>
+              <div class="metric-value">+2.6"</div>
+            </div>
+            <div class="metric metric-spin">
+              <div class="metric-label">Active Spin</div>
+              <div class="metric-value">+0.1%</div>
+            </div>
+          </div>
+
+          <div class="why">Shape profile is moving, but not yet in a fully qualified disruption tier. Keep this arm on the radar for another appearance.</div>
+        </article>
+        
+        <article
+          class="player-card js-player-card "
+          data-player-id="674370"
+          data-player-name="Bido, Osvaldo"
+          data-player-type="pitcher"
+          data-player-team="ATL"
+          data-profile-url="/scout/674370/"
+        >
+          <div class="player-top">
+            <div class="avatar">BI</div>
+            <div class="player-ident">
+              <div class="rankline">#12 Apex Trigger</div>
+              <h3 class="player-name">Bido, Osvaldo</h3>
+              <div class="signal-line">ATL // B-TIER // 5 start trend</div>
+            </div>
+            <div class="scorebox">
+              <div class="score-label">Disruption Score</div>
+              <div class="score-value score-b-tier">81.4</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div class="alert-pill alert-sweep">SWEEP DISRUPTION</div>
+            <button type="button" class="alert-pill js-add-to-roster">Add to Roster</button>
+          </div>
+
+          <div class="sparkline-wrap">
+            <div class="sparkline-head">
+              <div class="sparkline-label">Shape Trend</div>
+              <div class="sparkline-note">Last 5 start trend</div>
+            </div>
+            <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <polyline class="sparkline-path sparkline-sweep" points="0.00,10.00 25.00,23.87 50.00,25.24 75.00,22.77 100.00,30.00" />
+            </svg>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric metric-shape">
+              <div class="metric-label">IVB Delta</div>
+              <div class="metric-value">+4.4"</div>
+            </div>
+            <div class="metric ">
+              <div class="metric-label">VAA Delta</div>
+              <div class="metric-value">+0.4°</div>
+            </div>
+            <div class="metric metric-sweep">
+              <div class="metric-label">Move Delta</div>
+              <div class="metric-value">+3.2"</div>
+            </div>
+            <div class="metric metric-spin">
+              <div class="metric-label">Active Spin</div>
+              <div class="metric-value">+0.1%</div>
+            </div>
+          </div>
+
+          <div class="why">Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.</div>
+        </article>
+        
+      </div>
+    </section>
+
+    
+  </div>
+
+  <script src="/player-card-actions.js"></script>
+  <script>
+    function openGuide() {
+      document.getElementById("guideOverlay").classList.add("open");
+      document.getElementById("guideDrawer").classList.add("open");
+      document.getElementById("guideDrawer").setAttribute("aria-hidden", "false");
+    }
+
+    function closeGuide() {
+      document.getElementById("guideOverlay").classList.remove("open");
+      document.getElementById("guideDrawer").classList.remove("open");
+      document.getElementById("guideDrawer").setAttribute("aria-hidden", "true");
+    }
+  </script>
+</body>
+</html>

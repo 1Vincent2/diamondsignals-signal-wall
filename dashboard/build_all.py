@@ -9,6 +9,8 @@ SCRIPTS = [
     ROOT / "build_call_up_v2.py",
     ROOT / "build_hidden_gems.py",
     ROOT / "build_ivb_heat_map.py",
+    ROOT / "build_velocity_decay.py",
+    ROOT / "build_stuff_disruption.py",
 ]
 
 def run_script(path: Path) -> None:
