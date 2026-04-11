@@ -676,20 +676,20 @@ HTML_TEMPLATE = Template(
       text-transform: uppercase; margin: 10px 0 12px;
     }
     .alert-pill.alert-cliff {
-    border-color: rgba(255,49,49,0.55);
-    background: rgba(255,49,49,0.18);
-    color: #ffe1e1;
-    box-shadow: 0 0 12px rgba(255,49,49,0.14);
+  border-color: rgba(255,49,49,0.55);
+  background: rgba(255,49,49,0.18);
+  color: #ffe1e1;
+  box-shadow: 0 0 12px rgba(255,49,49,0.14);
 }
 
-    .alert-pill.alert-mechanical {
-    border-color: rgba(255,191,0,0.42);
-    background: rgba(255,191,0,0.12);
-    color: #ffe39a;
-    box-shadow: 0 0 10px rgba(255,191,0,0.08);
+.alert-pill.alert-mechanical {
+  border-color: rgba(255,191,0,0.42);
+  background: rgba(255,191,0,0.12);
+  color: #ffe39a;
+  box-shadow: 0 0 10px rgba(255,191,0,0.08);
+}
 
-    }
-    .alert-pill.alert-effort {
+.alert-pill.alert-effort {
   border-color: rgba(106,166,255,0.34);
   background: rgba(106,166,255,0.10);
   color: #cfe0ff;
@@ -700,16 +700,18 @@ HTML_TEMPLATE = Template(
   background: rgba(168,139,250,0.10);
   color: #ddd6fe;
 }
-    }
-    .alert-pill.alert-warning {
-      border-color: rgba(255,191,0,0.24);
-      background: rgba(255,191,0,0.07);
-      color: #e8d28f;
-    }
-    .alert-pill.alert-neutral {
-      border-color: rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.04);
-      color: var(--soft);
+
+.alert-pill.alert-warning {
+  border-color: rgba(255,214,102,0.24);
+  background: rgba(255,214,102,0.07);
+  color: #e8d9a8;
+}
+
+.alert-pill.alert-neutral {
+  border-color: rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.04);
+  color: var(--soft);
+}
     }
     .js-add-to-roster {
       border-color: rgba(255,255,255,0.10);
@@ -892,8 +894,9 @@ HTML_TEMPLATE = Template(
     {{ footer_html | safe }}
   </div>
 
-  <script src="/player-card-actions.js"></script>
-  <script>
+    <script src="/player-search.js"></script>
+    <script src="/player-card-actions.js"></script>
+    <script>
     function openGuide() {
       document.getElementById("guideOverlay").classList.add("open");
       document.getElementById("guideDrawer").classList.add("open");
@@ -915,10 +918,16 @@ HTML_TEMPLATE = Template(
 def copy_static_assets() -> None:
     DIST_DIR.mkdir(parents=True, exist_ok=True)
 
-    src = REPO_ROOT / "src" / "js" / "player-card-actions.js"
-    dest = DIST_DIR / "player-card-actions.js"
-    if src.exists():
-        dest.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+    search_src = REPO_ROOT / "src" / "js" / "player-search.js"
+    search_dest = DIST_DIR / "player-search.js"
+    if search_src.exists():
+        search_dest.write_text(search_src.read_text(encoding="utf-8"), encoding="utf-8")
+        print("Wrote dist/player-search.js")
+
+    actions_src = REPO_ROOT / "src" / "js" / "player-card-actions.js"
+    actions_dest = DIST_DIR / "player-card-actions.js"
+    if actions_src.exists():
+        actions_dest.write_text(actions_src.read_text(encoding="utf-8"), encoding="utf-8")
         print("Wrote dist/player-card-actions.js")
 
 

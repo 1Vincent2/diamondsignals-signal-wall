@@ -452,10 +452,17 @@ def format_apex_cards(rows: list[dict]) -> list[dict]:
 
 def copy_static_assets() -> None:
     DIST_DIR.mkdir(parents=True, exist_ok=True)
-    src = REPO_ROOT / "src" / "js" / "player-card-actions.js"
-    dest = DIST_DIR / "player-card-actions.js"
-    if src.exists():
-        dest.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+
+    search_src = REPO_ROOT / "src" / "js" / "player-search.js"
+    search_dest = DIST_DIR / "player-search.js"
+    if search_src.exists():
+        search_dest.write_text(search_src.read_text(encoding="utf-8"), encoding="utf-8")
+        print("Wrote dist/player-search.js")
+
+    actions_src = REPO_ROOT / "src" / "js" / "player-card-actions.js"
+    actions_dest = DIST_DIR / "player-card-actions.js"
+    if actions_src.exists():
+        actions_dest.write_text(actions_src.read_text(encoding="utf-8"), encoding="utf-8")
         print("Wrote dist/player-card-actions.js")
 
 
@@ -963,6 +970,7 @@ HTML_TEMPLATE = Template(
     {{ footer_html | safe }}
   </div>
 
+    <script src="/player-search.js"></script>
   <script src="/player-card-actions.js"></script>
   <script>
     function openGuide() {
