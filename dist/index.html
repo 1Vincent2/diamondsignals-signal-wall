@@ -67,7 +67,7 @@
     .hero-card::before, .meta-card::before, .section::before, .player-card::before { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; padding: 0.5px; background: linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.01)); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0.55; }
     .hero-card { padding: 18px; }
     .eyebrow { font-size: 10px; line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); font-weight: 800; margin-bottom: 10px; }
-    .hero-title { margin: 0 0 10px; font-size: clamp(28px, 7vw, 50px); line-height: 0.95; letter-spacing: -0.04em; font-weight: 900; text-transform: uppercase; }
+    .hero-title { margin: 0 0 8px; font-size: clamp(12px, 1.2vw, 16px); line-height: 1.1; letter-spacing: 0.16em; font-weight: 800; text-transform: uppercase; color: var(--soft); font-family: var(--mono); }
     .hero-copy { margin: 0; max-width: 760px; color: var(--soft); font-size: 14px; }
     .meta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .meta-card { padding: 14px; }
@@ -180,7 +180,7 @@
       <button class="info-trigger" type="button" onclick="openGlossary()" aria-label="Open glossary">ⓘ Glossary</button>
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">2026-04-10 02:14 PM</div>
+        <div class="live-time">2026-04-11 10:46 AM</div>
       </div>
     </div>
   </div>
@@ -189,11 +189,13 @@
   <div class="topnav-inner">
     <div class="topnav-links">
       <a class="topnav-link active" href="/"><span class="topnav-tag">[ LIVE ]</span> Signal Wall</a>
-      <a class="topnav-link " href="/typical-call-up"><span class="topnav-tag">[ SCOUT ]</span> AAA/AA Promotion Watch</a>
+      <a class="topnav-link " href="/typical-call-up"><span class="topnav-tag">[ SCOUT ]</span> Promotion Watch</a>
       <a class="topnav-link " href="/ivb-heat-map"><span class="topnav-tag">[ LAB ]</span> IVB Heat Map</a>
-      <a class="topnav-link " href="/hidden-gems"><span class="topnav-tag">[ EDGE ]</span> Hidden Gems Pipeline</a>
+      <a class="topnav-link " href="/velocity-decay-monitor"><span class="topnav-tag">[ RISK ]</span> Velocity Decay Monitor</a>
+      <a class="topnav-link " href="/stuff-disruption-feed"><span class="topnav-tag">[ APEX ]</span> Stuff+ Disruption Feed</a>
+      <a class="topnav-link " href="/hidden-gems"><span class="topnav-tag">[ EDGE ]</span> Hidden Gems</a>
       <a class="topnav-link" href="https://app.diamondsignals.ai/terminal"><span class="topnav-tag">[ TERMINAL ]</span> Roster Terminal</a>
-      <a class="topnav-link" href="https://diamondsignals.ai"><span class="topnav-tag">[ SITE ]</span> Back to Main Site</a>
+      <a class="topnav-link" href="https://diamondsignals.ai"><span class="topnav-tag">[ SITE ]</span> Main Site</a>
     </div>
   </div>
 </div>
@@ -256,7 +258,7 @@
         <div class="meta-grid">
           <div class="meta-card">
             <div class="meta-label">Last Updated</div>
-            <div class="meta-value">2026-04-10 02:14 PM</div>
+            <div class="meta-value">2026-04-11 10:46 AM</div>
           </div>
           <div class="meta-card">
             <div class="meta-label">Lookback</div>
@@ -271,8 +273,8 @@
         <div class="meta-card slate-heat-card">
           <div class="meta-label">Slate Heat</div>
           <div class="slate-heat-row">
-            <div class="slate-heat-bar"><div class="slate-heat-fill" style="width: 78%;"></div></div>
-            <div class="slate-heat-value">78</div>
+            <div class="slate-heat-bar"><div class="slate-heat-fill" style="width: 79%;"></div></div>
+            <div class="slate-heat-value">79</div>
           </div>
         </div>
       </div>
@@ -300,7 +302,7 @@
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">82.1</div>
+                <div class="score-value edge-up">83.3</div>
               </div>
             </div>
 
@@ -345,11 +347,11 @@
               <div class="player-ident">
                 <div class="rankline">#2 Pitcher Trigger</div>
                 <h3 class="player-name">Luzardo, Jesús</h3>
-                <div class="signal-line">Pitcher // Live Edge Signal // 99 P</div>
+                <div class="signal-line">Pitcher // Live Edge Signal // 185 P</div>
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">77.1</div>
+                <div class="score-value edge-up">76.6</div>
               </div>
             </div>
 
@@ -365,7 +367,7 @@
                     <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                   </linearGradient>
                 </defs>
-                <polyline class="sparkline-path glow" stroke="url(#pitcherGradient2)" points="0,26.0 20,23.3 40,20.7 60,18.0 80,15.3 100,12.7 120,10.0" />
+                <polyline class="sparkline-path glow" stroke="url(#pitcherGradient2)" points="0,10.0 20,10.0 40,10.0 60,10.0 80,10.0 100,10.0 120,26.0" />
               </svg>
             </div>
 
@@ -380,25 +382,25 @@
             </div>
 
             <div class="metric-grid">
-              <div class="metric"><div class="metric-label">Whiff %</div><div class="metric-value">22.2</div></div>
-              <div class="metric"><div class="metric-label">FB Velo</div><div class="metric-value">96.7</div></div>
-              <div class="metric"><div class="metric-label">Extension</div><div class="metric-value">5.6 ft</div></div>
+              <div class="metric"><div class="metric-label">Whiff %</div><div class="metric-value">18.4</div></div>
+              <div class="metric"><div class="metric-label">FB Velo</div><div class="metric-value">96.8</div></div>
+              <div class="metric"><div class="metric-label">Extension</div><div class="metric-value">5.7 ft</div></div>
             </div>
 
-            <div class="why">Whiff rate 22.2% (+0.1 pts vs baseline), FB velo 96.7 mph (+1.2).</div>
+            <div class="why">Whiff rate 18.4% (+0.1 pts vs baseline), FB velo 96.8 mph (+1.2).</div>
           </article>
           
           <article class="player-card high-edge">
             <div class="player-top">
-              <div class="avatar">BU</div>
+              <div class="avatar">DO</div>
               <div class="player-ident">
                 <div class="rankline">#3 Pitcher Trigger</div>
-                <h3 class="player-name">Burns, Chase</h3>
-                <div class="signal-line">Pitcher // Live Edge Signal // 87 P</div>
+                <h3 class="player-name">Dollander, Chase</h3>
+                <div class="signal-line">Pitcher // Live Edge Signal // 152 P</div>
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">76.5</div>
+                <div class="score-value edge-up">70.8</div>
               </div>
             </div>
 
@@ -414,97 +416,7 @@
                     <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                   </linearGradient>
                 </defs>
-                <polyline class="sparkline-path glow" stroke="url(#pitcherGradient3)" points="0,26.0 20,23.3 40,20.7 60,18.0 80,15.3 100,12.7 120,10.0" />
-              </svg>
-            </div>
-
-            <div class="badge-row">
-              
-              <span class="status-badge positive">Whiff Lift</span>
-              
-            </div>
-
-            <div class="metric-grid">
-              <div class="metric"><div class="metric-label">Whiff %</div><div class="metric-value">23.0</div></div>
-              <div class="metric"><div class="metric-label">FB Velo</div><div class="metric-value">98.7</div></div>
-              <div class="metric"><div class="metric-label">Extension</div><div class="metric-value">6.3 ft</div></div>
-            </div>
-
-            <div class="why">Whiff rate 23.0% (+0.1 pts vs baseline), FB velo 98.7 mph (+0.5).</div>
-          </article>
-          
-          <article class="player-card high-edge">
-            <div class="player-top">
-              <div class="avatar">MI</div>
-              <div class="player-ident">
-                <div class="rankline">#4 Pitcher Trigger</div>
-                <h3 class="player-name">Miller, Erik</h3>
-                <div class="signal-line">Pitcher // Live Edge Signal // 67 P</div>
-              </div>
-              <div class="scorebox">
-                <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">72.7</div>
-              </div>
-            </div>
-
-            <div class="sparkline-wrap">
-              <div class="sparkline-head">
-                <div class="sparkline-label">7 Day Trend</div>
-                <div class="sparkline-note">7D Trend Analysis</div>
-              </div>
-              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                <defs>
-                  <linearGradient id="pitcherGradient4" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
-                  </linearGradient>
-                </defs>
-                <polyline class="sparkline-path glow" stroke="url(#pitcherGradient4)" points="0,26.0 20,26.0 40,26.0 60,26.0 80,26.0 100,15.3 120,10.0" />
-              </svg>
-            </div>
-
-            <div class="badge-row">
-              
-              <span class="status-badge positive">Whiff Lift</span>
-              
-            </div>
-
-            <div class="metric-grid">
-              <div class="metric"><div class="metric-label">Whiff %</div><div class="metric-value">19.4</div></div>
-              <div class="metric"><div class="metric-label">FB Velo</div><div class="metric-value">97.2</div></div>
-              <div class="metric"><div class="metric-label">Extension</div><div class="metric-value">6.6 ft</div></div>
-            </div>
-
-            <div class="why">Whiff rate 19.4% (+0.1 pts vs baseline), FB velo 97.2 mph (+0.7).</div>
-          </article>
-          
-          <article class="player-card high-edge">
-            <div class="player-top">
-              <div class="avatar">DO</div>
-              <div class="player-ident">
-                <div class="rankline">#5 Pitcher Trigger</div>
-                <h3 class="player-name">Dollander, Chase</h3>
-                <div class="signal-line">Pitcher // Live Edge Signal // 152 P</div>
-              </div>
-              <div class="scorebox">
-                <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">70.1</div>
-              </div>
-            </div>
-
-            <div class="sparkline-wrap">
-              <div class="sparkline-head">
-                <div class="sparkline-label">7 Day Trend</div>
-                <div class="sparkline-note">7D Trend Analysis</div>
-              </div>
-              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                <defs>
-                  <linearGradient id="pitcherGradient5" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
-                  </linearGradient>
-                </defs>
-                <polyline class="sparkline-path " stroke="url(#pitcherGradient5)" points="0,10.0 20,10.0 40,10.0 60,10.0 80,10.0 100,10.0 120,26.0" />
+                <polyline class="sparkline-path " stroke="url(#pitcherGradient3)" points="0,10.0 20,10.0 40,10.0 60,10.0 80,10.0 100,10.0 120,26.0" />
               </svg>
             </div>
 
@@ -523,6 +435,98 @@
             <div class="why">Whiff rate 13.8% (+0.0 pts vs baseline), FB velo 99.0 mph (+0.7).</div>
           </article>
           
+          <article class="player-card high-edge">
+            <div class="player-top">
+              <div class="avatar">SK</div>
+              <div class="player-ident">
+                <div class="rankline">#4 Pitcher Trigger</div>
+                <h3 class="player-name">Skubal, Tarik</h3>
+                <div class="signal-line">Pitcher // Live Edge Signal // 96 P</div>
+              </div>
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value edge-up">70.5</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="pitcherGradient4" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline class="sparkline-path glow" stroke="url(#pitcherGradient4)" points="0,26.0 20,23.3 40,20.7 60,18.0 80,15.3 100,12.7 120,10.0" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge positive">Whiff Lift</span>
+              
+              <span class="status-badge positive">Extension Gain</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric"><div class="metric-label">Whiff %</div><div class="metric-value">17.7</div></div>
+              <div class="metric"><div class="metric-label">FB Velo</div><div class="metric-value">96.7</div></div>
+              <div class="metric"><div class="metric-label">Extension</div><div class="metric-value">6.5 ft</div></div>
+            </div>
+
+            <div class="why">Whiff rate 17.7% (+0.1 pts vs baseline), FB velo 96.7 mph (+0.0).</div>
+          </article>
+          
+          <article class="player-card high-edge">
+            <div class="player-top">
+              <div class="avatar">GL</div>
+              <div class="player-ident">
+                <div class="rankline">#5 Pitcher Trigger</div>
+                <h3 class="player-name">Glasnow, Tyler</h3>
+                <div class="signal-line">Pitcher // Live Edge Signal // 201 P</div>
+              </div>
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value edge-up">69.3</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="pitcherGradient5" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline class="sparkline-path " stroke="url(#pitcherGradient5)" points="0,26.0 20,26.0 40,26.0 60,26.0 80,26.0 100,26.0 120,10.0" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge neutral">Trend Confirming</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric"><div class="metric-label">Whiff %</div><div class="metric-value">14.4</div></div>
+              <div class="metric"><div class="metric-label">FB Velo</div><div class="metric-value">95.8</div></div>
+              <div class="metric"><div class="metric-label">Extension</div><div class="metric-value">7.4 ft</div></div>
+            </div>
+
+            <div class="why">Whiff rate 14.4% (+0.0 pts vs baseline), FB velo 95.8 mph (+0.2).</div>
+          </article>
+          
         </div>
       </div>
 
@@ -539,15 +543,15 @@
           
           <article class="player-card high-edge">
             <div class="player-top">
-              <div class="avatar">KY</div>
+              <div class="avatar">SA</div>
               <div class="player-ident">
                 <div class="rankline">#1 Hitter Trigger</div>
-                <h3 class="player-name">Kyle Higashioka</h3>
-                <div class="signal-line">Hitter // Live Edge Signal // 10 BBE</div>
+                <h3 class="player-name">Samuel Basallo</h3>
+                <div class="signal-line">Hitter // Live Edge Signal // 8 BBE</div>
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">90.3</div>
+                <div class="score-value edge-up">95.0</div>
               </div>
             </div>
 
@@ -563,7 +567,56 @@
                     <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                   </linearGradient>
                 </defs>
-                <polyline class="sparkline-path glow" stroke="url(#hitterGradient1)" points="0,26.0 20,26.0 40,26.0 60,26.0 80,26.0 100,26.0 120,10.0" />
+                <polyline class="sparkline-path glow" stroke="url(#hitterGradient1)" points="0,10.0 20,10.0 40,10.0 60,10.0 80,10.0 100,16.3 120,26.0" />
+              </svg>
+            </div>
+
+            <div class="badge-row">
+              
+              <span class="status-badge positive active-pulse">EV Burst</span>
+              
+              <span class="status-badge positive active-pulse">Barrel Jump</span>
+              
+              <span class="status-badge positive ">Impact EV</span>
+              
+            </div>
+
+            <div class="metric-grid">
+              <div class="metric"><div class="metric-label">Avg EV</div><div class="metric-value">92.5</div></div>
+              <div class="metric"><div class="metric-label">Barrel-like %</div><div class="metric-value">25.0</div></div>
+              <div class="metric"><div class="metric-label">Max EV</div><div class="metric-value">110.6</div></div>
+            </div>
+
+            <div class="why">Avg EV 92.5 mph (+5.2 vs baseline), barrel-like rate 25.0%.</div>
+          </article>
+          
+          <article class="player-card high-edge">
+            <div class="player-top">
+              <div class="avatar">KY</div>
+              <div class="player-ident">
+                <div class="rankline">#2 Hitter Trigger</div>
+                <h3 class="player-name">Kyle Higashioka</h3>
+                <div class="signal-line">Hitter // Live Edge Signal // 10 BBE</div>
+              </div>
+              <div class="scorebox">
+                <div class="score-label">Edge Score</div>
+                <div class="score-value edge-up">88.2</div>
+              </div>
+            </div>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">7 Day Trend</div>
+                <div class="sparkline-note">7D Trend Analysis</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <linearGradient id="hitterGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
+                  </linearGradient>
+                </defs>
+                <polyline class="sparkline-path glow" stroke="url(#hitterGradient2)" points="0,26.0 20,26.0 40,26.0 60,26.0 80,26.0 100,26.0 120,10.0" />
               </svg>
             </div>
 
@@ -586,62 +639,15 @@
           
           <article class="player-card high-edge">
             <div class="player-top">
-              <div class="avatar">SA</div>
-              <div class="player-ident">
-                <div class="rankline">#2 Hitter Trigger</div>
-                <h3 class="player-name">Samuel Basallo</h3>
-                <div class="signal-line">Hitter // Live Edge Signal // 12 BBE</div>
-              </div>
-              <div class="scorebox">
-                <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">80.1</div>
-              </div>
-            </div>
-
-            <div class="sparkline-wrap">
-              <div class="sparkline-head">
-                <div class="sparkline-label">7 Day Trend</div>
-                <div class="sparkline-note">7D Trend Analysis</div>
-              </div>
-              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                <defs>
-                  <linearGradient id="hitterGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                    <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
-                  </linearGradient>
-                </defs>
-                <polyline class="sparkline-path " stroke="url(#hitterGradient2)" points="0,26.0 20,26.0 40,26.0 60,26.0 80,26.0 100,10.0 120,15.6" />
-              </svg>
-            </div>
-
-            <div class="badge-row">
-              
-              <span class="status-badge positive active-pulse">Barrel Jump</span>
-              
-              <span class="status-badge positive ">Impact EV</span>
-              
-            </div>
-
-            <div class="metric-grid">
-              <div class="metric"><div class="metric-label">Avg EV</div><div class="metric-value">89.1</div></div>
-              <div class="metric"><div class="metric-label">Barrel-like %</div><div class="metric-value">16.7</div></div>
-              <div class="metric"><div class="metric-label">Max EV</div><div class="metric-value">110.6</div></div>
-            </div>
-
-            <div class="why">Avg EV 89.1 mph (+1.3 vs baseline), barrel-like rate 16.7%.</div>
-          </article>
-          
-          <article class="player-card high-edge">
-            <div class="player-top">
               <div class="avatar">JA</div>
               <div class="player-ident">
                 <div class="rankline">#3 Hitter Trigger</div>
                 <h3 class="player-name">James Wood</h3>
-                <div class="signal-line">Hitter // Live Edge Signal // 26 BBE</div>
+                <div class="signal-line">Hitter // Live Edge Signal // 30 BBE</div>
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">77.6</div>
+                <div class="score-value edge-up">81.2</div>
               </div>
             </div>
 
@@ -657,7 +663,7 @@
                     <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                   </linearGradient>
                 </defs>
-                <polyline class="sparkline-path glow" stroke="url(#hitterGradient3)" points="0,26.0 20,26.0 40,20.9 60,17.8 80,11.9 100,21.3 120,10.0" />
+                <polyline class="sparkline-path glow" stroke="url(#hitterGradient3)" points="0,25.6 20,25.6 40,22.8 60,17.5 80,26.0 100,15.8 120,10.0" />
               </svg>
             </div>
 
@@ -670,25 +676,25 @@
             </div>
 
             <div class="metric-grid">
-              <div class="metric"><div class="metric-label">Avg EV</div><div class="metric-value">92.8</div></div>
-              <div class="metric"><div class="metric-label">Barrel-like %</div><div class="metric-value">3.8</div></div>
-              <div class="metric"><div class="metric-label">Max EV</div><div class="metric-value">116.0</div></div>
+              <div class="metric"><div class="metric-label">Avg EV</div><div class="metric-value">95.0</div></div>
+              <div class="metric"><div class="metric-label">Barrel-like %</div><div class="metric-value">3.3</div></div>
+              <div class="metric"><div class="metric-label">Max EV</div><div class="metric-value">116.3</div></div>
             </div>
 
-            <div class="why">Avg EV 92.8 mph (+7.5 vs baseline), barrel-like rate 3.8%.</div>
+            <div class="why">Avg EV 95.0 mph (+9.5 vs baseline), barrel-like rate 3.3%.</div>
           </article>
           
           <article class="player-card high-edge">
             <div class="player-top">
-              <div class="avatar">AD</div>
+              <div class="avatar">KE</div>
               <div class="player-ident">
                 <div class="rankline">#4 Hitter Trigger</div>
-                <h3 class="player-name">Addison Barger</h3>
-                <div class="signal-line">Hitter // Live Edge Signal // 9 BBE</div>
+                <h3 class="player-name">Keibert Ruiz</h3>
+                <div class="signal-line">Hitter // Live Edge Signal // 8 BBE</div>
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">76.5</div>
+                <div class="score-value edge-up">77.6</div>
               </div>
             </div>
 
@@ -704,7 +710,7 @@
                     <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                   </linearGradient>
                 </defs>
-                <polyline class="sparkline-path glow" stroke="url(#hitterGradient4)" points="0,10.0 20,10.0 40,10.0 60,10.0 80,10.0 100,10.0 120,26.0" />
+                <polyline class="sparkline-path glow" stroke="url(#hitterGradient4)" points="0,19.3 20,19.3 40,19.3 60,19.3 80,19.3 100,26.0 120,10.0" />
               </svg>
             </div>
 
@@ -712,30 +718,30 @@
               
               <span class="status-badge positive active-pulse">EV Burst</span>
               
-              <span class="status-badge positive ">Impact EV</span>
+              <span class="status-badge positive active-pulse">Barrel Jump</span>
               
             </div>
 
             <div class="metric-grid">
-              <div class="metric"><div class="metric-label">Avg EV</div><div class="metric-value">95.5</div></div>
-              <div class="metric"><div class="metric-label">Barrel-like %</div><div class="metric-value">0.0</div></div>
-              <div class="metric"><div class="metric-label">Max EV</div><div class="metric-value">116.4</div></div>
+              <div class="metric"><div class="metric-label">Avg EV</div><div class="metric-value">89.6</div></div>
+              <div class="metric"><div class="metric-label">Barrel-like %</div><div class="metric-value">12.5</div></div>
+              <div class="metric"><div class="metric-label">Max EV</div><div class="metric-value">104.0</div></div>
             </div>
 
-            <div class="why">Avg EV 95.5 mph (+14.1 vs baseline), barrel-like rate 0.0%.</div>
+            <div class="why">Avg EV 89.6 mph (+9.5 vs baseline), barrel-like rate 12.5%.</div>
           </article>
           
           <article class="player-card high-edge">
             <div class="player-top">
-              <div class="avatar">GA</div>
+              <div class="avatar">JU</div>
               <div class="player-ident">
                 <div class="rankline">#5 Hitter Trigger</div>
-                <h3 class="player-name">Gabriel Moreno</h3>
-                <div class="signal-line">Hitter // Live Edge Signal // 27 BBE</div>
+                <h3 class="player-name">Juan Brito</h3>
+                <div class="signal-line">Hitter // Live Edge Signal // 17 BBE</div>
               </div>
               <div class="scorebox">
                 <div class="score-label">Edge Score</div>
-                <div class="score-value edge-up">75.9</div>
+                <div class="score-value edge-up">75.6</div>
               </div>
             </div>
 
@@ -751,7 +757,7 @@
                     <stop offset="100%" stop-color="#b6ff00" stop-opacity="1"></stop>
                   </linearGradient>
                 </defs>
-                <polyline class="sparkline-path glow" stroke="url(#hitterGradient5)" points="0,26.0 20,26.0 40,20.4 60,15.8 80,15.2 100,22.3 120,10.0" />
+                <polyline class="sparkline-path glow" stroke="url(#hitterGradient5)" points="0,10.0 20,10.0 40,10.0 60,10.0 80,10.0 100,26.0 120,23.3" />
               </svg>
             </div>
 
@@ -759,17 +765,15 @@
               
               <span class="status-badge positive active-pulse">EV Burst</span>
               
-              <span class="status-badge positive ">Impact EV</span>
-              
             </div>
 
             <div class="metric-grid">
-              <div class="metric"><div class="metric-label">Avg EV</div><div class="metric-value">90.7</div></div>
-              <div class="metric"><div class="metric-label">Barrel-like %</div><div class="metric-value">7.4</div></div>
-              <div class="metric"><div class="metric-label">Max EV</div><div class="metric-value">110.2</div></div>
+              <div class="metric"><div class="metric-label">Avg EV</div><div class="metric-value">86.9</div></div>
+              <div class="metric"><div class="metric-label">Barrel-like %</div><div class="metric-value">5.9</div></div>
+              <div class="metric"><div class="metric-label">Max EV</div><div class="metric-value">107.2</div></div>
             </div>
 
-            <div class="why">Avg EV 90.7 mph (+8.9 vs baseline), barrel-like rate 7.4%.</div>
+            <div class="why">Avg EV 86.9 mph (+16.9 vs baseline), barrel-like rate 5.9%.</div>
           </article>
           
         </div>

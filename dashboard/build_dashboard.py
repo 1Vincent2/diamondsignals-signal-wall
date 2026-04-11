@@ -1383,7 +1383,7 @@ HTML_TEMPLATE = Template(
     .hero-card::before, .meta-card::before, .section::before, .player-card::before { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; padding: 0.5px; background: linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.01)); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0.55; }
     .hero-card { padding: 18px; }
     .eyebrow { font-size: 10px; line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); font-weight: 800; margin-bottom: 10px; }
-    .hero-title { margin: 0 0 10px; font-size: clamp(28px, 7vw, 50px); line-height: 0.95; letter-spacing: -0.04em; font-weight: 900; text-transform: uppercase; }
+    .hero-title { margin: 0 0 8px; font-size: clamp(12px, 1.2vw, 16px); line-height: 1.1; letter-spacing: 0.16em; font-weight: 800; text-transform: uppercase; color: var(--soft); font-family: var(--mono); }
     .hero-copy { margin: 0; max-width: 760px; color: var(--soft); font-size: 14px; }
     .meta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .meta-card { padding: 14px; }
@@ -1778,13 +1778,13 @@ def scout_shell_html() -> str:
 
     .hero-card { padding: 22px; margin-bottom: 16px; }
     .eyebrow { font-size: 10px; line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); font-weight: 800; margin-bottom: 10px; }
-    .hero-title { margin: 0 0 10px; font-size: clamp(30px, 6vw, 56px); line-height: 0.95; letter-spacing: -0.04em; font-weight: 900; text-transform: uppercase; }
+    
     .hero-copy { margin: 0; max-width: 760px; color: var(--soft); font-size: 14px; }
 
     .player-id-grid { display: grid; grid-template-columns: 120px 1fr auto; gap: 18px; align-items: center; padding: 18px; margin-bottom: 16px; }
     .headshot-shell { width: 120px; height: 120px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.10); background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; color: var(--soft); font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; overflow: hidden; }
     .player-kicker { font-size: 10px; line-height: 1; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); font-weight: 800; margin-bottom: 8px; }
-    .player-name { margin: 0 0 8px; font-size: clamp(28px, 4vw, 44px); line-height: 0.98; letter-spacing: -0.04em; font-weight: 900; text-transform: uppercase; }
+    .player-name { margin: 0 0 8px; font-size: clamp(34px, 4.8vw, 56px); line-height: 0.96; letter-spacing: -0.04em; font-weight: 900; text-transform: uppercase; }
     .player-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
     .meta-pill, .signal-pill { display: inline-flex; align-items: center; border-radius: 999px; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.08em; }
     .signal-stack { display: grid; gap: 8px; justify-items: end; min-width: 120px; }
@@ -1840,9 +1840,9 @@ def scout_shell_html() -> str:
   {search_html}
 
   <div class="app">
-    <section class="hero-card">
+        <section class="hero-card">
       <div class="eyebrow">Scout Terminal</div>
-      <h1 class="hero-title">Player Dossier</h1>
+      <h1 class="hero-title">Player Dossier Reference</h1>
       <p class="hero-copy">
         DiamondSignals scout shell v2. This page hydrates dossiers from the canonical dossier JSON payload.
       </p>
