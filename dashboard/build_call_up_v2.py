@@ -12,7 +12,7 @@ from jinja2 import Template
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
 DIST_DIR = REPO_ROOT / "dist"
-CALL_UP_DIR = DIST_DIR / "typical-call-up"
+CALL_UP_DIR = DIST_DIR / "typical-call-up-v3"
 TEMPLATES_DIR = BASE_DIR / "templates"
 
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
@@ -833,7 +833,7 @@ HTML_TEMPLATE = Template(
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DiamondSignals // Promotion Watch</title>
+  <title>DiamondSignals // Promotion Watch Preview</title>
   <style>
     :root {
       --bg: #080808;
@@ -1150,7 +1150,53 @@ HTML_TEMPLATE = Template(
       gap: 12px;
     }
 
-    .arrival-grid {
+    
+    .system-pulse-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-top: 2px solid rgba(176,215,255,0.42);
+      background: rgba(7, 12, 24, 0.82);
+      box-shadow: 0 18px 40px rgba(2,6,23,0.22);
+    }
+
+    .system-pulse-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .system-pulse-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34,197,94,0.65);
+      animation: pulse 1.5s infinite;
+    }
+
+    .system-pulse-label,
+    .system-pulse-proof {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .system-pulse-label {
+      color: var(--soft);
+    }
+
+    .system-pulse-proof {
+      color: #B0D7FF;
+      text-align: right;
+    }
+
+.arrival-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
@@ -1184,6 +1230,27 @@ HTML_TEMPLATE = Template(
     }
 
     #tab-14d .section-kicker { color: var(--blue-soft); }
+
+    #tab-14d .signal-grid {
+      display: block;
+    }
+
+    #tab-14d .signal-grid > .section {
+      width: 100%;
+      max-width: none;
+      margin-bottom: 18px;
+    }
+
+    #tab-72h .signal-grid {
+      display: block;
+    }
+
+    #tab-72h .signal-grid > .section {
+      width: 100%;
+      max-width: none;
+      margin-bottom: 18px;
+    }
+
 
     .player-top {
       display: grid;
@@ -1448,6 +1515,254 @@ HTML_TEMPLATE = Template(
       font-variant-numeric: tabular-nums;
     }
 
+
+    .player-audit-row {
+      display: grid;
+      grid-template-columns: minmax(260px, 1.35fr) minmax(220px, 0.95fr) 84px 150px;
+      gap: 14px;
+      align-items: start;
+      border-radius: 10px;
+      padding: 16px 18px;
+      background: rgba(7,12,24,0.78);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-top: 2px solid rgba(176,215,255,0.28);
+      box-shadow: 0 18px 40px rgba(2,6,23,0.20);
+    }
+
+    .player-audit-row:hover {
+      border-color: rgba(176,215,255,0.34);
+      transform: translateY(-1px);
+    }
+
+    .audit-left,
+    .audit-center,
+    .audit-right,
+    .audit-action {
+      min-width: 0;
+    }
+
+    .audit-trigger {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 8px;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .audit-trigger:hover .audit-kicker,
+    .audit-trigger:hover .audit-player-name {
+      color: #B0D7FF;
+    }
+
+    .audit-kicker,
+    .audit-context,
+    .audit-chip,
+    .forensic-label,
+    .conviction-label {
+      font-family: var(--mono);
+      text-transform: uppercase;
+    }
+
+    .audit-kicker {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      color: #B0D7FF;
+    }
+
+    .audit-player-name {
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .audit-context {
+      margin-top: 8px;
+      font-size: 10px;
+      letter-spacing: 0.10em;
+      color: var(--soft);
+    }
+
+    .audit-submeta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .audit-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--soft);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+    }
+
+    .forensic-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(64px, 1fr));
+      gap: 6px;
+    }
+
+    .forensic-cell {
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+      padding: 10px 11px;
+    }
+
+    .forensic-label {
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      color: #B0D7FF;
+      white-space: nowrap;
+    }
+
+    .forensic-value {
+      margin-top: 5px;
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .audit-why {
+      margin-top: 12px;
+      font-size: 10px;
+      line-height: 1.55;
+      color: #8b8b94;
+      font-family: var(--mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .audit-right {
+      text-align: right;
+      min-width: 92px;
+    }
+
+    .conviction-label {
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      color: var(--tiny);
+      margin-bottom: 4px;
+      white-space: nowrap;
+    }
+
+    .conviction-score {
+      font-size: 36px;
+      line-height: 0.92;
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: -0.05em;
+    }
+
+    .conviction-score.positive,
+    .conviction-score.elite { color: var(--lime-hot); }
+    .conviction-score.watch { color: var(--gold); }
+    .conviction-score.neutral { color: var(--text); }
+
+    .audit-action {
+      display: flex;
+      align-items: start;
+      justify-content: flex-end;
+      min-width: 150px;
+    }
+
+    .provision-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 36px;
+      padding: 0 10px;
+      border: 1px solid rgba(96,165,250,0.32);
+      background: rgba(37,99,235,0.95);
+      color: white;
+      font-family: var(--mono);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: 160ms ease;
+      white-space: nowrap;
+    }
+
+    .provision-btn:hover {
+      background: rgba(59,130,246,1);
+      transform: translateY(-1px);
+      box-shadow: 0 0 16px rgba(59,130,246,0.16);
+    }
+
+    .movement-audit-row .movement-trigger {
+      cursor: default;
+    }
+
+    .movement-audit-row .forensic-grid {
+      grid-template-columns: repeat(3, minmax(88px, 1fr));
+    }
+
+    .movement-right {
+      min-width: 110px;
+      text-align: right;
+    }
+
+    .movement-flag {
+      font-family: var(--mono);
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--gold);
+      line-height: 1.1;
+    }
+
+    .movement-action {
+      min-width: 170px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: start;
+    }
+
+    .movement-route {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      color: var(--soft);
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 1120px) {
+      .player-audit-row {
+        grid-template-columns: 1fr;
+      }
+
+      .audit-right {
+        text-align: left;
+      }
+
+      .audit-action {
+        justify-content: flex-start;
+      }
+    }
+
     .drawer-overlay {
       position: fixed;
       inset: 0;
@@ -1605,7 +1920,7 @@ HTML_TEMPLATE = Template(
         <div class="brand-mark"></div>
         <div class="brand-text">
           <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
-          <div class="brand-title">Promotion Watch // Institutional Elite</div>
+          <div class="brand-title">Promotion Watch // Institutional Ledger Preview</div>
         </div>
       </div>
       <div class="livebox">
@@ -1648,6 +1963,15 @@ HTML_TEMPLATE = Template(
       <div class="board-controls">
         <button type="button" class="guide-btn" onclick="openTerminalGuide()">How to Use This Terminal</button>
 
+
+        <section class="system-pulse-bar">
+          <div class="system-pulse-left">
+            <span class="system-pulse-dot"></span>
+            <span class="system-pulse-label">LIVE_ENGINE_PULSE</span>
+          </div>
+          <div class="system-pulse-proof">8,421,902 TOTAL OPERATIONS VERIFIED</div>
+        </section>
+
         <div class="tabs" role="tablist" aria-label="Promotion watch windows">
           <button type="button" class="tab" id="tab-btn-72h" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
           <button type="button" class="tab active" id="tab-btn-14d" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
@@ -1659,7 +1983,7 @@ HTML_TEMPLATE = Template(
       {% else %}
 
       <div id="tab-72h" style="display:none;">
-        <section class="signal-grid">
+        <section class="signal-grid signal-grid-v3-preview">
           <div class="section">
             <div class="section-head">
               <div>
@@ -1672,69 +1996,51 @@ HTML_TEMPLATE = Template(
             <div class="cards">
               {% for row in pitchers %}
               <article
-  class="player-card js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
+  class="player-card player-audit-row js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
   data-player-id="{{ row.resolved_player_id }}"
   data-player-name="{{ row.player_name }}"
   data-player-type="pitcher"
   data-player-team="{{ row.display_team }}"
   data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
-                <div class="player-top">
-                  <div class="avatar">{{ row.avatar }}</div>
-                  <div class="player-ident">
-                    <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
-                    <h3 class="player-name">{{ row.player_name }}</h3>
-                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // Pitching Signal • {{ row.sample_note }}</div>
-                    <div class="card-meta-row">
-                      <span class="card-meta-badge">{{ row.source_badge }}</span>
-<span class="card-meta-badge">{{ row.score_version }}</span>
-<button type="button" class="card-meta-badge js-add-to-roster">Add to Roster</button>
+                <div class="audit-left">
+                  <div class="audit-trigger" role="button" tabindex="-1">
+                    <span class="audit-kicker">&gt;_ SYSTEM_AUDIT:</span>
+                    <span class="audit-player-name">{{ row.player_name }}</span>
+                  </div>
+                  <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // SIGNAL WINDOW • {{ row.sample_note }}</div>
+                  <div class="audit-submeta">
+                    <span class="audit-chip">{{ row.source_badge }}</span>
+                    <span class="audit-chip">{{ row.score_version }}</span>
+                  </div>
+                </div>
+
+                <div class="audit-center">
+                  <div class="forensic-grid">
+                    <div class="forensic-cell">
+                      <div class="forensic-label">VELO_DELTA</div>
+                      <div class="forensic-value">{{ row.metric_1 }}</div>
+                    </div>
+                    <div class="forensic-cell">
+                      <div class="forensic-label">WHIFF_STABILITY</div>
+                      <div class="forensic-value">{{ row.metric_2 }}</div>
+                    </div>
+                    <div class="forensic-cell">
+                      <div class="forensic-label">LVL_ADJUST</div>
+                      <div class="forensic-value">{{ row.metric_3 }}</div>
                     </div>
                   </div>
-                  <div class="scorebox">
-                    <div class="score-label">Edge Score</div>
-                    <div class="score-value {{ row.score_class }}">{{ row.edge_score }}</div>
-                  </div>
+                  <div class="audit-why">{{ row.why }}</div>
                 </div>
 
-                <div class="sparkline-wrap">
-                  <div class="sparkline-head">
-                    <div class="sparkline-label">Recent Trend</div>
-                    <div class="sparkline-note">{{ row.trend_note }}</div>
-                  </div>
-                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="pitcherGradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#6aa6ff{% endif %}" stop-opacity="1"></stop>
-                      </linearGradient>
-                    </defs>
-                    <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#pitcherGradient{{ loop.index }})" points="{{ row.trend_points }}" />
-                  </svg>
+                <div class="audit-right">
+                  <div class="conviction-label">CONVICTION_INDEX</div>
+                  <div class="conviction-score {{ row.score_class }}">{{ row.edge_score }}</div>
                 </div>
 
-                <div class="badge-row">
-                  {% for badge, badge_class in row.badges %}
-                  <span class="status-badge {{ badge_class }}">{{ badge }}</span>
-                  {% endfor %}
+                <div class="audit-action">
+                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
                 </div>
-
-                <div class="metric-grid">
-                  <div class="metric">
-                    <div class="metric-label">{{ row.metric_1_label }}</div>
-                    <div class="metric-value">{{ row.metric_1 }}</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">{{ row.metric_2_label }}</div>
-                    <div class="metric-value">{{ row.metric_2 }}</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">{{ row.metric_3_label }}</div>
-                    <div class="metric-value">{{ row.metric_3 }}</div>
-                  </div>
-                </div>
-
-                <div class="why">{{ row.why }}</div>
               </article>
               {% endfor %}
             </div>
@@ -1752,69 +2058,51 @@ HTML_TEMPLATE = Template(
             <div class="cards">
               {% for row in hitters %}
               <article
-  class="player-card js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
+  class="player-card player-audit-row js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
   data-player-id="{{ row.resolved_player_id }}"
   data-player-name="{{ row.player_name }}"
   data-player-type="hitter"
   data-player-team="{{ row.display_team }}"
   data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
-                <div class="player-top">
-                  <div class="avatar">{{ row.avatar }}</div>
-                  <div class="player-ident">
-                    <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
-                    <h3 class="player-name">{{ row.player_name }}</h3>
-                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // Hitting Signal • {{ row.sample_note }}</div>
-                    <div class="card-meta-row">
-                      <span class="card-meta-badge">{{ row.source_badge }}</span>
-<span class="card-meta-badge">{{ row.score_version }}</span>
-<button type="button" class="card-meta-badge js-add-to-roster">Add to Roster</button>
+                <div class="audit-left">
+                  <div class="audit-trigger" role="button" tabindex="-1">
+                    <span class="audit-kicker">&gt;_ SYSTEM_AUDIT:</span>
+                    <span class="audit-player-name">{{ row.player_name }}</span>
+                  </div>
+                  <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // SIGNAL WINDOW • {{ row.sample_note }}</div>
+                  <div class="audit-submeta">
+                    <span class="audit-chip">{{ row.source_badge }}</span>
+                    <span class="audit-chip">{{ row.score_version }}</span>
+                  </div>
+                </div>
+
+                <div class="audit-center">
+                  <div class="forensic-grid">
+                    <div class="forensic-cell">
+                      <div class="forensic-label">ISO_DELTA</div>
+                      <div class="forensic-value">{{ row.metric_1 }}</div>
+                    </div>
+                    <div class="forensic-cell">
+                      <div class="forensic-label">K/BB_STABILITY</div>
+                      <div class="forensic-value">{{ row.metric_2 }}</div>
+                    </div>
+                    <div class="forensic-cell">
+                      <div class="forensic-label">LVL_ADJUST</div>
+                      <div class="forensic-value">{{ row.metric_3 }}</div>
                     </div>
                   </div>
-                  <div class="scorebox">
-                    <div class="score-label">Edge Score</div>
-                    <div class="score-value {{ row.score_class }}">{{ row.edge_score }}</div>
-                  </div>
+                  <div class="audit-why">{{ row.why }}</div>
                 </div>
 
-                <div class="sparkline-wrap">
-                  <div class="sparkline-head">
-                    <div class="sparkline-label">Recent Trend</div>
-                    <div class="sparkline-note">{{ row.trend_note }}</div>
-                  </div>
-                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="hitterGradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#6aa6ff{% endif %}" stop-opacity="1"></stop>
-                      </linearGradient>
-                    </defs>
-                    <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#hitterGradient{{ loop.index }})" points="{{ row.trend_points }}" />
-                  </svg>
+                <div class="audit-right">
+                  <div class="conviction-label">CONVICTION_INDEX</div>
+                  <div class="conviction-score {{ row.score_class }}">{{ row.edge_score }}</div>
                 </div>
 
-                <div class="badge-row">
-                  {% for badge, badge_class in row.badges %}
-                  <span class="status-badge {{ badge_class }}">{{ badge }}</span>
-                  {% endfor %}
+                <div class="audit-action">
+                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
                 </div>
-
-                <div class="metric-grid">
-                  <div class="metric">
-                    <div class="metric-label">{{ row.metric_1_label }}</div>
-                    <div class="metric-value">{{ row.metric_1 }}</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">{{ row.metric_2_label }}</div>
-                    <div class="metric-value">{{ row.metric_2 }}</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">{{ row.metric_3_label }}</div>
-                    <div class="metric-value">{{ row.metric_3 }}</div>
-                  </div>
-                </div>
-
-                <div class="why">{{ row.why }}</div>
               </article>
               {% endfor %}
             </div>
@@ -1824,7 +2112,7 @@ HTML_TEMPLATE = Template(
 
       <div id="tab-14d">
         <section class="signal-grid">
-          <div class="section">
+          <div class="section section-v3-ledger-full">
             <div class="section-head">
               <div>
                 <div class="section-kicker">Signal Layer</div>
@@ -1837,69 +2125,51 @@ HTML_TEMPLATE = Template(
             <div class="cards">
               {% for row in pitchers_14 %}
               <article
-  class="player-card js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
+  class="player-card player-audit-row js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
   data-player-id="{{ row.resolved_player_id }}"
   data-player-name="{{ row.player_name }}"
   data-player-type="pitcher"
   data-player-team="{{ row.display_team }}"
   data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
-                <div class="player-top">
-                  <div class="avatar">{{ row.avatar }}</div>
-                  <div class="player-ident">
-                    <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
-                    <h3 class="player-name">{{ row.player_name }}</h3>
-                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // 14 Day Scout Window • {{ row.sample_note }}</div>
-                    <div class="card-meta-row">
-                      <span class="card-meta-badge">{{ row.source_badge }}</span>
-<span class="card-meta-badge">{{ row.score_version }}</span>
-<button type="button" class="card-meta-badge js-add-to-roster">Add to Roster</button>
+                <div class="audit-left">
+                  <div class="audit-trigger" role="button" tabindex="-1">
+                    <span class="audit-kicker">&gt;_ SYSTEM_AUDIT:</span>
+                    <span class="audit-player-name">{{ row.player_name }}</span>
+                  </div>
+                  <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // 14 DAY WINDOW • {{ row.sample_note }}</div>
+                  <div class="audit-submeta">
+                    <span class="audit-chip">{{ row.source_badge }}</span>
+                    <span class="audit-chip">{{ row.score_version }}</span>
+                  </div>
+                </div>
+
+                <div class="audit-center">
+                  <div class="forensic-grid">
+                    <div class="forensic-cell">
+                      <div class="forensic-label">VELO_DELTA</div>
+                      <div class="forensic-value">{{ row.metric_1 }}</div>
+                    </div>
+                    <div class="forensic-cell">
+                      <div class="forensic-label">WHIFF_STABILITY</div>
+                      <div class="forensic-value">{{ row.metric_2 }}</div>
+                    </div>
+                    <div class="forensic-cell">
+                      <div class="forensic-label">LVL_ADJUST</div>
+                      <div class="forensic-value">{{ row.metric_3 }}</div>
                     </div>
                   </div>
-                  <div class="scorebox">
-                    <div class="score-label">Edge Score</div>
-                    <div class="score-value {{ row.score_class }}">{{ row.edge_score }}</div>
-                  </div>
+                  <div class="audit-why">{{ row.why }}</div>
                 </div>
 
-                <div class="sparkline-wrap">
-                  <div class="sparkline-head">
-                    <div class="sparkline-label">Real Trend</div>
-                    <div class="sparkline-note">{{ row.trend_note }}</div>
-                  </div>
-                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="pitcher14Gradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#6aa6ff{% endif %}" stop-opacity="1"></stop>
-                      </linearGradient>
-                    </defs>
-                    <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#pitcher14Gradient{{ loop.index }})" points="{{ row.trend_points }}" />
-                  </svg>
+                <div class="audit-right">
+                  <div class="conviction-label">CONVICTION_INDEX</div>
+                  <div class="conviction-score {{ row.score_class }}">{{ row.edge_score }}</div>
                 </div>
 
-                <div class="badge-row">
-                  {% for badge, badge_class in row.badges %}
-                  <span class="status-badge {{ badge_class }}">{{ badge }}</span>
-                  {% endfor %}
+                <div class="audit-action">
+                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
                 </div>
-
-                <div class="metric-grid">
-                  <div class="metric">
-                    <div class="metric-label">{{ row.metric_1_label }}</div>
-                    <div class="metric-value">{{ row.metric_1 }}</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">{{ row.metric_2_label }}</div>
-                    <div class="metric-value">{{ row.metric_2 }}</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">{{ row.metric_3_label }}</div>
-                    <div class="metric-value">{{ row.metric_3 }}</div>
-                  </div>
-                </div>
-
-                <div class="why">{{ row.why }}</div>
               </article>
               {% endfor %}
             </div>
@@ -1921,69 +2191,51 @@ HTML_TEMPLATE = Template(
             <div class="cards">
               {% for row in hitters_14 %}
               <article
-  class="player-card js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
+  class="player-card player-audit-row js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
   data-player-id="{{ row.resolved_player_id }}"
   data-player-name="{{ row.player_name }}"
   data-player-type="hitter"
   data-player-team="{{ row.display_team }}"
   data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
-                <div class="player-top">
-                  <div class="avatar">{{ row.avatar }}</div>
-                  <div class="player-ident">
-                    <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
-                    <h3 class="player-name">{{ row.player_name }}</h3>
-                    <div class="signal-line">{{ row.display_org }} // {{ row.display_team }} // 14 Day Scout Window • {{ row.sample_note }}</div>
-                    <div class="card-meta-row">
-                      <span class="card-meta-badge">{{ row.source_badge }}</span>
-<span class="card-meta-badge">{{ row.score_version }}</span>
-<button type="button" class="card-meta-badge js-add-to-roster">Add to Roster</button>
+                <div class="audit-left">
+                  <div class="audit-trigger" role="button" tabindex="-1">
+                    <span class="audit-kicker">&gt;_ SYSTEM_AUDIT:</span>
+                    <span class="audit-player-name">{{ row.player_name }}</span>
+                  </div>
+                  <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // 14 DAY WINDOW • {{ row.sample_note }}</div>
+                  <div class="audit-submeta">
+                    <span class="audit-chip">{{ row.source_badge }}</span>
+                    <span class="audit-chip">{{ row.score_version }}</span>
+                  </div>
+                </div>
+
+                <div class="audit-center">
+                  <div class="forensic-grid">
+                    <div class="forensic-cell">
+                      <div class="forensic-label">ISO_DELTA</div>
+                      <div class="forensic-value">{{ row.metric_1 }}</div>
+                    </div>
+                    <div class="forensic-cell">
+                      <div class="forensic-label">K/BB_STABILITY</div>
+                      <div class="forensic-value">{{ row.metric_2 }}</div>
+                    </div>
+                    <div class="forensic-cell">
+                      <div class="forensic-label">LVL_ADJUST</div>
+                      <div class="forensic-value">{{ row.metric_3 }}</div>
                     </div>
                   </div>
-                  <div class="scorebox">
-                    <div class="score-label">Edge Score</div>
-                    <div class="score-value {{ row.score_class }}">{{ row.edge_score }}</div>
-                  </div>
+                  <div class="audit-why">{{ row.why }}</div>
                 </div>
 
-                <div class="sparkline-wrap">
-                  <div class="sparkline-head">
-                    <div class="sparkline-label">Real Trend</div>
-                    <div class="sparkline-note">{{ row.trend_note }}</div>
-                  </div>
-                  <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="hitter14Gradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                        <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#6aa6ff{% endif %}" stop-opacity="1"></stop>
-                      </linearGradient>
-                    </defs>
-                    <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#hitter14Gradient{{ loop.index }})" points="{{ row.trend_points }}" />
-                  </svg>
+                <div class="audit-right">
+                  <div class="conviction-label">CONVICTION_INDEX</div>
+                  <div class="conviction-score {{ row.score_class }}">{{ row.edge_score }}</div>
                 </div>
 
-                <div class="badge-row">
-                  {% for badge, badge_class in row.badges %}
-                  <span class="status-badge {{ badge_class }}">{{ badge }}</span>
-                  {% endfor %}
+                <div class="audit-action">
+                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
                 </div>
-
-                <div class="metric-grid">
-                  <div class="metric">
-                    <div class="metric-label">{{ row.metric_1_label }}</div>
-                    <div class="metric-value">{{ row.metric_1 }}</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">{{ row.metric_2_label }}</div>
-                    <div class="metric-value">{{ row.metric_2 }}</div>
-                  </div>
-                  <div class="metric">
-                    <div class="metric-label">{{ row.metric_3_label }}</div>
-                    <div class="metric-value">{{ row.metric_3 }}</div>
-                  </div>
-                </div>
-
-                <div class="why">{{ row.why }}</div>
               </article>
               {% endfor %}
             </div>
@@ -2005,42 +2257,46 @@ HTML_TEMPLATE = Template(
           {% if archive_arrivals %}
           <div class="arrival-grid">
             {% for row in archive_arrivals %}
-            <article class="player-card">
-              <div class="player-top">
-                <div class="avatar">{{ row.avatar }}</div>
-                <div class="player-ident">
-                  <div class="rankline">{{ row.transaction_label }} // Movement Layer</div>
-                  <h3 class="player-name">{{ row.player_name }}</h3>
-                  <div class="signal-line">From {{ row.from_code }} // To {{ row.to_code }} // {{ row.event_line }}</div>
-                  <div class="card-meta-row">
-                    <span class="card-meta-badge">Recent Arrival</span>
-                    <span class="card-meta-badge team">FROM {{ row.from_code }}</span>
-                    <span class="card-meta-badge team">TO {{ row.to_code }}</span>
+            <article class="player-card player-audit-row movement-audit-row">
+              <div class="audit-left">
+                <div class="audit-trigger movement-trigger">
+                  <span class="audit-kicker">&gt;_ MOVEMENT_AUDIT:</span>
+                  <span class="audit-player-name">{{ row.player_name }}</span>
+                </div>
+                <div class="audit-context">FROM {{ row.from_code }} // TO {{ row.to_code }} // {{ row.event_line }}</div>
+                <div class="audit-submeta">
+                  <span class="audit-chip">RECENT_ARRIVAL</span>
+                  <span class="audit-chip">{{ row.transaction_label }}</span>
+                  <span class="audit-chip">{{ row.position_badge }}</span>
+                </div>
+              </div>
+
+              <div class="audit-center">
+                <div class="forensic-grid">
+                  <div class="forensic-cell">
+                    <div class="forensic-label">TX_DATE</div>
+                    <div class="forensic-value">{{ row.date }}</div>
+                  </div>
+                  <div class="forensic-cell">
+                    <div class="forensic-label">CONTEXT</div>
+                    <div class="forensic-value">{{ row.meta_line }}</div>
+                  </div>
+                  <div class="forensic-cell">
+                    <div class="forensic-label">MLB_STATUS</div>
+                    <div class="forensic-value">{{ row.debut_label }}</div>
                   </div>
                 </div>
+                <div class="audit-why">{{ row.event_line }} // {{ row.why }}</div>
               </div>
 
-              <div class="badge-row">
-                <span class="status-badge {{ row.position_class }}">{{ row.position_badge }}</span>
-                <span class="status-badge {{ row.transaction_class }}">{{ row.transaction_label }}</span>
+              <div class="audit-right movement-right">
+                <div class="conviction-label">TX_TYPE</div>
+                <div class="movement-flag">{{ row.transaction_label }}</div>
               </div>
 
-              <div class="metric-grid">
-                <div class="metric">
-                  <div class="metric-label">Transaction Date</div>
-                  <div class="metric-value">{{ row.date }}</div>
-                </div>
-                <div class="metric">
-                  <div class="metric-label">Prospect Context</div>
-                  <div class="metric-value">{{ row.meta_line }} // {{ row.position_badge }}</div>
-                </div>
-                <div class="metric">
-                  <div class="metric-label">MLB Status</div>
-                  <div class="metric-value">{{ row.transaction_label }} // {{ row.debut_label }}</div>
-                </div>
+              <div class="audit-action movement-action">
+                <span class="movement-route">FROM {{ row.from_code }} → TO {{ row.to_code }}</span>
               </div>
-
-              <div class="why">{{ row.event_line }} // {{ row.why }}</div>
             </article>
             {% endfor %}
           </div>
