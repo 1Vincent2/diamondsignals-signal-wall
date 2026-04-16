@@ -2004,10 +2004,10 @@ HTML_TEMPLATE = Template(
   data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
                 <div class="audit-left">
-                  <button type="button" class="audit-trigger" onclick="openDossier('{{ row.resolved_player_id }}')">
+                  <div class="audit-trigger" role="button" tabindex="-1">
                     <span class="audit-kicker">&gt;_ SYSTEM_AUDIT:</span>
                     <span class="audit-player-name">{{ row.player_name }}</span>
-                  </button>
+                  </div>
                   <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // SIGNAL WINDOW • {{ row.sample_note }}</div>
                   <div class="audit-submeta">
                     <span class="audit-chip">{{ row.source_badge }}</span>
@@ -2066,10 +2066,10 @@ HTML_TEMPLATE = Template(
   data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
                 <div class="audit-left">
-                  <button type="button" class="audit-trigger" onclick="openDossier('{{ row.resolved_player_id }}')">
+                  <div class="audit-trigger" role="button" tabindex="-1">
                     <span class="audit-kicker">&gt;_ SYSTEM_AUDIT:</span>
                     <span class="audit-player-name">{{ row.player_name }}</span>
-                  </button>
+                  </div>
                   <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // SIGNAL WINDOW • {{ row.sample_note }}</div>
                   <div class="audit-submeta">
                     <span class="audit-chip">{{ row.source_badge }}</span>
@@ -2133,10 +2133,10 @@ HTML_TEMPLATE = Template(
   data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
                 <div class="audit-left">
-                  <button type="button" class="audit-trigger" onclick="openDossier('{{ row.resolved_player_id }}')">
+                  <div class="audit-trigger" role="button" tabindex="-1">
                     <span class="audit-kicker">&gt;_ SYSTEM_AUDIT:</span>
                     <span class="audit-player-name">{{ row.player_name }}</span>
-                  </button>
+                  </div>
                   <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // 14 DAY WINDOW • {{ row.sample_note }}</div>
                   <div class="audit-submeta">
                     <span class="audit-chip">{{ row.source_badge }}</span>
@@ -2199,10 +2199,10 @@ HTML_TEMPLATE = Template(
   data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
                 <div class="audit-left">
-                  <button type="button" class="audit-trigger" onclick="openDossier('{{ row.resolved_player_id }}')">
+                  <div class="audit-trigger" role="button" tabindex="-1">
                     <span class="audit-kicker">&gt;_ SYSTEM_AUDIT:</span>
                     <span class="audit-player-name">{{ row.player_name }}</span>
-                  </button>
+                  </div>
                   <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // 14 DAY WINDOW • {{ row.sample_note }}</div>
                   <div class="audit-submeta">
                     <span class="audit-chip">{{ row.source_badge }}</span>
