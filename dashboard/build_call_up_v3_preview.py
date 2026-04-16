@@ -833,7 +833,7 @@ HTML_TEMPLATE = Template(
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DiamondSignals // Promotion Watch v3 Preview</title>
+  <title>DiamondSignals // Promotion Watch Preview</title>
   <style>
     :root {
       --bg: #080808;
@@ -1937,7 +1937,7 @@ HTML_TEMPLATE = Template(
     <section class="hero">
       <div class="hero-card">
         <div class="eyebrow">Signal Wall // Scout</div>
-        <h1 class="hero-title">AAA Promotion Watch v3</h1>
+        <h1 class="hero-title">AAA Promotion Watch</h1>
         <p class="hero-sub">
           Real AAA signal intelligence with 72 HR urgency, 14 DAY movement context, stronger player cards, and live transaction-layer arrivals.
         </p>
