@@ -12,7 +12,7 @@ from jinja2 import Template
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
 DIST_DIR = REPO_ROOT / "dist"
-CALL_UP_DIR = DIST_DIR / "typical-call-up-v3"
+CALL_UP_DIR = DIST_DIR / "typical-call-up"
 TEMPLATES_DIR = BASE_DIR / "templates"
 
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
