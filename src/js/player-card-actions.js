@@ -1,41 +1,15 @@
 (function () {
   const CARD_SELECTOR = ".js-player-card";
   const ROSTER_BUTTON_SELECTOR = ".js-add-to-roster";
-  const STORAGE_KEY = "diamondsignals_roster_v1";
+  const APP_BASE_URL = "https://app.diamondsignals.ai";
 
-  function getRoster() {
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      const parsed = raw ? JSON.parse(raw) : [];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
+  function buildAuthUrl(playerId) {
+    const authUrl = new URL(`${APP_BASE_URL}/auth`);
+    authUrl.searchParams.set("next", "/terminal");
+    if (playerId) {
+      authUrl.searchParams.set("add_player_id", String(playerId));
     }
-  }
-
-  function setRoster(roster) {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(roster));
-    } catch {
-      // no-op
-    }
-  }
-
-  function upsertRosterPlayer(player) {
-    const roster = getRoster();
-    const existingIndex = roster.findIndex((p) => {
-      if (player.playerId && p.playerId) return String(p.playerId) === String(player.playerId);
-      return String(p.playerName || "").toLowerCase() === String(player.playerName || "").toLowerCase();
-    });
-
-    if (existingIndex >= 0) {
-      roster[existingIndex] = { ...roster[existingIndex], ...player, savedAt: new Date().toISOString() };
-    } else {
-      roster.push({ ...player, savedAt: new Date().toISOString() });
-    }
-
-    setRoster(roster);
-    return roster;
+    return authUrl.toString();
   }
 
   function ensureToast() {
@@ -128,8 +102,8 @@
         event.stopPropagation();
 
         const player = getPlayerFromCard(card);
-        upsertRosterPlayer(player);
-        showToast(`${player.playerName || "Player"} added to roster`);
+        showToast(`Sending ${player.playerName || "player"} to Roster Terminal...`);
+        window.location.href = buildAuthUrl(player.playerId);
       });
     }
   }
@@ -146,7 +120,6 @@
   }
 
   window.DiamondSignalsRoster = {
-    getRoster,
-    setRoster,
+    buildAuthUrl,
   };
 })();
