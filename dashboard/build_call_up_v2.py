@@ -2047,14 +2047,14 @@ HTML_TEMPLATE = Template(
       <div class="placeholder">No live AAA promotion-watch signals available yet.</div>
       {% else %}
 
-      <div style="margin: 0 0 16px 0; border: 1px solid rgba(59,130,246,0.22); border-radius: 14px; padding: 12px 14px; background: rgba(59,130,246,0.08);">
-        <div style="font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: #93c5fd;">Live Feed Status</div>
-        <div style="margin-top: 6px; font-size: 13px; line-height: 1.5; color: #f0f0f0;">
-          Fresh AAA hitter board active from <strong>{{ live_feed_label }}</strong>. Movement Layer remains the confirmation feed.
-        </div>
-      </div>
-
       <div id="tab-72h" style="display:none;">
+        <div style="margin: 0 0 16px 0; border: 1px solid rgba(245,158,11,0.22); border-radius: 14px; padding: 12px 14px; background: rgba(245,158,11,0.08);">
+          <div style="font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: #fbbf24;">72 HR Status</div>
+          <div style="margin-top: 6px; font-size: 13px; line-height: 1.5; color: #f0f0f0;">
+            This 72 HR board is still using the latest available AAA weekly snapshot from <strong>{{ latest_week_label }}</strong>. The 14 DAY tab currently contains the fresher live AAA box-feed and movement confirmation layers.
+          </div>
+        </div>
+
         <section class="signal-grid signal-grid-v3-preview">
           {# 72 HR pitching block temporarily suppressed while AAA signal source is stale. #}
 
@@ -2062,7 +2062,7 @@ HTML_TEMPLATE = Template(
             <div class="section-head">
               <div>
                 <div class="section-kicker">Signal Layer</div>
-                <h2 class="section-title">Hitting Prospect Signals — 72 HR</h2>
+                <h2 class="section-title">AAA Hitter Signals — 72 HR Snapshot</h2>
               </div>
               <div class="section-badge">Top {{ hitters|length }}</div>
             </div>
@@ -2113,7 +2113,7 @@ HTML_TEMPLATE = Template(
                 </div>
 
                 <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
+                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
                 </div>
               </article>
               {% endfor %}
@@ -2123,6 +2123,12 @@ HTML_TEMPLATE = Template(
       </div>
 
       <div id="tab-14d">
+        <div style="margin: 0 0 16px 0; border: 1px solid rgba(59,130,246,0.22); border-radius: 14px; padding: 12px 14px; background: rgba(59,130,246,0.08);">
+          <div style="font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: #93c5fd;">Live Feed Status</div>
+          <div style="margin-top: 6px; font-size: 13px; line-height: 1.5; color: #f0f0f0;">
+            Fresh AAA hitter board active from <strong>{{ live_feed_label }}</strong>. Movement Layer remains the confirmation feed.
+          </div>
+        </div>
         {% if fresh_hitters_live %}
         <div class="section" style="margin-bottom: 16px;">
           <div class="section-head">
