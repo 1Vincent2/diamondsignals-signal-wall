@@ -1702,17 +1702,56 @@ HTML_TEMPLATE = Template(
       box-shadow: 0 0 16px rgba(59,130,246,0.16);
     }
 
+    .movement-audit-row {
+      grid-template-columns: 1.18fr 1.7fr 0.62fr 0.78fr;
+      align-items: start;
+      column-gap: 18px;
+      row-gap: 12px;
+    }
+
     .movement-audit-row .movement-trigger {
       cursor: default;
     }
 
+    .movement-audit-row .audit-left {
+      min-width: 0;
+    }
+
+    .movement-audit-row .audit-center {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: start;
+    }
+
     .movement-audit-row .forensic-grid {
-      grid-template-columns: repeat(3, minmax(88px, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .movement-audit-row .forensic-cell {
+      min-height: 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .movement-audit-row .forensic-value {
+      min-height: 18px;
+      display: flex;
+      align-items: center;
     }
 
     .movement-right {
-      min-width: 110px;
+      min-width: 0;
       text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: start;
+      gap: 6px;
     }
 
     .movement-flag {
@@ -1723,10 +1762,11 @@ HTML_TEMPLATE = Template(
       text-transform: uppercase;
       color: var(--gold);
       line-height: 1.1;
+      text-align: right;
     }
 
     .movement-action {
-      min-width: 170px;
+      min-width: 0;
       display: flex;
       justify-content: flex-end;
       align-items: start;
@@ -1737,6 +1777,7 @@ HTML_TEMPLATE = Template(
       align-items: center;
       justify-content: center;
       min-height: 36px;
+      min-width: 160px;
       padding: 0 12px;
       border: 1px solid rgba(255,255,255,0.08);
       background: rgba(255,255,255,0.03);
@@ -1747,6 +1788,15 @@ HTML_TEMPLATE = Template(
       letter-spacing: 0.06em;
       text-transform: uppercase;
       white-space: nowrap;
+      text-align: center;
+    }
+
+    .movement-audit-row .audit-why {
+      margin-top: 2px;
+      max-width: 560px;
+      font-size: 11px;
+      line-height: 1.45;
+      color: #a1a1aa;
     }
 
     @media (max-width: 1120px) {
@@ -2223,9 +2273,9 @@ HTML_TEMPLATE = Template(
           <div class="section-head">
             <div>
               <div class="section-kicker">Movement Layer</div>
-              <h2 class="section-title">Recent MLB Arrivals — Last 14 Days</h2>
+              <h2 class="section-title">Fresh MLB Arrivals — Last 14 Days</h2>
             </div>
-            <div class="section-badge">{{ archive_arrivals|length }} Players</div>
+            <div class="section-badge">Top {{ archive_arrivals|length }}</div>
           </div>
 
           {% if archive_arrivals %}
@@ -2269,7 +2319,10 @@ HTML_TEMPLATE = Template(
               </div>
 
               <div class="audit-action movement-action">
-                <span class="movement-route">FROM {{ row.from_code }} → TO {{ row.to_code }}</span>
+                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+                  <span class="movement-route">FROM {{ row.from_code }} → TO {{ row.to_code }}</span>
+                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
+                </div>
               </div>
             </article>
             {% endfor %}
