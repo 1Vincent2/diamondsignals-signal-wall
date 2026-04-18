@@ -25,12 +25,10 @@ def fetch_yesterday_final_games(probe_date: str) -> list[dict]:
     dates = payload.get("dates", []) or []
     games = dates[0].get("games", []) if dates else []
 
-    final_games = []
-    for g in games:
-        status = ((g.get("status", {}) or {}).get("detailedState"))
-        if status == "Final":
-            final_games.append(g)
-    return final_games
+    return [
+        g for g in games
+        if ((g.get("status", {}) or {}).get("detailedState")) == "Final"
+    ]
 
 def extract_hitters_from_boxscore(game: dict) -> list[dict]:
     game_pk = game["gamePk"]
@@ -66,6 +64,14 @@ def extract_hitters_from_boxscore(game: dict) -> list[dict]:
             total_bases = singles + 2 * doubles + 3 * triples + 4 * hr
             iso = ((total_bases - hits) / ab) if ab else 0.0
 
+            live_score = (
+                (hits * 2.0)
+                + (hr * 4.0)
+                + (bb * 1.0)
+                + (iso * 3.0)
+                - (so * 0.5)
+            )
+
             rows.append(
                 {
                     "snapshot_date": game.get("gameDate", "")[:10],
@@ -81,6 +87,7 @@ def extract_hitters_from_boxscore(game: dict) -> list[dict]:
                     "so": so,
                     "hr": hr,
                     "iso": round(iso, 3),
+                    "live_score": round(live_score, 2),
                 }
             )
     return rows
@@ -101,7 +108,18 @@ def main() -> None:
         for game in final_games:
             players.extend(extract_hitters_from_boxscore(game))
 
-        status = "mlb_statsapi_aaa_boxscores_ok"
+        players = sorted(
+            players,
+            key=lambda r: (
+                float(r.get("live_score", 0)),
+                float(r.get("hr", 0)),
+                float(r.get("iso", 0)),
+                float(r.get("h", 0)),
+            ),
+            reverse=True,
+        )
+
+        status = "mlb_statsapi_aaa_boxscores_ranked_ok"
     except Exception as e:
         error = str(e)
 
@@ -112,6 +130,7 @@ def main() -> None:
         "probe_date": probe_date,
         "final_game_count": final_game_count,
         "player_count": len(players),
+        "top_20": players[:20],
         "error": error,
         "players": players,
     }
