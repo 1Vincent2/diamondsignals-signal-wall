@@ -2023,7 +2023,6 @@ HTML_TEMPLATE = Template(
         </section>
 
         <div class="tabs" role="tablist" aria-label="Promotion watch windows">
-          <button type="button" class="tab" id="tab-btn-72h" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
           <button type="button" class="tab active" id="tab-btn-14d" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
         </div>
 
@@ -2046,81 +2045,6 @@ HTML_TEMPLATE = Template(
       {% if total_signals == 0 and total_14_signals == 0 %}
       <div class="placeholder">No live AAA promotion-watch signals available yet.</div>
       {% else %}
-
-      <div id="tab-72h" style="display:none;">
-        <div style="margin: 0 0 16px 0; border: 1px solid rgba(245,158,11,0.22); border-radius: 14px; padding: 12px 14px; background: rgba(245,158,11,0.08);">
-          <div style="font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: #fbbf24;">72 HR Status</div>
-          <div style="margin-top: 6px; font-size: 13px; line-height: 1.5; color: #f0f0f0;">
-            This 72 HR board is still using the latest available AAA weekly snapshot from <strong>{{ latest_week_label }}</strong>. The 14 DAY tab currently contains the fresher live AAA box-feed and movement confirmation layers.
-          </div>
-        </div>
-
-        <section class="signal-grid signal-grid-v3-preview">
-          {# 72 HR pitching block temporarily suppressed while AAA signal source is stale. #}
-
-          <div class="section">
-            <div class="section-head">
-              <div>
-                <div class="section-kicker">Signal Layer</div>
-                <h2 class="section-title">AAA Hitter Signals — 72 HR Snapshot</h2>
-              </div>
-              <div class="section-badge">Top {{ hitters|length }}</div>
-            </div>
-
-            <div class="cards">
-              {% for row in hitters %}
-              <article
-  class="player-card player-audit-row js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
-  data-player-id="{{ row.resolved_player_id }}"
-  data-player-name="{{ row.player_name }}"
-  data-player-type="hitter"
-  data-player-team="{{ row.display_team }}"
-  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
->
-                <div class="audit-left">
-                  <div class="audit-trigger" role="button" tabindex="-1">
-                    <span class="audit-kicker">&gt;_ SYSTEM_AUDIT:</span>
-                    <span class="audit-player-name">{{ row.player_name }}</span>
-                  </div>
-                  <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // SIGNAL WINDOW • {{ row.sample_note }}</div>
-                  <div class="audit-submeta">
-                    <span class="audit-chip">{{ row.source_badge }}</span>
-                    <span class="audit-chip">{{ row.score_version }}</span>
-                  </div>
-                </div>
-
-                <div class="audit-center">
-                  <div class="forensic-grid">
-                    <div class="forensic-cell">
-                      <div class="forensic-label">ISO_DELTA</div>
-                      <div class="forensic-value">{{ row.metric_1 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">K/BB_STABILITY</div>
-                      <div class="forensic-value">{{ row.metric_2 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">LVL_ADJUST</div>
-                      <div class="forensic-value">{{ row.metric_3 }}</div>
-                    </div>
-                  </div>
-                  <div class="audit-why">{{ row.why }}</div>
-                </div>
-
-                <div class="audit-right">
-                  <div class="conviction-label">CONVICTION_INDEX</div>
-                  <div class="conviction-score {{ row.score_class }}">{{ row.edge_score }}</div>
-                </div>
-
-                <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-                </div>
-              </article>
-              {% endfor %}
-            </div>
-          </div>
-        </section>
-      </div>
 
       <div id="tab-14d">
         <div style="margin: 0 0 16px 0; border: 1px solid rgba(59,130,246,0.22); border-radius: 14px; padding: 12px 14px; background: rgba(59,130,246,0.08);">
@@ -2416,7 +2340,7 @@ HTML_TEMPLATE = Template(
     }
 
     function switchPromotionTab(panelId, buttonEl) {
-      document.querySelectorAll("#tab-72h, #tab-14d").forEach((panel) => {
+      document.querySelectorAll("#tab-14d").forEach((panel) => {
         panel.style.display = "none";
       });
 
@@ -2432,15 +2356,9 @@ HTML_TEMPLATE = Template(
       const summaryMode = document.getElementById("summary-mode");
       const summarySignals = document.getElementById("summary-signals");
 
-      if (panelId === "tab-14d") {
-        if (summaryWindow) summaryWindow.textContent = "14 DAY";
-        if (summaryMode) summaryMode.textContent = "SCOUT";
-        if (summarySignals) summarySignals.textContent = "{{ total_14_signals }}";
-      } else {
-        if (summaryWindow) summaryWindow.textContent = "72 HR";
-        if (summaryMode) summaryMode.textContent = "AAA";
-        if (summarySignals) summarySignals.textContent = "{{ total_signals }}";
-      }
+      if (summaryWindow) summaryWindow.textContent = "14 DAY";
+      if (summaryMode) summaryMode.textContent = "SCOUT";
+      if (summarySignals) summarySignals.textContent = "{{ total_14_signals }}";
     }
 
     document.addEventListener("keydown", function (event) {
