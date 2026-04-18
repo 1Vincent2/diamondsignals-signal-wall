@@ -1,0 +1,1333 @@
+{
+  "copyright": "Copyright 2026 MLB Advanced Media, L.P.  Use of any content on this page acknowledges agreement to the terms posted here http://gdx.mlb.com/components/copyright.txt",
+  "totalItems": 17,
+  "totalEvents": 0,
+  "totalGames": 17,
+  "totalGamesInProgress": 0,
+  "dates": [
+    {
+      "date": "2026-04-17",
+      "totalItems": 17,
+      "totalEvents": 0,
+      "totalGames": 17,
+      "totalGamesInProgress": 0,
+      "games": [
+        {
+          "gamePk": 815917,
+          "gameGuid": "d7ca58ad-0390-45eb-800b-658392ff92ad",
+          "link": "/api/v1.1/game/815917/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-17T20:05:00Z",
+          "officialDate": "2026-04-17",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": false,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 422,
+                "name": "Buffalo Bisons",
+                "link": "/api/v1/teams/422"
+              },
+              "leagueRecord": {
+                "wins": 9,
+                "losses": 9,
+                "pct": ".500"
+              },
+              "score": 6,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 534,
+                "name": "Rochester Red Wings",
+                "link": "/api/v1/teams/534"
+              },
+              "leagueRecord": {
+                "wins": 9,
+                "losses": 9,
+                "pct": ".500"
+              },
+              "score": 2,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 2773,
+            "name": "ESL Ballpark",
+            "link": "/api/v1/venues/2773"
+          },
+          "content": {
+            "link": "/api/v1/game/815917/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "Y",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-815917-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 7,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 3,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        },
+        {
+          "gamePk": 815912,
+          "gameGuid": "2046dbc8-f978-45de-aff1-11ab25bb9b8e",
+          "link": "/api/v1.1/game/815912/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-17T20:10:00Z",
+          "officialDate": "2026-04-17",
+          "rescheduledFrom": "2026-04-16T22:05:00Z",
+          "rescheduledFromDate": "2026-04-16",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": true,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 422,
+                "name": "Buffalo Bisons",
+                "link": "/api/v1/teams/422"
+              },
+              "leagueRecord": {
+                "wins": 9,
+                "losses": 10,
+                "pct": ".474"
+              },
+              "score": 3,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 534,
+                "name": "Rochester Red Wings",
+                "link": "/api/v1/teams/534"
+              },
+              "leagueRecord": {
+                "wins": 10,
+                "losses": 9,
+                "pct": ".526"
+              },
+              "score": 5,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 2773,
+            "name": "ESL Ballpark",
+            "link": "/api/v1/venues/2773"
+          },
+          "content": {
+            "link": "/api/v1/game/815912/content"
+          },
+          "isTie": false,
+          "gameNumber": 2,
+          "publicFacing": true,
+          "doubleHeader": "Y",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-815912-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "description": "Makeup of 4/16 PPD",
+          "scheduledInnings": 7,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 4,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        },
+        {
+          "gamePk": 816817,
+          "gameGuid": "0578393c-b070-4b32-9205-d52d212dd3f4",
+          "link": "/api/v1.1/game/816817/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-17T22:15:00Z",
+          "officialDate": "2026-04-17",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": false,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 451,
+                "name": "Iowa Cubs",
+                "link": "/api/v1/teams/451"
+              },
+              "leagueRecord": {
+                "wins": 10,
+                "losses": 8,
+                "pct": ".556"
+              },
+              "score": 3,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 445,
+                "name": "Columbus Clippers",
+                "link": "/api/v1/teams/445"
+              },
+              "leagueRecord": {
+                "wins": 10,
+                "losses": 9,
+                "pct": ".526"
+              },
+              "score": 5,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 3970,
+            "name": "Huntington Park",
+            "link": "/api/v1/venues/3970"
+          },
+          "content": {
+            "link": "/api/v1/game/816817/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-816817-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 4,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        },
+        {
+          "gamePk": 816291,
+          "gameGuid": "8313d418-b18b-41c9-ad1f-6a1ca326a9ed",
+          "link": "/api/v1.1/game/816291/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-17T22:35:00Z",
+          "officialDate": "2026-04-17",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": false,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 512,
+                "name": "Toledo Mud Hens",
+                "link": "/api/v1/teams/512"
+              },
+              "leagueRecord": {
+                "wins": 9,
+                "losses": 10,
+                "pct": ".474"
+              },
+              "score": 6,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 416,
+                "name": "Louisville Bats",
+                "link": "/api/v1/teams/416"
+              },
+              "leagueRecord": {
+                "wins": 10,
+                "losses": 9,
+                "pct": ".526"
+              },
+              "score": 2,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 2724,
+            "name": "Louisville Slugger Field",
+            "link": "/api/v1/venues/2724"
+          },
+          "content": {
+            "link": "/api/v1/game/816291/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-816291-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 4,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        },
+        {
+          "gamePk": 815694,
+          "gameGuid": "03cef5e8-0225-4f1e-b0c0-850693fbeae0",
+          "link": "/api/v1.1/game/815694/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-17T22:35:00Z",
+          "officialDate": "2026-04-17",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": false,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 531,
+                "name": "Scranton/Wilkes-Barre RailRiders",
+                "link": "/api/v1/teams/531"
+              },
+              "leagueRecord": {
+                "wins": 10,
+                "losses": 8,
+                "pct": ".556"
+              },
+              "score": 3,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 552,
+                "name": "Syracuse Mets",
+                "link": "/api/v1/teams/552"
+              },
+              "leagueRecord": {
+                "wins": 9,
+                "losses": 9,
+                "pct": ".500"
+              },
+              "score": 5,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 2823,
+            "name": "NBT Bank Stadium",
+            "link": "/api/v1/venues/2823"
+          },
+          "content": {
+            "link": "/api/v1/game/815694/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-815694-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 3,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        },
+        {
+          "gamePk": 816742,
+          "gameGuid": "55e72a83-9abd-47e7-8680-7aa2a3440965",
+          "link": "/api/v1.1/game/816742/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-17T22:45:00Z",
+          "officialDate": "2026-04-17",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": false,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 568,
+                "name": "Norfolk Tides",
+                "link": "/api/v1/teams/568"
+              },
+              "leagueRecord": {
+                "wins": 7,
+                "losses": 12,
+                "pct": ".368"
+              },
+              "score": 9,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 234,
+                "name": "Durham Bulls",
+                "link": "/api/v1/teams/234"
+              },
+              "leagueRecord": {
+                "wins": 7,
+                "losses": 12,
+                "pct": ".368"
+              },
+              "score": 19,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 2541,
+            "name": "Durham Bulls Athletic Park",
+            "link": "/api/v1/venues/2541"
+          },
+          "content": {
+            "link": "/api/v1/game/816742/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-816742-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 4,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        },
+        {
+          "gamePk": 816146,
+          "gameGuid": "6c54dd2a-ffec-44f5-bd35-1f847f4c12d4",
+          "link": "/api/v1.1/game/816146/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-17T23:05:00Z",
+          "officialDate": "2026-04-16",
+          "resumedFrom": "2026-04-16T23:35:00Z",
+          "resumedFromDate": "2026-04-16",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": false,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 533,
+                "name": "Worcester Red Sox",
+                "link": "/api/v1/teams/533"
+              },
+              "leagueRecord": {
+                "wins": 10,
+                "losses": 7,
+                "pct": ".588"
+              },
+              "score": 2,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 556,
+                "name": "Nashville Sounds",
+                "link": "/api/v1/teams/556"
+              },
+              "leagueRecord": {
+                "wins": 9,
+                "losses": 8,
+                "pct": ".529"
+              },
+              "score": 4,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 4715,
+            "name": "First Horizon Park",
+            "link": "/api/v1/venues/4715"
+          },
+          "content": {
+            "link": "/api/v1/game/816146/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-816146-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 4,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        },
+        {
+          "gamePk": 816438,
+          "gameGuid": "cacefca1-28fc-4b91-bf75-69fcded3ef43",
+          "link": "/api/v1.1/game/816438/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-17T23:05:00Z",
+          "officialDate": "2026-04-17",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": false,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 494,
+                "name": "Charlotte Knights",
+                "link": "/api/v1/teams/494"
+              },
+              "leagueRecord": {
+                "wins": 7,
+                "losses": 11,
+                "pct": ".389"
+              },
+              "score": 1,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 564,
+                "name": "Jacksonville Jumbo Shrimp",
+                "link": "/api/v1/teams/564"
+              },
+              "leagueRecord": {
+                "wins": 11,
+                "losses": 8,
+                "pct": ".579"
+              },
+              "score": 4,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 2852,
+            "name": "Vystar Ballpark",
+            "link": "/api/v1/venues/2852"
+          },
+          "content": {
+            "link": "/api/v1/game/816438/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-816438-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 4,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        },
+        {
+          "gamePk": 815989,
+          "gameGuid": "1c33c64c-4922-4039-a481-b638591e0248",
+          "link": "/api/v1.1/game/815989/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-17T23:35:00Z",
+          "officialDate": "2026-04-17",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": false,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 484,
+                "name": "Indianapolis Indians",
+                "link": "/api/v1/teams/484"
+              },
+              "leagueRecord": {
+                "wins": 5,
+                "losses": 14,
+                "pct": ".263"
+              },
+              "score": 2,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 541,
+                "name": "Omaha Storm Chasers",
+                "link": "/api/v1/teams/541"
+              },
+              "leagueRecord": {
+                "wins": 10,
+                "losses": 8,
+                "pct": ".556"
+              },
+              "score": 4,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 4271,
+            "name": "Werner Park",
+            "link": "/api/v1/venues/4271"
+          },
+          "content": {
+            "link": "/api/v1/game/815989/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-815989-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 4,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        },
+        {
+          "gamePk": 816147,
+          "gameGuid": "9321edf3-36a0-41a4-b38d-094ac4abf1ed",
+          "link": "/api/v1.1/game/816147/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-17T23:35:00Z",
+          "officialDate": "2026-04-17",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": false,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 533,
+                "name": "Worcester Red Sox",
+                "link": "/api/v1/teams/533"
+              },
+              "leagueRecord": {
+                "wins": 10,
+                "losses": 8,
+                "pct": ".556"
+              },
+              "score": 2,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 556,
+                "name": "Nashville Sounds",
+                "link": "/api/v1/teams/556"
+              },
+              "leagueRecord": {
+                "wins": 10,
+                "losses": 8,
+                "pct": ".556"
+              },
+              "score": 4,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 4715,
+            "name": "First Horizon Park",
+            "link": "/api/v1/venues/4715"
+          },
+          "content": {
+            "link": "/api/v1/game/816147/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-816147-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 7,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 4,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        },
+        {
+          "gamePk": 815763,
+          "gameGuid": "67ef4956-e050-418a-8556-cdbaa970413d",
+          "link": "/api/v1.1/game/815763/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-17T23:37:00Z",
+          "officialDate": "2026-04-17",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": false,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 1410,
+                "name": "Lehigh Valley IronPigs",
+                "link": "/api/v1/teams/1410"
+              },
+              "leagueRecord": {
+                "wins": 10,
+                "losses": 9,
+                "pct": ".526"
+              },
+              "score": 4,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 1960,
+                "name": "St. Paul Saints",
+                "link": "/api/v1/teams/1960"
+              },
+              "leagueRecord": {
+                "wins": 8,
+                "losses": 10,
+                "pct": ".444"
+              },
+              "score": 7,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 5472,
+            "name": "CHS Field",
+            "link": "/api/v1/venues/5472"
+          },
+          "content": {
+            "link": "/api/v1/game/815763/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-815763-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 4,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        },
+        {
+          "gamePk": 816219,
+          "gameGuid": "98ff33fd-13c9-41d5-8322-a0dfbaa0ed7d",
+          "link": "/api/v1.1/game/816219/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-18T00:05:00Z",
+          "officialDate": "2026-04-17",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": false,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 431,
+                "name": "Gwinnett Stripers",
+                "link": "/api/v1/teams/431"
+              },
+              "leagueRecord": {
+                "wins": 12,
+                "losses": 7,
+                "pct": ".632"
+              },
+              "score": 3,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 235,
+                "name": "Memphis Redbirds",
+                "link": "/api/v1/teams/235"
+              },
+              "leagueRecord": {
+                "wins": 13,
+                "losses": 6,
+                "pct": ".684"
+              },
+              "score": 5,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 2542,
+            "name": "AutoZone Park",
+            "link": "/api/v1/venues/2542"
+          },
+          "content": {
+            "link": "/api/v1/game/816219/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-816219-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 4,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        },
+        {
+          "gamePk": 815091,
+          "gameGuid": "7a44a819-13fe-4f91-9fa8-3b852aa80bd0",
+          "link": "/api/v1.1/game/815091/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-18T00:05:00Z",
+          "officialDate": "2026-04-17",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": false,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 4904,
+                "name": "El Paso Chihuahuas",
+                "link": "/api/v1/teams/4904"
+              },
+              "leagueRecord": {
+                "wins": 7,
+                "losses": 12,
+                "pct": ".368"
+              },
+              "score": 7,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 102,
+                "name": "Round Rock Express",
+                "link": "/api/v1/teams/102"
+              },
+              "leagueRecord": {
+                "wins": 7,
+                "losses": 12,
+                "pct": ".368"
+              },
+              "score": 9,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 2528,
+            "name": "Dell Diamond",
+            "link": "/api/v1/venues/2528"
+          },
+          "content": {
+            "link": "/api/v1/game/815091/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-815091-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 4,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        },
+        {
+          "gamePk": 815462,
+          "gameGuid": "8f1267cb-abc2-4538-afd6-cd3456900aef",
+          "link": "/api/v1.1/game/815462/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-18T00:35:00Z",
+          "officialDate": "2026-04-17",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": false,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 238,
+                "name": "Oklahoma City Comets",
+                "link": "/api/v1/teams/238"
+              },
+              "leagueRecord": {
+                "wins": 10,
+                "losses": 9,
+                "pct": ".526"
+              },
+              "score": 13,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 342,
+                "name": "Albuquerque Isotopes",
+                "link": "/api/v1/teams/342"
+              },
+              "leagueRecord": {
+                "wins": 10,
+                "losses": 9,
+                "pct": ".526"
+              },
+              "score": 12,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 2683,
+            "name": "Isotopes Park",
+            "link": "/api/v1/venues/2683"
+          },
+          "content": {
+            "link": "/api/v1/game/815462/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-815462-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 4,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        },
+        {
+          "gamePk": 814946,
+          "gameGuid": "5eb33f77-a8b8-4f21-b1f7-3a8f220d2c95",
+          "link": "/api/v1.1/game/814946/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-18T00:35:00Z",
+          "officialDate": "2026-04-17",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": false,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 5434,
+                "name": "Sugar Land Space Cowboys",
+                "link": "/api/v1/teams/5434"
+              },
+              "leagueRecord": {
+                "wins": 11,
+                "losses": 7,
+                "pct": ".611"
+              },
+              "score": 12,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 561,
+                "name": "Salt Lake Bees",
+                "link": "/api/v1/teams/561"
+              },
+              "leagueRecord": {
+                "wins": 7,
+                "losses": 11,
+                "pct": ".389"
+              },
+              "score": 6,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 6135,
+            "name": "The Ballpark at America First Square",
+            "link": "/api/v1/venues/6135"
+          },
+          "content": {
+            "link": "/api/v1/game/814946/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-814946-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 3,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        },
+        {
+          "gamePk": 815160,
+          "gameGuid": "4c0edc46-cc9d-4a4d-bc57-4cd2456004d0",
+          "link": "/api/v1.1/game/815160/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-18T01:05:00Z",
+          "officialDate": "2026-04-17",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": false,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 400,
+                "name": "Las Vegas Aviators",
+                "link": "/api/v1/teams/400"
+              },
+              "leagueRecord": {
+                "wins": 10,
+                "losses": 7,
+                "pct": ".588"
+              },
+              "score": 4,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 2310,
+                "name": "Reno Aces",
+                "link": "/api/v1/teams/2310"
+              },
+              "leagueRecord": {
+                "wins": 10,
+                "losses": 9,
+                "pct": ".526"
+              },
+              "score": 10,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 3789,
+            "name": "Greater Nevada Field",
+            "link": "/api/v1/venues/3789"
+          },
+          "content": {
+            "link": "/api/v1/game/815160/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-815160-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 4,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        },
+        {
+          "gamePk": 814792,
+          "gameGuid": "7b8b161a-9668-44c4-a0f9-3a9573c9241c",
+          "link": "/api/v1.1/game/814792/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-18T02:05:00Z",
+          "officialDate": "2026-04-17",
+          "status": {
+            "abstractGameState": "Final",
+            "codedGameState": "F",
+            "detailedState": "Final",
+            "statusCode": "F",
+            "startTimeTBD": false,
+            "abstractGameCode": "F"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "id": 105,
+                "name": "Sacramento River Cats",
+                "link": "/api/v1/teams/105"
+              },
+              "leagueRecord": {
+                "wins": 10,
+                "losses": 7,
+                "pct": ".588"
+              },
+              "score": 6,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 4
+            },
+            "home": {
+              "team": {
+                "id": 529,
+                "name": "Tacoma Rainiers",
+                "link": "/api/v1/teams/529"
+              },
+              "leagueRecord": {
+                "wins": 9,
+                "losses": 10,
+                "pct": ".474"
+              },
+              "score": 7,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 4
+            }
+          },
+          "venue": {
+            "id": 2745,
+            "name": "Cheney Stadium",
+            "link": "/api/v1/venues/2745"
+          },
+          "content": {
+            "link": "/api/v1/game/814792/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "E",
+          "tiebreaker": "N",
+          "calendarEventID": "44-814792-2026-04-17",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 6,
+          "seriesGameNumber": 4,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        }
+      ],
+      "events": []
+    }
+  ]
+}
