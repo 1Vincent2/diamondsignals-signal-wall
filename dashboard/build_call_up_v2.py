@@ -1976,75 +1976,38 @@ HTML_TEMPLATE = Template(
           <button type="button" class="tab" id="tab-btn-72h" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
           <button type="button" class="tab active" id="tab-btn-14d" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
         </div>
+
+        <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
+          <div style="border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px; background:rgba(255,255,255,0.02);">
+            <div style="font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#7c7c84;">Page Build</div>
+            <div style="margin-top:4px; font-size:13px; color:#f0f0f0;">{{ page_build_label }}</div>
+          </div>
+          <div style="border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px; background:rgba(255,255,255,0.02);">
+            <div style="font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#7c7c84;">AAA Signal Snapshot</div>
+            <div style="margin-top:4px; font-size:13px; color:#f0f0f0;">{{ latest_week_label }}</div>
+          </div>
+          <div style="border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px; background:rgba(255,255,255,0.02);">
+            <div style="font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#7c7c84;">Movement Feed</div>
+            <div style="margin-top:4px; font-size:13px; color:#f0f0f0;">{{ movement_window_label }}</div>
+          </div>
+        </div>
       </div>
 
       {% if total_signals == 0 and total_14_signals == 0 %}
       <div class="placeholder">No live AAA promotion-watch signals available yet.</div>
       {% else %}
 
+      <div style="margin: 0 0 16px 0; border: 1px solid rgba(239,68,68,0.24); border-radius: 14px; padding: 12px 14px; background: rgba(239,68,68,0.07);">
+        <div style="font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: #fca5a5;">Signal Layer Status</div>
+        <div style="margin-top: 6px; font-size: 13px; line-height: 1.5; color: #f0f0f0;">
+          The AAA signal layer is currently using the last available weekly snapshot from <strong>{{ latest_week_label }}</strong>.
+          The Movement Layer below is fresher and should be treated as the live confirmation feed for recent promotion activity.
+        </div>
+      </div>
+
       <div id="tab-72h" style="display:none;">
         <section class="signal-grid signal-grid-v3-preview">
-          <div class="section">
-            <div class="section-head">
-              <div>
-                <div class="section-kicker">Signal Layer</div>
-                <h2 class="section-title">Pitching Prospect Signals — 72 HR</h2>
-              </div>
-              <div class="section-badge">Top {{ pitchers|length }}</div>
-            </div>
-
-            <div class="cards">
-              {% for row in pitchers %}
-              <article
-  class="player-card player-audit-row js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
-  data-player-id="{{ row.resolved_player_id }}"
-  data-player-name="{{ row.player_name }}"
-  data-player-type="pitcher"
-  data-player-team="{{ row.display_team }}"
-  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
->
-                <div class="audit-left">
-                  <div class="audit-trigger" role="button" tabindex="-1">
-                    <span class="audit-kicker">&gt;_ SYSTEM_AUDIT:</span>
-                    <span class="audit-player-name">{{ row.player_name }}</span>
-                  </div>
-                  <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // SIGNAL WINDOW • {{ row.sample_note }}</div>
-                  <div class="audit-submeta">
-                    <span class="audit-chip">{{ row.source_badge }}</span>
-                    <span class="audit-chip">{{ row.score_version }}</span>
-                  </div>
-                </div>
-
-                <div class="audit-center">
-                  <div class="forensic-grid">
-                    <div class="forensic-cell">
-                      <div class="forensic-label">VELO_DELTA</div>
-                      <div class="forensic-value">{{ row.metric_1 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">WHIFF_STABILITY</div>
-                      <div class="forensic-value">{{ row.metric_2 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">LVL_ADJUST</div>
-                      <div class="forensic-value">{{ row.metric_3 }}</div>
-                    </div>
-                  </div>
-                  <div class="audit-why">{{ row.why }}</div>
-                </div>
-
-                <div class="audit-right">
-                  <div class="conviction-label">CONVICTION_INDEX</div>
-                  <div class="conviction-score {{ row.score_class }}">{{ row.edge_score }}</div>
-                </div>
-
-                <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
-                </div>
-              </article>
-              {% endfor %}
-            </div>
-          </div>
+          {# 72 HR pitching block temporarily suppressed while AAA signal source is stale. #}
 
           <div class="section">
             <div class="section-head">
@@ -2111,139 +2074,87 @@ HTML_TEMPLATE = Template(
       </div>
 
       <div id="tab-14d">
-        <section class="signal-grid">
-          <div class="section section-v3-ledger-full">
-            <div class="section-head">
-              <div>
-                <div class="section-kicker">Signal Layer</div>
-                <h2 class="section-title">Pitching Prospect Signals — Last 14 Days</h2>
-              </div>
-              <div class="section-badge">Top {{ pitchers_14|length }}</div>
+        {% if fresh_hitters_live %}
+        <div class="section" style="margin-bottom: 16px;">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Live Signal Layer</div>
+              <h2 class="section-title">Fresh AAA Hitters — Last Final Game Window</h2>
             </div>
-
-            {% if pitchers_14 %}
-            <div class="cards">
-              {% for row in pitchers_14 %}
-              <article
-  class="player-card player-audit-row js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
-  data-player-id="{{ row.resolved_player_id }}"
-  data-player-name="{{ row.player_name }}"
-  data-player-type="pitcher"
-  data-player-team="{{ row.display_team }}"
-  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
->
-                <div class="audit-left">
-                  <div class="audit-trigger" role="button" tabindex="-1">
-                    <span class="audit-kicker">&gt;_ SYSTEM_AUDIT:</span>
-                    <span class="audit-player-name">{{ row.player_name }}</span>
-                  </div>
-                  <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // 14 DAY WINDOW • {{ row.sample_note }}</div>
-                  <div class="audit-submeta">
-                    <span class="audit-chip">{{ row.source_badge }}</span>
-                    <span class="audit-chip">{{ row.score_version }}</span>
-                  </div>
-                </div>
-
-                <div class="audit-center">
-                  <div class="forensic-grid">
-                    <div class="forensic-cell">
-                      <div class="forensic-label">VELO_DELTA</div>
-                      <div class="forensic-value">{{ row.metric_1 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">WHIFF_STABILITY</div>
-                      <div class="forensic-value">{{ row.metric_2 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">LVL_ADJUST</div>
-                      <div class="forensic-value">{{ row.metric_3 }}</div>
-                    </div>
-                  </div>
-                  <div class="audit-why">{{ row.why }}</div>
-                </div>
-
-                <div class="audit-right">
-                  <div class="conviction-label">CONVICTION_INDEX</div>
-                  <div class="conviction-score {{ row.score_class }}">{{ row.edge_score }}</div>
-                </div>
-
-                <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
-                </div>
-              </article>
-              {% endfor %}
-            </div>
-            {% else %}
-            <div class="placeholder">No 14 day pitching prospect signals available.</div>
-            {% endif %}
+            <div class="section-badge">Top {{ fresh_hitters_live|length }}</div>
           </div>
+
+          <div class="cards">
+            {% for row in fresh_hitters_live %}
+            <article
+              class="player-card player-audit-row js-player-card {% if row.edge_score >= 15 %}elite-edge{% elif row.edge_score >= 12 %}high-edge{% endif %}"
+              data-player-id="{{ row.resolved_player_id }}"
+              data-player-name="{{ row.player_name }}"
+              data-player-type="hitter"
+              data-player-team="{{ row.display_team }}"
+              data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
+            >
+              <div class="audit-left">
+                <div class="audit-trigger" role="button" tabindex="-1">
+                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+                  <span class="audit-player-name">{{ row.player_name }}</span>
+                </div>
+                <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // FINAL GAME WINDOW • {{ row.sample_note }}</div>
+                <div class="audit-submeta">
+                  <span class="audit-chip">{{ row.source_badge }}</span>
+                  <span class="audit-chip">{{ row.score_version }}</span>
+                </div>
+              </div>
+
+              <div class="audit-center">
+                <div class="forensic-grid">
+                  <div class="forensic-cell">
+                    <div class="forensic-label">ISO_LIVE</div>
+                    <div class="forensic-value">{{ row.metric_1 }}</div>
+                  </div>
+                  <div class="forensic-cell">
+                    <div class="forensic-label">BB_LIVE</div>
+                    <div class="forensic-value">{{ row.metric_2 }}</div>
+                  </div>
+                  <div class="forensic-cell">
+                    <div class="forensic-label">HR_LIVE</div>
+                    <div class="forensic-value">{{ row.metric_3 }}</div>
+                  </div>
+                </div>
+                <div class="audit-why">{{ row.why }}</div>
+              </div>
+
+              <div class="audit-right">
+                <div class="conviction-label">LIVE_SCORE</div>
+                <div class="conviction-score {{ row.score_class }}">{{ row.live_score_raw }}</div>
+              </div>
+
+              <div class="audit-action">
+                <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
+              </div>
+            </article>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <section class="signal-grid">
+          {# 14 DAY pitching block temporarily suppressed while AAA signal source is stale. #}
 
           <div class="section">
             <div class="section-head">
               <div>
                 <div class="section-kicker">Signal Layer</div>
-                <h2 class="section-title">Hitting Prospect Signals — Last 14 Days</h2>
+                <h2 class="section-title">Live AAA Signal Engine — In Refresh</h2>
               </div>
-              <div class="section-badge">Top {{ hitters_14|length }}</div>
+              <div class="section-badge">Stale Snapshot Hidden</div>
             </div>
 
-            {% if hitters_14 %}
-            <div class="cards">
-              {% for row in hitters_14 %}
-              <article
-  class="player-card player-audit-row js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
-  data-player-id="{{ row.resolved_player_id }}"
-  data-player-name="{{ row.player_name }}"
-  data-player-type="hitter"
-  data-player-team="{{ row.display_team }}"
-  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
->
-                <div class="audit-left">
-                  <div class="audit-trigger" role="button" tabindex="-1">
-                    <span class="audit-kicker">&gt;_ SYSTEM_AUDIT:</span>
-                    <span class="audit-player-name">{{ row.player_name }}</span>
-                  </div>
-                  <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // 14 DAY WINDOW • {{ row.sample_note }}</div>
-                  <div class="audit-submeta">
-                    <span class="audit-chip">{{ row.source_badge }}</span>
-                    <span class="audit-chip">{{ row.score_version }}</span>
-                  </div>
-                </div>
-
-                <div class="audit-center">
-                  <div class="forensic-grid">
-                    <div class="forensic-cell">
-                      <div class="forensic-label">ISO_DELTA</div>
-                      <div class="forensic-value">{{ row.metric_1 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">K/BB_STABILITY</div>
-                      <div class="forensic-value">{{ row.metric_2 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">LVL_ADJUST</div>
-                      <div class="forensic-value">{{ row.metric_3 }}</div>
-                    </div>
-                  </div>
-                  <div class="audit-why">{{ row.why }}</div>
-                </div>
-
-                <div class="audit-right">
-                  <div class="conviction-label">CONVICTION_INDEX</div>
-                  <div class="conviction-score {{ row.score_class }}">{{ row.edge_score }}</div>
-                </div>
-
-                <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
-                </div>
-              </article>
-              {% endfor %}
+            <div class="placeholder">
+              The legacy AAA hitting snapshot has been temporarily hidden because it is not current enough for live surveillance use.
+              The fresh Movement Layer below remains active while the rolling delta-based signal engine is rebuilt.
             </div>
-            {% else %}
-            <div class="placeholder">No 14 day hitting prospect signals available.</div>
-            {% endif %}
           </div>
-        </section>
 
         <div class="section" style="margin-top: 16px;">
           <div class="section-head">
@@ -2255,7 +2166,7 @@ HTML_TEMPLATE = Template(
           </div>
 
           {% if archive_arrivals %}
-          <div class="arrival-grid">
+          <div class="cards">
             {% for row in archive_arrivals %}
             <article class="player-card player-audit-row movement-audit-row">
               <div class="audit-left">
@@ -2461,12 +2372,168 @@ def fetch_recent_aaa_weekly_signal_base(limit_weeks: int = 4) -> tuple[pd.DataFr
     return pd.DataFrame(data), week_starts
 
 
+
+
+def load_fresh_aaa_hitter_refresh() -> pd.DataFrame:
+    path = DIST_DIR / "aaa_hitter_refresh.json"
+    if not path.exists():
+        return pd.DataFrame()
+
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return pd.DataFrame()
+
+    rows = payload.get("top_20") or payload.get("players") or []
+    if not rows:
+        return pd.DataFrame()
+
+    df = pd.DataFrame(rows).copy()
+    if df.empty:
+        return df
+
+    if "player_name" in df.columns:
+        df["player_name"] = (
+            df["player_name"]
+            .fillna("")
+            .astype(str)
+            .str.strip()
+        )
+
+    if "player_id" in df.columns:
+        df["resolved_player_id"] = df["player_id"].fillna("").astype(str).str.strip()
+    else:
+        df["resolved_player_id"] = ""
+
+    if "org" in df.columns:
+        df["display_team"] = df["org"].fillna("AAA").astype(str)
+        df["display_org"] = df["org"].fillna("AAA").astype(str)
+    else:
+        df["display_team"] = "AAA"
+        df["display_org"] = "AAA"
+
+    if "live_score" in df.columns:
+        live_scores = pd.to_numeric(df["live_score"], errors="coerce").fillna(0)
+        df["live_score_raw"] = live_scores.round(2)
+        max_score = float(live_scores.max()) if len(live_scores) else 0.0
+        if max_score > 0:
+            df["edge_score"] = ((live_scores / max_score) * 95).round(1)
+        else:
+            df["edge_score"] = 0.0
+    else:
+        df["live_score_raw"] = 0.0
+        df["edge_score"] = 0.0
+
+    df["score_class"] = df["edge_score"].apply(classify_score)
+    df["metric_1"] = pd.to_numeric(df.get("iso"), errors="coerce").fillna(0).map(lambda x: f"{x:.3f}")
+    df["metric_2"] = pd.to_numeric(df.get("bb"), errors="coerce").fillna(0).map(lambda x: f"{int(x)}")
+    df["metric_3"] = pd.to_numeric(df.get("hr"), errors="coerce").fillna(0).map(lambda x: f"{int(x)}")
+    df["sample_note"] = pd.to_numeric(df.get("pa_proxy"), errors="coerce").fillna(0).map(lambda x: f"{int(x)} PA")
+    df["source_badge"] = "SRC: AAA_LIVE_BOX_v1"
+    df["score_version"] = "LIVE_v0.1"
+    df["signal_type"] = "Hitter"
+    df["avatar"] = df["player_name"].map(initials)
+
+    def _why(row: pd.Series) -> str:
+        return (
+            f"Fresh AAA final-box score: {int(row.get('h', 0) or 0)} H, "
+            f"{int(row.get('bb', 0) or 0)} BB, "
+            f"{int(row.get('hr', 0) or 0)} HR, "
+            f"ISO {float(row.get('iso', 0) or 0):.3f}."
+        )
+
+    df["why"] = df.apply(_why, axis=1)
+    return df.sort_values(["edge_score", "hr", "iso", "h"], ascending=[False, False, False, False]).reset_index(drop=True)
+
 def load_source_frame() -> tuple[pd.DataFrame, list[str]]:
     return fetch_recent_aaa_weekly_signal_base()
 
 
+
+
+
+def fetch_live_aaa_hitter_candidates_debug() -> pd.DataFrame:
+    base_df, _week_starts = load_source_frame()
+    if base_df is None or base_df.empty:
+        return pd.DataFrame()
+
+    aaa_hitters = base_df[base_df["pa"].notna()].copy()
+    if aaa_hitters.empty:
+        return pd.DataFrame()
+
+    aaa_hitters["player_name"] = aaa_hitters["player_name"].apply(safe_name)
+    aaa_names = set(aaa_hitters["player_name"].dropna().astype(str).str.strip())
+    if not aaa_names:
+        return pd.DataFrame()
+
+    fresh = fetch_fresh_hitter_signal_candidates_debug()
+    if fresh is None or fresh.empty:
+        return pd.DataFrame()
+
+    if "player_name" not in fresh.columns:
+        return pd.DataFrame()
+
+    fresh["player_name"] = fresh["player_name"].apply(safe_name)
+    fresh = fresh[fresh["player_name"].isin(aaa_names)].copy()
+
+    return fresh.sort_values("surge_score", ascending=False).head(10).reset_index(drop=True)
+
+def fetch_fresh_hitter_signal_candidates_debug() -> pd.DataFrame:
+    try:
+        from build_dashboard import fetch_statcast_window, build_hitter_signals
+        from datetime import date, timedelta
+    except Exception:
+        return pd.DataFrame()
+
+    end_dt = date.today()
+    start_dt = end_dt - timedelta(days=14)
+
+    try:
+        raw = fetch_statcast_window(start_dt, end_dt)
+    except Exception:
+        return pd.DataFrame()
+
+    if raw is None or raw.empty:
+        return pd.DataFrame()
+
+    try:
+        hitters = build_hitter_signals(raw)
+    except Exception:
+        return pd.DataFrame()
+
+    if hitters is None or hitters.empty:
+        return pd.DataFrame()
+
+    keep_cols = [
+        "player_name",
+        "team",
+        "score",
+        "metric_1",
+        "metric_2",
+        "metric_3",
+        "why",
+    ]
+    existing = [c for c in keep_cols if c in hitters.columns]
+    out = hitters[existing].copy()
+
+    rename_map = {}
+    if "score" in out.columns:
+        rename_map["score"] = "surge_score"
+    out = out.rename(columns=rename_map)
+
+    if "surge_score" in out.columns:
+        out = out.sort_values("surge_score", ascending=False)
+
+    return out.head(10).reset_index(drop=True)
+
+
 def render_html() -> str:
     df, week_starts = load_source_frame()
+    fresh_hitters_live = load_fresh_aaa_hitter_refresh()
+
+    latest_week_label = "Unavailable"
+    movement_window_label = "Last 14 Days"
+    page_build_label = datetime.now().strftime("%Y-%m-%d %I:%M %p")
 
     if df.empty or not week_starts:
         hitters_72 = pd.DataFrame()
@@ -2476,6 +2543,7 @@ def render_html() -> str:
     else:
         df["week_start"] = pd.to_datetime(df["week_start"], errors="coerce")
         latest_week = pd.to_datetime(week_starts[0], errors="coerce")
+        latest_week_label = latest_week.strftime("%Y-%m-%d") if not pd.isna(latest_week) else "Unavailable"
         latest_df = df[df["week_start"] == latest_week].copy()
 
         two_week_cut = sorted(df["week_start"].dropna().unique(), reverse=True)[:2]
@@ -2496,6 +2564,9 @@ def render_html() -> str:
 
     return HTML_TEMPLATE.render(
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
+        page_build_label=page_build_label,
+        latest_week_label=latest_week_label,
+        movement_window_label=movement_window_label,
         timezone_label=TIMEZONE_LABEL,
         nav_html=Template(NAV_TEMPLATE).render(active_nav="promotion_watch"),
         search_html=SEARCH_TEMPLATE,
@@ -2507,6 +2578,7 @@ def render_html() -> str:
         pitchers=pitchers_72.to_dict(orient="records"),
         hitters_14=hitters_14.to_dict(orient="records"),
         pitchers_14=pitchers_14.to_dict(orient="records"),
+        fresh_hitters_live=fresh_hitters_live.to_dict(orient="records"),
         archive_arrivals=archive_arrivals,
     )
 
