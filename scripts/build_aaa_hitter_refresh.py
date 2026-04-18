@@ -6,6 +6,7 @@ from datetime import date, timedelta
 import requests
 
 OUT_JSON = Path("dist/aaa_hitter_refresh.json")
+OUT_PITCHERS_JSON = Path("dist/aaa_pitcher_refresh_probe.json")
 OUT_RAW = Path("dist/aaa_schedule_probe_yesterday.json")
 
 SCHEDULE_URL = "https://statsapi.mlb.com/api/v1/schedule"
@@ -29,6 +30,55 @@ def fetch_yesterday_final_games(probe_date: str) -> list[dict]:
         g for g in games
         if ((g.get("status", {}) or {}).get("detailedState")) == "Final"
     ]
+
+def extract_pitchers_from_boxscore(game: dict, probe_date: str) -> list[dict]:
+    game_pk = game["gamePk"]
+    resp = requests.get(
+        BOXSCORE_URL.format(gamePk=game_pk),
+        timeout=30,
+        headers={"User-Agent": "Mozilla/5.0"},
+    )
+    resp.raise_for_status()
+    payload = resp.json()
+
+    rows = []
+    for side in ["away", "home"]:
+        team = ((payload.get("teams") or {}).get(side) or {})
+        team_name = ((team.get("team") or {}).get("name"))
+        players = team.get("players") or {}
+
+        for pdata in players.values():
+            person = pdata.get("person") or {}
+            stats = ((pdata.get("stats") or {}).get("pitching") or {})
+            if not stats:
+                continue
+
+            ip = str(stats.get("inningsPitched") or "0.0")
+            hits = int(stats.get("hits") or 0)
+            bb = int(stats.get("baseOnBalls") or 0)
+            so = int(stats.get("strikeOuts") or 0)
+            hr = int(stats.get("homeRuns") or 0)
+
+            live_score = (so * 2.0) - (bb * 1.0) - (hits * 0.5) - (hr * 2.0)
+
+            rows.append(
+                {
+                    "snapshot_date": probe_date,
+                    "gamePk": game_pk,
+                    "player_name": person.get("fullName"),
+                    "player_id": person.get("id"),
+                    "org": team_name,
+                    "level": "AAA",
+                    "ip": ip,
+                    "h": hits,
+                    "bb": bb,
+                    "so": so,
+                    "hr": hr,
+                    "live_score": round(live_score, 2),
+                }
+            )
+    return rows
+
 
 def extract_hitters_from_boxscore(game: dict) -> list[dict]:
     game_pk = game["gamePk"]
@@ -99,6 +149,7 @@ def main() -> None:
     status = "mlb_statsapi_aaa_boxscores_failed"
     error = None
     players = []
+    pitcher_rows = []
     final_game_count = 0
 
     try:
@@ -107,6 +158,7 @@ def main() -> None:
 
         for game in final_games:
             players.extend(extract_hitters_from_boxscore(game))
+            pitcher_rows.extend(extract_pitchers_from_boxscore(game, probe_date))
 
         players = sorted(
             players,
@@ -135,11 +187,37 @@ def main() -> None:
         "players": players,
     }
 
+    pitcher_rows = sorted(
+        pitcher_rows,
+        key=lambda r: (
+            float(r.get("live_score", 0)),
+            float(r.get("so", 0)),
+            -float(r.get("bb", 0)),
+            -float(r.get("h", 0)),
+        ),
+        reverse=True,
+    )
+
+    pitcher_payload = {
+        "generated_at": date.today().isoformat(),
+        "status": status,
+        "source": "MLB StatsAPI AAA Final Boxscores",
+        "probe_date": probe_date,
+        "final_game_count": final_game_count,
+        "player_count": len(pitcher_rows),
+        "top_20": pitcher_rows[:20],
+        "error": error,
+        "players": pitcher_rows,
+    }
+
     OUT_JSON.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    OUT_PITCHERS_JSON.write_text(json.dumps(pitcher_payload, indent=2), encoding="utf-8")
     print(f"Wrote {OUT_JSON}")
+    print(f"Wrote {OUT_PITCHERS_JSON}")
     print(f"status={status}")
     print(f"final_game_count={final_game_count}")
-    print(f"player_count={len(players)}")
+    print(f"hitter_player_count={len(players)}")
+    print(f"pitcher_player_count={len(pitcher_rows)}")
     print(f"error={error}")
 
 if __name__ == "__main__":
