@@ -1983,8 +1983,8 @@ HTML_TEMPLATE = Template(
             <div style="margin-top:4px; font-size:13px; color:#f0f0f0;">{{ page_build_label }}</div>
           </div>
           <div style="border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px; background:rgba(255,255,255,0.02);">
-            <div style="font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#7c7c84;">AAA Signal Snapshot</div>
-            <div style="margin-top:4px; font-size:13px; color:#f0f0f0;">{{ latest_week_label }}</div>
+            <div style="font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#7c7c84;">Live AAA Box Feed</div>
+            <div style="margin-top:4px; font-size:13px; color:#f0f0f0;">{{ live_feed_label }}</div>
           </div>
           <div style="border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px; background:rgba(255,255,255,0.02);">
             <div style="font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#7c7c84;">Movement Feed</div>
@@ -1997,11 +1997,10 @@ HTML_TEMPLATE = Template(
       <div class="placeholder">No live AAA promotion-watch signals available yet.</div>
       {% else %}
 
-      <div style="margin: 0 0 16px 0; border: 1px solid rgba(239,68,68,0.24); border-radius: 14px; padding: 12px 14px; background: rgba(239,68,68,0.07);">
-        <div style="font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: #fca5a5;">Signal Layer Status</div>
+      <div style="margin: 0 0 16px 0; border: 1px solid rgba(59,130,246,0.22); border-radius: 14px; padding: 12px 14px; background: rgba(59,130,246,0.08);">
+        <div style="font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: #93c5fd;">Live Feed Status</div>
         <div style="margin-top: 6px; font-size: 13px; line-height: 1.5; color: #f0f0f0;">
-          The AAA signal layer is currently using the last available weekly snapshot from <strong>{{ latest_week_label }}</strong>.
-          The Movement Layer below is fresher and should be treated as the live confirmation feed for recent promotion activity.
+          Fresh AAA hitter board active from <strong>{{ live_feed_label }}</strong>. Movement Layer remains the confirmation feed.
         </div>
       </div>
 
@@ -2079,7 +2078,7 @@ HTML_TEMPLATE = Template(
           <div class="section-head">
             <div>
               <div class="section-kicker">Live Signal Layer</div>
-              <h2 class="section-title">Fresh AAA Hitters — Last Final Game Window</h2>
+              <h2 class="section-title">Fresh AAA Hitters — Last Final AAA Slate</h2>
             </div>
             <div class="section-badge">Top {{ fresh_hitters_live|length }}</div>
           </div>
@@ -2407,7 +2406,7 @@ def load_fresh_aaa_hitter_refresh() -> pd.DataFrame:
 
     if "org" in df.columns:
         df["display_team"] = df["org"].fillna("AAA").astype(str)
-        df["display_org"] = df["org"].fillna("AAA").astype(str)
+        df["display_org"] = "AAA LIVE"
     else:
         df["display_team"] = "AAA"
         df["display_org"] = "AAA"
@@ -2530,10 +2529,12 @@ def fetch_fresh_hitter_signal_candidates_debug() -> pd.DataFrame:
 def render_html() -> str:
     df, week_starts = load_source_frame()
     fresh_hitters_live = load_fresh_aaa_hitter_refresh()
+    fresh_hitters_live = load_fresh_aaa_hitter_refresh()
 
     latest_week_label = "Unavailable"
     movement_window_label = "Last 14 Days"
     page_build_label = datetime.now().strftime("%Y-%m-%d %I:%M %p")
+    live_feed_label = "Unavailable"
 
     if df.empty or not week_starts:
         hitters_72 = pd.DataFrame()
@@ -2562,10 +2563,19 @@ def render_html() -> str:
     total_14_signals = len(hitters_14) + len(pitchers_14)
     _live_arrivals, archive_arrivals = load_arrivals_windows(live_limit=8, archive_limit=16)
 
+    if not fresh_hitters_live.empty and "snapshot_date" in fresh_hitters_live.columns:
+        snap_series = fresh_hitters_live["snapshot_date"].dropna().astype(str)
+        live_feed_label = f"{snap_series.iloc[0]} FINAL GAMES" if not snap_series.empty else "LIVE"
+    elif not fresh_hitters_live.empty:
+        live_feed_label = "LIVE"
+    else:
+        live_feed_label = latest_week_label
+
     return HTML_TEMPLATE.render(
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
         page_build_label=page_build_label,
         latest_week_label=latest_week_label,
+        live_feed_label=live_feed_label,
         movement_window_label=movement_window_label,
         timezone_label=TIMEZONE_LABEL,
         nav_html=Template(NAV_TEMPLATE).render(active_nav="promotion_watch"),
