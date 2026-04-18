@@ -2137,6 +2137,70 @@ HTML_TEMPLATE = Template(
         </div>
         {% endif %}
 
+        {% if fresh_pitchers_live %}
+        <div class="section" style="margin-bottom: 16px;">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Live Signal Layer</div>
+              <h2 class="section-title">Fresh AAA Pitchers — Last Final AAA Slate</h2>
+            </div>
+            <div class="section-badge">Top {{ fresh_pitchers_live|length }}</div>
+          </div>
+
+          <div class="cards">
+            {% for row in fresh_pitchers_live %}
+            <article
+              class="player-card player-audit-row js-player-card {% if row.edge_score >= 15 %}elite-edge{% elif row.edge_score >= 12 %}high-edge{% endif %}"
+              data-player-id="{{ row.resolved_player_id }}"
+              data-player-name="{{ row.player_name }}"
+              data-player-type="pitcher"
+              data-player-team="{{ row.display_team }}"
+              data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
+            >
+              <div class="audit-left">
+                <div class="audit-trigger" role="button" tabindex="-1">
+                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+                  <span class="audit-player-name">{{ row.player_name }}</span>
+                </div>
+                <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // FINAL AAA SLATE • {{ row.sample_note }}</div>
+                <div class="audit-submeta">
+                  <span class="audit-chip">{{ row.source_badge }}</span>
+                  <span class="audit-chip">{{ row.score_version }}</span>
+                </div>
+              </div>
+
+              <div class="audit-center">
+                <div class="forensic-grid">
+                  <div class="forensic-cell">
+                    <div class="forensic-label">IP_LIVE</div>
+                    <div class="forensic-value">{{ row.metric_1 }}</div>
+                  </div>
+                  <div class="forensic-cell">
+                    <div class="forensic-label">K_LIVE</div>
+                    <div class="forensic-value">{{ row.metric_2 }}</div>
+                  </div>
+                  <div class="forensic-cell">
+                    <div class="forensic-label">BB_LIVE</div>
+                    <div class="forensic-value">{{ row.metric_3 }}</div>
+                  </div>
+                </div>
+                <div class="audit-why">{{ row.why }}</div>
+              </div>
+
+              <div class="audit-right">
+                <div class="conviction-label">LIVE_SCORE</div>
+                <div class="conviction-score {{ row.score_class }}">{{ row.live_score_raw }}</div>
+              </div>
+
+              <div class="audit-action">
+                <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
+              </div>
+            </article>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
         <section class="signal-grid">
           {# 14 DAY pitching block temporarily suppressed while AAA signal source is stale. #}
 
@@ -2444,6 +2508,79 @@ def load_fresh_aaa_hitter_refresh() -> pd.DataFrame:
     df["why"] = df.apply(_why, axis=1)
     return df.sort_values(["edge_score", "hr", "iso", "h"], ascending=[False, False, False, False]).reset_index(drop=True)
 
+
+
+def load_fresh_aaa_pitcher_refresh() -> pd.DataFrame:
+    path = DIST_DIR / "aaa_pitcher_refresh_probe.json"
+    if not path.exists():
+        return pd.DataFrame()
+
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return pd.DataFrame()
+
+    rows = payload.get("top_20") or payload.get("players") or []
+    if not rows:
+        return pd.DataFrame()
+
+    df = pd.DataFrame(rows).copy()
+    if df.empty:
+        return df
+
+    if "player_name" in df.columns:
+        df["player_name"] = (
+            df["player_name"]
+            .fillna("")
+            .astype(str)
+            .str.strip()
+        )
+
+    if "player_id" in df.columns:
+        df["resolved_player_id"] = df["player_id"].fillna("").astype(str).str.strip()
+    else:
+        df["resolved_player_id"] = ""
+
+    if "org" in df.columns:
+        df["display_team"] = df["org"].fillna("AAA").astype(str)
+        df["display_org"] = "AAA LIVE"
+    else:
+        df["display_team"] = "AAA"
+        df["display_org"] = "AAA"
+
+    if "live_score" in df.columns:
+        live_scores = pd.to_numeric(df["live_score"], errors="coerce").fillna(0)
+        df["live_score_raw"] = live_scores.round(2)
+        max_score = float(live_scores.max()) if len(live_scores) else 0.0
+        if max_score > 0:
+            df["edge_score"] = ((live_scores / max_score) * 95).round(1)
+        else:
+            df["edge_score"] = 0.0
+    else:
+        df["live_score_raw"] = 0.0
+        df["edge_score"] = 0.0
+
+    df["score_class"] = df["edge_score"].apply(classify_score)
+    df["metric_1"] = df.get("ip", pd.Series(["0.0"] * len(df))).astype(str)
+    df["metric_2"] = pd.to_numeric(df.get("so"), errors="coerce").fillna(0).map(lambda x: f"{int(x)}")
+    df["metric_3"] = pd.to_numeric(df.get("bb"), errors="coerce").fillna(0).map(lambda x: f"{int(x)}")
+    df["sample_note"] = "Final AAA slate"
+    df["source_badge"] = "SRC: AAA_LIVE_PITCH_v1"
+    df["score_version"] = "LIVE_v0.1"
+    df["signal_type"] = "Pitcher"
+    df["avatar"] = df["player_name"].map(initials)
+
+    def _why(row: pd.Series) -> str:
+        return (
+            f"Fresh AAA final-box line: {row.get('ip', '0.0')} IP, "
+            f"{int(row.get('so', 0) or 0)} K, "
+            f"{int(row.get('bb', 0) or 0)} BB, "
+            f"{int(row.get('h', 0) or 0)} H allowed."
+        )
+
+    df["why"] = df.apply(_why, axis=1)
+    return df.sort_values(["edge_score", "so", "bb", "h"], ascending=[False, False, True, True]).reset_index(drop=True)
+
 def load_source_frame() -> tuple[pd.DataFrame, list[str]]:
     return fetch_recent_aaa_weekly_signal_base()
 
@@ -2529,6 +2666,7 @@ def fetch_fresh_hitter_signal_candidates_debug() -> pd.DataFrame:
 def render_html() -> str:
     df, week_starts = load_source_frame()
     fresh_hitters_live = load_fresh_aaa_hitter_refresh()
+    fresh_pitchers_live = load_fresh_aaa_pitcher_refresh()
     fresh_hitters_live = load_fresh_aaa_hitter_refresh()
 
     latest_week_label = "Unavailable"
@@ -2589,6 +2727,7 @@ def render_html() -> str:
         hitters_14=hitters_14.to_dict(orient="records"),
         pitchers_14=pitchers_14.to_dict(orient="records"),
         fresh_hitters_live=fresh_hitters_live.to_dict(orient="records"),
+        fresh_pitchers_live=fresh_pitchers_live.to_dict(orient="records"),
         archive_arrivals=archive_arrivals,
     )
 
