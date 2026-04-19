@@ -1,0 +1,54 @@
+<article
+  class="player-card js-player-card {% if row.edge_score >= 65 %}high-edge{% endif %}"
+  data-player-id="{{ row.resolved_player_id }}"
+  data-player-name="{{ row.player_name }}"
+  data-player-type="{{ player_type }}"
+  data-player-team="MLB"
+  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
+>
+  <div class="player-top">
+    <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+    <div class="player-ident">
+      <div class="rankline">#{{ rank }} {{ trigger_label }}</div>
+      <h3 class="player-name">{{ row.player_name }}</h3>
+      <div class="signal-line">{{ signal_line }}</div>
+    </div>
+    <div class="scorebox">
+      <div class="score-meta">
+        <div class="score-label">Edge Score</div>
+        <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
+      </div>
+      <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+    </div>
+  </div>
+
+  <div class="sparkline-wrap">
+    <div class="sparkline-head">
+      <div class="sparkline-label">7 Day Trend</div>
+      <div class="sparkline-note">7D Trend Analysis</div>
+    </div>
+    <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="{{ gradient_id }}" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+          <stop offset="100%" stop-color="{{ gradient_to }}" stop-opacity="1"></stop>
+        </linearGradient>
+      </defs>
+      <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#{{ gradient_id }})" points="{{ row.trend_points }}" />
+    </svg>
+  </div>
+
+  <div class="badge-row">
+    {% for badge in row.badges %}
+    <span class="status-badge {{ row.badge_classes[loop.index0] }} {% if pulse_badges and badge in pulse_badges %}active-pulse{% endif %}">{{ badge }}</span>
+    {% endfor %}
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric"><div class="metric-label">{{ row.metric_1_label }}</div><div class="metric-value">{{ row.metric_1 }}</div></div>
+    <div class="metric"><div class="metric-label">{{ row.metric_2_label }}</div><div class="metric-value">{{ row.metric_2 }}</div></div>
+    <div class="metric"><div class="metric-label">{{ row.metric_3_label }}</div><div class="metric-value">{{ row.metric_3 }}</div></div>
+  </div>
+
+  <div class="why">{{ row.why }}</div>
+</article>

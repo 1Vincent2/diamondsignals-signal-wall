@@ -1129,6 +1129,347 @@
   .player-search-avatar { width: 120px; height: 120px; }
 }
 
+    .ledger-cards {
+  display: grid;
+  gap: 12px;
+  padding: 10px;
+}
+
+.ledger-card {
+  background: var(--card-radial);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  padding: 14px;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.ledger-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  padding: 0.5px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,255,255,0.01));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.55;
+}
+
+.ledger-card.js-player-card {
+  cursor: pointer;
+}
+
+.ledger-card.js-player-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow), 0 0 12px rgba(106,166,255,0.08);
+  border-color: rgba(106,166,255,0.18);
+}
+
+.ledger-card.high-edge {
+  border-color: rgba(74,222,128,0.22);
+  box-shadow: var(--shadow), 0 0 8px rgba(74,222,128,0.07);
+}
+
+.ledger-top {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 12px;
+}
+
+.ledger-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.ledger-rankline {
+  margin-bottom: 4px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.ledger-name {
+  font-size: 28px;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  font-weight: 900;
+  margin: 0 0 4px;
+  text-transform: uppercase;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.ledger-signal-line {
+  font-size: 11px;
+  color: var(--soft);
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ledger-scorebox {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  min-width: 250px;
+}
+
+.ledger-score-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 3px;
+}
+
+.ledger-score-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.ledger-score-value {
+  font-family: var(--mono);
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.ledger-score-value.edge-up {
+  color: var(--emerald);
+  text-shadow: 0 0 6px rgba(74,222,128,0.18);
+}
+
+.ledger-trend {
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.015);
+}
+
+.ledger-trend-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.ledger-trend-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.ledger-trend-note {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--tiny);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+svg.ledger-sparkline {
+  display: block;
+  width: 100%;
+  height: 34px;
+}
+
+.ledger-sparkline-path {
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.ledger-sparkline-path.glow {
+  filter: drop-shadow(0 0 2px rgba(182,255,0,0.5));
+}
+
+.ledger-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 12px;
+}
+
+.ledger-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ledger-metric {
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 10px 10px 9px;
+  background: rgba(255,255,255,0.02);
+  min-width: 0;
+}
+
+.ledger-metric-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.ledger-metric-value {
+  font-family: var(--mono);
+  font-size: 15px;
+  line-height: 1.1;
+  color: var(--text);
+  font-weight: 700;
+  word-break: break-word;
+  font-variant-numeric: tabular-nums;
+}
+
+.ledger-thesis {
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--soft);
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.ledger-cta,
+.provision-btn {
+  min-height: 32px;
+  width: 132px;
+  min-width: 132px;
+  max-width: 132px;
+  padding: 0 10px;
+  border-radius: 4px;
+  border: 1px solid #1A73E8;
+  background: #1A73E8;
+  color: #ffffff;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease, opacity 140ms ease;
+  white-space: nowrap;
+  text-align: center;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04), 0 0 12px rgba(26,115,232,0.18);
+}
+
+.ledger-cta:hover,
+.provision-btn:hover {
+  background: #2B7DE9;
+  border-color: #2B7DE9;
+  transform: translateY(-1px);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), 0 0 16px rgba(26,115,232,0.24);
+}
+
+.ledger-cta.is-provisioned,
+.provision-btn.is-provisioned,
+.provision-btn[data-provisioned="true"] {
+  background: #00C853;
+  border-color: #00C853;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: default;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), 0 0 16px rgba(0,200,83,0.22);
+}
+
+.ledger-cta.is-provisioned:hover,
+.provision-btn.is-provisioned:hover,
+.provision-btn[data-provisioned="true"]:hover {
+  background: #00C853;
+  border-color: #00C853;
+  transform: none;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), 0 0 16px rgba(0,200,83,0.22);
+}
+
+@media (max-width: 640px) {
+  .ledger-name {
+    font-size: 22px;
+  }
+
+  .ledger-score-value {
+    font-size: 24px;
+  }
+
+  .ledger-top {
+    grid-template-columns: 1fr;
+  }
+
+  .ledger-scorebox {
+    min-width: 0;
+    justify-content: flex-start;
+  }
+
+  .ledger-score-meta {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .ledger-metric-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.audit-action-compact {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  min-width: 248px;
+}
+
+.audit-score-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 3px;
+}
+
+@media (max-width: 640px) {
+  .ledger-cta,
+  .provision-btn {
+    width: 116px;
+    min-width: 116px;
+    max-width: 116px;
+    font-size: 10px;
+  }
+
+  .audit-action-compact,
+  .ledger-scorebox {
+    min-width: 0;
+  }
+}
+
 
     @media (max-width: 980px) {
       .hero { grid-template-columns: 1fr; }
@@ -1183,7 +1524,7 @@
       </div>
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">2026-04-19 08:48 AM</div>
+        <div class="live-time">2026-04-19 01:22 PM</div>
       </div>
     </div>
   </div>
@@ -1264,7 +1605,7 @@
         <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
           <div style="border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px; background:rgba(255,255,255,0.02);">
             <div style="font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#7c7c84;">Page Build</div>
-            <div style="margin-top:4px; font-size:13px; color:#f0f0f0;">2026-04-19 08:48 AM</div>
+            <div style="margin-top:4px; font-size:13px; color:#f0f0f0;">2026-04-19 01:22 PM</div>
           </div>
           <div style="border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px; background:rgba(255,255,255,0.02);">
             <div style="font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#7c7c84;">Live AAA Box Feed</div>
@@ -1299,964 +1640,944 @@
           <div class="cards">
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="669234"
-              data-player-name="Justyn-Henry Malloy"
-              data-player-type="hitter"
-              data-player-team="Durham Bulls"
-              data-profile-url="/scout/669234/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Justyn-Henry Malloy</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Durham Bulls // FINAL GAME WINDOW • 6 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="669234"
+  data-player-name="Justyn-Henry Malloy"
+  data-player-type="hitter"
+  data-player-team="Durham Bulls"
+  data-profile-url="/scout/669234/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Justyn-Henry Malloy</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Durham Bulls // FINAL GAME WINDOW • 6 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">1.400</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">2</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 3 H, 1 BB, 2 HR, ISO 1.400.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">1.400</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">2</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 3 H, 1 BB, 2 HR, ISO 1.400.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score elite">19.2</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score elite">19.2</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="678010"
-              data-player-name="Nick Schnell"
-              data-player-type="hitter"
-              data-player-team="El Paso Chihuahuas"
-              data-profile-url="/scout/678010/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Nick Schnell</span>
-                </div>
-                <div class="audit-context">AAA LIVE // El Paso Chihuahuas // FINAL GAME WINDOW • 3 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="678010"
+  data-player-name="Nick Schnell"
+  data-player-type="hitter"
+  data-player-team="El Paso Chihuahuas"
+  data-profile-url="/scout/678010/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Nick Schnell</span>
+    </div>
+    <div class="audit-context">AAA LIVE // El Paso Chihuahuas // FINAL GAME WINDOW • 3 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">2.000</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">2</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 2 H, 0 BB, 2 HR, ISO 2.000.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">2.000</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">2</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 2 H, 0 BB, 2 HR, ISO 2.000.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score elite">18.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score elite">18.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="694025"
-              data-player-name="Felix Reyes"
-              data-player-type="hitter"
-              data-player-team="Lehigh Valley IronPigs"
-              data-profile-url="/scout/694025/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Felix Reyes</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Lehigh Valley IronPigs // FINAL GAME WINDOW • 5 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="694025"
+  data-player-name="Felix Reyes"
+  data-player-type="hitter"
+  data-player-team="Lehigh Valley IronPigs"
+  data-profile-url="/scout/694025/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Felix Reyes</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Lehigh Valley IronPigs // FINAL GAME WINDOW • 5 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">1.200</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">2</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 3 H, 0 BB, 2 HR, ISO 1.200.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">1.200</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">2</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 3 H, 0 BB, 2 HR, ISO 1.200.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score elite">17.6</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score elite">17.6</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="702176"
-              data-player-name="Alan Roden"
-              data-player-type="hitter"
-              data-player-team="St. Paul Saints"
-              data-profile-url="/scout/702176/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Alan Roden</span>
-                </div>
-                <div class="audit-context">AAA LIVE // St. Paul Saints // FINAL GAME WINDOW • 2 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="702176"
+  data-player-name="Alan Roden"
+  data-player-type="hitter"
+  data-player-team="St. Paul Saints"
+  data-profile-url="/scout/702176/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Alan Roden</span>
+    </div>
+    <div class="audit-context">AAA LIVE // St. Paul Saints // FINAL GAME WINDOW • 2 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">3.000</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 1 H, 1 BB, 1 HR, ISO 3.000.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">3.000</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 1 H, 1 BB, 1 HR, ISO 3.000.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score positive">16.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score positive">16.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="681146"
-              data-player-name="Jonah Bride"
-              data-player-type="hitter"
-              data-player-team="Round Rock Express"
-              data-profile-url="/scout/681146/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Jonah Bride</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Round Rock Express // FINAL GAME WINDOW • 5 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="681146"
+  data-player-name="Jonah Bride"
+  data-player-type="hitter"
+  data-player-team="Round Rock Express"
+  data-profile-url="/scout/681146/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Jonah Bride</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Round Rock Express // FINAL GAME WINDOW • 5 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">1.000</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 4 H, 0 BB, 1 HR, ISO 1.000.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">1.000</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 4 H, 0 BB, 1 HR, ISO 1.000.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score positive">15.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score positive">15.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="699625"
-              data-player-name="Jimmy Crooks"
-              data-player-type="hitter"
-              data-player-team="Memphis Redbirds"
-              data-profile-url="/scout/699625/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Jimmy Crooks</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Memphis Redbirds // FINAL GAME WINDOW • 5 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="699625"
+  data-player-name="Jimmy Crooks"
+  data-player-type="hitter"
+  data-player-team="Memphis Redbirds"
+  data-profile-url="/scout/699625/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Jimmy Crooks</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Memphis Redbirds // FINAL GAME WINDOW • 5 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">1.200</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">2</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 2 H, 0 BB, 2 HR, ISO 1.200.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">1.200</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">2</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 2 H, 0 BB, 2 HR, ISO 1.200.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score positive">14.6</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score positive">14.6</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="680695"
-              data-player-name="Brennen Davis"
-              data-player-type="hitter"
-              data-player-team="Tacoma Rainiers"
-              data-profile-url="/scout/680695/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Brennen Davis</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Tacoma Rainiers // FINAL GAME WINDOW • 4 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="680695"
+  data-player-name="Brennen Davis"
+  data-player-type="hitter"
+  data-player-team="Tacoma Rainiers"
+  data-profile-url="/scout/680695/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Brennen Davis</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Tacoma Rainiers // FINAL GAME WINDOW • 4 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">0.750</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 4 H, 0 BB, 1 HR, ISO 0.750.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">0.750</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 4 H, 0 BB, 1 HR, ISO 0.750.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score positive">14.25</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score positive">14.25</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="669722"
-              data-player-name="Logan Davidson"
-              data-player-type="hitter"
-              data-player-team="Durham Bulls"
-              data-profile-url="/scout/669722/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Logan Davidson</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Durham Bulls // FINAL GAME WINDOW • 6 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="669722"
+  data-player-name="Logan Davidson"
+  data-player-type="hitter"
+  data-player-team="Durham Bulls"
+  data-profile-url="/scout/669722/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Logan Davidson</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Durham Bulls // FINAL GAME WINDOW • 6 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">0.833</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 4 H, 0 BB, 1 HR, ISO 0.833.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">0.833</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 4 H, 0 BB, 1 HR, ISO 0.833.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score positive">14.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score positive">14.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="703601"
-              data-player-name="Max Clark"
-              data-player-type="hitter"
-              data-player-team="Toledo Mud Hens"
-              data-profile-url="/scout/703601/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Max Clark</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Toledo Mud Hens // FINAL GAME WINDOW • 5 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="703601"
+  data-player-name="Max Clark"
+  data-player-type="hitter"
+  data-player-team="Toledo Mud Hens"
+  data-profile-url="/scout/703601/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Max Clark</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Toledo Mud Hens // FINAL GAME WINDOW • 5 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">0.600</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 4 H, 0 BB, 1 HR, ISO 0.600.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">0.600</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 4 H, 0 BB, 1 HR, ISO 0.600.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score positive">13.8</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score positive">13.8</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="702358"
-              data-player-name="Trey Lipscomb"
-              data-player-type="hitter"
-              data-player-team="Rochester Red Wings"
-              data-profile-url="/scout/702358/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Trey Lipscomb</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Rochester Red Wings // FINAL GAME WINDOW • 3 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="702358"
+  data-player-name="Trey Lipscomb"
+  data-player-type="hitter"
+  data-player-team="Rochester Red Wings"
+  data-profile-url="/scout/702358/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Trey Lipscomb</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Rochester Red Wings // FINAL GAME WINDOW • 3 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">1.500</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 2 H, 1 BB, 1 HR, ISO 1.500.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">1.500</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 2 H, 1 BB, 1 HR, ISO 1.500.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score positive">13.5</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score positive">13.5</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="677342"
-              data-player-name="Brock Jones"
-              data-player-type="hitter"
-              data-player-team="Durham Bulls"
-              data-profile-url="/scout/677342/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Brock Jones</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Durham Bulls // FINAL GAME WINDOW • 3 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="677342"
+  data-player-name="Brock Jones"
+  data-player-type="hitter"
+  data-player-team="Durham Bulls"
+  data-profile-url="/scout/677342/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Brock Jones</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Durham Bulls // FINAL GAME WINDOW • 3 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">1.500</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 2 H, 1 BB, 1 HR, ISO 1.500.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">1.500</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 2 H, 1 BB, 1 HR, ISO 1.500.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score positive">13.5</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score positive">13.5</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="624523"
-              data-player-name="Riley Unroe"
-              data-player-type="hitter"
-              data-player-team="Sugar Land Space Cowboys"
-              data-profile-url="/scout/624523/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Riley Unroe</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Sugar Land Space Cowboys // FINAL GAME WINDOW • 5 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="624523"
+  data-player-name="Riley Unroe"
+  data-player-type="hitter"
+  data-player-team="Sugar Land Space Cowboys"
+  data-profile-url="/scout/624523/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Riley Unroe</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Sugar Land Space Cowboys // FINAL GAME WINDOW • 5 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">1.000</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 3 H, 1 BB, 1 HR, ISO 1.000.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">1.000</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 3 H, 1 BB, 1 HR, ISO 1.000.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score positive">13.5</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score positive">13.5</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="807727"
-              data-player-name="Charles McAdoo"
-              data-player-type="hitter"
-              data-player-team="Buffalo Bisons"
-              data-profile-url="/scout/807727/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Charles McAdoo</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Buffalo Bisons // FINAL GAME WINDOW • 4 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="807727"
+  data-player-name="Charles McAdoo"
+  data-player-type="hitter"
+  data-player-team="Buffalo Bisons"
+  data-profile-url="/scout/807727/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Charles McAdoo</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Buffalo Bisons // FINAL GAME WINDOW • 4 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">0.750</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 3 H, 0 BB, 1 HR, ISO 0.750.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">0.750</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 3 H, 0 BB, 1 HR, ISO 0.750.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score watch">12.25</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score watch">12.25</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="677595"
-              data-player-name="Ronny Mauricio"
-              data-player-type="hitter"
-              data-player-team="Syracuse Mets"
-              data-profile-url="/scout/677595/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Ronny Mauricio</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Syracuse Mets // FINAL GAME WINDOW • 4 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="677595"
+  data-player-name="Ronny Mauricio"
+  data-player-type="hitter"
+  data-player-team="Syracuse Mets"
+  data-profile-url="/scout/677595/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Ronny Mauricio</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Syracuse Mets // FINAL GAME WINDOW • 4 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">0.750</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 3 H, 0 BB, 1 HR, ISO 0.750.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">0.750</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 3 H, 0 BB, 1 HR, ISO 0.750.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score watch">12.25</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score watch">12.25</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="669200"
-              data-player-name="Mason McCoy"
-              data-player-type="hitter"
-              data-player-team="El Paso Chihuahuas"
-              data-profile-url="/scout/669200/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Mason McCoy</span>
-                </div>
-                <div class="audit-context">AAA LIVE // El Paso Chihuahuas // FINAL GAME WINDOW • 4 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="669200"
+  data-player-name="Mason McCoy"
+  data-player-type="hitter"
+  data-player-team="El Paso Chihuahuas"
+  data-profile-url="/scout/669200/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Mason McCoy</span>
+    </div>
+    <div class="audit-context">AAA LIVE // El Paso Chihuahuas // FINAL GAME WINDOW • 4 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">1.500</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">2</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 1 H, 2 BB, 1 HR, ISO 1.500.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">1.500</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">2</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 1 H, 2 BB, 1 HR, ISO 1.500.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score watch">12.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score watch">12.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="675455"
-              data-player-name="Milan Tolentino"
-              data-player-type="hitter"
-              data-player-team="Columbus Clippers"
-              data-profile-url="/scout/675455/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Milan Tolentino</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Columbus Clippers // FINAL GAME WINDOW • 4 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="675455"
+  data-player-name="Milan Tolentino"
+  data-player-type="hitter"
+  data-player-team="Columbus Clippers"
+  data-profile-url="/scout/675455/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Milan Tolentino</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Columbus Clippers // FINAL GAME WINDOW • 4 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">1.000</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 2 H, 1 BB, 1 HR, ISO 1.000.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">1.000</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 2 H, 1 BB, 1 HR, ISO 1.000.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score watch">12.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score watch">12.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="693409"
-              data-player-name="César Prieto"
-              data-player-type="hitter"
-              data-player-team="Memphis Redbirds"
-              data-profile-url="/scout/693409/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">César Prieto</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Memphis Redbirds // FINAL GAME WINDOW • 5 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="693409"
+  data-player-name="César Prieto"
+  data-player-type="hitter"
+  data-player-team="Memphis Redbirds"
+  data-profile-url="/scout/693409/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">César Prieto</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Memphis Redbirds // FINAL GAME WINDOW • 5 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">0.600</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 3 H, 0 BB, 1 HR, ISO 0.600.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">0.600</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 3 H, 0 BB, 1 HR, ISO 0.600.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score watch">11.8</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score watch">11.8</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="682987"
-              data-player-name="Spencer Jones"
-              data-player-type="hitter"
-              data-player-team="Scranton/Wilkes-Barre RailRiders"
-              data-profile-url="/scout/682987/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Spencer Jones</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Scranton/Wilkes-Barre RailRiders // FINAL GAME WINDOW • 3 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="682987"
+  data-player-name="Spencer Jones"
+  data-player-type="hitter"
+  data-player-team="Scranton/Wilkes-Barre RailRiders"
+  data-profile-url="/scout/682987/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Spencer Jones</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Scranton/Wilkes-Barre RailRiders // FINAL GAME WINDOW • 3 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">1.500</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 1 H, 1 BB, 1 HR, ISO 1.500.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">1.500</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 1 H, 1 BB, 1 HR, ISO 1.500.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score watch">11.5</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score watch">11.5</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="672463"
-              data-player-name="Rafael Lantigua"
-              data-player-type="hitter"
-              data-player-team="Buffalo Bisons"
-              data-profile-url="/scout/672463/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Rafael Lantigua</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Buffalo Bisons // FINAL GAME WINDOW • 2 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="672463"
+  data-player-name="Rafael Lantigua"
+  data-player-type="hitter"
+  data-player-team="Buffalo Bisons"
+  data-profile-url="/scout/672463/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Rafael Lantigua</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Buffalo Bisons // FINAL GAME WINDOW • 2 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">1.500</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 1 H, 0 BB, 1 HR, ISO 1.500.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">1.500</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 1 H, 0 BB, 1 HR, ISO 1.500.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score watch">10.5</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score watch">10.5</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="678225"
-              data-player-name="Ji Hwan Bae"
-              data-player-type="hitter"
-              data-player-team="Syracuse Mets"
-              data-profile-url="/scout/678225/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Ji Hwan Bae</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Syracuse Mets // FINAL GAME WINDOW • 4 PA</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="678225"
+  data-player-name="Ji Hwan Bae"
+  data-player-type="hitter"
+  data-player-team="Syracuse Mets"
+  data-profile-url="/scout/678225/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Ji Hwan Bae</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Syracuse Mets // FINAL GAME WINDOW • 4 PA</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_BOX_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">1.000</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box score: 2 H, 0 BB, 1 HR, ISO 1.000.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">ISO_LIVE</div>
+        <div class="forensic-value">1.000</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">HR_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box score: 2 H, 0 BB, 1 HR, ISO 1.000.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score watch">10.5</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score watch">10.5</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
           </div>
         </div>
@@ -2275,964 +2596,944 @@
           <div class="cards">
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="702281"
-              data-player-name="Robby Snelling"
-              data-player-type="pitcher"
-              data-player-team="Jacksonville Jumbo Shrimp"
-              data-profile-url="/scout/702281/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Robby Snelling</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Jacksonville Jumbo Shrimp // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="702281"
+  data-player-name="Robby Snelling"
+  data-player-type="pitcher"
+  data-player-team="Jacksonville Jumbo Shrimp"
+  data-profile-url="/scout/702281/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Robby Snelling</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Jacksonville Jumbo Shrimp // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">6.0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">9</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 6.0 IP, 9 K, 1 BB, 2 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">6.0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">9</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 6.0 IP, 9 K, 1 BB, 2 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score elite">16.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score elite">16.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="801179"
-              data-player-name="Yu-Min Lin"
-              data-player-type="pitcher"
-              data-player-team="Reno Aces"
-              data-profile-url="/scout/801179/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Yu-Min Lin</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Reno Aces // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="801179"
+  data-player-name="Yu-Min Lin"
+  data-player-type="pitcher"
+  data-player-team="Reno Aces"
+  data-profile-url="/scout/801179/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Yu-Min Lin</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Reno Aces // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">5.0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">7</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 5.0 IP, 7 K, 1 BB, 3 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">5.0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">7</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 5.0 IP, 7 K, 1 BB, 3 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score positive">11.5</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score positive">11.5</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="660623"
-              data-player-name="Huascar Ynoa"
-              data-player-type="pitcher"
-              data-player-team="Salt Lake Bees"
-              data-profile-url="/scout/660623/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Huascar Ynoa</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Salt Lake Bees // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="660623"
+  data-player-name="Huascar Ynoa"
+  data-player-type="pitcher"
+  data-player-team="Salt Lake Bees"
+  data-profile-url="/scout/660623/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Huascar Ynoa</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Salt Lake Bees // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">3.2</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">7</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">2</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 3.2 IP, 7 K, 2 BB, 4 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">3.2</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">7</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">2</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 3.2 IP, 7 K, 2 BB, 4 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score watch">10.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score watch">10.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="689149"
-              data-player-name="Chad Dallas"
-              data-player-type="pitcher"
-              data-player-team="Buffalo Bisons"
-              data-profile-url="/scout/689149/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Chad Dallas</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Buffalo Bisons // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="689149"
+  data-player-name="Chad Dallas"
+  data-player-type="pitcher"
+  data-player-team="Buffalo Bisons"
+  data-profile-url="/scout/689149/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Chad Dallas</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Buffalo Bisons // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">3.0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">6</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">2</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 3.0 IP, 6 K, 2 BB, 3 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">3.0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">6</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">2</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 3.0 IP, 6 K, 2 BB, 3 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score watch">8.5</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score watch">8.5</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="676510"
-              data-player-name="Nolan Hoffman"
-              data-player-type="pitcher"
-              data-player-team="Lehigh Valley IronPigs"
-              data-profile-url="/scout/676510/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Nolan Hoffman</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Lehigh Valley IronPigs // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="676510"
+  data-player-name="Nolan Hoffman"
+  data-player-type="pitcher"
+  data-player-team="Lehigh Valley IronPigs"
+  data-profile-url="/scout/676510/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Nolan Hoffman</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Lehigh Valley IronPigs // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">2.0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">4</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 2.0 IP, 4 K, 0 BB, 0 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">2.0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">4</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 2.0 IP, 4 K, 0 BB, 0 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score neutral">8.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score neutral">8.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="592826"
-              data-player-name="Vince Velasquez"
-              data-player-type="pitcher"
-              data-player-team="Iowa Cubs"
-              data-profile-url="/scout/592826/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Vince Velasquez</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Iowa Cubs // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="592826"
+  data-player-name="Vince Velasquez"
+  data-player-type="pitcher"
+  data-player-team="Iowa Cubs"
+  data-profile-url="/scout/592826/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Vince Velasquez</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Iowa Cubs // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">4.2</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">7</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">4</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 4.2 IP, 7 K, 4 BB, 5 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">4.2</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">7</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">4</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 4.2 IP, 7 K, 4 BB, 5 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score neutral">7.5</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score neutral">7.5</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="678576"
-              data-player-name="Wilkin Ramos"
-              data-player-type="pitcher"
-              data-player-team="Sacramento River Cats"
-              data-profile-url="/scout/678576/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Wilkin Ramos</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Sacramento River Cats // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="678576"
+  data-player-name="Wilkin Ramos"
+  data-player-type="pitcher"
+  data-player-team="Sacramento River Cats"
+  data-profile-url="/scout/678576/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Wilkin Ramos</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Sacramento River Cats // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">1.2</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">4</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 1.2 IP, 4 K, 0 BB, 1 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">1.2</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">4</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 1.2 IP, 4 K, 0 BB, 1 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score neutral">7.5</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score neutral">7.5</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="804249"
-              data-player-name="Tate Kuehner"
-              data-player-type="pitcher"
-              data-player-team="Nashville Sounds"
-              data-profile-url="/scout/804249/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Tate Kuehner</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Nashville Sounds // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="804249"
+  data-player-name="Tate Kuehner"
+  data-player-type="pitcher"
+  data-player-team="Nashville Sounds"
+  data-profile-url="/scout/804249/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Tate Kuehner</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Nashville Sounds // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">5.0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">5</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 5.0 IP, 5 K, 1 BB, 4 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">5.0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">5</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 5.0 IP, 5 K, 1 BB, 4 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score neutral">7.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score neutral">7.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="677976"
-              data-player-name="Randy Dobnak"
-              data-player-type="pitcher"
-              data-player-team="Tacoma Rainiers"
-              data-profile-url="/scout/677976/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Randy Dobnak</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Tacoma Rainiers // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="677976"
+  data-player-name="Randy Dobnak"
+  data-player-type="pitcher"
+  data-player-team="Tacoma Rainiers"
+  data-profile-url="/scout/677976/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Randy Dobnak</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Tacoma Rainiers // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">5.0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">7</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">2</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 5.0 IP, 7 K, 2 BB, 7 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">5.0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">7</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">2</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 5.0 IP, 7 K, 2 BB, 7 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score neutral">6.5</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score neutral">6.5</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="664192"
-              data-player-name="Joey Lucchesi"
-              data-player-type="pitcher"
-              data-player-team="Salt Lake Bees"
-              data-profile-url="/scout/664192/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Joey Lucchesi</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Salt Lake Bees // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="664192"
+  data-player-name="Joey Lucchesi"
+  data-player-type="pitcher"
+  data-player-team="Salt Lake Bees"
+  data-profile-url="/scout/664192/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Joey Lucchesi</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Salt Lake Bees // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">2.1</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">4</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 2.1 IP, 4 K, 0 BB, 4 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">2.1</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">4</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 2.1 IP, 4 K, 0 BB, 4 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score neutral">6.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score neutral">6.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="701568"
-              data-player-name="Justin Meis"
-              data-player-type="pitcher"
-              data-player-team="Indianapolis Indians"
-              data-profile-url="/scout/701568/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Justin Meis</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Indianapolis Indians // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="701568"
+  data-player-name="Justin Meis"
+  data-player-type="pitcher"
+  data-player-team="Indianapolis Indians"
+  data-profile-url="/scout/701568/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Justin Meis</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Indianapolis Indians // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">3.0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">4</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">2</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 3.0 IP, 4 K, 2 BB, 0 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">3.0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">4</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">2</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 3.0 IP, 4 K, 2 BB, 0 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score neutral">6.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score neutral">6.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="689958"
-              data-player-name="Andrew Walters"
-              data-player-type="pitcher"
-              data-player-team="Columbus Clippers"
-              data-profile-url="/scout/689958/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Andrew Walters</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Columbus Clippers // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="689958"
+  data-player-name="Andrew Walters"
+  data-player-type="pitcher"
+  data-player-team="Columbus Clippers"
+  data-profile-url="/scout/689958/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Andrew Walters</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Columbus Clippers // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">1.0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">3</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 1.0 IP, 3 K, 0 BB, 0 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">1.0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">3</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 1.0 IP, 3 K, 0 BB, 0 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score neutral">6.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score neutral">6.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="700327"
-              data-player-name="Welinton Herrera"
-              data-player-type="pitcher"
-              data-player-team="Albuquerque Isotopes"
-              data-profile-url="/scout/700327/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Welinton Herrera</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Albuquerque Isotopes // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="700327"
+  data-player-name="Welinton Herrera"
+  data-player-type="pitcher"
+  data-player-team="Albuquerque Isotopes"
+  data-profile-url="/scout/700327/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Welinton Herrera</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Albuquerque Isotopes // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">2.0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">3</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 2.0 IP, 3 K, 0 BB, 0 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">2.0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">3</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 2.0 IP, 3 K, 0 BB, 0 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score neutral">6.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score neutral">6.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="682608"
-              data-player-name="Peyton Gray"
-              data-player-type="pitcher"
-              data-player-team="Round Rock Express"
-              data-profile-url="/scout/682608/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Peyton Gray</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Round Rock Express // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="682608"
+  data-player-name="Peyton Gray"
+  data-player-type="pitcher"
+  data-player-team="Round Rock Express"
+  data-profile-url="/scout/682608/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Peyton Gray</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Round Rock Express // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">3.0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">3</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 3.0 IP, 3 K, 0 BB, 1 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">3.0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">3</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 3.0 IP, 3 K, 0 BB, 1 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score neutral">5.5</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score neutral">5.5</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="806190"
-              data-player-name="Isaac Coffey"
-              data-player-type="pitcher"
-              data-player-team="Worcester Red Sox"
-              data-profile-url="/scout/806190/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Isaac Coffey</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Worcester Red Sox // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="806190"
+  data-player-name="Isaac Coffey"
+  data-player-type="pitcher"
+  data-player-team="Worcester Red Sox"
+  data-profile-url="/scout/806190/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Isaac Coffey</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Worcester Red Sox // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">3.0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">4</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">2</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 3.0 IP, 4 K, 2 BB, 2 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">3.0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">4</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">2</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 3.0 IP, 4 K, 2 BB, 2 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score neutral">5.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score neutral">5.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="621199"
-              data-player-name="Matt Bowman"
-              data-player-type="pitcher"
-              data-player-team="St. Paul Saints"
-              data-profile-url="/scout/621199/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Matt Bowman</span>
-                </div>
-                <div class="audit-context">AAA LIVE // St. Paul Saints // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="621199"
+  data-player-name="Matt Bowman"
+  data-player-type="pitcher"
+  data-player-team="St. Paul Saints"
+  data-profile-url="/scout/621199/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Matt Bowman</span>
+    </div>
+    <div class="audit-context">AAA LIVE // St. Paul Saints // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">1.2</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">3</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 1.2 IP, 3 K, 0 BB, 2 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">1.2</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">3</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 1.2 IP, 3 K, 0 BB, 2 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score neutral">5.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score neutral">5.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="685377"
-              data-player-name="Misael Tamarez"
-              data-player-type="pitcher"
-              data-player-team="El Paso Chihuahuas"
-              data-profile-url="/scout/685377/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Misael Tamarez</span>
-                </div>
-                <div class="audit-context">AAA LIVE // El Paso Chihuahuas // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="685377"
+  data-player-name="Misael Tamarez"
+  data-player-type="pitcher"
+  data-player-team="El Paso Chihuahuas"
+  data-profile-url="/scout/685377/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Misael Tamarez</span>
+    </div>
+    <div class="audit-context">AAA LIVE // El Paso Chihuahuas // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">2.0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">3</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">0</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 2.0 IP, 3 K, 0 BB, 2 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">2.0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">3</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">0</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 2.0 IP, 3 K, 0 BB, 2 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score neutral">5.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score neutral">5.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="694677"
-              data-player-name="Collin Baumgartner"
-              data-player-type="pitcher"
-              data-player-team="Albuquerque Isotopes"
-              data-profile-url="/scout/694677/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Collin Baumgartner</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Albuquerque Isotopes // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="694677"
+  data-player-name="Collin Baumgartner"
+  data-player-type="pitcher"
+  data-player-team="Albuquerque Isotopes"
+  data-profile-url="/scout/694677/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Collin Baumgartner</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Albuquerque Isotopes // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">2.0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">3</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 2.0 IP, 3 K, 1 BB, 0 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">2.0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">3</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 2.0 IP, 3 K, 1 BB, 0 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score neutral">5.0</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score neutral">5.0</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="801739"
-              data-player-name="Carlos Lagrange"
-              data-player-type="pitcher"
-              data-player-team="Scranton/Wilkes-Barre RailRiders"
-              data-profile-url="/scout/801739/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Carlos Lagrange</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Scranton/Wilkes-Barre RailRiders // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="801739"
+  data-player-name="Carlos Lagrange"
+  data-player-type="pitcher"
+  data-player-team="Scranton/Wilkes-Barre RailRiders"
+  data-profile-url="/scout/801739/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Carlos Lagrange</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Scranton/Wilkes-Barre RailRiders // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">4.0</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">5</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">1</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 4.0 IP, 5 K, 1 BB, 5 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">4.0</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">5</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">1</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 4.0 IP, 5 K, 1 BB, 5 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score neutral">4.5</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score neutral">4.5</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
             <article
-              class="player-card player-audit-row js-player-card elite-edge"
-              data-player-id="811307"
-              data-player-name="Jack Wenninger"
-              data-player-type="pitcher"
-              data-player-team="Syracuse Mets"
-              data-profile-url="/scout/811307/"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">Jack Wenninger</span>
-                </div>
-                <div class="audit-context">AAA LIVE // Syracuse Mets // FINAL AAA SLATE • Final AAA slate</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
-                  <span class="audit-chip">LIVE_v0.1</span>
-                </div>
-              </div>
+  class="player-card player-audit-row js-player-card elite-edge"
+  data-player-id="811307"
+  data-player-name="Jack Wenninger"
+  data-player-type="pitcher"
+  data-player-team="Syracuse Mets"
+  data-profile-url="/scout/811307/"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">Jack Wenninger</span>
+    </div>
+    <div class="audit-context">AAA LIVE // Syracuse Mets // FINAL AAA SLATE • Final AAA slate</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">SRC: AAA_LIVE_PITCH_v1</span>
+      <span class="audit-chip">LIVE_v0.1</span>
+    </div>
+  </div>
 
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">5.1</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">5</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">2</div>
-                  </div>
-                </div>
-                <div class="audit-why">Fresh AAA final-box line: 5.1 IP, 5 K, 2 BB, 3 H allowed.</div>
-              </div>
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">IP_LIVE</div>
+        <div class="forensic-value">5.1</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">K_LIVE</div>
+        <div class="forensic-value">5</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">BB_LIVE</div>
+        <div class="forensic-value">2</div>
+      </div>
+    </div>
+    <div class="audit-why">Fresh AAA final-box line: 5.1 IP, 5 K, 2 BB, 3 H allowed.</div>
+  </div>
 
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score neutral">4.5</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score neutral">4.5</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>
             
           </div>
         </div>

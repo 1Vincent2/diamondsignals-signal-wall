@@ -73,6 +73,28 @@
     return watchList;
   }
 
+  function isPlayerProvisioned(player) {
+    const watchList = getWatchList();
+    return watchList.some((p) => {
+      if (player.playerId && p.playerId) return String(p.playerId) === String(player.playerId);
+      return String(p.playerName || "").toLowerCase() === String(player.playerName || "").toLowerCase();
+    });
+  }
+
+  function getDefaultProvisionLabel(button) {
+    const explicit = (button?.getAttribute("data-default-label") || "").trim();
+    return explicit || "PROVISION";
+  }
+
+  function applyProvisionedState(button, isProvisioned) {
+    if (!button) return;
+    button.textContent = isProvisioned ? "PROVISIONED" : getDefaultProvisionLabel(button);
+    button.setAttribute("data-provisioned", isProvisioned ? "true" : "false");
+    button.classList.toggle("is-provisioned", !!isProvisioned);
+    button.setAttribute("aria-pressed", isProvisioned ? "true" : "false");
+    button.disabled = !!isProvisioned;
+  }
+
   function ensureToast() {
     let toast = document.getElementById("dsPlayerActionToast");
     if (toast) return toast;
@@ -163,12 +185,20 @@
 
     const watchButton = card.querySelector(WATCH_BUTTON_SELECTOR);
     if (watchButton) {
+      const initialPlayer = getPlayerFromCard(card);
+      applyProvisionedState(watchButton, isPlayerProvisioned(initialPlayer));
+
       watchButton.addEventListener("click", function (event) {
         event.preventDefault();
         event.stopPropagation();
 
+        if (watchButton.disabled || watchButton.getAttribute("data-provisioned") === "true") {
+          return;
+        }
+
         const player = getPlayerFromCard(card);
         upsertWatchListPlayer(player);
+        applyProvisionedState(watchButton, true);
         showToast(`${player.playerName || "Player"} added to Watch List`);
       });
     }

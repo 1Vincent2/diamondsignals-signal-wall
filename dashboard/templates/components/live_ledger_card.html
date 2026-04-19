@@ -1,0 +1,46 @@
+<article
+  class="player-card player-audit-row js-player-card {% if row.edge_score >= 15 %}elite-edge{% elif row.edge_score >= 12 %}high-edge{% endif %}"
+  data-player-id="{{ row.resolved_player_id }}"
+  data-player-name="{{ row.player_name }}"
+  data-player-type="{{ player_type }}"
+  data-player-team="{{ row.display_team }}"
+  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
+>
+  <div class="audit-left">
+    <div class="audit-trigger" role="button" tabindex="-1">
+      <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
+      <span class="audit-player-name">{{ row.player_name }}</span>
+    </div>
+    <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // {{ context_label }} • {{ row.sample_note }}</div>
+    <div class="audit-submeta">
+      <span class="audit-chip">{{ row.source_badge }}</span>
+      <span class="audit-chip">{{ row.score_version }}</span>
+    </div>
+  </div>
+
+  <div class="audit-center">
+    <div class="forensic-grid">
+      <div class="forensic-cell">
+        <div class="forensic-label">{{ metric_1_label }}</div>
+        <div class="forensic-value">{{ row.metric_1 }}</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">{{ metric_2_label }}</div>
+        <div class="forensic-value">{{ row.metric_2 }}</div>
+      </div>
+      <div class="forensic-cell">
+        <div class="forensic-label">{{ metric_3_label }}</div>
+        <div class="forensic-value">{{ row.metric_3 }}</div>
+      </div>
+    </div>
+    <div class="audit-why">{{ row.why }}</div>
+  </div>
+
+  <div class="audit-right audit-action-compact">
+    <div class="audit-score-meta">
+      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-score {{ row.score_class }}">{{ row.live_score_raw }}</div>
+    </div>
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+</article>

@@ -19,6 +19,9 @@ NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
 SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
 FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
 SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
+LEDGER_STYLES_TEMPLATE = (TEMPLATES_DIR / "ledger_styles.css").read_text(encoding="utf-8")
+LIVE_LEDGER_CARD_TEMPLATE = (TEMPLATES_DIR / "components" / "live_ledger_card.html").read_text(encoding="utf-8")
+LIVE_LEDGER_CARD = Template(LIVE_LEDGER_CARD_TEMPLATE)
 
 TIMEZONE_LABEL = "America/New_York"
 SOURCE_BADGE = "SRC: AAA_PIPELINE_v1"
@@ -1926,6 +1929,7 @@ HTML_TEMPLATE = Template(
     }
 
     {{ shell_styles | safe }}
+    {{ ledger_styles | safe }}
 
     @media (max-width: 980px) {
       .hero { grid-template-columns: 1fr; }
@@ -2070,53 +2074,14 @@ HTML_TEMPLATE = Template(
 
           <div class="cards">
             {% for row in fresh_hitters_live %}
-            <article
-              class="player-card player-audit-row js-player-card {% if row.edge_score >= 15 %}elite-edge{% elif row.edge_score >= 12 %}high-edge{% endif %}"
-              data-player-id="{{ row.resolved_player_id }}"
-              data-player-name="{{ row.player_name }}"
-              data-player-type="hitter"
-              data-player-team="{{ row.display_team }}"
-              data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">{{ row.player_name }}</span>
-                </div>
-                <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // FINAL GAME WINDOW • {{ row.sample_note }}</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">{{ row.source_badge }}</span>
-                  <span class="audit-chip">{{ row.score_version }}</span>
-                </div>
-              </div>
-
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">ISO_LIVE</div>
-                    <div class="forensic-value">{{ row.metric_1 }}</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">{{ row.metric_2 }}</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">HR_LIVE</div>
-                    <div class="forensic-value">{{ row.metric_3 }}</div>
-                  </div>
-                </div>
-                <div class="audit-why">{{ row.why }}</div>
-              </div>
-
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score {{ row.score_class }}">{{ row.live_score_raw }}</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+            {{ live_ledger_card.render(
+              row=row,
+              player_type="hitter",
+              context_label="FINAL GAME WINDOW",
+              metric_1_label="ISO_LIVE",
+              metric_2_label="BB_LIVE",
+              metric_3_label="HR_LIVE"
+            ) | safe }}
             {% endfor %}
           </div>
         </div>
@@ -2134,53 +2099,14 @@ HTML_TEMPLATE = Template(
 
           <div class="cards">
             {% for row in fresh_pitchers_live %}
-            <article
-              class="player-card player-audit-row js-player-card {% if row.edge_score >= 15 %}elite-edge{% elif row.edge_score >= 12 %}high-edge{% endif %}"
-              data-player-id="{{ row.resolved_player_id }}"
-              data-player-name="{{ row.player_name }}"
-              data-player-type="pitcher"
-              data-player-team="{{ row.display_team }}"
-              data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
-            >
-              <div class="audit-left">
-                <div class="audit-trigger" role="button" tabindex="-1">
-                  <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
-                  <span class="audit-player-name">{{ row.player_name }}</span>
-                </div>
-                <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // FINAL AAA SLATE • {{ row.sample_note }}</div>
-                <div class="audit-submeta">
-                  <span class="audit-chip">{{ row.source_badge }}</span>
-                  <span class="audit-chip">{{ row.score_version }}</span>
-                </div>
-              </div>
-
-              <div class="audit-center">
-                <div class="forensic-grid">
-                  <div class="forensic-cell">
-                    <div class="forensic-label">IP_LIVE</div>
-                    <div class="forensic-value">{{ row.metric_1 }}</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">K_LIVE</div>
-                    <div class="forensic-value">{{ row.metric_2 }}</div>
-                  </div>
-                  <div class="forensic-cell">
-                    <div class="forensic-label">BB_LIVE</div>
-                    <div class="forensic-value">{{ row.metric_3 }}</div>
-                  </div>
-                </div>
-                <div class="audit-why">{{ row.why }}</div>
-              </div>
-
-              <div class="audit-right">
-                <div class="conviction-label">LIVE_SCORE</div>
-                <div class="conviction-score {{ row.score_class }}">{{ row.live_score_raw }}</div>
-              </div>
-
-              <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
-              </div>
-            </article>
+            {{ live_ledger_card.render(
+              row=row,
+              player_type="pitcher",
+              context_label="FINAL AAA SLATE",
+              metric_1_label="IP_LIVE",
+              metric_2_label="K_LIVE",
+              metric_3_label="BB_LIVE"
+            ) | safe }}
             {% endfor %}
           </div>
         </div>
@@ -2710,6 +2636,8 @@ def render_html() -> str:
         search_html=SEARCH_TEMPLATE,
         footer_html=FOOTER_TEMPLATE,
         shell_styles=SHELL_STYLES_TEMPLATE,
+        ledger_styles=LEDGER_STYLES_TEMPLATE,
+        live_ledger_card=LIVE_LEDGER_CARD,
         total_signals=total_signals,
         total_14_signals=total_14_signals,
         hitters=hitters_72.to_dict(orient="records"),

@@ -18,6 +18,9 @@ NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
 SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
 FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
 SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
+LEDGER_STYLES_TEMPLATE = (TEMPLATES_DIR / "ledger_styles.css").read_text(encoding="utf-8")
+HOME_SIGNAL_LEDGER_CARD_TEMPLATE = (TEMPLATES_DIR / "components" / "home_signal_ledger_card.html").read_text(encoding="utf-8")
+HOME_SIGNAL_LEDGER_CARD = Template(HOME_SIGNAL_LEDGER_CARD_TEMPLATE)
 
 ALERT_THRESHOLD = float(os.getenv("ALERT_THRESHOLD", "65"))
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "").strip()
@@ -1399,14 +1402,17 @@ HTML_TEMPLATE = Template(
     .section-title { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.02em; text-transform: uppercase; }
     .section-badge { font-family: var(--mono); font-size: 11px; color: var(--soft); border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; padding: 7px 10px; background: rgba(255,255,255,0.02); }
     .cards { display: grid; gap: 10px; padding: 10px; }
-    .player-card { padding: 14px; }
+    .player-card { padding: 14px; transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease; }
+    .player-card.js-player-card { cursor: pointer; }
+    .player-card.js-player-card:hover { transform: translateY(-1px); box-shadow: var(--shadow), 0 0 12px rgba(106,166,255,0.08); border-color: rgba(106,166,255,0.18); }
     .player-card.high-edge { border-color: rgba(74,222,128,0.22); box-shadow: var(--shadow), 0 0 8px rgba(74,222,128,0.07); }
     .player-top { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; margin-bottom: 12px; }
     .avatar { width: 42px; height: 42px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.10); display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); color: var(--text); font-size: 13px; font-weight: 800; }
     .rankline { margin-bottom: 4px; }
     .player-name { font-size: 28px; line-height: 0.98; letter-spacing: -0.04em; font-weight: 900; margin: 0 0 4px; text-transform: uppercase; color: var(--text); word-break: break-word; }
     .signal-line { font-size: 11px; color: var(--soft); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.06em; }
-    .scorebox { text-align: right; min-width: 88px; }
+    .scorebox { display: flex; align-items: flex-start; justify-content: flex-end; gap: 12px; min-width: 292px; }
+    .score-meta { display: flex; flex-direction: column; align-items: flex-end; text-align: right; gap: 4px; }
     .score-value { font-family: var(--mono); font-size: 28px; line-height: 1; font-weight: 800; color: var(--text); }
     .score-value.edge-up { color: var(--emerald); text-shadow: 0 0 6px rgba(74,222,128,0.18); }
     .sparkline-wrap { margin: 0 0 12px; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; background: rgba(255,255,255,0.015); }
@@ -1423,7 +1429,30 @@ HTML_TEMPLATE = Template(
     .status-badge.positive { color: var(--emerald); border-color: rgba(74,222,128,0.18); box-shadow: 0 0 6px rgba(74,222,128,0.08); background: rgba(74,222,128,0.03); }
     .status-badge.neutral { color: var(--soft); border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); }
     .status-badge.active-pulse { animation: badgePulse 2.2s infinite ease-in-out; }
-    .why { font-size: 10px; line-height: 1.45; color: var(--tiny); font-family: var(--mono); font-variant-numeric: tabular-nums; }
+    .why { font-size: 11px; line-height: 1.55; color: var(--soft); font-family: var(--mono); font-variant-numeric: tabular-nums; }
+    .provision-btn {
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(96,165,250,0.26);
+      background: linear-gradient(180deg, rgba(18,18,18,0.96) 0%, rgba(8,8,8,0.96) 100%);
+      color: #dbeafe;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: 160ms ease;
+      white-space: nowrap;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+    }
+    .provision-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(96,165,250,0.42);
+      color: #ffffff;
+      box-shadow: 0 0 14px rgba(59,130,246,0.14);
+    }
     .footer { padding: 16px 4px 0; color: var(--muted); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
     @keyframes badgePulse { 0%,100% { opacity: 0.82; } 50% { opacity: 1; } }
     @media (min-width: 900px) {
@@ -1431,6 +1460,7 @@ HTML_TEMPLATE = Template(
       .board { grid-template-columns: 1fr 1fr; }
     }
     {{ shell_styles | safe }}
+    {{ ledger_styles | safe }}
     @media (max-width: 640px) {
       .topbar-inner, .app, .topnav-inner, .search-strip-inner { width: min(100%, calc(100% - 16px)); }
       .search-strip-inner { justify-content: stretch; }
@@ -1543,50 +1573,16 @@ HTML_TEMPLATE = Template(
 
         <div class="cards">
           {% for row in pitchers %}
-          <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
-            <div class="player-top">
-              <div class="avatar">{{ row.player_name[:2]|upper }}</div>
-              <div class="player-ident">
-                <div class="rankline">#{{ loop.index }} Pitcher Trigger</div>
-                <h3 class="player-name">{{ row.player_name }}</h3>
-                <div class="signal-line">Pitcher // Live Edge Signal // {{ row.sample_note }}</div>
-              </div>
-              <div class="scorebox">
-                <div class="score-label">Edge Score</div>
-                <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
-              </div>
-            </div>
-
-            <div class="sparkline-wrap">
-              <div class="sparkline-head">
-                <div class="sparkline-label">7 Day Trend</div>
-                <div class="sparkline-note">7D Trend Analysis</div>
-              </div>
-              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                <defs>
-                  <linearGradient id="pitcherGradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                    <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
-                  </linearGradient>
-                </defs>
-                <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#pitcherGradient{{ loop.index }})" points="{{ row.trend_points }}" />
-              </svg>
-            </div>
-
-            <div class="badge-row">
-              {% for badge in row.badges %}
-              <span class="status-badge {{ row.badge_classes[loop.index0] }}">{{ badge }}</span>
-              {% endfor %}
-            </div>
-
-            <div class="metric-grid">
-              <div class="metric"><div class="metric-label">{{ row.metric_1_label }}</div><div class="metric-value">{{ row.metric_1 }}</div></div>
-              <div class="metric"><div class="metric-label">{{ row.metric_2_label }}</div><div class="metric-value">{{ row.metric_2 }}</div></div>
-              <div class="metric"><div class="metric-label">{{ row.metric_3_label }}</div><div class="metric-value">{{ row.metric_3 }}</div></div>
-            </div>
-
-            <div class="why">{{ row.why }}</div>
-          </article>
+          {{ home_signal_ledger_card.render(
+            row=row,
+            player_type="pitcher",
+            rank=loop.index,
+            trigger_label="Pitcher Trigger",
+            signal_line="Pitcher // Live Edge Signal // " ~ row.sample_note,
+            gradient_id="pitcherGradient" ~ loop.index,
+            gradient_to=("#b6ff00" if row.edge_score >= 65 else "#00e5ff"),
+            pulse_badges=[]
+          ) | safe }}
           {% endfor %}
         </div>
       </div>
@@ -1602,50 +1598,16 @@ HTML_TEMPLATE = Template(
 
         <div class="cards">
           {% for row in hitters %}
-          <article class="player-card {% if row.edge_score >= 65 %}high-edge{% endif %}">
-            <div class="player-top">
-              <div class="avatar">{{ row.player_name[:2]|upper }}</div>
-              <div class="player-ident">
-                <div class="rankline">#{{ loop.index }} Hitter Trigger</div>
-                <h3 class="player-name">{{ row.player_name }}</h3>
-                <div class="signal-line">Hitter // Live Edge Signal // {{ row.sample_note }}</div>
-              </div>
-              <div class="scorebox">
-                <div class="score-label">Edge Score</div>
-                <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
-              </div>
-            </div>
-
-            <div class="sparkline-wrap">
-              <div class="sparkline-head">
-                <div class="sparkline-label">7 Day Trend</div>
-                <div class="sparkline-note">7D Trend Analysis</div>
-              </div>
-              <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-                <defs>
-                  <linearGradient id="hitterGradient{{ loop.index }}" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-                    <stop offset="100%" stop-color="{% if row.edge_score >= 65 %}#b6ff00{% else %}#00e5ff{% endif %}" stop-opacity="1"></stop>
-                  </linearGradient>
-                </defs>
-                <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#hitterGradient{{ loop.index }})" points="{{ row.trend_points }}" />
-              </svg>
-            </div>
-
-            <div class="badge-row">
-              {% for badge in row.badges %}
-              <span class="status-badge {{ row.badge_classes[loop.index0] }} {% if badge in ['EV Burst', 'Barrel Jump'] %}active-pulse{% endif %}">{{ badge }}</span>
-              {% endfor %}
-            </div>
-
-            <div class="metric-grid">
-              <div class="metric"><div class="metric-label">{{ row.metric_1_label }}</div><div class="metric-value">{{ row.metric_1 }}</div></div>
-              <div class="metric"><div class="metric-label">{{ row.metric_2_label }}</div><div class="metric-value">{{ row.metric_2 }}</div></div>
-              <div class="metric"><div class="metric-label">{{ row.metric_3_label }}</div><div class="metric-value">{{ row.metric_3 }}</div></div>
-            </div>
-
-            <div class="why">{{ row.why }}</div>
-          </article>
+          {{ home_signal_ledger_card.render(
+            row=row,
+            player_type="hitter",
+            rank=loop.index,
+            trigger_label="Hitter Trigger",
+            signal_line="Hitter // Live Edge Signal // " ~ row.sample_note,
+            gradient_id="hitterGradient" ~ loop.index,
+            gradient_to=("#b6ff00" if row.edge_score >= 65 else "#00e5ff"),
+            pulse_badges=['EV Burst', 'Barrel Jump']
+          ) | safe }}
           {% endfor %}
         </div>
       </div>
@@ -1704,6 +1666,8 @@ def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
         search_html=SEARCH_TEMPLATE,
         footer_html=FOOTER_TEMPLATE,
         shell_styles=SHELL_STYLES_TEMPLATE,
+        ledger_styles=LEDGER_STYLES_TEMPLATE,
+        home_signal_ledger_card=HOME_SIGNAL_LEDGER_CARD,
         pitchers=pitchers.to_dict(orient="records"),
         hitters=hitters.to_dict(orient="records"),
     )
@@ -2100,6 +2064,12 @@ def main() -> None:
 
     top_hitters = hitter_signals.head(5).copy()
     top_pitchers = pitcher_signals.head(5).copy()
+
+    top_hitters["player_id"] = top_hitters["batter"].fillna("").astype(str).str.strip()
+    top_pitchers["player_id"] = top_pitchers["pitcher"].fillna("").astype(str).str.strip()
+
+    top_hitters = backfill_resolved_player_ids(top_hitters)
+    top_pitchers = backfill_resolved_player_ids(top_pitchers)
 
     combined_alerts = pd.concat([top_pitchers, top_hitters], ignore_index=True)
     combined_alerts = combined_alerts.sort_values(
