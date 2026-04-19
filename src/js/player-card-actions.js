@@ -44,13 +44,15 @@
   }
 
   function inferSourceTag(card, player) {
-    const text = (card.innerText || "").toUpperCase();
+    const explicit = (card.getAttribute("data-source-tag") || "").trim().toUpperCase();
+    if (explicit) return explicit;
 
-    if ((player.playerType || "").toLowerCase() === "pitcher") return "LIVE_SIGNAL";
-    if ((player.playerType || "").toLowerCase() === "hitter") return "LIVE_SIGNAL";
+    const text = (card.innerText || "").toUpperCase();
     if (text.includes("MOVEMENT_AUDIT") || text.includes("RECENT_ARRIVAL") || text.includes("DEBUT") || text.includes("RECALL")) {
       return "ARRIVAL";
     }
+    if ((player.playerType || "").toLowerCase() === "pitcher") return "LIVE_SIGNAL";
+    if ((player.playerType || "").toLowerCase() === "hitter") return "LIVE_SIGNAL";
     return "FOLLOW";
   }
 

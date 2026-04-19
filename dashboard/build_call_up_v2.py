@@ -2222,6 +2222,7 @@ HTML_TEMPLATE = Template(
               data-player-name="{{ row.player_name }}"
               data-player-type="{{ row.player_type }}"
               data-player-team="{{ row.to_code }}"
+              data-source-tag="ARRIVAL"
               data-profile-url="{% if row.player_id %}/scout/{{ row.player_id }}/{% else %}#{% endif %}"
             >
               <div class="audit-left">
