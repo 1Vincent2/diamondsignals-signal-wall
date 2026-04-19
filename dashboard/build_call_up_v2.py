@@ -805,9 +805,14 @@ def load_arrivals_windows(live_limit: int = 8, archive_limit: int = 16) -> tuple
             else:
                 event_line = "Roster movement"
 
+            player_id = move.get("playerId") or move.get("personId") or move.get("person_id") or ""
+            player_type = "pitcher" if pos_badge in {"RHP", "LHP", "P", "SP", "RP"} else "hitter"
+
             formatted.append(
                 {
+                    "player_id": player_id,
                     "player_name": player,
+                    "player_type": player_type,
                     "avatar": initials(player),
                     "date": move.get("date") or "—",
                     "debut_label": debut,
@@ -2109,7 +2114,7 @@ HTML_TEMPLATE = Template(
               </div>
 
               <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
+                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
               </div>
             </article>
             {% endfor %}
@@ -2173,7 +2178,7 @@ HTML_TEMPLATE = Template(
               </div>
 
               <div class="audit-action">
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
+                <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
               </div>
             </article>
             {% endfor %}
@@ -2211,7 +2216,14 @@ HTML_TEMPLATE = Template(
           {% if archive_arrivals %}
           <div class="cards">
             {% for row in archive_arrivals %}
-            <article class="player-card player-audit-row movement-audit-row">
+            <article
+              class="player-card player-audit-row movement-audit-row js-player-card"
+              data-player-id="{{ row.player_id }}"
+              data-player-name="{{ row.player_name }}"
+              data-player-type="{{ row.player_type }}"
+              data-player-team="{{ row.to_code }}"
+              data-profile-url="{% if row.player_id %}/scout/{{ row.player_id }}/{% else %}#{% endif %}"
+            >
               <div class="audit-left">
                 <div class="audit-trigger movement-trigger">
                   <span class="audit-kicker">&gt;_ MOVEMENT_AUDIT:</span>
