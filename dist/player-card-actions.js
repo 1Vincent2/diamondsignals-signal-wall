@@ -158,6 +158,16 @@
     };
   }
 
+  function syncCardProvisionStates() {
+    const cards = Array.from(document.querySelectorAll(CARD_SELECTOR));
+    cards.forEach((card) => {
+      const watchButton = card.querySelector(WATCH_BUTTON_SELECTOR);
+      if (!watchButton) return;
+      const player = getPlayerFromCard(card);
+      applyProvisionedState(watchButton, isPlayerProvisioned(player));
+    });
+  }
+
   function bindCard(card) {
     if (!card || card.dataset.playerCardBound === "true") return;
     card.dataset.playerCardBound = "true";
@@ -207,6 +217,11 @@
   function initPlayerCardActions() {
     const cards = Array.from(document.querySelectorAll(CARD_SELECTOR));
     cards.forEach(bindCard);
+    syncCardProvisionStates();
+  }
+
+  function syncProvisionUI() {
+    syncCardProvisionStates();
   }
 
   if (document.readyState === "loading") {
@@ -215,8 +230,21 @@
     initPlayerCardActions();
   }
 
+  window.addEventListener("focus", syncProvisionUI);
+
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) syncProvisionUI();
+  });
+
+  window.addEventListener("storage", function (event) {
+    if (!event || event.key === STORAGE_KEY || event.key === LEGACY_STORAGE_KEY) {
+      syncProvisionUI();
+    }
+  });
+
   window.DiamondSignalsWatchList = {
     getWatchList,
     setWatchList,
+    syncProvisionUI,
   };
 })();

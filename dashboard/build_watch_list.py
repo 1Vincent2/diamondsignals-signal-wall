@@ -255,6 +255,20 @@ HTML_TEMPLATE = Template(
           .replace(/'/g, "&#39;");
       }
 
+      function removeWatchListPlayer(playerKey) {
+        const rows = getWatchList();
+        const next = rows.filter((player) => {
+          if (player.playerId) return String(player.playerId) !== String(playerKey);
+          return String(player.playerName || "") !== String(playerKey);
+        });
+
+        try {
+          window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+        } catch {}
+
+        renderWatchList();
+      }
+
       function renderWatchList() {
         const root = document.getElementById("watchlist-root");
         const countEl = document.getElementById("watchlist-count");
@@ -296,7 +310,14 @@ HTML_TEMPLATE = Template(
                     <a href="${profileUrl}" style="min-height:34px; padding:0 12px; border-radius:10px; border:1px solid rgba(96,165,250,0.32); background:rgba(37,99,235,0.95); color:white; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:10px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; white-space:nowrap;">Open Dossier</a>
                   </div>
                 </div>
-                <div style="margin-top:12px; font-family:var(--mono); font-size:11px; color:var(--tiny); letter-spacing:.04em;">Saved: ${savedAt}</div>
+                <div style="margin-top:12px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                  <div style="font-family:var(--mono); font-size:11px; color:var(--tiny); letter-spacing:.04em;">Saved: ${savedAt}</div>
+                  <button
+                    type="button"
+                    data-remove-player="${escapeHtml(row.playerId || row.playerName || "")}"
+                    style="min-height:32px; width:148px; min-width:148px; max-width:148px; padding:0 10px; border-radius:4px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.04); color:#ffffff; font-family:var(--mono); font-size:10px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; cursor:pointer;"
+                  >REMOVE_ASSET</button>
+                </div>
               </article>
             `;
           })
@@ -304,13 +325,35 @@ HTML_TEMPLATE = Template(
 
         root.className = "";
         root.innerHTML = `<div style="display:grid; grid-template-columns:1fr; gap:12px;">${cards}</div>`;
+
+        root.querySelectorAll("[data-remove-player]").forEach((button) => {
+          button.addEventListener("click", function () {
+            removeWatchListPlayer(button.getAttribute("data-remove-player") || "");
+          });
+        });
+      }
+
+      function syncWatchListView() {
+        renderWatchList();
       }
 
       if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", renderWatchList);
+        document.addEventListener("DOMContentLoaded", syncWatchListView);
       } else {
-        renderWatchList();
+        syncWatchListView();
       }
+
+      window.addEventListener("focus", syncWatchListView);
+
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden) syncWatchListView();
+      });
+
+      window.addEventListener("storage", function (event) {
+        if (!event || event.key === STORAGE_KEY) {
+          syncWatchListView();
+        }
+      });
     })();
   </script>
 </body>
