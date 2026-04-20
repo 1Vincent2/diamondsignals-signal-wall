@@ -207,9 +207,18 @@
         }
 
         const player = getPlayerFromCard(card);
-        upsertWatchListPlayer(player);
-        applyProvisionedState(watchButton, true);
-        showToast(`${player.playerName || "Player"} added to Watch List`);
+        const playerId = String(player.playerId || "").trim();
+
+        if (!playerId) {
+          showToast(`Unable to provision ${player.playerName || "player"}: missing player id`);
+          return;
+        }
+
+        const authUrl = new URL("https://app.diamondsignals.ai/auth");
+        authUrl.searchParams.set("next", "/terminal");
+        authUrl.searchParams.set("add_player_id", playerId);
+
+        window.location.href = authUrl.toString();
       });
     }
   }
