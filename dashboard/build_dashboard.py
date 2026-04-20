@@ -21,6 +21,7 @@ SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding=
 LEDGER_STYLES_TEMPLATE = (TEMPLATES_DIR / "ledger_styles.css").read_text(encoding="utf-8")
 HOME_SIGNAL_LEDGER_CARD_TEMPLATE = (TEMPLATES_DIR / "components" / "home_signal_ledger_card.html").read_text(encoding="utf-8")
 HOME_SIGNAL_LEDGER_CARD = Template(HOME_SIGNAL_LEDGER_CARD_TEMPLATE)
+SIGNALS_FRONT_DOOR_TEMPLATE = (TEMPLATES_DIR / "signals_front_door.html").read_text(encoding="utf-8")
 
 ALERT_THRESHOLD = float(os.getenv("ALERT_THRESHOLD", "65"))
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "").strip()
@@ -1687,6 +1688,10 @@ def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
     )
 
 
+def render_signals_front_door() -> str:
+    return SIGNALS_FRONT_DOOR_TEMPLATE
+
+
 def scout_shell_html() -> str:
     html = r"""<!doctype html>
 <html lang="en">
@@ -2094,6 +2099,12 @@ def main() -> None:
     output_path = DIST_DIR / "index.html"
     output_path.write_text(html, encoding="utf-8")
     print(f"Wrote {output_path}")
+
+    front_door_html = render_signals_front_door()
+    front_door_path = DIST_DIR / "front-door" / "index.html"
+    front_door_path.parent.mkdir(parents=True, exist_ok=True)
+    front_door_path.write_text(front_door_html, encoding="utf-8")
+    print(f"Wrote {front_door_path}")
 
     summary = {
         "generated_at": datetime.now().isoformat(),
