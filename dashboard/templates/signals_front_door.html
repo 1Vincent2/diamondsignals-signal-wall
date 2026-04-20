@@ -426,9 +426,9 @@
               Enter your email to unlock the live Signal Wall preview and join the Founding Access list.
             </p>
 
-            <form class="preview-form" action="https://diamondsignals.ai/pages/thank-you/" method="get">
-              <input class="preview-input" type="email" name="email" placeholder="Enter your email" required />
-              <button class="preview-submit" type="submit">Enter Viewing Gallery</button>
+            <form class="preview-form" id="signals-front-door-form">
+              <input class="preview-input" id="signals-front-door-email" type="email" name="email" placeholder="Enter your email" required />
+              <button class="preview-submit" id="signals-front-door-submit" type="submit">Enter Viewing Gallery</button>
             </form>
 
             <div class="preview-note">Viewing Gallery • guest check-in required • <a href="https://app.diamondsignals.ai/auth" style="color:#d7e7ff; text-decoration:underline;">Passport auth required for member actions</a></div>
@@ -437,5 +437,35 @@
       </div>
     </section>
   </main>
+  <script>
+    (function () {
+      var form = document.getElementById('signals-front-door-form');
+      var emailInput = document.getElementById('signals-front-door-email');
+      var submitBtn = document.getElementById('signals-front-door-submit');
+
+      if (!form || !emailInput || !submitBtn) return;
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        var email = (emailInput.value || '').trim();
+        if (!email) return;
+
+        try {
+          document.cookie = "ds_captured=1; Domain=diamondsignals.ai; Path=/; Max-Age=2592000; Secure; SameSite=Lax";
+          document.cookie = "ds_captured_email=" + encodeURIComponent(email) + "; Domain=diamondsignals.ai; Path=/; Max-Age=2592000; Secure; SameSite=Lax";
+        } catch (err) {
+          console.error('Could not set captured-session cookie', err);
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Loading Live Data...';
+
+        window.setTimeout(function () {
+          window.location.href = '/live/';
+        }, 1500);
+      });
+    })();
+  </script>
 </body>
 </html>

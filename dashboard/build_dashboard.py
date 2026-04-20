@@ -2096,15 +2096,16 @@ def main() -> None:
     ).reset_index(drop=True)
 
     html = render_html(top_pitchers, top_hitters)
-    output_path = DIST_DIR / "index.html"
-    output_path.write_text(html, encoding="utf-8")
-    print(f"Wrote {output_path}")
+
+    live_path = DIST_DIR / "live" / "index.html"
+    live_path.parent.mkdir(parents=True, exist_ok=True)
+    live_path.write_text(html, encoding="utf-8")
+    print(f"Wrote {live_path}")
 
     front_door_html = render_signals_front_door()
-    front_door_path = DIST_DIR / "front-door" / "index.html"
-    front_door_path.parent.mkdir(parents=True, exist_ok=True)
-    front_door_path.write_text(front_door_html, encoding="utf-8")
-    print(f"Wrote {front_door_path}")
+    output_path = DIST_DIR / "index.html"
+    output_path.write_text(front_door_html, encoding="utf-8")
+    print(f"Wrote {output_path}")
 
     summary = {
         "generated_at": datetime.now().isoformat(),
