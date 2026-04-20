@@ -215,7 +215,7 @@
         }
 
         const authUrl = new URL("https://app.diamondsignals.ai/auth");
-        authUrl.searchParams.set("next", "/terminal");
+        authUrl.searchParams.set("next", "/watch-list");
         authUrl.searchParams.set("add_player_id", playerId);
 
         window.location.href = authUrl.toString();
