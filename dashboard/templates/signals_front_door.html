@@ -557,6 +557,17 @@
   </main>
   <script>
     (function () {
+      function readCookie(name) {
+        var match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[.$?*|{}()\[\]\\/+^]/g, '\\$&') + '=([^;]*)'));
+        return match ? decodeURIComponent(match[1]) : '';
+      }
+
+      var captured = readCookie('ds_captured');
+      if (captured === '1') {
+        window.location.replace('/live/');
+        return;
+      }
+
       var form = document.getElementById('signals-front-door-form');
       var emailInput = document.getElementById('signals-front-door-email');
       var submitBtn = document.getElementById('signals-front-door-submit');
