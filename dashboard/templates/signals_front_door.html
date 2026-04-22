@@ -428,39 +428,222 @@
       z-index: 1;
     }
 
-    .preview-board-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap: 14px;
+    .preview-board {
+      position: absolute;
+      inset: 0;
+      padding: 22px;
+      z-index: 1;
     }
 
-    .preview-tile {
-      min-height: 130px;
+    .preview-vault {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .preview-vault-grid {
+      position: absolute;
+      inset: 22px;
+      display: grid;
+      grid-template-rows: auto repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      opacity: 0.96;
+    }
+
+    .preview-wall-header,
+    .preview-wall-row {
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      padding: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.032), rgba(255,255,255,0.014));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
     }
 
-    .preview-tile .k {
+    .preview-wall-header {
+      display: grid;
+      grid-template-columns: 1.1fr 0.8fr 0.7fr 0.7fr;
+      gap: 12px;
+      align-items: center;
+      min-height: 48px;
+      padding: 0 18px;
+      color: rgba(215,224,238,0.58);
       font-family: var(--mono);
       font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
+      letter-spacing: 0.12em;
     }
 
-    .preview-tile .v {
-      margin-top: 12px;
-      font-size: 26px;
+    .preview-wall-row {
+      display: grid;
+      grid-template-columns: 1.1fr 0.8fr 0.7fr 0.7fr;
+      gap: 12px;
+      align-items: center;
+      min-height: 64px;
+      padding: 0 18px;
+    }
+
+    .preview-player {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .preview-player-name {
+      color: rgba(246,249,255,0.92);
+      font-size: 15px;
       font-weight: 800;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .preview-tile .s {
-      margin-top: 10px;
-      color: var(--soft);
-      font-size: 13px;
-      line-height: 1.4;
+    .preview-player-meta {
+      color: rgba(171,183,201,0.68);
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .preview-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      min-height: 28px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.035);
+      color: rgba(231,238,248,0.74);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .preview-tag.live {
+      border-color: rgba(182,255,0,0.22);
+      box-shadow: 0 0 20px rgba(182,255,0,0.08);
+      color: rgba(209,255,102,0.90);
+    }
+
+    .preview-tag.blue {
+      border-color: rgba(106,166,255,0.22);
+      box-shadow: 0 0 20px rgba(106,166,255,0.07);
+      color: rgba(152,194,255,0.90);
+    }
+
+    .preview-tag.red {
+      border-color: rgba(239,68,68,0.20);
+      color: rgba(255,174,174,0.86);
+    }
+
+    .preview-lock {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 96px;
+      height: 28px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      color: rgba(230,235,245,0.72);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .preview-metric {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .preview-skeleton {
+      display: block;
+      width: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.13), rgba(255,255,255,0.05));
+      background-size: 220% 100%;
+      animation: previewShimmer 2.2s linear infinite;
+    }
+
+    .preview-skeleton.metric-main {
+      height: 14px;
+      width: 82%;
+      border-radius: 8px;
+    }
+
+    .preview-skeleton.metric-sub {
+      height: 10px;
+      width: 58%;
+    }
+
+    .preview-vault-mask {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(7,9,14,0.00) 0%,
+          rgba(7,9,14,0.00) 18%,
+          rgba(7,9,14,0.12) 28%,
+          rgba(7,9,14,0.34) 42%,
+          rgba(7,9,14,0.62) 58%,
+          rgba(7,9,14,0.82) 74%,
+          rgba(7,9,14,0.94) 88%,
+          rgba(7,9,14,0.985) 100%
+        );
+    }
+
+    .preview-scanline {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      top: 72px;
+      height: 2px;
+      z-index: 4;
+      opacity: 0.42;
+      background: linear-gradient(90deg, rgba(182,255,0,0.00), rgba(182,255,0,0.42), rgba(106,166,255,0.30), rgba(182,255,0,0.00));
+      box-shadow: 0 0 10px rgba(182,255,0,0.18), 0 0 18px rgba(106,166,255,0.11);
+      animation: previewScan 5.2s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes previewScan {
+      0% { transform: translateY(0); opacity: 0.16; }
+      18% { opacity: 0.42; }
+      50% { transform: translateY(248px); opacity: 0.56; }
+      82% { opacity: 0.30; }
+      100% { transform: translateY(0); opacity: 0.16; }
+    }
+
+    @keyframes previewShimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -20% 0; }
+    }
+
+    .preview-blur {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      background:
+        linear-gradient(180deg, rgba(6,8,12,0.00) 0%, rgba(6,8,12,0.03) 20%, rgba(6,8,12,0.08) 38%, rgba(6,8,12,0.12) 56%, rgba(6,8,12,0.16) 100%);
+      pointer-events: none;
     }
 
     @media (max-width: 920px) {
@@ -473,8 +656,11 @@
       .hero-card, .preview-gate { padding: 22px; }
       .preview-board-grid { grid-template-columns: 1fr; }
       .proof-stat { grid-template-columns: 1fr; }
-      .hero-actions, .preview-form { flex-direction: column; }
-      .preview-submit, .btn-primary, .btn-secondary { width: 100%; }
+      .hero-actions, .preview-form, .hero-gate-form { flex-direction: column; }
+      .preview-submit, .btn-primary, .btn-secondary, .preview-input { width: 100%; }
+      .hero-gate { padding: 18px; }
+      .hero-member-login { align-items: stretch; }
+      .hero-member-login .preview-member-login__sub { text-align: center; }
     }
   </style>
 </head>
@@ -505,8 +691,23 @@
               Real-time player surveillance built to surface skill-shift signals before broad market repricing catches up. Enter the viewing gallery to unlock live signals, then use Passport-authenticated tools for Watch List and Terminal workflows.
             </div>
 
-            <div class="hero-actions">
-              <a class="btn-primary" href="#unlock">Unlock Live Signals</a>
+            <div class="hero-gate">
+              <h2 class="hero-gate-title">Unlock Live Signals</h2>
+              <p class="hero-gate-copy">
+                Enter your email to unlock temporary Viewing Gallery access and join the Founding Access queue.
+              </p>
+
+              <form class="preview-form hero-gate-form" id="signals-front-door-form">
+                <input class="preview-input" id="signals-front-door-email" type="email" name="email" placeholder="Enter your email" required />
+                <button class="preview-submit" id="signals-front-door-submit" type="submit">Enter Viewing Gallery</button>
+              </form>
+
+              <div class="preview-note">Viewing Gallery • guest check-in required</div>
+
+              <div class="preview-member-login hero-member-login">
+                <a class="preview-member-login__link" href="https://app.diamondsignals.ai/auth?next=/terminal">Roster Terminal Login</a>
+                <div class="preview-member-login__sub">Passport login required for Watch List and Terminal actions</div>
+              </div>
             </div>
           </div>
 
@@ -542,62 +743,89 @@
     <section class="preview" id="unlock">
       <div class="preview-card">
         <div class="preview-board">
-          <div class="preview-board-grid">
-            <div class="preview-tile">
-              <div class="k">Pitch Quality Drift</div>
-              <div class="v">+18</div>
-              <div class="s">Shape improvement, command stability, and rising pressure profile.</div>
+          <div class="preview-vault">
+            <div class="preview-vault-grid">
+              <div class="preview-wall-header">
+                <div>Asset</div>
+                <div>Signal Class</div>
+                <div>Metric Surface</div>
+                <div>Action Bias</div>
+              </div>
+
+              <div class="preview-wall-row">
+                <div class="preview-player">
+                  <div class="preview-player-name">C. Burnes</div>
+                  <div class="preview-player-meta">SP • LIVE SURVEILLANCE</div>
+                </div>
+                <div><span class="preview-tag live">APEX</span></div>
+                <div class="preview-metric">
+                  <span class="preview-skeleton metric-main"></span>
+                  <span class="preview-skeleton metric-sub"></span>
+                </div>
+                <div><span class="preview-lock">LOCKED</span></div>
+              </div>
+
+              <div class="preview-wall-row">
+                <div class="preview-player">
+                  <div class="preview-player-name">J. Chourio</div>
+                  <div class="preview-player-meta">OF • BAT SPEED PRESSURE</div>
+                </div>
+                <div><span class="preview-tag blue">VOLATILITY</span></div>
+                <div class="preview-metric">
+                  <span class="preview-skeleton metric-main"></span>
+                  <span class="preview-skeleton metric-sub"></span>
+                </div>
+                <div><span class="preview-lock">LOCKED</span></div>
+              </div>
+
+              <div class="preview-wall-row">
+                <div class="preview-player">
+                  <div class="preview-player-name">T. Skubal</div>
+                  <div class="preview-player-meta">SP • COMMAND LAYER</div>
+                </div>
+                <div><span class="preview-tag live">EDGE</span></div>
+                <div class="preview-metric">
+                  <span class="preview-skeleton metric-main"></span>
+                  <span class="preview-skeleton metric-sub"></span>
+                </div>
+                <div><span class="preview-lock">LOCKED</span></div>
+              </div>
+
+              <div class="preview-wall-row">
+                <div class="preview-player">
+                  <div class="preview-player-name">J. Caminero</div>
+                  <div class="preview-player-meta">3B • BALLISTIC SURFACE</div>
+                </div>
+                <div><span class="preview-tag red">ALERT</span></div>
+                <div class="preview-metric">
+                  <span class="preview-skeleton metric-main"></span>
+                  <span class="preview-skeleton metric-sub"></span>
+                </div>
+                <div><span class="preview-lock">LOCKED</span></div>
+              </div>
+
+              <div class="preview-wall-row">
+                <div class="preview-player">
+                  <div class="preview-player-name">AAA WATCHLIST</div>
+                  <div class="preview-player-meta">PROMOTION PRESSURE • LIVE</div>
+                </div>
+                <div><span class="preview-tag blue">SCOUT</span></div>
+                <div class="preview-metric">
+                  <span class="preview-skeleton metric-main"></span>
+                  <span class="preview-skeleton metric-sub"></span>
+                </div>
+                <div><span class="preview-lock">LOCKED</span></div>
+              </div>
             </div>
-            <div class="preview-tile">
-              <div class="k">Velocity Decay</div>
-              <div class="v">07</div>
-              <div class="s">Risk surface highlighting possible fatigue and hidden deterioration.</div>
-            </div>
-            <div class="preview-tile">
-              <div class="k">Promotion Watch</div>
-              <div class="v">AAA</div>
-              <div class="s">Organizational movement and readiness pressure across call-up targets.</div>
-            </div>
-            <div class="preview-tile">
-              <div class="k">Stuff+ Disruption</div>
-              <div class="v">APEX</div>
-              <div class="s">Arsenal strengthening and dominance inflections before full repricing.</div>
-            </div>
-            <div class="preview-tile">
-              <div class="k">Ballistic Pressure</div>
-              <div class="v">LIVE</div>
-              <div class="s">Signal clustering across role, skill, and market behavior.</div>
-            </div>
-            <div class="preview-tile">
-              <div class="k">Member Tools</div>
-              <div class="v">WL / RT</div>
-              <div class="s">Watch List staging and Terminal operations live behind Passport auth.</div>
-            </div>
+
+            <div class="preview-vault-mask"></div>
+            <div class="preview-scanline"></div>
           </div>
         </div>
 
         <div class="preview-blur"></div>
 
-        <div class="preview-overlay">
-          <div class="preview-gate">
-            <h2>Unlock Live Signals</h2>
-            <p>
-              Enter your email to unlock temporary Viewing Gallery access and join the Founding Access queue.
-            </p>
-
-            <form class="preview-form" id="signals-front-door-form">
-              <input class="preview-input" id="signals-front-door-email" type="email" name="email" placeholder="Enter your email" required />
-              <button class="preview-submit" id="signals-front-door-submit" type="submit">Enter Viewing Gallery</button>
-            </form>
-
-            <div class="preview-note">Viewing Gallery • guest check-in required</div>
-
-            <div class="preview-member-login">
-              <a class="preview-member-login__link" href="https://app.diamondsignals.ai/auth?next=/terminal">Roster Terminal Login</a>
-              <div class="preview-member-login__sub">Passport login required for Watch List and Terminal actions</div>
-            </div>
-          </div>
-        </div>
+        <div class="preview-overlay preview-overlay--passive" aria-hidden="true"></div>
       </div>
     </section>
   </main>
@@ -642,8 +870,6 @@
       var form = document.getElementById('signals-front-door-form');
       var emailInput = document.getElementById('signals-front-door-email');
       var submitBtn = document.getElementById('signals-front-door-submit');
-      var unlockButtons = document.querySelectorAll('a[href="#unlock"]');
-      var unlockTarget = document.getElementById('unlock');
 
       if (hasGalleryAccess()) {
         window.location.replace('/live/');
@@ -651,20 +877,6 @@
       }
 
       if (!form || !emailInput || !submitBtn) return;
-
-      unlockButtons.forEach(function (btn) {
-        btn.addEventListener('click', function (event) {
-          event.preventDefault();
-
-          if (unlockTarget) {
-            unlockTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-
-          window.setTimeout(function () {
-            try { emailInput.focus(); } catch (err) {}
-          }, 420);
-        });
-      });
 
       var defaultButtonText = submitBtn.textContent;
 
