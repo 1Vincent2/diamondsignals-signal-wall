@@ -377,6 +377,48 @@
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
+      text-align: center;
+    }
+
+    .preview-member-login {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .preview-member-login__link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+    }
+
+    .preview-member-login__link:hover {
+      transform: translateY(-1px);
+      border-color: rgba(106,166,255,0.30);
+      background: rgba(255,255,255,0.06);
+    }
+
+    .preview-member-login__sub {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: center;
+      line-height: 1.45;
     }
 
     .preview-board {
@@ -465,7 +507,6 @@
 
             <div class="hero-actions">
               <a class="btn-primary" href="#unlock">Unlock Live Signals</a>
-              <a class="btn-secondary" href="https://app.diamondsignals.ai/auth">Roster Terminal Login</a>
             </div>
           </div>
 
@@ -549,7 +590,12 @@
               <button class="preview-submit" id="signals-front-door-submit" type="submit">Enter Viewing Gallery</button>
             </form>
 
-            <div class="preview-note">Viewing Gallery • guest check-in required • <a href="https://app.diamondsignals.ai/auth" style="color:#d7e7ff; text-decoration:underline;">Passport login required for Watch List and Terminal actions</a></div>
+            <div class="preview-note">Viewing Gallery • guest check-in required</div>
+
+            <div class="preview-member-login">
+              <a class="preview-member-login__link" href="https://app.diamondsignals.ai/auth?next=/terminal">Roster Terminal Login</a>
+              <div class="preview-member-login__sub">Passport login required for Watch List and Terminal actions</div>
+            </div>
           </div>
         </div>
       </div>
@@ -596,6 +642,8 @@
       var form = document.getElementById('signals-front-door-form');
       var emailInput = document.getElementById('signals-front-door-email');
       var submitBtn = document.getElementById('signals-front-door-submit');
+      var unlockButtons = document.querySelectorAll('a[href="#unlock"]');
+      var unlockTarget = document.getElementById('unlock');
 
       if (hasGalleryAccess()) {
         window.location.replace('/live/');
@@ -603,6 +651,20 @@
       }
 
       if (!form || !emailInput || !submitBtn) return;
+
+      unlockButtons.forEach(function (btn) {
+        btn.addEventListener('click', function (event) {
+          event.preventDefault();
+
+          if (unlockTarget) {
+            unlockTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+
+          window.setTimeout(function () {
+            try { emailInput.focus(); } catch (err) {}
+          }, 420);
+        });
+      });
 
       var defaultButtonText = submitBtn.textContent;
 
