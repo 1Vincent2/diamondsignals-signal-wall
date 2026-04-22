@@ -951,9 +951,17 @@
   <script>
     (function () {
       function readCookie(name) {
-        var match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[.$?*|{}()\\[\\]\\\\/+^]/g, '\\$&') + '=([^;]*)'));
-        return match ? decodeURIComponent(match[1]) : '';
-      }
+  var target = String(name || '').trim() + '=';
+  var parts = document.cookie ? document.cookie.split('; ') : [];
+
+  for (var i = 0; i < parts.length; i += 1) {
+    if (parts[i].indexOf(target) === 0) {
+      return decodeURIComponent(parts[i].slice(target.length));
+    }
+  }
+
+  return '';
+}
 
       function setGalleryAccess(email) {
         try {
