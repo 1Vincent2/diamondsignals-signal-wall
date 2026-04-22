@@ -562,41 +562,102 @@
         return match ? decodeURIComponent(match[1]) : '';
       }
 
-      var captured = readCookie('ds_captured');
-      if (captured === '1') {
-        window.location.replace('/live/');
-        return;
+      function setGalleryAccess(email) {
+        try {
+          document.cookie = "ds_captured=1; Domain=diamondsignals.ai; Path=/; Max-Age=2592000; Secure; SameSite=Lax";
+          document.cookie = "ds_captured_email=" + encodeURIComponent(email || '') + "; Domain=diamondsignals.ai; Path=/; Max-Age=2592000; Secure; SameSite=Lax";
+        } catch (err) {
+          console.error('Could not set captured-session cookie', err);
+        }
+
+        try {
+          localStorage.setItem('ds_gallery_access', '1');
+          localStorage.setItem('ds_gallery_email', email || '');
+        } catch (err) {
+          console.error('Could not set local gallery access state', err);
+        }
+      }
+
+      function hasGalleryAccess() {
+        var cookieAccess = readCookie('ds_captured') === '1';
+        var localAccess = false;
+
+        try {
+          localAccess = localStorage.getItem('ds_gallery_access') === '1';
+        } catch (err) {}
+
+        return cookieAccess || localAccess;
+      }
+
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
       }
 
       var form = document.getElementById('signals-front-door-form');
       var emailInput = document.getElementById('signals-front-door-email');
       var submitBtn = document.getElementById('signals-front-door-submit');
 
+      if (hasGalleryAccess()) {
+        window.location.replace('/live/');
+        return;
+      }
+
       if (!form || !emailInput || !submitBtn) return;
+
+      var defaultButtonText = submitBtn.textContent;
 
       window.setTimeout(function () {
         try { emailInput.focus(); } catch (err) {}
       }, 120);
 
-      form.addEventListener('submit', function (event) {
+      form.addEventListener('submit', async function (event) {
         event.preventDefault();
 
         var email = (emailInput.value || '').trim();
-        if (!email) return;
-
-        try {
-          document.cookie = "ds_captured=1; Domain=diamondsignals.ai; Path=/; Max-Age=2592000; Secure; SameSite=Lax";
-          document.cookie = "ds_captured_email=" + encodeURIComponent(email) + "; Domain=diamondsignals.ai; Path=/; Max-Age=2592000; Secure; SameSite=Lax";
-        } catch (err) {
-          console.error('Could not set captured-session cookie', err);
+        if (!isValidEmail(email)) {
+          try { emailInput.focus(); } catch (err) {}
+          return;
         }
 
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Loading Live Data...';
+        submitBtn.textContent = 'Decrypting Signals...';
 
-        window.setTimeout(function () {
-          window.location.href = '/live/';
-        }, 1500);
+        try {
+          var response = await fetch('https://diamondsignals.ai/.netlify/functions/system-capture-lead', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              email: email,
+              source: 'signals_front_door',
+              entry_surface: 'signals_subdomain',
+              referrer: window.location.href,
+              utm_source: new URLSearchParams(window.location.search).get('utm_source') || '',
+              utm_medium: new URLSearchParams(window.location.search).get('utm_medium') || '',
+              utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign') || ''
+            })
+          });
+
+          var data = await response.json().catch(function () { return {}; });
+
+          if (!response.ok || !data.ok) {
+            throw new Error((data && data.error) || 'Lead capture failed');
+          }
+
+          setGalleryAccess(email);
+          submitBtn.textContent = 'Access Granted';
+
+          window.setTimeout(function () {
+            window.location.href = '/live/';
+          }, 1100);
+        } catch (err) {
+          console.error('Front door capture failed', err);
+          submitBtn.disabled = false;
+          submitBtn.textContent = defaultButtonText;
+          try { emailInput.focus(); } catch (focusErr) {}
+          alert('We could not activate the Viewing Gallery right now. Please try again.');
+        }
       });
     })();
   </script>
