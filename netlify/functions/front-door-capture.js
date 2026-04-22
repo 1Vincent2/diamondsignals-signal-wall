@@ -1,5 +1,3 @@
-const { createClient } = require("@supabase/supabase-js");
-
 exports.handler = async (event) => {
   try {
     if (event.httpMethod === "OPTIONS") {
@@ -35,10 +33,6 @@ exports.handler = async (event) => {
       return json(500, { ok: false, error: "Missing Supabase environment variables" });
     }
 
-    const sb = createClient(supabaseUrl, supabaseKey, {
-      auth: { persistSession: false },
-    });
-
     const payload = {
       email,
       source,
@@ -52,17 +46,25 @@ exports.handler = async (event) => {
       last_seen_at: new Date().toISOString(),
     };
 
-    const { data, error } = await sb
-      .from("founding_access")
-      .upsert(payload, { onConflict: "email" })
-      .select("email")
-      .limit(1);
+    const endpoint = supabaseUrl.replace(/\/+$/, "") + "/rest/v1/founding_access?on_conflict=email";
+    const resp = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "apikey": supabaseKey,
+        "Authorization": "Bearer " + supabaseKey,
+        "Content-Type": "application/json",
+        "Prefer": "resolution=merge-duplicates,return=representation"
+      },
+      body: JSON.stringify(payload)
+    });
 
-    if (error) {
+    const data = await resp.json().catch(() => ({}));
+
+    if (!resp.ok) {
       return json(500, {
         ok: false,
         error: "Supabase upsert failed",
-        details: error.message,
+        details: data
       });
     }
 
@@ -71,7 +73,7 @@ exports.handler = async (event) => {
       captured: true,
       email,
       next_url: "/live/",
-      record: data?.[0] || null,
+      record: Array.isArray(data) ? data[0] || null : data
     });
   } catch (err) {
     return json(500, {
