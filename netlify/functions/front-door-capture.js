@@ -16,6 +16,7 @@ exports.handler = async (event) => {
     const utm_source = String(body.utm_source || "").trim();
     const utm_medium = String(body.utm_medium || "").trim();
     const utm_campaign = String(body.utm_campaign || "").trim();
+    const first_name = String(body.first_name || "").trim();
     const user_agent = String(
       event.headers["user-agent"] ||
       event.headers["User-Agent"] ||
@@ -37,6 +38,7 @@ exports.handler = async (event) => {
       email,
       source,
       entry_surface,
+      first_name: first_name || null,
       referrer: referrer || null,
       utm_source: utm_source || null,
       utm_medium: utm_medium || null,
@@ -46,16 +48,19 @@ exports.handler = async (event) => {
       last_seen_at: new Date().toISOString(),
     };
 
-    const endpoint = supabaseUrl.replace(/\/+$/, "") + "/rest/v1/founding_access?on_conflict=email";
+    const endpoint =
+      supabaseUrl.replace(/\/+$/, "") +
+      "/rest/v1/founding_access?on_conflict=email";
+
     const resp = await fetch(endpoint, {
       method: "POST",
       headers: {
-        "apikey": supabaseKey,
-        "Authorization": "Bearer " + supabaseKey,
+        apikey: supabaseKey,
+        Authorization: "Bearer " + supabaseKey,
         "Content-Type": "application/json",
-        "Prefer": "resolution=merge-duplicates,return=representation"
+        Prefer: "resolution=merge-duplicates,return=representation",
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     });
 
     const data = await resp.json().catch(() => ({}));
@@ -64,8 +69,41 @@ exports.handler = async (event) => {
       return json(500, {
         ok: false,
         error: "Supabase upsert failed",
-        details: data
+        details: data,
       });
+    }
+
+    let welcome = { attempted: false, ok: false };
+
+    try {
+      const welcomeResp = await fetch(
+        "https://diamondsignals.ai/.netlify/functions/system-send-welcome",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            name: first_name || "",
+          }),
+        }
+      );
+
+      const welcomeData = await welcomeResp.json().catch(() => ({}));
+
+      welcome = {
+        attempted: true,
+        ok: Boolean(welcomeResp.ok && welcomeData && welcomeData.ok),
+        status: welcomeResp.status,
+        response: welcomeData,
+      };
+    } catch (err) {
+      welcome = {
+        attempted: true,
+        ok: false,
+        error: String(err?.message || err),
+      };
     }
 
     return json(200, {
@@ -73,7 +111,8 @@ exports.handler = async (event) => {
       captured: true,
       email,
       next_url: "/live/",
-      record: Array.isArray(data) ? data[0] || null : data
+      record: Array.isArray(data) ? data[0] || null : data,
+      welcome,
     });
   } catch (err) {
     return json(500, {
@@ -88,7 +127,7 @@ function json(statusCode, body) {
     statusCode,
     headers: {
       "Content-Type": "application/json",
-      "Cache-Control": "no-store"
+      "Cache-Control": "no-store",
     },
     body: typeof body === "string" ? body : JSON.stringify(body),
   };
