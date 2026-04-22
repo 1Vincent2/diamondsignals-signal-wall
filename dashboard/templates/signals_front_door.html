@@ -1002,7 +1002,7 @@
         try { emailInput.focus(); } catch (err) {}
       }, 120);
 
-      form.addEventListener('submit', async function (event) {
+      form.addEventListener('submit', function (event) {
         event.preventDefault();
 
         var email = (emailInput.value || '').trim();
@@ -1019,48 +1019,40 @@
           progressBar.classList.add('is-active');
         }
 
-        try {
-          var response = await fetch('https://diamondsignals.ai/.netlify/functions/system-capture-lead', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              email: email,
-              source: 'signals_front_door',
-              entry_surface: 'signals_subdomain',
-              referrer: window.location.href,
-              utm_source: new URLSearchParams(window.location.search).get('utm_source') || '',
-              utm_medium: new URLSearchParams(window.location.search).get('utm_medium') || '',
-              utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign') || ''
-            })
+        setGalleryAccess(email);
+
+        fetch('/.netlify/functions/front-door-capture', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: email,
+            source: 'signals_front_door',
+            entry_surface: 'signals_subdomain',
+            referrer: window.location.href,
+            utm_source: new URLSearchParams(window.location.search).get('utm_source') || '',
+            utm_medium: new URLSearchParams(window.location.search).get('utm_medium') || '',
+            utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign') || ''
+          })
+        })
+        .then(function (response) {
+          return response.json().catch(function () { return {}; }).then(function (data) {
+            if (!response.ok || !data.ok) {
+              throw new Error((data && data.error) || 'Lead capture failed');
+            }
+            return data;
           });
+        })
+        .catch(function (err) {
+          console.error('Front door background capture failed', err);
+        });
 
-          var data = await response.json().catch(function () { return {}; });
+        submitBtn.textContent = 'Access Granted';
 
-          if (!response.ok || !data.ok) {
-            throw new Error((data && data.error) || 'Lead capture failed');
-          }
-
-          setGalleryAccess(email);
-          submitBtn.textContent = 'Access Granted';
-
-          window.setTimeout(function () {
-            window.location.href = '/live/';
-          }, 1200);
-        } catch (err) {
-          console.error('Front door capture failed', err);
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Enter Viewing Gallery';
-
-          if (progressBar) {
-            progressBar.hidden = true;
-            progressBar.classList.remove('is-active');
-          }
-
-          try { emailInput.focus(); } catch (focusErr) {}
-          alert('We could not activate the Viewing Gallery right now. Please try again.');
-        }
+        window.setTimeout(function () {
+          window.location.href = '/live/';
+        }, 1200);
       });
     })();
   </script>
