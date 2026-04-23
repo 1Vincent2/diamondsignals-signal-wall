@@ -390,11 +390,11 @@ def build_hidden_gems_pitchers(df: pd.DataFrame) -> pd.DataFrame:
     latest["display_team"] = latest.apply(derive_display_team, axis=1)
     latest["display_org"] = latest.apply(derive_display_org, axis=1)
 
-    latest["metric_1_label"] = "Trait"
+    latest["metric_1_label"] = "Physics Core"
     latest["metric_1"] = latest["trait_score_raw"].fillna(0).map(lambda x: f"{x:.2f}")
-    latest["metric_2_label"] = "Divergence"
+    latest["metric_2_label"] = "Market Gap"
     latest["metric_2"] = latest["surface_pressure_raw"].fillna(0).map(lambda x: f"{x:.2f}")
-    latest["metric_3_label"] = "Market"
+    latest["metric_3_label"] = "Public Exposure"
     latest["metric_3"] = latest["market_score_raw"].fillna(0).map(lambda x: f"{x:.2f}")
 
     def pitcher_summary(r: pd.Series) -> str:
@@ -513,11 +513,11 @@ def build_hidden_gems_hitters(df: pd.DataFrame) -> pd.DataFrame:
     latest["display_team"] = latest.apply(derive_display_team, axis=1)
     latest["display_org"] = latest.apply(derive_display_org, axis=1)
 
-    latest["metric_1_label"] = "Trait"
+    latest["metric_1_label"] = "Physics Core"
     latest["metric_1"] = latest["trait_score_raw"].fillna(0).map(lambda x: f"{x:.2f}")
-    latest["metric_2_label"] = "Divergence"
+    latest["metric_2_label"] = "Market Gap"
     latest["metric_2"] = latest["surface_pressure_raw"].fillna(0).map(lambda x: f"{x:.2f}")
-    latest["metric_3_label"] = "Market"
+    latest["metric_3_label"] = "Public Exposure"
     latest["metric_3"] = latest["market_score_raw"].fillna(0).map(lambda x: f"{x:.2f}")
 
     def hitter_summary(r: pd.Series) -> str:
@@ -854,6 +854,16 @@ HTML_TEMPLATE = Template(
     .player-card:hover {
       border-color: rgba(255,255,255,0.13);
       transform: translateY(-1px);
+    }
+
+    .cards-grid article:first-child {
+      border-color: rgba(182,255,0,0.18);
+      box-shadow: 0 0 0 1px rgba(182,255,0,0.08), 0 16px 40px rgba(0,0,0,0.28);
+    }
+
+    .cards-grid article:first-child .rankline {
+      color: var(--lime-hot);
+      letter-spacing: 0.12em;
     }
 
     .player-top {
@@ -1291,18 +1301,107 @@ HTML_TEMPLATE = Template(
         width: min(100%, calc(100% - 16px));
       }
 
+      .app {
+        padding: 18px 0 40px;
+      }
+
+      .hero-card {
+        padding: 18px 16px 16px;
+      }
+
+      .summary-card,
+      .section {
+        padding: 14px;
+      }
+
+      .hero-title {
+        font-size: clamp(28px, 10vw, 40px);
+        line-height: 0.98;
+      }
+
+      .hero-sub {
+        margin-top: 10px;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .section-head {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .section-head-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .field-guide-btn,
+      .section-badge {
+        white-space: normal;
+      }
+
+      .player-card {
+        padding: 14px;
+      }
+
       .player-top {
-        grid-template-columns: auto 1fr;
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .avatar {
+        width: 38px;
+        height: 38px;
+        font-size: 11px;
+      }
+
+      .player-ident {
+        min-width: 0;
+      }
+
+      .signal-line {
+        font-size: 10px;
+        line-height: 1.45;
+      }
+
+      .card-meta-row {
+        gap: 5px;
+      }
+
+      .card-meta-badge {
+        font-size: 9px;
+        padding: 4px 7px;
       }
 
       .scorebox {
-        grid-column: 2;
+        grid-column: auto;
         text-align: left;
-        margin-top: 8px;
+        margin-top: 2px;
+        padding-top: 6px;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        min-width: 0;
+      }
+
+      .sparkline-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+
+      .pill-row {
+        gap: 6px;
+      }
+
+      .pill {
+        white-space: normal;
       }
 
       .metric-grid {
         grid-template-columns: 1fr;
+      }
+
+      .metric {
+        padding: 9px;
       }
 
       .player-name {
@@ -1362,7 +1461,7 @@ HTML_TEMPLATE = Template(
         <div class="eyebrow">Signal Wall // Edge</div>
         <h1 class="hero-title">Hidden Gems</h1>
         <p class="hero-sub">
-          Hidden Gems isolates under-the-hood elite profiles whose deeper traits are stronger than the visible surface line. This board is built to surface buy-low conviction candidates where ballistics, shape, and market neglect still diverge.
+          Hidden Gems isolates latent alpha where Physics Core remains stronger than the visible surface line. This Signal Surface is built to expose Market Gaps before public exposure catches up.
         </p>
       </div>
 
@@ -1379,6 +1478,10 @@ HTML_TEMPLATE = Template(
           <div class="summary-label">Hitters</div>
           <div class="summary-value">{{ hitters|length }}</div>
         </div>
+        <div>
+          <div class="summary-label">Source Window</div>
+          <div class="summary-value" style="font-size:16px; line-height:1.2; letter-spacing:0; font-weight:700;">AAA Snapshot // {{ latest_week_start }}</div>
+        </div>
         <div class="summary-mini">
           Buy-low lens: strong underlying traits, weaker public signal, and still-manageable market pricing.
         </div>
@@ -1389,10 +1492,10 @@ HTML_TEMPLATE = Template(
       <div class="section-head">
         <div>
           <div class="section-kicker">Latent Alpha</div>
-          <h2 class="section-title">Pitcher Hidden Gems</h2>
+          <h2 class="section-title">Latent Alpha: Pitcher Extractions</h2>
         </div>
         <div class="section-head-actions">
-          <button type="button" class="field-guide-btn" onclick="openGlossary()">Field Guide / How To Use This Board</button>
+          <button type="button" class="field-guide-btn" onclick="openGlossary()">Operator Guide / Extraction Protocol</button>
           <div class="section-badge">Top {{ pitchers|length }}</div>
         </div>
       </div>
@@ -1411,7 +1514,7 @@ HTML_TEMPLATE = Template(
           <div class="player-top">
             <div class="avatar">{{ row.avatar }}</div>
             <div class="player-ident">
-              <div class="rankline">#{{ loop.index }} Divergence Pitcher</div>
+              <div class="rankline">{% if loop.index == 1 %}[ PRIMARY EXTRACTION ]{% else %}#{{ loop.index }} Pitcher Extraction{% endif %}</div>
               <h3 class="player-name">{{ row.player_name }}</h3>
               <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %} // {{ row.display_team }}{% endif %} // Pitcher // Hidden Gems</div>
               <div class="card-meta-row">
@@ -1421,7 +1524,7 @@ HTML_TEMPLATE = Template(
               </div>
             </div>
             <div class="scorebox">
-              <div class="score-label">Hidden Gem Score</div>
+              <div class="score-label">Extraction Score</div>
               <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
             </div>
           </div>
@@ -1480,7 +1583,7 @@ HTML_TEMPLATE = Template(
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> {{ row.why_hidden }}</div>
+          <div class="why"><strong>Market Lie:</strong> {{ row.why_hidden }}</div>
         </article>
         {% endfor %}
       </div>
@@ -1493,10 +1596,10 @@ HTML_TEMPLATE = Template(
       <div class="section-head">
         <div>
           <div class="section-kicker">Latent Alpha</div>
-          <h2 class="section-title">Hitter Hidden Gems</h2>
+          <h2 class="section-title">Latent Alpha: Hitter Extractions</h2>
         </div>
         <div class="section-head-actions">
-          <button type="button" class="field-guide-btn" onclick="openGlossary()">Field Guide / How To Use This Board</button>
+          <button type="button" class="field-guide-btn" onclick="openGlossary()">Operator Guide / Extraction Protocol</button>
           <div class="section-badge">Top {{ hitters|length }}</div>
         </div>
       </div>
@@ -1515,7 +1618,7 @@ HTML_TEMPLATE = Template(
           <div class="player-top">
             <div class="avatar">{{ row.avatar }}</div>
             <div class="player-ident">
-              <div class="rankline">#{{ loop.index }} Divergence Hitter</div>
+              <div class="rankline">{% if loop.index == 1 %}[ PRIMARY EXTRACTION ]{% else %}#{{ loop.index }} Hitter Extraction{% endif %}</div>
               <h3 class="player-name">{{ row.player_name }}</h3>
               <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %} // {{ row.display_team }}{% endif %} // Hitter // Hidden Gems</div>
               <div class="card-meta-row">
@@ -1525,7 +1628,7 @@ HTML_TEMPLATE = Template(
               </div>
             </div>
             <div class="scorebox">
-              <div class="score-label">Hidden Gem Score</div>
+              <div class="score-label">Extraction Score</div>
               <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
             </div>
           </div>
@@ -1610,19 +1713,19 @@ HTML_TEMPLATE = Template(
     <div class="guide-intro">
       <div class="guide-intro-title">Read This In 10 Seconds</div>
       <div class="guide-intro-copy">
-        Start with the score, then check the three columns below it: Trait tells you what is strong, Divergence tells you what the market may still be missing, and Market tells you how early the profile may still be.
+        Start with the Extraction Score, then audit Physics Core, Market Gap, and Public Exposure. The objective is to identify where the surface line is lagging the underlying profile.
       </div>
     </div>
 
     <div class="guide-list">
       <div class="guide-item">
         <div class="guide-term">Hidden Gem</div>
-        <div class="guide-def">A player whose underlying profile looks stronger than the public-facing results and current market attention suggest.</div>
+        <div class="guide-def">A player whose underlying profile is stronger than public-facing results and current market attention imply.</div>
       </div>
 
       <div class="guide-item">
         <div class="guide-term">Latent Alpha</div>
-        <div class="guide-def">Unpriced upside. This appears when strong underlying indicators have not fully translated into broad market belief.</div>
+        <div class="guide-def">Unpriced upside. This appears when strong underlying indicators have not yet translated into broad market belief.</div>
       </div>
 
       <div class="guide-item">
@@ -1631,8 +1734,8 @@ HTML_TEMPLATE = Template(
       </div>
 
       <div class="guide-item">
-        <div class="guide-term">Divergence</div>
-        <div class="guide-def">The gap between stronger underlying traits and weaker visible outcomes. This is the core Hidden Gems lens.</div>
+        <div class="guide-term">Market Gap</div>
+        <div class="guide-def">The gap between stronger underlying traits and weaker visible outcomes. This is the core Hidden Gems extraction lens.</div>
       </div>
 
       <div class="guide-item">
@@ -1641,17 +1744,17 @@ HTML_TEMPLATE = Template(
       </div>
 
       <div class="guide-item">
-        <div class="guide-term">Trait</div>
+        <div class="guide-term">Physics Core</div>
         <div class="guide-def">The quality of the underlying profile. For pitchers this may include carry, whiff support, and velocity. For hitters this may include impact, power shape, and damage support.</div>
       </div>
 
       <div class="guide-item">
-        <div class="guide-term">Divergence Score</div>
+        <div class="guide-term">Market Gap</div>
         <div class="guide-def">A measure of how much the current visible results still lag the deeper profile.</div>
       </div>
 
       <div class="guide-item">
-        <div class="guide-term">Market Score</div>
+        <div class="guide-term">Public Exposure</div>
         <div class="guide-def">A rough estimate of how early the market still appears to be relative to the player’s underlying quality.</div>
       </div>
 
@@ -1662,7 +1765,7 @@ HTML_TEMPLATE = Template(
 
       <div class="guide-item">
         <div class="guide-term">How To Use This Board</div>
-        <div class="guide-def">Use this page to find buy-low candidates, not already-obvious stars. The best names here usually combine good underlying support, visible underperformance, and still-manageable market attention.</div>
+        <div class="guide-def">Use this page to isolate extraction candidates, not already-obvious stars. The best names here combine strong underlying support, visible underperformance, and still-manageable public exposure.</div>
       </div>
     </div>
   </aside>
@@ -1705,8 +1808,15 @@ def render_html() -> str:
     pitchers = build_hidden_gems_pitchers(df)
     hitters = build_hidden_gems_hitters(df)
 
+    latest_week_start = "NO DATA"
+    if not df.empty and "week_start" in df.columns:
+        valid_weeks = df["week_start"].dropna().sort_values(ascending=False)
+        if not valid_weeks.empty:
+            latest_week_start = valid_weeks.iloc[0].strftime("%Y-%m-%d")
+
     return HTML_TEMPLATE.render(
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
+        latest_week_start=latest_week_start,
         timezone_label=TIMEZONE_LABEL,
         nav_html=Template(NAV_TEMPLATE).render(active_nav="hidden_gems"),
         search_html=SEARCH_TEMPLATE,
