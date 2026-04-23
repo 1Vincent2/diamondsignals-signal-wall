@@ -28,3 +28,10 @@ This branch now contains:
 - page honesty improvements
 - AAA hitter refresh export stub
 - freshness status metadata
+
+
+## 2026-04-23 checkpoint update
+- Promotion Watch 14 DAY fetch bug was fixed in the live builder.
+- AAA ingest function was migrated into the signal wall repo.
+- 72 HR refresh artifacts are currently healthy and rebuild locally.
+- Remaining blocker is no longer the fetch logic itself; it is the stale upstream `milb_aaa_weekly_signal_base` source for the 14 DAY layer.
