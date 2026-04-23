@@ -2454,12 +2454,23 @@ def fetch_recent_aaa_weekly_signal_base(limit_weeks: int = 4) -> tuple[pd.DataFr
         sb.table("milb_aaa_weekly_signal_base")
         .select("week_start")
         .order("week_start", desc=True)
-        .limit(limit_weeks)
+        .limit(2000)
         .execute()
     )
 
     rows = latest_resp.data or []
-    week_starts = [row["week_start"] for row in rows if row.get("week_start")]
+
+    week_starts: list[str] = []
+    seen: set[str] = set()
+    for row in rows:
+        wk = row.get("week_start")
+        if not wk or wk in seen:
+            continue
+        seen.add(wk)
+        week_starts.append(wk)
+        if len(week_starts) >= limit_weeks:
+            break
+
     if not week_starts:
         return pd.DataFrame(), []
 
