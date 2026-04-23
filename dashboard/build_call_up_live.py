@@ -2465,30 +2465,110 @@ def load_source_frame() -> tuple[pd.DataFrame, list[str]]:
     return fetch_recent_aaa_weekly_signal_base()
 
 
+def load_refresh_top20(path_name: str) -> pd.DataFrame:
+    path = DIST_DIR / path_name
+    if not path.exists():
+        return pd.DataFrame()
+
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return pd.DataFrame()
+
+    rows = payload.get("top_20", []) if isinstance(payload, dict) else []
+    if not rows:
+        return pd.DataFrame()
+
+    return pd.DataFrame(rows)
+
+
+def normalize_refresh_hitters(df: pd.DataFrame) -> pd.DataFrame:
+    if df.empty:
+        return pd.DataFrame()
+
+    out = df.copy()
+    out["resolved_player_id"] = out.get("player_id")
+    out["display_org"] = out.get("org", "AAA")
+    out["display_team"] = "AAA"
+    out["source_badge"] = "AAA_REFRESH"
+    out["score_version"] = "LIVE_72H"
+    out["edge_score"] = out.get("live_score", 0).fillna(0).astype(float).round(1)
+    out["score_class"] = out["edge_score"].apply(
+        lambda x: "elite" if x >= 18 else "strong" if x >= 12 else "watch"
+    )
+    out["sample_note"] = out.get("snapshot_date", "LIVE")
+    out["metric_1"] = out.apply(
+        lambda r: f"ISO {float(r.get('iso', 0) or 0):.3f}",
+        axis=1,
+    )
+    out["metric_2"] = out.apply(
+        lambda r: f"HR {int(r.get('hr', 0) or 0)} | H {int(r.get('h', 0) or 0)}",
+        axis=1,
+    )
+    out["metric_3"] = out.apply(
+        lambda r: f"BB {int(r.get('bb', 0) or 0)} | SO {int(r.get('so', 0) or 0)}",
+        axis=1,
+    )
+    out["why"] = out.apply(
+        lambda r: f"72-hour hitting surge with live score {float(r.get('live_score', 0) or 0):.1f} across recent AAA action.",
+        axis=1,
+    )
+    return out
+
+
+def normalize_refresh_pitchers(df: pd.DataFrame) -> pd.DataFrame:
+    if df.empty:
+        return pd.DataFrame()
+
+    out = df.copy()
+    out["resolved_player_id"] = out.get("player_id")
+    out["display_org"] = out.get("org", "AAA")
+    out["display_team"] = "AAA"
+    out["source_badge"] = "AAA_REFRESH"
+    out["score_version"] = "LIVE_72H"
+    out["edge_score"] = out.get("live_score", 0).fillna(0).astype(float).round(1)
+    out["score_class"] = out["edge_score"].apply(
+        lambda x: "elite" if x >= 18 else "strong" if x >= 12 else "watch"
+    )
+    out["sample_note"] = out.get("snapshot_date", "LIVE")
+    out["metric_1"] = out.apply(
+        lambda r: f"IP {r.get('ip', '0.0')}",
+        axis=1,
+    )
+    out["metric_2"] = out.apply(
+        lambda r: f"SO {int(r.get('so', 0) or 0)} | H {int(r.get('h', 0) or 0)}",
+        axis=1,
+    )
+    out["metric_3"] = out.apply(
+        lambda r: f"BB {int(r.get('bb', 0) or 0)} | HR {int(r.get('hr', 0) or 0)}",
+        axis=1,
+    )
+    out["why"] = out.apply(
+        lambda r: f"72-hour pitching surge with live score {float(r.get('live_score', 0) or 0):.1f} across recent AAA action.",
+        axis=1,
+    )
+    return out
+
+
 def render_html() -> str:
     df, week_starts = load_source_frame()
 
+    hitters_72 = normalize_refresh_hitters(load_refresh_top20("aaa_hitter_refresh.json"))
+    pitchers_72 = normalize_refresh_pitchers(load_refresh_top20("aaa_pitcher_refresh_probe.json"))
+
     if df.empty or not week_starts:
-        hitters_72 = pd.DataFrame()
-        pitchers_72 = pd.DataFrame()
         hitters_14 = pd.DataFrame()
         pitchers_14 = pd.DataFrame()
     else:
         df["week_start"] = pd.to_datetime(df["week_start"], errors="coerce")
-        latest_week = pd.to_datetime(week_starts[0], errors="coerce")
-        latest_df = df[df["week_start"] == latest_week].copy()
-
         two_week_cut = sorted(df["week_start"].dropna().unique(), reverse=True)[:2]
         two_week_df = df[df["week_start"].isin(two_week_cut)].copy()
 
         hitter_trends_all = build_trend_lookup(df[df["pa"].notna()].copy(), "iso")
         pitcher_trends_all = build_trend_lookup(df[df["bf"].notna()].copy(), "kbb_p")
 
-        hitters_72 = build_aaa_hitter_promotion_watch(latest_df, trend_lookup=hitter_trends_all).head(6) if not latest_df.empty else pd.DataFrame()
-        pitchers_72 = build_aaa_pitcher_promotion_watch(latest_df, trend_lookup=pitcher_trends_all).head(6) if not latest_df.empty else pd.DataFrame()
-
-        hitters_14 = build_aaa_hitter_promotion_watch(two_week_df, trend_lookup=hitter_trends_all).head(6) if not two_week_df.empty else pd.DataFrame()
-        pitchers_14 = build_aaa_pitcher_promotion_watch(two_week_df, trend_lookup=pitcher_trends_all).head(6) if not two_week_df.empty else pd.DataFrame()
+        hitters_14 = build_aaa_hitter_promotion_watch(two_week_df, trend_lookup=hitter_trends_all).head(12) if not two_week_df.empty else pd.DataFrame()
+        pitchers_14 = build_aaa_pitcher_promotion_watch(two_week_df, trend_lookup=pitcher_trends_all).head(12) if not two_week_df.empty else pd.DataFrame()
 
     total_signals = len(hitters_72) + len(pitchers_72)
     total_14_signals = len(hitters_14) + len(pitchers_14)
