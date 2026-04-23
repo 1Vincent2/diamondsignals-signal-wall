@@ -13,11 +13,15 @@
 - `archive/netlify-functions/`
 
 ## Build architecture
-- Netlify build command: `python dashboard/build_all.py`
+- Netlify build command: `python3 dashboard/build_all.py`
 - `dashboard/build_all.py` is the single orchestrator for subdomain page generation
 - Current build set includes:
   - `build_dashboard.py`
-  - `build_typical_call_up.py`
+  - `build_call_up_live.py`
+  - `build_hidden_gems.py`
+  - `build_ivb_heat_map.py`
+  - `build_velocity_decay.py`
+  - `build_stuff_disruption.py`
 
 ## Scheduled rebuild architecture
 - Scheduled function: `netlify/functions/trigger-rebuild.mjs`
