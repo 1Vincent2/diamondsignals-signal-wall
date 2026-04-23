@@ -762,6 +762,22 @@ def load_arrivals_windows(live_limit: int = 8, archive_limit: int = 16) -> tuple
         if move_ts >= archive_cutoff:
             archive_arrivals.append(move)
 
+    arrivals_sorted = sorted(
+        arrivals,
+        key=lambda m: (
+            str(m.get("date") or ""),
+            str(m.get("mlbDebutDate") or ""),
+            str(m.get("person") or ""),
+        ),
+        reverse=True,
+    )
+
+    if not archive_arrivals and arrivals_sorted:
+        archive_arrivals = arrivals_sorted[:archive_limit]
+
+    if not live_arrivals and arrivals_sorted:
+        live_arrivals = arrivals_sorted[:live_limit]
+
     def format_arrivals(arrivals_subset: list[dict], limit: int) -> list[dict]:
         arrivals_subset = sorted(
             arrivals_subset,
