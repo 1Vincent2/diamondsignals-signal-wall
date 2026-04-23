@@ -21,7 +21,7 @@ SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding=
 
 TIMEZONE_LABEL = "America/New_York"
 SOURCE_BADGE = "SRC: EDGE_PIPELINE_v1"
-MODEL_BADGE = "HIDDEN_GEMS_v2"
+MODEL_BADGE = "MLB_EXTRACTION_v1"
 
 MLB_CODES = {
     "ARI", "ATL", "BAL", "BOS", "CHC", "CWS", "CIN", "CLE", "COL", "DET",
@@ -277,7 +277,10 @@ def derive_display_org(row: pd.Series) -> str:
 
 def load_hidden_gems_source_frame() -> tuple[pd.DataFrame, pd.DataFrame, str]:
     from datetime import date, timedelta
-    from build_dashboard import fetch_statcast_window, build_hitter_signals, build_pitcher_signals
+    try:
+        from build_dashboard import fetch_statcast_window, build_hitter_signals, build_pitcher_signals
+    except ModuleNotFoundError:
+        from dashboard.build_dashboard import fetch_statcast_window, build_hitter_signals, build_pitcher_signals
 
     end_dt = date.today()
     start_dt = end_dt - timedelta(days=14)
@@ -305,6 +308,9 @@ def build_hidden_gems_hitters_from_mlb(signals: pd.DataFrame, team_lookup: dict[
     latest = signals.copy()
     latest["hidden_gems_score"] = pd.to_numeric(latest.get("edge_score"), errors="coerce").fillna(0).round(1)
     latest["score_class"] = latest["hidden_gems_score"].apply(classify_score)
+
+    latest.loc[latest["hidden_gems_score"] < 70, "score_class"] = "watch"
+    latest.loc[latest["hidden_gems_score"] < 65, "score_class"] = "neutral"
     latest["avatar"] = latest["player_name"].map(initials)
     latest["player_id"] = latest.get("batter", "").fillna("").astype(str).str.strip() if "batter" in latest.columns else ""
     latest = backfill_resolved_player_ids(latest)
@@ -340,18 +346,31 @@ def build_hidden_gems_hitters_from_mlb(signals: pd.DataFrame, team_lookup: dict[
     else:
         latest["metric_2"] = "—"
 
-    latest["metric_3_label"] = "Public Exposure"
-    if "recent_barrel_rate" in latest.columns:
-        latest["metric_3"] = latest["recent_barrel_rate"].map(lambda x: f"{100*float(x):.1f}%" if pd.notna(x) else "—")
+    latest["metric_3_label"] = "Market Attention Feed"
+    if "rostered_pct" in latest.columns:
+        latest["metric_3"] = latest["rostered_pct"].map(
+            lambda x: f"{float(x):.1f}%" if pd.notna(x) else "FEED OFFLINE"
+        )
     else:
-        latest["metric_3"] = "—"
+        latest["metric_3"] = "FEED OFFLINE"
 
     def pick_pills(row):
-        badges = row.get("badges") or []
-        badges = list(badges)[:3]
-        while len(badges) < 3:
-            badges.append("Trend Confirming")
-        return pd.Series(badges[:3])
+        score = float(pd.to_numeric(row.get("hidden_gems_score"), errors="coerce") or 0)
+        badges = list(row.get("badges") or [])
+
+        if score >= 75:
+            pills = badges[:3]
+            while len(pills) < 3:
+                pills.append("Trend Confirming")
+        elif score >= 70:
+            pills = badges[:2]
+            while len(pills) < 2:
+                pills.append("Trend Confirming")
+            pills.append("Watchlist")
+        else:
+            pills = ["Trend Confirming", "Watchlist", "Monitor Only"]
+
+        return pd.Series(pills[:3])
 
     latest[["pill_1", "pill_2", "pill_3"]] = latest.apply(pick_pills, axis=1)
 
@@ -367,9 +386,27 @@ def build_hidden_gems_hitters_from_mlb(signals: pd.DataFrame, team_lookup: dict[
     if "recent_max_ev" in latest.columns:
         latest = latest[pd.to_numeric(latest["recent_max_ev"], errors="coerce").between(95, 122, inclusive="both")].copy()
 
-    latest["why_hidden"] = latest.get("why", "").fillna("").map(
-        lambda s: f"Surface production is lagging the Ballistic Surface. {s}".strip()
-    )
+    def build_hitter_thesis(row):
+        ev = pd.to_numeric(row.get("recent_ev"), errors="coerce")
+        ev_delta = pd.to_numeric(row.get("ev_delta"), errors="coerce")
+        barrel = pd.to_numeric(row.get("recent_barrel_rate"), errors="coerce")
+        bbe = pd.to_numeric(row.get("recent_bbe"), errors="coerce")
+        max_ev = pd.to_numeric(row.get("recent_max_ev"), errors="coerce")
+        score = pd.to_numeric(row.get("hidden_gems_score"), errors="coerce")
+
+        if pd.notna(ev_delta) and ev_delta >= 4.0 and pd.notna(barrel) and barrel >= 0.08:
+            return "Impact quality is already ahead of the production line. The bat has moved before the market has reacted."
+        if pd.notna(ev) and ev >= 92 and pd.notna(max_ev) and max_ev >= 112:
+            return "The damage profile is live even if the visible output still looks incomplete. This is a hard-contact mismatch."
+        if pd.notna(barrel) and barrel >= 0.10 and pd.notna(bbe) and bbe >= 15:
+            return "Barrel-like contact is showing up often enough to matter. The surface stats have not fully caught up yet."
+        if pd.notna(ev_delta) and ev_delta >= 2.0:
+            return "Average impact has improved faster than the box-score line. The market is still staring at the wrong layer."
+        if pd.notna(score) and score >= 75:
+            return "Underlying offensive quality is stronger than current market recognition. This is a clean extraction candidate."
+        return "The ballistic profile is firmer than the visible production line. Market recognition still looks late."
+
+    latest["why_hidden"] = latest.apply(build_hitter_thesis, axis=1)
 
     latest["trend_note"] = latest.get("sample_note", "MLB Statcast")
     latest["trend_glow"] = latest.get("trend_glow", False)
@@ -384,6 +421,9 @@ def build_hidden_gems_pitchers_from_mlb(signals: pd.DataFrame, team_lookup: dict
     latest = signals.copy()
     latest["hidden_gems_score"] = pd.to_numeric(latest.get("edge_score"), errors="coerce").fillna(0).round(1)
     latest["score_class"] = latest["hidden_gems_score"].apply(classify_score)
+
+    latest.loc[latest["hidden_gems_score"] < 70, "score_class"] = "watch"
+    latest.loc[latest["hidden_gems_score"] < 65, "score_class"] = "neutral"
     latest["avatar"] = latest["player_name"].map(initials)
     latest["player_id"] = latest.get("pitcher", "").fillna("").astype(str).str.strip() if "pitcher" in latest.columns else ""
     latest = backfill_resolved_player_ids(latest)
@@ -422,27 +462,60 @@ def build_hidden_gems_pitchers_from_mlb(signals: pd.DataFrame, team_lookup: dict
     else:
         latest["metric_2"] = "—"
 
-    latest["metric_3_label"] = "Public Exposure"
-    if "recent_fb_velo" in latest.columns:
-        latest["metric_3"] = latest["recent_fb_velo"].map(lambda x: f"{float(x):.1f}" if pd.notna(x) else "—")
+    latest["metric_3_label"] = "Market Attention Feed"
+    if "rostered_pct" in latest.columns:
+        latest["metric_3"] = latest["rostered_pct"].map(
+            lambda x: f"{float(x):.1f}%" if pd.notna(x) else "FEED OFFLINE"
+        )
     else:
-        latest["metric_3"] = "—"
+        latest["metric_3"] = "FEED OFFLINE"
 
     def pick_pills(row):
-        badges = row.get("badges") or []
-        badges = list(badges)[:3]
-        while len(badges) < 3:
-            badges.append("Trend Confirming")
-        return pd.Series(badges[:3])
+        score = float(pd.to_numeric(row.get("hidden_gems_score"), errors="coerce") or 0)
+        badges = list(row.get("badges") or [])
+
+        if score >= 75:
+            pills = badges[:3]
+            while len(pills) < 3:
+                pills.append("Trend Confirming")
+        elif score >= 70:
+            pills = badges[:2]
+            while len(pills) < 2:
+                pills.append("Trend Confirming")
+            pills.append("Watchlist")
+        else:
+            pills = ["Trend Confirming", "Watchlist", "Monitor Only"]
+
+        return pd.Series(pills[:3])
 
     latest[["pill_1", "pill_2", "pill_3"]] = latest.apply(pick_pills, axis=1)
 
     if "display_team" in latest.columns:
         latest = latest[latest["display_team"].isin(MLB_CODES)].copy()
 
-    latest["why_hidden"] = latest.get("why", "").fillna("").map(
-        lambda s: f"Surface read is lagging the underlying pitch physics. {s}".strip()
-    )
+    def build_pitcher_thesis(row):
+        whiff = pd.to_numeric(row.get("recent_whiff_rate"), errors="coerce")
+        whiff_delta = pd.to_numeric(row.get("whiff_delta"), errors="coerce")
+        velo = pd.to_numeric(row.get("recent_fb_velo"), errors="coerce")
+        velo_delta = pd.to_numeric(row.get("velo_delta"), errors="coerce")
+        ext_delta = pd.to_numeric(row.get("extension_delta"), errors="coerce")
+        score = pd.to_numeric(row.get("hidden_gems_score"), errors="coerce")
+
+        if pd.notna(velo_delta) and velo_delta >= 1.0 and pd.notna(whiff) and whiff >= 0.18:
+            return "Velocity has moved first and the bat-miss support is already there. The visible line usually catches up later."
+        if pd.notna(whiff_delta) and whiff_delta >= 0.015 and pd.notna(velo_delta) and velo_delta >= 0.5:
+            return "Whiff support is improving while the fastball is still firm. The market has not fully priced in the shape change yet."
+        if pd.notna(ext_delta) and ext_delta >= 0.15 and pd.notna(velo) and velo >= 96:
+            return "Extension and carry support are stronger than the public read. This is a live stuff-over-surface mismatch."
+        if pd.notna(whiff) and whiff >= 0.20:
+            return "The miss profile is stronger than the surface line suggests. Underlying pitch quality is beating public perception."
+        if pd.notna(velo_delta) and velo_delta >= 1.5:
+            return "The fastball has materially improved before the surface results have corrected. That is a classic extraction setup."
+        if pd.notna(score) and score >= 75:
+            return "The underlying arsenal is grading stronger than the visible results. This is the type of mismatch the market is late to recognize."
+        return "Underlying pitch quality is holding firmer than the surface line. The market read still looks behind the actual signal."
+
+    latest["why_hidden"] = latest.apply(build_pitcher_thesis, axis=1)
 
     latest["trend_note"] = latest.get("sample_note", "MLB Statcast")
     latest["trend_glow"] = latest.get("trend_glow", False)
@@ -564,7 +637,7 @@ def build_hidden_gems_pitchers(df: pd.DataFrame) -> pd.DataFrame:
     latest["metric_1"] = latest["trait_score_raw"].fillna(0).map(lambda x: f"{x:.2f}")
     latest["metric_2_label"] = "Market Gap"
     latest["metric_2"] = latest["surface_pressure_raw"].fillna(0).map(lambda x: f"{x:.2f}")
-    latest["metric_3_label"] = "Public Exposure"
+    latest["metric_3_label"] = "Market Attention Feed"
     latest["metric_3"] = latest["market_score_raw"].fillna(0).map(lambda x: f"{x:.2f}")
 
     def pitcher_summary(r: pd.Series) -> str:
@@ -687,7 +760,7 @@ def build_hidden_gems_hitters(df: pd.DataFrame) -> pd.DataFrame:
     latest["metric_1"] = latest["trait_score_raw"].fillna(0).map(lambda x: f"{x:.2f}")
     latest["metric_2_label"] = "Market Gap"
     latest["metric_2"] = latest["surface_pressure_raw"].fillna(0).map(lambda x: f"{x:.2f}")
-    latest["metric_3_label"] = "Public Exposure"
+    latest["metric_3_label"] = "Market Attention Feed"
     latest["metric_3"] = latest["market_score_raw"].fillna(0).map(lambda x: f"{x:.2f}")
 
     def hitter_summary(r: pd.Series) -> str:
@@ -1015,7 +1088,7 @@ HTML_TEMPLATE = Template(
     .player-card {
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 16px;
-      padding: 16px;
+      padding: 14px;
       background: rgba(255,255,255,0.02);
       position: relative;
       transition: 160ms ease;
@@ -1039,7 +1112,7 @@ HTML_TEMPLATE = Template(
     .player-top {
       display: grid;
       grid-template-columns: auto 1fr auto;
-      gap: 14px;
+      gap: 12px;
       align-items: start;
     }
 
@@ -1065,13 +1138,14 @@ HTML_TEMPLATE = Template(
       letter-spacing: 0.10em;
       text-transform: uppercase;
       color: var(--tiny);
-      margin-bottom: 5px;
+      margin-bottom: 3px;
+      line-height: 1.2;
     }
 
     .player-name {
       margin: 0;
       font-size: 20px;
-      line-height: 1;
+      line-height: 1.0;
       letter-spacing: -0.03em;
       font-weight: 800;
     }
@@ -1083,27 +1157,37 @@ HTML_TEMPLATE = Template(
       color: var(--soft);
       text-transform: uppercase;
       letter-spacing: 0.08em;
+      line-height: 1.35;
+    }
+
+    .signal-line .sep {
+      opacity: 0.55;
+      padding: 0 4px;
     }
 
     .card-meta-row {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       gap: 6px;
-      margin-top: 10px;
+      margin-top: 8px;
+      align-items: center;
+      white-space: nowrap;
     }
 
     .card-meta-badge {
       display: inline-flex;
       align-items: center;
-      padding: 4px 8px;
+      padding: 3px 7px;
       border-radius: 999px;
       font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.06em;
+      font-size: 9px;
+      letter-spacing: 0.03em;
       text-transform: uppercase;
       border: 1px solid rgba(255,255,255,0.08);
       background: rgba(255,255,255,0.04);
       color: var(--soft);
+      line-height: 1.0;
+      flex: 0 0 auto;
     }
 
     .card-meta-badge.team {
@@ -1112,23 +1196,76 @@ HTML_TEMPLATE = Template(
       background: rgba(106,166,255,0.06);
     }
 
-    .scorebox { text-align: right; min-width: 78px; }
+    .scorebox {
+      text-align: right;
+      min-width: 170px;
+      max-width: 190px;
+      justify-self: end;
+    }
+
+    .card-upper {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .pill-row-tight {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 6px;
+      max-width: 170px;
+      margin-left: auto;
+    }
+
+    .thesis-row {
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.38;
+      color: var(--soft);
+    }
+
+    .player-ident {
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .thesis-row strong {
+      color: var(--text);
+      font-weight: 800;
+    }
+
     .js-add-to-roster {
       cursor: pointer;
     }
 
+    .js-add-to-roster {
+      cursor: pointer;
+      color: var(--blue-soft);
+      border-color: rgba(106,166,255,0.22);
+      background: rgba(106,166,255,0.10);
+      min-height: 44px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+
     .js-add-to-roster:hover {
       color: var(--text);
-      border-color: rgba(182,255,0,0.20);
-      background: rgba(182,255,0,0.06);
+      border-color: rgba(106,166,255,0.34);
+      background: rgba(106,166,255,0.18);
     }
     .score-label {
       font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.12em;
+      font-size: 9px;
+      letter-spacing: 0.10em;
       text-transform: uppercase;
       color: var(--tiny);
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .score-value {
@@ -1141,14 +1278,14 @@ HTML_TEMPLATE = Template(
     .score-value.positive,
     .score-value.elite { color: var(--lime-hot); }
     .score-value.watch { color: var(--gold); }
-    .score-value.neutral { color: var(--text); }
+    .score-value.neutral { color: var(--blue-soft); }
 
     .sparkline-wrap {
-      margin-top: 12px;
+      margin-top: 10px;
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: 12px;
       background: rgba(255,255,255,0.025);
-      padding: 8px 10px;
+      padding: 7px 10px;
     }
 
     .sparkline-head {
@@ -1191,20 +1328,20 @@ HTML_TEMPLATE = Template(
     .pill-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 14px;
+      gap: 6px;
+      margin-top: 10px;
     }
 
     .pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 5px 9px;
+      padding: 4px 8px;
       border-radius: 999px;
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 800;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
       border: 1px solid rgba(255,255,255,0.10);
       white-space: nowrap;
@@ -1231,23 +1368,29 @@ HTML_TEMPLATE = Template(
     .metric-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 14px;
+      gap: 8px;
+      margin-top: 10px;
     }
 
     .metric {
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: 12px;
-      padding: 10px;
+      padding: 6px 7px;
       background: rgba(255,255,255,0.02);
       min-width: 0;
       position: relative;
     }
 
+    .metric-value.pending {
+      color: var(--soft);
+      font-size: 24px;
+      letter-spacing: 0.02em;
+    }
+
     .metric-head {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
     }
 
     .metric-label {
@@ -1631,7 +1774,7 @@ HTML_TEMPLATE = Template(
         <div class="eyebrow">Signal Wall // Edge</div>
         <h1 class="hero-title">MLB Extraction Ledger</h1>
         <p class="hero-sub">
-          MLB Extraction Ledger isolates active big-league profiles where Physics Core remains stronger than the visible surface line. This Signal Surface is built to expose Market Gaps before public exposure corrects.
+          MLB Extraction Ledger isolates active big-league profiles where Physics Core remains stronger than the visible surface line. This Signal Surface is built to expose Market Gaps before broader market recognition corrects. Market-attention feed remains offline in this version.
         </p>
       </div>
 
@@ -1653,7 +1796,7 @@ HTML_TEMPLATE = Template(
           <div class="summary-value" style="font-size:16px; line-height:1.2; letter-spacing:0; font-weight:700;">{{ latest_week_start.replace("MLB Statcast // ", "") if latest_week_start else "NO DATA" }}</div>
         </div>
         <div class="summary-mini">
-          Buy-low lens: strong underlying traits, weaker public signal, and still-manageable market pricing.
+          Buy-low lens: strong underlying traits, weaker visible results, and market-attention feed not yet wired.
         </div>
       </div>
     </section>
@@ -1686,16 +1829,21 @@ HTML_TEMPLATE = Template(
             <div class="player-ident">
               <div class="rankline">{% if loop.index == 1 %}[ PRIMARY EXTRACTION ]{% else %}#{{ loop.index }} Pitcher Extraction{% endif %}</div>
               <h3 class="player-name">{{ row.player_name }}</h3>
-              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %} // {{ row.display_team }}{% endif %} // Pitcher // MLB Extraction</div>
+              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %}<span class="sep"> //</span>{{ row.display_team }}{% endif %}<span class="sep"> //</span>Pitcher<span class="sep"> //</span>MLB Extraction</div>
               <div class="card-meta-row">
-                <span class="card-meta-badge">{{ row.source_badge }}</span>
+                <span class="card-meta-badge">{{ row.source_badge.replace("SRC: ", "") if row.source_badge else "" }}</span>
 <span class="card-meta-badge">{{ row.model_badge }}</span>
-<button type="button" class="card-meta-badge js-add-to-roster">Add to Roster</button>
+<button type="button" class="card-meta-badge js-add-to-roster">Add</button>
               </div>
             </div>
             <div class="scorebox">
               <div class="score-label">Extraction Score</div>
               <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
+              <div class="pill-row pill-row-tight">
+                <span class="pill primary">{{ row.pill_1 }}</span>
+                <span class="pill secondary">{{ row.pill_2 }}</span>
+                <span class="pill tertiary">{{ row.pill_3 }}</span>
+              </div>
             </div>
           </div>
 
@@ -1715,13 +1863,7 @@ HTML_TEMPLATE = Template(
             </svg>
           </div>
 
-          <div class="pill-row">
-            <span class="pill primary">{{ row.pill_1 }}</span>
-            <span class="pill secondary">{{ row.pill_2 }}</span>
-            <span class="pill tertiary">{{ row.pill_3 }}</span>
-          </div>
-
-          <div class="metric-grid">
+          <div class="metric-grid metric-grid-tight">
             <div class="metric">
               <div class="metric-head">
                 <div class="metric-label">{{ row.metric_1_label }}</div>
@@ -1749,11 +1891,11 @@ HTML_TEMPLATE = Template(
                   <span class="tooltip-bubble">Market estimates how overlooked the profile still appears to be relative to the underlying quality.</span>
                 </span>
               </div>
-              <div class="metric-value">{{ row.metric_3 }}</div>
+              <div class="metric-value pending">PENDING</div>
             </div>
           </div>
 
-          <div class="why"><strong>Market Lie:</strong> {{ row.why_hidden }}</div>
+          <div class="why why-full"><strong>Extraction Thesis:</strong> {{ row.why_hidden }}</div>
         </article>
         {% endfor %}
       </div>
@@ -1790,16 +1932,21 @@ HTML_TEMPLATE = Template(
             <div class="player-ident">
               <div class="rankline">{% if loop.index == 1 %}[ PRIMARY EXTRACTION ]{% else %}#{{ loop.index }} Hitter Extraction{% endif %}</div>
               <h3 class="player-name">{{ row.player_name }}</h3>
-              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %} // {{ row.display_team }}{% endif %} // Hitter // MLB Extraction</div>
+              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %}<span class="sep"> //</span>{{ row.display_team }}{% endif %}<span class="sep"> //</span>Hitter<span class="sep"> //</span>MLB Extraction</div>
               <div class="card-meta-row">
-                <span class="card-meta-badge">{{ row.source_badge }}</span>
+                <span class="card-meta-badge">{{ row.source_badge.replace("SRC: ", "") if row.source_badge else "" }}</span>
 <span class="card-meta-badge">{{ row.model_badge }}</span>
-<button type="button" class="card-meta-badge js-add-to-roster">Add to Roster</button>
+<button type="button" class="card-meta-badge js-add-to-roster">Add</button>
               </div>
             </div>
             <div class="scorebox">
               <div class="score-label">Extraction Score</div>
               <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
+              <div class="pill-row pill-row-tight">
+                <span class="pill primary">{{ row.pill_1 }}</span>
+                <span class="pill secondary">{{ row.pill_2 }}</span>
+                <span class="pill tertiary">{{ row.pill_3 }}</span>
+              </div>
             </div>
           </div>
 
@@ -1819,13 +1966,7 @@ HTML_TEMPLATE = Template(
             </svg>
           </div>
 
-          <div class="pill-row">
-            <span class="pill primary">{{ row.pill_1 }}</span>
-            <span class="pill secondary">{{ row.pill_2 }}</span>
-            <span class="pill tertiary">{{ row.pill_3 }}</span>
-          </div>
-
-          <div class="metric-grid">
+          <div class="metric-grid metric-grid-tight">
             <div class="metric">
               <div class="metric-head">
                 <div class="metric-label">{{ row.metric_1_label }}</div>
@@ -1853,11 +1994,11 @@ HTML_TEMPLATE = Template(
                   <span class="tooltip-bubble">Market estimates how overlooked or underpriced the player still appears relative to the underlying bat.</span>
                 </span>
               </div>
-              <div class="metric-value">{{ row.metric_3 }}</div>
+              <div class="metric-value pending">PENDING</div>
             </div>
           </div>
 
-          <div class="why"><strong>Market Lie:</strong> {{ row.why_hidden }}</div>
+          <div class="why why-full"><strong>Extraction Thesis:</strong> {{ row.why_hidden }}</div>
         </article>
         {% endfor %}
       </div>
