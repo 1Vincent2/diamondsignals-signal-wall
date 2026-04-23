@@ -118,6 +118,30 @@ def backfill_resolved_player_ids(df: pd.DataFrame) -> pd.DataFrame:
     out["resolved_player_id"] = out["resolved_player_id"].fillna("").astype(str).str.strip()
     return out
 
+def fetch_player_team_identity(player_id: int) -> dict:
+    try:
+        import requests
+
+        url = f"https://statsapi.mlb.com/api/v1/people/{player_id}?hydrate=currentTeam"
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        payload = response.json()
+        people = payload.get("people", []) or []
+        if not people:
+            return {}
+
+        person = people[0]
+        current_team = person.get("currentTeam") or {}
+        team_name = str(current_team.get("name") or "").strip()
+
+        return {
+            "display_org": team_name or "Active MLB",
+            "display_team": map_team_to_code(team_name) if team_name else "MLB",
+        }
+    except Exception:
+        return {}
+
+
 def zscore(series: pd.Series) -> pd.Series:
     s = pd.to_numeric(series, errors="coerce")
     std = s.std(ddof=0)
@@ -251,33 +275,179 @@ def derive_display_org(row: pd.Series) -> str:
     return derive_display_team(row)
 
 
-def load_hidden_gems_source_frame() -> pd.DataFrame:
-    from supabase import create_client
-    import os
+def load_hidden_gems_source_frame() -> tuple[pd.DataFrame, pd.DataFrame, str]:
+    from datetime import date, timedelta
+    from build_dashboard import fetch_statcast_window, build_hitter_signals, build_pitcher_signals
 
-    url = os.environ["SUPABASE_URL"]
-    key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
+    end_dt = date.today()
+    start_dt = end_dt - timedelta(days=14)
 
-    sb = create_client(url, key)
+    raw = fetch_statcast_window(start_dt, end_dt)
+    if raw is None or raw.empty:
+        return pd.DataFrame(), pd.DataFrame(), f"MLB Statcast // {start_dt.isoformat()} to {end_dt.isoformat()}"
 
-    resp = (
-        sb.table("milb_aaa_weekly_signal_base")
-        .select("*")
-        .order("week_start", desc=True)
-        .limit(300)
-        .execute()
-    )
+    hitters = build_hitter_signals(raw)
+    pitchers = build_pitcher_signals(raw)
 
-    data = resp.data or []
-    if not data:
+    if not hitters.empty and "player_name" in hitters.columns:
+        hitters["player_name"] = hitters["player_name"].apply(safe_name)
+
+    if not pitchers.empty and "player_name" in pitchers.columns:
+        pitchers["player_name"] = pitchers["player_name"].apply(safe_name)
+
+    return hitters, pitchers, f"MLB Statcast // {start_dt.isoformat()} to {end_dt.isoformat()}"
+
+
+def build_hidden_gems_hitters_from_mlb(signals: pd.DataFrame, team_lookup: dict[int, dict] | None = None) -> pd.DataFrame:
+    if signals is None or signals.empty:
         return pd.DataFrame()
 
-    df = pd.DataFrame(data)
-    if "player_name" in df.columns:
-        df["player_name"] = df["player_name"].apply(safe_name)
-    if "week_start" in df.columns:
-        df["week_start"] = pd.to_datetime(df["week_start"], errors="coerce")
-    return df
+    latest = signals.copy()
+    latest["hidden_gems_score"] = pd.to_numeric(latest.get("edge_score"), errors="coerce").fillna(0).round(1)
+    latest["score_class"] = latest["hidden_gems_score"].apply(classify_score)
+    latest["avatar"] = latest["player_name"].map(initials)
+    latest["player_id"] = latest.get("batter", "").fillna("").astype(str).str.strip() if "batter" in latest.columns else ""
+    latest = backfill_resolved_player_ids(latest)
+
+    team_lookup = team_lookup or {}
+
+    latest["display_org"] = "Active MLB"
+    latest["display_team"] = "MLB"
+
+    if "batter" in latest.columns:
+        for idx, val in latest["batter"].items():
+            try:
+                pid = int(val)
+            except Exception:
+                continue
+            info = team_lookup.get(pid) or {}
+            org = str(info.get("display_org") or "").strip()
+            team = str(info.get("display_team") or "").strip()
+            if org:
+                latest.at[idx, "display_org"] = org
+            if team and team != "—":
+                latest.at[idx, "display_team"] = team
+
+    latest["source_badge"] = SOURCE_BADGE
+    latest["model_badge"] = MODEL_BADGE
+
+    latest["metric_1_label"] = "Physics Core"
+    latest["metric_1"] = latest.get("recent_ev", pd.Series([None] * len(latest))).map(lambda x: f"{float(x):.1f}" if pd.notna(x) else "—")
+
+    latest["metric_2_label"] = "Market Gap"
+    if "ev_delta" in latest.columns:
+        latest["metric_2"] = latest["ev_delta"].map(lambda x: f"{float(x):+.1f}" if pd.notna(x) else "—")
+    else:
+        latest["metric_2"] = "—"
+
+    latest["metric_3_label"] = "Public Exposure"
+    if "recent_barrel_rate" in latest.columns:
+        latest["metric_3"] = latest["recent_barrel_rate"].map(lambda x: f"{100*float(x):.1f}%" if pd.notna(x) else "—")
+    else:
+        latest["metric_3"] = "—"
+
+    def pick_pills(row):
+        badges = row.get("badges") or []
+        badges = list(badges)[:3]
+        while len(badges) < 3:
+            badges.append("Trend Confirming")
+        return pd.Series(badges[:3])
+
+    latest[["pill_1", "pill_2", "pill_3"]] = latest.apply(pick_pills, axis=1)
+
+    if "display_team" in latest.columns:
+        latest = latest[latest["display_team"].isin(MLB_CODES)].copy()
+
+    if "ev_delta" in latest.columns:
+        latest = latest[pd.to_numeric(latest["ev_delta"], errors="coerce").abs() <= 12].copy()
+
+    if "recent_ev" in latest.columns:
+        latest = latest[pd.to_numeric(latest["recent_ev"], errors="coerce").between(85, 110, inclusive="both")].copy()
+
+    if "recent_max_ev" in latest.columns:
+        latest = latest[pd.to_numeric(latest["recent_max_ev"], errors="coerce").between(95, 122, inclusive="both")].copy()
+
+    latest["why_hidden"] = latest.get("why", "").fillna("").map(
+        lambda s: f"Surface production is lagging the Ballistic Surface. {s}".strip()
+    )
+
+    latest["trend_note"] = latest.get("sample_note", "MLB Statcast")
+    latest["trend_glow"] = latest.get("trend_glow", False)
+
+    return latest.sort_values("hidden_gems_score", ascending=False).head(12).reset_index(drop=True)
+
+
+def build_hidden_gems_pitchers_from_mlb(signals: pd.DataFrame, team_lookup: dict[int, dict] | None = None) -> pd.DataFrame:
+    if signals is None or signals.empty:
+        return pd.DataFrame()
+
+    latest = signals.copy()
+    latest["hidden_gems_score"] = pd.to_numeric(latest.get("edge_score"), errors="coerce").fillna(0).round(1)
+    latest["score_class"] = latest["hidden_gems_score"].apply(classify_score)
+    latest["avatar"] = latest["player_name"].map(initials)
+    latest["player_id"] = latest.get("pitcher", "").fillna("").astype(str).str.strip() if "pitcher" in latest.columns else ""
+    latest = backfill_resolved_player_ids(latest)
+
+    team_lookup = team_lookup or {}
+
+    latest["display_org"] = "Active MLB"
+    latest["display_team"] = "MLB"
+
+    if "pitcher" in latest.columns:
+        for idx, val in latest["pitcher"].items():
+            try:
+                pid = int(val)
+            except Exception:
+                continue
+            info = team_lookup.get(pid) or {}
+            org = str(info.get("display_org") or "").strip()
+            team = str(info.get("display_team") or "").strip()
+            if org:
+                latest.at[idx, "display_org"] = org
+            if team and team != "—":
+                latest.at[idx, "display_team"] = team
+
+    latest["source_badge"] = SOURCE_BADGE
+    latest["model_badge"] = MODEL_BADGE
+
+    latest["metric_1_label"] = "Physics Core"
+    if "recent_whiff_rate" in latest.columns:
+        latest["metric_1"] = latest["recent_whiff_rate"].map(lambda x: f"{100*float(x):.1f}%" if pd.notna(x) else "—")
+    else:
+        latest["metric_1"] = "—"
+
+    latest["metric_2_label"] = "Market Gap"
+    if "velo_delta" in latest.columns:
+        latest["metric_2"] = latest["velo_delta"].map(lambda x: f"{float(x):+.1f}" if pd.notna(x) else "—")
+    else:
+        latest["metric_2"] = "—"
+
+    latest["metric_3_label"] = "Public Exposure"
+    if "recent_fb_velo" in latest.columns:
+        latest["metric_3"] = latest["recent_fb_velo"].map(lambda x: f"{float(x):.1f}" if pd.notna(x) else "—")
+    else:
+        latest["metric_3"] = "—"
+
+    def pick_pills(row):
+        badges = row.get("badges") or []
+        badges = list(badges)[:3]
+        while len(badges) < 3:
+            badges.append("Trend Confirming")
+        return pd.Series(badges[:3])
+
+    latest[["pill_1", "pill_2", "pill_3"]] = latest.apply(pick_pills, axis=1)
+
+    if "display_team" in latest.columns:
+        latest = latest[latest["display_team"].isin(MLB_CODES)].copy()
+
+    latest["why_hidden"] = latest.get("why", "").fillna("").map(
+        lambda s: f"Surface read is lagging the underlying pitch physics. {s}".strip()
+    )
+
+    latest["trend_note"] = latest.get("sample_note", "MLB Statcast")
+    latest["trend_glow"] = latest.get("trend_glow", False)
+
+    return latest.sort_values("hidden_gems_score", ascending=False).head(12).reset_index(drop=True)
 
 
 def build_pitcher_trend_lookup(df: pd.DataFrame) -> dict[str, dict]:
@@ -589,7 +759,7 @@ HTML_TEMPLATE = Template(
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DiamondSignals // Hidden Gems</title>
+  <title>DiamondSignals // MLB Extraction Ledger</title>
   <style>
     :root {
       --bg: #080808;
@@ -1442,7 +1612,7 @@ HTML_TEMPLATE = Template(
         <div class="brand-mark"></div>
         <div class="brand-text">
           <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
-          <div class="brand-title">Hidden Gems // Institutional Edge</div>
+          <div class="brand-title">MLB Extraction Ledger // Institutional Edge</div>
         </div>
       </div>
       <div class="livebox">
@@ -1459,9 +1629,9 @@ HTML_TEMPLATE = Template(
     <section class="hero">
       <div class="hero-card">
         <div class="eyebrow">Signal Wall // Edge</div>
-        <h1 class="hero-title">Hidden Gems</h1>
+        <h1 class="hero-title">MLB Extraction Ledger</h1>
         <p class="hero-sub">
-          Hidden Gems isolates latent alpha where Physics Core remains stronger than the visible surface line. This Signal Surface is built to expose Market Gaps before public exposure catches up.
+          MLB Extraction Ledger isolates active big-league profiles where Physics Core remains stronger than the visible surface line. This Signal Surface is built to expose Market Gaps before public exposure corrects.
         </p>
       </div>
 
@@ -1479,8 +1649,8 @@ HTML_TEMPLATE = Template(
           <div class="summary-value">{{ hitters|length }}</div>
         </div>
         <div>
-          <div class="summary-label">Source Window</div>
-          <div class="summary-value" style="font-size:16px; line-height:1.2; letter-spacing:0; font-weight:700;">AAA Snapshot // {{ latest_week_start }}</div>
+          <div class="summary-label">Window</div>
+          <div class="summary-value" style="font-size:16px; line-height:1.2; letter-spacing:0; font-weight:700;">{{ latest_week_start.replace("MLB Statcast // ", "") if latest_week_start else "NO DATA" }}</div>
         </div>
         <div class="summary-mini">
           Buy-low lens: strong underlying traits, weaker public signal, and still-manageable market pricing.
@@ -1492,7 +1662,7 @@ HTML_TEMPLATE = Template(
       <div class="section-head">
         <div>
           <div class="section-kicker">Latent Alpha</div>
-          <h2 class="section-title">Latent Alpha: Pitcher Extractions</h2>
+          <h2 class="section-title">Pitcher Extractions</h2>
         </div>
         <div class="section-head-actions">
           <button type="button" class="field-guide-btn" onclick="openGlossary()">Operator Guide / Extraction Protocol</button>
@@ -1516,7 +1686,7 @@ HTML_TEMPLATE = Template(
             <div class="player-ident">
               <div class="rankline">{% if loop.index == 1 %}[ PRIMARY EXTRACTION ]{% else %}#{{ loop.index }} Pitcher Extraction{% endif %}</div>
               <h3 class="player-name">{{ row.player_name }}</h3>
-              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %} // {{ row.display_team }}{% endif %} // Pitcher // Hidden Gems</div>
+              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %} // {{ row.display_team }}{% endif %} // Pitcher // MLB Extraction</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">{{ row.source_badge }}</span>
 <span class="card-meta-badge">{{ row.model_badge }}</span>
@@ -1596,7 +1766,7 @@ HTML_TEMPLATE = Template(
       <div class="section-head">
         <div>
           <div class="section-kicker">Latent Alpha</div>
-          <h2 class="section-title">Latent Alpha: Hitter Extractions</h2>
+          <h2 class="section-title">Hitter Extractions</h2>
         </div>
         <div class="section-head-actions">
           <button type="button" class="field-guide-btn" onclick="openGlossary()">Operator Guide / Extraction Protocol</button>
@@ -1620,7 +1790,7 @@ HTML_TEMPLATE = Template(
             <div class="player-ident">
               <div class="rankline">{% if loop.index == 1 %}[ PRIMARY EXTRACTION ]{% else %}#{{ loop.index }} Hitter Extraction{% endif %}</div>
               <h3 class="player-name">{{ row.player_name }}</h3>
-              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %} // {{ row.display_team }}{% endif %} // Hitter // Hidden Gems</div>
+              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %} // {{ row.display_team }}{% endif %} // Hitter // MLB Extraction</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">{{ row.source_badge }}</span>
 <span class="card-meta-badge">{{ row.model_badge }}</span>
@@ -1687,7 +1857,7 @@ HTML_TEMPLATE = Template(
             </div>
           </div>
 
-          <div class="why"><strong>Edge Note:</strong> {{ row.why_hidden }}</div>
+          <div class="why"><strong>Market Lie:</strong> {{ row.why_hidden }}</div>
         </article>
         {% endfor %}
       </div>
@@ -1704,7 +1874,7 @@ HTML_TEMPLATE = Template(
   <aside id="glossaryDrawer" class="drawer-panel" aria-hidden="true">
     <div class="drawer-head">
       <div class="drawer-title-wrap">
-        <div class="drawer-kicker">Hidden Gems // Field Guide</div>
+        <div class="drawer-kicker">MLB Extraction Ledger // Field Guide</div>
         <h2 class="drawer-title">How To Use This Board</h2>
       </div>
       <button type="button" class="drawer-close" onclick="closeGlossary()">Close</button>
@@ -1719,8 +1889,8 @@ HTML_TEMPLATE = Template(
 
     <div class="guide-list">
       <div class="guide-item">
-        <div class="guide-term">Hidden Gem</div>
-        <div class="guide-def">A player whose underlying profile is stronger than public-facing results and current market attention imply.</div>
+        <div class="guide-term">MLB Extraction</div>
+        <div class="guide-def">An active MLB player whose underlying profile is stronger than public-facing results and current market attention imply.</div>
       </div>
 
       <div class="guide-item">
@@ -1735,7 +1905,7 @@ HTML_TEMPLATE = Template(
 
       <div class="guide-item">
         <div class="guide-term">Market Gap</div>
-        <div class="guide-def">The gap between stronger underlying traits and weaker visible outcomes. This is the core Hidden Gems extraction lens.</div>
+        <div class="guide-def">The gap between stronger underlying traits and weaker visible outcomes. This is the core extraction lens.</div>
       </div>
 
       <div class="guide-item">
@@ -1804,19 +1974,32 @@ HTML_TEMPLATE = Template(
 
 
 def render_html() -> str:
-    df = load_hidden_gems_source_frame()
-    pitchers = build_hidden_gems_pitchers(df)
-    hitters = build_hidden_gems_hitters(df)
+    hitter_source, pitcher_source, source_window = load_hidden_gems_source_frame()
 
-    latest_week_start = "NO DATA"
-    if not df.empty and "week_start" in df.columns:
-        valid_weeks = df["week_start"].dropna().sort_values(ascending=False)
-        if not valid_weeks.empty:
-            latest_week_start = valid_weeks.iloc[0].strftime("%Y-%m-%d")
+    hitter_team_lookup = {}
+    if hitter_source is not None and not hitter_source.empty and "batter" in hitter_source.columns:
+        for _, row in hitter_source.iterrows():
+            try:
+                pid = int(row.get("batter"))
+            except Exception:
+                continue
+            hitter_team_lookup[pid] = fetch_player_team_identity(pid) or {}
+
+    pitcher_team_lookup = {}
+    if pitcher_source is not None and not pitcher_source.empty and "pitcher" in pitcher_source.columns:
+        for _, row in pitcher_source.iterrows():
+            try:
+                pid = int(row.get("pitcher"))
+            except Exception:
+                continue
+            pitcher_team_lookup[pid] = fetch_player_team_identity(pid) or {}
+
+    pitchers = build_hidden_gems_pitchers_from_mlb(pitcher_source, pitcher_team_lookup)
+    hitters = build_hidden_gems_hitters_from_mlb(hitter_source, hitter_team_lookup)
 
     return HTML_TEMPLATE.render(
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
-        latest_week_start=latest_week_start,
+        latest_week_start=source_window,
         timezone_label=TIMEZONE_LABEL,
         nav_html=Template(NAV_TEMPLATE).render(active_nav="hidden_gems"),
         search_html=SEARCH_TEMPLATE,
@@ -1825,7 +2008,6 @@ def render_html() -> str:
         pitchers=pitchers.to_dict(orient="records"),
         hitters=hitters.to_dict(orient="records"),
     )
-
 
 def main() -> None:
     HIDDEN_GEMS_DIR.mkdir(parents=True, exist_ok=True)
