@@ -764,15 +764,23 @@ HTML_TEMPLATE = Template(
     }
 
     .js-add-to-roster {
-      border-color: rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.03);
-      color: var(--soft);
+      min-height: 44px;
+      padding: 0 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      border-color: rgba(96,165,250,0.24);
+      background: rgba(30,58,138,0.72);
+      color: #f8fbff;
       box-shadow: none;
     }
     .js-add-to-roster:hover {
-      border-color: rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
+      border-color: rgba(96,165,250,0.34);
+      background: rgba(37,99,235,0.78);
+      color: white;
+      box-shadow: 0 0 12px rgba(59,130,246,0.10);
+      transform: translateY(-1px);
     }
 
     .sparkline-wrap {
@@ -929,7 +937,7 @@ HTML_TEMPLATE = Template(
 
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
             <div class="alert-pill {{ row.alert_class }}">{{ row.primary_alert }}</div>
-            <button type="button" class="alert-pill js-add-to-roster">Add to Roster</button>
+            <button type="button" class="alert-pill js-add-to-roster">PROVISION TO WATCHLIST</button>
           </div>
 
           <div class="sparkline-wrap">

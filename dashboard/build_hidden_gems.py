@@ -1243,9 +1243,9 @@ HTML_TEMPLATE = Template(
 
     .js-add-to-roster {
       cursor: pointer;
-      color: var(--blue-soft);
-      border-color: rgba(106,166,255,0.22);
-      background: rgba(106,166,255,0.10);
+      color: #f8fbff;
+      border-color: rgba(96,165,250,0.24);
+      background: rgba(30,58,138,0.72);
       min-height: 44px;
       padding: 0 12px;
       display: inline-flex;
@@ -1255,9 +1255,11 @@ HTML_TEMPLATE = Template(
     }
 
     .js-add-to-roster:hover {
-      color: var(--text);
-      border-color: rgba(106,166,255,0.34);
-      background: rgba(106,166,255,0.18);
+      color: white;
+      border-color: rgba(96,165,250,0.34);
+      background: rgba(37,99,235,0.78);
+      box-shadow: 0 0 12px rgba(59,130,246,0.10);
+      transform: translateY(-1px);
     }
     .score-label {
       font-family: var(--mono);
@@ -1833,7 +1835,7 @@ HTML_TEMPLATE = Template(
               <div class="card-meta-row">
                 <span class="card-meta-badge">{{ row.source_badge.replace("SRC: ", "") if row.source_badge else "" }}</span>
 <span class="card-meta-badge">{{ row.model_badge }}</span>
-<button type="button" class="card-meta-badge js-add-to-roster">Add</button>
+<button type="button" class="card-meta-badge js-add-to-roster">PROVISION TO WATCHLIST</button>
               </div>
             </div>
             <div class="scorebox">
@@ -1936,7 +1938,7 @@ HTML_TEMPLATE = Template(
               <div class="card-meta-row">
                 <span class="card-meta-badge">{{ row.source_badge.replace("SRC: ", "") if row.source_badge else "" }}</span>
 <span class="card-meta-badge">{{ row.model_badge }}</span>
-<button type="button" class="card-meta-badge js-add-to-roster">Add</button>
+<button type="button" class="card-meta-badge js-add-to-roster">PROVISION TO WATCHLIST</button>
               </div>
             </div>
             <div class="scorebox">

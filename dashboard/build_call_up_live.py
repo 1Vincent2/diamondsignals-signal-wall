@@ -1214,7 +1214,7 @@ HTML_TEMPLATE = Template(
 
 .arrival-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 12px;
     }
 
@@ -1255,6 +1255,52 @@ HTML_TEMPLATE = Template(
       width: 100%;
       max-width: none;
       margin-bottom: 18px;
+    }
+
+
+    #tab-aaa-gems {
+      width: min(1180px, calc(100% - 32px));
+      margin: 16px auto 0;
+    }
+
+    #tab-aaa-gems .aaa-gems-stack {
+      display: block;
+      width: 100%;
+    }
+
+    #tab-aaa-gems .aaa-gems-stack > .section {
+      width: 100%;
+      max-width: none;
+      margin-bottom: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.024) 0%, rgba(255,255,255,0.015) 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+    }
+
+    #tab-aaa-gems .section-kicker {
+      color: var(--blue-soft);
+    }
+
+    #tab-aaa-gems .section-head {
+      margin-bottom: 10px;
+    }
+
+    #tab-aaa-gems .placeholder {
+      min-height: 84px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border: 1px dashed rgba(255,255,255,0.12);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.015);
+      color: var(--soft);
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing: 0.01em;
+      padding: 0 18px;
     }
 
     #tab-72h .signal-grid {
@@ -1988,9 +2034,10 @@ HTML_TEMPLATE = Template(
           <div class="system-pulse-proof">8,421,902 TOTAL OPERATIONS VERIFIED</div>
         </section>
 
-        <div class="tabs" role="tablist" aria-label="Promotion watch windows">
-          <button type="button" class="tab" id="tab-btn-72h" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
-          <button type="button" class="tab active" id="tab-btn-14d" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
+        <div class="tabs tabs-aaa" role="tablist" aria-label="Promotion watch windows">
+          <button type="button" class="tab" id="tab-btn-72h" data-window="72 HR" data-mode="AAA" data-signals="{{ total_signals }}" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
+          <button type="button" class="tab active" id="tab-btn-14d" data-window="14 DAY" data-mode="SCOUT" data-signals="{{ total_14_signals }}" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
+          <button type="button" class="tab" id="tab-btn-aaa-gems" data-window="AAA GEMS" data-mode="GEMS" data-signals="{{ (aaa_gems_pitchers|length) + (aaa_gems_hitters|length) }}" onclick="switchPromotionTab('tab-aaa-gems', this)">AAA GEMS</button>
         </div>
       </div>
 
@@ -1998,7 +2045,7 @@ HTML_TEMPLATE = Template(
       <div class="placeholder">No live AAA promotion-watch signals available yet.</div>
       {% else %}
 
-      <div id="tab-72h" style="display:none;">
+      <div id="tab-72h" class="tab-panel" style="display:none;">
         <section class="signal-grid signal-grid-v3-preview">
           <div class="section">
             <div class="section-head">
@@ -2055,7 +2102,7 @@ HTML_TEMPLATE = Template(
                 </div>
 
                 <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
+                  <button type="button" class="provision-btn js-add-to-roster">PROVISION TO WATCHLIST</button>
                 </div>
               </article>
               {% endfor %}
@@ -2117,16 +2164,16 @@ HTML_TEMPLATE = Template(
                 </div>
 
                 <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
+                  <button type="button" class="provision-btn js-add-to-roster">PROVISION TO WATCHLIST</button>
                 </div>
               </article>
               {% endfor %}
             </div>
           </div>
-        </section>
+                </section>
       </div>
 
-      <div id="tab-14d">
+      <div id="tab-14d" class="tab-panel">
         <section class="signal-grid">
           <div class="section section-v3-ledger-full">
             <div class="section-head">
@@ -2184,7 +2231,7 @@ HTML_TEMPLATE = Template(
                 </div>
 
                 <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
+                  <button type="button" class="provision-btn js-add-to-roster">PROVISION TO WATCHLIST</button>
                 </div>
               </article>
               {% endfor %}
@@ -2250,7 +2297,7 @@ HTML_TEMPLATE = Template(
                 </div>
 
                 <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
+                  <button type="button" class="provision-btn js-add-to-roster">PROVISION TO WATCHLIST</button>
                 </div>
               </article>
               {% endfor %}
@@ -2372,6 +2419,145 @@ HTML_TEMPLATE = Template(
         </div>
       </aside>
 
+
+      </div>
+
+      <div id="tab-aaa-gems" class="tab-panel" style="display:none;">
+        <div class="aaa-gems-stack">
+          <div class="section">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">AAA Gems</div>
+                <h2 class="section-title">Pitching AAA Gems</h2>
+              </div>
+              <div class="section-badge">Top {{ aaa_gems_pitchers|length }}</div>
+            </div>
+
+            {% if aaa_gems_pitchers %}
+            <div class="cards">
+              {% for row in aaa_gems_pitchers %}
+              <article
+  class="player-card player-audit-row js-player-card"
+  data-player-id="{{ row.resolved_player_id }}"
+  data-player-name="{{ row.player_name }}"
+  data-player-type="pitcher"
+  data-player-team="{{ row.display_team }}"
+  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
+>
+                <div class="audit-left">
+                  <div class="audit-trigger" role="button" tabindex="-1">
+                    <span class="audit-kicker">&gt;_ AAA_GEM:</span>
+                    <span class="audit-player-name">{{ row.player_name }}</span>
+                  </div>
+                  <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // PITCHER // AAA GEMS</div>
+                  <div class="audit-submeta">
+                    <span class="audit-chip">{{ row.source_badge }}</span>
+                    <span class="audit-chip">{{ row.model_badge }}</span>
+                  </div>
+                </div>
+
+                <div class="audit-center">
+                  <div class="forensic-grid">
+                    <div class="forensic-cell">
+                      <div class="forensic-label">{{ row.metric_1_label|upper|replace(' ', '_') }}</div>
+                      <div class="forensic-value">{{ row.metric_1 }}</div>
+                    </div>
+                    <div class="forensic-cell">
+                      <div class="forensic-label">{{ row.metric_2_label|upper|replace(' ', '_') }}</div>
+                      <div class="forensic-value">{{ row.metric_2 }}</div>
+                    </div>
+                    <div class="forensic-cell">
+                      <div class="forensic-label">{{ row.metric_3_label|upper|replace(' ', '_') }}</div>
+                      <div class="forensic-value">{{ row.metric_3 }}</div>
+                    </div>
+                  </div>
+                  <div class="audit-why">{{ row.why }}</div>
+                </div>
+
+                <div class="audit-right">
+                  <div class="conviction-label">GEM_SCORE</div>
+                  <div class="conviction-score {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
+                </div>
+
+                <div class="audit-action">
+                  <button type="button" class="provision-btn js-add-to-roster">PROVISION TO WATCHLIST</button>
+                </div>
+              </article>
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="placeholder">No AAA pitcher gems available yet.</div>
+            {% endif %}
+          </div>
+
+          <div class="section">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">AAA Gems</div>
+                <h2 class="section-title">Hitting AAA Gems</h2>
+              </div>
+              <div class="section-badge">Top {{ aaa_gems_hitters|length }}</div>
+            </div>
+
+            {% if aaa_gems_hitters %}
+            <div class="cards">
+              {% for row in aaa_gems_hitters %}
+              <article
+  class="player-card player-audit-row js-player-card"
+  data-player-id="{{ row.resolved_player_id }}"
+  data-player-name="{{ row.player_name }}"
+  data-player-type="hitter"
+  data-player-team="{{ row.display_team }}"
+  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
+>
+                <div class="audit-left">
+                  <div class="audit-trigger" role="button" tabindex="-1">
+                    <span class="audit-kicker">&gt;_ AAA_GEM:</span>
+                    <span class="audit-player-name">{{ row.player_name }}</span>
+                  </div>
+                  <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // HITTER // AAA GEMS</div>
+                  <div class="audit-submeta">
+                    <span class="audit-chip">{{ row.source_badge }}</span>
+                    <span class="audit-chip">{{ row.model_badge }}</span>
+                  </div>
+                </div>
+
+                <div class="audit-center">
+                  <div class="forensic-grid">
+                    <div class="forensic-cell">
+                      <div class="forensic-label">{{ row.metric_1_label|upper|replace(' ', '_') }}</div>
+                      <div class="forensic-value">{{ row.metric_1 }}</div>
+                    </div>
+                    <div class="forensic-cell">
+                      <div class="forensic-label">{{ row.metric_2_label|upper|replace(' ', '_') }}</div>
+                      <div class="forensic-value">{{ row.metric_2 }}</div>
+                    </div>
+                    <div class="forensic-cell">
+                      <div class="forensic-label">{{ row.metric_3_label|upper|replace(' ', '_') }}</div>
+                      <div class="forensic-value">{{ row.metric_3 }}</div>
+                    </div>
+                  </div>
+                  <div class="audit-why">{{ row.why }}</div>
+                </div>
+
+                <div class="audit-right">
+                  <div class="conviction-label">GEM_SCORE</div>
+                  <div class="conviction-score {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
+                </div>
+
+                <div class="audit-action">
+                  <button type="button" class="provision-btn js-add-to-roster">PROVISION TO WATCHLIST</button>
+                </div>
+              </article>
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="placeholder">No AAA hitter gems available yet.</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
     {{ footer_html | safe }}
   </div>
 
@@ -2399,7 +2585,7 @@ HTML_TEMPLATE = Template(
     }
 
     function switchPromotionTab(panelId, buttonEl) {
-      document.querySelectorAll("#tab-72h, #tab-14d").forEach((panel) => {
+      document.querySelectorAll("#tab-72h, #tab-14d, #tab-aaa-gems").forEach((panel) => {
         panel.style.display = "none";
       });
 
@@ -2419,6 +2605,10 @@ HTML_TEMPLATE = Template(
         if (summaryWindow) summaryWindow.textContent = "14 DAY";
         if (summaryMode) summaryMode.textContent = "SCOUT";
         if (summarySignals) summarySignals.textContent = "{{ total_14_signals }}";
+      } else if (panelId === "tab-aaa-gems") {
+        if (summaryWindow) summaryWindow.textContent = "AAA GEMS";
+        if (summaryMode) summaryMode.textContent = "GEMS";
+        if (summarySignals) summarySignals.textContent = "{{ (aaa_gems_pitchers|length) + (aaa_gems_hitters|length) }}";
       } else {
         if (summaryWindow) summaryWindow.textContent = "72 HR";
         if (summaryMode) summaryMode.textContent = "AAA";
