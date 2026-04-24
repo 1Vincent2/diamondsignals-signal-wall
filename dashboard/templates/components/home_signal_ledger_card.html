@@ -13,13 +13,17 @@
       <h3 class="player-name">{{ row.player_name }}</h3>
       <div class="signal-line">{{ signal_line }}</div>
     </div>
-    <div class="scorebox">
-      <div class="score-meta">
-        <div class="score-label">Edge Score</div>
-        <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
-      </div>
-      <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION">PROVISION</button>
+  </div>
+
+  <div class="scorebox">
+    <div class="score-meta">
+      <div class="score-label">Edge Score</div>
+      <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
     </div>
+  </div>
+
+  <div class="provision-row">
+    <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION TO WATCHLIST">PROVISION TO WATCHLIST</button>
   </div>
 
   <div class="sparkline-wrap">

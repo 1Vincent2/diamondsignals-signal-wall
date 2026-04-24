@@ -1596,7 +1596,69 @@ HTML_TEMPLATE = Template(
       line-height: 1.5;
     }
 
+
     {{ shell_styles | safe }}
+
+    @media (max-width: 640px) {
+      .card-meta-row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        gap: 8px !important;
+      }
+
+      .card-meta-row .js-add-to-roster {
+        display: none !important;
+      }
+
+      .scorebox {
+        min-width: 0 !important;
+        max-width: none !important;
+        width: 100% !important;
+        justify-self: stretch !important;
+        text-align: left !important;
+      }
+
+      .pill-row-tight {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: flex-start !important;
+        gap: 8px !important;
+        max-width: none !important;
+        margin-left: 0 !important;
+      }
+
+      .pill-row-tight::after {
+        content: "PROVISION TO WATCHLIST";
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 20px;
+        padding: 0 12px;
+        border-radius: 0;
+        border: 1px solid rgba(96,165,250,0.32);
+        background: rgba(37,99,235,0.95);
+        color: #ffffff;
+        font-family: var(--mono);
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .metric-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      .metric,
+      .metric-head,
+      .metric-label,
+      .metric-value,
+      .thesis-row {
+        text-align: left !important;
+      }
+    }
 
     @media (max-width: 980px) {
       .hero {

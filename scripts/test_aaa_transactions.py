@@ -40,13 +40,17 @@ RETURN_TYPES = {
     "Assigned",
 }
 
-DATE_WINDOW = [
-    "2026-03-25",
-    "2026-03-26",
-    "2026-03-27",
-    "2026-03-28",
-    "2026-03-29",
-]
+from datetime import datetime, timedelta
+
+LOOKBACK_DAYS = 14
+
+def build_date_window(days: int) -> list[str]:
+    today = datetime.utcnow().date()
+    start = today - timedelta(days=days - 1)
+    return [
+        (start + timedelta(days=i)).isoformat()
+        for i in range(days)
+    ]
 
 OUTPUT_PATH = Path("dist/aaa_transactions_probe.json")
 
@@ -177,7 +181,7 @@ def build_summary(all_moves: list[dict], scout_moves: list[dict]) -> dict:
 def main() -> None:
     all_moves: list[dict] = []
 
-    for date_str in DATE_WINDOW:
+    for date_str in build_date_window(LOOKBACK_DAYS):
         transactions = fetch_transactions(date_str)
         aaa_moves = [simplify(t) for t in transactions if is_aaa_related(t)]
         all_moves.extend(aaa_moves)

@@ -1958,14 +1958,109 @@ HTML_TEMPLATE = Template(
 
       .hero-card { padding: 18px; }
       .metric-grid { grid-template-columns: 1fr; }
-      .player-name { font-size: 17px; }
-      .score-value { font-size: 24px; }
-      .player-top { grid-template-columns: auto 1fr; }
-      .scorebox {
-        grid-column: 2;
-        text-align: left;
-        margin-top: 8px;
+
+      .player-audit-row {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 16px 14px;
       }
+
+      .audit-left,
+      .audit-center,
+      .audit-right,
+      .audit-action {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .audit-right,
+      .audit-action {
+        text-align: left;
+        justify-content: flex-start;
+      }
+
+      .audit-trigger {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .audit-player-name {
+        display: block;
+        width: 100%;
+        font-size: 26px;
+        line-height: 0.96;
+        letter-spacing: -0.04em;
+        text-transform: uppercase;
+      }
+
+      .audit-kicker {
+        font-size: 10px;
+        letter-spacing: 0.14em;
+      }
+
+      .audit-context {
+        font-size: 11px;
+        line-height: 1.35;
+        letter-spacing: 0.10em;
+      }
+
+      .audit-submeta {
+        gap: 8px;
+      }
+
+      .audit-chip {
+        min-height: 34px;
+        padding: 6px 10px;
+        font-size: 10px;
+      }
+
+      .forensic-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .forensic-cell {
+        padding: 10px 10px 9px;
+      }
+
+      .forensic-label {
+        font-size: 9px;
+        letter-spacing: 0.08em;
+      }
+
+      .forensic-value {
+        font-size: 18px;
+        line-height: 1.08;
+        font-weight: 800;
+        word-break: break-word;
+      }
+
+      .conviction-label {
+        font-size: 10px;
+        letter-spacing: 0.10em;
+      }
+
+      .conviction-score {
+        font-size: 54px;
+        line-height: 0.88;
+        letter-spacing: -0.05em;
+      }
+
+      .provision-btn {
+        width: 100%;
+        min-height: 42px;
+        padding: 0 14px;
+        border-radius: 10px;
+        font-size: 10px;
+        letter-spacing: 0.05em;
+      }
+
+      .audit-why {
+        font-size: 11px;
+        line-height: 1.55;
+      }
+
       .drawer-panel {
         top: 8px;
         right: 8px;

@@ -433,6 +433,39 @@ HTML_TEMPLATE = Template(
       line-height: 1.45;
     }
 
+    .heat-action-row {
+      margin-top: 12px;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .heat-provision-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 0 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(96,165,250,0.32);
+      background: rgba(37,99,235,0.95);
+      color: white;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: 160ms ease;
+      white-space: nowrap;
+    }
+
+    .heat-provision-btn:hover {
+      background: rgba(59,130,246,1);
+      border-color: rgba(96,165,250,0.40);
+      box-shadow: 0 0 16px rgba(59,130,246,0.16);
+      transform: translateY(-1px);
+    }
+
     {{ shell_styles | safe }}
 
     @media (max-width: 980px) {
@@ -446,6 +479,18 @@ HTML_TEMPLATE = Template(
       .heat-grid { grid-template-columns: 1fr; }
       .hero-card, .metric-card, .section-card, .leader-card { padding-left: 16px; padding-right: 16px; }
       .field-guide-modal { width: min(100vw - 16px, 720px); }
+
+      .heat-action-row {
+        margin-top: 10px;
+      }
+
+      .heat-provision-btn {
+        min-height: 32px;
+        padding: 0 12px;
+        border-radius: 8px;
+        font-size: 8px;
+        letter-spacing: 0.04em;
+      }
     }
   </style>
 </head>
@@ -634,6 +679,10 @@ HTML_TEMPLATE = Template(
                 <span class="heat-transition">{{ row.transition_badge }}</span>
                 {% endif %}
               {% endif %}
+            </div>
+
+            <div class="heat-action-row">
+              <button type="button" class="heat-provision-btn js-add-to-roster">PROVISION TO WATCHLIST</button>
             </div>
 
             <div class="heat-values">
