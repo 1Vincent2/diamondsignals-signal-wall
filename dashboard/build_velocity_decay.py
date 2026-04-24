@@ -764,9 +764,149 @@ HTML_TEMPLATE = Template(
     }
     .why { font-size: 12px; line-height: 1.65; color: var(--soft); margin-top: 6px; }
 
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      background: rgba(8, 8, 8, 0.90);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .topbar-inner,
+    .app {
+      width: min(1180px, calc(100% - 24px));
+      margin: 0 auto;
+    }
+
+    .topbar-inner {
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--lime-hot);
+      box-shadow:
+        0 0 0 2px rgba(182,255,0,0.06),
+        0 0 12px rgba(182,255,0,0.55),
+        0 0 24px rgba(182,255,0,0.22);
+      animation: dsPulse 1.8s ease-in-out infinite;
+      flex: 0 0 auto;
+    }
+
+    @keyframes dsPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow:
+          0 0 0 2px rgba(182,255,0,0.06),
+          0 0 12px rgba(182,255,0,0.45),
+          0 0 22px rgba(182,255,0,0.18);
+      }
+      50% {
+        transform: scale(1.18);
+        box-shadow:
+          0 0 0 4px rgba(182,255,0,0.10),
+          0 0 18px rgba(182,255,0,0.90),
+          0 0 34px rgba(182,255,0,0.34);
+      }
+    }
+
+    .brand-text {
+      min-width: 0;
+    }
+
+    .brand-kicker {
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .brand-white { color: #f5f7fb; }
+    .brand-blue  { color: #4f8cff; }
+
+    .brand-title {
+      font-size: 16px;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .livebox {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      flex: 0 0 auto;
+    }
+
+    .live-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--soft);
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--lime-hot);
+      box-shadow:
+        0 0 0 2px rgba(182,255,0,0.06),
+        0 0 12px rgba(182,255,0,0.55),
+        0 0 24px rgba(182,255,0,0.22);
+      animation: dsPulse 1.8s ease-in-out infinite;
+    }
+
+    .live-time {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--tiny);
+      letter-spacing: 0.08em;
+    }
+
+
     {{ shell_styles | safe }}
 
     @media (max-width: 700px) {
+      .js-add-to-roster {
+        min-height: 32px !important;
+        padding: 0 12px !important;
+        border-radius: 10px !important;
+        width: auto !important;
+        min-width: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        white-space: nowrap !important;
+        font-size: 10px !important;
+        letter-spacing: 0.04em !important;
+      }
+
+
       .app { width: min(100%, calc(100% - 16px)); }
       .player-name { font-size: 22px; }
       .score-value { font-size: 24px; }
@@ -775,6 +915,21 @@ HTML_TEMPLATE = Template(
   </style>
 </head>
 <body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div class="brand-text">
+          <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
+          <div class="brand-title">Risk Terminal // Velocity Decay</div>
+        </div>
+      </div>
+      <div class="livebox">
+        <div class="live-label"><span class="live-dot"></span>LIVE</div>
+        <div class="live-time">{{ generated_at }}</div>
+      </div>
+    </div>
+  </div>
   <div class="guide-overlay" id="guideOverlay" onclick="closeGuide()"></div>
 
   <aside class="guide-drawer" id="guideDrawer" aria-hidden="true">
