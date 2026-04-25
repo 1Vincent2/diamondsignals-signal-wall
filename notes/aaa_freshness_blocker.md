@@ -35,3 +35,14 @@ This branch now contains:
 - AAA ingest function was migrated into the signal wall repo.
 - 72 HR refresh artifacts are currently healthy and rebuild locally.
 - Remaining blocker is no longer the fetch logic itself; it is the stale upstream `milb_aaa_weekly_signal_base` source for the 14 DAY layer.
+
+
+## 2026-04-25 discovery update
+- `milb_raw_weekly` is alive and receiving 2026 data.
+- The new preview transformer proved the missing link is not raw ingest storage, but incomplete ingest coverage.
+- Current weekly snapshots in raw data are fragmented by org:
+  - `2025-06-02` -> Detroit Tigers only
+  - `2025-06-06` -> 7 orgs
+  - `2026-04-20` -> New York Yankees only
+- `ingest-milb-aaa-weekly.mjs` defaults to a restricted `DEFAULT_ORG_ALLOWLIST` of 11 orgs, not full AAA coverage.
+- Therefore Promotion Watch 14 DAY and AAA Hidden Gems Legacy remain structurally dependent on incomplete weekly source data until ingest coverage is expanded and rerun.
