@@ -1,0 +1,81 @@
+{
+  "reports": [
+    {
+      "report_id": "signal_wall",
+      "builder_script": "dashboard/build_dashboard.py",
+      "output_html": "dist/live/index.html",
+      "output_json": "dist/signals.json",
+      "status_output": "dist/status/signal-wall.json",
+      "fallback_artifact": "dist/_snapshots/signal-wall/index.html",
+      "freshness_threshold_minutes": 180,
+      "required_sections": ["top_signals"],
+      "source_dependencies": ["statcast", "player_lookup"]
+    },
+    {
+      "report_id": "promotion_watch",
+      "builder_script": "dashboard/build_call_up_live.py",
+      "output_html": "dist/typical-call-up/index.html",
+      "output_json": "dist/aaa_transactions_scout_only.json",
+      "status_output": "dist/status/promotion-watch.json",
+      "fallback_artifact": "dist/_snapshots/promotion-watch/index.html",
+      "freshness_threshold_minutes": 240,
+      "required_sections": [
+        "pitchers_72hr",
+        "hitters_72hr",
+        "pitchers_14day",
+        "hitters_14day",
+        "recent_arrivals"
+      ],
+      "source_dependencies": [
+        "milb_aaa_weekly_signal_base",
+        "milb_raw_weekly",
+        "aaa_transactions",
+        "recent_mlb_arrivals"
+      ]
+    },
+    {
+      "report_id": "velocity_decay",
+      "builder_script": "dashboard/build_velocity_decay.py",
+      "output_html": "dist/velocity-decay-monitor/index.html",
+      "output_json": "dist/velocity_decay_monitor.json",
+      "status_output": "dist/status/velocity-decay.json",
+      "fallback_artifact": "dist/_snapshots/velocity-decay/index.html",
+      "freshness_threshold_minutes": 240,
+      "required_sections": ["risk_cards"],
+      "source_dependencies": ["statcast", "pitcher_trends"]
+    },
+    {
+      "report_id": "stuff_disruption",
+      "builder_script": "dashboard/build_stuff_disruption.py",
+      "output_html": "dist/stuff-disruption-feed/index.html",
+      "output_json": "dist/stuff_disruption_feed.json",
+      "status_output": "dist/status/stuff-disruption.json",
+      "fallback_artifact": "dist/_snapshots/stuff-disruption/index.html",
+      "freshness_threshold_minutes": 240,
+      "required_sections": ["apex_candidates"],
+      "source_dependencies": ["statcast", "pitch_shape_trends"]
+    },
+    {
+      "report_id": "mlb_extraction",
+      "builder_script": "dashboard/build_hidden_gems.py",
+      "output_html": "dist/hidden-gems/index.html",
+      "output_json": "dist/hidden_gems.json",
+      "status_output": "dist/status/mlb-extraction.json",
+      "fallback_artifact": "dist/_snapshots/mlb-extraction/index.html",
+      "freshness_threshold_minutes": 240,
+      "required_sections": ["pitcher_extractions", "hitter_extractions"],
+      "source_dependencies": ["mlb_weekly_signal_base", "market_attention_inputs"]
+    },
+    {
+      "report_id": "ivb_heat_map",
+      "builder_script": "dashboard/build_ivb_heat_map.py",
+      "output_html": "dist/ivb-heat-map/index.html",
+      "output_json": "dist/ivb_heat_map.json",
+      "status_output": "dist/status/ivb-heat-map.json",
+      "fallback_artifact": "dist/_snapshots/ivb-heat-map/index.html",
+      "freshness_threshold_minutes": 240,
+      "required_sections": ["ivb_tiles"],
+      "source_dependencies": ["statcast", "pitcher_lookup"]
+    }
+  ]
+}

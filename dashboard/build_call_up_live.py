@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 import json
 import math
@@ -8,6 +8,13 @@ import re
 
 import pandas as pd
 from jinja2 import Template
+
+from dashboard.lib.report_status import build_report_status, utc_now_iso
+from dashboard.lib.report_validation import (
+    build_validation_report,
+    validate_min_rows,
+    validate_required_sections,
+)
 
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
@@ -98,6 +105,10 @@ AAA_TO_MLB_CODES = {
 MLB_TO_AAA_NAME = {mlb: name for name, (_, mlb) in AAA_TO_MLB_CODES.items()}
 AAA_CODES = {v[0] for v in AAA_TO_MLB_CODES.values()}
 VALID_TEAM_CODES = MLB_CODES | AAA_CODES
+
+STATUS_DIR = DIST_DIR / "status"
+SNAPSHOT_DIR = DIST_DIR / "_snapshots" / "promotion-watch"
+PROMOTION_WATCH_STATUS_PATH = STATUS_DIR / "promotion-watch.json"
 
 # existing constants / globals above
 
@@ -2785,8 +2796,18 @@ def fetch_recent_aaa_weekly_signal_base(limit_weeks: int = 4) -> tuple[pd.DataFr
     return pd.DataFrame(data), week_starts
 
 
-def load_source_frame() -> tuple[pd.DataFrame, list[str]]:
-    return fetch_recent_aaa_weekly_signal_base()
+def load_source_frame() -> tuple[pd.DataFrame, list[str], str | None]:
+    df, week_starts = fetch_recent_aaa_weekly_signal_base()
+    source_updated_at = None
+    if week_starts:
+        try:
+            latest = pd.to_datetime(week_starts, errors="coerce")
+            latest = pd.Series(latest).dropna()
+            if not latest.empty:
+                source_updated_at = latest.max().to_pydatetime().replace(tzinfo=timezone.utc).isoformat()
+        except Exception:
+            source_updated_at = None
+    return df, week_starts, source_updated_at
 
 
 def load_refresh_top20(path_name: str) -> pd.DataFrame:
@@ -2875,7 +2896,8 @@ def normalize_refresh_pitchers(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def render_html() -> str:
-    df, week_starts = load_source_frame()
+    build_started_at = utc_now_iso()
+    df, week_starts, source_updated_at = load_source_frame()
 
     hitters_72 = normalize_refresh_hitters(load_refresh_top20("aaa_hitter_refresh.json"))
     pitchers_72 = normalize_refresh_pitchers(load_refresh_top20("aaa_pitcher_refresh_probe.json"))
@@ -2898,6 +2920,43 @@ def render_html() -> str:
     total_14_signals = len(hitters_14) + len(pitchers_14)
     _live_arrivals, archive_arrivals = load_arrivals_windows(live_limit=8, archive_limit=16)
 
+    sections = {
+        "pitchers_72hr": len(pitchers_72),
+        "hitters_72hr": len(hitters_72),
+        "pitchers_14day": len(pitchers_14),
+        "hitters_14day": len(hitters_14),
+        "recent_arrivals": len(archive_arrivals),
+    }
+
+    validation = build_validation_report(
+        "promotion_watch",
+        [
+            validate_required_sections(
+                "promotion_watch",
+                sections,
+                ["pitchers_72hr", "hitters_72hr", "pitchers_14day", "hitters_14day", "recent_arrivals"],
+            ),
+            validate_min_rows("pitchers_72hr", sections["pitchers_72hr"], 0),
+            validate_min_rows("hitters_72hr", sections["hitters_72hr"], 0),
+            validate_min_rows("pitchers_14day", sections["pitchers_14day"], 0),
+            validate_min_rows("hitters_14day", sections["hitters_14day"], 0),
+            validate_min_rows("recent_arrivals", sections["recent_arrivals"], 0),
+        ],
+    )
+
+    status_payload = build_report_status(
+        "promotion_watch",
+        build_success=True,
+        threshold_minutes=240,
+        build_started_at=build_started_at,
+        build_finished_at=utc_now_iso(),
+        source_updated_at=source_updated_at,
+        section_counts=sections,
+        degraded=not validation["ok"],
+        errors=validation["messages"],
+    )
+    write_status_file(status_payload)
+
     return HTML_TEMPLATE.render(
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
         timezone_label=TIMEZONE_LABEL,
@@ -2913,6 +2972,15 @@ def render_html() -> str:
         pitchers_14=pitchers_14.to_dict(orient="records"),
         archive_arrivals=archive_arrivals,
     )
+
+
+def write_status_file(status_payload: dict) -> None:
+    STATUS_DIR.mkdir(parents=True, exist_ok=True)
+    PROMOTION_WATCH_STATUS_PATH.write_text(
+        json.dumps(status_payload, indent=2),
+        encoding="utf-8",
+    )
+    print(f"Wrote {PROMOTION_WATCH_STATUS_PATH}")
 
 
 def main() -> None:
