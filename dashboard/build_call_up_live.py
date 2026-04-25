@@ -2355,7 +2355,7 @@ HTML_TEMPLATE = Template(
               {% endfor %}
             </div>
             {% else %}
-            <div class="placeholder">No 14 day pitching prospect signals available.</div>
+            <div class="placeholder">{{ pitchers_14_message }}</div>
             {% endif %}
           </div>
 
@@ -2421,7 +2421,7 @@ HTML_TEMPLATE = Template(
               {% endfor %}
             </div>
             {% else %}
-            <div class="placeholder">No 14 day hitting prospect signals available.</div>
+            <div class="placeholder">{{ hitters_14_message }}</div>
             {% endif %}
           </div>
         </section>
@@ -2482,7 +2482,7 @@ HTML_TEMPLATE = Template(
             {% endfor %}
           </div>
           {% else %}
-          <div class="placeholder">No prospect-relevant MLB arrivals in the last 14 days.</div>
+          <div class="placeholder">{{ arrivals_message }}</div>
           {% endif %}
         </div>
       </div>
@@ -2957,6 +2957,22 @@ def render_html() -> str:
     )
     write_status_file(status_payload)
 
+    source_is_stale = status_payload["state"] in {"stale", "degraded"}
+    pitchers_14_empty = len(pitchers_14) == 0
+    hitters_14_empty = len(hitters_14) == 0
+    arrivals_empty = len(archive_arrivals) == 0
+
+    pitchers_14_message = "No 14 day pitching prospect signals available."
+    hitters_14_message = "No 14 day hitting prospect signals available."
+    arrivals_message = "No prospect-relevant MLB arrivals in the last 14 days."
+
+    if source_is_stale and pitchers_14_empty:
+        pitchers_14_message = "14 day pitching signals unavailable or stale. Last source window is older than threshold."
+    if source_is_stale and hitters_14_empty:
+        hitters_14_message = "14 day hitting signals unavailable or stale. Last source window is older than threshold."
+    if source_is_stale and arrivals_empty:
+        arrivals_message = "Recent MLB arrivals feed unavailable or stale. Last source window is older than threshold."
+
     return HTML_TEMPLATE.render(
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
         timezone_label=TIMEZONE_LABEL,
@@ -2971,6 +2987,9 @@ def render_html() -> str:
         hitters_14=hitters_14.to_dict(orient="records"),
         pitchers_14=pitchers_14.to_dict(orient="records"),
         archive_arrivals=archive_arrivals,
+        pitchers_14_message=pitchers_14_message,
+        hitters_14_message=hitters_14_message,
+        arrivals_message=arrivals_message,
     )
 
 
