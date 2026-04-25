@@ -690,30 +690,40 @@ HTML_TEMPLATE = Template(
       border-color: rgba(34,211,238,0.22);
       box-shadow: var(--shadow), 0 0 14px rgba(34,211,238,0.08);
     }
-    .player-top { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; margin-bottom: 12px; }
+    .player-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px; align-items: start; margin-bottom: 10px; }
+    .player-head { display: flex; align-items: start; gap: 12px; min-width: 0; }
     .avatar {
       width: 42px; height: 42px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.10);
       display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03);
       color: var(--text); font-size: 13px; font-weight: 800;
+      flex: 0 0 auto;
     }
-    .rankline, .score-label, .metric-label, .sparkline-label {
+    .player-ident { min-width: 0; }
+    .rankline, .score-label, .metric-label, .sparkline-label, .diagnosis-label {
       font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 800;
     }
     .score-label {
       font-size: 9px;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.08em;
       color: var(--tiny);
       margin-bottom: 4px;
     }
     .player-name {
-      margin: 0 0 4px; font-size: clamp(26px, 3.4vw, 42px); line-height: 0.95; letter-spacing: -0.04em;
-      font-weight: 900; text-transform: uppercase;
+      margin: 0 0 4px; font-size: clamp(20px, 2.4vw, 30px); line-height: 1; letter-spacing: -0.03em;
+      font-weight: 800; text-transform: uppercase;
     }
     .signal-line {
-      font-size: 11px; color: var(--soft); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em;
+      font-size: 10px; color: var(--soft); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.10em;
     }
-    .scorebox { text-align: right; min-width: 88px; }
-    .score-value { font-family: var(--mono); font-size: 28px; line-height: 1; font-weight: 800; color: var(--cyan); }
+    .scorebox {
+      text-align: right;
+      min-width: 148px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+    .score-value { font-family: var(--sans); font-size: 36px; line-height: 0.92; font-weight: 900; font-style: italic; letter-spacing: -0.05em; color: var(--cyan); }
     .score-value.score-s-tier {
       color: #22d3ee;
       text-shadow: 0 0 12px rgba(34,211,238,0.20);
@@ -764,28 +774,101 @@ HTML_TEMPLATE = Template(
     }
 
     .js-add-to-roster {
-      min-height: 44px;
-      padding: 0 14px;
+      min-height: 40px;
+      padding: 0 16px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      border-color: rgba(96,165,250,0.24);
-      background: rgba(30,58,138,0.72);
-      color: #f8fbff;
+      border: 1px solid rgba(34,211,238,0.24);
+      background: rgba(18,18,18,0.92);
+      color: #ffffff;
       box-shadow: none;
     }
     .js-add-to-roster:hover {
-      border-color: rgba(96,165,250,0.34);
-      background: rgba(37,99,235,0.78);
+      border-color: rgba(34,211,238,0.36);
+      background: rgba(24,24,24,0.98);
       color: white;
-      box-shadow: 0 0 12px rgba(59,130,246,0.10);
+      box-shadow: 0 0 12px rgba(34,211,238,0.12);
       transform: translateY(-1px);
     }
 
+    .analysis-stack {
+      border-radius: 12px;
+      background: rgba(255,255,255,0.015);
+      border: 1px solid rgba(255,255,255,0.035);
+      padding: 10px 10px 12px;
+      margin-bottom: 12px;
+    }
+
+    .diagnosis-wrap {
+      margin: 0;
+    }
+
+    .diagnosis-label {
+      margin-bottom: 4px;
+      color: var(--tiny);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .diagnosis-banner {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 12px 12px 0 0;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      pointer-events: none;
+      user-select: none;
+      box-shadow: none;
+    }
+    .diagnosis-banner.alert-shape {
+      border: 1px solid rgba(34,211,238,0.22);
+      background: rgba(34,211,238,0.12);
+      color: #d8fdff;
+    }
+    .diagnosis-banner.alert-spin {
+      border: 1px solid rgba(167,139,250,0.22);
+      background: rgba(167,139,250,0.10);
+      color: #e5dcff;
+    }
+    .diagnosis-banner.alert-sweep {
+      border: 1px solid rgba(182,255,0,0.20);
+      background: rgba(182,255,0,0.08);
+      color: #ecffc0;
+    }
+    .diagnosis-banner.alert-deception {
+      border: 1px solid rgba(106,166,255,0.22);
+      background: rgba(106,166,255,0.08);
+      color: #d6e5ff;
+    }
+    .diagnosis-banner.alert-neutral {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: var(--soft);
+    }
+
     .sparkline-wrap {
-      border-radius: 12px; background: rgba(255,255,255,0.015); padding: 10px 10px 6px;
+      border-radius: 0 0 12px 12px;
+      background: rgba(255,255,255,0.015);
+      padding: 10px 10px 6px;
+      margin-top: 0;
       margin-bottom: 14px;
+      border-top: 0;
+    }
+
+    .action-row {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+      align-items: flex-start;
     }
     .sparkline-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
     .sparkline-note { font-family: var(--mono); font-size: 10px; color: var(--tiny); text-transform: uppercase; letter-spacing: 0.08em; }
@@ -796,7 +879,7 @@ HTML_TEMPLATE = Template(
     .sparkline-path.sparkline-sweep { stroke: #b6ff00; }
     .sparkline-path.sparkline-neutral { stroke: #6aa6ff; }
 
-    .metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 16px; }
+    .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; align-items: stretch; }
     .metric {
       border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 10px 10px 9px;
       background: rgba(255,255,255,0.02); min-width: 0;
@@ -953,53 +1036,69 @@ HTML_TEMPLATE = Template(
 
     @media (max-width: 700px) {
       .app { width: min(100%, calc(100% - 16px)); }
-      .player-name { font-size: 22px; }
-      .score-value { font-size: 24px; }
+      .player-name { font-size: 26px; line-height: 0.96; letter-spacing: -0.04em; font-weight: 800; }
+      .signal-line { font-size: 11px; line-height: 1.3; letter-spacing: 0.10em; }
+      .score-label { font-size: 9px; letter-spacing: 0.08em; }
+      .score-value { font-family: var(--sans); font-size: 44px; line-height: 0.88; font-weight: 900; font-style: italic; letter-spacing: -0.06em; }
       .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .meta-grid { grid-template-columns: 1fr; }
 
       .player-top {
-        grid-template-columns: 1fr;
+        grid-template-columns: auto 1fr;
         gap: 10px;
       }
 
+      .player-head {
+        display: contents;
+      }
+
       .scorebox {
+        grid-column: 1 / -1;
         min-width: 0;
         width: 100%;
         text-align: left;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
       }
 
-      .player-top > div[style="display:flex;gap:8px;flex-wrap:wrap;"],
-      .player-card > div[style="display:flex;gap:8px;flex-wrap:wrap;"] {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        align-items: center !important;
-        gap: 8px !important;
+      .analysis-stack {
+        padding: 10px 10px 12px;
       }
 
-      .player-card > div[style="display:flex;gap:8px;flex-wrap:wrap;"] .alert-pill {
-        margin: 0 !important;
+      .diagnosis-banner {
+        width: 100%;
+        justify-content: center;
+        min-height: 36px;
+        font-size: 10px;
       }
 
-      .player-card > div[style="display:flex;gap:8px;flex-wrap:wrap;"] .js-add-to-roster {
+      .action-row {
+        width: 100%;
+        justify-content: stretch;
+      }
+
+      .action-row .js-add-to-roster {
         min-height: 34px !important;
-        padding: 0 10px !important;
+        padding: 0 12px !important;
         border-radius: 8px !important;
-        border: 1px solid rgba(96,165,250,0.32) !important;
-        background: rgba(37,99,235,0.95) !important;
+        border: 1px solid rgba(34,211,238,0.30) !important;
+        background: rgba(18,18,18,0.94) !important;
         color: white !important;
         box-shadow: none !important;
         font-size: 8px !important;
         letter-spacing: 0.05em !important;
         white-space: nowrap !important;
-        flex: 0 0 auto !important;
+        width: 100%;
+        justify-content: center;
       }
 
-      .player-card > div[style="display:flex;gap:8px;flex-wrap:wrap;"] .js-add-to-roster:hover {
-        background: rgba(59,130,246,1) !important;
-        border-color: rgba(96,165,250,0.42) !important;
+      .action-row .js-add-to-roster:hover {
+        border-color: rgba(34,211,238,0.42) !important;
+        background: rgba(24,24,24,0.98) !important;
         color: white !important;
-        box-shadow: 0 0 16px rgba(59,130,246,0.16) !important;
+        box-shadow: 0 0 16px rgba(34,211,238,0.14) !important;
         transform: translateY(-1px);
       }
     }
@@ -1108,31 +1207,40 @@ HTML_TEMPLATE = Template(
           data-profile-url="/scout/{{ row.player_id }}/"
         >
           <div class="player-top">
-            <div class="avatar">{{ row.player_name[:2]|upper }}</div>
-            <div class="player-ident">
-              <div class="rankline">#{{ loop.index }} Apex Trigger</div>
-              <h3 class="player-name">{{ row.player_name }}</h3>
-              <div class="signal-line">{{ row.team }} // {{ row.apex_tier }} // {{ row.sample_note }}</div>
+            <div class="player-head">
+              <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+              <div class="player-ident">
+                <div class="rankline">#{{ loop.index }} Apex Trigger</div>
+                <h3 class="player-name">{{ row.player_name }}</h3>
+                <div class="signal-line">{{ row.team }} // {{ row.apex_tier }} // {{ row.sample_note }}</div>
+              </div>
             </div>
+
             <div class="scorebox">
-              <div class="score-label">Disruption Score</div>
-              <div class="score-value {{ row.score_class }}">{{ row.disruption_score_label }}</div>
+              <div>
+                <div class="score-label">Disruption Score</div>
+                <div class="score-value {{ row.score_class }}">{{ row.disruption_score_label }}</div>
+              </div>
+              <div class="action-row">
+                <button type="button" class="alert-pill js-add-to-roster">PROVISION TO WATCHLIST</button>
+              </div>
             </div>
           </div>
 
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <div class="alert-pill {{ row.alert_class }}">{{ row.primary_alert }}</div>
-            <button type="button" class="alert-pill js-add-to-roster">PROVISION TO WATCHLIST</button>
-          </div>
-
-          <div class="sparkline-wrap">
-            <div class="sparkline-head">
-              <div class="sparkline-label">Shape Trend</div>
-              <div class="sparkline-note">Last {{ row.sample_note }}</div>
+          <div class="analysis-stack">
+            <div class="diagnosis-wrap">
+              <div class="diagnosis-label">Diagnosis</div>
+              <div class="diagnosis-banner {{ row.alert_class }}">{{ row.primary_alert }}</div>
             </div>
-            <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
-              <polyline class="sparkline-path {{ row.sparkline_class }}" points="{{ row.trend_points }}" />
-            </svg>
+
+            <div class="sparkline-wrap">
+              <div class="sparkline-head">
+                <div class="sparkline-label">Shape Trend</div>
+                <div class="sparkline-note">Last {{ row.sample_note }}</div>
+              </div>
+              <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+                <polyline class="sparkline-path {{ row.sparkline_class }}" points="{{ row.trend_points }}" />
+              </svg>
           </div>
 
           <div class="metric-grid">
@@ -1152,6 +1260,8 @@ HTML_TEMPLATE = Template(
               <div class="metric-label">Active Spin</div>
               <div class="metric-value">{{ row.active_spin_delta_label }}</div>
             </div>
+          </div>
+
           </div>
 
           <div class="why">{{ row.analysis }}</div>

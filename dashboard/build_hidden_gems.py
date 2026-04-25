@@ -941,7 +941,8 @@ HTML_TEMPLATE = Template(
       border-radius: 999px;
       background: var(--red);
       box-shadow: 0 0 10px rgba(239,68,68,0.35);
-    }
+    
+      animation: dsPulse 1.8s ease-in-out infinite;}
 
     .live-time {
       margin-top: 6px;
@@ -1241,26 +1242,53 @@ HTML_TEMPLATE = Template(
       cursor: pointer;
     }
 
-    .js-add-to-roster {
+    .provision-btn {
       cursor: pointer;
-      color: #f8fbff;
-      border-color: rgba(96,165,250,0.24);
-      background: rgba(30,58,138,0.72);
-      min-height: 44px;
-      padding: 0 12px;
+      color: #ffffff;
+      border: 1px solid rgba(96,165,250,0.26);
+      background: rgba(18,18,18,0.94);
+      min-height: 42px;
+      min-width: 176px;
+      padding: 0 16px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       line-height: 1;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 10px;
+      white-space: nowrap;
+      box-shadow: none;
+      flex: 0 0 auto;
     }
 
-    .js-add-to-roster:hover {
+    .provision-btn:hover {
       color: white;
-      border-color: rgba(96,165,250,0.34);
-      background: rgba(37,99,235,0.78);
-      box-shadow: 0 0 12px rgba(59,130,246,0.10);
+      border-color: rgba(96,165,250,0.40);
+      background: rgba(24,24,24,0.98);
+      box-shadow: 0 0 14px rgba(59,130,246,0.12);
       transform: translateY(-1px);
     }
+
+    .score-head {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+      min-width: 178px;
+    }
+
+    .score-readout {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
     .score-label {
       font-family: var(--mono);
       font-size: 9px;
@@ -1271,10 +1299,12 @@ HTML_TEMPLATE = Template(
     }
 
     .score-value {
-      font-size: 30px;
-      line-height: 1;
-      font-weight: 800;
-      letter-spacing: -0.04em;
+      font-family: var(--sans);
+      font-size: 42px;
+      line-height: 0.88;
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: -0.06em;
     }
 
     .score-value.positive,
@@ -1282,10 +1312,52 @@ HTML_TEMPLATE = Template(
     .score-value.watch { color: var(--gold); }
     .score-value.neutral { color: var(--blue-soft); }
 
+    .diagnosis-wrap {
+      margin-top: 12px;
+      margin-bottom: 0;
+    }
+
+    .diagnosis-label {
+      margin-bottom: 4px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--tiny);
+      font-weight: 800;
+    }
+
+    .diagnosis-banner {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0;
+      width: 100%;
+      min-height: 38px;
+      padding: 0 14px;
+      border: 1px solid rgba(182,255,0,0.18);
+      border-bottom: 0;
+      border-radius: 12px 12px 0 0;
+      background: rgba(182,255,0,0.06);
+      color: #efffcf;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .diagnosis-sep {
+      opacity: 0.65;
+      padding: 0 4px;
+    }
+
     .sparkline-wrap {
-      margin-top: 10px;
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 12px;
+      margin-top: 0;
+      border: 1px solid rgba(182,255,0,0.18);
+      border-top: 1px solid rgba(182,255,0,0.18);
+      border-radius: 0 0 12px 12px;
       background: rgba(255,255,255,0.025);
       padding: 7px 10px;
     }
@@ -1599,7 +1671,17 @@ HTML_TEMPLATE = Template(
 
     {{ shell_styles | safe }}
 
-    @media (max-width: 640px) {
+    
+    @keyframes dsPulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.18);
+      }
+    }
+
+@media (max-width: 640px) {
       .card-meta-row {
         display: flex !important;
         flex-wrap: wrap !important;
@@ -1753,24 +1835,40 @@ HTML_TEMPLATE = Template(
       .scorebox {
         grid-column: auto;
         text-align: left;
-        margin-top: 2px;
-        padding-top: 6px;
+        margin-top: 4px;
+        padding-top: 8px;
         border-top: 1px solid rgba(255,255,255,0.06);
         min-width: 0;
+      }
+
+      .score-head {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .provision-btn {
+        width: 100%;
+        min-width: 0;
+        min-height: 38px;
+        justify-content: center;
+        font-size: 9px;
+      }
+
+      .diagnosis-banner {
+        min-height: 40px;
+        justify-content: center;
+        text-align: center;
+        font-size: 9px;
+        line-height: 1.35;
+        padding: 8px 12px;
       }
 
       .sparkline-head {
         flex-direction: column;
         align-items: flex-start;
         gap: 4px;
-      }
-
-      .pill-row {
-        gap: 6px;
-      }
-
-      .pill {
-        white-space: normal;
       }
 
       .metric-grid {
@@ -1782,11 +1880,15 @@ HTML_TEMPLATE = Template(
       }
 
       .player-name {
-        font-size: 17px;
+        font-size: 20px;
+        line-height: 0.98;
+        letter-spacing: -0.03em;
       }
 
       .score-value {
-        font-size: 24px;
+        font-size: 38px;
+        line-height: 0.88;
+        letter-spacing: -0.05em;
       }
 
       .section-head {
@@ -1892,22 +1994,32 @@ HTML_TEMPLATE = Template(
             <div class="avatar">{{ row.avatar }}</div>
             <div class="player-ident">
               <div class="rankline">{% if loop.index == 1 %}[ PRIMARY EXTRACTION ]{% else %}#{{ loop.index }} Pitcher Extraction{% endif %}</div>
-              <h3 class="player-name">{{ row.player_name }}</h3>
-              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %}<span class="sep"> //</span>{{ row.display_team }}{% endif %}<span class="sep"> //</span>Pitcher<span class="sep"> //</span>MLB Extraction</div>
+              <h3 class="player-name">{{ row.player_name.upper() }}</h3>
+              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %}<span class="sep"> //</span>{{ row.display_team }}{% endif %}<span class="sep"> //</span>PITCHER</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">{{ row.source_badge.replace("SRC: ", "") if row.source_badge else "" }}</span>
 <span class="card-meta-badge">{{ row.model_badge }}</span>
-<button type="button" class="card-meta-badge js-add-to-roster">PROVISION TO WATCHLIST</button>
               </div>
             </div>
             <div class="scorebox">
-              <div class="score-label">Extraction Score</div>
-              <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
-              <div class="pill-row pill-row-tight">
-                <span class="pill primary">{{ row.pill_1 }}</span>
-                <span class="pill secondary">{{ row.pill_2 }}</span>
-                <span class="pill tertiary">{{ row.pill_3 }}</span>
+              <div class="score-head">
+                <div class="score-readout">
+                  <div class="score-label">Extraction Score</div>
+                  <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
+                </div>
+                <button type="button" class="provision-btn js-add-to-roster">PROVISION TO WATCHLIST</button>
               </div>
+            </div>
+          </div>
+
+          <div class="diagnosis-wrap">
+            <div class="diagnosis-label">Diagnosis</div>
+            <div class="diagnosis-banner">
+              <span>{{ row.pill_1 }}</span>
+              <span class="diagnosis-sep"> //</span>
+              <span>{{ row.pill_2 }}</span>
+              <span class="diagnosis-sep"> //</span>
+              <span>{{ row.pill_3 }}</span>
             </div>
           </div>
 
@@ -1995,22 +2107,32 @@ HTML_TEMPLATE = Template(
             <div class="avatar">{{ row.avatar }}</div>
             <div class="player-ident">
               <div class="rankline">{% if loop.index == 1 %}[ PRIMARY EXTRACTION ]{% else %}#{{ loop.index }} Hitter Extraction{% endif %}</div>
-              <h3 class="player-name">{{ row.player_name }}</h3>
-              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %}<span class="sep"> //</span>{{ row.display_team }}{% endif %}<span class="sep"> //</span>Hitter<span class="sep"> //</span>MLB Extraction</div>
+              <h3 class="player-name">{{ row.player_name.upper() }}</h3>
+              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %}<span class="sep"> //</span>{{ row.display_team }}{% endif %}<span class="sep"> //</span>HITTER</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">{{ row.source_badge.replace("SRC: ", "") if row.source_badge else "" }}</span>
 <span class="card-meta-badge">{{ row.model_badge }}</span>
-<button type="button" class="card-meta-badge js-add-to-roster">PROVISION TO WATCHLIST</button>
               </div>
             </div>
             <div class="scorebox">
-              <div class="score-label">Extraction Score</div>
-              <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
-              <div class="pill-row pill-row-tight">
-                <span class="pill primary">{{ row.pill_1 }}</span>
-                <span class="pill secondary">{{ row.pill_2 }}</span>
-                <span class="pill tertiary">{{ row.pill_3 }}</span>
+              <div class="score-head">
+                <div class="score-readout">
+                  <div class="score-label">Extraction Score</div>
+                  <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
+                </div>
+                <button type="button" class="provision-btn js-add-to-roster">PROVISION TO WATCHLIST</button>
               </div>
+            </div>
+          </div>
+
+          <div class="diagnosis-wrap">
+            <div class="diagnosis-label">Diagnosis</div>
+            <div class="diagnosis-banner">
+              <span>{{ row.pill_1 }}</span>
+              <span class="diagnosis-sep"> //</span>
+              <span>{{ row.pill_2 }}</span>
+              <span class="diagnosis-sep"> //</span>
+              <span>{{ row.pill_3 }}</span>
             </div>
           </div>
 

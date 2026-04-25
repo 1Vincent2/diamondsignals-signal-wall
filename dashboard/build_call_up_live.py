@@ -958,7 +958,8 @@ HTML_TEMPLATE = Template(
       border-radius: 999px;
       background: var(--red);
       box-shadow: 0 0 10px rgba(239,68,68,0.35);
-    }
+    
+      animation: dsPulse 1.8s ease-in-out infinite;}
 
     .live-time {
       margin-top: 6px;
@@ -1759,9 +1760,10 @@ HTML_TEMPLATE = Template(
     }
 
     .provision-btn:hover {
-      background: rgba(59,130,246,1);
+      background: rgba(24,24,24,0.98);
+      border-color: rgba(96,165,250,0.40);
       transform: translateY(-1px);
-      box-shadow: 0 0 16px rgba(59,130,246,0.16);
+      box-shadow: 0 0 14px rgba(59,130,246,0.12);
     }
 
     .movement-audit-row .movement-trigger {
@@ -1811,7 +1813,17 @@ HTML_TEMPLATE = Template(
       white-space: nowrap;
     }
 
-    @media (max-width: 1120px) {
+    
+    @keyframes dsPulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.18);
+      }
+    }
+
+@media (max-width: 1120px) {
       .player-audit-row {
         grid-template-columns: 1fr;
       }

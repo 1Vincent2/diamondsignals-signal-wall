@@ -1407,21 +1407,25 @@ HTML_TEMPLATE = Template(
     .player-card.js-player-card { cursor: pointer; }
     .player-card.js-player-card:hover { transform: translateY(-1px); box-shadow: var(--shadow), 0 0 12px rgba(106,166,255,0.08); border-color: rgba(106,166,255,0.18); }
     .player-card.high-edge { border-color: rgba(74,222,128,0.22); box-shadow: var(--shadow), 0 0 8px rgba(74,222,128,0.07); }
-    .player-top { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: start; margin-bottom: 12px; }
+    .player-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px; align-items: start; margin-bottom: 12px; }
+    .player-head { display: flex; align-items: start; gap: 18px; min-width: 0; }
     .avatar { width: 42px; height: 42px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.10); display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); color: var(--text); font-size: 13px; font-weight: 800; flex: 0 0 auto; }
     .player-ident { min-width: 0; max-width: 100%; }
     .rankline { margin-bottom: 4px; }
-    .player-name { font-size: clamp(18px, 1.55vw, 26px); line-height: 0.98; letter-spacing: -0.035em; font-weight: 900; margin: 0 0 4px; text-transform: uppercase; color: var(--text); word-break: break-word; overflow-wrap: anywhere; }
-    .signal-line { font-size: 10px; color: var(--soft); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.05em; }
-    .scorebox { display: flex; align-items: center; justify-content: flex-end; gap: 8px; min-width: 238px; flex: 0 0 238px; }
-    .score-meta { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; text-align: right; gap: 3px; min-width: 74px; flex: 0 0 74px; }
-    .score-value { font-family: var(--mono); font-size: 28px; line-height: 1; font-weight: 800; color: var(--hg-amber); text-shadow: 0 0 8px rgba(214,164,58,0.14); }
+    .player-name { font-size: clamp(18px, 1.55vw, 26px); line-height: 1; letter-spacing: -0.03em; font-weight: 800; margin: 0 0 4px; text-transform: uppercase; color: var(--text); word-break: break-word; overflow-wrap: anywhere; }
+    .signal-line { font-size: 10px; color: var(--soft); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.10em; }
+    .provision-row-desktop { display: flex; align-items: center; justify-content: flex-start; min-width: 240px; padding-top: 6px; }
+    .provision-row-mobile { display: none; }
+    .scorebox { display: flex; align-items: flex-start; justify-content: flex-end; gap: 8px; min-width: 120px; flex: 0 0 120px; padding-top: 2px; }
+    .score-meta { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; text-align: right; gap: 3px; min-width: 74px; flex: 0 0 auto; }
+    .score-label { font-size: 9px; letter-spacing: 0.08em; }
+    .score-value { font-family: var(--sans); font-size: 36px; line-height: 0.92; font-weight: 900; font-style: italic; letter-spacing: -0.05em; color: var(--hg-amber); text-shadow: 0 0 8px rgba(214,164,58,0.14); }
     .score-value.edge-up { color: var(--hg-lime); text-shadow: 0 0 10px rgba(183,240,0,0.22); }
     .sparkline-wrap { margin: 0 0 12px; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; background: rgba(255,255,255,0.015); }
     .sparkline-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
     .sparkline-note { font-family: var(--mono); font-size: 10px; color: var(--tiny); text-transform: uppercase; letter-spacing: 0.1em; }
     svg.sparkline { display: block; width: 100%; height: 34px; }
-    .sparkline-path { stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    .sparkline-path { stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; filter: drop-shadow(0 0 2px rgba(173, 255, 47, 0.4)); }
     .sparkline-path.glow { filter: drop-shadow(0 0 3px rgba(183,240,0,0.40)); }
     .metric-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 12px; }
     .metric { border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 10px 10px 9px; background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.018)); min-width: 0; }
@@ -1443,27 +1447,29 @@ HTML_TEMPLATE = Template(
     .status-badge.active-pulse { animation: badgePulse 2.2s infinite ease-in-out; }
     .why { font-size: 11px; line-height: 1.55; color: var(--soft); font-family: var(--mono); font-variant-numeric: tabular-nums; }
     .provision-btn {
-      min-height: 34px;
-      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 18px;
       border-radius: 10px;
-      border: 1px solid rgba(96,165,250,0.26);
-      background: linear-gradient(180deg, rgba(18,18,18,0.96) 0%, rgba(8,8,8,0.96) 100%);
-      color: #dbeafe;
+      border: 1px solid rgba(96,165,250,0.28);
+      background: rgba(18,18,18,0.94);
+      color: white;
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 8px;
       font-weight: 800;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
       cursor: pointer;
       transition: 160ms ease;
       white-space: nowrap;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
     }
     .provision-btn:hover {
+      background: rgba(24,24,24,0.98);
+      border-color: rgba(96,165,250,0.40);
       transform: translateY(-1px);
-      border-color: rgba(96,165,250,0.42);
-      color: #ffffff;
-      box-shadow: 0 0 14px rgba(59,130,246,0.14);
+      box-shadow: 0 0 14px rgba(59,130,246,0.12);
     }
     .footer { padding: 16px 4px 0; color: var(--muted); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
     @keyframes badgePulse { 0%,100% { opacity: 0.82; } 50% { opacity: 1; } }
@@ -1496,6 +1502,18 @@ HTML_TEMPLATE = Template(
         margin-bottom: 8px;
       }
 
+      .player-head {
+        display: contents;
+      }
+
+      .provision-row-desktop {
+        display: none;
+      }
+
+      .provision-row-mobile {
+        display: block;
+      }
+
       .avatar {
         width: 42px;
         height: 42px;
@@ -1525,7 +1543,7 @@ HTML_TEMPLATE = Template(
         line-height: 1.3;
         letter-spacing: 0.05em;
       }
-
+    
       .scorebox {
         width: 100%;
         min-width: 0;
@@ -1545,16 +1563,17 @@ HTML_TEMPLATE = Template(
       }
 
       .score-label {
-        font-size: 10px;
-        letter-spacing: 0.08em;
+        font-size: 9px;
+        letter-spacing: 0.10em;
       }
 
       .score-value {
-        font-size: 36px;
-        line-height: 0.92;
+        font-family: var(--sans);
+        font-size: 48px;
+        line-height: 0.88;
         font-weight: 900;
         font-style: italic;
-        letter-spacing: -0.05em;
+        letter-spacing: -0.06em;
       }
 
       .provision-row {
@@ -1563,14 +1582,22 @@ HTML_TEMPLATE = Template(
       }
 
       .provision-btn {
-        width: 100%;
-        min-height: 36px;
-        padding: 0 12px;
-        border-radius: 10px;
-        font-size: 10px;
-        letter-spacing: 0.05em;
-        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
         justify-content: center;
+        width: 100%;
+        min-width: 100%;
+        min-height: 46px;
+        padding: 0 16px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+        border: 1px solid rgba(96,165,250,0.28);
+        background: rgba(18,18,18,0.94);
+        color: white;
+        box-shadow: 0 0 14px rgba(59,130,246,0.12);
       }
 
       .badge-row {
@@ -1578,16 +1605,21 @@ HTML_TEMPLATE = Template(
       }
 
       .metric-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .metric {
+        padding: 10px 10px 9px;
       }
 
       .metric-label {
-        font-size: 10px;
-        letter-spacing: 0.07em;
+        font-size: 9px;
+        letter-spacing: 0.06em;
       }
 
       .metric-value {
-        font-size: 18px;
+        font-size: 16px;
         line-height: 1.05;
       }
 
