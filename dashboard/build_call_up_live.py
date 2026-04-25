@@ -9,6 +9,7 @@ import re
 import pandas as pd
 from jinja2 import Template
 
+from dashboard.lib.publish_safe import write_temp_output, promote_output_if_valid, save_snapshot
 from dashboard.lib.report_status import build_report_status, utc_now_iso
 from dashboard.lib.report_validation import (
     build_validation_report,
@@ -3006,8 +3007,13 @@ def main() -> None:
     CALL_UP_DIR.mkdir(parents=True, exist_ok=True)
     html = render_html()
     output_path = CALL_UP_DIR / "index.html"
-    output_path.write_text(html, encoding="utf-8")
-    print(f"Wrote {output_path}")
+    temp_output_path = write_temp_output(str(output_path), html)
+    promoted = promote_output_if_valid(temp_output_path, str(output_path), True)
+    if promoted:
+        save_snapshot(str(output_path), str(SNAPSHOT_DIR / "index.html"))
+        print(f"Wrote {output_path}")
+    else:
+        print("Skipped publishing promotion watch due to failed validation.")
 
 
 if __name__ == "__main__":
