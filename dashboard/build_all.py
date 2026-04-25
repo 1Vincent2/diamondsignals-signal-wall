@@ -1,27 +1,24 @@
-from pathlib import Path
 import subprocess
 import sys
 
-ROOT = Path(__file__).resolve().parent
-
-SCRIPTS = [
-    ROOT / "build_dashboard.py",
-    ROOT / "build_call_up_live.py",
-    ROOT / "build_hidden_gems.py",
-    ROOT / "build_ivb_heat_map.py",
-    ROOT / "build_velocity_decay.py",
-    ROOT / "build_stuff_disruption.py",
+MODULES = [
+    "dashboard.build_dashboard",
+    "dashboard.build_call_up_live",
+    "dashboard.build_hidden_gems",
+    "dashboard.build_ivb_heat_map",
+    "dashboard.build_velocity_decay",
+    "dashboard.build_stuff_disruption",
 ]
 
-def run_script(path: Path) -> None:
-    print(f"\n=== Running {path.name} ===")
-    result = subprocess.run([sys.executable, str(path)], check=False)
+def run_module(module_name: str) -> None:
+    print(f"\n=== Running {module_name} ===")
+    result = subprocess.run([sys.executable, "-m", module_name], check=False)
     if result.returncode != 0:
-        raise SystemExit(f"{path.name} failed with exit code {result.returncode}")
+        raise SystemExit(f"{module_name} failed with exit code {result.returncode}")
 
 def main() -> None:
-    for script in SCRIPTS:
-        run_script(script)
+    for module_name in MODULES:
+        run_module(module_name)
     print("\nAll dashboard builds completed successfully.")
 
 if __name__ == "__main__":
