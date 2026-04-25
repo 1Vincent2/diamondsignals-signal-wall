@@ -7,22 +7,28 @@
   data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
   <div class="player-top">
-    <div class="avatar">{{ row.player_name[:2]|upper }}</div>
-    <div class="player-ident">
-      <div class="rankline">#{{ rank }} {{ trigger_label }}</div>
-      <h3 class="player-name">{{ row.player_name }}</h3>
-      <div class="signal-line">{{ signal_line }}</div>
+    <div class="player-head">
+      <div class="avatar">{{ row.player_name[:2]|upper }}</div>
+      <div class="player-ident">
+        <div class="rankline">#{{ rank }} {{ trigger_label }}</div>
+        <h3 class="player-name">{{ row.player_name }}</h3>
+        <div class="signal-line">{{ signal_line }}</div>
+      </div>
+
+      <div class="provision-row-desktop">
+        <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION TO WATCHLIST">PROVISION TO WATCHLIST</button>
+      </div>
+    </div>
+
+    <div class="scorebox">
+      <div class="score-meta">
+        <div class="score-label">Edge Score</div>
+        <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
+      </div>
     </div>
   </div>
 
-  <div class="scorebox">
-    <div class="score-meta">
-      <div class="score-label">Edge Score</div>
-      <div class="score-value {% if row.edge_score >= 65 %}edge-up{% endif %}">{{ row.edge_score }}</div>
-    </div>
-  </div>
-
-  <div class="provision-row">
+  <div class="provision-row provision-row-mobile">
     <button type="button" class="provision-btn js-add-to-roster" data-default-label="PROVISION TO WATCHLIST">PROVISION TO WATCHLIST</button>
   </div>
 
