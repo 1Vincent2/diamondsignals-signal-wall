@@ -5,6 +5,10 @@ from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Optional
 
+from dashboard.lib.publish_safe import write_temp_output, promote_output_if_valid, save_snapshot
+from dashboard.lib.report_status import build_report_status, utc_now_iso
+from dashboard.lib.report_validation import build_validation_report, validate_min_rows
+
 import pandas as pd
 import requests
 from jinja2 import Template
@@ -12,6 +16,10 @@ from pybaseball import playerid_reverse_lookup, statcast
 
 DIST_DIR = Path("dist")
 DIST_DIR.mkdir(parents=True, exist_ok=True)
+
+STATUS_DIR = DIST_DIR / "status"
+SNAPSHOT_DIR = DIST_DIR / "_snapshots" / "signal-wall"
+SIGNAL_WALL_STATUS_PATH = STATUS_DIR / "signal-wall.json"
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
@@ -2206,9 +2214,29 @@ def write_scout_pages(dossier_payload: dict) -> None:
     print(f"Wrote {len(player_ids)} player dossier pages under dist/scout/<player_id>/index.html")
 
 
+def write_status_file(status_payload: dict) -> None:
+    STATUS_DIR.mkdir(parents=True, exist_ok=True)
+    SIGNAL_WALL_STATUS_PATH.write_text(
+        json.dumps(status_payload, indent=2),
+        encoding="utf-8",
+    )
+    print(f"Wrote {SIGNAL_WALL_STATUS_PATH}")
+
+
 def main() -> None:
+    build_started_at = utc_now_iso()
     raw = fetch_statcast_window(START_DATE, END_DATE)
     if raw.empty:
+        status_payload = build_report_status(
+            "signal_wall",
+            build_success=False,
+            threshold_minutes=180,
+            build_started_at=build_started_at,
+            build_finished_at=utc_now_iso(),
+            errors=["Statcast fallback returned no fresh data."],
+            notes=["Keeping existing dist assets."],
+        )
+        write_status_file(status_payload)
         print(
             "Skipping dashboard rebuild because Statcast fallback returned no fresh data. Keeping existing dist assets."
         )
@@ -2218,6 +2246,15 @@ def main() -> None:
     pitcher_signals = build_pitcher_signals(raw)
 
     if hitter_signals.empty and pitcher_signals.empty:
+        status_payload = build_report_status(
+            "signal_wall",
+            build_success=False,
+            threshold_minutes=180,
+            build_started_at=build_started_at,
+            build_finished_at=utc_now_iso(),
+            errors=["No hitter or pitcher signals were produced."],
+        )
+        write_status_file(status_payload)
         raise RuntimeError("No hitter or pitcher signals were produced.")
 
     top_hitters = hitter_signals.head(5).copy()
@@ -2234,17 +2271,35 @@ def main() -> None:
         "edge_score", ascending=False
     ).reset_index(drop=True)
 
+    sections = {
+        "top_signals": len(combined_alerts),
+    }
+    validation = build_validation_report(
+        "signal_wall",
+        [
+            validate_min_rows("top_signals", sections["top_signals"], 1),
+        ],
+    )
+
     html = render_html(top_pitchers, top_hitters)
 
     live_path = DIST_DIR / "live" / "index.html"
-    live_path.parent.mkdir(parents=True, exist_ok=True)
-    live_path.write_text(html, encoding="utf-8")
-    print(f"Wrote {live_path}")
+    temp_live_path = write_temp_output(str(live_path), html)
+    promoted_live = promote_output_if_valid(temp_live_path, str(live_path), validation["ok"])
+    if promoted_live:
+        save_snapshot(str(live_path), str(SNAPSHOT_DIR / "index.html"))
+        print(f"Wrote {live_path}")
+    else:
+        print("Skipped publishing live signal wall due to failed validation.")
 
     front_door_html = render_signals_front_door()
     output_path = DIST_DIR / "index.html"
-    output_path.write_text(front_door_html, encoding="utf-8")
-    print(f"Wrote {output_path}")
+    temp_front_door_path = write_temp_output(str(output_path), front_door_html)
+    promoted_front_door = promote_output_if_valid(temp_front_door_path, str(output_path), validation["ok"])
+    if promoted_front_door:
+        print(f"Wrote {output_path}")
+    else:
+        print("Skipped publishing signal wall front door due to failed validation.")
 
     summary = {
         "generated_at": datetime.now().isoformat(),
@@ -2282,6 +2337,19 @@ def main() -> None:
         json.dumps(summary, indent=2), encoding="utf-8"
     )
     print("Wrote dist/signals.json")
+
+    status_payload = build_report_status(
+        "signal_wall",
+        build_success=bool(promoted_live and promoted_front_door),
+        threshold_minutes=180,
+        build_started_at=build_started_at,
+        build_finished_at=utc_now_iso(),
+        section_counts=sections,
+        degraded=not validation["ok"],
+        errors=validation["messages"],
+        notes=[] if validation["ok"] else ["Validation blocked one or more signal wall publishes."],
+    )
+    write_status_file(status_payload)
 
     player_index = build_player_index(raw)
     (DIST_DIR / "player_index.json").write_text(
