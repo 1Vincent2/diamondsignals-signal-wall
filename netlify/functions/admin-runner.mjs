@@ -87,6 +87,7 @@ export default async (req) => {
       const weekStart = (url.searchParams.get("week_start") || "").trim();
       const season = (url.searchParams.get("season") || "").trim();
       const maxTeams = (url.searchParams.get("max_teams") || "").trim();
+      const startIndex = (url.searchParams.get("start_index") || "").trim();
 
       if (!weekStart || !season) {
         return json({ ok: false, error: "Missing week_start or season" }, 400);
@@ -97,6 +98,7 @@ export default async (req) => {
       ingestUrl.searchParams.set("season", season);
       ingestUrl.searchParams.set("token", (process.env.ADMIN_RUN_TOKEN || "").trim());
       if (maxTeams) ingestUrl.searchParams.set("max_teams", maxTeams);
+      if (startIndex) ingestUrl.searchParams.set("start_index", startIndex);
 
       const ingestResult = await hit(ingestUrl.toString(), "aaa_ingest_run");
 

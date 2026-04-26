@@ -412,10 +412,12 @@ async function run(urlStr) {
 
   const selectedAll = filterTeamsByOrgAllowlist(aaaTeams, allowlist);
 
-  // max_teams limiter for timeout safety
+  // chunk controls for timeout safety
   const maxTeamsParam = Number(url.searchParams.get("max_teams"));
   const maxTeams = Number.isFinite(maxTeamsParam) && maxTeamsParam > 0 ? maxTeamsParam : selectedAll.length;
-  const selected = selectedAll.slice(0, maxTeams);
+  const startIndexParam = Number(url.searchParams.get("start_index"));
+  const startIndex = Number.isFinite(startIndexParam) && startIndexParam >= 0 ? startIndexParam : 0;
+  const selected = selectedAll.slice(startIndex, startIndex + maxTeams);
 
   console.log("AAA_MULTI_ORG_SELECTION", {
     season,
