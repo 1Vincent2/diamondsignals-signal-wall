@@ -8,7 +8,7 @@ PREBUILD_COMMANDS = [
 MODULES = [
     "dashboard.build_dashboard",
     "dashboard.build_call_up_live",
-    "dashboard.build_hidden_gems",
+    "dashboard.build_mlb_extraction",
     "dashboard.build_ivb_heat_map",
     "dashboard.build_velocity_decay",
     "dashboard.build_stuff_disruption",

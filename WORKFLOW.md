@@ -18,7 +18,7 @@
 - Current build set includes:
   - `build_dashboard.py`
   - `build_call_up_live.py`
-  - `build_hidden_gems.py`
+  - `build_mlb_extraction.py`
   - `build_ivb_heat_map.py`
   - `build_velocity_decay.py`
   - `build_stuff_disruption.py`

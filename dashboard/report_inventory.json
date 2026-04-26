@@ -57,7 +57,7 @@
     },
     {
       "report_id": "mlb_extraction",
-      "builder_script": "dashboard/build_hidden_gems.py",
+      "builder_script": "dashboard/build_mlb_extraction.py",
       "output_html": "dist/hidden-gems/index.html",
       "output_json": "dist/hidden_gems.json",
       "status_output": "dist/status/mlb-extraction.json",
