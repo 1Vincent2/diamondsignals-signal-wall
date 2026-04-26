@@ -3,6 +3,7 @@ import sys
 
 PREBUILD_COMMANDS = [
     [sys.executable, "scripts/build_aaa_hitter_refresh.py"],
+    [sys.executable, "scripts/test_aaa_transactions.py"],
 ]
 
 MODULES = [
