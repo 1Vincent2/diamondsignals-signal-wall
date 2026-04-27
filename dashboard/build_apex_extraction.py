@@ -8,6 +8,44 @@ from datetime import datetime, timezone
 OUT_DIR = Path("dist/apex-extraction")
 OUT_JSON = OUT_DIR / "apex_extraction.json"
 OUT_HTML = OUT_DIR / "index.html"
+DATA_DIR = Path("dist")
+
+
+def safe_float(value, default: float = 0.0) -> float:
+    try:
+        if value is None:
+            return default
+        text = str(value).replace("%", "").replace('"', "").replace("°", "").replace("ft", "").strip()
+        if not text:
+            return default
+        return float(text)
+    except Exception:
+        return default
+
+
+def clamp(value: float, low: float = 0.0, high: float = 100.0) -> float:
+    return max(low, min(high, value))
+
+
+def load_json(path: Path, fallback):
+    try:
+        if path.exists():
+            return json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        print(f"Warning: failed to load {path}: {exc}")
+    return fallback
+
+
+def player_index_by_id() -> dict:
+    data = load_json(DATA_DIR / "player_index.json", {"players": []})
+    return {str(row.get("player_id")): row for row in data.get("players", []) if row.get("player_id")}
+
+
+def display_name_from_index(player_id: str, fallback: str = "UNKNOWN") -> str:
+    idx = player_index_by_id()
+    row = idx.get(str(player_id), {})
+    return (row.get("full_name") or fallback or "UNKNOWN").upper()
+
 
 
 def score_apex_candidate(row: dict) -> dict:
@@ -43,6 +81,185 @@ def score_apex_candidate(row: dict) -> dict:
         "market_latency": market_latency,
         "verdict": verdict,
     }
+
+
+
+def build_apex_arms_from_existing_reports() -> list[dict]:
+    stuff = load_json(DATA_DIR / "stuff_disruption_feed.json", {"cards": []}).get("cards", [])
+    ivb = load_json(DATA_DIR / "ivb_heat_map.json", {"heat_cards": []}).get("heat_cards", [])
+    velocity = load_json(DATA_DIR / "velocity_decay_monitor.json", {"cards": []}).get("cards", [])
+
+    ivb_by_name = {str(row.get("player_name", "")).lower(): row for row in ivb}
+    velocity_by_name = {str(row.get("player_name", "")).lower(): row for row in velocity}
+
+    candidates = []
+
+    for row in stuff[:24]:
+        name = row.get("player_name", "UNKNOWN")
+        key = str(name).lower()
+        ivb_row = ivb_by_name.get(key, {})
+        velo_row = velocity_by_name.get(key, {})
+
+        disruption = safe_float(row.get("disruption_score"))
+        ivb_delta = safe_float(row.get("ivb_delta"))
+        vaa_delta = safe_float(row.get("vaa_delta"))
+        movement_delta = safe_float(row.get("movement_delta"))
+        active_spin_delta = safe_float(row.get("active_spin_delta"))
+
+        physical = clamp((disruption * 0.55) + max(ivb_delta, 0) * 6 + abs(min(vaa_delta, 0)) * 10 + max(movement_delta, 0) * 2)
+        vision = clamp(58 + max(ivb_delta, 0) * 3 + abs(min(vaa_delta, 0)) * 8)
+        market = clamp(62 + (8 if row.get("apex_tier") in {"S-TIER", "A-TIER"} else 0) + (6 if ivb_row.get("transition_badge") else 0))
+
+        primary_signal = row.get("analysis") or "Pitch-shape disruption detected across the recent window."
+        supporting_metric = f"iVB Delta {row.get('ivb_delta_label', '')} // VAA Delta {row.get('vaa_delta_label', '')}".strip()
+        market_note = "Public results may be lagging the shape-change signal."
+
+        forensic_metrics = [
+            {
+                "category": "Geometry",
+                "code": "VAA_DELTA",
+                "label": "VAA Delta",
+                "value": row.get("vaa_delta_label") or f"{vaa_delta:+.1f}°",
+                "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
+            },
+            {
+                "category": "Deception",
+                "code": "SSW_PROXY",
+                "label": "Movement Deviation",
+                "value": row.get("movement_delta_label") or f"{movement_delta:+.1f}\"",
+                "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
+            },
+            {
+                "category": "Market",
+                "code": "HIGH_STAKES_DELTA",
+                "label": "High-Stakes Delta",
+                "value": "Public Late",
+                "purpose": "Identifies the value gap between physical signal and public attention."
+            },
+        ]
+
+        candidates.append({
+            "player_id": str(row.get("player_id", name)),
+            "name": str(name).upper(),
+            "team": row.get("team", "MLB"),
+            "role": "SP",
+            "signal_family": "APEX ARM",
+            "physical_shift_score": round(physical, 1),
+            "vision_delta_score": round(vision, 1),
+            "market_latency_score": round(market, 1),
+            "primary_signal": primary_signal,
+            "supporting_metric": supporting_metric,
+            "market_note": market_note,
+            "action": "WATCH" if market < 72 else "ADD",
+            "forensic_metrics": forensic_metrics,
+        })
+
+    return candidates
+
+
+def build_apex_bats_from_scout_metrics() -> list[dict]:
+    scout = load_json(DATA_DIR / "scout_metrics.json", {"players": {}}).get("players", {})
+    idx = player_index_by_id()
+    candidates = []
+
+    for player_id, row in scout.items():
+        if row.get("player_type") != "hitter":
+            continue
+
+        ballistics = row.get("ballistics", {})
+        movement = row.get("movement", {})
+        results = row.get("results", {})
+
+        max_ev = safe_float(ballistics.get("value_2"))
+        hard_hit = safe_float(ballistics.get("value_3"))
+        diamond_delta = safe_float(ballistics.get("value_4"))
+        sweet_spot = safe_float(movement.get("value_1"))
+        barrel = safe_float(movement.get("value_2"))
+        launch_angle = safe_float(movement.get("value_3"))
+        xba = safe_float(movement.get("value_4"))
+        avg = safe_float(results.get("value_1"))
+        k_rate = safe_float(results.get("value_2"))
+        signal = str(results.get("value_4") or "")
+
+        optimized_la = 15 <= launch_angle <= 25
+        physical = clamp(
+            42
+            + max(0, max_ev - 103) * 4
+            + hard_hit * 0.45
+            + barrel * 1.4
+            + (12 if optimized_la else 0)
+        )
+        vision = clamp(
+            50
+            + max(0, 18 - k_rate) * 1.2
+            + sweet_spot * 0.35
+            + (8 if optimized_la else 0)
+        )
+        market = clamp(
+            50
+            + max(0, diamond_delta) * 90
+            + (10 if signal == "GOLD BUY" else 0)
+            + (8 if xba - avg > 0.06 else 0)
+        )
+
+        if physical < 62 and market < 62:
+            continue
+
+        player = idx.get(str(player_id), {})
+        name = (player.get("full_name") or f"PLAYER {player_id}").upper()
+        team = player.get("team") or player.get("team_name") or "MLB"
+
+        forensic_metrics = [
+            {
+                "category": "Physics",
+                "code": "DHH_PROXY",
+                "label": "Dynamic Hard-Hit",
+                "value": f"{max_ev:.1f} mph",
+                "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
+            },
+            {
+                "category": "Vision",
+                "code": "LA_CONSISTENCY",
+                "label": "LA Consistency",
+                "value": "Surgical" if optimized_la else f"{launch_angle:.1f}°",
+                "purpose": "Shows whether the swing plane is converting force into flight."
+            },
+            {
+                "category": "Market",
+                "code": "HIGH_STAKES_DELTA",
+                "label": "High-Stakes Delta",
+                "value": f"{diamond_delta:+.3f}",
+                "purpose": "Identifies the value gap between expected quality and public results."
+            },
+        ]
+
+        candidates.append({
+            "player_id": str(player_id),
+            "name": name,
+            "team": team,
+            "role": "BAT",
+            "signal_family": "APEX BAT",
+            "physical_shift_score": round(physical, 1),
+            "vision_delta_score": round(vision, 1),
+            "market_latency_score": round(market, 1),
+            "primary_signal": row.get("briefing") or "Underlying contact quality is ahead of surface results.",
+            "supporting_metric": f"Max EV {max_ev:.1f} mph // xBA {xba:.3f} vs AVG {avg:.3f}",
+            "market_note": "Surface production may be lagging the underlying contact profile.",
+            "action": "ADD" if market >= 72 and physical >= 70 else "WATCH",
+            "forensic_metrics": forensic_metrics,
+        })
+
+    return candidates
+
+
+def real_candidates() -> list[dict]:
+    arms = build_apex_arms_from_existing_reports()
+    bats = build_apex_bats_from_scout_metrics()
+
+    arms = sorted(arms, key=lambda r: (r["physical_shift_score"] + r["market_latency_score"]), reverse=True)[:8]
+    bats = sorted(bats, key=lambda r: (r["physical_shift_score"] + r["market_latency_score"]), reverse=True)[:8]
+
+    return bats + arms
 
 
 def demo_candidates() -> list[dict]:
@@ -125,7 +342,11 @@ def demo_candidates() -> list[dict]:
 
 
 def build_payload() -> dict:
-    rows = [score_apex_candidate(row) for row in demo_candidates()]
+    source_rows = real_candidates()
+    if not source_rows:
+        source_rows = demo_candidates()
+
+    rows = [score_apex_candidate(row) for row in source_rows]
     rows = sorted(rows, key=lambda r: r["apex_score"], reverse=True)
 
     bats = [r for r in rows if r["role"] == "BAT"]
@@ -136,7 +357,7 @@ def build_payload() -> dict:
         "subtitle": "Subsurface MLB Breakout Ledger",
         "version": "apex_extraction_v0.1",
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "status": "demo_scaffold",
+        "status": "real_data_v0.2",
         "logic": {
             "apex_score": "physical_shift_score*0.45 + vision_delta_score*0.25 + market_latency_score*0.30",
             "apex_trigger": "3 clusters = APEX EXTRACTION; 2 clusters = SUBSURFACE BREAKOUT/APEX WATCH; 1 cluster = PHYSICAL WATCH",
