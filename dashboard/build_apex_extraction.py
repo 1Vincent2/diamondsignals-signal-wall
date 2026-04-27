@@ -404,8 +404,26 @@ def build_payload() -> dict:
     }
 
 
+def apex_heat_class(score: float) -> str:
+    try:
+        score = float(score)
+    except Exception:
+        score = 0.0
+
+    if score >= 90:
+        return "apex-hot"
+    if score >= 80:
+        return "apex-edge"
+    if score >= 70:
+        return "apex-watch"
+    if score >= 60:
+        return "apex-neutral"
+    return "apex-dormant"
+
+
 def render_signal_card(row: dict) -> str:
     score = row.get("apex_score", 0)
+    heat_class = apex_heat_class(score)
     verdict = row.get("verdict", "NO SIGNAL")
     action = row.get("action", "WATCH")
 
@@ -423,7 +441,7 @@ def render_signal_card(row: dict) -> str:
     )
 
     return f"""
-      <article class="apex-card">
+      <article class="apex-card {heat_class}">
         <div class="card-top">
           <div>
             <div class="kicker">{row.get("signal_family", "APEX")}</div>
@@ -638,7 +656,8 @@ def render_html(payload: dict) -> str:
       font-weight: 900;
       font-style: italic;
       letter-spacing: -2px;
-      color: var(--danger);
+      color: var(--heat, var(--danger));
+      text-shadow: 0 0 18px var(--heat-glow, rgba(255,122,26,.18));
     }}
 
     .score-label {{
@@ -688,7 +707,7 @@ def render_html(payload: dict) -> str:
       display: block;
       margin-top: 6px;
       font-size: 22px;
-      color: var(--danger);
+      color: var(--heat, var(--danger));
     }}
 
     .proof {{
@@ -755,7 +774,7 @@ def render_html(payload: dict) -> str:
     .forensic-chip em {{
       display: block;
       margin-top: 7px;
-      color: var(--danger);
+      color: var(--heat, var(--danger));
       font-family: Arial, Helvetica, sans-serif;
       font-size: 18px;
       line-height: 20px;
@@ -785,9 +804,51 @@ def render_html(payload: dict) -> str:
     }}
 
     .action-row strong {{
-      color: var(--danger);
+      color: var(--heat, var(--danger));
       font-family: Menlo, Consolas, "Courier New", monospace;
       letter-spacing: 2px;
+    }}
+
+    .apex-card.apex-hot {{
+      --heat: #ffffff;
+      --heat-glow: rgba(255,215,0,.28);
+      border: 2px solid rgba(255,122,26,.72);
+      box-shadow: 0 0 0 1px rgba(255,255,255,.10), 0 20px 70px rgba(255,122,26,.10);
+    }}
+
+    .apex-card.apex-hot .score-label::after {{
+      content: " // PURE SIGNAL";
+      color: #ffd700;
+    }}
+
+    .apex-card.apex-edge {{
+      --heat: #ff8c00;
+      --heat-glow: rgba(255,140,0,.24);
+      border-color: rgba(255,140,0,.42);
+      border-top-color: #ff8c00;
+      box-shadow: 0 0 0 1px rgba(255,140,0,.08);
+    }}
+
+    .apex-card.apex-watch {{
+      --heat: #b86500;
+      --heat-glow: rgba(184,101,0,.18);
+      border-color: rgba(184,101,0,.24);
+      border-top-color: #b86500;
+    }}
+
+    .apex-card.apex-neutral {{
+      --heat: #a0a0a0;
+      --heat-glow: rgba(160,160,160,.08);
+      border-color: rgba(160,160,160,.12);
+      border-top-color: rgba(160,160,160,.42);
+    }}
+
+    .apex-card.apex-dormant {{
+      --heat: #4a4a4a;
+      --heat-glow: rgba(74,74,74,.04);
+      opacity: .60;
+      border-color: rgba(74,74,74,.18);
+      border-top-color: rgba(74,74,74,.42);
     }}
 
     .provision-btn {{
