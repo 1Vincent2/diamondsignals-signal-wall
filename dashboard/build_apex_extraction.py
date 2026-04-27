@@ -23,12 +23,14 @@ def score_apex_candidate(row: dict) -> dict:
 
     apex_score = round((physical * 0.45) + (vision * 0.25) + (market * 0.30), 1)
 
-    if physical_shift and vision_delta and market_latency:
+    if trigger_count == 3:
         verdict = "APEX EXTRACTION"
     elif physical_shift and market_latency:
-        verdict = "SUBSURFACE WATCH"
-    elif physical_shift:
-        verdict = "PHYSICAL SHIFT"
+        verdict = "APEX WATCH"
+    elif trigger_count == 2:
+        verdict = "SUBSURFACE BREAKOUT"
+    elif trigger_count == 1:
+        verdict = "PHYSICAL WATCH"
     else:
         verdict = "NO SIGNAL"
 
@@ -137,8 +139,39 @@ def build_payload() -> dict:
         "status": "demo_scaffold",
         "logic": {
             "apex_score": "physical_shift_score*0.45 + vision_delta_score*0.25 + market_latency_score*0.30",
-            "apex_trigger": "physical_shift >= 70 AND vision_delta >= 60 AND market_latency >= 65",
+            "apex_trigger": "3 clusters = APEX EXTRACTION; 2 clusters = SUBSURFACE BREAKOUT/APEX WATCH; 1 cluster = PHYSICAL WATCH",
+            "cluster_gate": "Alert only when at least two clusters fire simultaneously; highest tier requires all three clusters.",
         },
+        "technical_array": [
+            {
+                "metric": "VAA Above Expected",
+                "code": "VAA_DELTA",
+                "category": "Pitching Geometry",
+                "trigger": "VAA_Delta > 0.2 degrees over a 2-start window",
+                "shark_meaning": "The ball is disappearing at the top of the zone."
+            },
+            {
+                "metric": "SSW Deviation",
+                "code": "SSW_DEVIATION",
+                "category": "Pitching Deception",
+                "trigger": "Observed movement vs spin-based movement deviation > 15%",
+                "shark_meaning": "The ball is moving in ways the human brain cannot calculate."
+            },
+            {
+                "metric": "Whiff-per-Swing by Zone Quadrant",
+                "code": "SHADOW_ZONE_WHIFF_REDUCTION",
+                "category": "Hitter Vision",
+                "trigger": "Shadow-zone whiff reduction > 10%",
+                "shark_meaning": "The hitter has downloaded the strike zone."
+            },
+            {
+                "metric": "Dynamic Hard-Hit",
+                "code": "DHH_SCORE",
+                "category": "Hitter Physics",
+                "trigger": "DHH score increase > 15%",
+                "shark_meaning": "The power is being optimized for flight, not just force."
+            }
+        ],
         "counts": {
             "total": len(rows),
             "bats": len(bats),
