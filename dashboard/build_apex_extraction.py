@@ -106,9 +106,40 @@ def build_apex_arms_from_existing_reports() -> list[dict]:
         movement_delta = safe_float(row.get("movement_delta"))
         active_spin_delta = safe_float(row.get("active_spin_delta"))
 
-        physical = clamp((disruption * 0.55) + max(ivb_delta, 0) * 6 + abs(min(vaa_delta, 0)) * 10 + max(movement_delta, 0) * 2)
-        vision = clamp(58 + max(ivb_delta, 0) * 3 + abs(min(vaa_delta, 0)) * 8)
-        market = clamp(62 + (8 if row.get("apex_tier") in {"S-TIER", "A-TIER"} else 0) + (6 if ivb_row.get("transition_badge") else 0))
+        tier_bonus = 12 if row.get("apex_tier") == "S-TIER" else 8 if row.get("apex_tier") == "A-TIER" else 0
+        transition_bonus = 8 if ivb_row.get("transition_badge") else 0
+        shape_alert_bonus = 8 if "APEX" in str(row.get("primary_alert", "")).upper() else 0
+        whiff_bonus = 6 if str(ivb_row.get("whiff_probability", "")).upper() == "HIGH" else 0
+
+        # Apex Arms should reward simultaneous geometry + deception signals.
+        # Stuff disruption is the base; iVB, VAA, movement and transition badges lift the signal into Apex territory.
+        physical = clamp(
+            20
+            + disruption * 0.62
+            + max(ivb_delta, 0) * 7.5
+            + abs(vaa_delta) * 7.0
+            + max(movement_delta, 0) * 2.4
+            + tier_bonus
+            + transition_bonus
+            + shape_alert_bonus
+        )
+
+        vision = clamp(
+            48
+            + max(ivb_delta, 0) * 4.0
+            + abs(vaa_delta) * 9.0
+            + max(active_spin_delta, 0) * 12.0
+            + whiff_bonus
+            + (6 if row.get("sample_note") else 0)
+        )
+
+        market = clamp(
+            58
+            + tier_bonus
+            + transition_bonus
+            + shape_alert_bonus
+            + (6 if row.get("card_class") == "apex-top" else 0)
+        )
 
         primary_signal = row.get("analysis") or "Pitch-shape disruption detected across the recent window."
         supporting_metric = f"iVB Delta {row.get('ivb_delta_label', '')} // VAA Delta {row.get('vaa_delta_label', '')}".strip()
