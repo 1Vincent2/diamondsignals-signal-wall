@@ -4,10 +4,17 @@ import json
 from pathlib import Path
 from datetime import datetime, timezone
 
+from jinja2 import Template
+
 
 OUT_DIR = Path("dist/apex-extraction")
 OUT_JSON = OUT_DIR / "apex_extraction.json"
 OUT_HTML = OUT_DIR / "index.html"
+
+BASE_DIR = Path(__file__).resolve().parent
+TEMPLATES_DIR = BASE_DIR / "templates"
+NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
+SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
 DATA_DIR = Path("dist")
 
 
@@ -485,7 +492,7 @@ def render_signal_card(row: dict) -> str:
           </div>
         </div>
 
-        <div class="verdict">{verdict}</div>
+        <div class="verdict">[ {verdict} ]</div>
 
         <div class="grid">
           <div><span>PHYSICAL</span><strong>{row.get("physical_shift_score", 0)}</strong></div>
@@ -525,6 +532,8 @@ def render_html(payload: dict) -> str:
     bat_cards = "\n".join(render_signal_card(row) for row in payload.get("apex_bats", []))
     arm_cards = "\n".join(render_signal_card(row) for row in payload.get("apex_arms", []))
     generated = payload.get("generated_at", "")
+    nav_html = Template(NAV_TEMPLATE).render(active_nav="apex_extraction")
+    shell_styles = SHELL_STYLES_TEMPLATE
 
     return f"""<!doctype html>
 <html lang="en">
@@ -533,6 +542,8 @@ def render_html(payload: dict) -> str:
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Apex Extraction // DiamondSignals</title>
   <style>
+    {shell_styles}
+
     :root {{
       --bg: #05070a;
       --panel: #0d1319;
@@ -642,11 +653,12 @@ def render_html(payload: dict) -> str:
     }}
 
     .apex-card {{
-      border: 1px solid rgba(255,255,255,.16);
-      border-top: 1px solid var(--emerald);
-      background: linear-gradient(180deg, rgba(17,26,33,.98), rgba(9,13,18,.98));
+      border: 1px solid rgba(255,255,255,.10);
+      border-top: 1px solid rgba(255,255,255,.22);
+      background: linear-gradient(180deg, rgba(17,20,24,.96), rgba(8,10,13,.98));
       border-radius: 24px;
       padding: 22px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
     }}
 
     .card-top {{
@@ -663,9 +675,11 @@ def render_html(payload: dict) -> str:
 
     h2 {{
       margin: 0;
-      font-size: 30px;
-      line-height: 1;
-      letter-spacing: -1px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 27px;
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+      font-weight: 800;
     }}
 
     .meta {{
@@ -683,13 +697,13 @@ def render_html(payload: dict) -> str:
 
     .score {{
       font-family: Arial, Helvetica, sans-serif;
-      font-size: 52px;
-      line-height: 50px;
-      font-weight: 900;
+      font-size: 50px;
+      line-height: 48px;
+      font-weight: 800;
       font-style: italic;
-      letter-spacing: -2px;
+      letter-spacing: -0.045em;
       color: var(--heat, var(--danger));
-      text-shadow: 0 0 18px var(--heat-glow, rgba(255,122,26,.18));
+      text-shadow: 0 0 12px var(--heat-glow, rgba(255,122,26,.10));
     }}
 
     .score-label {{
@@ -700,17 +714,17 @@ def render_html(payload: dict) -> str:
 
     .verdict {{
       margin-top: 18px;
-      border: 1px solid rgba(255,255,255,.28);
-      border-left: 3px solid #ffffff;
-      background: rgba(255,255,255,.055);
+      border: 1px solid rgba(255,255,255,.22);
+      border-left: 1px solid rgba(255,255,255,.42);
+      background: rgba(255,255,255,.045);
       border-radius: 16px;
       padding: 13px 14px;
       font-family: Menlo, Consolas, "Courier New", monospace;
-      font-size: 13px;
+      font-size: 12px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: #ffffff;
-      font-weight: 900;
+      color: #f5f5f5;
+      font-weight: 800;
     }}
 
     .grid {{
@@ -721,10 +735,11 @@ def render_html(payload: dict) -> str:
     }}
 
     .grid div {{
-      border: 1px solid rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.035);
       border-radius: 14px;
-      padding: 12px;
+      padding: 13px 14px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
     }}
 
     .grid span {{
@@ -738,7 +753,11 @@ def render_html(payload: dict) -> str:
     .grid strong {{
       display: block;
       margin-top: 6px;
+      font-family: Arial, Helvetica, sans-serif;
       font-size: 22px;
+      line-height: 24px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
       color: var(--heat, var(--danger));
     }}
 
@@ -774,11 +793,12 @@ def render_html(payload: dict) -> str:
     }}
 
     .forensic-chip {{
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
       border-radius: 14px;
       padding: 12px;
       min-height: 122px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
     }}
 
     .forensic-chip span {{
@@ -811,7 +831,8 @@ def render_html(payload: dict) -> str:
       font-size: 18px;
       line-height: 20px;
       font-style: normal;
-      font-weight: 900;
+      font-weight: 800;
+      letter-spacing: -0.015em;
     }}
 
     .forensic-chip p {{
@@ -843,9 +864,10 @@ def render_html(payload: dict) -> str:
 
     .apex-card.apex-hot {{
       --heat: #ffffff;
-      --heat-glow: rgba(255,215,0,.28);
-      border: 2px solid rgba(255,122,26,.72);
-      box-shadow: 0 0 0 1px rgba(255,255,255,.10), 0 20px 70px rgba(255,122,26,.10);
+      --heat-glow: rgba(255,215,0,.18);
+      border: 1px solid rgba(255,122,26,.40);
+      border-top-color: rgba(255,122,26,.62);
+      box-shadow: 0 0 0 1px rgba(255,255,255,.04), 0 20px 60px rgba(255,122,26,.07);
     }}
 
     .apex-card.apex-hot .score-label::after {{
@@ -855,17 +877,17 @@ def render_html(payload: dict) -> str:
 
     .apex-card.apex-edge {{
       --heat: #ff8c00;
-      --heat-glow: rgba(255,140,0,.24);
-      border-color: rgba(255,140,0,.42);
-      border-top-color: #ff8c00;
-      box-shadow: 0 0 0 1px rgba(255,140,0,.08);
+      --heat-glow: rgba(255,140,0,.16);
+      border-color: rgba(255,140,0,.28);
+      border-top-color: rgba(255,140,0,.52);
+      box-shadow: 0 0 0 1px rgba(255,140,0,.04);
     }}
 
     .apex-card.apex-watch {{
       --heat: #b86500;
-      --heat-glow: rgba(184,101,0,.18);
-      border-color: rgba(184,101,0,.24);
-      border-top-color: #b86500;
+      --heat-glow: rgba(184,101,0,.10);
+      border-color: rgba(184,101,0,.18);
+      border-top-color: rgba(184,101,0,.38);
     }}
 
     .apex-card.apex-neutral {{
@@ -886,24 +908,24 @@ def render_html(payload: dict) -> str:
     .provision-btn {{
       display: inline-block;
       margin-top: 16px;
-      padding: 13px 16px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,122,26,.42);
-      background: rgba(255,122,26,.08);
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,122,26,.28);
+      background: rgba(8,12,18,.66);
       color: #ffffff;
       font-family: Menlo, Consolas, "Courier New", monospace;
-      font-size: 11px;
-      line-height: 14px;
-      letter-spacing: 2px;
+      font-size: 10px;
+      line-height: 13px;
+      letter-spacing: 1.7px;
       text-transform: uppercase;
-      font-weight: 900;
+      font-weight: 800;
       text-decoration: none;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.045);
     }}
 
     .provision-btn:hover {{
-      border-color: rgba(255,122,26,.72);
-      background: rgba(255,122,26,.14);
+      border-color: rgba(255,122,26,.46);
+      background: rgba(255,122,26,.075);
     }}
 
     @media (max-width: 760px) {{
@@ -916,6 +938,7 @@ def render_html(payload: dict) -> str:
   </style>
 </head>
 <body>
+  {nav_html}
   <main class="shell">
     <section class="hero">
       <div class="eyebrow">DIAMONDSIGNALS // SUBSURFACE BREAKOUT LEDGER</div>
