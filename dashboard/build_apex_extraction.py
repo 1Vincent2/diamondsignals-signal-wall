@@ -491,7 +491,8 @@ def render_signal_card(row: dict) -> str:
 
 
 def render_html(payload: dict) -> str:
-    top_cards = "\n".join(render_signal_card(row) for row in payload["top_signals"])
+    bat_cards = "\n".join(render_signal_card(row) for row in payload.get("apex_bats", []))
+    arm_cards = "\n".join(render_signal_card(row) for row in payload.get("apex_arms", []))
     generated = payload.get("generated_at", "")
 
     return f"""<!doctype html>
@@ -901,10 +902,14 @@ def render_html(payload: dict) -> str:
       </div>
     </section>
 
-    <div class="section-title">&gt;_ DECLASSIFIED APEX SIGNALS // GENERATED {generated}</div>
-
+    <div class="section-title">&gt;_ APEX BATS // SUBSURFACE POWER OPTIMIZATION // GENERATED {generated}</div>
     <section class="cards">
-      {top_cards}
+      {bat_cards}
+    </section>
+
+    <div class="section-title">&gt;_ APEX ARMS // PITCHING GEOMETRY + DECEPTION ARRAY</div>
+    <section class="cards">
+      {arm_cards}
     </section>
   </main>
 </body>
