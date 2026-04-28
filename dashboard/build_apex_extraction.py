@@ -14,6 +14,7 @@ OUT_HTML = OUT_DIR / "index.html"
 BASE_DIR = Path(__file__).resolve().parent
 TEMPLATES_DIR = BASE_DIR / "templates"
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
+SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
 SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
 DATA_DIR = Path("dist")
 
@@ -449,14 +450,12 @@ def apex_heat_class(score: float) -> str:
         score = 0.0
 
     if score >= 90:
+        return "apex-elite"
+    if score >= 85:
         return "apex-hot"
-    if score >= 80:
-        return "apex-edge"
-    if score >= 70:
-        return "apex-watch"
-    if score >= 60:
-        return "apex-neutral"
-    return "apex-dormant"
+    if score >= 78:
+        return "apex-warm"
+    return "apex-cool"
 
 
 def render_signal_card(row: dict) -> str:
@@ -479,7 +478,22 @@ def render_signal_card(row: dict) -> str:
     )
 
     return f"""
-      <article class="apex-card {heat_class}">
+      <article
+        class="apex-card {heat_class}"
+        id="apex-player-{row.get("player_id", "")}"
+        data-player-id="{row.get("player_id", "")}"
+        data-player-name="{row.get("name", "")}"
+        data-player-team="{row.get("team", "MLB")}"
+        data-player-role="{row.get("role", "ASSET")}"
+        data-signal-family="{row.get("signal_family", "APEX")}"
+        data-apex-score="{score}"
+        data-physical="{row.get("physical_shift_score", 0)}"
+        data-vision="{row.get("vision_delta_score", 0)}"
+        data-market="{row.get("market_latency_score", 0)}"
+        data-verdict="{verdict}"
+        data-action="{action}"
+        data-supporting-metric="{row.get("supporting_metric", "")}"
+      >
         <div class="card-top">
           <div>
             <div class="kicker">{row.get("signal_family", "APEX")}</div>
@@ -527,9 +541,9 @@ def render_signal_card(row: dict) -> str:
           <strong>{action}</strong>
         </div>
 
-        <a class="provision-btn" href="/watchlist/?player_id={row.get("player_id", "")}&source=apex-extraction">
+        <button type="button" class="provision-btn js-add-to-roster" data-player-id="{row.get("player_id", "")}" data-player-name="{row.get("name", "")}">
           PROVISION TO WATCHLIST
-        </a>
+        </button>
       </article>
     """
 
@@ -539,6 +553,7 @@ def render_html(payload: dict) -> str:
     arm_cards = "\n".join(render_signal_card(row) for row in payload.get("apex_arms", []))
     generated = payload.get("generated_at", "")
     nav_html = Template(NAV_TEMPLATE).render(active_nav="apex_extraction")
+    search_html = Template(SEARCH_TEMPLATE).render()
     shell_styles = SHELL_STYLES_TEMPLATE
 
     return f"""<!doctype html>
@@ -729,6 +744,35 @@ def render_html(payload: dict) -> str:
       line-height: 1.35;
     }}
 
+
+    .apex-elite {{
+      --heat: #ffffff;
+      --heat-glow: rgba(255, 255, 255, .30);
+      --card-accent: rgba(255, 255, 255, .68);
+      --rail-accent: #ffffff;
+    }}
+
+    .apex-hot {{
+      --heat: #f5c451;
+      --heat-glow: rgba(245, 196, 81, .20);
+      --card-accent: rgba(245, 196, 81, .42);
+      --rail-accent: #f5c451;
+    }}
+
+    .apex-warm {{
+      --heat: #a87945;
+      --heat-glow: rgba(168, 121, 69, .11);
+      --card-accent: rgba(168, 121, 69, .24);
+      --rail-accent: #a87945;
+    }}
+
+    .apex-cool {{
+      --heat: #8fa3b8;
+      --heat-glow: rgba(143, 163, 184, .10);
+      --card-accent: rgba(143, 163, 184, .22);
+      --rail-accent: #8fa3b8;
+    }}
+
     .cards {{
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -736,12 +780,73 @@ def render_html(payload: dict) -> str:
     }}
 
     .apex-card {{
+      position: relative;
       border: 1px solid rgba(255,255,255,.10);
-      border-top: 1px solid rgba(255,255,255,.22);
+      border-top: 1px solid var(--card-accent, rgba(255,255,255,.22));
       background: linear-gradient(180deg, rgba(17,20,24,.96), rgba(8,10,13,.98));
       border-radius: 22px;
       padding: 18px;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+      scroll-margin-top: 112px;
+    }}
+      50% {{
+        transform: translateY(-2px);
+        box-shadow:
+          0 0 0 1px rgba(204,255,0,.52),
+          0 0 44px rgba(255,122,26,.36),
+          0 0 70px rgba(204,255,0,.18),
+          inset 0 1px 0 rgba(255,255,255,.10);
+      }}
+    }}
+
+
+    .apex-card.target-signal-card {{
+      border-color: rgba(204,255,0,.72);
+      border-top-color: rgba(204,255,0,.95);
+      box-shadow:
+        0 0 0 1px rgba(204,255,0,.30),
+        0 0 42px rgba(204,255,0,.20),
+        0 0 68px rgba(255,122,26,.16),
+        inset 0 1px 0 rgba(255,255,255,.10);
+      animation: apexTargetPulse 1.25s ease-in-out 0s 7;
+    }}
+
+    .apex-card.target-signal-card::before {{
+      content: "EXTRACTED FROM EMAIL";
+      position: absolute;
+      right: 16px;
+      top: -13px;
+      z-index: 5;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(204,255,0,.55);
+      background: rgba(9,12,16,.96);
+      color: #ccff00;
+      font-family: var(--mono);
+      font-size: 9px;
+      line-height: 1;
+      letter-spacing: .16em;
+      font-weight: 900;
+      text-transform: uppercase;
+      box-shadow: 0 0 22px rgba(204,255,0,.24);
+    }}
+
+    @keyframes apexTargetPulse {{
+      0%, 100% {{
+        transform: translateY(0);
+        box-shadow:
+          0 0 0 1px rgba(204,255,0,.28),
+          0 0 30px rgba(204,255,0,.16),
+          inset 0 1px 0 rgba(255,255,255,.08);
+      }}
+      50% {{
+        transform: translateY(-3px);
+        box-shadow:
+          0 0 0 1px rgba(204,255,0,.72),
+          0 0 54px rgba(204,255,0,.30),
+          0 0 84px rgba(255,122,26,.18),
+          inset 0 1px 0 rgba(255,255,255,.12);
+      }}
     }}
 
     .card-top {{
@@ -788,8 +893,8 @@ def render_html(payload: dict) -> str:
       font-weight: 900;
       font-style: italic;
       letter-spacing: -0.055em;
-      color: var(--heat, var(--danger));
-      text-shadow: 0 0 12px var(--heat-glow, rgba(255,122,26,.10));
+      color: var(--heat, #ffffff);
+      text-shadow: 0 0 12px var(--heat-glow, rgba(255,255,255,.12));
       transform: skewX(-7deg);
       transform-origin: right center;
     }}
@@ -1004,51 +1109,7 @@ def render_html(payload: dict) -> str:
       font-family: Menlo, Consolas, "Courier New", monospace;
       letter-spacing: 2px;
     }}
-
-    .apex-card.apex-hot {{
-      --heat: #ffffff;
-      --heat-glow: rgba(255,215,0,.18);
-      border: 1px solid rgba(255,122,26,.40);
-      border-top-color: rgba(255,122,26,.62);
-      box-shadow: 0 0 0 1px rgba(255,255,255,.04), 0 20px 60px rgba(255,122,26,.07);
-    }}
-
-    .apex-card.apex-hot .score-label::after {{
-      content: " // PURE SIGNAL";
-      color: #ffd700;
-    }}
-
-    .apex-card.apex-edge {{
-      --heat: #ff8c00;
-      --heat-glow: rgba(255,140,0,.16);
-      border-color: rgba(255,140,0,.28);
-      border-top-color: rgba(255,140,0,.52);
-      box-shadow: 0 0 0 1px rgba(255,140,0,.04);
-    }}
-
-    .apex-card.apex-watch {{
-      --heat: #b86500;
-      --heat-glow: rgba(184,101,0,.10);
-      border-color: rgba(184,101,0,.18);
-      border-top-color: rgba(184,101,0,.38);
-    }}
-
-    .apex-card.apex-neutral {{
-      --heat: #a0a0a0;
-      --heat-glow: rgba(160,160,160,.08);
-      border-color: rgba(160,160,160,.12);
-      border-top-color: rgba(160,160,160,.42);
-    }}
-
-    .apex-card.apex-dormant {{
-      --heat: #4a4a4a;
-      --heat-glow: rgba(74,74,74,.04);
-      opacity: .60;
-      border-color: rgba(74,74,74,.18);
-      border-top-color: rgba(74,74,74,.42);
-    }}
-
-    .provision-btn {{
+.provision-btn {{
       display: inline-block;
       margin-top: 16px;
       padding: 12px 15px;
@@ -1089,10 +1150,200 @@ def render_html(payload: dict) -> str:
       .card-top {{ align-items: flex-start; }}
       .forensic-strip {{ grid-template-columns: 1fr; }}
     }}
+  
+
+    .field-guide-pill {{
+      position: fixed;
+      right: max(24px, calc((100vw - 1120px) / 2 + 18px));
+      bottom: 24px;
+      z-index: 80;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(8,11,15,.92);
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 11px 14px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .16em;
+      font-weight: 900;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 0 26px rgba(245,196,81,.14);
+    }}
+
+    .field-guide-pill:hover {{
+      border-color: rgba(204,255,0,.42);
+      color: #ccff00;
+    }}
+
+    .field-guide-backdrop {{
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      background: rgba(0,0,0,.54);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .22s ease;
+    }}
+
+    .field-guide-drawer {{
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 91;
+      width: min(430px, 92vw);
+      height: 100vh;
+      overflow: auto;
+      padding: 28px;
+      background:
+        linear-gradient(180deg, rgba(18,22,28,.98), rgba(5,8,12,.99));
+      border-left: 1px solid rgba(255,255,255,.14);
+      box-shadow: -24px 0 80px rgba(0,0,0,.55), -4px 0 30px rgba(255,122,26,.10);
+      transform: translateX(105%);
+      transition: transform .26s ease;
+    }}
+
+    body.field-guide-open .field-guide-backdrop {{
+      opacity: 1;
+      pointer-events: auto;
+    }}
+
+    body.field-guide-open .field-guide-drawer {{
+      transform: translateX(0);
+    }}
+
+    .field-guide-top {{
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+    }}
+
+    .field-guide-kicker {{
+      color: #ff9a3d;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }}
+
+    .field-guide-title {{
+      margin: 0;
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 30px;
+      line-height: .94;
+      letter-spacing: -.05em;
+      text-transform: uppercase;
+      font-weight: 950;
+    }}
+
+    .field-guide-close {{
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.04);
+      color: #fff;
+      border-radius: 999px;
+      width: 34px;
+      height: 34px;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+    }}
+
+    .guide-item {{
+      border-top: 1px solid rgba(255,255,255,.10);
+      padding: 15px 0;
+    }}
+
+    .guide-item strong {{
+      display: block;
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }}
+
+    .guide-item p {{
+      margin: 0;
+      color: #aeb8c4;
+      font-size: 13px;
+      line-height: 1.5;
+    }}
+
+    @media (max-width: 700px) {{
+      .field-guide-pill {{
+      position: fixed;
+      right: max(24px, calc((100vw - 1120px) / 2 + 18px));
+      bottom: 24px;
+      z-index: 80;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(8,11,15,.92);
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 11px 14px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .16em;
+      font-weight: 900;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 0 26px rgba(245,196,81,.14);
+    }}
+      .field-guide-drawer {{
+        padding: 22px;
+      }}
+    }}
+
   </style>
 </head>
 <body>
+
+
+
+  <button class="field-guide-pill" type="button" data-open-field-guide>FIELD GUIDE</button>
+  <div class="field-guide-backdrop" data-close-field-guide></div>
+  <aside class="field-guide-drawer" aria-label="Apex Extraction Field Guide">
+    <div class="field-guide-top">
+      <div>
+        <div class="field-guide-kicker">Operator Guide</div>
+        <h2 class="field-guide-title">Apex Extraction</h2>
+      </div>
+      <button class="field-guide-close" type="button" data-close-field-guide aria-label="Close Field Guide">×</button>
+    </div>
+
+    <div class="guide-item">
+      <strong>Apex Score</strong>
+      <p>Weighted extraction score built from Physical, Vision, and Market Latency. It is the top-line conviction score, not a single raw stat.</p>
+    </div>
+    <div class="guide-item">
+      <strong>Physical</strong>
+      <p>Measures underlying force or shape change: exit velocity, contact authority, pitch movement, carry, extension, or comparable physical traits.</p>
+    </div>
+    <div class="guide-item">
+      <strong>Vision</strong>
+      <p>Measures whether the player is converting the physical trait into usable skill: swing plane, zone control, whiff behavior, command, or deception.</p>
+    </div>
+    <div class="guide-item">
+      <strong>Market</strong>
+      <p>Measures the gap between the player’s underlying signal and public recognition. High market latency means the market may still be late.</p>
+    </div>
+    <div class="guide-item">
+      <strong>Heat Fade</strong>
+      <p>Orange is reserved for higher-conviction Apex profiles. As score degrades, cards cool from orange into bronze and steel.</p>
+    </div>
+    <div class="guide-item">
+      <strong>Provision To Watchlist</strong>
+      <p>Stages the player for roster surveillance. This is the action layer between signal discovery and roster execution.</p>
+    </div>
+  </aside>
+
   {nav_html}
+  {search_html}
   <div class="app">
     <section class="hero">
       <div class="hero-card">
@@ -1147,6 +1398,167 @@ def render_html(payload: dict) -> str:
       {arm_cards}
     </section>
   </div>
+
+
+
+  <script src="/player-search.js"></script>
+  <script>
+    (function () {{
+      const params = new URLSearchParams(window.location.search);
+      const targetPlayerId = (params.get("player") || "").trim();
+      const targetPlayerName = (params.get("player_name") || params.get("name") || "").trim().toUpperCase();
+
+      if (!targetPlayerId && !targetPlayerName) return;
+
+      function normalize(value) {{
+        return String(value || "")
+          .trim()
+          .toUpperCase()
+          .replace(/\s+/g, " ");
+      }}
+
+      function findTargetCard() {{
+        const cards = Array.from(document.querySelectorAll(".apex-card"));
+
+        if (targetPlayerId) {{
+          const byId = cards.find((card) => String(card.dataset.playerId || "").trim() === targetPlayerId);
+          if (byId) return byId;
+        }}
+
+        if (targetPlayerName) {{
+          const wanted = normalize(targetPlayerName);
+          const exact = cards.find((card) => normalize(card.dataset.playerName) === wanted);
+          if (exact) return exact;
+
+          return cards.find((card) => normalize(card.dataset.playerName).includes(wanted) || wanted.includes(normalize(card.dataset.playerName)));
+        }}
+
+        return null;
+      }}
+
+      function activateTarget() {{
+        const card = findTargetCard();
+        if (!card) return;
+
+        card.classList.remove("target-signal-card");
+        void card.offsetWidth;
+        card.classList.add("target-signal-card");
+
+        setTimeout(() => {{
+          card.scrollIntoView({{
+            behavior: "smooth",
+            block: "center"
+          }});
+        }}, 300);
+      }}
+
+      if (document.readyState === "loading") {{
+        document.addEventListener("DOMContentLoaded", activateTarget);
+      }} else {{
+        activateTarget();
+      }}
+    }})();
+  </script>
+
+
+  <script>
+    (function () {{
+      const openBtn = document.querySelector("[data-open-field-guide]");
+      const closeEls = document.querySelectorAll("[data-close-field-guide]");
+
+      if (!openBtn) return;
+
+      openBtn.addEventListener("click", () => {{
+        document.body.classList.add("field-guide-open");
+      }});
+
+      closeEls.forEach((el) => {{
+        el.addEventListener("click", () => {{
+          document.body.classList.remove("field-guide-open");
+        }});
+      }});
+
+      document.addEventListener("keydown", (event) => {{
+        if (event.key === "Escape") {{
+          document.body.classList.remove("field-guide-open");
+        }}
+      }});
+    }})();
+  </script>
+
+
+  <script>
+    (function () {{
+      const cards = Array.from(document.querySelectorAll(".js-player-action-card"));
+      const closeEls = document.querySelectorAll("[data-close-player-action]");
+
+      const fields = {{
+        meta: document.getElementById("paMeta"),
+        name: document.getElementById("paName"),
+        score: document.getElementById("paScore"),
+        physical: document.getElementById("paPhysical"),
+        vision: document.getElementById("paVision"),
+        market: document.getElementById("paMarket"),
+        verdict: document.getElementById("paVerdict"),
+        metric: document.getElementById("paMetric"),
+        action: document.getElementById("paAction"),
+        provision: document.getElementById("paProvision"),
+        dossier: document.getElementById("paDossier"),
+        copy: document.getElementById("paCopy")
+      }};
+
+      function openDrawer(card) {{
+        const d = card.dataset;
+        const playerId = d.playerId || "";
+        const playerName = d.playerName || "PLAYER";
+
+        fields.meta.textContent = `${{d.playerTeam || "MLB"}} // ${{d.playerRole || "ASSET"}} // ${{d.signalFamily || "APEX"}}`;
+        fields.name.textContent = playerName;
+        fields.score.textContent = d.apexScore || "--";
+        fields.physical.textContent = d.physical || "--";
+        fields.vision.textContent = d.vision || "--";
+        fields.market.textContent = d.market || "--";
+        fields.verdict.textContent = d.verdict || "--";
+        fields.metric.textContent = d.supportingMetric || "--";
+        fields.action.textContent = d.action || "--";
+
+        fields.provision.href = `https://app.diamondsignals.ai/auth?next=/watchlist&player_id=${{encodeURIComponent(playerId)}}&source=apex-extraction`;
+        fields.dossier.href = `/player/${{encodeURIComponent(playerId)}}/`;
+
+        fields.copy.onclick = async () => {{
+          const copyText = `${{playerName}} // Apex Score ${{d.apexScore || "--"}} // ${{d.verdict || ""}} // ${{d.supportingMetric || ""}}`;
+          try {{
+            await navigator.clipboard.writeText(copyText);
+            fields.copy.textContent = "COPIED";
+            setTimeout(() => fields.copy.textContent = "COPY SIGNAL", 1100);
+          }} catch (err) {{
+            fields.copy.textContent = "COPY FAILED";
+            setTimeout(() => fields.copy.textContent = "COPY SIGNAL", 1100);
+          }}
+        }};
+
+        document.body.classList.add("player-action-open");
+      }}
+
+      cards.forEach((card) => {{
+        card.addEventListener("click", (event) => {{
+          if (event.target.closest("a, button")) return;
+          openDrawer(card);
+        }});
+      }});
+
+      closeEls.forEach((el) => {{
+        el.addEventListener("click", () => document.body.classList.remove("player-action-open"));
+      }});
+
+      document.addEventListener("keydown", (event) => {{
+        if (event.key === "Escape") {{
+          document.body.classList.remove("player-action-open");
+        }}
+      }});
+    }})();
+  </script>
+
 </body>
 </html>"""
 
