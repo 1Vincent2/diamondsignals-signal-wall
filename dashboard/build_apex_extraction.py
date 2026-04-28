@@ -552,6 +552,10 @@ def render_html(payload: dict) -> str:
     bat_cards = "\n".join(render_signal_card(row) for row in payload.get("apex_bats", []))
     arm_cards = "\n".join(render_signal_card(row) for row in payload.get("apex_arms", []))
     generated = payload.get("generated_at", "")
+    try:
+        generated_label = datetime.fromisoformat(str(generated).replace("Z", "+00:00")).strftime("%Y-%m-%d %I:%M %p")
+    except Exception:
+        generated_label = str(generated)
     nav_html = Template(NAV_TEMPLATE).render(active_nav="apex_extraction")
     search_html = Template(SEARCH_TEMPLATE).render()
     shell_styles = SHELL_STYLES_TEMPLATE
@@ -591,6 +595,88 @@ def render_html(payload: dict) -> str:
       color: var(--text);
       font-family: var(--sans);
     }}
+
+
+    .topbar {{
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(255,255,255,.08), transparent 28%),
+        rgba(5,7,10,.72);
+      backdrop-filter: blur(18px);
+      position: relative;
+      z-index: 20;
+    }}
+
+    .topbar-inner {{
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }}
+
+    .brand {{
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }}
+
+    .brand-mark {{
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .22em;
+      color: var(--text);
+      text-transform: uppercase;
+    }}
+
+    .brand-mark span {{
+      color: var(--lime);
+      text-shadow: 0 0 12px rgba(255,255,255,.14);
+    }}
+
+    .brand-sub {{
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }}
+
+    .livebox {{
+      text-align: right;
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: .10em;
+    }}
+
+    .live-label {{
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      font-size: 10px;
+      color: var(--text);
+      font-weight: 900;
+    }}
+
+    .live-dot {{
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--lime);
+      box-shadow: 0 0 12px rgba(255,255,255,.18);
+      display: inline-block;
+    }}
+
+    .live-time {{
+      margin-top: 5px;
+      font-size: 10px;
+      color: var(--muted);
+    }}
+
 
     .app {{
       width: min(1180px, calc(100% - 28px));
@@ -1341,6 +1427,19 @@ def render_html(payload: dict) -> str:
       <p>Stages the player for roster surveillance. This is the action layer between signal discovery and roster execution.</p>
     </div>
   </aside>
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">DIAMOND<span>SIGNALS</span></div>
+        <div class="brand-sub">Signal Wall // Apex Extraction</div>
+      </div>
+      <div class="livebox">
+        <div class="live-label"><span class="live-dot"></span>LIVE</div>
+        <div class="live-time">{generated_label}</div>
+      </div>
+    </div>
+  </div>
 
   {nav_html}
   {search_html}
