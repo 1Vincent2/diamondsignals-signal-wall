@@ -487,12 +487,18 @@ def render_signal_card(row: dict) -> str:
             <div class="meta">{row.get("team", "MLB")} // {row.get("role", "ASSET")}</div>
           </div>
           <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
             <div class="score">{score}</div>
-            <div class="score-label">APEX</div>
           </div>
         </div>
 
-        <div class="verdict">[ {verdict} ]</div>
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ {verdict} ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
 
         <div class="grid">
           <div><span>PHYSICAL</span><strong>{row.get("physical_shift_score", 0)}</strong></div>
@@ -555,6 +561,8 @@ def render_html(payload: dict) -> str:
       --emerald: #ffffff;
       --lime: #ffffff;
       --danger: #ff7a1a;
+      --mono: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }}
 
     * {{ box-sizing: border-box; }}
@@ -566,21 +574,63 @@ def render_html(payload: dict) -> str:
         radial-gradient(circle at 88% 12%, rgba(160, 160, 160, 0.10), transparent 34%),
         var(--bg);
       color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: var(--sans);
     }}
 
-    .shell {{
+    .app {{
       width: min(1180px, calc(100% - 28px));
       margin: 0 auto;
-      padding: 34px 0 60px;
+      padding: 28px 0 56px;
     }}
 
     .hero {{
-      border: 1px solid var(--line);
-      background: linear-gradient(135deg, rgba(13,19,25,.96), rgba(7,10,14,.98));
-      border-radius: 28px;
-      padding: 30px;
-      box-shadow: 0 24px 80px rgba(0,0,0,.35), 0 0 0 1px rgba(255,122,26,.08);
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 18px;
+      margin-bottom: 20px;
+    }}
+
+    .hero-card,
+    .summary-card {{
+      background: var(--card-radial);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }}
+
+    .hero-card {{
+      padding: 24px 24px 22px;
+      min-width: 0;
+    }}
+
+    .summary-card {{
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }}
+
+    .summary-label {{
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--tiny);
+    }}
+
+    .summary-value {{
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }}
+
+    .status-note {{
+      margin-top: 6px;
+      color: #aab3bd;
+      font-size: 15px;
+      line-height: 1.55;
+      font-weight: 700;
     }}
 
     .eyebrow, .kicker, .proof-label, .action-row span, .score-label {{
@@ -596,19 +646,21 @@ def render_html(payload: dict) -> str:
       margin-bottom: 16px;
     }}
 
-    h1 {{
+    .hero-title {{
       margin: 0;
-      font-size: clamp(38px, 7vw, 78px);
-      line-height: .9;
-      letter-spacing: -3px;
+      font-size: clamp(32px, 6vw, 58px);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      text-transform: uppercase;
+      font-weight: 900;
     }}
 
-    .subhead {{
-      margin-top: 18px;
-      max-width: 790px;
-      color: #c9d4dd;
-      font-size: 18px;
-      line-height: 1.55;
+    .hero-sub {{
+      margin: 14px 0 0;
+      max-width: 58ch;
+      color: var(--soft);
+      font-size: 14px;
+      line-height: 1.65;
     }}
 
     .status-row {{
@@ -637,40 +689,71 @@ def render_html(payload: dict) -> str:
       margin-top: 6px;
     }}
 
+    .section-head {{
+      margin: 22px 0 12px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+    }}
+
+    .section-kicker {{
+      font-family: var(--mono);
+      color: #6ea8ff;
+      font-size: 11px;
+      line-height: 1;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }}
+
+    .section-heading {{
+      margin: 0;
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      font-weight: 900;
+    }}
+
     .section-title {{
-      margin: 34px 0 16px;
+      margin: 20px 0 10px;
       font-family: Menlo, Consolas, "Courier New", monospace;
       color: var(--lime);
-      letter-spacing: 3px;
+      letter-spacing: 2.2px;
       text-transform: uppercase;
-      font-size: 13px;
+      font-size: 11px;
+      line-height: 1.35;
     }}
 
     .cards {{
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
+      gap: 14px;
     }}
 
     .apex-card {{
       border: 1px solid rgba(255,255,255,.10);
       border-top: 1px solid rgba(255,255,255,.22);
       background: linear-gradient(180deg, rgba(17,20,24,.96), rgba(8,10,13,.98));
-      border-radius: 24px;
-      padding: 22px;
+      border-radius: 22px;
+      padding: 18px;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
     }}
 
     .card-top {{
       display: flex;
       justify-content: space-between;
-      gap: 16px;
+      gap: 12px;
     }}
 
     .kicker {{
       color: var(--emerald);
-      font-size: 11px;
-      margin-bottom: 8px;
+      font-size: 10px;
+      margin-bottom: 6px;
     }}
 
     h2 {{
@@ -683,33 +766,41 @@ def render_html(payload: dict) -> str:
     }}
 
     .meta {{
-      margin-top: 8px;
+      margin-top: 6px;
       color: var(--muted);
       font-family: Menlo, Consolas, "Courier New", monospace;
-      font-size: 12px;
+      font-size: 11px;
+      line-height: 1.25;
       letter-spacing: 2px;
     }}
 
     .score-box {{
       text-align: right;
-      min-width: 88px;
+      min-width: 118px;
+      align-self: flex-start;
     }}
 
     .score {{
-      font-family: Arial, Helvetica, sans-serif;
+      display: inline-block;
+      font-family: var(--sans);
       font-size: 50px;
-      line-height: 48px;
-      font-weight: 800;
+      line-height: 0.9;
+      font-weight: 900;
       font-style: italic;
-      letter-spacing: -0.045em;
+      letter-spacing: -0.055em;
       color: var(--heat, var(--danger));
       text-shadow: 0 0 12px var(--heat-glow, rgba(255,122,26,.10));
+      transform: skewX(-7deg);
+      transform-origin: right center;
     }}
 
     .score-label {{
-      margin-top: 6px;
-      color: #a0a0a0;
-      font-size: 10px;
+      margin-bottom: 8px;
+      color: #8f96a1;
+      font-size: 11px;
+      line-height: 13px;
+      letter-spacing: 2.5px;
+      text-align: right;
     }}
 
     .verdict {{
@@ -727,18 +818,68 @@ def render_html(payload: dict) -> str:
       font-weight: 800;
     }}
 
+    .diagnosis-label {{
+      margin-top: 16px;
+      margin-bottom: 8px;
+      color: #8f96a1;
+      font-family: Menlo, Consolas, "Courier New", monospace;
+      font-size: 11px;
+      line-height: 13px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 900;
+    }}
+
+    .verdict {{
+      margin-top: 0;
+      border: 1px solid rgba(255,255,255,.18);
+      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.025));
+      border-radius: 18px;
+      padding: 0;
+      overflow: hidden;
+      font-family: Menlo, Consolas, "Courier New", monospace;
+      text-transform: uppercase;
+      color: #f5f5f5;
+      font-weight: 800;
+    }}
+
+    .verdict-text {{
+      padding: 13px 16px;
+      font-size: 13px;
+      line-height: 16px;
+      letter-spacing: 2px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }}
+
+    .verdict-rail {{
+      height: 44px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,.018);
+    }}
+
+    .verdict-rail span {{
+      display: block;
+      width: 100%;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,255,255,.04), var(--heat, #ff8c00));
+      box-shadow: 0 0 16px var(--heat-glow, rgba(255,122,26,.14));
+    }}
+
     .grid {{
       display: grid;
       grid-template-columns: repeat(3, minmax(0,1fr));
-      gap: 10px;
-      margin-top: 16px;
+      gap: 9px;
+      margin-top: 12px;
     }}
 
     .grid div {{
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.035);
-      border-radius: 14px;
-      padding: 13px 14px;
+      border-radius: 13px;
+      padding: 10px 12px;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
     }}
 
@@ -752,12 +893,12 @@ def render_html(payload: dict) -> str:
 
     .grid strong {{
       display: block;
-      margin-top: 6px;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 22px;
-      line-height: 24px;
-      font-weight: 800;
-      letter-spacing: -0.025em;
+      margin-top: 5px;
+      font-family: var(--sans);
+      font-size: 20px;
+      line-height: 22px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
       color: var(--heat, var(--danger));
     }}
 
@@ -769,35 +910,37 @@ def render_html(payload: dict) -> str:
 
     .proof-label {{
       color: #a0a0a0;
-      font-size: 10px;
+      font-size: 9px;
+      letter-spacing: 2px;
     }}
 
     .proof p {{
-      margin: 8px 0 0;
+      margin: 6px 0 0;
       color: #d4dde5;
-      line-height: 1.45;
+      font-size: 12.5px;
+      line-height: 1.42;
     }}
 
     .market-note {{
-      margin-top: 16px;
+      margin-top: 11px;
       color: #9cabb6;
-      font-size: 14px;
-      line-height: 1.45;
+      font-size: 12.5px;
+      line-height: 1.4;
     }}
 
     .forensic-strip {{
-      margin-top: 16px;
+      margin-top: 11px;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
+      gap: 9px;
     }}
 
     .forensic-chip {{
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.03);
-      border-radius: 14px;
-      padding: 12px;
-      min-height: 122px;
+      border-radius: 13px;
+      padding: 10px;
+      min-height: 104px;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
     }}
 
@@ -843,12 +986,12 @@ def render_html(payload: dict) -> str:
     }}
 
     .action-row {{
-      margin-top: 18px;
+      margin-top: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-top: 1px solid rgba(255,255,255,.08);
-      padding-top: 14px;
+      padding-top: 11px;
     }}
 
     .action-row span {{
@@ -929,8 +1072,19 @@ def render_html(payload: dict) -> str:
     }}
 
     @media (max-width: 760px) {{
-      .hero {{ padding: 22px; }}
-      .status-row {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+
+      .hero {{ grid-template-columns: 1fr; }}
+      .summary-card {{ padding: 14px; }}
+      .hero-title {{
+        font-size: clamp(28px, 10vw, 40px);
+        line-height: 0.98;
+      }}
+      .hero-sub {{
+        margin-top: 10px;
+        font-size: 13px;
+        line-height: 1.55;
+      }}
+
       .cards {{ grid-template-columns: 1fr; }}
       .card-top {{ align-items: flex-start; }}
       .forensic-strip {{ grid-template-columns: 1fr; }}
@@ -939,33 +1093,60 @@ def render_html(payload: dict) -> str:
 </head>
 <body>
   {nav_html}
-  <main class="shell">
+  <div class="app">
     <section class="hero">
-      <div class="eyebrow">DIAMONDSIGNALS // SUBSURFACE BREAKOUT LEDGER</div>
-      <h1>APEX EXTRACTION</h1>
-      <p class="subhead">
-        Physical shift first. Vision and discipline confirm it. Market latency makes it actionable.
-        This surface identifies MLB players whose underlying profile is moving before public pricing catches up.
-      </p>
-
-      <div class="status-row">
-        <div class="status-pill">Report Status<strong>{payload.get("status", "")}</strong></div>
-        <div class="status-pill">Candidates<strong>{payload["counts"]["total"]}</strong></div>
-        <div class="status-pill">Apex Bats<strong>{payload["counts"]["bats"]}</strong></div>
-        <div class="status-pill">Apex Arms<strong>{payload["counts"]["arms"]}</strong></div>
+      <div class="hero-card">
+        <div class="eyebrow">DIAMONDSIGNALS // SUBSURFACE BREAKOUT LEDGER</div>
+        <h1 class="hero-title">APEX EXTRACTION</h1>
+        <p class="hero-sub">
+          Physical shift first. Vision and discipline confirm it. Market latency makes it actionable.
+          This surface identifies MLB players whose underlying profile is moving before public pricing catches up.
+        </p>
       </div>
+
+      <aside class="summary-card">
+        <div>
+          <div class="summary-label">Mode</div>
+          <div class="summary-value">APEX</div>
+        </div>
+        <div>
+          <div class="summary-label">Candidates</div>
+          <div class="summary-value">{payload["counts"]["total"]}</div>
+        </div>
+        <div>
+          <div class="summary-label">Apex Bats</div>
+          <div class="summary-value">{payload["counts"]["bats"]}</div>
+        </div>
+        <div>
+          <div class="summary-label">Apex Arms</div>
+          <div class="summary-value">{payload["counts"]["arms"]}</div>
+        </div>
+        <div class="status-note">Cluster-gated extraction surface. Heat fades as conviction decays.</div>
+      </aside>
     </section>
 
-    <div class="section-title">&gt;_ APEX BATS // SUBSURFACE POWER OPTIMIZATION // GENERATED {generated}</div>
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">LATENT ALPHA</div>
+        <h2 class="section-heading">HITTER EXTRACTIONS</h2>
+      </div>
+      <div class="section-title">&gt;_ APEX BATS // GENERATED {generated}</div>
+    </div>
     <section class="cards">
       {bat_cards}
     </section>
 
-    <div class="section-title">&gt;_ APEX ARMS // PITCHING GEOMETRY + DECEPTION ARRAY</div>
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">APEX ARM ARRAY</div>
+        <h2 class="section-heading">PITCHER EXTRACTIONS</h2>
+      </div>
+      <div class="section-title">&gt;_ PITCHING GEOMETRY + DECEPTION ARRAY</div>
+    </div>
     <section class="cards">
       {arm_cards}
     </section>
-  </main>
+  </div>
 </body>
 </html>"""
 
