@@ -576,9 +576,11 @@ def render_html(payload: dict) -> str:
       --line: rgba(255, 255, 255, 0.16);
       --text: #f6fbff;
       --muted: #81909d;
-      --cyan: #ffffff;
-      --emerald: #ffffff;
-      --lime: #ffffff;
+      --cyan: #4ea3ff;
+      --emerald: #ccff00;
+      --lime: #ccff00;
+      --lime-hot: #ccff00;
+      --brand-blue: #4ea3ff;
       --danger: #ff7a1a;
       --mono: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
       --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -676,6 +678,257 @@ def render_html(payload: dict) -> str:
       font-size: 10px;
       color: var(--muted);
     }}
+
+
+
+    /* === APEX INSTITUTIONAL TOPBAR OVERRIDE === */
+    @keyframes dsApexLivePulse {{
+      0% {{
+        transform: scale(0.9);
+        opacity: 0.78;
+        box-shadow:
+          0 0 0 0 rgba(204,255,0,0.55),
+          0 0 10px rgba(204,255,0,0.50),
+          0 0 18px rgba(204,255,0,0.26);
+      }}
+
+      50% {{
+        transform: scale(1.22);
+        opacity: 1;
+        box-shadow:
+          0 0 0 10px rgba(204,255,0,0),
+          0 0 18px rgba(204,255,0,0.80),
+          0 0 30px rgba(204,255,0,0.38);
+      }}
+
+      100% {{
+        transform: scale(0.9);
+        opacity: 0.78;
+        box-shadow:
+          0 0 0 0 rgba(204,255,0,0),
+          0 0 10px rgba(204,255,0,0.50),
+          0 0 18px rgba(204,255,0,0.26);
+      }}
+    }}
+
+    .topbar {{
+      position: relative;
+      z-index: 40;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(204,255,0,0.10), transparent 24%),
+        radial-gradient(circle at 50% -10%, rgba(78,163,255,0.12), transparent 28%),
+        rgba(4,6,9,0.94);
+      backdrop-filter: blur(18px);
+    }}
+
+    .topbar-inner {{
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      min-height: 86px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 18px;
+    }}
+
+    .brand-lockup {{
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }}
+
+    .brand-pulse {{
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: #ccff00;
+      flex: 0 0 auto;
+      animation: dsApexLivePulse 1.15s ease-in-out infinite;
+    }}
+
+    .brand-copy {{
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }}
+
+    .brand-mark {{
+      font-family: var(--mono);
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #ffffff;
+      line-height: 1;
+    }}
+
+    .brand-mark span {{
+      color: #4ea3ff;
+      text-shadow: 0 0 14px rgba(78,163,255,0.22);
+    }}
+
+    .brand-sub {{
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+      color: #f4f7fb;
+      opacity: 0.98;
+    }}
+
+    .topbar-center {{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }}
+
+    .topbar .field-guide-pill {{
+      position: static;
+      inset: auto;
+      appearance: none;
+      border: 1px solid rgba(204,255,0,0.24);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015));
+      color: #f5f7fb;
+      border-radius: 999px;
+      padding: 15px 26px;
+      min-height: 56px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.04),
+        0 0 0 1px rgba(204,255,0,0.04),
+        0 0 18px rgba(204,255,0,0.06);
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    }}
+
+    .topbar .field-guide-pill:hover {{
+      transform: translateY(-1px);
+      border-color: rgba(204,255,0,0.42);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        0 0 22px rgba(204,255,0,0.14);
+    }}
+
+    .field-guide-icon {{
+      font-size: 15px;
+      color: #e8edf3;
+      opacity: 0.96;
+    }}
+
+    .livebox {{
+      justify-self: end;
+      text-align: right;
+    }}
+
+    .live-label {{
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      color: #ccff00;
+      text-transform: uppercase;
+    }}
+
+    .live-dot {{
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #ccff00;
+      display: inline-block;
+      animation: dsApexLivePulse 1.15s ease-in-out infinite;
+    }}
+
+    .live-time {{
+      margin-top: 6px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: #9aa5b5;
+      letter-spacing: 0.10em;
+    }}
+
+    .topnav {{
+      border-top: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      background:
+        linear-gradient(90deg, rgba(18,22,28,0.96), rgba(10,12,16,0.96));
+    }}
+
+    .topnav-link {{
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012));
+    }}
+
+    .topnav-link.active {{
+      color: var(--text);
+      border-color: rgba(204,255,0,0.34);
+      box-shadow:
+        0 0 0 1px rgba(204,255,0,0.07),
+        0 0 18px rgba(204,255,0,0.12);
+    }}
+
+    .topnav-tag {{
+      color: #ccff00;
+    }}
+
+    .search-strip {{
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background:
+        linear-gradient(90deg, rgba(20,24,30,0.94), rgba(12,15,19,0.94));
+    }}
+
+    .player-search-input {{
+      border: 1px solid rgba(204,255,0,0.24);
+      background: rgba(255,255,255,0.07);
+      box-shadow: 0 0 10px rgba(204,255,0,0.06);
+    }}
+
+    .player-search-input:focus {{
+      border-color: rgba(204,255,0,0.48);
+      background: rgba(255,255,255,0.09);
+      box-shadow:
+        0 0 0 3px rgba(204,255,0,0.10),
+        0 0 14px rgba(204,255,0,0.14);
+    }}
+
+    @media (max-width: 900px) {{
+      .topbar-inner {{
+        grid-template-columns: 1fr;
+        justify-items: start;
+        gap: 14px;
+        padding: 16px 0;
+      }}
+
+      .topbar-center {{
+        width: 100%;
+        justify-content: flex-start;
+      }}
+
+      .livebox {{
+        justify-self: start;
+        text-align: left;
+      }}
+
+      .topbar .field-guide-pill {{
+        min-height: 48px;
+        padding: 12px 18px;
+      }}
+    }}
+    /* === END APEX INSTITUTIONAL TOPBAR OVERRIDE === */
 
 
     .app {{
@@ -1385,13 +1638,161 @@ def render_html(payload: dict) -> str:
       }}
     }}
 
+
+    /* FINAL APEX HEADER NORMALIZATION */
+    .topbar {{
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 50 !important;
+      background: rgba(8, 8, 8, 0.90) !important;
+      backdrop-filter: blur(10px) !important;
+      border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    }}
+
+    .topbar-inner {{
+      width: min(1180px, calc(100% - 24px)) !important;
+      margin: 0 auto !important;
+      min-height: 62px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 12px !important;
+      padding: 12px 0 !important;
+    }}
+
+    .topbar .brand {{
+      display: flex !important;
+      align-items: center !important;
+      flex-direction: row !important;
+      gap: 10px !important;
+      min-width: 0 !important;
+    }}
+
+    .topbar .brand-mark {{
+      width: 14px !important;
+      height: 14px !important;
+      min-width: 14px !important;
+      min-height: 14px !important;
+      border-radius: 999px !important;
+      background: #ccff00 !important;
+      animation: dsLivePulse 1.15s ease-in-out infinite !important;
+      box-shadow: 0 0 0 0 rgba(204,255,0,0.55), 0 0 12px rgba(204,255,0,0.55), 0 0 22px rgba(204,255,0,0.28) !important;
+      flex: 0 0 auto !important;
+      font-size: 0 !important;
+      line-height: 0 !important;
+    }}
+
+    .topbar .brand-kicker {{
+      font-family: var(--mono) !important;
+      font-size: 10px !important;
+      line-height: 1 !important;
+      letter-spacing: 0.18em !important;
+      text-transform: uppercase !important;
+      font-weight: 800 !important;
+      margin-bottom: 4px !important;
+    }}
+
+    .topbar .brand-white {{ color: var(--text) !important; }}
+    .topbar .brand-blue {{ color: var(--brand-blue, #4ea3ff) !important; }}
+
+    .topbar .brand-title {{
+      font-family: var(--sans) !important;
+      font-size: 16px !important;
+      line-height: 1.05 !important;
+      letter-spacing: -0.02em !important;
+      font-weight: 800 !important;
+      color: var(--text) !important;
+      text-transform: none !important;
+    }}
+
+    .topbar .livebox {{
+      justify-self: auto !important;
+      text-align: right !important;
+    }}
+
+    .topbar .live-label {{
+      font-family: var(--mono) !important;
+      font-size: 11px !important;
+      letter-spacing: 0.14em !important;
+      text-transform: uppercase !important;
+      color: var(--soft, #8a95a3) !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }}
+
+    .topbar .live-dot {{
+      width: 14px !important;
+      height: 14px !important;
+      min-width: 14px !important;
+      min-height: 14px !important;
+      border-radius: 999px !important;
+      background: #ccff00 !important;
+      animation: dsLivePulse 1.15s ease-in-out infinite !important;
+      box-shadow: 0 0 0 0 rgba(204,255,0,0.55), 0 0 12px rgba(204,255,0,0.55), 0 0 22px rgba(204,255,0,0.28) !important;
+    }}
+
+    .topbar-center {{
+      display: none !important;
+    }}
+
+    .field-guide-pill {{
+      position: fixed !important;
+      right: 24px !important;
+      bottom: 24px !important;
+      z-index: 90 !important;
+    }}
+
+    @media (max-width: 640px) {{
+      .topbar-inner {{
+        width: min(100%, calc(100% - 16px)) !important;
+      }}
+
+      .topbar .brand-title {{
+        font-size: 14px !important;
+      }}
+
+      .field-guide-pill {{
+        right: 14px !important;
+        bottom: 14px !important;
+      }}
+    }}
+
+    /* FINAL APEX BRAND FONT NORMALIZATION */
+    .topbar .brand-kicker,
+    .topbar .brand-white,
+    .topbar .brand-blue {{
+      font-family: var(--sans) !important;
+      font-weight: 900 !important;
+      letter-spacing: .18em !important;
+      line-height: 1 !important;
+    }}
+
+    /* FINAL APEX FIELD GUIDE POSITION NORMALIZATION */
+    .field-guide-pill {
+      position: fixed !important;
+      right: max(22px, calc((100vw - 1180px) / 2 + 22px)) !important;
+      bottom: 22px !important;
+      z-index: 95 !important;
+    }
+
+    @media (max-width: 1280px) {
+      .field-guide-pill {
+        right: 22px !important;
+        bottom: 22px !important;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .field-guide-pill {
+        right: 14px !important;
+        bottom: 14px !important;
+      }
+    }
+
   </style>
 </head>
 <body>
-
-
-
-  <button class="field-guide-pill" type="button" data-open-field-guide>FIELD GUIDE</button>
   <div class="field-guide-backdrop" data-close-field-guide></div>
   <aside class="field-guide-drawer" aria-label="Apex Extraction Field Guide">
     <div class="field-guide-top">
@@ -1427,19 +1828,32 @@ def render_html(payload: dict) -> str:
       <p>Stages the player for roster surveillance. This is the action layer between signal discovery and roster execution.</p>
     </div>
   </aside>
-
   <div class="topbar">
     <div class="topbar-inner">
       <div class="brand">
-        <div class="brand-mark">DIAMOND<span>SIGNALS</span></div>
-        <div class="brand-sub">Signal Wall // Apex Extraction</div>
+        <div class="brand-mark"></div>
+        <div class="brand-text">
+          <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
+          <div class="brand-title">Apex Extraction // Institutional Edge</div>
+        </div>
       </div>
+
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
         <div class="live-time">{generated_label}</div>
       </div>
     </div>
   </div>
+
+  <button
+    class="field-guide-pill"
+    type="button"
+    data-open-field-guide
+    aria-label="Open Apex Extraction Field Guide"
+  >
+    <span class="field-guide-icon">ⓘ</span>
+    <span>Field Guide</span>
+  </button>
 
   {nav_html}
   {search_html}
