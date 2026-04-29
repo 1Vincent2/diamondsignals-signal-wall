@@ -1769,26 +1769,26 @@ def render_html(payload: dict) -> str:
     }}
 
     /* FINAL APEX FIELD GUIDE POSITION NORMALIZATION */
-    .field-guide-pill {
+    .field-guide-pill {{
       position: fixed !important;
       right: max(22px, calc((100vw - 1180px) / 2 + 22px)) !important;
       bottom: 22px !important;
       z-index: 95 !important;
-    }
+    }}
 
-    @media (max-width: 1280px) {
-      .field-guide-pill {
+    @media (max-width: 1280px) {{
+      .field-guide-pill {{
         right: 22px !important;
         bottom: 22px !important;
-      }
-    }
+      }}
+    }}
 
-    @media (max-width: 640px) {
-      .field-guide-pill {
+    @media (max-width: 640px) {{
+      .field-guide-pill {{
         right: 14px !important;
         bottom: 14px !important;
-      }
-    }
+      }}
+    }}
 
   </style>
 </head>
