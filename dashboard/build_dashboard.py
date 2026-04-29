@@ -1635,6 +1635,69 @@ HTML_TEMPLATE = Template(
       .player-search-avatar { width: 120px; height: 120px; }
     }
 
+    /* FINAL SIGNAL WALL FIELD GUIDE FLOAT NORMALIZATION */
+    .glossary-btn,
+    .guide-btn,
+    .field-guide-btn,
+    .field-guide-pill,
+    button[onclick*="Glossary"],
+    button[onclick*="glossary"],
+    button[onclick*="Guide"],
+    button[onclick*="guide"] {
+      position: fixed !important;
+      right: max(22px, calc((100vw - 1180px) / 2 + 22px)) !important;
+      bottom: 22px !important;
+      top: auto !important;
+      left: auto !important;
+      z-index: 95 !important;
+      border-radius: 999px !important;
+      padding: 12px 18px !important;
+      border: 1px solid rgba(204,255,0,.28) !important;
+      background: rgba(5,7,10,.88) !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 22px rgba(204,255,0,.10), inset 0 1px 0 rgba(255,255,255,.08) !important;
+      backdrop-filter: blur(14px) !important;
+      font-family: var(--mono, "JetBrains Mono", "Roboto Mono", monospace) !important;
+      font-size: 11px !important;
+      font-weight: 900 !important;
+      letter-spacing: .16em !important;
+      text-transform: uppercase !important;
+    }
+
+    .topbar-center,
+    .header-center,
+    .glossary-center {
+      display: none !important;
+    }
+
+    @media (max-width: 1280px) {
+      .glossary-btn,
+      .guide-btn,
+      .field-guide-btn,
+      .field-guide-pill,
+      button[onclick*="Glossary"],
+      button[onclick*="glossary"],
+      button[onclick*="Guide"],
+      button[onclick*="guide"] {
+        right: 22px !important;
+        bottom: 22px !important;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .glossary-btn,
+      .guide-btn,
+      .field-guide-btn,
+      .field-guide-pill,
+      button[onclick*="Glossary"],
+      button[onclick*="glossary"],
+      button[onclick*="Guide"],
+      button[onclick*="guide"] {
+        right: 14px !important;
+        bottom: 14px !important;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -1647,7 +1710,7 @@ HTML_TEMPLATE = Template(
           <div class="brand-title">Signal Wall // Institutional Elite</div>
         </div>
       </div>
-      <button class="info-trigger" type="button" onclick="openGlossary()" aria-label="Open glossary">ⓘ Glossary</button>
+      <button class="info-trigger" type="button" onclick="openGlossary()" aria-label="Open field guide">ⓘ Field Guide</button>
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
         <div class="live-time">{{ generated_at }}</div>
@@ -1663,9 +1726,9 @@ HTML_TEMPLATE = Template(
     <div class="glossary-head">
       <div>
         <div class="glossary-kicker">DiamondSignals Intelligence</div>
-        <h2 class="glossary-title">Glossary</h2>
+        <h2 class="glossary-title">Field Guide</h2>
       </div>
-      <button class="glossary-close" type="button" onclick="closeGlossary()" aria-label="Close glossary">×</button>
+      <button class="glossary-close" type="button" onclick="closeGlossary()" aria-label="Close field guide">×</button>
     </div>
     <div class="glossary-body">
       <section class="glossary-section">
