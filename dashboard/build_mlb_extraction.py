@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 import math
+import json
 import re
 
 import pandas as pd
@@ -12,6 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
 DIST_DIR = REPO_ROOT / "dist"
 HIDDEN_GEMS_DIR = DIST_DIR / "hidden-gems"
+HIDDEN_GEMS_JSON = HIDDEN_GEMS_DIR / "mlb_extraction_ledger.json"
 TEMPLATES_DIR = BASE_DIR / "templates"
 
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
@@ -2300,6 +2302,117 @@ HTML_TEMPLATE = Template(
 )
 
 
+
+def _json_clean_value(value):
+    try:
+        import pandas as pd
+        if pd.isna(value):
+            return None
+    except Exception:
+        pass
+
+    if hasattr(value, "item"):
+        try:
+            return value.item()
+        except Exception:
+            pass
+
+    return value
+
+
+def _json_records(df, kind: str) -> list[dict]:
+    if df is None or df.empty:
+        return []
+
+    records = []
+    for idx, row in df.head(12).reset_index(drop=True).iterrows():
+        raw = {k: _json_clean_value(v) for k, v in row.to_dict().items()}
+
+        player_id = str(raw.get("player_id") or raw.get("batter") or raw.get("pitcher") or "").strip()
+        name = str(raw.get("player_name") or raw.get("name") or "Player X").strip()
+        team = str(raw.get("display_team") or raw.get("team") or raw.get("display_org") or "MLB").strip()
+        score = raw.get("hidden_gems_score") or raw.get("edge_score") or raw.get("signal_score") or 0
+
+        try:
+            score_display = f"{float(score):.1f}".rstrip("0").rstrip(".")
+        except Exception:
+            score_display = str(score or "0")
+
+        metric_value = None
+        metric_label = "MARKET ATTENTION CONTEXT"
+
+        if kind == "pitcher":
+            if raw.get("recent_velo_delta") is not None:
+                metric_label = "PITCHING PHYSICS CONTEXT"
+                metric_value = f"{float(raw.get('recent_velo_delta')):+.1f} mph velocity delta"
+            elif raw.get("recent_whiff_rate") is not None:
+                metric_label = "PITCHING PHYSICS CONTEXT"
+                metric_value = f"{float(raw.get('recent_whiff_rate')):.1%} recent whiff rate"
+            elif raw.get("recent_fastball_velo") is not None:
+                metric_label = "PITCHING PHYSICS CONTEXT"
+                metric_value = f"{float(raw.get('recent_fastball_velo')):.1f} mph fastball"
+        else:
+            if raw.get("recent_ev_delta") is not None:
+                metric_label = "CONTACT QUALITY CONTEXT"
+                metric_value = f"{float(raw.get('recent_ev_delta')):+.1f} mph EV delta"
+            elif raw.get("recent_avg_ev") is not None:
+                metric_label = "CONTACT QUALITY CONTEXT"
+                metric_value = f"{float(raw.get('recent_avg_ev')):.1f} mph recent EV"
+            elif raw.get("recent_barrel_rate") is not None:
+                metric_label = "CONTACT QUALITY CONTEXT"
+                metric_value = f"{float(raw.get('recent_barrel_rate')):.1%} barrel rate"
+
+        if not metric_value:
+            metric_value = str(raw.get("trait_label") or raw.get("supporting_metric") or "Roster % lagging signal score")
+
+        records.append({
+            "rank": int(idx + 1),
+            "kind": kind,
+            "player_id": player_id,
+            "name": name,
+            "displayName": name.upper(),
+            "team": team,
+            "role": "SP" if kind == "pitcher" else "BAT",
+            "score": score_display,
+            "signal_id": f"DS-MLB-EXTRACTION-{player_id or idx + 1}",
+            "diagnosis": str(raw.get("verdict") or raw.get("pill_1") or "UNDERPRICED MLB ASSET").upper(),
+            "metric_label": metric_label,
+            "metric_value": metric_value,
+            "body_copy": str(raw.get("why_hidden") or "Standard fantasy market behavior is lagging. This profile shows stronger underlying support than the visible market has fully absorbed."),
+            "raw": raw,
+        })
+
+    return records
+
+
+def write_mlb_extraction_json(pitchers, hitters, generated_at: str, latest_week_start: str) -> None:
+    pitcher_records = _json_records(pitchers, "pitcher")
+    hitter_records = _json_records(hitters, "hitter")
+
+    top_signals = sorted(
+        pitcher_records + hitter_records,
+        key=lambda r: float(r.get("score") or 0),
+        reverse=True,
+    )[:12]
+
+    payload = {
+        "report": "MLB Extraction Ledger",
+        "subtitle": "Market Latency / Hidden Gems Surface",
+        "version": "mlb_extraction_ledger_v0.1",
+        "generated_at": generated_at,
+        "latest_week_start": latest_week_start,
+        "status": "real_data_v0.1",
+        "top_signals": top_signals,
+        "top_pitchers": pitcher_records,
+        "top_hitters": hitter_records,
+    }
+
+    HIDDEN_GEMS_JSON.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+
 def render_html() -> str:
     hitter_source, pitcher_source, source_window = load_hidden_gems_source_frame()
 
@@ -2324,8 +2437,11 @@ def render_html() -> str:
     pitchers = build_hidden_gems_pitchers_from_mlb(pitcher_source, pitcher_team_lookup)
     hitters = build_hidden_gems_hitters_from_mlb(hitter_source, hitter_team_lookup)
 
+    generated_at = datetime.now().strftime("%Y-%m-%d %I:%M %p")
+    write_mlb_extraction_json(pitchers, hitters, generated_at, source_window)
+
     return HTML_TEMPLATE.render(
-        generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
+        generated_at=generated_at,
         latest_week_start=source_window,
         timezone_label=TIMEZONE_LABEL,
         nav_html=Template(NAV_TEMPLATE).render(active_nav="hidden_gems"),
