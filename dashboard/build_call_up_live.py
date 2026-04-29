@@ -2958,6 +2958,35 @@ def render_html() -> str:
     )
     write_status_file(status_payload)
 
+    def safe_records(frame, limit=12):
+        if frame is None or frame.empty:
+            return []
+        safe = frame.head(limit).copy()
+        safe = safe.where(pd.notna(safe), None)
+        return safe.to_dict(orient="records")
+
+    promotion_payload = {
+        "report": "Promotion Watch",
+        "subtitle": "AAA Movement Zone / Call-Up Surveillance",
+        "version": "promotion_watch_v0.1",
+        "generated_at": datetime.now().strftime("%Y-%m-%d %I:%M %p"),
+        "timezone": TIMEZONE_LABEL,
+        "status": status_payload.get("state"),
+        "source_updated_at": source_updated_at,
+        "section_counts": sections,
+        "top_signals": {
+            "pitchers_72hr": safe_records(pitchers_72, 12),
+            "hitters_72hr": safe_records(hitters_72, 12),
+            "pitchers_14day": safe_records(pitchers_14, 12),
+            "hitters_14day": safe_records(hitters_14, 12),
+            "recent_arrivals": archive_arrivals[:16] if isinstance(archive_arrivals, list) else safe_records(archive_arrivals, 16),
+        },
+    }
+
+    promo_json_path = CALL_UP_DIR / "promotion_watch.json"
+    promo_json_path.write_text(json.dumps(promotion_payload, indent=2, default=str), encoding="utf-8")
+    print(f"Wrote {promo_json_path}")
+
     source_is_stale = status_payload["state"] in {"stale", "degraded"}
     pitchers_14_empty = len(pitchers_14) == 0
     hitters_14_empty = len(hitters_14) == 0
