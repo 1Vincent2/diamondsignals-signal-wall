@@ -218,6 +218,18 @@
         authUrl.searchParams.set("next", "/watchlist");
         authUrl.searchParams.set("add_player_id", playerId);
 
+        if (player.playerName) {
+          authUrl.searchParams.set("player_name", player.playerName);
+        }
+
+        if (player.team) {
+          authUrl.searchParams.set("player_team", player.team);
+        }
+
+        if (player.sourceTag) {
+          authUrl.searchParams.set("signal_source", player.sourceTag);
+        }
+
         window.location.href = authUrl.toString();
       });
     }
