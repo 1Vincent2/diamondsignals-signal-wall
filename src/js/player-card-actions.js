@@ -239,6 +239,12 @@
 
   function initPlayerCardActions() {
     const cards = Array.from(document.querySelectorAll(CARD_SELECTOR));
+
+    Array.from(document.querySelectorAll(WATCH_BUTTON_SELECTOR)).forEach((button) => {
+      const card = button.closest(CARD_SELECTOR) || button.closest("article") || button.parentElement;
+      if (card && !cards.includes(card)) cards.push(card);
+    });
+
     cards.forEach(bindCard);
     syncCardProvisionStates();
   }
