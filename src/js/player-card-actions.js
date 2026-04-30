@@ -143,13 +143,15 @@
     window.location.href = profileUrl;
   }
 
-  function getPlayerFromCard(card) {
+  function getPlayerFromCard(card, button) {
+    const source = button || card;
+
     const base = {
-      playerId: card.getAttribute("data-player-id") || "",
-      playerName: card.getAttribute("data-player-name") || "",
-      playerType: card.getAttribute("data-player-type") || "",
-      team: card.getAttribute("data-player-team") || "",
-      profileUrl: card.getAttribute("data-profile-url") || "",
+      playerId: source.getAttribute("data-player-id") || card.getAttribute("data-player-id") || "",
+      playerName: source.getAttribute("data-player-name") || card.getAttribute("data-player-name") || "",
+      playerType: source.getAttribute("data-player-type") || card.getAttribute("data-player-type") || card.getAttribute("data-player-role") || "",
+      team: source.getAttribute("data-player-team") || card.getAttribute("data-player-team") || "",
+      profileUrl: source.getAttribute("data-profile-url") || card.getAttribute("data-profile-url") || "",
     };
 
     return {
@@ -163,7 +165,7 @@
     cards.forEach((card) => {
       const watchButton = card.querySelector(WATCH_BUTTON_SELECTOR);
       if (!watchButton) return;
-      const player = getPlayerFromCard(card);
+      const player = getPlayerFromCard(card, watchButton);
       applyProvisionedState(watchButton, isPlayerProvisioned(player));
     });
   }
@@ -195,7 +197,7 @@
 
     const watchButton = card.querySelector(WATCH_BUTTON_SELECTOR);
     if (watchButton) {
-      const initialPlayer = getPlayerFromCard(card);
+      const initialPlayer = getPlayerFromCard(card, watchButton);
       applyProvisionedState(watchButton, isPlayerProvisioned(initialPlayer));
 
       watchButton.addEventListener("click", function (event) {
@@ -206,7 +208,7 @@
           return;
         }
 
-        const player = getPlayerFromCard(card);
+        const player = getPlayerFromCard(card, watchButton);
         const playerId = String(player.playerId || "").trim();
 
         if (!playerId) {
