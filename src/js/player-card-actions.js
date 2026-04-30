@@ -83,12 +83,12 @@
 
   function getDefaultProvisionLabel(button) {
     const explicit = (button?.getAttribute("data-default-label") || "").trim();
-    return explicit || "PROVISION";
+    return explicit || "INITIATE TRACKING";
   }
 
   function applyProvisionedState(button, isProvisioned) {
     if (!button) return;
-    button.textContent = isProvisioned ? "PROVISIONED" : getDefaultProvisionLabel(button);
+    button.textContent = isProvisioned ? "TRACKING ACTIVE" : getDefaultProvisionLabel(button);
     button.setAttribute("data-provisioned", isProvisioned ? "true" : "false");
     button.classList.toggle("is-provisioned", !!isProvisioned);
     button.setAttribute("aria-pressed", isProvisioned ? "true" : "false");
@@ -210,12 +210,12 @@
         const playerId = String(player.playerId || "").trim();
 
         if (!playerId) {
-          showToast(`Unable to provision ${player.playerName || "player"}: missing player id`);
+          showToast(`Unable to initiate tracking for ${player.playerName || "player"}: missing player id`);
           return;
         }
 
         const authUrl = new URL("https://app.diamondsignals.ai/auth");
-        authUrl.searchParams.set("next", "/watch-list");
+        authUrl.searchParams.set("next", "/watchlist");
         authUrl.searchParams.set("add_player_id", playerId);
 
         window.location.href = authUrl.toString();
@@ -251,7 +251,7 @@
     }
   });
 
-  window.DiamondSignalsWatchList = {
+  window.DiamondSignalsTrackingRadar = {
     getWatchList,
     setWatchList,
     syncProvisionUI,
