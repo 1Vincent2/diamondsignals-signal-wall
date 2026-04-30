@@ -1222,7 +1222,7 @@ HTML_TEMPLATE = Template(
                 <div class="score-value {{ row.score_class }}">{{ row.disruption_score_label }}</div>
               </div>
               <div class="action-row">
-                <button type="button" class="alert-pill js-add-to-roster">PROVISION TO WATCHLIST</button>
+                <button type="button" class="alert-pill js-add-to-roster">INITIATE TRACKING</button>
               </div>
             </div>
           </div>

@@ -2190,7 +2190,7 @@ HTML_TEMPLATE = Template(
               <div class="audit-action movement-action">
                 <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
                   <span class="movement-route">FROM {{ row.from_code }} → TO {{ row.to_code }}</span>
-                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_WATCH_LIST</button>
+                  <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
                 </div>
               </div>
             </article>

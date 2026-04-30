@@ -1713,7 +1713,7 @@ HTML_TEMPLATE = Template(
       }
 
       .pill-row-tight::after {
-        content: "PROVISION TO WATCHLIST";
+        content: "INITIATE TRACKING";
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -2009,7 +2009,7 @@ HTML_TEMPLATE = Template(
                   <div class="score-label">Extraction Score</div>
                   <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
                 </div>
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION TO WATCHLIST</button>
+                <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
               </div>
             </div>
           </div>
@@ -2122,7 +2122,7 @@ HTML_TEMPLATE = Template(
                   <div class="score-label">Extraction Score</div>
                   <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
                 </div>
-                <button type="button" class="provision-btn js-add-to-roster">PROVISION TO WATCHLIST</button>
+                <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
               </div>
             </div>
           </div>

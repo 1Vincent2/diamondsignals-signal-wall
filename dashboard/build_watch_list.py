@@ -17,7 +17,7 @@ HTML_TEMPLATE = Template(
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DiamondSignals // Watch List</title>
+  <title>DiamondSignals // Tracking Radar</title>
   <style>
 {{ shell_styles | safe }}
 
@@ -196,9 +196,9 @@ HTML_TEMPLATE = Template(
     <section class="hero">
       <div class="hero-card">
         <div class="eyebrow">Roster Intelligence // Staging Layer</div>
-        <h1 class="hero-title">My Watch List</h1>
+        <h1 class="hero-title">Tracking Radar</h1>
         <p class="hero-sub">
-          Central surveillance queue for players provisioned from Promotion Watch, Signal Wall, and future report surfaces.
+          Central surveillance queue for players tracked from Promotion Watch, Signal Wall, and future report surfaces.
           This page is the staging layer before players are assigned into one or more rosters inside the Roster Terminal.
         </p>
       </div>
@@ -218,14 +218,14 @@ HTML_TEMPLATE = Template(
     <section class="panel">
       <div class="panel-head">
         <div>
-          <div class="panel-kicker">Watch Queue</div>
-          <h2 class="panel-title">Provisioned Players</h2>
+          <div class="panel-kicker">Tracking Queue</div>
+          <h2 class="panel-title">Tracked Players</h2>
         </div>
         <div class="panel-badge" id="watchlist-status">Awaiting Local Data</div>
       </div>
 
       <div id="watchlist-root" class="placeholder">
-        No players loaded yet. Provision players from Promotion Watch or Signal Wall, then return here.
+        No players loaded yet. Initiate tracking on players from Promotion Watch or Signal Wall, then return here.
       </div>
     </section>
 
@@ -282,7 +282,7 @@ HTML_TEMPLATE = Template(
 
         if (!rows.length) {
           root.className = "placeholder";
-          root.innerHTML = "No players loaded yet. Provision players from Promotion Watch or Signal Wall, then return here.";
+          root.innerHTML = "No players loaded yet. Initiate tracking on players from Promotion Watch or Signal Wall, then return here.";
           return;
         }
 

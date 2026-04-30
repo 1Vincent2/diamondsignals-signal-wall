@@ -682,7 +682,7 @@ HTML_TEMPLATE = Template(
             </div>
 
             <div class="heat-action-row">
-              <button type="button" class="heat-provision-btn js-add-to-roster">PROVISION TO WATCHLIST</button>
+              <button type="button" class="heat-provision-btn js-add-to-roster">INITIATE TRACKING</button>
             </div>
 
             <div class="heat-values">

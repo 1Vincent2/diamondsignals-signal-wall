@@ -2039,7 +2039,7 @@ HTML_TEMPLATE = Template(
                 </div>
 
                 <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
+                  <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
                 </div>
               </article>
               {% endfor %}
@@ -2101,7 +2101,7 @@ HTML_TEMPLATE = Template(
                 </div>
 
                 <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
+                  <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
                 </div>
               </article>
               {% endfor %}
@@ -2168,7 +2168,7 @@ HTML_TEMPLATE = Template(
                 </div>
 
                 <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
+                  <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
                 </div>
               </article>
               {% endfor %}
@@ -2234,7 +2234,7 @@ HTML_TEMPLATE = Template(
                 </div>
 
                 <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">PROVISION_TO_ROSTER</button>
+                  <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
                 </div>
               </article>
               {% endfor %}

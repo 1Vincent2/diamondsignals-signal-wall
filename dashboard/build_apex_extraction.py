@@ -542,7 +542,7 @@ def render_signal_card(row: dict) -> str:
         </div>
 
         <button type="button" class="provision-btn js-add-to-roster" data-player-id="{row.get("player_id", "")}" data-player-name="{row.get("name", "")}">
-          PROVISION TO WATCHLIST
+          INITIATE TRACKING
         </button>
       </article>
     """
