@@ -658,7 +658,14 @@ HTML_TEMPLATE = Template(
 
         <div class="heat-grid">
           {% for row in heat_cards %}
-          <article class="heat-card {{ row.heat_class }}">
+          <article
+            class="heat-card {{ row.heat_class }}"
+            data-player-id="ivb-{{ row.player_name|replace(' ', '-')|replace(',', '')|lower }}-{{ row.team|lower }}"
+            data-player-name="{{ row.player_name }}"
+            data-player-team="{{ row.team }}"
+            data-player-role="PITCHER"
+            data-source-tag="IVB_HEAT_MAP"
+          >
             <div class="heat-rank">#{{ loop.index }} // {{ row.band_label }}</div>
             <h3 class="heat-name">{{ row.player_name }}</h3>
             <div class="heat-meta">{{ row.team }} {% if row.velocity_bucket %}// {{ row.velocity_bucket }}{% endif %}</div>
@@ -682,7 +689,15 @@ HTML_TEMPLATE = Template(
             </div>
 
             <div class="heat-action-row">
-              <button type="button" class="heat-provision-btn js-add-to-roster">INITIATE TRACKING</button>
+              <button
+                type="button"
+                class="heat-provision-btn js-add-to-roster"
+                data-player-id="ivb-{{ row.player_name|replace(' ', '-')|replace(',', '')|lower }}-{{ row.team|lower }}"
+                data-player-name="{{ row.player_name }}"
+                data-player-team="{{ row.team }}"
+                data-player-type="pitcher"
+                data-source-tag="IVB_HEAT_MAP"
+              >INITIATE TRACKING</button>
             </div>
 
             <div class="heat-values">
