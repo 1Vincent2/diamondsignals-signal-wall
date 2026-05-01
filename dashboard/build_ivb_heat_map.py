@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import hashlib
 from datetime import datetime, timedelta
 import json
 import math
@@ -660,7 +661,7 @@ HTML_TEMPLATE = Template(
           {% for row in heat_cards %}
           <article
             class="heat-card {{ row.heat_class }}"
-            data-player-id="ivb-{{ row.player_name|replace(' ', '-')|replace(',', '')|lower }}-{{ row.team|lower }}"
+            data-player-id="{{ row.synthetic_player_id }}"
             data-player-name="{{ row.player_name }}"
             data-player-team="{{ row.team }}"
             data-player-role="PITCHER"
@@ -692,7 +693,7 @@ HTML_TEMPLATE = Template(
               <button
                 type="button"
                 class="heat-provision-btn js-add-to-roster"
-                data-player-id="ivb-{{ row.player_name|replace(' ', '-')|replace(',', '')|lower }}-{{ row.team|lower }}"
+                data-player-id="{{ row.synthetic_player_id }}"
                 data-player-name="{{ row.player_name }}"
                 data-player-team="{{ row.team }}"
                 data-player-type="pitcher"
@@ -1574,6 +1575,11 @@ def write_ivb_heat_map() -> None:
 
     latest_lab_rows = fetch_latest_lab_rows(end_date)
     heat_cards = lab_rows_to_cards(latest_lab_rows) if latest_lab_rows else to_cards(grouped, climber_ids)
+
+    for row in heat_cards:
+        key = f"{row.get('player_name', '')}|{row.get('team', '')}".lower()
+        digest = hashlib.sha1(key.encode("utf-8")).hexdigest()
+        row["synthetic_player_id"] = 900000000 + (int(digest[:8], 16) % 999999)
 
     if not climbers:
         climbers = [
