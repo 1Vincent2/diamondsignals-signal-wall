@@ -541,7 +541,14 @@ def render_signal_card(row: dict) -> str:
           <strong>{action}</strong>
         </div>
 
-        <button type="button" class="provision-btn js-add-to-roster" data-player-id="{row.get("player_id", "")}" data-player-name="{row.get("name", "")}">
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="{row.get("player_id", "")}"
+          data-player-name="{row.get("name", "")}"
+          data-player-team="{row.get("team", "MLB")}"
+          data-source-tag="APEX_EXTRACTION"
+        >
           INITIATE TRACKING
         </button>
       </article>
