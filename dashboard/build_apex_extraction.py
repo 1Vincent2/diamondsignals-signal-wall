@@ -1922,6 +1922,7 @@ def render_html(payload: dict) -> str:
 
 
   <script src="/player-search.js"></script>
+  <script src="/player-card-actions.js"></script>
   <script>
     (function () {{
       const params = new URLSearchParams(window.location.search);
