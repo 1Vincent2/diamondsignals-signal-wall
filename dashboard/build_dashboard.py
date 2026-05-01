@@ -2020,7 +2020,7 @@ def scout_shell_html() -> str:
         <div class="brand-mark"></div>
         <div class="brand-text">
           <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
-          <div class="brand-title">Scout Terminal // Player Dossier</div>
+          <div class="brand-title">Scout Terminal // Performance Audit</div>
         </div>
       </div>
       <div class="header-actions">
@@ -2035,7 +2035,7 @@ def scout_shell_html() -> str:
   <div class="app">
         <section class="hero-card">
       <div class="eyebrow">Scout Terminal</div>
-      <h1 class="hero-title">Player Dossier Reference</h1>
+      <h1 class="hero-title">Performance Audit</h1>
       <p class="hero-copy">
         DiamondSignals scout shell v2. This page hydrates dossiers from the canonical dossier JSON payload.
       </p>
