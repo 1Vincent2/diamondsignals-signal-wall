@@ -992,8 +992,9 @@
 
       function setGalleryAccess(email) {
         try {
-          document.cookie = "ds_captured=1; Domain=diamondsignals.ai; Path=/; Max-Age=2592000; Secure; SameSite=Lax";
-          document.cookie = "ds_captured_email=" + encodeURIComponent(email || '') + "; Domain=diamondsignals.ai; Path=/; Max-Age=2592000; Secure; SameSite=Lax";
+          document.cookie = "ds_founding_access=1; Domain=.diamondsignals.ai; Path=/; Max-Age=31536000; Secure; SameSite=Lax";
+          document.cookie = "ds_founding_access_email=" + encodeURIComponent(email || '') + "; Domain=.diamondsignals.ai; Path=/; Max-Age=31536000; Secure; SameSite=Lax";
+          document.cookie = "ds_captured=1; Domain=.diamondsignals.ai; Path=/; Max-Age=31536000; Secure; SameSite=Lax";
         } catch (err) {
           console.error('Could not set captured-session cookie', err);
         }
@@ -1007,7 +1008,7 @@
       }
 
       function hasGalleryAccess() {
-        var cookieAccess = readCookie('ds_captured') === '1';
+        var cookieAccess = readCookie('ds_founding_access') === '1' || readCookie('ds_captured') === '1';
         var localAccess = false;
 
         try {
@@ -1056,7 +1057,7 @@
 
         setGalleryAccess(email);
 
-        fetch('/.netlify/functions/front-door-capture', {
+        fetch('https://diamondsignals.ai/.netlify/functions/system-capture-lead', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
