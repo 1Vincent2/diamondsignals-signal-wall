@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 import json
 import re
+import unicodedata
 from pathlib import Path
 from datetime import datetime, timezone
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
 OUT = DIST / "admin" / "player_signal_index.json"
+AUDIT_OUT = DIST / "admin" / "signal_identity_audit.json"
+CATALOG_OVERLAY_OUT = DIST / "admin" / "player_catalog_overlay.json"
+PLAYER_INDEX = DIST / "player_index.json"
 
 SOURCES = [
     {
@@ -59,6 +63,35 @@ ID_FIELDS = ["player_id", "mlbam_id", "synthetic_player_id", "id"]
 TEAM_FIELDS = ["team", "org", "organization", "mlb_team"]
 POSITION_FIELDS = ["position", "role", "pos"]
 
+# Manual identity resolver for Promotion Watch / minor-league residue.
+# These are not replacing the canonical universe; they only fill gaps when player_index.json
+# cannot resolve a signal row by MLBAM id or normalized name.
+MANUAL_PLAYER_RESOLVER = {
+    "allan winans": {"team": "NYY", "position": "P"},
+    "blaine crim": {"team": "TEX", "position": "1B"},
+    "blas castano": {"team": "UNK", "position": "P"},
+    "brendan beck": {"team": "NYY", "position": "P"},
+    "brennen davis": {"team": "SEA", "position": "OF"},
+    "brett harris": {"team": "UNK", "position": "INF"},
+    "cameron cauley": {"team": "TEX", "position": "INF"},
+    "carlos lagrange": {"team": "NYY", "position": "P"},
+    "carlos perez": {"team": "CHC", "position": "C"},
+    "cj alexander": {"team": "HOU", "position": "INF"},
+    "elieser hernandez": {"team": "ATL", "position": "P"},
+    "isaac coffey": {"team": "BOS", "position": "P"},
+    "jhostynxon garcia": {"team": "BOS", "position": "OF"},
+    "jonah tong": {"team": "NYM", "position": "P"},
+    "lucas braun": {"team": "ATL", "position": "P"},
+    "miguel andujar": {"team": "UNK", "position": "OF"},
+    "nick morabito": {"team": "NYM", "position": "OF"},
+    "nick sogard": {"team": "BOS", "position": "INF"},
+    "pedro ramirez": {"team": "CHC", "position": "INF"},
+    "sawyer gipson long": {"team": "DET", "position": "P"},
+    "spencer packard": {"team": "SEA", "position": "OF"},
+    "sung mun song": {"team": "UNK", "position": "INF"},
+    "william fleming": {"team": "SEA", "position": "P"},
+}
+
 def norm_name(value):
     value = str(value or "").strip()
     value = re.sub(r"\s+", " ", value)
@@ -69,7 +102,9 @@ def norm_name(value):
     return value
 
 def search_key(name):
-    return re.sub(r"[^a-z0-9]+", " ", (name or "").lower()).strip()
+    value = unicodedata.normalize("NFKD", str(name or ""))
+    value = "".join(ch for ch in value if not unicodedata.combining(ch))
+    return re.sub(r"[^a-z0-9]+", " ", value.lower()).strip()
 
 def first(item, fields):
     for f in fields:
@@ -77,6 +112,160 @@ def first(item, fields):
         if v not in (None, ""):
             return v
     return None
+
+
+
+
+# Final resolver normalization overrides.
+MANUAL_PLAYER_RESOLVER.update({
+    "blas castano": {"team": "UNK", "position": "P"},
+    "carlos perez": {"team": "CHC", "position": "C"},
+    "elieser hernandez": {"team": "ATL", "position": "P"},
+    "miguel andujar": {"team": "UNK", "position": "OF"},
+    "pedro ramirez": {"team": "CHC", "position": "INF"},
+})
+
+def as_int_or_none(value):
+    try:
+        if value in (None, ""):
+            return None
+        return int(str(value).strip())
+    except Exception:
+        return None
+
+
+def load_player_universe():
+    data = load_json(PLAYER_INDEX)
+    players = data.get("players", []) if isinstance(data, dict) else []
+    by_id = {}
+    by_name = {}
+
+    for row in players:
+        if not isinstance(row, dict):
+            continue
+
+        pid = as_int_or_none(row.get("player_id"))
+        name = norm_name(row.get("full_name") or row.get("player_name") or row.get("name"))
+
+        normalized = {
+            "player_id": pid,
+            "player_name": name,
+            "team": row.get("team") or row.get("team_name"),
+            "position": row.get("position"),
+            "bats": row.get("bats"),
+            "throws": row.get("throws"),
+            "headshot_url": row.get("headshot_url"),
+            "status": row.get("status"),
+        }
+
+        if pid is not None:
+            by_id[pid] = normalized
+
+        if name:
+            by_name[search_key(name)] = normalized
+
+    return by_id, by_name
+
+
+def enrich_from_universe(rec, universe_by_id, universe_by_name):
+    pid = as_int_or_none(rec.get("player_id"))
+    source = None
+
+    if pid is not None and pid in universe_by_id:
+        source = universe_by_id[pid]
+    else:
+        source = universe_by_name.get(search_key(rec.get("player_name")))
+
+    if source:
+        rec["player_id"] = rec.get("player_id") or source.get("player_id")
+        rec["team"] = rec.get("team") or source.get("team")
+        rec["position"] = rec.get("position") or source.get("position")
+        rec["headshot_url"] = rec.get("headshot_url") or source.get("headshot_url")
+        rec["bats"] = rec.get("bats") or source.get("bats")
+        rec["throws"] = rec.get("throws") or source.get("throws")
+        rec["universe_match"] = True
+
+    manual = MANUAL_PLAYER_RESOLVER.get(search_key(rec.get("player_name")))
+    if manual:
+        rec["team"] = rec.get("team") or manual.get("team")
+        rec["position"] = rec.get("position") or manual.get("position")
+        rec["manual_identity_resolver"] = True
+
+    return rec
+
+
+def build_catalog_overlay(players):
+    overlay = []
+
+    for p in players:
+        pid = as_int_or_none(p.get("player_id"))
+        if pid is None:
+            continue
+
+        reports = p.get("reports_triggered") or []
+        primary_report = reports[0] if reports else "SIGNAL OVERLAY"
+
+        overlay.append({
+            "id": pid,
+            "name": p.get("player_name"),
+            "org": p.get("team") or "UNK",
+            "role": p.get("position") or "UNK",
+            "signal": primary_report,
+            "note": "Backfilled from DiamondSignals active signal overlay.",
+            "signal_tier": "ACTIVE_SIGNAL",
+            "decision_bias": "MONITOR",
+            "risk": "Unknown",
+            "trend": "Active",
+        })
+
+    return sorted(overlay, key=lambda r: str(r.get("name") or "").lower())
+
+
+def build_identity_audit(players, source_count):
+    missing_id = []
+    missing_team = []
+    missing_position = []
+    duplicate_ids = {}
+    seen_ids = {}
+
+    for p in players:
+        pid = as_int_or_none(p.get("player_id"))
+        slim = {
+            "player_id": p.get("player_id"),
+            "player_name": p.get("player_name"),
+            "team": p.get("team"),
+            "position": p.get("position"),
+            "reports_triggered": p.get("reports_triggered", []),
+        }
+
+        if pid is None:
+            missing_id.append(slim)
+        else:
+            seen_ids.setdefault(str(pid), []).append(slim)
+
+        if not p.get("team"):
+            missing_team.append(slim)
+
+        if not p.get("position"):
+            missing_position.append(slim)
+
+    for pid, rows in seen_ids.items():
+        if len(rows) > 1:
+            duplicate_ids[pid] = rows
+
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "source_count": source_count,
+        "players_indexed": len(players),
+        "missing_player_id_count": len(missing_id),
+        "missing_team_count": len(missing_team),
+        "missing_position_count": len(missing_position),
+        "duplicate_id_count": len(duplicate_ids),
+        "missing_player_id": missing_id,
+        "missing_team": missing_team,
+        "missing_position": missing_position,
+        "duplicate_ids": duplicate_ids,
+    }
 
 def pick_metrics(item):
     keep = {}
@@ -175,19 +364,43 @@ def main():
                     for item in rows:
                         add_record(index, item, source, section=section, generated_at=generated_at)
 
-    players = sorted(index.values(), key=lambda r: r["player_name"].lower())
+    universe_by_id, universe_by_name = load_player_universe()
+
+    players = [
+        enrich_from_universe(rec, universe_by_id, universe_by_name)
+        for rec in index.values()
+    ]
+    players = sorted(players, key=lambda r: r["player_name"].lower())
+
+    source_count = len(SOURCES) + 1
 
     payload = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "player_count": len(players),
-        "source_count": len(SOURCES) + 1,
+        "source_count": source_count,
         "players": players,
     }
 
+    catalog_overlay = {
+        "generated_at": payload["generated_at"],
+        "player_count": len(build_catalog_overlay(players)),
+        "players": build_catalog_overlay(players),
+    }
+
+    audit = build_identity_audit(players, source_count)
+
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+    CATALOG_OVERLAY_OUT.write_text(json.dumps(catalog_overlay, indent=2, ensure_ascii=False), encoding="utf-8")
+    AUDIT_OUT.write_text(json.dumps(audit, indent=2, ensure_ascii=False), encoding="utf-8")
+
     print(f"Wrote {OUT.relative_to(ROOT)}")
+    print(f"Wrote {CATALOG_OVERLAY_OUT.relative_to(ROOT)}")
+    print(f"Wrote {AUDIT_OUT.relative_to(ROOT)}")
     print(f"Players indexed: {len(players)}")
+    print(f"Missing IDs after universe enrichment: {audit['missing_player_id_count']}")
+    print(f"Missing teams after universe enrichment: {audit['missing_team_count']}")
+    print(f"Missing positions after universe enrichment: {audit['missing_position_count']}")
 
 if __name__ == "__main__":
     main()
