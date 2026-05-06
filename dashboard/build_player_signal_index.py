@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import requests
 import re
 import unicodedata
 from pathlib import Path
@@ -112,6 +113,153 @@ def first(item, fields):
         if v not in (None, ""):
             return v
     return None
+
+CURRENT_SEASON = datetime.now(timezone.utc).year
+MLB_STATS_CACHE = {}
+
+def safe_div(numerator, denominator):
+    try:
+        numerator = float(numerator or 0)
+        denominator = float(denominator or 0)
+        if denominator == 0:
+            return None
+        return numerator / denominator
+    except Exception:
+        return None
+
+def fmt_pct(value):
+    if value is None:
+        return None
+    return f"{value * 100:.1f}%"
+
+def fmt_ratio(value):
+    if value is None:
+        return None
+    return f"{value:.2f}"
+
+def fetch_mlb_season_stat(player_id, group):
+    pid = as_int_or_none(player_id)
+    if pid is None:
+        return None
+
+    cache_key = (pid, group, CURRENT_SEASON)
+    if cache_key in MLB_STATS_CACHE:
+        return MLB_STATS_CACHE[cache_key]
+
+    url = f"https://statsapi.mlb.com/api/v1/people/{pid}/stats"
+    params = {
+        "stats": "season",
+        "group": group,
+        "season": CURRENT_SEASON,
+    }
+
+    try:
+        response = requests.get(url, params=params, timeout=12)
+        response.raise_for_status()
+        data = response.json()
+        splits = (((data.get("stats") or [{}])[0]).get("splits") or [])
+        stat = (splits[0].get("stat") if splits else None) or {}
+    except Exception as exc:
+        print(f"DISCIPLINE_ENRICH_MISS player_id={pid} group={group}: {exc}")
+        stat = None
+
+    MLB_STATS_CACHE[cache_key] = stat
+    return stat
+
+def infer_stat_group(player):
+    position = str(player.get("position") or "").upper()
+    reports = set(player.get("reports_triggered") or [])
+    signal_text = json.dumps(player.get("signals") or [], default=str).lower()
+
+    pitcher_positions = {"P", "SP", "RP", "LHP", "RHP", "PITCHER"}
+    hitter_positions = {"BAT", "B", "H", "C", "1B", "2B", "3B", "SS", "OF", "LF", "CF", "RF", "DH", "INF", "UTIL"}
+
+    if position in pitcher_positions:
+        return "pitching"
+
+    if position in hitter_positions:
+        return "hitting"
+
+    if any(report in reports for report in ["Velocity Decay", "Stuff+ Disruption", "IVB Heat Map"]):
+        return "pitching"
+
+    if any(term in signal_text for term in ["pitch", "velo", "ivb", "vaa", "whiff", "arsenal", "stuff"]):
+        return "pitching"
+
+    return "hitting"
+
+def discipline_context_for_player(player):
+    pid = player.get("player_id")
+    group = infer_stat_group(player)
+
+    stat = fetch_mlb_season_stat(pid, group)
+
+    # Fallback: if inferred side has no season stats, try the other side.
+    if not stat:
+        fallback_group = "hitting" if group == "pitching" else "pitching"
+        stat = fetch_mlb_season_stat(pid, fallback_group)
+        if stat:
+            group = fallback_group
+
+    if not stat:
+        return {}
+
+    is_pitcher = group == "pitching"
+
+    strikeouts = stat.get("strikeOuts")
+    walks = stat.get("baseOnBalls")
+    babip = stat.get("babip")
+
+    if is_pitcher:
+        batters_faced = stat.get("battersFaced")
+        k_pct = safe_div(strikeouts, batters_faced)
+        bb_pct = safe_div(walks, batters_faced)
+        k_bb = safe_div(strikeouts, walks)
+
+        return {
+            "season_context": "COMMAND_PROFILE",
+            "season": CURRENT_SEASON,
+            "k_pct": fmt_pct(k_pct),
+            "bb_pct": fmt_pct(bb_pct),
+            "k_bb_ratio": fmt_ratio(k_bb),
+            "babip": babip,
+            "batters_faced": batters_faced,
+            "strikeouts": strikeouts,
+            "walks": walks,
+        }
+
+    plate_appearances = stat.get("plateAppearances")
+    k_pct = safe_div(strikeouts, plate_appearances)
+    bb_pct = safe_div(walks, plate_appearances)
+    bb_k = safe_div(walks, strikeouts)
+
+    return {
+        "season_context": "PLATE_DISCIPLINE",
+        "season": CURRENT_SEASON,
+        "bb_pct": fmt_pct(bb_pct),
+        "k_pct": fmt_pct(k_pct),
+        "bb_k_ratio": fmt_ratio(bb_k),
+        "babip": babip,
+        "plate_appearances": plate_appearances,
+        "strikeouts": strikeouts,
+        "walks": walks,
+    }
+
+def apply_discipline_context(players):
+    for player in players:
+        context = discipline_context_for_player(player)
+        if not context:
+            continue
+
+        player["season_context"] = context
+
+        for signal in player.get("signals") or []:
+            metrics = signal.setdefault("metrics", {})
+            for key, value in context.items():
+                if value not in (None, "") and key not in metrics:
+                    metrics[key] = value
+
+    return players
 
 
 
@@ -370,6 +518,7 @@ def main():
         enrich_from_universe(rec, universe_by_id, universe_by_name)
         for rec in index.values()
     ]
+    players = apply_discipline_context(players)
     players = sorted(players, key=lambda r: r["player_name"].lower())
 
     source_count = len(SOURCES) + 1
