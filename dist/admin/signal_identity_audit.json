@@ -1,0 +1,203 @@
+{
+  "generated_at": "2026-05-06T19:58:15.180158+00:00",
+  "source_count": 7,
+  "players_indexed": 126,
+  "missing_player_id_count": 21,
+  "missing_team_count": 0,
+  "missing_position_count": 0,
+  "duplicate_id_count": 0,
+  "missing_player_id": [
+    {
+      "player_id": null,
+      "player_name": "Allan Winans",
+      "team": "New York Yankees",
+      "position": "P",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Blaine Crim",
+      "team": "Texas Rangers",
+      "position": "1B",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Blas Castaño",
+      "team": "UNK",
+      "position": "P",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Brendan Beck",
+      "team": "New York Yankees",
+      "position": "P",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Brennen Davis",
+      "team": "Seattle Mariners",
+      "position": "OF",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Cameron Cauley",
+      "team": "Texas Rangers",
+      "position": "INF",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Carlos Lagrange",
+      "team": "New York Yankees",
+      "position": "P",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Carlos Pérez",
+      "team": "Chicago Cubs",
+      "position": "C",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Cj Alexander",
+      "team": "Houston Astros",
+      "position": "INF",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Elieser Hernández",
+      "team": "Atlanta Braves",
+      "position": "P",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Isaac Coffey",
+      "team": "Boston Red Sox",
+      "position": "P",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Jhostynxon Garcia",
+      "team": "Boston Red Sox",
+      "position": "OF",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Jonah Tong",
+      "team": "New York Mets",
+      "position": "P",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Lucas Braun",
+      "team": "Atlanta Braves",
+      "position": "P",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Nick Morabito",
+      "team": "New York Mets",
+      "position": "OF",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Nick Sogard",
+      "team": "Boston Red Sox",
+      "position": "INF",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Pedro Ramírez",
+      "team": "Chicago Cubs",
+      "position": "INF",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Sawyer Gipson-long",
+      "team": "Detroit Tigers",
+      "position": "P",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Spencer Packard",
+      "team": "Seattle Mariners",
+      "position": "OF",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Sung-mun Song",
+      "team": "UNK",
+      "position": "INF",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "William Fleming",
+      "team": "Seattle Mariners",
+      "position": "P",
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    }
+  ],
+  "missing_team": [],
+  "missing_position": [],
+  "duplicate_ids": {}
+}

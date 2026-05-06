@@ -1,0 +1,210 @@
+{
+  "generated_at": "2026-05-04T13:01:29.334369",
+  "top_pitchers": [
+    {
+      "player_name": "Misiorowski, Jacob",
+      "edge_score": 89.0,
+      "metric_1_label": "Whiff %",
+      "metric_1": 22.4,
+      "metric_2_label": "FB Velo",
+      "metric_2": 100.7,
+      "metric_3_label": "Extension",
+      "metric_3": "7.6 ft",
+      "why": "Whiff rate 22.4% (+0.1 pts vs baseline), FB velo 100.7 mph (+1.4).",
+      "badges": [
+        "Whiff Lift",
+        "Velo Jump"
+      ]
+    },
+    {
+      "player_name": "Schlittler, Cam",
+      "edge_score": 78.1,
+      "metric_1_label": "Whiff %",
+      "metric_1": 18.3,
+      "metric_2_label": "FB Velo",
+      "metric_2": 97.6,
+      "metric_3_label": "Extension",
+      "metric_3": "7.0 ft",
+      "why": "Whiff rate 18.3% (+0.0 pts vs baseline), FB velo 97.6 mph (+1.5).",
+      "badges": [
+        "Whiff Lift",
+        "Velo Jump",
+        "Extension Gain"
+      ]
+    },
+    {
+      "player_name": "Burns, Chase",
+      "edge_score": 75.1,
+      "metric_1_label": "Whiff %",
+      "metric_1": 17.8,
+      "metric_2_label": "FB Velo",
+      "metric_2": 98.3,
+      "metric_3_label": "Extension",
+      "metric_3": "6.3 ft",
+      "why": "Whiff rate 17.8% (+0.1 pts vs baseline), FB velo 98.3 mph (+0.7).",
+      "badges": [
+        "Whiff Lift"
+      ]
+    },
+    {
+      "player_name": "Cabrera, Edward",
+      "edge_score": 72.1,
+      "metric_1_label": "Whiff %",
+      "metric_1": 18.2,
+      "metric_2_label": "FB Velo",
+      "metric_2": 96.4,
+      "metric_3_label": "Extension",
+      "metric_3": "6.5 ft",
+      "why": "Whiff rate 18.2% (+0.1 pts vs baseline), FB velo 96.4 mph (+0.8).",
+      "badges": [
+        "Whiff Lift"
+      ]
+    },
+    {
+      "player_name": "Sale, Chris",
+      "edge_score": 68.9,
+      "metric_1_label": "Whiff %",
+      "metric_1": 18.6,
+      "metric_2_label": "FB Velo",
+      "metric_2": 95.7,
+      "metric_3_label": "Extension",
+      "metric_3": "6.6 ft",
+      "why": "Whiff rate 18.6% (+0.1 pts vs baseline), FB velo 95.7 mph (+0.4).",
+      "badges": [
+        "Whiff Lift"
+      ]
+    }
+  ],
+  "top_hitters": [
+    {
+      "player_name": "Yandy Díaz",
+      "edge_score": 76.9,
+      "metric_1_label": "Avg EV",
+      "metric_1": 92.0,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 5.6,
+      "metric_3_label": "Max EV",
+      "metric_3": 110.8,
+      "why": "Avg EV 92.0 mph (+7.2 vs baseline), barrel-like rate 5.6%.",
+      "badges": [
+        "EV Burst",
+        "Impact EV"
+      ],
+      "season_context": {
+        "season_context": "PLATE_DISCIPLINE",
+        "season": 2026,
+        "bb_pct": "8.8%",
+        "k_pct": "10.9%",
+        "bb_k_ratio": "0.81",
+        "babip": ".333",
+        "plate_appearances": 147,
+        "strikeouts": 16,
+        "walks": 13
+      }
+    },
+    {
+      "player_name": "Drew Romo",
+      "edge_score": 75.9,
+      "metric_1_label": "Avg EV",
+      "metric_1": 84.9,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 15.4,
+      "metric_3_label": "Max EV",
+      "metric_3": 106.0,
+      "why": "Avg EV 84.9 mph (+4.1 vs baseline), barrel-like rate 15.4%.",
+      "badges": [
+        "EV Burst",
+        "Barrel Jump"
+      ],
+      "season_context": {
+        "season_context": "PLATE_DISCIPLINE",
+        "season": 2026,
+        "bb_pct": "28.6%",
+        "k_pct": "14.3%",
+        "bb_k_ratio": "2.00",
+        "babip": ".000",
+        "plate_appearances": 21,
+        "strikeouts": 3,
+        "walks": 6
+      }
+    },
+    {
+      "player_name": "Pete Alonso",
+      "edge_score": 75.1,
+      "metric_1_label": "Avg EV",
+      "metric_1": 89.8,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 6.9,
+      "metric_3_label": "Max EV",
+      "metric_3": 114.6,
+      "why": "Avg EV 89.8 mph (+3.3 vs baseline), barrel-like rate 6.9%.",
+      "badges": [
+        "EV Burst",
+        "Impact EV"
+      ],
+      "season_context": {
+        "season_context": "PLATE_DISCIPLINE",
+        "season": 2026,
+        "bb_pct": "13.5%",
+        "k_pct": "24.5%",
+        "bb_k_ratio": "0.55",
+        "babip": ".270",
+        "plate_appearances": 155,
+        "strikeouts": 38,
+        "walks": 21
+      }
+    },
+    {
+      "player_name": "Jordan Walker",
+      "edge_score": 73.9,
+      "metric_1_label": "Avg EV",
+      "metric_1": 90.9,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 2.4,
+      "metric_3_label": "Max EV",
+      "metric_3": 115.8,
+      "why": "Avg EV 90.9 mph (+5.6 vs baseline), barrel-like rate 2.4%.",
+      "badges": [
+        "EV Burst",
+        "Impact EV"
+      ],
+      "season_context": {
+        "season_context": "PLATE_DISCIPLINE",
+        "season": 2026,
+        "bb_pct": "10.7%",
+        "k_pct": "28.7%",
+        "bb_k_ratio": "0.37",
+        "babip": ".375",
+        "plate_appearances": 150,
+        "strikeouts": 43,
+        "walks": 16
+      }
+    },
+    {
+      "player_name": "Michael Busch",
+      "edge_score": 72.4,
+      "metric_1_label": "Avg EV",
+      "metric_1": 88.3,
+      "metric_2_label": "Barrel-like %",
+      "metric_2": 3.6,
+      "metric_3_label": "Max EV",
+      "metric_3": 108.7,
+      "why": "Avg EV 88.3 mph (+8.4 vs baseline), barrel-like rate 3.6%.",
+      "badges": [
+        "EV Burst",
+        "Impact EV"
+      ],
+      "season_context": {
+        "season_context": "PLATE_DISCIPLINE",
+        "season": 2026,
+        "bb_pct": "12.3%",
+        "k_pct": "22.1%",
+        "bb_k_ratio": "0.56",
+        "babip": ".281",
+        "plate_appearances": 154,
+        "strikeouts": 34,
+        "walks": 19
+      }
+    }
+  ]
+}
