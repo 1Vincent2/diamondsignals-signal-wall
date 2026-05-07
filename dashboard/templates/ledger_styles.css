@@ -241,53 +241,71 @@ svg.ledger-sparkline {
 
 .ledger-cta,
 .provision-btn {
-  min-height: 32px;
-  width: 148px;
-  min-width: 148px;
-  max-width: 148px;
-  padding: 0 10px;
-  border-radius: 4px;
-  border: 1px solid #1A73E8;
-  background: #1A73E8;
-  color: #ffffff;
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  width: 168px;
+  min-width: 168px;
+  max-width: 168px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 211, 238, 0.46);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(34, 211, 238, 0.10), transparent 58%),
+    linear-gradient(180deg, rgba(5, 12, 18, 0.82), rgba(2, 6, 12, 0.94));
+  color: rgba(248, 250, 252, 0.96);
   font-family: var(--mono);
   font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
+  font-weight: 900;
+  letter-spacing: 0.10em;
+  line-height: 1;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 140ms ease, border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease, opacity 140ms ease;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease, color 160ms ease, transform 160ms ease;
   white-space: nowrap;
   text-align: center;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04), 0 0 12px rgba(26,115,232,0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 0 0 1px rgba(34,211,238,0.08),
+    0 0 22px rgba(34,211,238,0.10);
 }
 
 .ledger-cta:hover,
 .provision-btn:hover {
-  background: #2B7DE9;
-  border-color: #2B7DE9;
+  border-color: rgba(204, 255, 0, 0.72);
+  color: rgba(252, 255, 235, 1);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(204,255,0,0.13), transparent 58%),
+    linear-gradient(180deg, rgba(12, 24, 14, 0.86), rgba(3, 8, 5, 0.96));
   transform: translateY(-1px);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), 0 0 16px rgba(26,115,232,0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.11),
+    0 0 0 1px rgba(204,255,0,0.10),
+    0 0 24px rgba(204,255,0,0.16);
 }
 
 .ledger-cta.is-provisioned,
 .provision-btn.is-provisioned,
 .provision-btn[data-provisioned="true"] {
-  background: #00C853;
-  border-color: #00C853;
-  color: #ffffff;
-  font-weight: 700;
+  border-color: rgba(34, 197, 94, 0.48);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(34,197,94,0.12), transparent 58%),
+    linear-gradient(180deg, rgba(5, 20, 14, 0.84), rgba(2, 8, 6, 0.96));
+  color: rgba(220, 252, 231, 0.92);
+  font-weight: 900;
   cursor: default;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), 0 0 16px rgba(0,200,83,0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 0 20px rgba(34,197,94,0.12);
 }
 
 .ledger-cta.is-provisioned:hover,
 .provision-btn.is-provisioned:hover,
 .provision-btn[data-provisioned="true"]:hover {
-  background: #00C853;
-  border-color: #00C853;
   transform: none;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), 0 0 16px rgba(0,200,83,0.22);
 }
 
 @media (max-width: 640px) {
@@ -338,9 +356,9 @@ svg.ledger-sparkline {
 @media (max-width: 640px) {
   .ledger-cta,
   .provision-btn {
-    width: 124px;
-    min-width: 124px;
-    max-width: 124px;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
     font-size: 10px;
   }
 
