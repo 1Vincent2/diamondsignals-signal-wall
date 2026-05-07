@@ -112,7 +112,7 @@ HTML = r'''
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DiamondSignals // Signal Wall V2</title>
+  <title>DiamondSignals // Signal Wall</title>
   <style>
     {{ shell_styles | safe }}
 
@@ -419,19 +419,20 @@ HTML = r'''
 
     .rankline {
       font-size: 9px;
-      font-weight: 900;
+      font-weight: 800;
       color: var(--muted);
     }
 
     .player-name {
       margin: 4px 0 0;
       font-family: var(--sans);
-      font-size: clamp(24px, 1.9vw, 34px);
-      font-weight: 900;
-      line-height: 0.94;
-      letter-spacing: -0.055em;
+      font-size: clamp(21px, 1.45vw, 28px);
+      font-weight: 820;
+      line-height: 0.98;
+      letter-spacing: -0.045em;
       text-transform: uppercase;
       color: rgba(248,250,252,0.98);
+      max-width: 100%;
     }
 
     .signal-line {
@@ -439,6 +440,7 @@ HTML = r'''
       font-size: 9px;
       line-height: 1.45;
       color: rgba(148,163,184,0.86);
+      letter-spacing: 0.10em;
     }
 
     .score-head {
@@ -460,10 +462,10 @@ HTML = r'''
 
     .score-value {
       font-family: var(--sans);
-      font-size: clamp(42px, 3.2vw, 58px);
-      font-weight: 950;
-      line-height: 0.86;
-      letter-spacing: -0.06em;
+      font-size: clamp(38px, 2.65vw, 50px);
+      font-weight: 900;
+      line-height: 0.88;
+      letter-spacing: -0.055em;
     }
 
     .score-hot { color: var(--lime); }
@@ -510,8 +512,8 @@ HTML = r'''
         rgba(15,23,42,0.34);
       font-family: var(--mono);
       font-size: 9px;
-      font-weight: 900;
-      letter-spacing: 0.08em;
+      font-weight: 800;
+      letter-spacing: 0.075em;
       color: rgba(219,255,142,0.98);
       text-transform: uppercase;
     }
@@ -690,17 +692,841 @@ HTML = r'''
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
+
+/* V2 typography refinement override: closer to live MLB Extraction */
+.signal-wall-v2-typography-lock .player-name,
+body .player-name {
+  font-family: var(--sans) !important;
+  font-size: clamp(19px, 1.28vw, 25px) !important;
+  font-weight: 760 !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.038em !important;
+  text-transform: uppercase !important;
+  color: rgba(248,250,252,0.98) !important;
+}
+
+.signal-wall-v2-typography-lock .score-value,
+body .score-value {
+  font-family: var(--sans) !important;
+  font-size: clamp(34px, 2.25vw, 46px) !important;
+  font-weight: 860 !important;
+  line-height: 0.9 !important;
+  letter-spacing: -0.052em !important;
+}
+
+.signal-wall-v2-typography-lock .hero-title,
+body .hero-title {
+  font-weight: 620 !important;
+  letter-spacing: -0.047em !important;
+}
+
+.signal-wall-v2-typography-lock .section-title,
+body .section-title {
+  font-size: clamp(22px, 1.7vw, 28px) !important;
+  font-weight: 780 !important;
+  letter-spacing: -0.042em !important;
+}
+
+.signal-wall-v2-typography-lock .diagnosis-banner,
+body .diagnosis-banner {
+  font-size: 8.5px !important;
+  font-weight: 760 !important;
+  letter-spacing: 0.065em !important;
+}
+
+.signal-wall-v2-typography-lock .rankline,
+.signal-wall-v2-typography-lock .signal-line,
+body .rankline,
+body .signal-line {
+  font-weight: 700 !important;
+  letter-spacing: 0.09em !important;
+}
+
+
+
+/* V2 canvas density lock: match live MLB Extraction proportions */
+
+body.signal-wall-v2-typography-lock .topbar-inner,
+
+body.signal-wall-v2-typography-lock .app {
+
+  width: min(1440px, calc(100% - 48px)) !important;
+
+  max-width: 1440px !important;
+
+}
+
+body.signal-wall-v2-typography-lock .hero {
+
+  grid-template-columns: minmax(0, 1fr) 360px !important;
+
+  gap: 16px !important;
+
+  margin-bottom: 16px !important;
+
+}
+
+body.signal-wall-v2-typography-lock .boards {
+
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+
+  gap: 16px !important;
+
+}
+
+body.signal-wall-v2-typography-lock .cards-grid {
+
+  gap: 12px !important;
+
+  padding: 12px !important;
+
+}
+
+body.signal-wall-v2-typography-lock .player-card {
+
+  padding: 14px !important;
+
+  border-radius: 18px !important;
+
+}
+
+body.signal-wall-v2-typography-lock .player-top {
+
+  grid-template-columns: minmax(0, 1fr) 116px !important;
+
+  gap: 12px !important;
+
+}
+
+body.signal-wall-v2-typography-lock .player-head {
+
+  grid-template-columns: 38px minmax(0, 1fr) !important;
+
+  gap: 10px !important;
+
+}
+
+body.signal-wall-v2-typography-lock .avatar {
+
+  width: 38px !important;
+
+  height: 38px !important;
+
+  font-size: 10px !important;
+
+}
+
+body.signal-wall-v2-typography-lock .player-name {
+
+  font-size: clamp(18px, 1.12vw, 23px) !important;
+
+  font-weight: 760 !important;
+
+  line-height: 0.98 !important;
+
+  letter-spacing: -0.04em !important;
+
+}
+
+body.signal-wall-v2-typography-lock .score-value {
+
+  font-size: clamp(34px, 2.05vw, 44px) !important;
+
+  font-weight: 880 !important;
+
+}
+
+body.signal-wall-v2-typography-lock .provision-btn {
+
+  width: 116px !important;
+
+  min-height: 34px !important;
+
+  font-size: 7.5px !important;
+
+}
+
+body.signal-wall-v2-typography-lock .diagnosis-banner {
+
+  min-height: 34px !important;
+
+  padding: 8px 10px !important;
+
+  font-size: 8px !important;
+
+}
+
+body.signal-wall-v2-typography-lock .sparkline-wrap {
+
+  margin-top: 10px !important;
+
+  padding: 9px !important;
+
+}
+
+body.signal-wall-v2-typography-lock .metric-grid {
+
+  margin-top: 10px !important;
+
+  gap: 7px !important;
+
+}
+
+body.signal-wall-v2-typography-lock .metric,
+
+body.signal-wall-v2-typography-lock .season-context-tile {
+
+  padding: 8px !important;
+
+}
+
+body.signal-wall-v2-typography-lock .season-context-strip {
+
+  margin-top: 10px !important;
+
+  padding: 9px !important;
+
+}
+
+body.signal-wall-v2-typography-lock .why-full {
+
+  font-size: 9.5px !important;
+
+  line-height: 1.45 !important;
+
+}
+
+
+
+/* V2 MLB Extraction typography/style match */
+body.signal-wall-v2-typography-lock {
+  --v2-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --v2-mono: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+body.signal-wall-v2-typography-lock .hero-title,
+body.signal-wall-v2-typography-lock h1 {
+  font-family: var(--v2-sans) !important;
+  font-size: clamp(56px, 5.35vw, 82px) !important;
+  font-weight: 760 !important;
+  line-height: 0.92 !important;
+  letter-spacing: -0.072em !important;
+  text-transform: none !important;
+  color: #f7f8fa !important;
+  max-width: 820px !important;
+}
+
+body.signal-wall-v2-typography-lock .hero-copy,
+body.signal-wall-v2-typography-lock .hero p {
+  font-family: var(--v2-sans) !important;
+  font-size: 17px !important;
+  line-height: 1.55 !important;
+  font-weight: 430 !important;
+  letter-spacing: -0.015em !important;
+  color: rgba(247, 248, 250, 0.72) !important;
+  max-width: 760px !important;
+}
+
+body.signal-wall-v2-typography-lock .section-title,
+body.signal-wall-v2-typography-lock .board-title,
+body.signal-wall-v2-typography-lock h2 {
+  font-family: var(--v2-sans) !important;
+  font-size: clamp(25px, 1.65vw, 34px) !important;
+  font-weight: 780 !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.055em !important;
+  text-transform: uppercase !important;
+}
+
+body.signal-wall-v2-typography-lock .player-name {
+  font-family: var(--v2-sans) !important;
+  font-size: clamp(20px, 1.22vw, 26px) !important;
+  font-weight: 820 !important;
+  line-height: 0.95 !important;
+  letter-spacing: -0.06em !important;
+  text-transform: uppercase !important;
+}
+
+body.signal-wall-v2-typography-lock .score-value {
+  font-family: var(--v2-sans) !important;
+  font-size: clamp(42px, 2.85vw, 58px) !important;
+  font-weight: 860 !important;
+  line-height: 0.82 !important;
+  letter-spacing: -0.07em !important;
+  font-style: italic !important;
+}
+
+body.signal-wall-v2-typography-lock .eyebrow,
+body.signal-wall-v2-typography-lock .section-kicker,
+body.signal-wall-v2-typography-lock .card-kicker,
+body.signal-wall-v2-typography-lock .player-meta,
+body.signal-wall-v2-typography-lock .metric-label,
+body.signal-wall-v2-typography-lock .season-context-label,
+body.signal-wall-v2-typography-lock .diagnosis-label,
+body.signal-wall-v2-typography-lock .provision-btn {
+  font-family: var(--v2-mono) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.14em !important;
+}
+
+body.signal-wall-v2-typography-lock .hero,
+body.signal-wall-v2-typography-lock .summary-card,
+body.signal-wall-v2-typography-lock .board-panel,
+body.signal-wall-v2-typography-lock .player-card {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(160, 255, 55, 0.08), transparent 35%),
+    linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012)),
+    rgba(7, 8, 13, 0.82) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 18px 60px rgba(0,0,0,0.34) !important;
+}
+
+body.signal-wall-v2-typography-lock .player-card {
+  padding: 18px !important;
+}
+
+body.signal-wall-v2-typography-lock .diagnosis-banner {
+  border-radius: 12px !important;
+  background: rgba(139, 255, 35, 0.12) !important;
+  border: 1px solid rgba(166, 255, 52, 0.42) !important;
+  box-shadow: inset 0 1px 0 rgba(166,255,52,0.12) !important;
+}
+
+body.signal-wall-v2-typography-lock .provision-btn {
+  background: rgba(10, 11, 15, 0.88) !important;
+  border: 1px solid rgba(72, 132, 255, 0.62) !important;
+  color: #ffffff !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 0 22px rgba(47, 111, 255, 0.12) !important;
+}
+
+body.signal-wall-v2-typography-lock .metric-value,
+body.signal-wall-v2-typography-lock .season-context-value {
+  font-family: var(--v2-sans) !important;
+  font-weight: 760 !important;
+  letter-spacing: -0.035em !important;
+}
+
+
+/* V2 extraction-ledger hero/card alignment pass */
+body.signal-wall-v2-typography-lock .topbar-inner,
+body.signal-wall-v2-typography-lock .app {
+  width: min(1320px, calc(100% - 48px)) !important;
+  max-width: 1320px !important;
+}
+
+body.signal-wall-v2-typography-lock .hero {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.45fr) minmax(360px, 0.78fr) !important;
+  gap: 22px !important;
+  align-items: stretch !important;
+  margin: 28px auto 22px !important;
+}
+
+body.signal-wall-v2-typography-lock .hero,
+body.signal-wall-v2-typography-lock .hero-panel,
+body.signal-wall-v2-typography-lock .hero-card {
+  min-height: 300px !important;
+}
+
+body.signal-wall-v2-typography-lock .hero-title,
+body.signal-wall-v2-typography-lock h1 {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: clamp(58px, 5.15vw, 82px) !important;
+  font-weight: 720 !important;
+  line-height: 0.91 !important;
+  letter-spacing: -0.078em !important;
+  text-transform: none !important;
+  color: #f6f7f8 !important;
+  max-width: 760px !important;
+}
+
+body.signal-wall-v2-typography-lock .hero-copy,
+body.signal-wall-v2-typography-lock .hero p {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: 17px !important;
+  line-height: 1.55 !important;
+  font-weight: 420 !important;
+  letter-spacing: -0.018em !important;
+  color: rgba(246, 247, 248, 0.72) !important;
+  max-width: 720px !important;
+}
+
+/* Convert V2 tiled stat card toward MLB Extraction single vertical card */
+body.signal-wall-v2-typography-lock .summary-card,
+body.signal-wall-v2-typography-lock .executive-card,
+body.signal-wall-v2-typography-lock .stat-card,
+body.signal-wall-v2-typography-lock .hero-stats {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  gap: 18px !important;
+  padding: 30px 34px !important;
+  border-radius: 22px !important;
+  min-height: 300px !important;
+}
+
+body.signal-wall-v2-typography-lock .summary-grid,
+body.signal-wall-v2-typography-lock .stat-grid,
+body.signal-wall-v2-typography-lock .hero-stat-grid {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+body.signal-wall-v2-typography-lock .summary-tile,
+body.signal-wall-v2-typography-lock .stat-tile,
+body.signal-wall-v2-typography-lock .hero-stat {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+
+body.signal-wall-v2-typography-lock .summary-tile span,
+body.signal-wall-v2-typography-lock .stat-tile span,
+body.signal-wall-v2-typography-lock .hero-stat span,
+body.signal-wall-v2-typography-lock .summary-label,
+body.signal-wall-v2-typography-lock .stat-label {
+  display: block !important;
+  font-family: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace !important;
+  font-size: 11px !important;
+  font-weight: 760 !important;
+  line-height: 1 !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  color: rgba(225, 228, 238, 0.52) !important;
+  margin-bottom: 5px !important;
+}
+
+body.signal-wall-v2-typography-lock .summary-tile strong,
+body.signal-wall-v2-typography-lock .stat-tile strong,
+body.signal-wall-v2-typography-lock .hero-stat strong,
+body.signal-wall-v2-typography-lock .summary-value,
+body.signal-wall-v2-typography-lock .stat-value {
+  display: block !important;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: clamp(28px, 2.3vw, 42px) !important;
+  font-weight: 760 !important;
+  line-height: 0.95 !important;
+  letter-spacing: -0.058em !important;
+  color: #f6f7f8 !important;
+}
+
+/* Board title/card typography closer to MLB Extraction */
+body.signal-wall-v2-typography-lock .section-title,
+body.signal-wall-v2-typography-lock .board-title,
+body.signal-wall-v2-typography-lock h2 {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: clamp(24px, 1.55vw, 31px) !important;
+  font-weight: 740 !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.058em !important;
+  text-transform: uppercase !important;
+}
+
+body.signal-wall-v2-typography-lock .boards {
+  gap: 18px !important;
+}
+
+body.signal-wall-v2-typography-lock .board-panel {
+  border-radius: 22px !important;
+}
+
+body.signal-wall-v2-typography-lock .player-card {
+  padding: 18px !important;
+  border-radius: 18px !important;
+}
+
+body.signal-wall-v2-typography-lock .player-name {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: clamp(21px, 1.35vw, 27px) !important;
+  font-weight: 780 !important;
+  line-height: 0.96 !important;
+  letter-spacing: -0.065em !important;
+  text-transform: uppercase !important;
+}
+
+body.signal-wall-v2-typography-lock .score-value {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: clamp(46px, 3vw, 60px) !important;
+  font-weight: 820 !important;
+  line-height: 0.82 !important;
+  letter-spacing: -0.075em !important;
+  font-style: italic !important;
+}
+
+body.signal-wall-v2-typography-lock .provision-btn {
+  background: rgba(8, 9, 13, 0.9) !important;
+  border: 1px solid rgba(67, 119, 255, 0.68) !important;
+  color: #fff !important;
+  border-radius: 10px !important;
+  width: 132px !important;
+  min-height: 42px !important;
+  font-size: 8px !important;
+  font-family: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace !important;
+  letter-spacing: 0.12em !important;
+}
+
+body.signal-wall-v2-typography-lock .diagnosis-banner {
+  min-height: 46px !important;
+  padding: 12px 14px !important;
+  border-radius: 12px !important;
+}
+
+body.signal-wall-v2-typography-lock .metric,
+body.signal-wall-v2-typography-lock .season-context-tile {
+  border-radius: 11px !important;
+}
+
+@media (max-width: 960px) {
+  body.signal-wall-v2-typography-lock .hero {
+    grid-template-columns: 1fr !important;
+  }
+
+  body.signal-wall-v2-typography-lock .boards {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
+/* V2 live-visual calibration: reduce oversized local V2 toward MLB Extraction production scale */
+body.signal-wall-v2-typography-lock .topbar-inner,
+body.signal-wall-v2-typography-lock .app {
+  width: min(1180px, calc(100% - 64px)) !important;
+  max-width: 1180px !important;
+}
+
+body.signal-wall-v2-typography-lock .hero {
+  grid-template-columns: minmax(0, 1.56fr) minmax(310px, 0.74fr) !important;
+  gap: 16px !important;
+  margin: 30px auto 20px !important;
+}
+
+body.signal-wall-v2-typography-lock .hero,
+body.signal-wall-v2-typography-lock .hero-panel,
+body.signal-wall-v2-typography-lock .hero-card {
+  min-height: 250px !important;
+}
+
+body.signal-wall-v2-typography-lock .hero-panel,
+body.signal-wall-v2-typography-lock .hero-card,
+body.signal-wall-v2-typography-lock .summary-card {
+  padding: 26px 30px !important;
+  border-radius: 18px !important;
+}
+
+body.signal-wall-v2-typography-lock .hero-title,
+body.signal-wall-v2-typography-lock h1 {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: clamp(44px, 4.05vw, 62px) !important;
+  font-weight: 560 !important;
+  line-height: 0.96 !important;
+  letter-spacing: -0.064em !important;
+  text-transform: none !important;
+  max-width: 680px !important;
+  color: #f6f7f8 !important;
+}
+
+body.signal-wall-v2-typography-lock .hero-copy,
+body.signal-wall-v2-typography-lock .hero p {
+  font-size: 14.5px !important;
+  line-height: 1.5 !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.01em !important;
+  max-width: 660px !important;
+  color: rgba(246, 247, 248, 0.72) !important;
+}
+
+body.signal-wall-v2-typography-lock .summary-card,
+body.signal-wall-v2-typography-lock .executive-card,
+body.signal-wall-v2-typography-lock .stat-card,
+body.signal-wall-v2-typography-lock .hero-stats {
+  gap: 12px !important;
+  padding: 26px 30px !important;
+  min-height: 250px !important;
+  justify-content: flex-start !important;
+}
+
+body.signal-wall-v2-typography-lock .summary-tile span,
+body.signal-wall-v2-typography-lock .stat-tile span,
+body.signal-wall-v2-typography-lock .hero-stat span,
+body.signal-wall-v2-typography-lock .summary-label,
+body.signal-wall-v2-typography-lock .stat-label {
+  font-size: 9.5px !important;
+  font-weight: 680 !important;
+  line-height: 1 !important;
+  letter-spacing: 0.17em !important;
+  color: rgba(225, 228, 238, 0.52) !important;
+  margin-bottom: 4px !important;
+}
+
+body.signal-wall-v2-typography-lock .summary-tile strong,
+body.signal-wall-v2-typography-lock .stat-tile strong,
+body.signal-wall-v2-typography-lock .hero-stat strong,
+body.signal-wall-v2-typography-lock .summary-value,
+body.signal-wall-v2-typography-lock .stat-value {
+  font-size: clamp(23px, 1.65vw, 31px) !important;
+  font-weight: 560 !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.05em !important;
+}
+
+body.signal-wall-v2-typography-lock .boards {
+  gap: 15px !important;
+}
+
+body.signal-wall-v2-typography-lock .board-panel {
+  border-radius: 18px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.01)),
+    rgba(14, 15, 17, 0.86) !important;
+}
+
+body.signal-wall-v2-typography-lock .section-title,
+body.signal-wall-v2-typography-lock .board-title,
+body.signal-wall-v2-typography-lock h2 {
+  font-size: clamp(20px, 1.24vw, 25px) !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.045em !important;
+}
+
+body.signal-wall-v2-typography-lock .cards-grid {
+  gap: 11px !important;
+  padding: 11px !important;
+}
+
+body.signal-wall-v2-typography-lock .player-card {
+  padding: 14px !important;
+  border-radius: 15px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.026), rgba(255,255,255,0.01)),
+    rgba(15, 16, 18, 0.88) !important;
+}
+
+body.signal-wall-v2-typography-lock .player-top {
+  grid-template-columns: minmax(0, 1fr) 112px !important;
+  gap: 9px !important;
+}
+
+body.signal-wall-v2-typography-lock .player-head {
+  grid-template-columns: 34px minmax(0, 1fr) !important;
+  gap: 9px !important;
+}
+
+body.signal-wall-v2-typography-lock .avatar {
+  width: 34px !important;
+  height: 34px !important;
+  font-size: 9px !important;
+}
+
+body.signal-wall-v2-typography-lock .player-name {
+  font-size: clamp(17px, 0.96vw, 21px) !important;
+  font-weight: 620 !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.052em !important;
+}
+
+body.signal-wall-v2-typography-lock .score-value {
+  font-size: clamp(36px, 2.05vw, 44px) !important;
+  font-weight: 680 !important;
+  line-height: 0.86 !important;
+  letter-spacing: -0.067em !important;
+  font-style: italic !important;
+}
+
+body.signal-wall-v2-typography-lock .provision-btn {
+  width: 112px !important;
+  min-height: 34px !important;
+  font-size: 7px !important;
+  border-radius: 8px !important;
+}
+
+body.signal-wall-v2-typography-lock .diagnosis-banner {
+  min-height: 35px !important;
+  padding: 8px 10px !important;
+  border-radius: 10px !important;
+}
+
+body.signal-wall-v2-typography-lock .sparkline-wrap {
+  margin-top: 8px !important;
+  padding: 8px !important;
+}
+
+body.signal-wall-v2-typography-lock .metric-grid {
+  margin-top: 8px !important;
+  gap: 6px !important;
+}
+
+body.signal-wall-v2-typography-lock .metric,
+body.signal-wall-v2-typography-lock .season-context-tile {
+  padding: 7px 8px !important;
+  border-radius: 9px !important;
+}
+
+body.signal-wall-v2-typography-lock .season-context-strip {
+  margin-top: 8px !important;
+  padding: 8px !important;
+}
+
+body.signal-wall-v2-typography-lock .why-full {
+  font-size: 8.5px !important;
+  line-height: 1.38 !important;
+}
+
+body.signal-wall-v2-typography-lock .hero,
+body.signal-wall-v2-typography-lock .summary-card,
+body.signal-wall-v2-typography-lock .hero-panel,
+body.signal-wall-v2-typography-lock .hero-card,
+body.signal-wall-v2-typography-lock .board-panel,
+body.signal-wall-v2-typography-lock .player-card {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.045),
+    0 16px 44px rgba(0,0,0,0.28) !important;
+}
+
+body.signal-wall-v2-typography-lock .hero,
+body.signal-wall-v2-typography-lock .summary-card,
+body.signal-wall-v2-typography-lock .hero-panel,
+body.signal-wall-v2-typography-lock .hero-card {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.024), rgba(255,255,255,0.008)),
+    rgba(8, 9, 12, 0.88) !important;
+}
+
+
+/* V2 summary-card content model: MLB Extraction vertical card */
+body.signal-wall-v2-typography-lock .extraction-summary-card {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+}
+
+body.signal-wall-v2-typography-lock .summary-row {
+  display: block !important;
+}
+
+body.signal-wall-v2-typography-lock .summary-row span {
+  display: block !important;
+  font-family: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace !important;
+  font-size: 9.5px !important;
+  font-weight: 680 !important;
+  line-height: 1 !important;
+  letter-spacing: 0.17em !important;
+  text-transform: uppercase !important;
+  color: rgba(225, 228, 238, 0.52) !important;
+  margin-bottom: 4px !important;
+}
+
+body.signal-wall-v2-typography-lock .summary-row strong {
+  display: block !important;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: clamp(23px, 1.65vw, 31px) !important;
+  font-weight: 560 !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.05em !important;
+  color: #f6f7f8 !important;
+}
+
+body.signal-wall-v2-typography-lock .summary-row .summary-window {
+  font-size: clamp(16px, 1.18vw, 21px) !important;
+  letter-spacing: -0.035em !important;
+}
+
+body.signal-wall-v2-typography-lock .summary-note {
+  margin: 8px 0 0 !important;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: 12.5px !important;
+  line-height: 1.45 !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.01em !important;
+  color: rgba(246, 247, 248, 0.66) !important;
+}
+
+
+/* V2 viewport overflow guard */
+html,
+body {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+body.signal-wall-v2-typography-lock .topbar-inner,
+body.signal-wall-v2-typography-lock .app,
+body.signal-wall-v2-typography-lock .hero,
+body.signal-wall-v2-typography-lock .boards {
+  box-sizing: border-box !important;
+}
+
+body.signal-wall-v2-typography-lock .app {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+body.signal-wall-v2-typography-lock .hero,
+body.signal-wall-v2-typography-lock .boards {
+  width: 100% !important;
+}
+
+
+/* V2 compact summary terminal note */
+body.signal-wall-v2-typography-lock .summary-terminal-note {
+  margin-top: 10px !important;
+  padding-top: 14px !important;
+  border-top: 1px solid rgba(255,255,255,0.08) !important;
+  font-family: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace !important;
+  font-size: 9.5px !important;
+  line-height: 1.25 !important;
+  font-weight: 760 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: rgba(166, 255, 52, 0.82) !important;
+}
+
+
+/* V2 hero final spacing polish */
+body.signal-wall-v2-typography-lock .hero {
+  gap: 14px !important;
+}
+
+body.signal-wall-v2-typography-lock .hero-card,
+body.signal-wall-v2-typography-lock .summary-card {
+  min-height: 238px !important;
+}
+
+body.signal-wall-v2-typography-lock .hero-panel,
+body.signal-wall-v2-typography-lock .hero-card,
+body.signal-wall-v2-typography-lock .summary-card {
+  padding-top: 24px !important;
+  padding-bottom: 24px !important;
+}
+
+body.signal-wall-v2-typography-lock .summary-card.extraction-summary-card {
+  gap: 10px !important;
+}
+
+body.signal-wall-v2-typography-lock .summary-terminal-note {
+  margin-top: 6px !important;
+  padding-top: 11px !important;
+}
+
   </style>
 </head>
 
-<body>
+<body class="signal-wall-v2-typography-lock">
   <div class="topbar">
     <div class="topbar-inner">
       <div class="brand">
         <div class="brand-mark"></div>
         <div>
           <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
-          <div class="brand-title">Signal Wall V2 // Extraction Chassis</div>
+          <div class="brand-title">Signal Wall // Extraction Chassis</div>
         </div>
       </div>
       <div class="livebox">
@@ -717,28 +1543,31 @@ HTML = r'''
     <section class="hero">
       <div class="hero-card">
         <div class="eyebrow">Executive Terminal</div>
-        <h1 class="hero-title">Today’s Signal Wall V2</h1>
+        <h1 class="hero-title">Today’s Signal Wall</h1>
         <p class="hero-copy">
-          Clean-room Signal Wall built from the MLB Extraction Ledger chassis. Pitchers and hitters remain split into forensic panes while preserving Edge Score, SEAGER, BABIP, BB%, K%, BB/K, K/BB, and season-context command data.
+          Live pitcher and hitter movement board built from the MLB Extraction Ledger chassis. Edge Score, SEAGER, BABIP, BB%, K%, BB/K, K/BB, and season-context command data remain preserved.
         </p>
       </div>
 
-      <aside class="summary-card">
-        <div class="summary-tile">
-          <div class="summary-label">Pitchers</div>
-          <div class="summary-value">{{ pitchers|length }}</div>
+      <aside class="summary-card extraction-summary-card">
+        <div class="summary-row">
+          <span>Mode</span>
+          <strong>EDGE</strong>
         </div>
-        <div class="summary-tile">
-          <div class="summary-label">Hitters</div>
-          <div class="summary-value">{{ hitters|length }}</div>
+        <div class="summary-row">
+          <span>Pitchers</span>
+          <strong>{{ pitchers|length }}</strong>
         </div>
-        <div class="summary-tile">
-          <div class="summary-label">Mode</div>
-          <div class="summary-value">LIVE</div>
+        <div class="summary-row">
+          <span>Hitters</span>
+          <strong>{{ hitters|length }}</strong>
         </div>
-        <div class="summary-tile">
-          <div class="summary-label">Source</div>
-          <div class="summary-value" style="font-size:18px;line-height:1.1;">signals.json</div>
+        <div class="summary-row">
+          <span>Window</span>
+          <strong class="summary-window">LIVE</strong>
+        </div>
+        <div class="summary-note summary-terminal-note">
+          SEASON_CONTEXT // SEAGER + BABIP ACTIVE
         </div>
       </aside>
     </section>
