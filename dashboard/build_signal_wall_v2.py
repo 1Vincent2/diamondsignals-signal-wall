@@ -8,6 +8,8 @@ DIST_DIR = Path("dist")
 SIGNALS_JSON = DIST_DIR / "signals.json"
 OUT_DIR = DIST_DIR / "live-v2"
 OUT_PATH = OUT_DIR / "index.html"
+LIVE_DIR = DIST_DIR / "live"
+LIVE_PATH = LIVE_DIR / "index.html"
 
 NAV_TEMPLATE_PATH = Path("dashboard/templates/shell_nav.html")
 SEARCH_TEMPLATE_PATH = Path("dashboard/templates/components/player_search.html")
@@ -1736,9 +1738,15 @@ def render_html() -> str:
 def main() -> None:
     if not SIGNALS_JSON.exists():
         raise SystemExit("Missing dist/signals.json. Run dashboard/build_dashboard.py first.")
+    html = render_html()
+
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    OUT_PATH.write_text(render_html(), encoding="utf-8")
+    OUT_PATH.write_text(html, encoding="utf-8")
     print(f"Wrote {OUT_PATH}")
+
+    LIVE_DIR.mkdir(parents=True, exist_ok=True)
+    LIVE_PATH.write_text(html, encoding="utf-8")
+    print(f"Wrote {LIVE_PATH}")
 
 if __name__ == "__main__":
     main()
