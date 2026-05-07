@@ -1548,6 +1548,66 @@ HTML_TEMPLATE = Template(
     .footer { padding: 16px 4px 0; color: var(--muted); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
     @keyframes badgePulse { 0%,100% { opacity: 0.82; } 50% { opacity: 1; } }
 
+
+    /* Signal Wall split-board layout: preserve existing board markup, render Pitchers left / Hitters right */
+    @media (min-width: 1100px) {
+      .app {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
+      }
+
+      .app > .hero {
+        grid-column: 1 / -1;
+      }
+
+      .app > .board {
+        margin-top: 0;
+        min-width: 0;
+      }
+
+      .app > .board:nth-of-type(2) {
+        grid-column: 1;
+      }
+
+      .app > .board:nth-of-type(3) {
+        grid-column: 2;
+      }
+
+      .app > .board .player-card {
+        min-width: 0;
+      }
+
+      .app > .board .player-top,
+      .app > .board .player-head {
+        min-width: 0;
+      }
+
+      .app > .board .player-name {
+        font-size: clamp(22px, 1.95vw, 34px);
+        line-height: 0.95;
+      }
+
+      .app > .board .metric-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .app > .board .season-context-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 1099px) {
+      .app {
+        display: block;
+      }
+
+      .app > .board + .board {
+        margin-top: 18px;
+      }
+    }
+
     {{ shell_styles | safe }}
     {{ ledger_styles | safe }}
         @media (max-width: 640px) {
@@ -1853,7 +1913,7 @@ HTML_TEMPLATE = Template(
     </section>
 
     <section class="board">
-      <div class="section">
+      <div class="section pitching-section">
         <div class="section-head">
           <div>
             <div class="section-kicker">Pitching Board</div>
@@ -1878,7 +1938,7 @@ HTML_TEMPLATE = Template(
         </div>
       </div>
 
-      <div class="section">
+      <div class="section hitting-section">
         <div class="section-head">
           <div>
             <div class="section-kicker">Hitting Board</div>
