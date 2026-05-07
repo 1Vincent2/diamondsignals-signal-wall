@@ -188,6 +188,46 @@ def infer_stat_group(player):
 
     return "hitting"
 
+
+
+def safe_num(value):
+    try:
+        if value in (None, ""):
+            return None
+        return float(value)
+    except Exception:
+        return None
+
+
+def pitcher_babip_fallback(stat, strikeouts):
+    """
+    Pitcher BABIP allowed fallback:
+    (H - HR) / (AB - K - HR + SF)
+
+    MLB Stats API does not always expose pitcher babip directly in season stat payloads,
+    so calculate it when the component fields are available.
+    """
+    direct = stat.get("babip")
+    if direct not in (None, ""):
+        return direct
+
+    hits = safe_num(stat.get("hits"))
+    home_runs = safe_num(stat.get("homeRuns"))
+    at_bats = safe_num(stat.get("atBats"))
+    strikeouts_num = safe_num(strikeouts)
+    sac_flies = safe_num(stat.get("sacFlies") or stat.get("sacrificeFlies") or 0)
+
+    if None in (hits, home_runs, at_bats, strikeouts_num):
+        return None
+
+    denominator = at_bats - strikeouts_num - home_runs + sac_flies
+    numerator = hits - home_runs
+
+    if denominator <= 0:
+        return None
+
+    return f"{numerator / denominator:.3f}"
+
 def discipline_context_for_player(player):
     pid = player.get("player_id")
     group = infer_stat_group(player)
@@ -208,7 +248,7 @@ def discipline_context_for_player(player):
 
     strikeouts = stat.get("strikeOuts")
     walks = stat.get("baseOnBalls")
-    babip = stat.get("babip")
+    babip = pitcher_babip_fallback(stat, strikeouts) if group == "pitching" else stat.get("babip")
 
     if is_pitcher:
         batters_faced = stat.get("battersFaced")
