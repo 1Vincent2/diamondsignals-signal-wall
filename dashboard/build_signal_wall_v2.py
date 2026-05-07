@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import requests
 from datetime import datetime
 from pathlib import Path
 from jinja2 import Template
@@ -28,6 +29,74 @@ def avatar(name: str) -> str:
 
 def safe(v, fallback="—"):
     return fallback if v is None or v == "" else v
+
+
+
+_ID_RESOLUTION_CACHE = {}
+
+def _resolve_name_variants(name: str):
+    raw = str(name or "").strip()
+    variants = [raw]
+
+    if "," in raw:
+        last, first = raw.split(",", 1)
+        variants.append(f"{first.strip()} {last.strip()}")
+
+    # preserve order, remove blanks/dupes
+    seen = set()
+    out = []
+    for v in variants:
+        safe = " ".join(str(v or "").split())
+        key = safe.lower()
+        if safe and key not in seen:
+            seen.add(key)
+            out.append(safe)
+    return out
+
+
+def resolve_player_id_by_name(name: str) -> str:
+    for safe in _resolve_name_variants(name):
+        cache_key = safe.lower()
+        if cache_key in _ID_RESOLUTION_CACHE:
+            cached = _ID_RESOLUTION_CACHE[cache_key]
+            if cached:
+                return cached
+            continue
+
+        try:
+            url = "https://statsapi.mlb.com/api/v1/people/search"
+            resp = requests.get(url, params={"names": safe}, timeout=15)
+            resp.raise_for_status()
+            payload = resp.json()
+            people = payload.get("people", []) or []
+
+            if people:
+                pid = str(people[0].get("id") or "").strip()
+                _ID_RESOLUTION_CACHE[cache_key] = pid
+                return pid
+        except Exception:
+            pass
+
+        _ID_RESOLUTION_CACHE[cache_key] = ""
+
+    return ""
+
+def stable_player_id(row, player_type, name):
+    for key in ["resolved_player_id", "player_id", "mlbam_id", "batter", "pitcher", "id", "synthetic_player_id"]:
+        value = row.get(key)
+        if value not in (None, ""):
+            try:
+                return str(int(float(str(value).strip())))
+            except Exception:
+                return str(value).strip()
+
+    resolved = resolve_player_id_by_name(name)
+    if resolved:
+        return resolved
+
+    slug = "".join(ch.lower() if ch.isalnum() else "-" for ch in str(name or "unknown"))
+    slug = "-".join(part for part in slug.split("-") if part)
+    return f"signal-wall-v2-{player_type}-{slug or 'unknown'}"
 
 def score_class(score):
     try:
@@ -104,7 +173,7 @@ def normalize_rows(rows, player_type):
             "why": safe(r.get("why"), "Signal thesis pending."),
             "sample_note": safe(r.get("sample_note"), "LIVE WINDOW"),
             "trend_points": safe(r.get("trend_points"), "0,26 20,22 40,24 60,15 80,18 100,10 120,8"),
-            "resolved_player_id": r.get("resolved_player_id") or r.get("player_id") or "",
+            "resolved_player_id": stable_player_id(r, player_type, name),
         })
     return out
 
@@ -1518,6 +1587,308 @@ body.signal-wall-v2-typography-lock .summary-terminal-note {
   padding-top: 11px !important;
 }
 
+
+/* FIELD_GUIDE_STICKY_DRAWER */
+.field-guide-trigger {
+  position: fixed;
+  top: 232px;
+  right: max(24px, calc((100vw - 1440px) / 2 + 92px));
+  z-index: 120;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(166,255,52,0.34);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(166,255,52,0.16), transparent 42%),
+    rgba(9, 11, 15, 0.88);
+  color: rgba(246,247,248,0.92);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 12px 34px rgba(0,0,0,0.38),
+    0 0 18px rgba(166,255,52,0.08);
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+}
+
+.field-guide-trigger:hover {
+  border-color: rgba(166,255,52,0.58);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.field-guide-trigger .fg-dot {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(166,255,52,0.48);
+  color: rgba(166,255,52,0.95);
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+.field-guide-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 210;
+  background: rgba(0,0,0,0.52);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.field-guide-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 220;
+  width: min(520px, calc(100vw - 24px));
+  height: 100vh;
+  transform: translateX(104%);
+  transition: transform 220ms ease;
+  border-left: 1px solid rgba(255,255,255,0.12);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(166,255,52,0.10), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)),
+    rgba(6, 8, 12, 0.96);
+  box-shadow: -22px 0 80px rgba(0,0,0,0.58);
+  backdrop-filter: blur(18px);
+  overflow: hidden;
+}
+
+body.field-guide-open .field-guide-backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.field-guide-open .field-guide-drawer {
+  transform: translateX(0);
+}
+
+.field-guide-shell {
+  height: 100%;
+  overflow-y: auto;
+  padding: 26px;
+}
+
+.field-guide-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.09);
+}
+
+.field-guide-kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(166,255,52,0.86);
+  margin-bottom: 8px;
+}
+
+.field-guide-title {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: clamp(28px, 2.4vw, 38px);
+  line-height: 0.92;
+  letter-spacing: -0.06em;
+  font-weight: 720;
+  color: #f7f8fa;
+}
+
+.field-guide-close {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.035);
+  color: rgba(247,248,250,0.78);
+  cursor: pointer;
+}
+
+.field-guide-close:hover {
+  color: #fff;
+  border-color: rgba(166,255,52,0.38);
+}
+
+.field-guide-section {
+  margin: 0 0 18px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.09);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.032), rgba(255,255,255,0.010)),
+    rgba(255,255,255,0.018);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.045);
+}
+
+.field-guide-section h3 {
+  margin: 0 0 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  line-height: 1.25;
+  text-transform: uppercase;
+  color: rgba(247,248,250,0.88);
+}
+
+.field-guide-item {
+  padding: 12px 0;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.field-guide-item:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.field-guide-item strong {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: #f7f8fa;
+}
+
+.field-guide-item strong span {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(166,255,52,0.70);
+  white-space: nowrap;
+}
+
+.field-guide-item p {
+  margin: 7px 0 0;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: rgba(226,232,240,0.72);
+}
+
+.field-guide-notice {
+  margin-top: 20px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(166,255,52,0.18);
+  background: rgba(166,255,52,0.055);
+  font-family: var(--mono);
+  font-size: 9px;
+  line-height: 1.45;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(219,255,142,0.82);
+}
+
+@media (max-width: 760px) {
+  .field-guide-trigger {
+    top: auto;
+    right: 14px;
+    bottom: 18px;
+  }
+
+  .field-guide-drawer {
+    top: auto;
+    bottom: 0;
+    width: 100vw;
+    height: min(86vh, 760px);
+    transform: translateY(104%);
+    border-left: 0;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    border-radius: 24px 24px 0 0;
+  }
+
+  body.field-guide-open .field-guide-drawer {
+    transform: translateY(0);
+  }
+
+  .field-guide-shell {
+    padding: 22px 18px 28px;
+  }
+}
+
+
+/* FIELD_GUIDE_COLOR_INTEL_PASS */
+.field-guide-section[data-guide-family="global"] {
+  border-color: rgba(91, 141, 255, 0.22) !important;
+  box-shadow: inset 3px 0 0 rgba(91, 141, 255, 0.58), inset 0 1px 0 rgba(255,255,255,0.045) !important;
+}
+
+.field-guide-section[data-guide-family="pitching"] {
+  border-color: rgba(76, 165, 255, 0.22) !important;
+  box-shadow: inset 3px 0 0 rgba(76, 165, 255, 0.62), inset 0 1px 0 rgba(255,255,255,0.045) !important;
+}
+
+.field-guide-section[data-guide-family="hitting"] {
+  border-color: rgba(166, 255, 52, 0.22) !important;
+  box-shadow: inset 3px 0 0 rgba(166, 255, 52, 0.62), inset 0 1px 0 rgba(255,255,255,0.045) !important;
+}
+
+.field-guide-section[data-guide-family="advanced"] {
+  border-color: rgba(188, 93, 255, 0.24) !important;
+  box-shadow: inset 3px 0 0 rgba(188, 93, 255, 0.62), inset 0 1px 0 rgba(255,255,255,0.045) !important;
+}
+
+.field-guide-section[data-guide-family="global"] h3,
+.field-guide-section[data-guide-family="global"] .field-guide-item strong span {
+  color: rgba(111, 160, 255, 0.92) !important;
+}
+
+.field-guide-section[data-guide-family="pitching"] h3,
+.field-guide-section[data-guide-family="pitching"] .field-guide-item strong span {
+  color: rgba(92, 190, 255, 0.92) !important;
+}
+
+.field-guide-section[data-guide-family="hitting"] h3,
+.field-guide-section[data-guide-family="hitting"] .field-guide-item strong span {
+  color: rgba(166, 255, 52, 0.92) !important;
+}
+
+.field-guide-section[data-guide-family="advanced"] h3,
+.field-guide-section[data-guide-family="advanced"] .field-guide-item strong span {
+  color: rgba(201, 116, 255, 0.94) !important;
+}
+
+.field-guide-item strong .guide-metric {
+  color: #f7f8fa;
+}
+
+.field-guide-section[data-guide-family="global"] .guide-metric {
+  text-shadow: 0 0 14px rgba(91,141,255,0.18);
+}
+
+.field-guide-section[data-guide-family="pitching"] .guide-metric {
+  text-shadow: 0 0 14px rgba(76,165,255,0.18);
+}
+
+.field-guide-section[data-guide-family="hitting"] .guide-metric {
+  text-shadow: 0 0 14px rgba(166,255,52,0.18);
+}
+
+.field-guide-section[data-guide-family="advanced"] .guide-metric {
+  text-shadow: 0 0 14px rgba(188,93,255,0.18);
+}
+
   </style>
 </head>
 
@@ -1540,6 +1911,111 @@ body.signal-wall-v2-typography-lock .summary-terminal-note {
 
   {{ nav_html | safe }}
   {{ search_html | safe }}
+
+
+<button class="field-guide-trigger" type="button" data-field-guide-open aria-controls="fieldGuideDrawer" aria-expanded="false">
+  <span class="fg-dot">i</span>
+  <span>Field Guide</span>
+</button>
+
+<div class="field-guide-backdrop" data-field-guide-close></div>
+
+<aside class="field-guide-drawer" id="fieldGuideDrawer" aria-hidden="true">
+  <div class="field-guide-shell">
+    <div class="field-guide-head">
+      <div>
+        <div class="field-guide-kicker">Version 4.0 // Operator Manual</div>
+        <h2 class="field-guide-title">Forensic Field Guide</h2>
+      </div>
+      <button class="field-guide-close" type="button" data-field-guide-close aria-label="Close Field Guide">×</button>
+    </div>
+
+    <section class="field-guide-section" data-guide-family="global">
+      <h3>I. Global System Metrics</h3>
+      <div class="field-guide-item">
+        <strong><span class="guide-metric">Slate Heat Index</span> <span>Opportunity</span></strong>
+        <p>Quantifies the day’s total volume of unpriced alpha. High heat means the board is target-rich.</p>
+      </div>
+      <div class="field-guide-item">
+        <strong><span class="guide-metric">System Status</span> <span>Infrastructure</span></strong>
+        <p>Confirms the Statcast-driven feed is active, synchronized, and processing ballistic metadata.</p>
+      </div>
+      <div class="field-guide-item">
+        <strong><span class="guide-metric">Edge Score</span> <span>0–100 Rank</span></strong>
+        <p>Signal strength relative to baseline. Higher scores indicate stronger deviation from market expectation.</p>
+      </div>
+      <div class="field-guide-item">
+        <strong><span class="guide-metric">2.4Σ Verification</span> <span>Gate</span></strong>
+        <p>High-conviction threshold used to separate signal from noise before a roster command becomes actionable.</p>
+      </div>
+    </section>
+
+    <section class="field-guide-section" data-guide-family="pitching">
+      <h3>II. Pitching // Ballistic Signals</h3>
+      <div class="field-guide-item">
+        <strong><span class="guide-metric">IVB</span> <span>Pitch Physics</span></strong>
+        <p>Induced vertical break. ERA reports history; IVB measures the physical ability to miss barrels now.</p>
+      </div>
+      <div class="field-guide-item">
+        <strong><span class="guide-metric">Stuff+ Disruption</span> <span>Surveillance</span></strong>
+        <p>Tracks unpriced shifts in velocity, spin, movement, and pitch nastiness before the box score reacts.</p>
+      </div>
+      <div class="field-guide-item">
+        <strong><span class="guide-metric">Whiff %</span> <span>Swing Dynamics</span></strong>
+        <p>Recent swing-and-miss rate. Measures deception, finish, and current miss-ability.</p>
+      </div>
+      <div class="field-guide-item">
+        <strong><span class="guide-metric">FB Velo + Extension</span> <span>Kinetic Output</span></strong>
+        <p>Velocity plus release extension. More extension shrinks the hitter’s reaction window.</p>
+      </div>
+    </section>
+
+    <section class="field-guide-section" data-guide-family="hitting">
+      <h3>III. Hitting // Kinetic Signals</h3>
+      <div class="field-guide-item">
+        <strong><span class="guide-metric">Avg EV / EV Burst</span> <span>Kinetic Output</span></strong>
+        <p>Exit velocity baseline and sudden velocity jumps versus recent norms.</p>
+      </div>
+      <div class="field-guide-item">
+        <strong><span class="guide-metric">Barrel-Like %</span> <span>Contact Quality</span></strong>
+        <p>Custom quality-of-contact bucket using launch and velocity vectors.</p>
+      </div>
+      <div class="field-guide-item">
+        <strong><span class="guide-metric">Blast Rate</span> <span>Power Floor</span></strong>
+        <p>High bat speed plus squared-up contact. A physical floor for power emergence.</p>
+      </div>
+      <div class="field-guide-item">
+        <strong><span class="guide-metric">SEAGER Score</span> <span>Behavioral Alpha</span></strong>
+        <p>Selective Aggression Gauge. Rewards attacking damage-zone strikes while ignoring marginal pitcher’s pitches.</p>
+      </div>
+      <div class="field-guide-item">
+        <strong><span class="guide-metric">BABIP</span> <span>Luck Filter</span></strong>
+        <p>Audits whether outcome is misleading by comparing results against contact quality and physical cause layers.</p>
+      </div>
+    </section>
+
+    <section class="field-guide-section" data-guide-family="advanced">
+      <h3>IV. Advanced Forensic Logic</h3>
+      <div class="field-guide-item">
+        <strong><span class="guide-metric">Market Latency Delta</span> <span>Temporal Audit</span></strong>
+        <p>The gap between DiamondSignals detection and mainstream headline confirmation.</p>
+      </div>
+      <div class="field-guide-item">
+        <strong><span class="guide-metric">Retail Tax</span> <span>Headline Premium</span></strong>
+        <p>The cost of waiting for public confirmation instead of acting on forensic movement first.</p>
+      </div>
+      <div class="field-guide-item">
+        <strong><span class="guide-metric">Recursive Drift Modeling</span> <span>Core Algorithm</span></strong>
+        <p>Compares new movement and performance data against historical kinetic audits to detect structural drift.</p>
+      </div>
+    </section>
+
+    <div class="field-guide-notice">
+      System Notice: Licensed operators only // DiamondSignals.ai // Forensic Intel Unit
+    </div>
+  </div>
+</aside>
+
 
   <main class="app">
     <section class="hero">
@@ -1608,6 +2084,35 @@ body.signal-wall-v2-typography-lock .summary-terminal-note {
       </section>
     </section>
   </main>
+
+
+<script>
+(function () {
+  const body = document.body;
+  const openBtn = document.querySelector("[data-field-guide-open]");
+  const drawer = document.getElementById("fieldGuideDrawer");
+  const closeEls = document.querySelectorAll("[data-field-guide-close]");
+
+  function openGuide() {
+    body.classList.add("field-guide-open");
+    if (drawer) drawer.setAttribute("aria-hidden", "false");
+    if (openBtn) openBtn.setAttribute("aria-expanded", "true");
+  }
+
+  function closeGuide() {
+    body.classList.remove("field-guide-open");
+    if (drawer) drawer.setAttribute("aria-hidden", "true");
+    if (openBtn) openBtn.setAttribute("aria-expanded", "false");
+  }
+
+  if (openBtn) openBtn.addEventListener("click", openGuide);
+  closeEls.forEach((el) => el.addEventListener("click", closeGuide));
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") closeGuide();
+  });
+})();
+</script>
 
   <script src="/player-search.js"></script>
   <script src="/player-card-actions.js"></script>
