@@ -9,7 +9,7 @@ SIGNALS_JSON = DIST_DIR / "signals.json"
 OUT_DIR = DIST_DIR / "live-v2"
 OUT_PATH = OUT_DIR / "index.html"
 
-NAV_TEMPLATE_PATH = Path("dashboard/templates/components/nav.html")
+NAV_TEMPLATE_PATH = Path("dashboard/templates/shell_nav.html")
 SEARCH_TEMPLATE_PATH = Path("dashboard/templates/components/player_search.html")
 SHELL_STYLES_PATH = Path("dashboard/templates/shell_styles.css")
 
