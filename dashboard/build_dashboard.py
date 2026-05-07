@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import re
 import json
 import os
 from datetime import date, datetime, timedelta
@@ -241,6 +242,71 @@ def fill_missing_batter_names_with_statsapi(
             continue
 
     return name_map
+
+
+
+def add_seager_score(df: pd.DataFrame, signals: pd.DataFrame) -> pd.DataFrame:
+    """
+    SEAGER v1 = Z-Swing% - O-Swing%.
+    Correct aggression: attack pitches in the zone, refuse pitches out of the zone.
+    """
+    if signals is None or signals.empty or df is None or df.empty:
+        return signals
+
+    required = {"batter", "zone", "description"}
+    if not required.issubset(set(df.columns)):
+        print("SEAGER_SKIPPED_MISSING_COLUMNS:", sorted(required - set(df.columns)))
+        signals["seager_score"] = None
+        return signals
+
+    work = df.copy()
+    work["batter"] = pd.to_numeric(work["batter"], errors="coerce")
+    work["zone"] = pd.to_numeric(work["zone"], errors="coerce")
+
+    # Statcast zone 1-9 = rulebook zone grid; 11-14 = chase/waste zones.
+    work["in_zone"] = work["zone"].between(1, 9)
+
+    swing_descriptions = {
+        "swinging_strike",
+        "swinging_strike_blocked",
+        "foul",
+        "foul_tip",
+        "foul_bunt",
+        "missed_bunt",
+        "bunt_foul_tip",
+        "hit_into_play",
+        "hit_into_play_no_out",
+        "hit_into_play_score",
+    }
+
+    work["is_swing"] = work["description"].astype(str).isin(swing_descriptions)
+
+    rows = []
+    for batter, g in work.dropna(subset=["batter"]).groupby("batter"):
+        z = g[g["in_zone"]]
+        o = g[~g["in_zone"]]
+
+        z_swing = float(z["is_swing"].mean()) if len(z) else None
+        o_swing = float(o["is_swing"].mean()) if len(o) else None
+
+        score = None if z_swing is None or o_swing is None else round((z_swing - o_swing) * 100, 1)
+
+        rows.append({
+            "batter": int(batter),
+            "seager_score": score,
+            "z_swing_pct": round(z_swing * 100, 1) if z_swing is not None else None,
+            "o_swing_pct": round(o_swing * 100, 1) if o_swing is not None else None,
+        })
+
+    if not rows:
+        signals["seager_score"] = None
+        return signals
+
+    seager = pd.DataFrame(rows)
+    out = signals.merge(seager, on="batter", how="left")
+    print("SEAGER_ATTACHED_HITTERS:", int(out["seager_score"].notna().sum()))
+    return out
+
 
 
 def build_hitter_signals(df: pd.DataFrame) -> pd.DataFrame:
@@ -2286,6 +2352,81 @@ def write_status_file(status_payload: dict) -> None:
     print(f"Wrote {SIGNAL_WALL_STATUS_PATH}")
 
 
+
+def _season_context_key(value):
+    if value is None:
+        return ""
+    return re.sub(r"[^a-z0-9]+", " ", str(value).lower()).strip()
+
+
+def _season_context_player_id(value):
+    try:
+        if value in (None, ""):
+            return None
+        return str(int(float(str(value).strip())))
+    except Exception:
+        return None
+
+
+def load_signal_wall_season_context_lookup():
+    path = DIST_DIR / "admin" / "player_signal_index.json"
+    if not path.exists():
+        print("SIGNAL_WALL_SEASON_CONTEXT_MISSING:", path)
+        return {}, {}
+
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        print("SIGNAL_WALL_SEASON_CONTEXT_ERROR:", exc)
+        return {}, {}
+
+    by_id = {}
+    by_name = {}
+
+    for player in data.get("players", []):
+        ctx = player.get("season_context")
+        if not ctx:
+            continue
+
+        pid = _season_context_player_id(player.get("player_id"))
+        name = _season_context_key(player.get("player_name") or player.get("name"))
+
+        if pid:
+            by_id[pid] = ctx
+        if name:
+            by_name[name] = ctx
+
+    print("SIGNAL_WALL_SEASON_CONTEXT_LOOKUP:", len(by_id), "ids //", len(by_name), "names")
+    return by_id, by_name
+
+
+def apply_signal_wall_season_context(df):
+    if df is None or df.empty:
+        return df
+
+    by_id, by_name = load_signal_wall_season_context_lookup()
+    if not by_id and not by_name:
+        return df
+
+    out = df.copy()
+
+    def pick_ctx(row):
+        for field in ["resolved_player_id", "player_id", "batter", "pitcher", "mlbam_id", "id"]:
+            pid = _season_context_player_id(row.get(field))
+            if pid and pid in by_id:
+                return by_id[pid]
+
+        for field in ["player_name", "name", "displayName"]:
+            name = _season_context_key(row.get(field))
+            if name and name in by_name:
+                return by_name[name]
+
+        return None
+
+    out["season_context"] = out.apply(pick_ctx, axis=1)
+    return out
+
+
 def main() -> None:
     build_started_at = utc_now_iso()
     raw = fetch_statcast_window(START_DATE, END_DATE)
@@ -2306,6 +2447,7 @@ def main() -> None:
         return
 
     hitter_signals = build_hitter_signals(raw)
+    hitter_signals = add_seager_score(raw, hitter_signals)
     pitcher_signals = build_pitcher_signals(raw)
 
     if hitter_signals.empty and pitcher_signals.empty:
@@ -2328,6 +2470,12 @@ def main() -> None:
 
     top_hitters = backfill_resolved_player_ids(top_hitters)
     top_pitchers = backfill_resolved_player_ids(top_pitchers)
+
+    top_hitters = apply_signal_wall_season_context(top_hitters)
+    top_pitchers = apply_signal_wall_season_context(top_pitchers)
+
+    print("SIGNAL_WALL_RENDER_CONTEXT_HITTERS:", int(top_hitters["season_context"].notna().sum()) if "season_context" in top_hitters.columns else 0)
+    print("SIGNAL_WALL_RENDER_CONTEXT_PITCHERS:", int(top_pitchers["season_context"].notna().sum()) if "season_context" in top_pitchers.columns else 0)
 
     combined_alerts = pd.concat([top_pitchers, top_hitters], ignore_index=True)
     combined_alerts = combined_alerts.sort_values(
@@ -2376,6 +2524,7 @@ def main() -> None:
                 "metric_2",
                 "metric_3_label",
                 "metric_3",
+                  "season_context",
                 "why",
                 "badges",
             ]
@@ -2390,6 +2539,8 @@ def main() -> None:
                 "metric_2",
                 "metric_3_label",
                 "metric_3",
+                  "season_context",
+                  "seager_score",
                 "why",
                 "badges",
             ]

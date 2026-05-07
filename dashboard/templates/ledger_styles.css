@@ -367,3 +367,66 @@ svg.ledger-sparkline {
     min-width: 0;
   }
 }
+
+.season-context-strip {
+  margin: 12px 0 10px;
+  padding: 10px;
+  border: 1px solid rgba(34, 211, 238, 0.16);
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(34,211,238,0.06), transparent 62%),
+    rgba(2, 6, 12, 0.38);
+}
+
+.season-context-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: rgba(148, 163, 184, 0.88);
+  text-transform: uppercase;
+}
+
+.season-context-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.season-context-tile {
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 10px;
+  padding: 7px 6px;
+  background: rgba(15, 23, 42, 0.36);
+  min-width: 0;
+}
+
+.season-context-tile span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.10em;
+  color: rgba(148, 163, 184, 0.74);
+  text-transform: uppercase;
+}
+
+.season-context-tile strong {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 900;
+  color: rgba(248, 250, 252, 0.96);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .season-context-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
