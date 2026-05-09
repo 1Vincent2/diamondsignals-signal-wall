@@ -246,6 +246,17 @@
 
         </div>
 
+        <div class="drift-proof">
+          <div class="drift-label">DRIFT TRACE</div>
+          <div class="drift-line
+            {% if row.movement_state == 'BREAKDOWN_RISK' %}trace-red{% endif %}
+            {% if row.movement_state == 'EMERGENCE' %}trace-green{% endif %}
+            {% if row.movement_state == 'INSTABILITY' %}trace-blue{% endif %}
+          ">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+
         <div class="metrics">
 
           <div class="metric">
