@@ -203,6 +203,19 @@ def confidence_score(kde_score: float, recent_n: int, baseline_n: int, pitch_cou
     return round(clamp(kde_score * 0.65 + sample_bonus + pitch_bonus, 0, 100), 1)
 
 
+
+def classify_kde_band(score: float) -> str:
+    if score >= 85:
+        return "EXTREME MOVEMENT ANOMALY"
+    if score >= 70:
+        return "MAJOR KINETIC SHIFT"
+    if score >= 55:
+        return "ACTIONABLE DRIFT"
+    if score >= 40:
+        return "EARLY MOVEMENT SIGNAL"
+    return "STABLE BASELINE"
+
+
 def classify_operator_action(movement_state: str, risk: float, emergence: float, instability: float) -> str:
     if movement_state == "BREAKDOWN_RISK":
         if risk >= 75:
@@ -372,6 +385,7 @@ def build_kinetic_signals(appearances: pd.DataFrame) -> list[dict]:
                 "team": str(latest.get("team") or ""),
                 "latest_game_date": str(pd.to_datetime(latest.get("game_date")).date()),
                 "kde_score": kde_score,
+                "kde_band": classify_kde_band(kde_score),
                 "kinetic_risk_score": kinetic_risk_score,
                 "kinetic_emergence_score": kinetic_emergence_score,
                 "kinetic_instability_score": kinetic_instability_score,
