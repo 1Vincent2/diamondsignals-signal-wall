@@ -228,7 +228,7 @@ def classify_operator_action(movement_state: str, risk: float, emergence: float,
         if emergence >= 75:
             return "INITIATE TRACKING"
         if emergence >= 60:
-            return "WATCHLIST / STASH"
+            return "TRACK / STASH"
         return "MONITOR FOR CONFIRMATION"
 
     if movement_state == "INSTABILITY":
