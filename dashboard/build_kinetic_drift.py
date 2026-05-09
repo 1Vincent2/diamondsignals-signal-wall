@@ -205,13 +205,13 @@ def confidence_score(kde_score: float, recent_n: int, baseline_n: int, pitch_cou
 
 
 def classify_kde_band(score: float) -> str:
-    if score >= 85:
+    if score >= 90:
         return "EXTREME MOVEMENT ANOMALY"
-    if score >= 70:
+    if score >= 75:
         return "MAJOR KINETIC SHIFT"
-    if score >= 55:
+    if score >= 60:
         return "ACTIONABLE DRIFT"
-    if score >= 40:
+    if score >= 45:
         return "EARLY MOVEMENT SIGNAL"
     return "STABLE BASELINE"
 
@@ -302,30 +302,30 @@ def build_kinetic_signals(appearances: pd.DataFrame) -> list[dict]:
         # Important: KRS should not treat all movement as bad. Release drift matters,
         # but risk should be driven mainly by negative velocity, extension, IVB, and spin deltas.
         risk_raw = (
-            max(0.0, -velo_delta) * 16
-            + max(0.0, -ext_delta * 8.0) * 14
-            + max(0.0, -ivb_delta) * 12
-            + max(0.0, -spin_delta / 120.0) * 8
-            + max(0.0, release_instability - 1.25) * 10
-            + max(0.0, velocity_instability - 1.25) * 5
-            + max(0.0, extension_instability - 1.25) * 5
+            max(0.0, -velo_delta) * 18
+            + max(0.0, -ext_delta * 8.0) * 12
+            + max(0.0, -ivb_delta) * 10
+            + max(0.0, -spin_delta / 140.0) * 6
+            + max(0.0, release_instability - 1.35) * 8
+            + max(0.0, velocity_instability - 1.35) * 5
+            + max(0.0, extension_instability - 1.35) * 4
         )
 
         emergence_raw = (
-            max(0.0, velo_delta) * 18
-            + max(0.0, ivb_delta) * 18
-            + max(0.0, spin_delta / 120.0) * 8
-            + max(0.0, ext_delta * 8.0) * 6
-            + max(0.0, 1.5 - release_instability) * 6
+            max(0.0, velo_delta) * 16
+            + max(0.0, ivb_delta) * 16
+            + max(0.0, spin_delta / 140.0) * 6
+            + max(0.0, ext_delta * 8.0) * 5
+            + max(0.0, 1.35 - release_instability) * 4
         )
 
         instability_raw = (
-            max(0.0, release_instability - 1.0) * 18
-            + max(0.0, ivb_instability - 1.0) * 12
-            + max(0.0, hb_instability - 1.0) * 8
-            + max(0.0, velocity_instability - 1.0) * 8
-            + max(0.0, extension_instability - 1.0) * 8
-            + max(0.0, spin_instability - 1.0) * 6
+            max(0.0, release_instability - 1.15) * 14
+            + max(0.0, ivb_instability - 1.15) * 10
+            + max(0.0, hb_instability - 1.15) * 7
+            + max(0.0, velocity_instability - 1.15) * 7
+            + max(0.0, extension_instability - 1.15) * 7
+            + max(0.0, spin_instability - 1.15) * 5
         )
 
         kinetic_risk_score = round(clamp(risk_raw, 0, 100), 1)
@@ -374,7 +374,7 @@ def build_kinetic_signals(appearances: pd.DataFrame) -> list[dict]:
             kinetic_instability_score,
         )
 
-        if kde_score < 40 and diagnosis == "NO ACUTE DRIFT":
+        if kde_score < 45 and diagnosis == "NO ACUTE DRIFT":
             continue
 
         latest = g.iloc[0]
