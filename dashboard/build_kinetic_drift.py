@@ -260,6 +260,85 @@ def build_drift_trace(recent: pd.DataFrame, baseline: pd.DataFrame) -> list[dict
     return trace
 
 
+
+def classify_trace_behavior(trace: list[dict]) -> str:
+    if len(trace) < 3:
+        return "INSUFFICIENT TRACE"
+
+    values = [safe_float(point.get("drift_index")) or 0.0 for point in trace[-3:]]
+    first, middle, last = values
+
+    total_move = last - first
+    leg_one = middle - first
+    leg_two = last - middle
+
+    if abs(total_move) <= 8 and max(values) - min(values) <= 15:
+        return "HOLDING"
+
+    if leg_one > 12 and leg_two < -12:
+        return "CHOPPY / REVERSAL"
+
+    if leg_one < -12 and leg_two > 12:
+        return "CHOPPY / REBOUND"
+
+    if total_move >= 18:
+        return "ACCELERATING"
+
+    if total_move <= -18:
+        return "COOLING"
+
+    return "MIXED"
+
+
+def movement_state_label(movement_state: str) -> str:
+    if movement_state == "BREAKDOWN_RISK":
+        return "DECAY / FATIGUE RISK"
+    if movement_state == "EMERGENCE":
+        return "EMERGENCE / POWER GAIN"
+    if movement_state == "INSTABILITY":
+        return "MECHANICAL INSTABILITY"
+    return movement_state
+
+
+def align_diagnosis_to_state(
+    movement_state: str,
+    diagnosis: str,
+    risk: float,
+    emergence: float,
+    instability: float,
+    trace_behavior: str,
+) -> str:
+    if movement_state == "BREAKDOWN_RISK":
+        if trace_behavior == "ACCELERATING":
+            return "ACCELERATING DECAY / FATIGUE RISK"
+        if trace_behavior == "COOLING":
+            return "DECAY EVENT COOLING / STILL RISK-FAMILY"
+        if instability >= 60:
+            return "DECAY RISK WITH MECHANICAL VOLATILITY"
+        return diagnosis if diagnosis != "NO ACUTE DRIFT" else "EARLY KINETIC DECAY"
+
+    if movement_state == "EMERGENCE":
+        if trace_behavior == "ACCELERATING":
+            return "EMERGENCE SIGNAL STRENGTHENING"
+        if trace_behavior == "COOLING":
+            return "EMERGENCE SIGNAL COOLING / VERIFY HOLD"
+        if instability >= 55:
+            return "EMERGENCE WITH RELEASE VOLATILITY"
+        return diagnosis if diagnosis != "NO ACUTE DRIFT" else "EMERGING SHAPE / POWER GAIN"
+
+    if movement_state == "INSTABILITY":
+        if risk >= 55:
+            return "MECHANICAL VOLATILITY WITH DECAY PRESSURE"
+        if emergence >= 45:
+            return "MECHANICAL VOLATILITY WITH EMERGENCE PRESSURE"
+        if trace_behavior in {"CHOPPY / REVERSAL", "CHOPPY / REBOUND"}:
+            return "CHOPPY RELEASE / SHAPE VOLATILITY"
+        if trace_behavior == "HOLDING":
+            return "MECHANICAL INSTABILITY HOLDING"
+        return "MECHANICAL VOLATILITY // VERIFY RELEASE WINDOW"
+
+    return diagnosis
+
 def classify_operator_action(movement_state: str, risk: float, emergence: float, instability: float) -> str:
     if movement_state == "BREAKDOWN_RISK":
         if risk >= 75:
@@ -410,6 +489,15 @@ def build_kinetic_signals(appearances: pd.DataFrame) -> list[dict]:
             diagnosis = "UNSTABLE EMERGENCE PROFILE"
 
         drift_trace = build_drift_trace(recent, baseline)
+        trace_behavior = classify_trace_behavior(drift_trace)
+        diagnosis_detail = align_diagnosis_to_state(
+            movement_state,
+            diagnosis,
+            kinetic_risk_score,
+            kinetic_emergence_score,
+            kinetic_instability_score,
+            trace_behavior,
+        )
 
         total_recent_fastballs = int(pd.to_numeric(recent["pitch_count"], errors="coerce").fillna(0).sum())
         confidence = confidence_score(kde_score, len(recent), len(baseline), total_recent_fastballs)
@@ -437,10 +525,13 @@ def build_kinetic_signals(appearances: pd.DataFrame) -> list[dict]:
                 "kinetic_instability_score": kinetic_instability_score,
                 "classification": classify_kds(kinetic_risk_score),
                 "movement_state": movement_state,
+                "movement_state_label": movement_state_label(movement_state),
+                "trace_behavior": trace_behavior,
                 "confidence_score": confidence,
                 "operator_action": operator_action,
                 "drift_trace": drift_trace,
-                "diagnosis": diagnosis,
+                "diagnosis": diagnosis_detail,
+                "raw_diagnosis": diagnosis,
                 "recent_appearances": int(len(recent)),
                 "baseline_appearances": int(len(baseline)),
                 "metrics": {

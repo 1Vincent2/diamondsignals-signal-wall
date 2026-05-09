@@ -620,19 +620,9 @@
 
       {% for row in signals %}
       <div class="card">
-        {% if row.movement_state == 'BREAKDOWN_RISK' %}
-          {% set state_label = 'DECAY / FATIGUE RISK' %}
-          {% set forensic_state = 'EARLY KINETIC DECAY' %}
-        {% elif row.movement_state == 'EMERGENCE' %}
-          {% set state_label = 'EMERGENCE / POWER GAIN' %}
-          {% set forensic_state = 'EMERGING SHAPE / POWER GAIN' %}
-        {% elif row.movement_state == 'INSTABILITY' %}
-          {% set state_label = 'MECHANICAL INSTABILITY' %}
-          {% set forensic_state = 'MECHANICAL VOLATILITY // VERIFY RELEASE WINDOW' %}
-        {% else %}
-          {% set state_label = row.movement_state %}
-          {% set forensic_state = row.diagnosis %}
-        {% endif %}
+        {% set state_label = row.movement_state_label or row.movement_state %}
+        {% set forensic_state = row.diagnosis %}
+        {% set trace_behavior = row.trace_behavior or 'MIXED' %}
 
         <div class="top">
 
@@ -672,7 +662,7 @@
         ">
           <div class="trace-head">
             <div class="trace-label">3-OUTING DRIFT WAVEFORM</div>
-            <div class="trace-state">{{ state_label }}</div>
+            <div class="trace-state">{{ state_label }} // {{ trace_behavior }}</div>
           </div>
 
           {% if row.drift_trace and row.drift_trace|length >= 3 %}
@@ -716,6 +706,7 @@
             EXT {{ last.extension_delta }} FT //
             REL-X {{ last.release_x_delta }} //
             REL-Z {{ last.release_z_delta }} //
+              TRACE {{ trace_behavior }} //
             {{ forensic_state }}
           </div>
           {% endif %}
@@ -751,7 +742,7 @@
           </div>
 
           <div class="confidence">
-            {{ row.movement_state }}
+            {{ state_label }} // {{ trace_behavior }}
           </div>
         </div>
 

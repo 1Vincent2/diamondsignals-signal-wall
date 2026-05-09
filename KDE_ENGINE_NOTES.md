@@ -113,3 +113,50 @@ KDE remains intentionally disconnected from:
 - live Signal Wall routing
 
 Production wiring comes later only after the waveform, diagnosis logic, UI hierarchy, and explanation layer are reviewed further.
+
+## V4 Diagnosis Logic Preview — kinetic-drift-v4-diagnosis-logic
+
+### Current status
+KDE V4 adds diagnosis alignment logic on top of the V3 waveform preview.
+
+KDE remains isolated and experimental. It is not production-wired.
+
+### V4 additions
+- Added `trace_behavior` classification:
+  - ACCELERATING
+  - COOLING
+  - HOLDING
+  - MIXED
+  - CHOPPY / REVERSAL
+  - CHOPPY / REBOUND
+  - INSUFFICIENT TRACE
+- Added `movement_state_label` for user-facing signal-family language:
+  - BREAKDOWN_RISK → DECAY / FATIGUE RISK
+  - EMERGENCE → EMERGENCE / POWER GAIN
+  - INSTABILITY → MECHANICAL INSTABILITY
+- Added `raw_diagnosis` to preserve the original diagnostic read.
+- Added aligned user-facing `diagnosis` so card color, signal family, and forensic read agree.
+- Fixed instability-dominant cards so they no longer display misleading emergence/decay language as the main diagnosis.
+- Updated KDE preview UI to display:
+  - signal family + trace behavior in waveform header
+  - trace behavior in forensic readout
+  - signal family + trace behavior in the action footer
+
+### Interpretation example
+A blue instability card may still have raw emergence pressure underneath, but the user-facing diagnosis should describe the dominant signal family.
+
+Example:
+- movement_state: INSTABILITY
+- movement_state_label: MECHANICAL INSTABILITY
+- trace_behavior: CHOPPY / REBOUND
+- diagnosis: CHOPPY RELEASE / SHAPE VOLATILITY
+- raw_diagnosis: EMERGING SHAPE / POWER GAIN
+
+This preserves the underlying model read while preventing UX confusion.
+
+### Still isolated
+KDE remains intentionally disconnected from:
+- dashboard/build_all.py
+- netlify.toml
+- production functions
+- live Signal Wall routing
