@@ -8,12 +8,16 @@ from pathlib import Path
 
 import pandas as pd
 from pybaseball import statcast
+from jinja2 import Template
 
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
 DIST_DIR = REPO_ROOT / "dist"
 OUT_DIR = DIST_DIR / "admin"
 OUT_PATH = OUT_DIR / "kinetic_drift_signals.json"
+HTML_DIR = OUT_DIR / "kinetic-drift"
+HTML_PATH = HTML_DIR / "index.html"
+TEMPLATE_PATH = BASE_DIR / "templates" / "admin" / "kinetic_drift.html"
 
 LOOKBACK_DAYS = 45
 RECENT_APPEARANCES = 3
@@ -339,6 +343,15 @@ def build_kinetic_signals(appearances: pd.DataFrame) -> list[dict]:
             else "STABLE"
         )
 
+        if movement_state == "INSTABILITY" and diagnosis == "NO ACUTE DRIFT":
+            diagnosis = "KINETIC VARIABILITY SPIKE"
+
+        if movement_state == "INSTABILITY" and kinetic_risk_score >= 50 and "DECAY" in diagnosis:
+            diagnosis = "UNSTABLE DECAY PROFILE"
+
+        if movement_state == "INSTABILITY" and kinetic_emergence_score >= 50 and "EMERGING" in diagnosis:
+            diagnosis = "UNSTABLE EMERGENCE PROFILE"
+
         total_recent_fastballs = int(pd.to_numeric(recent["pitch_count"], errors="coerce").fillna(0).sum())
         confidence = confidence_score(kde_score, len(recent), len(baseline), total_recent_fastballs)
         operator_action = classify_operator_action(
@@ -418,6 +431,14 @@ def write_json(signals: list[dict], start_date: str, end_date: str) -> None:
     }
     OUT_PATH.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     print(f"Wrote {len(signals)} kinetic drift signals -> {OUT_PATH}")
+
+    HTML_DIR.mkdir(parents=True, exist_ok=True)
+    template = Template(TEMPLATE_PATH.read_text(encoding="utf-8"))
+    HTML_PATH.write_text(
+        template.render(signals=signals, payload=payload),
+        encoding="utf-8",
+    )
+    print(f"Wrote kinetic drift preview -> {HTML_PATH}")
 
 
 def main() -> None:

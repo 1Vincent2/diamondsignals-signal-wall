@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kinetic Drift Engine</title>
+
+  <style>
+    :root{
+      --bg:#07090c;
+      --panel:#0d1117;
+      --border:rgba(255,255,255,.08);
+      --text:#f3f6fb;
+      --muted:rgba(255,255,255,.58);
+
+      --cyan:#54c7ff;
+      --lime:#9dff6b;
+      --red:#ff6b6b;
+      --amber:#ffbf69;
+      --purple:#9f7aea;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:Inter,system-ui,sans-serif;
+      padding:32px;
+    }
+
+    .shell{
+      max-width:1600px;
+      margin:0 auto;
+    }
+
+    .eyebrow{
+      color:var(--lime);
+      font-size:12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:10px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    }
+
+    h1{
+      font-size:clamp(44px,5vw,72px);
+      line-height:1.02;
+      letter-spacing:-0.05em;
+      margin:0 0 14px;
+      max-width:980px;
+      font-weight:700;
+    }
+
+    .sub{
+      color:var(--muted);
+      max-width:920px;
+      font-size:18px;
+      line-height:1.6;
+      margin-bottom:36px;
+    }
+
+    .grid{
+      display:grid;
+      gap:18px;
+    }
+
+    .card{
+      background:linear-gradient(
+        180deg,
+        rgba(255,255,255,.03),
+        rgba(255,255,255,.015)
+      );
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:22px;
+    }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      gap:18px;
+      align-items:flex-start;
+      margin-bottom:18px;
+    }
+
+    .name{
+      font-size:28px;
+      font-weight:700;
+      letter-spacing:-0.04em;
+    }
+
+    .diag{
+      display:inline-block;
+      margin-top:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      border:1px solid rgba(255,255,255,.08);
+      color:#fff;
+    }
+
+    .diag.breakdown{background:rgba(255,107,107,.12); color:var(--red)}
+    .diag.emergence{background:rgba(157,255,107,.10); color:var(--lime)}
+    .diag.instability{background:rgba(84,199,255,.10); color:var(--cyan)}
+
+    .score{
+      text-align:right;
+    }
+
+    .score .num{
+      font-size:58px;
+      font-weight:800;
+      line-height:.9;
+      letter-spacing:-0.06em;
+    }
+
+    .score .label{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    }
+
+    .metrics{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .metric{
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.02);
+    }
+
+    .metric .k{
+      color:var(--muted);
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+      margin-bottom:8px;
+    }
+
+    .metric .v{
+      font-size:28px;
+      font-weight:700;
+      letter-spacing:-0.04em;
+    }
+
+    .action{
+      margin-top:18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      border-top:1px solid var(--border);
+      padding-top:18px;
+    }
+
+    .operator{
+      color:#fff;
+      font-weight:600;
+      letter-spacing:-0.02em;
+    }
+
+    .confidence{
+      color:var(--muted);
+      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    }
+
+    @media (max-width:960px){
+      .metrics{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .top{
+        flex-direction:column;
+      }
+
+      .score{
+        text-align:left;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+
+    <div class="eyebrow">
+      DIAMONDSIGNALS // KINETIC DRIFT ENGINE
+    </div>
+
+    <h1>
+      Recursive movement drift before the box score reprices the asset.
+    </h1>
+
+    <div class="sub">
+      Kinetic Drift isolates emerging biomechanical instability, velocity collapse,
+      release-point fragmentation, and hidden shape gains before traditional outcome metrics fully react.
+    </div>
+
+    <div class="grid">
+
+      {% for row in signals %}
+      <div class="card">
+
+        <div class="top">
+
+          <div>
+            <div class="name">
+              {{ row.player_name }}
+            </div>
+
+            <div class="diag
+              {% if row.movement_state == 'BREAKDOWN_RISK' %}breakdown{% endif %}
+              {% if row.movement_state == 'EMERGENCE' %}emergence{% endif %}
+              {% if row.movement_state == 'INSTABILITY' %}instability{% endif %}
+            ">
+              {{ row.diagnosis }}
+            </div>
+          </div>
+
+          <div class="score">
+            <div class="num">
+              {{ row.kde_score }}
+            </div>
+
+            <div class="label">
+              KDE SCORE
+            </div>
+          </div>
+
+        </div>
+
+        <div class="metrics">
+
+          <div class="metric">
+            <div class="k">KINETIC RISK</div>
+            <div class="v">{{ row.kinetic_risk_score }}</div>
+          </div>
+
+          <div class="metric">
+            <div class="k">EMERGENCE</div>
+            <div class="v">{{ row.kinetic_emergence_score }}</div>
+          </div>
+
+          <div class="metric">
+            <div class="k">INSTABILITY</div>
+            <div class="v">{{ row.kinetic_instability_score }}</div>
+          </div>
+
+          <div class="metric">
+            <div class="k">CONFIDENCE</div>
+            <div class="v">{{ row.confidence_score }}</div>
+          </div>
+
+        </div>
+
+        <div class="action">
+          <div class="operator">
+            {{ row.operator_action }}
+          </div>
+
+          <div class="confidence">
+            {{ row.movement_state }}
+          </div>
+        </div>
+
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</body>
+</html>
