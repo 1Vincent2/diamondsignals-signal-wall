@@ -216,6 +216,50 @@ def classify_kde_band(score: float) -> str:
     return "STABLE BASELINE"
 
 
+def build_drift_trace(recent: pd.DataFrame, baseline: pd.DataFrame) -> list[dict]:
+    base_speed = mean_or_none(baseline["release_speed"])
+    base_ext = mean_or_none(baseline["release_extension"])
+    base_ivb = mean_or_none(baseline["ivb_inches"])
+    base_rel_x = mean_or_none(baseline["release_pos_x"])
+    base_rel_z = mean_or_none(baseline["release_pos_z"])
+
+    trace = []
+    ordered = recent.sort_values(["game_date", "game_pk"], ascending=True)
+
+    for _, row in ordered.iterrows():
+        speed = safe_float(row.get("release_speed"))
+        ext = safe_float(row.get("release_extension"))
+        ivb = safe_float(row.get("ivb_inches"))
+        rel_x = safe_float(row.get("release_pos_x"))
+        rel_z = safe_float(row.get("release_pos_z"))
+
+        speed_delta = (speed - base_speed) if speed is not None and base_speed is not None else 0.0
+        ext_delta = (ext - base_ext) if ext is not None and base_ext is not None else 0.0
+        ivb_delta = (ivb - base_ivb) if ivb is not None and base_ivb is not None else 0.0
+        rel_x_delta = (rel_x - base_rel_x) if rel_x is not None and base_rel_x is not None else 0.0
+        rel_z_delta = (rel_z - base_rel_z) if rel_z is not None and base_rel_z is not None else 0.0
+
+        drift_index = (
+            abs(speed_delta) * 16
+            + abs(ext_delta) * 65
+            + abs(ivb_delta) * 8
+            + abs(rel_x_delta) * 55
+            + abs(rel_z_delta) * 55
+        )
+
+        trace.append({
+            "game_date": str(pd.to_datetime(row.get("game_date")).date()),
+            "drift_index": round(clamp(drift_index, 0, 100), 1),
+            "speed_delta": round(speed_delta, 2),
+            "extension_delta": round(ext_delta, 2),
+            "ivb_delta": round(ivb_delta, 2),
+            "release_x_delta": round(rel_x_delta, 2),
+            "release_z_delta": round(rel_z_delta, 2),
+        })
+
+    return trace
+
+
 def classify_operator_action(movement_state: str, risk: float, emergence: float, instability: float) -> str:
     if movement_state == "BREAKDOWN_RISK":
         if risk >= 75:
@@ -365,6 +409,8 @@ def build_kinetic_signals(appearances: pd.DataFrame) -> list[dict]:
         if movement_state == "INSTABILITY" and kinetic_emergence_score >= 50 and "EMERGING" in diagnosis:
             diagnosis = "UNSTABLE EMERGENCE PROFILE"
 
+        drift_trace = build_drift_trace(recent, baseline)
+
         total_recent_fastballs = int(pd.to_numeric(recent["pitch_count"], errors="coerce").fillna(0).sum())
         confidence = confidence_score(kde_score, len(recent), len(baseline), total_recent_fastballs)
         operator_action = classify_operator_action(
@@ -393,6 +439,7 @@ def build_kinetic_signals(appearances: pd.DataFrame) -> list[dict]:
                 "movement_state": movement_state,
                 "confidence_score": confidence,
                 "operator_action": operator_action,
+                "drift_trace": drift_trace,
                 "diagnosis": diagnosis,
                 "recent_appearances": int(len(recent)),
                 "baseline_appearances": int(len(baseline)),

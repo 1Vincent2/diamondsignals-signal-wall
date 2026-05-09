@@ -60,3 +60,56 @@ Kinetic Drift remains intentionally disconnected from:
 - netlify.toml
 - production functions
 - live Signal Wall routing
+
+## V3 Waveform UI Preview — kinetic-drift-v3-waveform-ui
+
+### Current status
+Kinetic Drift Engine now has a visual waveform proof module in the admin preview.
+
+KDE remains isolated and experimental. It is not production-wired.
+
+### V3 additions
+- Added `drift_trace` JSON to each KDE signal.
+- Added 3-outing SVG waveform renderer.
+- Added latest-point pulse on waveform.
+- Added waveform color system:
+  - Red = decay / fatigue risk
+  - Lime = emergence / power gain
+  - Cyan = mechanical instability
+- Added page-level explanation that color and slope mean different things:
+  - Color = dominant signal family / diagnosis
+  - Slope = recent 3-outing signal behavior
+- Added forensic readout line under each waveform.
+- Added proprietary DiamondSignals research surface notation.
+- Added Kinetic Drift Engine © KDE branding language.
+
+### Interpretation model
+The waveform should not be read as a simple red/green/blue chart.
+
+Color answers:
+"What kind of kinetic signal is this?"
+
+Slope answers:
+"Is that signal accelerating, cooling, or holding across the last three outings?"
+
+Examples:
+- Red + rising = decay/fatigue risk intensifying
+- Red + falling = prior decay event cooling, but still in the risk family
+- Lime + rising = emergence/power-gain signal strengthening
+- Lime + falling = emergence signal cooling
+- Cyan + level = mechanical instability holding, not necessarily safe
+
+### Branding note
+The current page should use:
+Kinetic Drift Engine © KDE
+
+Avoid using "Hawking" in the visible product copy for now. The public-facing terminology should stay closer to "Synthetic Kinetic Biometrics," "inferred-movement intelligence," and "KDE."
+
+### Still isolated
+KDE remains intentionally disconnected from:
+- dashboard/build_all.py
+- netlify.toml
+- production functions
+- live Signal Wall routing
+
+Production wiring comes later only after the waveform, diagnosis logic, UI hierarchy, and explanation layer are reviewed further.
