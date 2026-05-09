@@ -36,3 +36,27 @@ This branch is intentionally not wired into:
 - Risk/opportunity color refinement
 - Player drilldown concept
 - Later Signal Wall integration review
+
+## V2 Calibration Pass
+Merged to main: 6144f91
+
+### What changed
+- KDE band thresholds were raised:
+  - Extreme: 90+
+  - Major: 75+
+  - Actionable: 60+
+  - Early: 45+
+- Risk, emergence, and instability formulas were softened to reduce over-amplification.
+- Low-signal no-drift filter moved from 40 to 45.
+
+### Result
+- Cleaner distribution.
+- Fewer false “extreme” labels.
+- Better separation between true anomalies, actionable drift, and early movement signals.
+
+### Still isolated
+Kinetic Drift remains intentionally disconnected from:
+- dashboard/build_all.py
+- netlify.toml
+- production functions
+- live Signal Wall routing
