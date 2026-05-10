@@ -160,3 +160,71 @@ KDE remains intentionally disconnected from:
 - netlify.toml
 - production functions
 - live Signal Wall routing
+
+## V7 Final QA / Documentation Pass — kinetic-drift-v7-final-qa-docs
+
+### Current branch
+`kinetic-drift-v7-final-qa-docs`
+
+### Current KDE stack
+- V2: calibrated KDE score distribution
+- V3: waveform preview UI
+- V4: diagnosis alignment logic
+- V5: mobile UX polish
+- V6: operator command UX
+- V7: final QA and documentation pass
+
+### V7 objective
+Prepare KDE as a complete experimental module candidate by documenting the current architecture, confirming production isolation, and creating a clear next-step checklist before any future integration.
+
+### Current KDE output
+KDE currently writes:
+- `dist/admin/kinetic_drift_signals.json`
+- `dist/admin/kinetic-drift/index.html`
+
+### Current KDE fields
+Key output fields include:
+- `kde_score`
+- `kde_band`
+- `kinetic_risk_score`
+- `kinetic_emergence_score`
+- `kinetic_instability_score`
+- `movement_state`
+- `movement_state_label`
+- `trace_behavior`
+- `diagnosis`
+- `raw_diagnosis`
+- `operator_action`
+- `operator_note`
+- `confidence_score`
+- `drift_trace`
+- `metrics`
+
+### Production isolation status
+KDE remains intentionally isolated from:
+- `dashboard/build_all.py`
+- `netlify.toml`
+- production Netlify functions
+- live Signal Wall routing
+
+### Remaining pre-production checklist
+Before production wiring:
+1. Confirm scoring behavior over several slates.
+2. Review top 20 names for false positives.
+3. Add stale-data / generated_at freshness guard.
+4. Decide whether KDE belongs under `/admin/`, `/lab/`, or a future protected operator route.
+5. Add auth protection before any public admin route exposure.
+6. Decide whether KDE feeds Signal Wall cards, Player Forensics, Tracking Radar, or remains standalone.
+7. Consider exporting a compact player-level KDE overlay for app-side use.
+8. Add glossary/tooltips for KDE, KRS, KES, KIS, trace behavior, and operator commands.
+9. Add a dedicated roadmap section for Hawking / inferred biomechanics descendants:
+   - Release Window Integrity
+   - Shape Mutation Report
+   - Fatigue Fracture Report
+   - Emergence Mechanics Report
+   - Command Scatter / Release Fragmentation
+   - Pitch Arsenal Drift
+   - future Hitter Kinetic Timing
+
+### V7 recommendation
+Keep KDE experimental but “complete enough” after this pass. Next serious milestone should be integration planning, not more cosmetic polish.
