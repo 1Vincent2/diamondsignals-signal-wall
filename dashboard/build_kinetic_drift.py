@@ -359,9 +359,37 @@ def classify_operator_action(movement_state: str, risk: float, emergence: float,
             return "VOLATILITY WATCH"
         if instability >= 65:
             return "HOLD / VERIFY MECHANICS"
-        return "MONITOR"
+        return "MONITOR MECHANICS"
 
     return "NO ACTION"
+
+
+def operator_directive(operator_action: str, movement_state: str, trace_behavior: str) -> str:
+    if operator_action == "EXIT / BENCH IMMEDIATELY":
+        return "High-risk kinetic decay profile. Treat as roster-damage prevention until the next outing proves stabilization."
+    if operator_action == "REDUCE EXPOSURE":
+        return "Risk family is active but not terminal. Trim exposure, verify velocity and release window before trusting volume."
+    if operator_action == "MONITOR NEXT OUTING":
+        return "Early decay read. No panic move yet, but next appearance becomes the confirmation checkpoint."
+
+    if operator_action == "INITIATE TRACKING":
+        return "Power or shape gain has cleared the signal threshold. Move asset onto Tracking Radar before the market reprices."
+    if operator_action == "TRACK / STASH":
+        return "Emergence profile is building. Track aggressively, but wait for one more confirmation layer before full deployment."
+    if operator_action == "MONITOR FOR CONFIRMATION":
+        return "Emergence pressure exists, but the edge is not clean enough yet. Keep under surveillance."
+
+    if operator_action == "VOLATILITY WATCH":
+        return "Mechanical instability is the dominant read. Do not blindly add or exit; verify release-window repeatability."
+    if operator_action == "HOLD / VERIFY MECHANICS":
+        return "Volatility is actionable, but direction is unresolved. Hold current exposure and demand mechanical confirmation."
+    if operator_action == "MONITOR MECHANICS":
+        return "Low-grade instability. Watch release slot, IVB, and velocity shape before changing exposure."
+
+    if movement_state == "STABLE":
+        return "No acute command. Maintain baseline surveillance."
+
+    return f"Operator should verify {movement_state} with trace behavior: {trace_behavior}."
 
 def build_kinetic_signals(appearances: pd.DataFrame) -> list[dict]:
     if appearances.empty:
@@ -507,6 +535,7 @@ def build_kinetic_signals(appearances: pd.DataFrame) -> list[dict]:
             kinetic_emergence_score,
             kinetic_instability_score,
         )
+        operator_note = operator_directive(operator_action, movement_state, trace_behavior)
 
         if kde_score < 45 and diagnosis == "NO ACUTE DRIFT":
             continue
@@ -529,6 +558,7 @@ def build_kinetic_signals(appearances: pd.DataFrame) -> list[dict]:
                 "trace_behavior": trace_behavior,
                 "confidence_score": confidence,
                 "operator_action": operator_action,
+                "operator_note": operator_note,
                 "drift_trace": drift_trace,
                 "diagnosis": diagnosis_detail,
                 "raw_diagnosis": diagnosis,
