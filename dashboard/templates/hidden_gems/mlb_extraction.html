@@ -1083,6 +1083,88 @@
         max-width: 240px;
       }
     }
+
+/* MLB_EXTRACTION_KDE_STYLE_MOBILE_SIGNAL_CARD */
+@media screen and (max-width: 760px) {
+  .app {
+    width: min(100%, calc(100% - 28px)) !important;
+    padding: 18px 0 48px !important;
+  }
+
+  .hero.mlb-extraction-mobile-hero {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    margin: 16px 0 16px !important;
+  }
+
+  .hero.mlb-extraction-mobile-hero .hero-card {
+    padding: 18px 16px !important;
+    border-radius: 22px !important;
+  }
+
+  .hero.mlb-extraction-mobile-hero .hero-title {
+    font-size: 34px !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.045em !important;
+    font-weight: 650 !important;
+    text-transform: none !important;
+  }
+
+  .hero.mlb-extraction-mobile-hero .hero-sub {
+    margin-top: 12px !important;
+    font-size: 13px !important;
+    line-height: 1.48 !important;
+    color: rgba(226,232,240,0.72) !important;
+  }
+
+  .hero.mlb-extraction-mobile-hero .summary-card {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    padding: 12px !important;
+    border-radius: 20px !important;
+    min-height: 0 !important;
+  }
+
+  .hero.mlb-extraction-mobile-hero .summary-card > div {
+    border: 1px solid rgba(255,255,255,0.07) !important;
+    border-radius: 14px !important;
+    padding: 10px !important;
+    background: rgba(255,255,255,0.025) !important;
+  }
+
+  .hero.mlb-extraction-mobile-hero .summary-label {
+    font-size: 8px !important;
+    line-height: 1 !important;
+    letter-spacing: 0.14em !important;
+  }
+
+  .hero.mlb-extraction-mobile-hero .summary-value {
+    margin-top: 6px !important;
+    font-size: 20px !important;
+    line-height: 1 !important;
+  }
+
+  .hero.mlb-extraction-mobile-hero .summary-mini {
+    grid-column: 1 / -1 !important;
+    font-size: 10px !important;
+    line-height: 1.45 !important;
+    color: rgba(182,255,0,0.78) !important;
+  }
+
+  .section {
+    border-radius: 22px !important;
+    padding: 14px !important;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+}
+
+
   </style>
 </head>
 <body>
@@ -1106,7 +1188,7 @@
   {{ search_html | safe }}
 
   <div class="app">
-    <section class="hero">
+    <section class="hero mlb-extraction-mobile-hero">
       <div class="hero-card">
         <div class="eyebrow">Signal Wall // Edge</div>
         <h1 class="hero-title">MLB Extraction Ledger</h1>
@@ -1159,6 +1241,10 @@
   data-player-name="{{ row.player_name }}"
   data-player-type="pitcher"
   data-player-team="{{ row.display_team }}"
+  data-source-tag="mlb-extraction-ledger"
+  data-sort-score="{{ row.hidden_gems_score }}"
+  data-rank="{{ loop.index }}"
+  data-signal-type="pitcher"
   data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
           <div class="player-top">
@@ -1272,6 +1358,10 @@
   data-player-name="{{ row.player_name }}"
   data-player-type="hitter"
   data-player-team="{{ row.display_team }}"
+  data-source-tag="mlb-extraction-ledger"
+  data-sort-score="{{ row.hidden_gems_score }}"
+  data-rank="{{ loop.index }}"
+  data-signal-type="hitter"
   data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
           <div class="player-top">
