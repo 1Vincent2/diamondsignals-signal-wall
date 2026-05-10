@@ -564,6 +564,219 @@
         text-align:left;
       }
     }
+  
+    /* V5 mobile UX polish */
+    @media (max-width:720px){
+      body{
+        padding:26px 16px 72px;
+      }
+
+      .wrap{
+        width:100%;
+      }
+
+      .eyebrow{
+        font-size:10px;
+        letter-spacing:.22em;
+        line-height:1.4;
+      }
+
+      h1{
+        margin-top:16px;
+        font-size:clamp(42px, 13vw, 58px);
+        line-height:.94;
+        letter-spacing:-.075em;
+      }
+
+      .sub{
+        margin-top:20px;
+        font-size:17px;
+        line-height:1.55;
+        max-width:100%;
+      }
+
+      .proprietary-box,
+      .method-box,
+      .kde-legend,
+      .kde-interpretation,
+      .kde-guide-card{
+        border-radius:18px;
+      }
+
+      .proprietary-box,
+      .method-box{
+        padding:14px 16px;
+      }
+
+      .method-box{
+        margin-top:12px;
+      }
+
+      .kde-legend{
+        margin:18px 0 14px;
+        padding:14px 16px;
+        display:grid;
+        gap:10px;
+      }
+
+      .legend-title{
+        display:block;
+        margin-bottom:2px;
+      }
+
+      .legend-chip{
+        width:100%;
+        justify-content:flex-start;
+        padding:8px 10px;
+      }
+
+      .kde-interpretation{
+        margin:12px 0 10px;
+        padding:12px 14px;
+        font-size:10px;
+        line-height:1.5;
+      }
+
+      .kde-guide{
+        margin:8px 0 18px;
+        gap:8px;
+        grid-template-columns:1fr;
+      }
+
+      .kde-guide-card{
+        padding:10px 12px;
+        font-size:9.5px;
+        line-height:1.45;
+      }
+
+      .grid{
+        gap:14px;
+      }
+
+      .card{
+        border-radius:24px;
+        padding:22px 18px 20px;
+      }
+
+      .top{
+        display:block;
+      }
+
+      .name{
+        font-size:24px;
+        line-height:1.02;
+      }
+
+      .diag{
+        margin-top:12px;
+        font-size:11px;
+        padding:8px 12px;
+        letter-spacing:.13em;
+      }
+
+      .score{
+        text-align:left;
+        margin-top:22px;
+      }
+
+      .num{
+        font-size:66px;
+        line-height:.82;
+      }
+
+      .score .label,
+      .score .band{
+        text-align:left;
+      }
+
+      .trace-panel{
+        margin-top:24px;
+        padding:13px 12px 12px;
+        border-radius:20px;
+      }
+
+      .trace-head{
+        align-items:flex-start;
+        gap:8px;
+      }
+
+      .trace-label{
+        max-width:42%;
+        font-size:10px;
+        line-height:1.25;
+      }
+
+      .trace-state{
+        max-width:54%;
+        text-align:right;
+        font-size:9px;
+        line-height:1.35;
+      }
+
+      .trace-svg{
+        height:104px;
+      }
+
+      .trace-deltas{
+        grid-template-columns:1fr 1fr 1fr;
+        gap:6px;
+      }
+
+      .trace-deltas div{
+        font-size:10px;
+        padding:7px 8px;
+      }
+
+      .forensic-readout{
+        margin-top:8px;
+        padding:10px 10px;
+        font-size:10px;
+        line-height:1.45;
+      }
+
+      .metrics{
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+        margin-top:20px;
+      }
+
+      .metric{
+        min-height:86px;
+        padding:14px 14px;
+        border-radius:18px;
+      }
+
+      .metric .k{
+        font-size:10px;
+      }
+
+      .metric .v{
+        margin-top:12px;
+        font-size:31px;
+      }
+
+      .action{
+        margin-top:18px;
+        padding-top:18px;
+        align-items:flex-start;
+        gap:18px;
+      }
+
+      .operator{
+        max-width:42%;
+        font-size:14px;
+        line-height:1.16;
+      }
+
+      .confidence{
+        max-width:54%;
+        text-align:right;
+        font-size:14px;
+        line-height:1.28;
+        color:rgba(229,231,235,.68);
+      }
+    }
+
   </style>
 </head>
 
