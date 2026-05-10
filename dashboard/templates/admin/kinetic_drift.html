@@ -45,12 +45,14 @@
     }
 
     h1{
-      font-size:clamp(44px,5vw,72px);
-      line-height:1.02;
-      letter-spacing:-0.05em;
-      margin:0 0 14px;
+      margin:18px 0 0;
       max-width:980px;
-      font-weight:700;
+      color:#f7f8fa;
+      font-size:34px;
+      line-height:1.12;
+      letter-spacing:-0.04em;
+      font-weight:650;
+      text-transform:none;
     }
 
     .sub{
@@ -116,7 +118,7 @@
       padding-top:14px;
       display:flex;
       flex-wrap:wrap;
-      justify-content:space-between;
+      justify-content:flex-start;
       gap:10px;
       font-family:var(--mono);
       font-size:9px;
@@ -600,6 +602,129 @@
       }
     }
   
+
+    .kde-sortbar{
+      margin:22px 0 20px;
+      padding:14px 16px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:18px;
+      background:rgba(255,255,255,.025);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+    }
+
+
+
+    .kde-sort-select{
+      appearance:none;
+      min-width:0;
+      width:100%;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:14px;
+      background:rgba(0,0,0,.44);
+      color:rgba(248,250,252,.88);
+      font-family:var(--mono);
+      font-size:11px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      padding:12px 38px 12px 13px;
+      outline:none;
+      cursor:pointer;
+    }
+
+    .kde-sort-control{
+      position:relative;
+      width:min(100%, 360px);
+    }
+
+    .kde-sort-count{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      padding:10px 12px;
+      background:rgba(255,255,255,.018);
+      color:rgba(229,231,235,.46);
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    .kde-filterbar{
+      margin:-10px 0 22px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+    }
+
+    .kde-filter-chip{
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:999px;
+      background:rgba(255,255,255,.018);
+      color:rgba(229,231,235,.54);
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      padding:9px 11px;
+      cursor:pointer;
+      transition:border-color .16s ease, color .16s ease, background .16s ease;
+    }
+
+    .kde-filter-chip:hover{
+      border-color:rgba(34,211,238,.34);
+      color:rgba(248,250,252,.86);
+      background:rgba(34,211,238,.045);
+    }
+
+    .kde-filter-chip.is-active{
+      border-color:rgba(163,230,53,.42);
+      color:rgba(244,255,214,.92);
+      background:rgba(163,230,53,.08);
+      box-shadow:0 0 22px rgba(163,230,53,.075);
+    }
+
+    .kde-generated{
+      margin:10px 0 16px;
+      color:rgba(229,231,235,.42);
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .kde-sort-control::after{
+      content:"▾";
+      position:absolute;
+      right:14px;
+      top:50%;
+      transform:translateY(-52%);
+      color:rgba(229,231,235,.48);
+      pointer-events:none;
+      font-size:12px;
+    }
+
+    @media (max-width:720px){
+      .kde-sortbar{
+        margin:18px 0 16px;
+        padding:13px 14px;
+        border-radius:18px;
+        display:block;
+      }
+
+      .kde-sort-control{
+        margin-top:12px;
+      }
+
+      .kde-sort-select{
+        width:100%;
+        min-width:0;
+      }
+    }
+
     /* V5 mobile UX polish */
     @media (max-width:720px){
       body{
@@ -617,11 +742,15 @@
       }
 
       h1{
-        margin-top:16px;
-        font-size:clamp(42px, 13vw, 58px);
-        line-height:.94;
-        letter-spacing:-.075em;
-      }
+      margin:18px 0 0;
+      max-width:980px;
+      color:#f7f8fa;
+      font-size:34px;
+      line-height:1.12;
+      letter-spacing:-0.04em;
+      font-weight:650;
+      text-transform:none;
+    }
 
       .sub{
         margin-top:20px;
@@ -681,6 +810,59 @@
       .kde-guide-card{
         padding:10px 12px;
         font-size:9.5px;
+        line-height:1.45;
+      }
+
+      .proprietary-box span,
+      .method-box,
+      .kde-interpretation,
+      .kde-guide-card span{
+        font-size:9.5px;
+        line-height:1.45;
+      }
+
+      .proprietary-box strong,
+      .method-box strong,
+      .kde-interpretation strong,
+      .kde-guide-card strong{
+        font-size:10px;
+        letter-spacing:.14em;
+      }
+
+      .kde-guide-card{
+        padding:9px 11px;
+      }
+
+      .kde-sortbar{
+        align-items:flex-start;
+        gap:10px;
+      }
+
+      .kde-sort-count{
+        margin-top:10px;
+        display:inline-flex;
+        width:auto;
+        padding:8px 10px;
+        font-size:9px;
+        letter-spacing:.14em;
+      }
+
+      .kde-filterbar{
+        margin:-6px 0 18px;
+        flex-wrap:nowrap;
+        overflow-x:auto;
+        padding-bottom:4px;
+      }
+
+      .kde-filter-chip{
+        flex:0 0 auto;
+        font-size:9px;
+        padding:8px 10px;
+      }
+
+      .kde-generated{
+        margin:8px 0 14px;
+        font-size:9px;
         line-height:1.45;
       }
 
@@ -833,7 +1015,7 @@
   <div class="shell">
 
     <div class="eyebrow">
-      DIAMONDSIGNALS // KINETIC DRIFT ENGINE
+      DIAMONDSIGNALS // KINETIC DRIFT ENGINE — ACTIVE PREVIEW
     </div>
 
     <h1>
@@ -878,10 +1060,47 @@
       </div>
     </div>
 
-    <div class="grid">
+    <div class="kde-sortbar">
+      <div class="kde-sort-control">
+        <select class="kde-sort-select" id="kde-sort-select" aria-label="Sort Kinetic Drift cards">
+          <option value="kde-desc">KDE Score // High to Low</option>
+          <option value="operator-priority">Operator Command // Priority</option>
+          <option value="risk-desc">Kinetic Risk // High to Low</option>
+          <option value="emergence-desc">Emergence // High to Low</option>
+          <option value="instability-desc">Instability // High to Low</option>
+          <option value="confidence-desc">Confidence // High to Low</option>
+          <option value="name-asc">Player Name // A to Z</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="kde-generated">
+      GENERATED: {{ generated_at }} // ACTIVE PREVIEW // MANUAL BUILD
+    </div>
+
+    <div class="kde-filterbar" id="kde-filterbar" aria-label="Filter Kinetic Drift cards">
+      <button class="kde-filter-chip is-active" type="button" data-filter="all">All</button>
+      <button class="kde-filter-chip" type="button" data-filter="decay">Decay Risk</button>
+      <button class="kde-filter-chip" type="button" data-filter="emergence">Emergence</button>
+      <button class="kde-filter-chip" type="button" data-filter="instability">Instability</button>
+      <button class="kde-filter-chip" type="button" data-filter="exit-reduce">Exit / Reduce</button>
+      <button class="kde-filter-chip" type="button" data-filter="track-stash">Track / Stash</button>
+    </div>
+
+    <div class="grid" id="kde-card-grid">
 
       {% for row in signals %}
-      <div class="card">
+      <div
+        class="card"
+        data-player="{{ row.player_name }}"
+        data-operator="{{ row.operator_action }}"
+        data-state="{{ row.movement_state }}"
+        data-kde="{{ row.kde_score }}"
+        data-risk="{{ row.kinetic_risk_score }}"
+        data-emergence="{{ row.kinetic_emergence_score }}"
+        data-instability="{{ row.kinetic_instability_score }}"
+        data-confidence="{{ row.confidence_score }}"
+      >
         {% set state_label = row.movement_state_label or row.movement_state %}
         {% set forensic_state = row.diagnosis %}
         {% set trace_behavior = row.trace_behavior or 'MIXED' %}
@@ -1016,5 +1235,104 @@
 
     </div>
   </div>
+
+<script>
+  (function(){
+    const grid = document.getElementById("kde-card-grid");
+    const select = document.getElementById("kde-sort-select");
+    if (!grid || !select) return;
+
+    function numeric(card, key){
+      const value = Number(card.dataset[key] || 0);
+      return Number.isFinite(value) ? value : 0;
+    }
+
+    const operatorPriority = {
+      "EXIT / BENCH IMMEDIATELY": 100,
+      "REDUCE EXPOSURE": 90,
+      "VOLATILITY WATCH": 82,
+      "HOLD / VERIFY MECHANICS": 76,
+      "INITIATE TRACKING": 70,
+      "TRACK / STASH": 62,
+      "MONITOR NEXT OUTING": 54,
+      "MONITOR FOR CONFIRMATION": 46,
+      "MONITOR MECHANICS": 38,
+      "NO ACTION": 0
+    };
+
+    function operatorScore(card){
+      return operatorPriority[card.dataset.operator || ""] || 0;
+    }
+
+    function sortCards(mode){
+      const cards = Array.from(grid.querySelectorAll(".card"));
+
+      cards.sort(function(a, b){
+        if (mode === "name-asc") {
+          return (a.dataset.player || "").localeCompare(b.dataset.player || "");
+        }
+
+        if (mode === "operator-priority") {
+          const priorityDelta = operatorScore(b) - operatorScore(a);
+          if (priorityDelta !== 0) return priorityDelta;
+          return numeric(b, "kde") - numeric(a, "kde");
+        }
+
+        const key = mode.replace("-desc", "");
+        return numeric(b, key) - numeric(a, key);
+      });
+
+      cards.forEach(function(card){
+        grid.appendChild(card);
+      });
+    }
+
+    function matchesFilter(card, filter){
+      const state = card.dataset.state || "";
+      const operator = card.dataset.operator || "";
+
+      if (filter === "all") return true;
+      if (filter === "decay") return state === "BREAKDOWN_RISK";
+      if (filter === "emergence") return state === "EMERGENCE";
+      if (filter === "instability") return state === "INSTABILITY";
+      if (filter === "exit-reduce") return operator === "EXIT / BENCH IMMEDIATELY" || operator === "REDUCE EXPOSURE";
+      if (filter === "track-stash") return operator === "INITIATE TRACKING" || operator === "TRACK / STASH";
+
+      return true;
+    }
+
+    function applyFilter(filter){
+      const cards = Array.from(grid.querySelectorAll(".card"));
+      cards.forEach(function(card){
+        card.style.display = matchesFilter(card, filter) ? "" : "none";
+      });
+    }
+
+    const filterbar = document.getElementById("kde-filterbar");
+    if (filterbar) {
+      filterbar.addEventListener("click", function(event){
+        const chip = event.target.closest(".kde-filter-chip");
+        if (!chip) return;
+
+        filterbar.querySelectorAll(".kde-filter-chip").forEach(function(item){
+          item.classList.remove("is-active");
+        });
+
+        chip.classList.add("is-active");
+        applyFilter(chip.dataset.filter || "all");
+      });
+    }
+
+    select.addEventListener("change", function(){
+      sortCards(select.value);
+      const activeChip = document.querySelector(".kde-filter-chip.is-active");
+      applyFilter(activeChip ? activeChip.dataset.filter : "all");
+    });
+
+    sortCards(select.value);
+    applyFilter("all");
+  })();
+</script>
+
 </body>
 </html>
