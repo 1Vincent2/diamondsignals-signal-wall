@@ -1609,6 +1609,58 @@ HTML_TEMPLATE = Template(
     }
 
     {{ shell_styles | safe }}
+
+      /* SIGNAL_WALL_MOBILE_NAV_FIXED_LOCK_V2
+         Signal Wall page-level override: keep mobile command nav persistent above all live-page layers. */
+      @media screen and (max-width: 760px) {
+        body {
+          padding-top: 58px !important;
+        }
+
+        .topnav.ds-shell-nav {
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          width: 100vw !important;
+          z-index: 2147483000 !important;
+          transform: none !important;
+          pointer-events: auto !important;
+        }
+
+        .topnav.ds-shell-nav .topnav-inner {
+          position: relative !important;
+          z-index: 2147483001 !important;
+        }
+
+        .ds-mobile-menu-trigger {
+          position: relative !important;
+          z-index: 2147483002 !important;
+          pointer-events: auto !important;
+        }
+
+        .ds-mobile-menu-backdrop {
+          position: fixed !important;
+          inset: 0 !important;
+          z-index: 2147483003 !important;
+        }
+
+        .ds-mobile-menu-drawer {
+          position: fixed !important;
+          top: 0 !important;
+          right: 0 !important;
+          bottom: 0 !important;
+          z-index: 2147483004 !important;
+          max-height: 100dvh !important;
+          overflow-y: auto !important;
+          -webkit-overflow-scrolling: touch !important;
+        }
+
+        body.ds-mobile-menu-open {
+          overflow: hidden !important;
+        }
+      }
+
     {{ ledger_styles | safe }}
         @media (max-width: 640px) {
       .topbar-inner, .app, .topnav-inner, .search-strip-inner { width: min(100%, calc(100% - 16px)); }
