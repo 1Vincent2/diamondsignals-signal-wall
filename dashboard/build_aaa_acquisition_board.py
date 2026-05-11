@@ -1433,6 +1433,240 @@ HTML_TEMPLATE = Template(
         max-width: 240px;
       }
     }
+
+      /* HIDDEN_GEMS_MOBILE_REFACTOR_V1 */
+      @media screen and (max-width: 760px) {
+        html,
+        body {
+          overflow-x: hidden !important;
+        }
+
+        .topbar-inner,
+        .app,
+        .topnav-inner,
+        .search-strip-inner {
+          width: min(100%, calc(100% - 16px)) !important;
+        }
+
+        .search-strip {
+          display: none !important;
+        }
+
+        .app {
+          padding: 14px 0 42px !important;
+        }
+
+        .hero {
+          display: block !important;
+          margin-bottom: 12px !important;
+        }
+
+        .hero-card {
+          padding: 20px 18px 18px !important;
+          border-radius: 22px !important;
+        }
+
+        .hero-title {
+          text-transform: none !important;
+          font-size: 38px !important;
+          line-height: 1.0 !important;
+          letter-spacing: -0.055em !important;
+          font-weight: 720 !important;
+        }
+
+        .hero-sub {
+          margin-top: 12px !important;
+          font-size: 14px !important;
+          line-height: 1.45 !important;
+          max-width: none !important;
+        }
+
+        .summary-card {
+          display: none !important;
+        }
+
+        .section {
+          padding: 12px !important;
+          border-radius: 22px !important;
+          margin-bottom: 12px !important;
+        }
+
+        .section-head {
+          gap: 10px !important;
+          margin-bottom: 12px !important;
+        }
+
+        .section-title {
+          font-size: 22px !important;
+          line-height: 1.02 !important;
+          letter-spacing: -0.035em !important;
+          text-transform: none !important;
+          font-weight: 760 !important;
+        }
+
+        .section-head-actions {
+          width: 100% !important;
+          justify-content: flex-start !important;
+          gap: 8px !important;
+        }
+
+        .field-guide-btn {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          width: 100% !important;
+          min-height: 40px !important;
+          padding: 0 14px !important;
+          border-radius: 999px !important;
+          border: 1px solid rgba(106, 166, 255, 0.38) !important;
+          background: rgba(2, 6, 23, 0.58) !important;
+          color: rgba(255,255,255,0.92) !important;
+          font-size: 10px !important;
+          letter-spacing: 0.12em !important;
+          box-shadow: 0 0 16px rgba(59,130,246,0.10) !important;
+        }
+
+        .section-badge {
+          min-height: 32px !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          padding: 0 11px !important;
+          font-size: 9px !important;
+          letter-spacing: 0.10em !important;
+        }
+
+        .cards-grid {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          gap: 10px !important;
+        }
+
+        .player-card {
+          padding: 13px !important;
+          border-radius: 20px !important;
+        }
+
+        .player-top {
+          grid-template-columns: auto 1fr !important;
+          gap: 10px !important;
+          align-items: start !important;
+        }
+
+        .avatar {
+          width: 38px !important;
+          height: 38px !important;
+          font-size: 11px !important;
+        }
+
+        .player-ident {
+          min-width: 0 !important;
+        }
+
+        .rankline {
+          font-size: 9px !important;
+          line-height: 1.15 !important;
+          letter-spacing: 0.12em !important;
+          margin-bottom: 4px !important;
+        }
+
+        .player-name {
+          font-size: 25px !important;
+          line-height: 0.96 !important;
+          letter-spacing: -0.05em !important;
+          font-weight: 760 !important;
+        }
+
+        .signal-line {
+          font-size: 9px !important;
+          line-height: 1.35 !important;
+          letter-spacing: 0.08em !important;
+        }
+
+        .card-meta-row {
+          gap: 6px !important;
+          margin-top: 8px !important;
+        }
+
+        .card-meta-badge {
+          font-size: 8px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.10em !important;
+          padding: 6px 8px !important;
+          border-radius: 999px !important;
+        }
+
+        button.card-meta-badge.js-add-to-roster {
+          width: 100% !important;
+          min-height: 34px !important;
+          margin-top: 2px !important;
+          justify-content: center !important;
+          background: rgba(2, 6, 23, 0.58) !important;
+          border: 1px solid rgba(59, 130, 246, 0.38) !important;
+          color: rgba(255,255,255,0.92) !important;
+          box-shadow: none !important;
+        }
+
+        .scorebox {
+          grid-column: 1 / -1 !important;
+          text-align: left !important;
+          margin-top: 4px !important;
+          padding-top: 8px !important;
+          border-top: 1px solid rgba(255,255,255,0.06) !important;
+        }
+
+        .score-value {
+          font-size: 42px !important;
+          line-height: 0.88 !important;
+          letter-spacing: -0.06em !important;
+        }
+
+        .sparkline-wrap {
+          margin-top: 10px !important;
+          border-radius: 14px !important;
+          padding: 10px !important;
+        }
+
+        .metric-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          gap: 8px !important;
+        }
+
+        .metric {
+          padding: 8px 9px !important;
+          border-radius: 14px !important;
+        }
+
+        .metric-value {
+          font-size: 16px !important;
+          line-height: 18px !important;
+        }
+
+        .pill-row {
+          gap: 6px !important;
+        }
+
+        .pill {
+          font-size: 8px !important;
+          line-height: 1.1 !important;
+          letter-spacing: 0.08em !important;
+          padding: 6px 7px !important;
+        }
+
+        .why {
+          font-size: 12px !important;
+          line-height: 1.45 !important;
+        }
+
+        .drawer-panel {
+          top: 8px !important;
+          right: 8px !important;
+          width: calc(100vw - 16px) !important;
+          max-height: calc(100vh - 16px) !important;
+          border-radius: 22px !important;
+          padding: 14px !important;
+        }
+      }
+
   </style>
 </head>
 <body>
@@ -1520,7 +1754,7 @@ HTML_TEMPLATE = Template(
               <div class="card-meta-row">
                 <span class="card-meta-badge">{{ row.source_badge }}</span>
 <span class="card-meta-badge">{{ row.model_badge }}</span>
-<button type="button" class="card-meta-badge js-add-to-roster">Add to Roster</button>
+<button type="button" class="card-meta-badge js-add-to-roster">INITIATE TRACKING</button>
               </div>
             </div>
             <div class="scorebox">
@@ -1624,7 +1858,7 @@ HTML_TEMPLATE = Template(
               <div class="card-meta-row">
                 <span class="card-meta-badge">{{ row.source_badge }}</span>
 <span class="card-meta-badge">{{ row.model_badge }}</span>
-<button type="button" class="card-meta-badge js-add-to-roster">Add to Roster</button>
+<button type="button" class="card-meta-badge js-add-to-roster">INITIATE TRACKING</button>
               </div>
             </div>
             <div class="scorebox">
