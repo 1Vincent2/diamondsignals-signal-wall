@@ -1786,6 +1786,200 @@ def render_html(payload: dict) -> str:
       }}
     }}
 
+      /* APEX_MOBILE_UX_PASS_V1 */
+      @media screen and (max-width: 760px) {{
+        .app {{
+          width: min(100%, calc(100% - 28px)) !important;
+          padding: 18px 0 52px !important;
+        }}
+
+        .hero {{
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          gap: 12px !important;
+          margin: 16px 0 16px !important;
+        }}
+
+        .hero-card {{
+          padding: 18px 16px !important;
+          border-radius: 22px !important;
+        }}
+
+        .summary-card {{
+          display: grid !important;
+          grid-template-columns: 1fr 1fr !important;
+          gap: 10px !important;
+          padding: 12px !important;
+          border-radius: 20px !important;
+          min-height: 0 !important;
+        }}
+
+        .summary-card > div {{
+          border: 1px solid rgba(255,255,255,.07) !important;
+          border-radius: 14px !important;
+          padding: 10px !important;
+          background: rgba(255,255,255,.025) !important;
+        }}
+
+        .summary-label {{
+          font-size: 8px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.14em !important;
+        }}
+
+        .summary-value {{
+          margin-top: 6px !important;
+          font-size: 20px !important;
+          line-height: 1 !important;
+        }}
+
+        .status-note {{
+          grid-column: 1 / -1 !important;
+          font-size: 10px !important;
+          line-height: 1.45 !important;
+          color: rgba(204,255,0,.78) !important;
+        }}
+
+        .hero-title {{
+          font-size: 34px !important;
+          line-height: 1.04 !important;
+          letter-spacing: -0.045em !important;
+          font-weight: 650 !important;
+          text-transform: none !important;
+        }}
+
+        .hero-sub {{
+          margin-top: 12px !important;
+          font-size: 13px !important;
+          line-height: 1.48 !important;
+          color: rgba(226,232,240,.72) !important;
+        }}
+
+        .section-head {{
+          margin: 20px 0 12px !important;
+          align-items: flex-start !important;
+          flex-direction: column !important;
+          gap: 8px !important;
+        }}
+
+        .section-heading {{
+          font-size: 20px !important;
+          line-height: 1 !important;
+          letter-spacing: -0.025em !important;
+        }}
+
+        .section-title {{
+          margin: 0 !important;
+          font-size: 9px !important;
+          line-height: 1.4 !important;
+          letter-spacing: 0.14em !important;
+        }}
+
+        .cards {{
+          grid-template-columns: 1fr !important;
+          gap: 14px !important;
+        }}
+
+        .apex-card {{
+          border-radius: 22px !important;
+          padding: 14px !important;
+        }}
+
+        .card-top {{
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          gap: 10px !important;
+        }}
+
+        .score-box {{
+          text-align: left !important;
+          min-width: 0 !important;
+          padding-top: 8px !important;
+          border-top: 1px solid rgba(255,255,255,.06) !important;
+        }}
+
+        .score-label {{
+          text-align: left !important;
+          margin-bottom: 6px !important;
+          font-size: 9px !important;
+          letter-spacing: 0.16em !important;
+        }}
+
+        .score {{
+          font-size: 42px !important;
+          transform-origin: left center !important;
+        }}
+
+        .diagnosis-label {{
+          margin-top: 14px !important;
+          font-size: 9px !important;
+          letter-spacing: 0.16em !important;
+        }}
+
+        .verdict {{
+          border-radius: 16px !important;
+        }}
+
+        .verdict-text {{
+          padding: 11px 12px !important;
+          font-size: 10px !important;
+          line-height: 1.35 !important;
+          letter-spacing: 0.14em !important;
+          text-align: center !important;
+        }}
+
+        .verdict-rail {{
+          height: 34px !important;
+          padding: 0 12px !important;
+        }}
+
+        .grid {{
+          grid-template-columns: 1fr !important;
+          gap: 8px !important;
+        }}
+
+        .grid div {{
+          padding: 9px 10px !important;
+        }}
+
+        .grid strong {{
+          font-size: 18px !important;
+          line-height: 20px !important;
+        }}
+
+        .forensic-strip {{
+          grid-template-columns: 1fr !important;
+          gap: 9px !important;
+        }}
+
+        .forensic-chip {{
+          min-height: 0 !important;
+          padding: 10px !important;
+        }}
+
+        .provision-btn {{
+          width: 100% !important;
+          text-align: center !important;
+          font-size: 9px !important;
+          letter-spacing: 0.14em !important;
+        }}
+
+        .field-guide-pill {{
+          right: 14px !important;
+          bottom: 14px !important;
+          padding: 10px 12px !important;
+          font-size: 9px !important;
+          letter-spacing: 0.14em !important;
+        }}
+
+        .field-guide-drawer {{
+          width: calc(100vw - 16px) !important;
+          padding: 22px !important;
+        }}
+      }}
+
+
+
   </style>
 </head>
 <body>
