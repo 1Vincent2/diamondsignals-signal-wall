@@ -372,3 +372,42 @@
     text-shadow: 0 0 12px rgba(182,255,0,0.45) !important;
   }
 }
+
+/* DS_MOBILE_NAV_PERSISTENCE_LOCK_V1
+   Keeps the shared mobile command menu available while scrolling on refactored surfaces. */
+@media screen and (max-width: 760px) {
+  .topnav.ds-shell-nav {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 9000 !important;
+    transform: none !important;
+  }
+
+  .ds-mobile-menu-trigger {
+    position: relative !important;
+    z-index: 9001 !important;
+    transform: none !important;
+  }
+
+  .ds-mobile-menu-backdrop {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9998 !important;
+  }
+
+  .ds-mobile-menu-drawer {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 9999 !important;
+    max-height: 100dvh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  body.ds-mobile-menu-open {
+    overflow: hidden !important;
+  }
+}
+

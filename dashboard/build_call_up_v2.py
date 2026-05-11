@@ -1970,6 +1970,33 @@ HTML_TEMPLATE = Template(
         max-height: calc(100vh - 16px);
       }
     }
+
+      /* PROMOTION_WATCH_HIDE_SIGNAL_SUMMARY_V1 */
+      .hero-summary,
+      .summary-card {
+        display: none !important;
+      }
+
+      /* PROMOTION_WATCH_HERO_TITLE_EDITORIAL_V1 */
+      .hero-title {
+        text-transform: none !important;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+        font-weight: 620 !important;
+        letter-spacing: -0.045em !important;
+        line-height: 1.02 !important;
+      }
+
+      @media screen and (max-width: 760px) {
+        .hero-title {
+          font-size: 44px !important;
+          font-weight: 620 !important;
+          line-height: 1.02 !important;
+          letter-spacing: -0.048em !important;
+          text-transform: none !important;
+        }
+      }
+
+
   </style>
 </head>
 <body>
@@ -2031,8 +2058,10 @@ HTML_TEMPLATE = Template(
           <div class="system-pulse-proof">8,421,902 TOTAL OPERATIONS VERIFIED</div>
         </section>
 
-        <div class="tabs" role="tablist" aria-label="Promotion watch windows">
+        <div class="tabs tabs-aaa" role="tablist" aria-label="Promotion watch windows">
+          <button type="button" class="tab" id="tab-btn-72h" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
           <button type="button" class="tab active" id="tab-btn-14d" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
+          <button type="button" class="tab" id="tab-btn-aaa-gems" onclick="switchPromotionTab('tab-aaa-gems', this)">AAA GEMS</button>
         </div>
 
         <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
@@ -2055,7 +2084,65 @@ HTML_TEMPLATE = Template(
       <div class="placeholder">No live AAA promotion-watch signals available yet.</div>
       {% else %}
 
-      <div id="tab-14d">
+      <div id="tab-72h" class="tab-panel" style="display:none;">
+        <section class="signal-grid">
+          <div class="section section-v3-ledger-full">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">Signal Layer</div>
+                <h2 class="section-title">Pitching Prospect Signals — 72 HR</h2>
+              </div>
+              <div class="section-badge">Top {{ pitchers_72|length }}</div>
+            </div>
+
+            {% if pitchers_72 %}
+            <div class="cards">
+              {% for row in pitchers_72 %}
+              {{ live_ledger_card.render(
+                row=row,
+                player_type="pitcher",
+                context_label="72 HR WINDOW",
+                metric_1_label="VELO_DELTA",
+                metric_2_label="WHIFF_STABILITY",
+                metric_3_label="LVL_ADJUST"
+              ) | safe }}
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="placeholder">No 72 HR pitching prospect signals available.</div>
+            {% endif %}
+          </div>
+
+          <div class="section section-v3-ledger-full">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">Signal Layer</div>
+                <h2 class="section-title">Hitting Prospect Signals — 72 HR</h2>
+              </div>
+              <div class="section-badge">Top {{ hitters_72|length }}</div>
+            </div>
+
+            {% if hitters_72 %}
+            <div class="cards">
+              {% for row in hitters_72 %}
+              {{ live_ledger_card.render(
+                row=row,
+                player_type="hitter",
+                context_label="72 HR WINDOW",
+                metric_1_label="ISO_DELTA",
+                metric_2_label="K/BB_STABILITY",
+                metric_3_label="LVL_ADJUST"
+              ) | safe }}
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="placeholder">No 72 HR hitting prospect signals available.</div>
+            {% endif %}
+          </div>
+        </section>
+      </div>
+
+      <div id="tab-14d" class="tab-panel">
         <div style="margin: 0 0 16px 0; border: 1px solid rgba(59,130,246,0.22); border-radius: 14px; padding: 12px 14px; background: rgba(59,130,246,0.08);">
           <div style="font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: #93c5fd;">Live Feed Status</div>
           <div style="margin-top: 6px; font-size: 13px; line-height: 1.5; color: #f0f0f0;">
@@ -2252,6 +2339,22 @@ HTML_TEMPLATE = Template(
         </div>
       </aside>
 
+      <div id="tab-aaa-gems" class="tab-panel" style="display:none;">
+        <div class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">AAA Gems</div>
+              <h2 class="section-title">AAA Gems — Legacy Surface Parked</h2>
+            </div>
+            <div class="section-badge">Offline</div>
+          </div>
+
+          <div class="placeholder">
+            AAA Gems was the legacy Hidden Gems-style prospect layer. It has been parked while Promotion Watch prioritizes fresh 72 HR, 14 DAY, and Movement Layer surveillance. The concept is preserved for future rebuild as a dedicated AAA latent-alpha tab.
+          </div>
+        </div>
+      </div>
+
     {{ footer_html | safe }}
   </div>
 
@@ -2279,7 +2382,7 @@ HTML_TEMPLATE = Template(
     }
 
     function switchPromotionTab(panelId, buttonEl) {
-      document.querySelectorAll("#tab-14d").forEach((panel) => {
+      document.querySelectorAll("#tab-72h, #tab-14d, #tab-aaa-gems").forEach((panel) => {
         panel.style.display = "none";
       });
 
@@ -2295,9 +2398,19 @@ HTML_TEMPLATE = Template(
       const summaryMode = document.getElementById("summary-mode");
       const summarySignals = document.getElementById("summary-signals");
 
-      if (summaryWindow) summaryWindow.textContent = "14 DAY";
-      if (summaryMode) summaryMode.textContent = "SCOUT";
-      if (summarySignals) summarySignals.textContent = "{{ total_14_signals }}";
+      if (panelId === "tab-72h") {
+        if (summaryWindow) summaryWindow.textContent = "72 HR";
+        if (summaryMode) summaryMode.textContent = "AAA";
+        if (summarySignals) summarySignals.textContent = "{{ total_signals }}";
+      } else if (panelId === "tab-aaa-gems") {
+        if (summaryWindow) summaryWindow.textContent = "AAA GEMS";
+        if (summaryMode) summaryMode.textContent = "PARKED";
+        if (summarySignals) summarySignals.textContent = "0";
+      } else {
+        if (summaryWindow) summaryWindow.textContent = "14 DAY";
+        if (summaryMode) summaryMode.textContent = "SCOUT";
+        if (summarySignals) summarySignals.textContent = "{{ total_14_signals }}";
+      }
     }
 
     document.addEventListener("keydown", function (event) {
