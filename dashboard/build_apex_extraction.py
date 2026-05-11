@@ -1978,6 +1978,292 @@ def render_html(payload: dict) -> str:
         }}
       }}
 
+      /* APEX_HIDE_MOBILE_SUMMARY_GRID_V1 */
+      @media screen and (max-width: 760px) {{
+        .hero .summary-card {{
+          display: none !important;
+        }}
+      }}
+
+      /* APEX_HIDE_MOBILE_SEARCH_STRIP_V1 */
+      @media screen and (max-width: 760px) {{
+        .search-strip {{
+          display: none !important;
+        }}
+      }}
+
+      /* APEX_MOBILE_TYPOGRAPHY_ALIGN_V1 */
+      @media screen and (max-width: 760px) {{
+        .hero-title {{
+          text-transform: none !important;
+          font-size: 34px !important;
+          line-height: 1.04 !important;
+          letter-spacing: -0.045em !important;
+          font-weight: 650 !important;
+        }}
+
+        .section-kicker {{
+          font-size: 10px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.18em !important;
+          font-weight: 800 !important;
+        }}
+
+        .section-heading {{
+          font-size: 24px !important;
+          line-height: 1.02 !important;
+          letter-spacing: -0.035em !important;
+          font-weight: 760 !important;
+          text-transform: uppercase !important;
+        }}
+
+        .section-title {{
+          font-size: 10px !important;
+          line-height: 1.35 !important;
+          letter-spacing: 0.16em !important;
+          font-weight: 800 !important;
+        }}
+
+        .apex-card {{
+          border-radius: 22px !important;
+          padding: 14px !important;
+        }}
+
+        .kicker {{
+          font-size: 9px !important;
+          line-height: 1.2 !important;
+          letter-spacing: 0.16em !important;
+          font-weight: 800 !important;
+        }}
+
+        .name {{
+          font-size: 27px !important;
+          line-height: 0.98 !important;
+          letter-spacing: -0.045em !important;
+          font-weight: 760 !important;
+        }}
+
+        .meta {{
+          font-size: 12px !important;
+          line-height: 1.25 !important;
+          letter-spacing: 0.16em !important;
+        }}
+
+        .score-label,
+        .diagnosis-label,
+        .proof-label {{
+          font-size: 9px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.16em !important;
+          font-weight: 800 !important;
+        }}
+
+        .score {{
+          font-size: 48px !important;
+          line-height: 0.86 !important;
+          letter-spacing: -0.06em !important;
+          font-weight: 850 !important;
+        }}
+
+        .verdict-text {{
+          font-size: 10px !important;
+          line-height: 1.35 !important;
+          letter-spacing: 0.14em !important;
+          padding: 10px 12px !important;
+        }}
+
+        .grid {{
+          grid-template-columns: 1fr !important;
+          gap: 8px !important;
+        }}
+
+        .grid div {{
+          padding: 9px 10px !important;
+        }}
+
+        .grid span {{
+          font-size: 9px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.16em !important;
+        }}
+
+        .grid strong {{
+          font-size: 18px !important;
+          line-height: 20px !important;
+        }}
+      }}
+        .hero-sub {{
+          margin-top: 0.5rem !important;
+        }}
+      }}
+        .section-heading {{
+          font-size: 21px !important;
+          line-height: 1 !important;
+          letter-spacing: -0.03em !important;
+          font-weight: 760 !important;
+        }}
+
+        .section-title {{
+          font-size: 9px !important;
+          line-height: 1.25 !important;
+          letter-spacing: 0.14em !important;
+        }}
+
+        .apex-card {{
+          padding: 12px !important;
+          border-radius: 20px !important;
+        }}
+
+        .kicker {{
+          font-size: 8px !important;
+          line-height: 1.15 !important;
+          letter-spacing: 0.14em !important;
+        }}
+
+        .name {{
+          font-size: 23px !important;
+          line-height: 0.98 !important;
+          letter-spacing: -0.04em !important;
+          font-weight: 760 !important;
+        }}
+
+        .meta {{
+          font-size: 10px !important;
+          line-height: 1.2 !important;
+          letter-spacing: 0.13em !important;
+        }}
+
+        .score-label,
+        .diagnosis-label,
+        .proof-label {{
+          font-size: 8px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.14em !important;
+        }}
+
+        .score {{
+          font-size: 38px !important;
+          line-height: 0.86 !important;
+          letter-spacing: -0.055em !important;
+        }}
+
+        .verdict-text {{
+          font-size: 9px !important;
+          line-height: 1.25 !important;
+          letter-spacing: 0.13em !important;
+          padding: 9px 10px !important;
+        }}
+
+        .grid div {{
+          padding: 8px 9px !important;
+        }}
+
+        .grid span {{
+          font-size: 8px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.14em !important;
+        }}
+
+        .grid strong {{
+          font-size: 16px !important;
+          line-height: 18px !important;
+        }}
+
+        .proof-copy,
+        .primary-signal,
+        .apex-card p {{
+          font-size: 12px !important;
+          line-height: 1.45 !important;
+        }}
+      }}
+
+      /* APEX_MOBILE_FINAL_CARD_DENSITY_V2 */
+      @media screen and (max-width: 760px) {{
+        section.cards {{
+          gap: 12px !important;
+        }}
+
+        section.cards .apex-card {{
+          padding: 12px !important;
+          border-radius: 20px !important;
+        }}
+
+        section.cards .apex-card .kicker {{
+          font-size: 8px !important;
+          line-height: 1.1 !important;
+          letter-spacing: 0.14em !important;
+          font-weight: 800 !important;
+        }}
+
+        section.cards .apex-card .name {{
+          font-size: 22px !important;
+          line-height: 0.96 !important;
+          letter-spacing: -0.045em !important;
+          font-weight: 760 !important;
+        }}
+
+        section.cards .apex-card .meta {{
+          font-size: 10px !important;
+          line-height: 1.2 !important;
+          letter-spacing: 0.12em !important;
+        }}
+
+        section.cards .apex-card .score-label,
+        section.cards .apex-card .diagnosis-label,
+        section.cards .apex-card .proof-label {{
+          font-size: 8px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.14em !important;
+        }}
+
+        section.cards .apex-card .score {{
+          font-size: 36px !important;
+          line-height: 0.84 !important;
+          letter-spacing: -0.06em !important;
+          font-weight: 850 !important;
+        }}
+
+        section.cards .apex-card .verdict-text {{
+          font-size: 8px !important;
+          line-height: 1.2 !important;
+          letter-spacing: 0.12em !important;
+          padding: 8px 9px !important;
+        }}
+
+        section.cards .apex-card .grid {{
+          grid-template-columns: 1fr !important;
+          gap: 7px !important;
+        }}
+
+        section.cards .apex-card .grid div {{
+          padding: 8px 9px !important;
+        }}
+
+        section.cards .apex-card .grid span {{
+          font-size: 8px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.13em !important;
+        }}
+
+        section.cards .apex-card .grid strong {{
+          font-size: 15px !important;
+          line-height: 17px !important;
+        }}
+
+        section.cards .apex-card p,
+        section.cards .apex-card .proof-copy,
+        section.cards .apex-card .primary-signal {{
+          font-size: 11px !important;
+          line-height: 1.38 !important;
+        }}
+      }}
+
+
+
+
+
+
+
 
 
   </style>
@@ -2051,7 +2337,7 @@ def render_html(payload: dict) -> str:
     <section class="hero">
       <div class="hero-card">
         <div class="eyebrow">DIAMONDSIGNALS // SUBSURFACE BREAKOUT LEDGER</div>
-        <h1 class="hero-title">APEX EXTRACTION</h1>
+        <h1 class="hero-title">Apex Extraction</h1>
         <p class="hero-sub">
           Physical shift first. Vision and discipline confirm it. Market latency makes it actionable.
           This surface identifies MLB players whose underlying profile is moving before public pricing catches up.
