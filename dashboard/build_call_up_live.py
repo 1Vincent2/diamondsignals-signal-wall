@@ -27,6 +27,9 @@ NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
 SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
 FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
 SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
+LEDGER_STYLES_TEMPLATE = (TEMPLATES_DIR / "ledger_styles.css").read_text(encoding="utf-8")
+LIVE_LEDGER_CARD_TEMPLATE = (TEMPLATES_DIR / "components" / "live_ledger_card.html").read_text(encoding="utf-8")
+LIVE_LEDGER_CARD = Template(LIVE_LEDGER_CARD_TEMPLATE)
 
 TIMEZONE_LABEL = "America/New_York"
 SOURCE_BADGE = "SRC: AAA_PIPELINE_v1"
@@ -970,8 +973,7 @@ HTML_TEMPLATE = Template(
       border-radius: 999px;
       background: var(--red);
       box-shadow: 0 0 10px rgba(239,68,68,0.35);
-    
-      animation: dsPulse 1.8s ease-in-out infinite;}
+    }
 
     .live-time {
       margin-top: 6px;
@@ -1227,7 +1229,7 @@ HTML_TEMPLATE = Template(
 
 .arrival-grid {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
 
@@ -1268,52 +1270,6 @@ HTML_TEMPLATE = Template(
       width: 100%;
       max-width: none;
       margin-bottom: 18px;
-    }
-
-
-    #tab-aaa-gems {
-      width: min(1180px, calc(100% - 32px));
-      margin: 16px auto 0;
-    }
-
-    #tab-aaa-gems .aaa-gems-stack {
-      display: block;
-      width: 100%;
-    }
-
-    #tab-aaa-gems .aaa-gems-stack > .section {
-      width: 100%;
-      max-width: none;
-      margin-bottom: 18px;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.024) 0%, rgba(255,255,255,0.015) 100%);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
-    }
-
-    #tab-aaa-gems .section-kicker {
-      color: var(--blue-soft);
-    }
-
-    #tab-aaa-gems .section-head {
-      margin-bottom: 10px;
-    }
-
-    #tab-aaa-gems .placeholder {
-      min-height: 84px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      border: 1px dashed rgba(255,255,255,0.12);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.015);
-      color: var(--soft);
-      font-family: var(--mono);
-      font-size: 14px;
-      letter-spacing: 0.01em;
-      padding: 0 18px;
     }
 
     #tab-72h .signal-grid {
@@ -1772,23 +1728,61 @@ HTML_TEMPLATE = Template(
     }
 
     .provision-btn:hover {
-      background: rgba(24,24,24,0.98);
-      border-color: rgba(96,165,250,0.40);
+      background: rgba(59,130,246,1);
       transform: translateY(-1px);
-      box-shadow: 0 0 14px rgba(59,130,246,0.12);
+      box-shadow: 0 0 16px rgba(59,130,246,0.16);
+    }
+
+    .movement-audit-row {
+      grid-template-columns: 1.18fr 1.7fr 0.62fr 0.78fr;
+      align-items: start;
+      column-gap: 18px;
+      row-gap: 12px;
     }
 
     .movement-audit-row .movement-trigger {
       cursor: default;
     }
 
+    .movement-audit-row .audit-left {
+      min-width: 0;
+    }
+
+    .movement-audit-row .audit-center {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: start;
+    }
+
     .movement-audit-row .forensic-grid {
-      grid-template-columns: repeat(3, minmax(88px, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .movement-audit-row .forensic-cell {
+      min-height: 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .movement-audit-row .forensic-value {
+      min-height: 18px;
+      display: flex;
+      align-items: center;
     }
 
     .movement-right {
-      min-width: 110px;
+      min-width: 0;
       text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: start;
+      gap: 6px;
     }
 
     .movement-flag {
@@ -1799,10 +1793,11 @@ HTML_TEMPLATE = Template(
       text-transform: uppercase;
       color: var(--gold);
       line-height: 1.1;
+      text-align: right;
     }
 
     .movement-action {
-      min-width: 170px;
+      min-width: 0;
       display: flex;
       justify-content: flex-end;
       align-items: start;
@@ -1813,6 +1808,7 @@ HTML_TEMPLATE = Template(
       align-items: center;
       justify-content: center;
       min-height: 36px;
+      min-width: 160px;
       padding: 0 12px;
       border: 1px solid rgba(255,255,255,0.08);
       background: rgba(255,255,255,0.03);
@@ -1823,19 +1819,18 @@ HTML_TEMPLATE = Template(
       letter-spacing: 0.06em;
       text-transform: uppercase;
       white-space: nowrap;
+      text-align: center;
     }
 
-    
-    @keyframes dsPulse {
-      0%, 100% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.18);
-      }
+    .movement-audit-row .audit-why {
+      margin-top: 2px;
+      max-width: 560px;
+      font-size: 11px;
+      line-height: 1.45;
+      color: #a1a1aa;
     }
 
-@media (max-width: 1120px) {
+    @media (max-width: 1120px) {
       .player-audit-row {
         grid-template-columns: 1fr;
       }
@@ -1957,6 +1952,7 @@ HTML_TEMPLATE = Template(
     }
 
     {{ shell_styles | safe }}
+    {{ ledger_styles | safe }}
 
     @media (max-width: 980px) {
       .hero { grid-template-columns: 1fr; }
@@ -1982,109 +1978,14 @@ HTML_TEMPLATE = Template(
 
       .hero-card { padding: 18px; }
       .metric-grid { grid-template-columns: 1fr; }
-
-      .player-audit-row {
-        grid-template-columns: 1fr;
-        gap: 14px;
-        padding: 16px 14px;
-      }
-
-      .audit-left,
-      .audit-center,
-      .audit-right,
-      .audit-action {
-        width: 100%;
-        min-width: 0;
-      }
-
-      .audit-right,
-      .audit-action {
+      .player-name { font-size: 17px; }
+      .score-value { font-size: 24px; }
+      .player-top { grid-template-columns: auto 1fr; }
+      .scorebox {
+        grid-column: 2;
         text-align: left;
-        justify-content: flex-start;
+        margin-top: 8px;
       }
-
-      .audit-trigger {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-      }
-
-      .audit-player-name {
-        display: block;
-        width: 100%;
-        font-size: 26px;
-        line-height: 0.96;
-        letter-spacing: -0.04em;
-        text-transform: uppercase;
-      }
-
-      .audit-kicker {
-        font-size: 10px;
-        letter-spacing: 0.14em;
-      }
-
-      .audit-context {
-        font-size: 11px;
-        line-height: 1.35;
-        letter-spacing: 0.10em;
-      }
-
-      .audit-submeta {
-        gap: 8px;
-      }
-
-      .audit-chip {
-        min-height: 34px;
-        padding: 6px 10px;
-        font-size: 10px;
-      }
-
-      .forensic-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
-      }
-
-      .forensic-cell {
-        padding: 10px 10px 9px;
-      }
-
-      .forensic-label {
-        font-size: 9px;
-        letter-spacing: 0.08em;
-      }
-
-      .forensic-value {
-        font-size: 18px;
-        line-height: 1.08;
-        font-weight: 800;
-        word-break: break-word;
-      }
-
-      .conviction-label {
-        font-size: 10px;
-        letter-spacing: 0.10em;
-      }
-
-      .conviction-score {
-        font-size: 54px;
-        line-height: 0.88;
-        letter-spacing: -0.05em;
-      }
-
-      .provision-btn {
-        width: 100%;
-        min-height: 42px;
-        padding: 0 14px;
-        border-radius: 10px;
-        font-size: 10px;
-        letter-spacing: 0.05em;
-      }
-
-      .audit-why {
-        font-size: 11px;
-        line-height: 1.55;
-      }
-
       .drawer-panel {
         top: 8px;
         right: 8px;
@@ -2092,6 +1993,33 @@ HTML_TEMPLATE = Template(
         max-height: calc(100vh - 16px);
       }
     }
+
+      /* PROMOTION_WATCH_HIDE_SIGNAL_SUMMARY_V1 */
+      .hero-summary,
+      .summary-card {
+        display: none !important;
+      }
+
+      /* PROMOTION_WATCH_HERO_TITLE_EDITORIAL_V1 */
+      .hero-title {
+        text-transform: none !important;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+        font-weight: 620 !important;
+        letter-spacing: -0.045em !important;
+        line-height: 1.02 !important;
+      }
+
+      @media screen and (max-width: 760px) {
+        .hero-title {
+          font-size: 44px !important;
+          font-weight: 620 !important;
+          line-height: 1.02 !important;
+          letter-spacing: -0.048em !important;
+          text-transform: none !important;
+        }
+      }
+
+
   </style>
 </head>
 <body>
@@ -2154,9 +2082,24 @@ HTML_TEMPLATE = Template(
         </section>
 
         <div class="tabs tabs-aaa" role="tablist" aria-label="Promotion watch windows">
-          <button type="button" class="tab" id="tab-btn-72h" data-window="72 HR" data-mode="AAA" data-signals="{{ total_signals }}" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
-          <button type="button" class="tab active" id="tab-btn-14d" data-window="14 DAY" data-mode="SCOUT" data-signals="{{ total_14_signals }}" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
-          <button type="button" class="tab" id="tab-btn-aaa-gems" data-window="AAA GEMS" data-mode="GEMS" data-signals="{{ (aaa_gems_pitchers|length) + (aaa_gems_hitters|length) }}" onclick="switchPromotionTab('tab-aaa-gems', this)">AAA GEMS</button>
+          <button type="button" class="tab" id="tab-btn-72h" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
+          <button type="button" class="tab active" id="tab-btn-14d" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
+          <button type="button" class="tab" id="tab-btn-aaa-gems" onclick="switchPromotionTab('tab-aaa-gems', this)">AAA GEMS</button>
+        </div>
+
+        <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
+          <div style="border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px; background:rgba(255,255,255,0.02);">
+            <div style="font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#7c7c84;">Page Build</div>
+            <div style="margin-top:4px; font-size:13px; color:#f0f0f0;">{{ page_build_label }}</div>
+          </div>
+          <div style="border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px; background:rgba(255,255,255,0.02);">
+            <div style="font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#7c7c84;">Live AAA Box Feed</div>
+            <div style="margin-top:4px; font-size:13px; color:#f0f0f0;">{{ live_feed_label }}</div>
+          </div>
+          <div style="border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px; background:rgba(255,255,255,0.02);">
+            <div style="font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#7c7c84;">Movement Feed</div>
+            <div style="margin-top:4px; font-size:13px; color:#f0f0f0;">{{ movement_window_label }}</div>
+          </div>
         </div>
       </div>
 
@@ -2165,281 +2108,159 @@ HTML_TEMPLATE = Template(
       {% else %}
 
       <div id="tab-72h" class="tab-panel" style="display:none;">
-        <section class="signal-grid signal-grid-v3-preview">
-          <div class="section">
-            <div class="section-head">
-              <div>
-                <div class="section-kicker">Signal Layer</div>
-                <h2 class="section-title">Pitching Prospect Signals — 72 HR</h2>
-              </div>
-              <div class="section-badge">Top {{ pitchers|length }}</div>
-            </div>
-
-            <div class="cards">
-              {% for row in pitchers %}
-              <article
-  class="player-card player-audit-row js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
-  data-player-id="{{ row.resolved_player_id }}"
-  data-player-name="{{ row.player_name }}"
-  data-player-type="pitcher"
-  data-player-team="{{ row.display_team }}"
-  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
->
-                <div class="audit-left">
-                  <div class="audit-trigger" role="button" tabindex="-1">
-                    <span class="audit-kicker">&gt;_ SYSTEM_AUDIT:</span>
-                    <span class="audit-player-name">{{ row.player_name }}</span>
-                  </div>
-                  <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // SIGNAL WINDOW • {{ row.sample_note }}</div>
-                  <div class="audit-submeta">
-                    <span class="audit-chip">{{ row.source_badge }}</span>
-                    <span class="audit-chip">{{ row.score_version }}</span>
-                  </div>
-                </div>
-
-                <div class="audit-center">
-                  <div class="forensic-grid">
-                    <div class="forensic-cell">
-                      <div class="forensic-label">VELO_DELTA</div>
-                      <div class="forensic-value">{{ row.metric_1 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">WHIFF_STABILITY</div>
-                      <div class="forensic-value">{{ row.metric_2 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">LVL_ADJUST</div>
-                      <div class="forensic-value">{{ row.metric_3 }}</div>
-                    </div>
-                  </div>
-                  <div class="audit-why">{{ row.why }}</div>
-                </div>
-
-                <div class="audit-right">
-                  <div class="conviction-label">CONVICTION_INDEX</div>
-                  <div class="conviction-score {{ row.score_class }}">{{ row.edge_score }}</div>
-                </div>
-
-                <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
-                </div>
-              </article>
-              {% endfor %}
-            </div>
-          </div>
-
-          <div class="section">
-            <div class="section-head">
-              <div>
-                <div class="section-kicker">Signal Layer</div>
-                <h2 class="section-title">Hitting Prospect Signals — 72 HR</h2>
-              </div>
-              <div class="section-badge">Top {{ hitters|length }}</div>
-            </div>
-
-            <div class="cards">
-              {% for row in hitters %}
-              <article
-  class="player-card player-audit-row js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
-  data-player-id="{{ row.resolved_player_id }}"
-  data-player-name="{{ row.player_name }}"
-  data-player-type="hitter"
-  data-player-team="{{ row.display_team }}"
-  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
->
-                <div class="audit-left">
-                  <div class="audit-trigger" role="button" tabindex="-1">
-                    <span class="audit-kicker">&gt;_ SYSTEM_AUDIT:</span>
-                    <span class="audit-player-name">{{ row.player_name }}</span>
-                  </div>
-                  <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // SIGNAL WINDOW • {{ row.sample_note }}</div>
-                  <div class="audit-submeta">
-                    <span class="audit-chip">{{ row.source_badge }}</span>
-                    <span class="audit-chip">{{ row.score_version }}</span>
-                  </div>
-                </div>
-
-                <div class="audit-center">
-                  <div class="forensic-grid">
-                    <div class="forensic-cell">
-                      <div class="forensic-label">ISO_DELTA</div>
-                      <div class="forensic-value">{{ row.metric_1 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">K/BB_STABILITY</div>
-                      <div class="forensic-value">{{ row.metric_2 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">LVL_ADJUST</div>
-                      <div class="forensic-value">{{ row.metric_3 }}</div>
-                    </div>
-                  </div>
-                  <div class="audit-why">{{ row.why }}</div>
-                </div>
-
-                <div class="audit-right">
-                  <div class="conviction-label">CONVICTION_INDEX</div>
-                  <div class="conviction-score {{ row.score_class }}">{{ row.edge_score }}</div>
-                </div>
-
-                <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
-                </div>
-              </article>
-              {% endfor %}
-            </div>
-          </div>
-                </section>
-      </div>
-
-      <div id="tab-14d" class="tab-panel">
         <section class="signal-grid">
           <div class="section section-v3-ledger-full">
             <div class="section-head">
               <div>
                 <div class="section-kicker">Signal Layer</div>
-                <h2 class="section-title">Pitching Prospect Signals — Last 14 Days</h2>
+                <h2 class="section-title">Pitching Prospect Signals — 72 HR</h2>
               </div>
-              <div class="section-badge">Top {{ pitchers_14|length }}</div>
+              <div class="section-badge">Top {{ pitchers_72|length }}</div>
             </div>
 
-            {% if pitchers_14 %}
+            {% if pitchers_72 %}
             <div class="cards">
-              {% for row in pitchers_14 %}
-              <article
-  class="player-card player-audit-row js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
-  data-player-id="{{ row.resolved_player_id }}"
-  data-player-name="{{ row.player_name }}"
-  data-player-type="pitcher"
-  data-player-team="{{ row.display_team }}"
-  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
->
-                <div class="audit-left">
-                  <div class="audit-trigger" role="button" tabindex="-1">
-                    <span class="audit-kicker">&gt;_ SYSTEM_AUDIT:</span>
-                    <span class="audit-player-name">{{ row.player_name }}</span>
-                  </div>
-                  <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // 14 DAY WINDOW • {{ row.sample_note }}</div>
-                  <div class="audit-submeta">
-                    <span class="audit-chip">{{ row.source_badge }}</span>
-                    <span class="audit-chip">{{ row.score_version }}</span>
-                  </div>
-                </div>
-
-                <div class="audit-center">
-                  <div class="forensic-grid">
-                    <div class="forensic-cell">
-                      <div class="forensic-label">VELO_DELTA</div>
-                      <div class="forensic-value">{{ row.metric_1 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">WHIFF_STABILITY</div>
-                      <div class="forensic-value">{{ row.metric_2 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">LVL_ADJUST</div>
-                      <div class="forensic-value">{{ row.metric_3 }}</div>
-                    </div>
-                  </div>
-                  <div class="audit-why">{{ row.why }}</div>
-                </div>
-
-                <div class="audit-right">
-                  <div class="conviction-label">CONVICTION_INDEX</div>
-                  <div class="conviction-score {{ row.score_class }}">{{ row.edge_score }}</div>
-                </div>
-
-                <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
-                </div>
-              </article>
+              {% for row in pitchers_72 %}
+              {{ live_ledger_card.render(
+                row=row,
+                player_type="pitcher",
+                context_label="72 HR WINDOW",
+                metric_1_label="VELO_DELTA",
+                metric_2_label="WHIFF_STABILITY",
+                metric_3_label="LVL_ADJUST"
+              ) | safe }}
               {% endfor %}
             </div>
             {% else %}
-            <div class="placeholder">{{ pitchers_14_message }}</div>
+            <div class="placeholder">No 72 HR pitching prospect signals available.</div>
             {% endif %}
           </div>
+
+          <div class="section section-v3-ledger-full">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">Signal Layer</div>
+                <h2 class="section-title">Hitting Prospect Signals — 72 HR</h2>
+              </div>
+              <div class="section-badge">Top {{ hitters_72|length }}</div>
+            </div>
+
+            {% if hitters_72 %}
+            <div class="cards">
+              {% for row in hitters_72 %}
+              {{ live_ledger_card.render(
+                row=row,
+                player_type="hitter",
+                context_label="72 HR WINDOW",
+                metric_1_label="ISO_DELTA",
+                metric_2_label="K/BB_STABILITY",
+                metric_3_label="LVL_ADJUST"
+              ) | safe }}
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="placeholder">No 72 HR hitting prospect signals available.</div>
+            {% endif %}
+          </div>
+        </section>
+      </div>
+
+      <div id="tab-14d" class="tab-panel">
+        <div style="margin: 0 0 16px 0; border: 1px solid rgba(59,130,246,0.22); border-radius: 14px; padding: 12px 14px; background: rgba(59,130,246,0.08);">
+          <div style="font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: #93c5fd;">Live Feed Status</div>
+          <div style="margin-top: 6px; font-size: 13px; line-height: 1.5; color: #f0f0f0;">
+            Fresh AAA hitter board active from <strong>{{ live_feed_label }}</strong>. Movement Layer remains the confirmation feed.
+          </div>
+        </div>
+        {% if fresh_hitters_live %}
+        <div class="section" style="margin-bottom: 16px;">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Live Signal Layer</div>
+              <h2 class="section-title">Fresh AAA Hitters — Last Final AAA Slate</h2>
+            </div>
+            <div class="section-badge">Top {{ fresh_hitters_live|length }}</div>
+          </div>
+
+          <div class="cards">
+            {% for row in fresh_hitters_live %}
+            {{ live_ledger_card.render(
+              row=row,
+              player_type="hitter",
+              context_label="FINAL GAME WINDOW",
+              metric_1_label="ISO_LIVE",
+              metric_2_label="BB_LIVE",
+              metric_3_label="HR_LIVE"
+            ) | safe }}
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if fresh_pitchers_live %}
+        <div class="section" style="margin-bottom: 16px;">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Live Signal Layer</div>
+              <h2 class="section-title">Fresh AAA Pitchers — Last Final AAA Slate</h2>
+            </div>
+            <div class="section-badge">Top {{ fresh_pitchers_live|length }}</div>
+          </div>
+
+          <div class="cards">
+            {% for row in fresh_pitchers_live %}
+            {{ live_ledger_card.render(
+              row=row,
+              player_type="pitcher",
+              context_label="FINAL AAA SLATE",
+              metric_1_label="IP_LIVE",
+              metric_2_label="K_LIVE",
+              metric_3_label="BB_LIVE"
+            ) | safe }}
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <section class="signal-grid">
+          {# 14 DAY pitching block temporarily suppressed while AAA signal source is stale. #}
 
           <div class="section">
             <div class="section-head">
               <div>
                 <div class="section-kicker">Signal Layer</div>
-                <h2 class="section-title">Hitting Prospect Signals — Last 14 Days</h2>
+                <h2 class="section-title">Live AAA Signal Engine — In Refresh</h2>
               </div>
-              <div class="section-badge">Top {{ hitters_14|length }}</div>
+              <div class="section-badge">Stale Snapshot Hidden</div>
             </div>
 
-            {% if hitters_14 %}
-            <div class="cards">
-              {% for row in hitters_14 %}
-              <article
-  class="player-card player-audit-row js-player-card {% if row.edge_score >= 80 %}elite-edge{% elif row.edge_score >= 65 %}high-edge{% endif %}"
-  data-player-id="{{ row.resolved_player_id }}"
-  data-player-name="{{ row.player_name }}"
-  data-player-type="hitter"
-  data-player-team="{{ row.display_team }}"
-  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
->
-                <div class="audit-left">
-                  <div class="audit-trigger" role="button" tabindex="-1">
-                    <span class="audit-kicker">&gt;_ SYSTEM_AUDIT:</span>
-                    <span class="audit-player-name">{{ row.player_name }}</span>
-                  </div>
-                  <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // 14 DAY WINDOW • {{ row.sample_note }}</div>
-                  <div class="audit-submeta">
-                    <span class="audit-chip">{{ row.source_badge }}</span>
-                    <span class="audit-chip">{{ row.score_version }}</span>
-                  </div>
-                </div>
-
-                <div class="audit-center">
-                  <div class="forensic-grid">
-                    <div class="forensic-cell">
-                      <div class="forensic-label">ISO_DELTA</div>
-                      <div class="forensic-value">{{ row.metric_1 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">K/BB_STABILITY</div>
-                      <div class="forensic-value">{{ row.metric_2 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">LVL_ADJUST</div>
-                      <div class="forensic-value">{{ row.metric_3 }}</div>
-                    </div>
-                  </div>
-                  <div class="audit-why">{{ row.why }}</div>
-                </div>
-
-                <div class="audit-right">
-                  <div class="conviction-label">CONVICTION_INDEX</div>
-                  <div class="conviction-score {{ row.score_class }}">{{ row.edge_score }}</div>
-                </div>
-
-                <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
-                </div>
-              </article>
-              {% endfor %}
+            <div class="placeholder">
+              The legacy AAA hitting snapshot has been temporarily hidden because it is not current enough for live surveillance use.
+              The fresh Movement Layer below remains active while the rolling delta-based signal engine is rebuilt.
             </div>
-            {% else %}
-            <div class="placeholder">{{ hitters_14_message }}</div>
-            {% endif %}
           </div>
-        </section>
 
         <div class="section" style="margin-top: 16px;">
           <div class="section-head">
             <div>
               <div class="section-kicker">Movement Layer</div>
-              <h2 class="section-title">Recent MLB Arrivals — Last 14 Days</h2>
+              <h2 class="section-title">Fresh MLB Arrivals — Last 14 Days</h2>
             </div>
-            <div class="section-badge">{{ archive_arrivals|length }} Players</div>
+            <div class="section-badge">Top {{ archive_arrivals|length }}</div>
           </div>
 
           {% if archive_arrivals %}
-          <div class="arrival-grid">
+          <div class="cards">
             {% for row in archive_arrivals %}
-            <article class="player-card player-audit-row movement-audit-row">
+            <article
+              class="player-card player-audit-row movement-audit-row js-player-card"
+              data-player-id="{{ row.player_id }}"
+              data-player-name="{{ row.player_name }}"
+              data-player-type="{{ row.player_type }}"
+              data-player-team="{{ row.to_code }}"
+              data-source-tag="ARRIVAL"
+              data-profile-url="{% if row.player_id %}/scout/{{ row.player_id }}/{% else %}#{% endif %}"
+            >
               <div class="audit-left">
                 <div class="audit-trigger movement-trigger">
                   <span class="audit-kicker">&gt;_ MOVEMENT_AUDIT:</span>
@@ -2477,13 +2298,16 @@ HTML_TEMPLATE = Template(
               </div>
 
               <div class="audit-action movement-action">
-                <span class="movement-route">FROM {{ row.from_code }} → TO {{ row.to_code }}</span>
+                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+                  <span class="movement-route">FROM {{ row.from_code }} → TO {{ row.to_code }}</span>
+                  <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
+                </div>
               </div>
             </article>
             {% endfor %}
           </div>
           {% else %}
-          <div class="placeholder">{{ arrivals_message }}</div>
+          <div class="placeholder">No prospect-relevant MLB arrivals in the last 14 days.</div>
           {% endif %}
         </div>
       </div>
@@ -2538,141 +2362,18 @@ HTML_TEMPLATE = Template(
         </div>
       </aside>
 
-
-      </div>
-
       <div id="tab-aaa-gems" class="tab-panel" style="display:none;">
-        <div class="aaa-gems-stack">
-          <div class="section">
-            <div class="section-head">
-              <div>
-                <div class="section-kicker">AAA Gems</div>
-                <h2 class="section-title">Pitching AAA Gems</h2>
-              </div>
-              <div class="section-badge">Top {{ aaa_gems_pitchers|length }}</div>
+        <div class="section">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">AAA Gems</div>
+              <h2 class="section-title">AAA Gems — Legacy Surface Parked</h2>
             </div>
-
-            {% if aaa_gems_pitchers %}
-            <div class="cards">
-              {% for row in aaa_gems_pitchers %}
-              <article
-  class="player-card player-audit-row js-player-card"
-  data-player-id="{{ row.resolved_player_id }}"
-  data-player-name="{{ row.player_name }}"
-  data-player-type="pitcher"
-  data-player-team="{{ row.display_team }}"
-  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
->
-                <div class="audit-left">
-                  <div class="audit-trigger" role="button" tabindex="-1">
-                    <span class="audit-kicker">&gt;_ AAA_GEM:</span>
-                    <span class="audit-player-name">{{ row.player_name }}</span>
-                  </div>
-                  <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // PITCHER // AAA GEMS</div>
-                  <div class="audit-submeta">
-                    <span class="audit-chip">{{ row.source_badge }}</span>
-                    <span class="audit-chip">{{ row.model_badge }}</span>
-                  </div>
-                </div>
-
-                <div class="audit-center">
-                  <div class="forensic-grid">
-                    <div class="forensic-cell">
-                      <div class="forensic-label">{{ row.metric_1_label|upper|replace(' ', '_') }}</div>
-                      <div class="forensic-value">{{ row.metric_1 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">{{ row.metric_2_label|upper|replace(' ', '_') }}</div>
-                      <div class="forensic-value">{{ row.metric_2 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">{{ row.metric_3_label|upper|replace(' ', '_') }}</div>
-                      <div class="forensic-value">{{ row.metric_3 }}</div>
-                    </div>
-                  </div>
-                  <div class="audit-why">{{ row.why }}</div>
-                </div>
-
-                <div class="audit-right">
-                  <div class="conviction-label">GEM_SCORE</div>
-                  <div class="conviction-score {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
-                </div>
-
-                <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
-                </div>
-              </article>
-              {% endfor %}
-            </div>
-            {% else %}
-            <div class="placeholder">No AAA pitcher gems available yet.</div>
-            {% endif %}
+            <div class="section-badge">Offline</div>
           </div>
 
-          <div class="section">
-            <div class="section-head">
-              <div>
-                <div class="section-kicker">AAA Gems</div>
-                <h2 class="section-title">Hitting AAA Gems</h2>
-              </div>
-              <div class="section-badge">Top {{ aaa_gems_hitters|length }}</div>
-            </div>
-
-            {% if aaa_gems_hitters %}
-            <div class="cards">
-              {% for row in aaa_gems_hitters %}
-              <article
-  class="player-card player-audit-row js-player-card"
-  data-player-id="{{ row.resolved_player_id }}"
-  data-player-name="{{ row.player_name }}"
-  data-player-type="hitter"
-  data-player-team="{{ row.display_team }}"
-  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
->
-                <div class="audit-left">
-                  <div class="audit-trigger" role="button" tabindex="-1">
-                    <span class="audit-kicker">&gt;_ AAA_GEM:</span>
-                    <span class="audit-player-name">{{ row.player_name }}</span>
-                  </div>
-                  <div class="audit-context">{{ row.display_org }} // {{ row.display_team }} // HITTER // AAA GEMS</div>
-                  <div class="audit-submeta">
-                    <span class="audit-chip">{{ row.source_badge }}</span>
-                    <span class="audit-chip">{{ row.model_badge }}</span>
-                  </div>
-                </div>
-
-                <div class="audit-center">
-                  <div class="forensic-grid">
-                    <div class="forensic-cell">
-                      <div class="forensic-label">{{ row.metric_1_label|upper|replace(' ', '_') }}</div>
-                      <div class="forensic-value">{{ row.metric_1 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">{{ row.metric_2_label|upper|replace(' ', '_') }}</div>
-                      <div class="forensic-value">{{ row.metric_2 }}</div>
-                    </div>
-                    <div class="forensic-cell">
-                      <div class="forensic-label">{{ row.metric_3_label|upper|replace(' ', '_') }}</div>
-                      <div class="forensic-value">{{ row.metric_3 }}</div>
-                    </div>
-                  </div>
-                  <div class="audit-why">{{ row.why }}</div>
-                </div>
-
-                <div class="audit-right">
-                  <div class="conviction-label">GEM_SCORE</div>
-                  <div class="conviction-score {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
-                </div>
-
-                <div class="audit-action">
-                  <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
-                </div>
-              </article>
-              {% endfor %}
-            </div>
-            {% else %}
-            <div class="placeholder">No AAA hitter gems available yet.</div>
-            {% endif %}
+          <div class="placeholder">
+            AAA Gems was the legacy Hidden Gems-style prospect layer. It has been parked while Promotion Watch prioritizes fresh 72 HR, 14 DAY, and Movement Layer surveillance. The concept is preserved for future rebuild as a dedicated AAA latent-alpha tab.
           </div>
         </div>
       </div>
@@ -2720,18 +2421,18 @@ HTML_TEMPLATE = Template(
       const summaryMode = document.getElementById("summary-mode");
       const summarySignals = document.getElementById("summary-signals");
 
-      if (panelId === "tab-14d") {
-        if (summaryWindow) summaryWindow.textContent = "14 DAY";
-        if (summaryMode) summaryMode.textContent = "SCOUT";
-        if (summarySignals) summarySignals.textContent = "{{ total_14_signals }}";
-      } else if (panelId === "tab-aaa-gems") {
-        if (summaryWindow) summaryWindow.textContent = "AAA GEMS";
-        if (summaryMode) summaryMode.textContent = "GEMS";
-        if (summarySignals) summarySignals.textContent = "{{ (aaa_gems_pitchers|length) + (aaa_gems_hitters|length) }}";
-      } else {
+      if (panelId === "tab-72h") {
         if (summaryWindow) summaryWindow.textContent = "72 HR";
         if (summaryMode) summaryMode.textContent = "AAA";
         if (summarySignals) summarySignals.textContent = "{{ total_signals }}";
+      } else if (panelId === "tab-aaa-gems") {
+        if (summaryWindow) summaryWindow.textContent = "AAA GEMS";
+        if (summaryMode) summaryMode.textContent = "PARKED";
+        if (summarySignals) summarySignals.textContent = "0";
+      } else {
+        if (summaryWindow) summaryWindow.textContent = "14 DAY";
+        if (summaryMode) summaryMode.textContent = "SCOUT";
+        if (summarySignals) summarySignals.textContent = "{{ total_14_signals }}";
       }
     }
 
@@ -2748,6 +2449,44 @@ HTML_TEMPLATE = Template(
 </html>
 """
 )
+
+
+def fetch_recent_aaa_weekly_signal_base(limit_weeks: int = 4) -> tuple[pd.DataFrame, list[str]]:
+    from supabase import create_client
+    import os
+
+    url = os.environ["SUPABASE_URL"]
+    key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
+
+    sb = create_client(url, key)
+
+    latest_resp = (
+        sb.table("milb_aaa_weekly_signal_base")
+        .select("week_start")
+        .order("week_start", desc=True)
+        .limit(limit_weeks)
+        .execute()
+    )
+
+    rows = latest_resp.data or []
+    week_starts = [row["week_start"] for row in rows if row.get("week_start")]
+    if not week_starts:
+        return pd.DataFrame(), []
+
+    data_resp = (
+        sb.table("milb_aaa_weekly_signal_base")
+        .select("*")
+        .in_("week_start", week_starts)
+        .execute()
+    )
+
+    data = data_resp.data or []
+    if not data:
+        return pd.DataFrame(), week_starts
+
+    return pd.DataFrame(data), week_starts
+
+
 
 
 def fetch_recent_aaa_weekly_signal_base(limit_weeks: int = 4) -> tuple[pd.DataFrame, list[str]]:
@@ -2896,9 +2635,239 @@ def normalize_refresh_pitchers(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def load_fresh_aaa_hitter_refresh() -> pd.DataFrame:
+    path = DIST_DIR / "aaa_hitter_refresh.json"
+    if not path.exists():
+        return pd.DataFrame()
+
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return pd.DataFrame()
+
+    rows = payload.get("top_20") or payload.get("players") or []
+    if not rows:
+        return pd.DataFrame()
+
+    df = pd.DataFrame(rows).copy()
+    if df.empty:
+        return df
+
+    if "player_name" in df.columns:
+        df["player_name"] = (
+            df["player_name"]
+            .fillna("")
+            .astype(str)
+            .str.strip()
+        )
+
+    if "player_id" in df.columns:
+        df["resolved_player_id"] = df["player_id"].fillna("").astype(str).str.strip()
+    else:
+        df["resolved_player_id"] = ""
+
+    if "org" in df.columns:
+        df["display_team"] = df["org"].fillna("AAA").astype(str)
+        df["display_org"] = "AAA LIVE"
+    else:
+        df["display_team"] = "AAA"
+        df["display_org"] = "AAA"
+
+    if "live_score" in df.columns:
+        live_scores = pd.to_numeric(df["live_score"], errors="coerce").fillna(0)
+        df["live_score_raw"] = live_scores.round(2)
+        max_score = float(live_scores.max()) if len(live_scores) else 0.0
+        if max_score > 0:
+            df["edge_score"] = ((live_scores / max_score) * 95).round(1)
+        else:
+            df["edge_score"] = 0.0
+    else:
+        df["live_score_raw"] = 0.0
+        df["edge_score"] = 0.0
+
+    df["score_class"] = df["edge_score"].apply(classify_score)
+    df["metric_1"] = pd.to_numeric(df.get("iso"), errors="coerce").fillna(0).map(lambda x: f"{x:.3f}")
+    df["metric_2"] = pd.to_numeric(df.get("bb"), errors="coerce").fillna(0).map(lambda x: f"{int(x)}")
+    df["metric_3"] = pd.to_numeric(df.get("hr"), errors="coerce").fillna(0).map(lambda x: f"{int(x)}")
+    df["sample_note"] = pd.to_numeric(df.get("pa_proxy"), errors="coerce").fillna(0).map(lambda x: f"{int(x)} PA")
+    df["source_badge"] = "SRC: AAA_LIVE_BOX_v1"
+    df["score_version"] = "LIVE_v0.1"
+    df["signal_type"] = "Hitter"
+    df["avatar"] = df["player_name"].map(initials)
+
+    def _why(row: pd.Series) -> str:
+        return (
+            f"Fresh AAA final-box score: {int(row.get('h', 0) or 0)} H, "
+            f"{int(row.get('bb', 0) or 0)} BB, "
+            f"{int(row.get('hr', 0) or 0)} HR, "
+            f"ISO {float(row.get('iso', 0) or 0):.3f}."
+        )
+
+    df["why"] = df.apply(_why, axis=1)
+    return df.sort_values(["edge_score", "hr", "iso", "h"], ascending=[False, False, False, False]).reset_index(drop=True)
+
+
+
+def load_fresh_aaa_pitcher_refresh() -> pd.DataFrame:
+    path = DIST_DIR / "aaa_pitcher_refresh_probe.json"
+    if not path.exists():
+        return pd.DataFrame()
+
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return pd.DataFrame()
+
+    rows = payload.get("top_20") or payload.get("players") or []
+    if not rows:
+        return pd.DataFrame()
+
+    df = pd.DataFrame(rows).copy()
+    if df.empty:
+        return df
+
+    if "player_name" in df.columns:
+        df["player_name"] = (
+            df["player_name"]
+            .fillna("")
+            .astype(str)
+            .str.strip()
+        )
+
+    if "player_id" in df.columns:
+        df["resolved_player_id"] = df["player_id"].fillna("").astype(str).str.strip()
+    else:
+        df["resolved_player_id"] = ""
+
+    if "org" in df.columns:
+        df["display_team"] = df["org"].fillna("AAA").astype(str)
+        df["display_org"] = "AAA LIVE"
+    else:
+        df["display_team"] = "AAA"
+        df["display_org"] = "AAA"
+
+    if "live_score" in df.columns:
+        live_scores = pd.to_numeric(df["live_score"], errors="coerce").fillna(0)
+        df["live_score_raw"] = live_scores.round(2)
+        max_score = float(live_scores.max()) if len(live_scores) else 0.0
+        if max_score > 0:
+            df["edge_score"] = ((live_scores / max_score) * 95).round(1)
+        else:
+            df["edge_score"] = 0.0
+    else:
+        df["live_score_raw"] = 0.0
+        df["edge_score"] = 0.0
+
+    df["score_class"] = df["edge_score"].apply(classify_score)
+    df["metric_1"] = df.get("ip", pd.Series(["0.0"] * len(df))).astype(str)
+    df["metric_2"] = pd.to_numeric(df.get("so"), errors="coerce").fillna(0).map(lambda x: f"{int(x)}")
+    df["metric_3"] = pd.to_numeric(df.get("bb"), errors="coerce").fillna(0).map(lambda x: f"{int(x)}")
+    df["sample_note"] = "Final AAA slate"
+    df["source_badge"] = "SRC: AAA_LIVE_PITCH_v1"
+    df["score_version"] = "LIVE_v0.1"
+    df["signal_type"] = "Pitcher"
+    df["avatar"] = df["player_name"].map(initials)
+
+    def _why(row: pd.Series) -> str:
+        return (
+            f"Fresh AAA final-box line: {row.get('ip', '0.0')} IP, "
+            f"{int(row.get('so', 0) or 0)} K, "
+            f"{int(row.get('bb', 0) or 0)} BB, "
+            f"{int(row.get('h', 0) or 0)} H allowed."
+        )
+
+    df["why"] = df.apply(_why, axis=1)
+    return df.sort_values(["edge_score", "so", "bb", "h"], ascending=[False, False, True, True]).reset_index(drop=True)
+
+def load_source_frame() -> tuple[pd.DataFrame, list[str]]:
+    return fetch_recent_aaa_weekly_signal_base()
+
+
+
+
+
+def fetch_live_aaa_hitter_candidates_debug() -> pd.DataFrame:
+    base_df, _week_starts = load_source_frame()
+    if base_df is None or base_df.empty:
+        return pd.DataFrame()
+
+    aaa_hitters = base_df[base_df["pa"].notna()].copy()
+    if aaa_hitters.empty:
+        return pd.DataFrame()
+
+    aaa_hitters["player_name"] = aaa_hitters["player_name"].apply(safe_name)
+    aaa_names = set(aaa_hitters["player_name"].dropna().astype(str).str.strip())
+    if not aaa_names:
+        return pd.DataFrame()
+
+    fresh = fetch_fresh_hitter_signal_candidates_debug()
+    if fresh is None or fresh.empty:
+        return pd.DataFrame()
+
+    if "player_name" not in fresh.columns:
+        return pd.DataFrame()
+
+    fresh["player_name"] = fresh["player_name"].apply(safe_name)
+    fresh = fresh[fresh["player_name"].isin(aaa_names)].copy()
+
+    return fresh.sort_values("surge_score", ascending=False).head(10).reset_index(drop=True)
+
+def fetch_fresh_hitter_signal_candidates_debug() -> pd.DataFrame:
+    try:
+        from build_dashboard import fetch_statcast_window, build_hitter_signals
+        from datetime import date, timedelta
+    except Exception:
+        return pd.DataFrame()
+
+    end_dt = date.today()
+    start_dt = end_dt - timedelta(days=14)
+
+    try:
+        raw = fetch_statcast_window(start_dt, end_dt)
+    except Exception:
+        return pd.DataFrame()
+
+    if raw is None or raw.empty:
+        return pd.DataFrame()
+
+    try:
+        hitters = build_hitter_signals(raw)
+    except Exception:
+        return pd.DataFrame()
+
+    if hitters is None or hitters.empty:
+        return pd.DataFrame()
+
+    keep_cols = [
+        "player_name",
+        "team",
+        "score",
+        "metric_1",
+        "metric_2",
+        "metric_3",
+        "why",
+    ]
+    existing = [c for c in keep_cols if c in hitters.columns]
+    out = hitters[existing].copy()
+
+    rename_map = {}
+    if "score" in out.columns:
+        rename_map["score"] = "surge_score"
+    out = out.rename(columns=rename_map)
+
+    if "surge_score" in out.columns:
+        out = out.sort_values("surge_score", ascending=False)
+
+    return out.head(10).reset_index(drop=True)
+
 def render_html() -> str:
     build_started_at = utc_now_iso()
-    df, week_starts, source_updated_at = load_source_frame()
+    source_frame_result = load_source_frame()
+    if len(source_frame_result) == 3:
+        df, week_starts, source_updated_at = source_frame_result
+    else:
+        df, week_starts = source_frame_result
+        source_updated_at = datetime.now(timezone.utc).isoformat()
 
     hitters_72 = normalize_refresh_hitters(load_refresh_top20("aaa_hitter_refresh.json"))
     pitchers_72 = normalize_refresh_pitchers(load_refresh_top20("aaa_pitcher_refresh_probe.json"))
@@ -2920,6 +2889,20 @@ def render_html() -> str:
     total_signals = len(hitters_72) + len(pitchers_72)
     total_14_signals = len(hitters_14) + len(pitchers_14)
     _live_arrivals, archive_arrivals = load_arrivals_windows(live_limit=8, archive_limit=16)
+    fresh_hitters_live = load_fresh_aaa_hitter_refresh()
+    fresh_pitchers_live = load_fresh_aaa_pitcher_refresh()
+
+    movement_window_label = "Last 14 Days"
+    page_build_label = datetime.now().strftime("%Y-%m-%d %I:%M %p")
+    live_feed_label = "Unavailable"
+
+    if not fresh_hitters_live.empty and "snapshot_date" in fresh_hitters_live.columns:
+        snap_series = fresh_hitters_live["snapshot_date"].dropna().astype(str)
+        live_feed_label = f"{snap_series.iloc[0]} FINAL GAMES" if not snap_series.empty else "LIVE"
+    elif not fresh_hitters_live.empty:
+        live_feed_label = "LIVE"
+    elif "source_updated_at" in locals() and source_updated_at:
+        live_feed_label = source_updated_at
 
     sections = {
         "pitchers_72hr": len(pitchers_72),
@@ -3010,6 +2993,13 @@ def render_html() -> str:
         search_html=SEARCH_TEMPLATE,
         footer_html=FOOTER_TEMPLATE,
         shell_styles=SHELL_STYLES_TEMPLATE,
+        ledger_styles=LEDGER_STYLES_TEMPLATE,
+        live_ledger_card=LIVE_LEDGER_CARD,
+        page_build_label=page_build_label,
+        live_feed_label=live_feed_label,
+        movement_window_label=movement_window_label,
+        fresh_hitters_live=fresh_hitters_live.to_dict(orient="records"),
+        fresh_pitchers_live=fresh_pitchers_live.to_dict(orient="records"),
         total_signals=total_signals,
         total_14_signals=total_14_signals,
         hitters=hitters_72.to_dict(orient="records"),
