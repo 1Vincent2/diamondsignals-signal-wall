@@ -1135,17 +1135,6 @@ def render_html(payload: dict) -> str:
       box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
       scroll-margin-top: 112px;
     }}
-      50% {{
-        transform: translateY(-2px);
-        box-shadow:
-          0 0 0 1px rgba(204,255,0,.52),
-          0 0 44px rgba(255,122,26,.36),
-          0 0 70px rgba(204,255,0,.18),
-          inset 0 1px 0 rgba(255,255,255,.10);
-      }}
-    }}
-
-
     .apex-card.target-signal-card {{
       border-color: rgba(204,255,0,.72);
       border-top-color: rgba(204,255,0,.95);
