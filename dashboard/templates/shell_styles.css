@@ -373,26 +373,40 @@
   }
 }
 
-/* DS_MOBILE_NAV_PERSISTENCE_LOCK_V1
-   Keeps the shared mobile command menu available while scrolling on refactored surfaces. */
+/* DS_MOBILE_NAV_PERSISTENCE_LOCK_V2
+   Global mobile command menu hard lock for all Signal Wall surfaces. */
 @media screen and (max-width: 760px) {
+  body {
+    padding-top: 58px !important;
+  }
+
   .topnav.ds-shell-nav {
-    position: sticky !important;
+    position: fixed !important;
     top: 0 !important;
-    z-index: 9000 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    z-index: 2147483000 !important;
     transform: none !important;
+    pointer-events: auto !important;
+  }
+
+  .topnav.ds-shell-nav .topnav-inner {
+    position: relative !important;
+    z-index: 2147483001 !important;
   }
 
   .ds-mobile-menu-trigger {
     position: relative !important;
-    z-index: 9001 !important;
+    z-index: 2147483002 !important;
+    pointer-events: auto !important;
     transform: none !important;
   }
 
   .ds-mobile-menu-backdrop {
     position: fixed !important;
     inset: 0 !important;
-    z-index: 9998 !important;
+    z-index: 2147483003 !important;
   }
 
   .ds-mobile-menu-drawer {
@@ -400,7 +414,7 @@
     top: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
-    z-index: 9999 !important;
+    z-index: 2147483004 !important;
     max-height: 100dvh !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
