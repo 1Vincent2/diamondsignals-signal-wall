@@ -1008,6 +1008,225 @@ HTML_TEMPLATE = Template(
       .score-value { font-family: var(--sans); font-size: 44px; line-height: 0.88; font-weight: 900; font-style: italic; letter-spacing: -0.06em; }
       .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
+
+      /* VELOCITY_DECAY_MOBILE_REFACTOR_V1 */
+      @media screen and (max-width: 760px) {
+        body {
+          overflow-x: hidden !important;
+        }
+
+        .search-strip {
+          display: none !important;
+        }
+
+        .app {
+          width: min(100%, calc(100% - 28px)) !important;
+          padding: 18px 0 52px !important;
+        }
+
+        .hero-card {
+          padding: 18px 16px !important;
+          margin: 16px 0 14px !important;
+          border-radius: 22px !important;
+        }
+
+        .hero-card > div {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          gap: 12px !important;
+        }
+
+        .eyebrow {
+          font-size: 9px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.16em !important;
+          margin-bottom: 10px !important;
+        }
+
+        .hero-title {
+          font-size: 34px !important;
+          line-height: 1.04 !important;
+          letter-spacing: -0.045em !important;
+          font-weight: 700 !important;
+          text-transform: none !important;
+          margin: 0 0 10px !important;
+        }
+
+        .hero-copy {
+          font-size: 13px !important;
+          line-height: 1.48 !important;
+          color: rgba(226,232,240,0.72) !important;
+          margin: 0 !important;
+        }
+
+        .info-trigger {
+          width: 100% !important;
+          min-height: 38px !important;
+          justify-content: center !important;
+          text-align: center !important;
+          font-size: 9px !important;
+          letter-spacing: 0.14em !important;
+          border-radius: 999px !important;
+        }
+
+        .section {
+          border-radius: 22px !important;
+        }
+
+        .section-head {
+          flex-direction: column !important;
+          align-items: stretch !important;
+          gap: 10px !important;
+          padding: 14px !important;
+        }
+
+        .section-kicker {
+          font-size: 9px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.16em !important;
+        }
+
+        .section-title {
+          font-size: 21px !important;
+          line-height: 1 !important;
+          letter-spacing: -0.03em !important;
+          font-weight: 760 !important;
+        }
+
+        .section-badge {
+          width: 100% !important;
+          min-height: 34px !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          text-align: center !important;
+          font-size: 9px !important;
+          line-height: 1.25 !important;
+          letter-spacing: 0.12em !important;
+        }
+
+        .cards {
+          gap: 14px !important;
+          padding: 10px !important;
+        }
+
+        .player-card {
+          padding: 12px !important;
+          border-radius: 20px !important;
+        }
+
+        .player-top {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          gap: 10px !important;
+          margin-bottom: 10px !important;
+        }
+
+        .player-head {
+          display: block !important;
+        }
+
+        .avatar {
+          display: none !important;
+        }
+
+        .rankline {
+          font-size: 8px !important;
+          line-height: 1.15 !important;
+          letter-spacing: 0.14em !important;
+        }
+
+        .player-name {
+          font-size: 23px !important;
+          line-height: 0.98 !important;
+          letter-spacing: -0.04em !important;
+          font-weight: 760 !important;
+          text-transform: uppercase !important;
+        }
+
+        .signal-line {
+          font-size: 9px !important;
+          line-height: 1.35 !important;
+          letter-spacing: 0.12em !important;
+        }
+
+        .scorebox {
+          align-items: flex-start !important;
+          text-align: left !important;
+          min-width: 0 !important;
+          padding-top: 8px !important;
+          border-top: 1px solid rgba(255,255,255,0.06) !important;
+        }
+
+        .score-value {
+          font-size: 38px !important;
+          line-height: 0.86 !important;
+          letter-spacing: -0.055em !important;
+        }
+
+        .action-row {
+          justify-content: stretch !important;
+        }
+
+        .alert-pill {
+          width: 100% !important;
+          min-height: 38px !important;
+          justify-content: center !important;
+          text-align: center !important;
+          font-size: 9px !important;
+          letter-spacing: 0.14em !important;
+        }
+
+        .analysis-stack {
+          padding: 9px !important;
+          border-radius: 16px !important;
+        }
+
+        .diagnosis-label,
+        .sparkline-label,
+        .metric-label {
+          font-size: 8px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.14em !important;
+        }
+
+        .diagnosis-banner {
+          min-height: 36px !important;
+          padding: 8px 10px !important;
+          justify-content: center !important;
+          text-align: center !important;
+          font-size: 9px !important;
+          line-height: 1.25 !important;
+          letter-spacing: 0.12em !important;
+          border-radius: 14px !important;
+        }
+
+        .sparkline-head {
+          flex-direction: column !important;
+          align-items: flex-start !important;
+          gap: 4px !important;
+        }
+
+        .metric-grid {
+          grid-template-columns: 1fr !important;
+          gap: 8px !important;
+        }
+
+        .metric {
+          padding: 8px 9px !important;
+        }
+
+        .metric-value {
+          font-size: 16px !important;
+          line-height: 18px !important;
+        }
+
+        .why {
+          font-size: 12px !important;
+          line-height: 1.45 !important;
+        }
+      }
+
   </style>
 </head>
 <body>
