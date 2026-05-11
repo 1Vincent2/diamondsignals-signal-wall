@@ -11,6 +11,7 @@ MODULES = [
     "dashboard.build_dashboard",
     "dashboard.build_signal_wall_v2",
     "dashboard.build_call_up_live",
+    "dashboard.build_kinetic_drift",
     "dashboard.build_mlb_extraction",
     "dashboard.build_apex_extraction",
     "dashboard.build_ivb_heat_map",
