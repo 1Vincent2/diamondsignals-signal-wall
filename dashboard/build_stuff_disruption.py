@@ -1102,6 +1102,441 @@ HTML_TEMPLATE = Template(
         transform: translateY(-1px);
       }
     }
+
+      /* STUFF_DISRUPTION_MOBILE_REFACTOR_V1 */
+      @media screen and (max-width: 760px) {
+        body {
+          overflow-x: hidden !important;
+        }
+
+        .search-strip {
+          display: none !important;
+        }
+
+        .topbar {
+          min-height: 72px !important;
+        }
+
+        .topbar-inner,
+        .app {
+          width: min(100%, calc(100% - 28px)) !important;
+        }
+
+        .topbar-inner {
+          min-height: 62px !important;
+          padding: 10px 0 !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+          gap: 12px !important;
+        }
+
+        .brand {
+          gap: 9px !important;
+          min-width: 0 !important;
+        }
+
+        .brand-mark {
+          width: 14px !important;
+          height: 14px !important;
+          min-width: 14px !important;
+          min-height: 14px !important;
+        }
+
+        .brand-kicker {
+          font-size: 9px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.16em !important;
+          margin-bottom: 4px !important;
+        }
+
+        .brand-title {
+          max-width: 230px !important;
+          font-family: var(--sans) !important;
+          font-size: 15px !important;
+          line-height: 1.04 !important;
+          letter-spacing: -0.035em !important;
+          font-weight: 750 !important;
+          text-transform: none !important;
+        }
+
+        .livebox {
+          min-width: 70px !important;
+          text-align: right !important;
+        }
+
+        .live-label {
+          font-size: 10px !important;
+          gap: 6px !important;
+        }
+
+        .live-dot {
+          width: 14px !important;
+          height: 14px !important;
+          min-width: 14px !important;
+          min-height: 14px !important;
+        }
+
+        .live-time {
+          font-size: 9px !important;
+          line-height: 1.12 !important;
+        }
+
+        .app {
+          padding: 18px 0 52px !important;
+        }
+
+        .hero-card {
+          padding: 18px 16px !important;
+          margin: 16px 0 14px !important;
+          border-radius: 22px !important;
+        }
+
+        .hero-card > div {
+          display: block !important;
+        }
+
+        .eyebrow {
+          font-size: 9px !important;
+          line-height: 1.2 !important;
+          letter-spacing: 0.16em !important;
+          margin-bottom: 12px !important;
+        }
+
+        .hero-title {
+          font-family: var(--sans) !important;
+          font-size: 34px !important;
+          line-height: 1.02 !important;
+          letter-spacing: -0.045em !important;
+          font-weight: 720 !important;
+          text-transform: none !important;
+          margin-bottom: 10px !important;
+        }
+
+        .hero-copy {
+          font-size: 13px !important;
+          line-height: 1.48 !important;
+          color: rgba(226,232,240,.72) !important;
+        }
+
+        .hero-card .info-trigger {
+          display: none !important;
+        }
+
+        .meta-grid {
+          display: none !important;
+        }
+
+        .section {
+          border-radius: 22px !important;
+          margin-top: 14px !important;
+        }
+
+        .section-head {
+          padding: 14px 14px 12px !important;
+          align-items: flex-start !important;
+          flex-direction: column !important;
+          gap: 8px !important;
+        }
+
+        .section-kicker {
+          font-size: 9px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.16em !important;
+        }
+
+        .section-title {
+          font-size: 22px !important;
+          line-height: 1 !important;
+          letter-spacing: -0.035em !important;
+          font-weight: 760 !important;
+        }
+
+        .section-badge {
+          font-size: 9px !important;
+          padding: 6px 9px !important;
+        }
+
+        .cards {
+          padding: 10px !important;
+          gap: 12px !important;
+        }
+
+        .player-card {
+          padding: 13px !important;
+          border-radius: 20px !important;
+        }
+
+        .player-top {
+          display: grid !important;
+          grid-template-columns: auto 1fr !important;
+          gap: 10px !important;
+          align-items: start !important;
+          margin-bottom: 10px !important;
+        }
+
+        .player-head {
+          display: contents !important;
+        }
+
+        .avatar {
+          width: 34px !important;
+          height: 34px !important;
+          font-size: 11px !important;
+        }
+
+        .rankline,
+        .score-label,
+        .metric-label,
+        .sparkline-label,
+        .diagnosis-label {
+          font-size: 8px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.14em !important;
+        }
+
+        .player-name {
+          font-size: 24px !important;
+          line-height: 0.98 !important;
+          letter-spacing: -0.045em !important;
+          font-weight: 760 !important;
+        }
+
+        .signal-line {
+          font-size: 9px !important;
+          line-height: 1.28 !important;
+          letter-spacing: 0.10em !important;
+        }
+
+        .scorebox {
+          grid-column: 1 / -1 !important;
+          min-width: 0 !important;
+          width: 100% !important;
+          text-align: left !important;
+          align-items: flex-start !important;
+          gap: 8px !important;
+        }
+
+        .score-value {
+          font-size: 42px !important;
+          line-height: 0.88 !important;
+          letter-spacing: -0.06em !important;
+        }
+
+        .action-row {
+          width: 100% !important;
+          justify-content: stretch !important;
+        }
+
+        .action-row .js-add-to-roster {
+          width: 100% !important;
+          min-height: 36px !important;
+          padding: 0 12px !important;
+          border-radius: 12px !important;
+          border: 1px solid rgba(34,211,238,0.34) !important;
+          background: rgba(2, 6, 23, 0.58) !important;
+          color: rgba(255,255,255,0.92) !important;
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.06),
+            0 0 14px rgba(34,211,238,0.10) !important;
+          font-size: 9px !important;
+          letter-spacing: 0.08em !important;
+          white-space: nowrap !important;
+          justify-content: center !important;
+        }
+
+        .action-row .js-add-to-roster:hover {
+          background: rgba(2, 6, 23, 0.76) !important;
+          border-color: rgba(34,211,238,0.54) !important;
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.08),
+            0 0 18px rgba(34,211,238,0.16) !important;
+          transform: none !important;
+        }
+
+        .analysis-stack {
+          padding: 9px !important;
+          border-radius: 16px !important;
+        }
+
+        .diagnosis-banner {
+          min-height: 36px !important;
+          padding: 0 10px !important;
+          justify-content: center !important;
+          font-size: 9px !important;
+          line-height: 1.25 !important;
+          letter-spacing: 0.12em !important;
+          text-align: center !important;
+        }
+
+        .sparkline-wrap {
+          border-radius: 14px !important;
+        }
+
+        .sparkline {
+          height: 42px !important;
+        }
+
+        .metric-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          gap: 8px !important;
+        }
+
+        .metric {
+          padding: 8px 9px !important;
+          border-radius: 14px !important;
+        }
+
+        .metric-value {
+          font-size: 16px !important;
+          line-height: 18px !important;
+        }
+
+        .why {
+          font-size: 12px !important;
+          line-height: 1.45 !important;
+        }
+
+        .field-guide-pill {
+          right: 14px !important;
+          bottom: 14px !important;
+          padding: 10px 12px !important;
+          font-size: 9px !important;
+          letter-spacing: 0.14em !important;
+        }
+      }
+
+      /* STUFF_DISRUPTION_MOBILE_VERTICAL_TIGHTEN_V1 */
+      @media screen and (max-width: 760px) {
+        .hero-card {
+          margin-bottom: 10px !important;
+        }
+
+        .meta-grid {
+          gap: 7px !important;
+          margin-bottom: 10px !important;
+        }
+
+        .meta-card {
+          padding: 9px 10px !important;
+          border-radius: 18px !important;
+        }
+
+        .meta-label {
+          margin-bottom: 4px !important;
+          font-size: 8px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.16em !important;
+        }
+
+        .meta-value {
+          font-size: 12px !important;
+          line-height: 1.2 !important;
+        }
+
+        .section-head {
+          padding: 12px 12px 10px !important;
+        }
+
+        .cards {
+          padding: 8px !important;
+          gap: 9px !important;
+        }
+      }
+
+      /* STUFF_DISRUPTION_MOBILE_META_GAP_TIGHTEN_V1 */
+      @media screen and (max-width: 760px) {
+        .meta-grid {
+          gap: 4px !important;
+          margin-bottom: 8px !important;
+        }
+
+        .meta-card {
+          margin: 0 !important;
+          padding-top: 8px !important;
+          padding-bottom: 8px !important;
+        }
+      }
+
+      /* STUFF_DISRUPTION_MOBILE_META_HEIGHT_HALF_V1 */
+      @media screen and (max-width: 760px) {
+        .meta-grid {
+          gap: 4px !important;
+          margin-bottom: 6px !important;
+        }
+
+        .meta-card {
+          min-height: 0 !important;
+          padding: 6px 12px !important;
+          border-radius: 18px !important;
+        }
+
+        .meta-label {
+          margin-bottom: 4px !important;
+          font-size: 8px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.14em !important;
+        }
+
+        .meta-value {
+          font-size: 12px !important;
+          line-height: 1.15 !important;
+        }
+      }
+
+      /* STUFF_DISRUPTION_MOBILE_HERO_INITIAL_CAPS_V1 */
+      @media screen and (max-width: 760px) {
+        .hero-title {
+          text-transform: none !important;
+          font-size: 38px !important;
+          line-height: 0.96 !important;
+          letter-spacing: -0.055em !important;
+          font-weight: 850 !important;
+        }
+      }
+
+      /* STUFF_DISRUPTION_MOBILE_FIELD_GUIDE_AND_TITLE_WEIGHT_V1 */
+      @media screen and (max-width: 760px) {
+        .hero-title {
+          font-weight: 680 !important;
+          font-size: 36px !important;
+          line-height: 1.02 !important;
+          letter-spacing: -0.05em !important;
+          text-transform: none !important;
+        }
+
+        .hero-card .info-trigger,
+        .info-trigger {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          width: auto !important;
+          min-width: 0 !important;
+          min-height: 38px !important;
+          margin-top: 16px !important;
+          padding: 0 18px !important;
+          border-radius: 999px !important;
+          border: 1px solid rgba(34, 211, 238, 0.35) !important;
+          background: rgba(2, 6, 23, 0.62) !important;
+          color: rgba(255, 255, 255, 0.92) !important;
+          font-family: var(--mono) !important;
+          font-size: 10px !important;
+          font-weight: 850 !important;
+          letter-spacing: 0.16em !important;
+          text-transform: uppercase !important;
+          box-shadow: 0 0 16px rgba(34, 211, 238, 0.12) !important;
+        }
+
+        .hero-card > div {
+          align-items: flex-start !important;
+        }
+      }
+
+
+
+
+
+
   </style>
 </head>
 <body>
@@ -1163,7 +1598,7 @@ HTML_TEMPLATE = Template(
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
         <div>
           <div class="eyebrow">Apex Terminal</div>
-          <h1 class="hero-title">Stuff+ Disruption Feed</h1>
+          <h1 class="hero-title">Stuff+ Disruption</h1>
           <p class="hero-copy">
             Diagnostic breakout feed for IVB spikes, VAA flattening, movement disruptions, and active spin gains. This page is built to surface shape-shifters before their strikeout surge shows up in the obvious places.
           </p>

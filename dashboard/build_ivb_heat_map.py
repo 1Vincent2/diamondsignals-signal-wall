@@ -493,6 +493,252 @@ HTML_TEMPLATE = Template(
         letter-spacing: 0.04em;
       }
     }
+
+      /* IVB_HEAT_MAP_MOBILE_REFACTOR_V1 */
+      @media screen and (max-width: 760px) {
+        body {
+          overflow-x: hidden !important;
+        }
+
+        .search-strip {
+          display: none !important;
+        }
+
+        .app {
+          width: min(100%, calc(100% - 28px)) !important;
+          padding: 18px 0 52px !important;
+        }
+
+        .hero-card {
+          padding: 18px 16px !important;
+          margin: 16px 0 14px !important;
+          border-radius: 22px !important;
+        }
+
+        .eyebrow {
+          font-size: 9px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.16em !important;
+          margin-bottom: 10px !important;
+        }
+
+        .hero-title {
+          font-size: 34px !important;
+          line-height: 1.04 !important;
+          letter-spacing: -0.045em !important;
+          font-weight: 700 !important;
+          text-transform: none !important;
+          margin: 0 0 10px !important;
+        }
+
+        .hero-copy {
+          font-size: 13px !important;
+          line-height: 1.48 !important;
+          color: rgba(226,232,240,0.72) !important;
+          margin: 0 !important;
+        }
+
+        .top-metrics {
+          display: none !important;
+        }
+
+        .main-grid {
+          grid-template-columns: 1fr !important;
+          gap: 14px !important;
+        }
+
+        .section-card,
+        .leader-card {
+          padding: 14px !important;
+          border-radius: 22px !important;
+        }
+
+        .section-head,
+        .leader-head {
+          flex-direction: column !important;
+          align-items: stretch !important;
+          gap: 10px !important;
+          margin-bottom: 14px !important;
+          padding-bottom: 12px !important;
+        }
+
+        .section-kicker {
+          font-size: 9px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.16em !important;
+        }
+
+        .section-title {
+          font-size: 21px !important;
+          line-height: 1 !important;
+          letter-spacing: -0.03em !important;
+          font-weight: 760 !important;
+          text-transform: uppercase !important;
+        }
+
+        .section-actions {
+          width: 100% !important;
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          gap: 8px !important;
+        }
+
+        .field-guide-trigger,
+        .section-badge {
+          width: 100% !important;
+          min-height: 36px !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          text-align: center !important;
+          font-size: 9px !important;
+          line-height: 1.25 !important;
+          letter-spacing: 0.12em !important;
+          border-radius: 999px !important;
+        }
+
+        .heat-grid {
+          grid-template-columns: 1fr !important;
+          gap: 14px !important;
+        }
+
+        .heat-card {
+          min-height: 0 !important;
+          padding: 12px !important;
+          border-radius: 20px !important;
+        }
+
+        .heat-rank {
+          font-size: 8px !important;
+          line-height: 1.15 !important;
+          letter-spacing: 0.14em !important;
+          margin-bottom: 7px !important;
+        }
+
+        .heat-name {
+          font-size: 23px !important;
+          line-height: 0.98 !important;
+          letter-spacing: -0.04em !important;
+          font-weight: 760 !important;
+        }
+
+        .heat-meta {
+          font-size: 9px !important;
+          line-height: 1.25 !important;
+          letter-spacing: 0.12em !important;
+          margin-bottom: 10px !important;
+        }
+
+        .heat-header-tags {
+          gap: 6px !important;
+          flex-wrap: wrap !important;
+        }
+
+        .heat-band,
+        .heat-climber,
+        .heat-transition {
+          font-size: 8px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.12em !important;
+          padding: 6px 8px !important;
+        }
+
+        .heat-action-row {
+          margin-top: 10px !important;
+        }
+
+        .heat-provision-btn {
+          width: 100% !important;
+          min-height: 38px !important;
+          justify-content: center !important;
+          text-align: center !important;
+          font-size: 9px !important;
+          letter-spacing: 0.14em !important;
+          border-radius: 999px !important;
+        }
+
+        .heat-values {
+          grid-template-columns: 1fr !important;
+          gap: 8px !important;
+          margin-top: 12px !important;
+        }
+
+        .heat-value-box {
+          padding: 8px 9px !important;
+          border-radius: 14px !important;
+        }
+
+        .heat-value-label {
+          font-size: 8px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.14em !important;
+        }
+
+        .heat-value {
+          font-size: 16px !important;
+          line-height: 18px !important;
+        }
+
+        .heat-risk {
+          font-size: 9px !important;
+          line-height: 1.25 !important;
+          letter-spacing: 0.12em !important;
+          padding: 8px 10px !important;
+          border-radius: 14px !important;
+        }
+
+        .heat-brief,
+        .lab-note {
+          font-size: 12px !important;
+          line-height: 1.45 !important;
+        }
+
+        .leader-row {
+          padding: 10px !important;
+          border-radius: 16px !important;
+        }
+
+        .leader-name {
+          font-size: 14px !important;
+          line-height: 1.1 !important;
+        }
+
+        .leader-sub,
+        .leader-delta {
+          font-size: 9px !important;
+          line-height: 1.25 !important;
+          letter-spacing: 0.12em !important;
+        }
+
+        .field-guide-modal {
+          width: calc(100vw - 16px) !important;
+          max-height: calc(100vh - 16px) !important;
+          border-radius: 22px !important;
+        }
+      }
+
+      /* IVB_MOBILE_TRANSPARENT_TRACKING_BUTTON_V1 */
+      @media screen and (max-width: 760px) {
+        .heat-provision-btn {
+          background: rgba(2, 6, 23, 0.58) !important;
+          border: 1px solid rgba(106, 166, 255, 0.42) !important;
+          color: rgba(255, 255, 255, 0.92) !important;
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.06),
+            0 0 14px rgba(59,130,246,0.10) !important;
+        }
+
+        .heat-provision-btn:hover {
+          background: rgba(2, 6, 23, 0.76) !important;
+          border-color: rgba(106, 166, 255, 0.60) !important;
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.08),
+            0 0 18px rgba(59,130,246,0.16) !important;
+          transform: none !important;
+        }
+      }
+
+
   </style>
 </head>
 <body>

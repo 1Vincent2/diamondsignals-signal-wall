@@ -18,6 +18,8 @@ OUT_PATH = OUT_DIR / "kinetic_drift_signals.json"
 HTML_DIR = OUT_DIR / "kinetic-drift"
 HTML_PATH = HTML_DIR / "index.html"
 TEMPLATE_PATH = BASE_DIR / "templates" / "admin" / "kinetic_drift.html"
+SHELL_STYLES_PATH = BASE_DIR / "templates" / "shell_styles.css"
+SHELL_NAV_PATH = BASE_DIR / "templates" / "shell_nav.html"
 
 LOOKBACK_DAYS = 45
 RECENT_APPEARANCES = 3
@@ -617,7 +619,12 @@ def write_json(signals: list[dict], start_date: str, end_date: str) -> None:
     HTML_DIR.mkdir(parents=True, exist_ok=True)
     template = Template(TEMPLATE_PATH.read_text(encoding="utf-8"))
     HTML_PATH.write_text(
-        template.render(signals=signals, payload=payload),
+        template.render(
+            signals=signals,
+            payload=payload,
+            shell_styles=SHELL_STYLES_PATH.read_text(encoding="utf-8"),
+            shell_nav=Template(SHELL_NAV_PATH.read_text(encoding="utf-8")).render(active_nav="kinetic_drift"),
+        ),
         encoding="utf-8",
     )
     print(f"Wrote kinetic drift preview -> {HTML_PATH}")
