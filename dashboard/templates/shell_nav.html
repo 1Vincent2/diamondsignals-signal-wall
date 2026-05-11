@@ -1,8 +1,9 @@
-<div class="topnav">
+<div class="topnav ds-shell-nav">
   <div class="topnav-inner">
     <div class="topnav-links">
       <a class="topnav-link {% if active_nav == 'signal_wall' %}active{% endif %}" href="/live/"><span class="topnav-tag">[ LIVE ]</span> Signal Wall</a>
       <a class="topnav-link {% if active_nav == 'promotion_watch' %}active{% endif %}" href="/typical-call-up"><span class="topnav-tag">[ SCOUT ]</span> Promotion Watch</a>
+      <a class="topnav-link {% if active_nav == 'kinetic_drift' %}active{% endif %}" href="/admin/kinetic-drift/"><span class="topnav-tag">[ KINETIC ]</span> KDE</a>
       <a class="topnav-link {% if active_nav == 'ivb_heat_map' %}active{% endif %}" href="/ivb-heat-map"><span class="topnav-tag">[ LAB ]</span> IVB Heat Map</a>
       <a class="topnav-link {% if active_nav == 'velocity_decay_monitor' %}active{% endif %}" href="/velocity-decay-monitor"><span class="topnav-tag">[ RISK ]</span> Velocity Decay</a>
       <a class="topnav-link {% if active_nav == 'stuff_disruption_feed' %}active{% endif %}" href="/stuff-disruption-feed"><span class="topnav-tag">[ APEX ]</span> Stuff+ Disruption</a>
@@ -12,5 +13,73 @@
       <a class="topnav-link" href="https://app.diamondsignals.ai/auth?next=/terminal"><span class="topnav-tag">[ TERMINAL ]</span> Roster Terminal</a>
       <a class="topnav-link" href="https://diamondsignals.ai"><span class="topnav-tag">[ SITE ]</span> Main Site</a>
     </div>
+
+    <button class="ds-mobile-menu-trigger" type="button" data-ds-mobile-menu-open onclick="window.dsOpenMobileMenu && window.dsOpenMobileMenu()" aria-controls="dsMobileMenu" aria-expanded="false">
+      <span class="ds-mobile-menu-icon">☰</span>
+      <span>Menu</span>
+    </button>
   </div>
 </div>
+
+<div class="ds-mobile-menu-backdrop" data-ds-mobile-menu-close></div>
+
+<aside class="ds-mobile-menu-drawer" id="dsMobileMenu" aria-hidden="true">
+  <div class="ds-mobile-menu-shell">
+    <div class="ds-mobile-menu-head">
+      <div>
+        <div class="ds-mobile-menu-kicker">DIAMONDSIGNALS // COMMAND NAV</div>
+        <h2 class="ds-mobile-menu-title">Signal Surfaces</h2>
+      </div>
+      <button class="ds-mobile-menu-close" type="button" data-ds-mobile-menu-close onclick="window.dsCloseMobileMenu && window.dsCloseMobileMenu()" aria-label="Close menu">×</button>
+    </div>
+
+    <div class="ds-mobile-menu-links">
+      <a class="ds-mobile-menu-link {% if active_nav == 'signal_wall' %}active{% endif %}" href="/live/"><span>[ LIVE ]</span> Signal Wall</a>
+      <a class="ds-mobile-menu-link {% if active_nav == 'promotion_watch' %}active{% endif %}" href="/typical-call-up"><span>[ SCOUT ]</span> Promotion Watch</a>
+      <a class="ds-mobile-menu-link {% if active_nav == 'kinetic_drift' %}active{% endif %}" href="/admin/kinetic-drift/"><span>[ KINETIC ]</span> Kinetic Drift Engine</a>
+      <a class="ds-mobile-menu-link {% if active_nav == 'ivb_heat_map' %}active{% endif %}" href="/ivb-heat-map"><span>[ LAB ]</span> IVB Heat Map</a>
+      <a class="ds-mobile-menu-link {% if active_nav == 'velocity_decay_monitor' %}active{% endif %}" href="/velocity-decay-monitor"><span>[ RISK ]</span> Velocity Decay</a>
+      <a class="ds-mobile-menu-link {% if active_nav == 'stuff_disruption_feed' %}active{% endif %}" href="/stuff-disruption-feed"><span>[ APEX ]</span> Stuff+ Disruption</a>
+      <a class="ds-mobile-menu-link {% if active_nav == 'hidden_gems' %}active{% endif %}" href="/hidden-gems"><span>[ EDGE ]</span> MLB Extraction Ledger</a>
+      <a class="ds-mobile-menu-link {% if active_nav == 'apex_extraction' %}active{% endif %}" href="/apex-extraction/"><span>[ APEX ]</span> Apex Extraction</a>
+      <a class="ds-mobile-menu-link" href="https://app.diamondsignals.ai/auth?next=/watchlist"><span>[ STAGE ]</span> Tracking Radar</a>
+      <a class="ds-mobile-menu-link" href="https://app.diamondsignals.ai/auth?next=/terminal"><span>[ TERMINAL ]</span> Roster Terminal</a>
+      <a class="ds-mobile-menu-link" href="https://diamondsignals.ai"><span>[ SITE ]</span> Main Site</a>
+    </div>
+
+    <div class="ds-mobile-menu-status">
+      SYSTEM STATUS: MOBILE COMMAND DRAWER ACTIVE
+    </div>
+  </div>
+</aside>
+
+<script>
+(function(){
+  const body = document.body;
+  const openBtn = document.querySelector("[data-ds-mobile-menu-open]");
+  const closeEls = document.querySelectorAll("[data-ds-mobile-menu-close]");
+  const drawer = document.getElementById("dsMobileMenu");
+
+  function openMenu(){
+    body.classList.add("ds-mobile-menu-open");
+    if (drawer) drawer.setAttribute("aria-hidden", "false");
+    if (openBtn) openBtn.setAttribute("aria-expanded", "true");
+  }
+
+  function closeMenu(){
+    body.classList.remove("ds-mobile-menu-open");
+    if (drawer) drawer.setAttribute("aria-hidden", "true");
+    if (openBtn) openBtn.setAttribute("aria-expanded", "false");
+  }
+
+  window.dsOpenMobileMenu = openMenu;
+  window.dsCloseMobileMenu = closeMenu;
+
+  if (openBtn) openBtn.addEventListener("click", openMenu);
+  closeEls.forEach((el) => el.addEventListener("click", closeMenu));
+
+  document.addEventListener("keydown", function(event){
+    if (event.key === "Escape") closeMenu();
+  });
+})();
+</script>

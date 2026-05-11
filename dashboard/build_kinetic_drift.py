@@ -216,6 +216,129 @@ def classify_kde_band(score: float) -> str:
     return "STABLE BASELINE"
 
 
+def build_drift_trace(recent: pd.DataFrame, baseline: pd.DataFrame) -> list[dict]:
+    base_speed = mean_or_none(baseline["release_speed"])
+    base_ext = mean_or_none(baseline["release_extension"])
+    base_ivb = mean_or_none(baseline["ivb_inches"])
+    base_rel_x = mean_or_none(baseline["release_pos_x"])
+    base_rel_z = mean_or_none(baseline["release_pos_z"])
+
+    trace = []
+    ordered = recent.sort_values(["game_date", "game_pk"], ascending=True)
+
+    for _, row in ordered.iterrows():
+        speed = safe_float(row.get("release_speed"))
+        ext = safe_float(row.get("release_extension"))
+        ivb = safe_float(row.get("ivb_inches"))
+        rel_x = safe_float(row.get("release_pos_x"))
+        rel_z = safe_float(row.get("release_pos_z"))
+
+        speed_delta = (speed - base_speed) if speed is not None and base_speed is not None else 0.0
+        ext_delta = (ext - base_ext) if ext is not None and base_ext is not None else 0.0
+        ivb_delta = (ivb - base_ivb) if ivb is not None and base_ivb is not None else 0.0
+        rel_x_delta = (rel_x - base_rel_x) if rel_x is not None and base_rel_x is not None else 0.0
+        rel_z_delta = (rel_z - base_rel_z) if rel_z is not None and base_rel_z is not None else 0.0
+
+        drift_index = (
+            abs(speed_delta) * 16
+            + abs(ext_delta) * 65
+            + abs(ivb_delta) * 8
+            + abs(rel_x_delta) * 55
+            + abs(rel_z_delta) * 55
+        )
+
+        trace.append({
+            "game_date": str(pd.to_datetime(row.get("game_date")).date()),
+            "drift_index": round(clamp(drift_index, 0, 100), 1),
+            "speed_delta": round(speed_delta, 2),
+            "extension_delta": round(ext_delta, 2),
+            "ivb_delta": round(ivb_delta, 2),
+            "release_x_delta": round(rel_x_delta, 2),
+            "release_z_delta": round(rel_z_delta, 2),
+        })
+
+    return trace
+
+
+
+def classify_trace_behavior(trace: list[dict]) -> str:
+    if len(trace) < 3:
+        return "INSUFFICIENT TRACE"
+
+    values = [safe_float(point.get("drift_index")) or 0.0 for point in trace[-3:]]
+    first, middle, last = values
+
+    total_move = last - first
+    leg_one = middle - first
+    leg_two = last - middle
+
+    if abs(total_move) <= 8 and max(values) - min(values) <= 15:
+        return "HOLDING"
+
+    if leg_one > 12 and leg_two < -12:
+        return "CHOPPY / REVERSAL"
+
+    if leg_one < -12 and leg_two > 12:
+        return "CHOPPY / REBOUND"
+
+    if total_move >= 18:
+        return "ACCELERATING"
+
+    if total_move <= -18:
+        return "COOLING"
+
+    return "MIXED"
+
+
+def movement_state_label(movement_state: str) -> str:
+    if movement_state == "BREAKDOWN_RISK":
+        return "DECAY / FATIGUE RISK"
+    if movement_state == "EMERGENCE":
+        return "EMERGENCE / POWER GAIN"
+    if movement_state == "INSTABILITY":
+        return "MECHANICAL INSTABILITY"
+    return movement_state
+
+
+def align_diagnosis_to_state(
+    movement_state: str,
+    diagnosis: str,
+    risk: float,
+    emergence: float,
+    instability: float,
+    trace_behavior: str,
+) -> str:
+    if movement_state == "BREAKDOWN_RISK":
+        if trace_behavior == "ACCELERATING":
+            return "ACCELERATING DECAY / FATIGUE RISK"
+        if trace_behavior == "COOLING":
+            return "DECAY EVENT COOLING / STILL RISK-FAMILY"
+        if instability >= 60:
+            return "DECAY RISK WITH MECHANICAL VOLATILITY"
+        return diagnosis if diagnosis != "NO ACUTE DRIFT" else "EARLY KINETIC DECAY"
+
+    if movement_state == "EMERGENCE":
+        if trace_behavior == "ACCELERATING":
+            return "EMERGENCE SIGNAL STRENGTHENING"
+        if trace_behavior == "COOLING":
+            return "EMERGENCE SIGNAL COOLING / VERIFY HOLD"
+        if instability >= 55:
+            return "EMERGENCE WITH RELEASE VOLATILITY"
+        return diagnosis if diagnosis != "NO ACUTE DRIFT" else "EMERGING SHAPE / POWER GAIN"
+
+    if movement_state == "INSTABILITY":
+        if risk >= 55:
+            return "MECHANICAL VOLATILITY WITH DECAY PRESSURE"
+        if emergence >= 45:
+            return "MECHANICAL VOLATILITY WITH EMERGENCE PRESSURE"
+        if trace_behavior in {"CHOPPY / REVERSAL", "CHOPPY / REBOUND"}:
+            return "CHOPPY RELEASE / SHAPE VOLATILITY"
+        if trace_behavior == "HOLDING":
+            return "MECHANICAL INSTABILITY HOLDING"
+        return "MECHANICAL VOLATILITY // VERIFY RELEASE WINDOW"
+
+    return diagnosis
+
 def classify_operator_action(movement_state: str, risk: float, emergence: float, instability: float) -> str:
     if movement_state == "BREAKDOWN_RISK":
         if risk >= 75:
@@ -236,9 +359,37 @@ def classify_operator_action(movement_state: str, risk: float, emergence: float,
             return "VOLATILITY WATCH"
         if instability >= 65:
             return "HOLD / VERIFY MECHANICS"
-        return "MONITOR"
+        return "MONITOR MECHANICS"
 
     return "NO ACTION"
+
+
+def operator_directive(operator_action: str, movement_state: str, trace_behavior: str) -> str:
+    if operator_action == "EXIT / BENCH IMMEDIATELY":
+        return "High-risk kinetic decay profile. Treat as roster-damage prevention until the next outing proves stabilization."
+    if operator_action == "REDUCE EXPOSURE":
+        return "Risk family is active but not terminal. Trim exposure, verify velocity and release window before trusting volume."
+    if operator_action == "MONITOR NEXT OUTING":
+        return "Early decay read. No panic move yet, but next appearance becomes the confirmation checkpoint."
+
+    if operator_action == "INITIATE TRACKING":
+        return "Power or shape gain has cleared the signal threshold. Move asset onto Tracking Radar before the market reprices."
+    if operator_action == "TRACK / STASH":
+        return "Emergence profile is building. Track aggressively, but wait for one more confirmation layer before full deployment."
+    if operator_action == "MONITOR FOR CONFIRMATION":
+        return "Emergence pressure exists, but the edge is not clean enough yet. Keep under surveillance."
+
+    if operator_action == "VOLATILITY WATCH":
+        return "Mechanical instability is the dominant read. Do not blindly add or exit; verify release-window repeatability."
+    if operator_action == "HOLD / VERIFY MECHANICS":
+        return "Volatility is actionable, but direction is unresolved. Hold current exposure and demand mechanical confirmation."
+    if operator_action == "MONITOR MECHANICS":
+        return "Low-grade instability. Watch release slot, IVB, and velocity shape before changing exposure."
+
+    if movement_state == "STABLE":
+        return "No acute command. Maintain baseline surveillance."
+
+    return f"Operator should verify {movement_state} with trace behavior: {trace_behavior}."
 
 def build_kinetic_signals(appearances: pd.DataFrame) -> list[dict]:
     if appearances.empty:
@@ -365,6 +516,17 @@ def build_kinetic_signals(appearances: pd.DataFrame) -> list[dict]:
         if movement_state == "INSTABILITY" and kinetic_emergence_score >= 50 and "EMERGING" in diagnosis:
             diagnosis = "UNSTABLE EMERGENCE PROFILE"
 
+        drift_trace = build_drift_trace(recent, baseline)
+        trace_behavior = classify_trace_behavior(drift_trace)
+        diagnosis_detail = align_diagnosis_to_state(
+            movement_state,
+            diagnosis,
+            kinetic_risk_score,
+            kinetic_emergence_score,
+            kinetic_instability_score,
+            trace_behavior,
+        )
+
         total_recent_fastballs = int(pd.to_numeric(recent["pitch_count"], errors="coerce").fillna(0).sum())
         confidence = confidence_score(kde_score, len(recent), len(baseline), total_recent_fastballs)
         operator_action = classify_operator_action(
@@ -373,6 +535,7 @@ def build_kinetic_signals(appearances: pd.DataFrame) -> list[dict]:
             kinetic_emergence_score,
             kinetic_instability_score,
         )
+        operator_note = operator_directive(operator_action, movement_state, trace_behavior)
 
         if kde_score < 45 and diagnosis == "NO ACUTE DRIFT":
             continue
@@ -391,9 +554,14 @@ def build_kinetic_signals(appearances: pd.DataFrame) -> list[dict]:
                 "kinetic_instability_score": kinetic_instability_score,
                 "classification": classify_kds(kinetic_risk_score),
                 "movement_state": movement_state,
+                "movement_state_label": movement_state_label(movement_state),
+                "trace_behavior": trace_behavior,
                 "confidence_score": confidence,
                 "operator_action": operator_action,
-                "diagnosis": diagnosis,
+                "operator_note": operator_note,
+                "drift_trace": drift_trace,
+                "diagnosis": diagnosis_detail,
+                "raw_diagnosis": diagnosis,
                 "recent_appearances": int(len(recent)),
                 "baseline_appearances": int(len(baseline)),
                 "metrics": {

@@ -1889,6 +1889,133 @@ body.field-guide-open .field-guide-drawer {
   text-shadow: 0 0 14px rgba(188,93,255,0.18);
 }
 
+/* SIGNAL_WALL_FINAL_MOBILE_HERO_OVERRIDE */
+@media screen and (max-width: 760px) {
+  html,
+  body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  body.signal-wall-v2-typography-lock main.app {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 14px 80px !important;
+    margin: 0 !important;
+  }
+
+  body.signal-wall-v2-typography-lock main.app > section.hero.signal-wall-mobile-hero {
+    display: block !important;
+    grid-template-columns: unset !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 16px 0 14px !important;
+    padding: 0 !important;
+  }
+
+  body.signal-wall-v2-typography-lock main.app > section.hero.signal-wall-mobile-hero > aside.summary-card,
+  body.signal-wall-v2-typography-lock main.app > section.hero.signal-wall-mobile-hero > aside.extraction-summary-card,
+  body.signal-wall-v2-typography-lock main.app > section.hero.signal-wall-mobile-hero > aside.summary-card.extraction-summary-card {
+    display: none !important;
+    visibility: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  body.signal-wall-v2-typography-lock main.app > section.hero.signal-wall-mobile-hero > div.hero-card {
+    display: block !important;
+    grid-column: auto !important;
+    grid-row: auto !important;
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 18px 16px !important;
+    margin: 0 !important;
+    border-radius: 22px !important;
+    overflow: hidden !important;
+  }
+
+  body.signal-wall-v2-typography-lock main.app > section.hero.signal-wall-mobile-hero .eyebrow {
+    font-size: 9px !important;
+    line-height: 1.3 !important;
+    letter-spacing: 0.18em !important;
+  }
+
+  body.signal-wall-v2-typography-lock main.app > section.hero.signal-wall-mobile-hero .hero-title {
+    display: block !important;
+    margin: 10px 0 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 34px !important;
+    line-height: 1.06 !important;
+    letter-spacing: -0.045em !important;
+    font-weight: 650 !important;
+    white-space: normal !important;
+    text-transform: none !important;
+  }
+
+  body.signal-wall-v2-typography-lock main.app > section.hero.signal-wall-mobile-hero .hero-copy {
+    margin-top: 12px !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    color: transparent !important;
+  }
+
+  body.signal-wall-v2-typography-lock main.app > section.hero.signal-wall-mobile-hero .hero-copy::before {
+    content: "Pitchers 5 // Hitters 5 // Live";
+    display: block !important;
+    font-family: var(--mono) !important;
+    font-size: 11px !important;
+    line-height: 1.45 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    color: rgba(182,255,0,0.86) !important;
+  }
+
+  body.signal-wall-v2-typography-lock .boards {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  body.signal-wall-v2-typography-lock .section {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 18px !important;
+    border-radius: 24px !important;
+    overflow: hidden !important;
+  }
+
+  body.signal-wall-v2-typography-lock .cards-grid {
+    grid-template-columns: 1fr !important;
+    padding: 12px !important;
+    gap: 14px !important;
+  }
+
+  body.signal-wall-v2-typography-lock .player-card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+
+
+
+
   </style>
 </head>
 
@@ -2018,7 +2145,7 @@ body.field-guide-open .field-guide-drawer {
 
 
   <main class="app">
-    <section class="hero">
+    <section class="hero signal-wall-mobile-hero">
       <div class="hero-card">
         <div class="eyebrow">Executive Terminal</div>
         <h1 class="hero-title">Today’s Signal Wall</h1>
@@ -2113,7 +2240,6 @@ body.field-guide-open .field-guide-drawer {
   });
 })();
 </script>
-
   <script src="/player-search.js"></script>
   <script src="/player-card-actions.js"></script>
 </body>

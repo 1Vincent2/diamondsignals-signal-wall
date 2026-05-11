@@ -45,12 +45,14 @@
     }
 
     h1{
-      font-size:clamp(44px,5vw,72px);
-      line-height:1.02;
-      letter-spacing:-0.05em;
-      margin:0 0 14px;
+      margin:18px 0 0;
       max-width:980px;
-      font-weight:700;
+      color:#f7f8fa;
+      font-size:34px;
+      line-height:1.12;
+      letter-spacing:-0.04em;
+      font-weight:650;
+      text-transform:none;
     }
 
     .sub{
@@ -65,6 +67,175 @@
       display:grid;
       gap:18px;
     }
+
+    .proprietary-strip{
+      margin:18px 0 16px;
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:8px;
+      border:1px solid rgba(163,230,53,.20);
+      border-radius:18px;
+      padding:10px 12px;
+      background:
+        radial-gradient(circle at 6% 0%, rgba(163,230,53,.11), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07), 0 0 28px rgba(163,230,53,.035);
+      font-family:var(--mono);
+      font-size:10px;
+      line-height:1.5;
+      letter-spacing:.105em;
+      color:rgba(229,231,235,.62);
+    }
+
+    .proprietary-strip strong{
+      color:rgba(190,242,100,.96);
+      font-weight:900;
+      letter-spacing:.14em;
+    }
+
+    .method-note{
+      margin:-6px 0 18px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:10px 12px;
+      background:rgba(0,0,0,.20);
+      font-family:var(--mono);
+      font-size:10px;
+      line-height:1.55;
+      letter-spacing:.085em;
+      color:rgba(229,231,235,.56);
+    }
+
+    .method-note strong{
+      color:rgba(248,250,252,.92);
+      font-weight:900;
+    }
+
+    .kde-footer{
+      margin:24px 0 6px;
+      border-top:1px solid rgba(255,255,255,.10);
+      padding-top:14px;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-start;
+      gap:10px;
+      font-family:var(--mono);
+      font-size:9px;
+      line-height:1.5;
+      letter-spacing:.11em;
+      color:rgba(229,231,235,.42);
+    }
+
+    .kde-footer strong{
+      color:rgba(229,231,235,.70);
+      font-weight:800;
+    }
+
+    .kde-guide{
+      margin:-10px 0 24px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .kde-guide-card{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:11px 12px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.014)),
+        rgba(0,0,0,.18);
+      font-family:var(--mono);
+      font-size:10px;
+      line-height:1.55;
+      letter-spacing:.085em;
+      color:rgba(229,231,235,.58);
+    }
+
+    .kde-guide-card strong{
+      display:block;
+      margin-bottom:4px;
+      color:rgba(248,250,252,.92);
+      font-weight:900;
+      letter-spacing:.12em;
+    }
+
+    .kde-guide-card span{
+      color:rgba(248,250,252,.82);
+      font-weight:800;
+    }
+
+    @media (max-width:720px){
+      .kde-guide{
+        grid-template-columns:1fr;
+      }
+    }
+
+    .kde-interpretation{
+      margin:-12px 0 22px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:10px 12px;
+      background:rgba(0,0,0,.20);
+      font-family:var(--mono);
+      font-size:10px;
+      line-height:1.55;
+      letter-spacing:.095em;
+      color:rgba(229,231,235,.58);
+    }
+
+    .kde-interpretation strong{
+      color:rgba(248,250,252,.92);
+      font-weight:800;
+    }
+
+    .kde-legend{
+      margin:18px 0 22px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:18px;
+      padding:10px 12px;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(34,211,238,.08), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.12em;
+      color:rgba(229,231,235,.62);
+    }
+
+    .legend-title{
+      color:rgba(248,250,252,.92);
+      font-weight:800;
+      margin-right:4px;
+    }
+
+    .legend-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:999px;
+      padding:5px 8px;
+      background:rgba(0,0,0,.22);
+      white-space:nowrap;
+    }
+
+    .legend-dot{
+      width:7px;
+      height:7px;
+      border-radius:999px;
+      box-shadow:0 0 12px currentColor;
+    }
+
+    .legend-red{ color:rgba(248,113,113,.96); }
+    .legend-green{ color:rgba(163,230,53,.96); }
+    .legend-blue{ color:rgba(34,211,238,.96); }
 
     .card{
       background:linear-gradient(
@@ -128,6 +299,210 @@
       font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
     }
 
+    .trace-panel{
+      position:relative;
+      overflow:hidden;
+      margin-top:18px;
+      padding:14px 14px 12px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:20px;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(34,211,238,.10), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.018));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .trace-panel::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(to right, rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size:42px 100%, 100% 28px;
+      opacity:.55;
+      pointer-events:none;
+    }
+
+    .trace-panel::after{
+      content:"";
+      position:absolute;
+      left:14px;
+      right:14px;
+      top:50%;
+      height:1px;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+      opacity:.75;
+      pointer-events:none;
+    }
+
+    .trace-head{
+      position:relative;
+      z-index:2;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:8px;
+    }
+
+    .trace-label{
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.16em;
+      color:rgba(229,231,235,.66);
+    }
+
+    .trace-state{
+      font-family:var(--mono);
+      font-size:9px;
+      letter-spacing:.14em;
+      color:rgba(229,231,235,.48);
+    }
+
+    .trace-svg{
+      position:relative;
+      z-index:2;
+      display:block;
+      width:100%;
+      height:92px;
+      overflow:visible;
+    }
+
+    .trace-baseline{
+      stroke:rgba(255,255,255,.16);
+      stroke-width:1;
+      stroke-dasharray:5 7;
+    }
+
+    .trace-path-shadow{
+      fill:none;
+      stroke:rgba(255,255,255,.10);
+      stroke-width:10;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .trace-path{
+      fill:none;
+      stroke:rgba(34,211,238,.92);
+      stroke-width:3.5;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      filter:drop-shadow(0 0 10px rgba(34,211,238,.35));
+    }
+
+    .trace-red .trace-path{
+      stroke:rgba(248,113,113,.96);
+      filter:drop-shadow(0 0 12px rgba(248,113,113,.38));
+    }
+
+    .trace-green .trace-path{
+      stroke:rgba(163,230,53,.96);
+      filter:drop-shadow(0 0 12px rgba(163,230,53,.34));
+    }
+
+    .trace-blue .trace-path{
+      stroke:rgba(34,211,238,.96);
+      filter:drop-shadow(0 0 12px rgba(34,211,238,.36));
+    }
+
+    .trace-node{
+      fill:#05070a;
+      stroke:rgba(34,211,238,.96);
+      stroke-width:2.4;
+      filter:drop-shadow(0 0 7px rgba(34,211,238,.34));
+    }
+
+    .trace-red .trace-node{ stroke:rgba(248,113,113,.96); }
+    .trace-green .trace-node{ stroke:rgba(163,230,53,.96); }
+    .trace-blue .trace-node{ stroke:rgba(34,211,238,.96); }
+
+    .trace-latest{
+      fill:rgba(34,211,238,.98);
+      stroke:rgba(255,255,255,.85);
+      stroke-width:1.5;
+      filter:drop-shadow(0 0 12px rgba(34,211,238,.75));
+      animation:tracePulse 1.75s ease-in-out infinite;
+      transform-origin:center;
+    }
+
+    .trace-red .trace-latest{
+      fill:rgba(248,113,113,.98);
+      filter:drop-shadow(0 0 12px rgba(248,113,113,.74));
+    }
+
+    .trace-green .trace-latest{
+      fill:rgba(163,230,53,.98);
+      filter:drop-shadow(0 0 12px rgba(163,230,53,.68));
+    }
+
+    .trace-date-label,
+    .trace-value-label{
+      font-family:var(--mono);
+      font-size:9px;
+      fill:rgba(229,231,235,.52);
+      letter-spacing:.08em;
+    }
+
+    .trace-value-label{
+      font-size:11px;
+      font-weight:800;
+      fill:rgba(248,250,252,.90);
+    }
+
+    .trace-deltas{
+      position:relative;
+      z-index:2;
+      margin-top:8px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+    }
+
+    .trace-deltas div{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:12px;
+      padding:7px 8px;
+      background:rgba(0,0,0,.18);
+      font-family:var(--mono);
+      font-size:9px;
+      letter-spacing:.10em;
+      color:rgba(229,231,235,.58);
+      white-space:nowrap;
+    }
+
+    @keyframes tracePulse{
+      0%,100%{ opacity:1; r:5.5; }
+      50%{ opacity:.65; r:8.5; }
+    }
+
+    .forensic-readout{
+      position:relative;
+      z-index:2;
+      margin-top:10px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;
+      padding:9px 10px;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.30), rgba(255,255,255,.025)),
+        rgba(0,0,0,.18);
+      font-family:var(--mono);
+      font-size:10px;
+      line-height:1.45;
+      letter-spacing:.085em;
+      color:rgba(229,231,235,.66);
+    }
+
+    .forensic-readout strong{
+      color:rgba(248,250,252,.95);
+      font-weight:800;
+    }
+
+    .trace-red .forensic-readout strong{ color:rgba(248,113,113,.96); }
+    .trace-green .forensic-readout strong{ color:rgba(163,230,53,.96); }
+    .trace-blue .forensic-readout strong{ color:rgba(34,211,238,.96); }
+
     .metrics{
       display:grid;
       grid-template-columns:repeat(4,1fr);
@@ -169,13 +544,48 @@
 
     .operator{
       color:#fff;
-      font-weight:600;
-      letter-spacing:-0.02em;
+      font-weight:700;
+      letter-spacing:-0.03em;
+    }
+
+    .operator-command{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-width:0;
+    }
+
+    .operator-label{
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.16em;
+      color:rgba(229,231,235,.42);
+      text-transform:uppercase;
+    }
+
+    .operator-note{
+      margin-top:10px;
+      max-width:760px;
+      color:rgba(229,231,235,.62);
+      font-family:var(--mono);
+      font-size:10px;
+      line-height:1.55;
+      letter-spacing:.07em;
     }
 
     .confidence{
       color:var(--muted);
       font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    }
+
+    .confidence-label{
+      display:block;
+      margin-bottom:5px;
+      color:rgba(229,231,235,.38);
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
     }
 
     @media (max-width:960px){
@@ -191,6 +601,413 @@
         text-align:left;
       }
     }
+  
+
+    .kde-sortbar{
+      margin:22px 0 20px;
+      padding:14px 16px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:18px;
+      background:rgba(255,255,255,.025);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+    }
+
+
+
+    .kde-sort-select{
+      appearance:none;
+      min-width:0;
+      width:100%;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:14px;
+      background:rgba(0,0,0,.44);
+      color:rgba(248,250,252,.88);
+      font-family:var(--mono);
+      font-size:11px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      padding:12px 38px 12px 13px;
+      outline:none;
+      cursor:pointer;
+    }
+
+    .kde-sort-control{
+      position:relative;
+      width:min(100%, 360px);
+    }
+
+    .kde-sort-count{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      padding:10px 12px;
+      background:rgba(255,255,255,.018);
+      color:rgba(229,231,235,.46);
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    .kde-filterbar{
+      margin:-10px 0 22px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+    }
+
+    .kde-filter-chip{
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:999px;
+      background:rgba(255,255,255,.018);
+      color:rgba(229,231,235,.54);
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      padding:9px 11px;
+      cursor:pointer;
+      transition:border-color .16s ease, color .16s ease, background .16s ease;
+    }
+
+    .kde-filter-chip:hover{
+      border-color:rgba(34,211,238,.34);
+      color:rgba(248,250,252,.86);
+      background:rgba(34,211,238,.045);
+    }
+
+    .kde-filter-chip.is-active{
+      border-color:rgba(163,230,53,.42);
+      color:rgba(244,255,214,.92);
+      background:rgba(163,230,53,.08);
+      box-shadow:0 0 22px rgba(163,230,53,.075);
+    }
+
+    .kde-generated{
+      margin:10px 0 16px;
+      color:rgba(229,231,235,.42);
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .kde-sort-control::after{
+      content:"▾";
+      position:absolute;
+      right:14px;
+      top:50%;
+      transform:translateY(-52%);
+      color:rgba(229,231,235,.48);
+      pointer-events:none;
+      font-size:12px;
+    }
+
+    @media (max-width:720px){
+      .kde-sortbar{
+        margin:18px 0 16px;
+        padding:13px 14px;
+        border-radius:18px;
+        display:block;
+      }
+
+      .kde-sort-control{
+        margin-top:12px;
+      }
+
+      .kde-sort-select{
+        width:100%;
+        min-width:0;
+      }
+    }
+
+    /* V5 mobile UX polish */
+    @media (max-width:720px){
+      body{
+        padding:26px 16px 72px;
+      }
+
+      .wrap{
+        width:100%;
+      }
+
+      .eyebrow{
+        font-size:10px;
+        letter-spacing:.22em;
+        line-height:1.4;
+      }
+
+      h1{
+      margin:18px 0 0;
+      max-width:980px;
+      color:#f7f8fa;
+      font-size:34px;
+      line-height:1.12;
+      letter-spacing:-0.04em;
+      font-weight:650;
+      text-transform:none;
+    }
+
+      .sub{
+        margin-top:20px;
+        font-size:17px;
+        line-height:1.55;
+        max-width:100%;
+      }
+
+      .proprietary-box,
+      .method-box,
+      .kde-legend,
+      .kde-interpretation,
+      .kde-guide-card{
+        border-radius:18px;
+      }
+
+      .proprietary-box,
+      .method-box{
+        padding:14px 16px;
+      }
+
+      .method-box{
+        margin-top:12px;
+      }
+
+      .kde-legend{
+        margin:18px 0 14px;
+        padding:14px 16px;
+        display:grid;
+        gap:10px;
+      }
+
+      .legend-title{
+        display:block;
+        margin-bottom:2px;
+      }
+
+      .legend-chip{
+        width:100%;
+        justify-content:flex-start;
+        padding:8px 10px;
+      }
+
+      .kde-interpretation{
+        margin:12px 0 10px;
+        padding:12px 14px;
+        font-size:10px;
+        line-height:1.5;
+      }
+
+      .kde-guide{
+        margin:8px 0 18px;
+        gap:8px;
+        grid-template-columns:1fr;
+      }
+
+      .kde-guide-card{
+        padding:10px 12px;
+        font-size:9.5px;
+        line-height:1.45;
+      }
+
+      .proprietary-box span,
+      .method-box,
+      .kde-interpretation,
+      .kde-guide-card span{
+        font-size:9.5px;
+        line-height:1.45;
+      }
+
+      .proprietary-box strong,
+      .method-box strong,
+      .kde-interpretation strong,
+      .kde-guide-card strong{
+        font-size:10px;
+        letter-spacing:.14em;
+      }
+
+      .kde-guide-card{
+        padding:9px 11px;
+      }
+
+      .kde-sortbar{
+        align-items:flex-start;
+        gap:10px;
+      }
+
+      .kde-sort-count{
+        margin-top:10px;
+        display:inline-flex;
+        width:auto;
+        padding:8px 10px;
+        font-size:9px;
+        letter-spacing:.14em;
+      }
+
+      .kde-filterbar{
+        margin:-6px 0 18px;
+        flex-wrap:nowrap;
+        overflow-x:auto;
+        padding-bottom:4px;
+      }
+
+      .kde-filter-chip{
+        flex:0 0 auto;
+        font-size:9px;
+        padding:8px 10px;
+      }
+
+      .kde-generated{
+        margin:8px 0 14px;
+        font-size:9px;
+        line-height:1.45;
+      }
+
+      .grid{
+        gap:14px;
+      }
+
+      .card{
+        border-radius:24px;
+        padding:22px 18px 20px;
+      }
+
+      .top{
+        display:block;
+      }
+
+      .name{
+        font-size:24px;
+        line-height:1.02;
+      }
+
+      .diag{
+        margin-top:12px;
+        font-size:11px;
+        padding:8px 12px;
+        letter-spacing:.13em;
+      }
+
+      .score{
+        text-align:left;
+        margin-top:22px;
+      }
+
+      .num{
+        font-size:66px;
+        line-height:.82;
+      }
+
+      .score .label,
+      .score .band{
+        text-align:left;
+      }
+
+      .trace-panel{
+        margin-top:24px;
+        padding:13px 12px 12px;
+        border-radius:20px;
+      }
+
+      .trace-head{
+        align-items:flex-start;
+        gap:8px;
+      }
+
+      .trace-label{
+        max-width:42%;
+        font-size:10px;
+        line-height:1.25;
+      }
+
+      .trace-state{
+        max-width:54%;
+        text-align:right;
+        font-size:9px;
+        line-height:1.35;
+      }
+
+      .trace-svg{
+        height:104px;
+      }
+
+      .trace-deltas{
+        grid-template-columns:1fr 1fr 1fr;
+        gap:6px;
+      }
+
+      .trace-deltas div{
+        font-size:10px;
+        padding:7px 8px;
+      }
+
+      .forensic-readout{
+        margin-top:8px;
+        padding:10px 10px;
+        font-size:10px;
+        line-height:1.45;
+      }
+
+      .metrics{
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+        margin-top:20px;
+      }
+
+      .metric{
+        min-height:86px;
+        padding:14px 14px;
+        border-radius:18px;
+      }
+
+      .metric .k{
+        font-size:10px;
+      }
+
+      .metric .v{
+        margin-top:12px;
+        font-size:31px;
+      }
+
+      .action{
+        margin-top:18px;
+        padding-top:18px;
+        align-items:flex-start;
+        gap:18px;
+      }
+
+      .operator-command{
+        max-width:48%;
+      }
+
+      .operator{
+        font-size:14px;
+        line-height:1.16;
+      }
+
+      .operator-note{
+        margin-top:8px;
+        font-size:9.5px;
+        line-height:1.45;
+        letter-spacing:.055em;
+      }
+
+      .confidence{
+        max-width:48%;
+        text-align:right;
+        font-size:13px;
+        line-height:1.28;
+        color:rgba(229,231,235,.68);
+      }
+
+      .confidence-label{
+        font-size:9px;
+      }
+    }
+
   </style>
 </head>
 
@@ -198,7 +1015,7 @@
   <div class="shell">
 
     <div class="eyebrow">
-      DIAMONDSIGNALS // KINETIC DRIFT ENGINE
+      DIAMONDSIGNALS // KINETIC DRIFT ENGINE — ACTIVE PREVIEW
     </div>
 
     <h1>
@@ -210,10 +1027,83 @@
       release-point fragmentation, and hidden shape gains before traditional outcome metrics fully react.
     </div>
 
-    <div class="grid">
+    <div class="proprietary-strip">
+      <strong>PROPRIETARY RESEARCH SURFACE</strong>
+      DiamondSignals Kinetic Drift Engine © KDE // experimental inferred-movement intelligence.
+    </div>
+
+    <div class="method-note">
+      <strong>METHOD NOTE:</strong>
+      KDE does not claim direct Hawkeye/TrackMan ownership. It infers kinetic drift from available pitch-tracking variables, including velocity, induced vertical break, extension, release coordinates, and appearance-to-appearance movement deltas.
+    </div>
+
+    <div class="kde-legend">
+      <span class="legend-title">WAVEFORM COLOR SYSTEM</span>
+      <span class="legend-chip legend-red"><span class="legend-dot"></span>RED = DECAY / FATIGUE RISK</span>
+      <span class="legend-chip legend-green"><span class="legend-dot"></span>LIME = EMERGENCE / POWER GAIN</span>
+      <span class="legend-chip legend-blue"><span class="legend-dot"></span>CYAN = MECHANICAL INSTABILITY</span>
+    </div>
+
+    <div class="kde-interpretation">
+      <strong>READING THE TRACE:</strong>
+      color and shape are two different signals. Color shows the dominant kinetic diagnosis. Shape shows whether the last 3 outings are accelerating, cooling, or holding.
+    </div>
+
+    <div class="kde-guide">
+      <div class="kde-guide-card">
+        <strong>COLOR = SIGNAL FAMILY</strong>
+        <span>Red</span> flags decay / fatigue risk. <span>Lime</span> flags emergence / power gain. <span>Cyan</span> flags mechanical instability.
+      </div>
+      <div class="kde-guide-card">
+        <strong>SLOPE = SIGNAL BEHAVIOR</strong>
+        A rising line means drift is intensifying. A falling line means a prior drift event is cooling. A level line means the signal is holding, not necessarily safe.
+      </div>
+    </div>
+
+    <div class="kde-sortbar">
+      <div class="kde-sort-control">
+        <select class="kde-sort-select" id="kde-sort-select" aria-label="Sort Kinetic Drift cards">
+          <option value="kde-desc">KDE Score // High to Low</option>
+          <option value="operator-priority">Operator Command // Priority</option>
+          <option value="risk-desc">Kinetic Risk // High to Low</option>
+          <option value="emergence-desc">Emergence // High to Low</option>
+          <option value="instability-desc">Instability // High to Low</option>
+          <option value="confidence-desc">Confidence // High to Low</option>
+          <option value="name-asc">Player Name // A to Z</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="kde-generated">
+      GENERATED: {{ generated_at }} // ACTIVE PREVIEW // MANUAL BUILD
+    </div>
+
+    <div class="kde-filterbar" id="kde-filterbar" aria-label="Filter Kinetic Drift cards">
+      <button class="kde-filter-chip is-active" type="button" data-filter="all">All</button>
+      <button class="kde-filter-chip" type="button" data-filter="decay">Decay Risk</button>
+      <button class="kde-filter-chip" type="button" data-filter="emergence">Emergence</button>
+      <button class="kde-filter-chip" type="button" data-filter="instability">Instability</button>
+      <button class="kde-filter-chip" type="button" data-filter="exit-reduce">Exit / Reduce</button>
+      <button class="kde-filter-chip" type="button" data-filter="track-stash">Track / Stash</button>
+    </div>
+
+    <div class="grid" id="kde-card-grid">
 
       {% for row in signals %}
-      <div class="card">
+      <div
+        class="card"
+        data-player="{{ row.player_name }}"
+        data-operator="{{ row.operator_action }}"
+        data-state="{{ row.movement_state }}"
+        data-kde="{{ row.kde_score }}"
+        data-risk="{{ row.kinetic_risk_score }}"
+        data-emergence="{{ row.kinetic_emergence_score }}"
+        data-instability="{{ row.kinetic_instability_score }}"
+        data-confidence="{{ row.confidence_score }}"
+      >
+        {% set state_label = row.movement_state_label or row.movement_state %}
+        {% set forensic_state = row.diagnosis %}
+        {% set trace_behavior = row.trace_behavior or 'MIXED' %}
 
         <div class="top">
 
@@ -227,7 +1117,7 @@
               {% if row.movement_state == 'EMERGENCE' %}emergence{% endif %}
               {% if row.movement_state == 'INSTABILITY' %}instability{% endif %}
             ">
-              {{ row.diagnosis }}
+              {{ state_label }}
             </div>
           </div>
 
@@ -246,15 +1136,61 @@
 
         </div>
 
-        <div class="drift-proof">
-          <div class="drift-label">DRIFT TRACE</div>
-          <div class="drift-line
-            {% if row.movement_state == 'BREAKDOWN_RISK' %}trace-red{% endif %}
-            {% if row.movement_state == 'EMERGENCE' %}trace-green{% endif %}
-            {% if row.movement_state == 'INSTABILITY' %}trace-blue{% endif %}
-          ">
-            <span></span><span></span><span></span><span></span><span></span>
+        <div class="trace-panel
+          {% if row.movement_state == 'BREAKDOWN_RISK' %}trace-red{% endif %}
+          {% if row.movement_state == 'EMERGENCE' %}trace-green{% endif %}
+          {% if row.movement_state == 'INSTABILITY' %}trace-blue{% endif %}
+        ">
+          <div class="trace-head">
+            <div class="trace-label">3-OUTING DRIFT WAVEFORM</div>
+            <div class="trace-state">{{ state_label }} // {{ trace_behavior }}</div>
           </div>
+
+          {% if row.drift_trace and row.drift_trace|length >= 3 %}
+          {% set p0 = row.drift_trace[0] %}
+          {% set p1 = row.drift_trace[1] %}
+          {% set p2 = row.drift_trace[2] %}
+          {% set y0 = 84 - (p0.drift_index * 0.68) %}
+          {% set y1 = 84 - (p1.drift_index * 0.68) %}
+          {% set y2 = 84 - (p2.drift_index * 0.68) %}
+
+          <svg class="trace-svg" viewBox="0 0 320 104" preserveAspectRatio="none" aria-label="3 outing kinetic drift waveform">
+            <line class="trace-baseline" x1="0" y1="52" x2="320" y2="52"></line>
+
+            <path class="trace-path-shadow" d="M 22 {{ y0 }} C 78 {{ y0 }}, 92 {{ y1 }}, 160 {{ y1 }} S 252 {{ y2 }}, 298 {{ y2 }}"></path>
+            <path class="trace-path" d="M 22 {{ y0 }} C 78 {{ y0 }}, 92 {{ y1 }}, 160 {{ y1 }} S 252 {{ y2 }}, 298 {{ y2 }}"></path>
+
+            <circle class="trace-node" cx="22" cy="{{ y0 }}" r="4.6"></circle>
+            <circle class="trace-node" cx="160" cy="{{ y1 }}" r="4.6"></circle>
+            <circle class="trace-latest" cx="298" cy="{{ y2 }}" r="5.5"></circle>
+
+            <text class="trace-date-label" x="22" y="99" text-anchor="middle">{{ p0.game_date[5:] }}</text>
+            <text class="trace-date-label" x="160" y="99" text-anchor="middle">{{ p1.game_date[5:] }}</text>
+            <text class="trace-date-label" x="298" y="99" text-anchor="middle">{{ p2.game_date[5:] }}</text>
+
+            <text class="trace-value-label" x="22" y="{{ y0 - 9 }}" text-anchor="middle">{{ p0.drift_index }}</text>
+            <text class="trace-value-label" x="160" y="{{ y1 - 9 }}" text-anchor="middle">{{ p1.drift_index }}</text>
+            <text class="trace-value-label" x="298" y="{{ y2 - 9 }}" text-anchor="middle">{{ p2.drift_index }}</text>
+          </svg>
+
+          {% set last = row.drift_trace[-1] %}
+          <div class="trace-deltas">
+            <div>VELO {{ last.speed_delta }}</div>
+            <div>IVB {{ last.ivb_delta }}</div>
+            <div>REL-Z {{ last.release_z_delta }}</div>
+          </div>
+
+          <div class="forensic-readout">
+            <strong>FORENSIC READ:</strong>
+            VELO {{ last.speed_delta }} MPH //
+            IVB {{ last.ivb_delta }} IN //
+            EXT {{ last.extension_delta }} FT //
+            REL-X {{ last.release_x_delta }} //
+            REL-Z {{ last.release_z_delta }} //
+              TRACE {{ trace_behavior }} //
+            {{ forensic_state }}
+          </div>
+          {% endif %}
         </div>
 
         <div class="metrics">
@@ -282,12 +1218,15 @@
         </div>
 
         <div class="action">
-          <div class="operator">
-            {{ row.operator_action }}
+          <div class="operator-command">
+            <div class="operator-label">OPERATOR COMMAND</div>
+            <div class="operator">{{ row.operator_action }}</div>
+            <div class="operator-note">{{ row.operator_note }}</div>
           </div>
 
           <div class="confidence">
-            {{ row.movement_state }}
+            <span class="confidence-label">SIGNAL CONTEXT</span>
+            {{ state_label }} // {{ trace_behavior }}
           </div>
         </div>
 
@@ -296,5 +1235,104 @@
 
     </div>
   </div>
+
+<script>
+  (function(){
+    const grid = document.getElementById("kde-card-grid");
+    const select = document.getElementById("kde-sort-select");
+    if (!grid || !select) return;
+
+    function numeric(card, key){
+      const value = Number(card.dataset[key] || 0);
+      return Number.isFinite(value) ? value : 0;
+    }
+
+    const operatorPriority = {
+      "EXIT / BENCH IMMEDIATELY": 100,
+      "REDUCE EXPOSURE": 90,
+      "VOLATILITY WATCH": 82,
+      "HOLD / VERIFY MECHANICS": 76,
+      "INITIATE TRACKING": 70,
+      "TRACK / STASH": 62,
+      "MONITOR NEXT OUTING": 54,
+      "MONITOR FOR CONFIRMATION": 46,
+      "MONITOR MECHANICS": 38,
+      "NO ACTION": 0
+    };
+
+    function operatorScore(card){
+      return operatorPriority[card.dataset.operator || ""] || 0;
+    }
+
+    function sortCards(mode){
+      const cards = Array.from(grid.querySelectorAll(".card"));
+
+      cards.sort(function(a, b){
+        if (mode === "name-asc") {
+          return (a.dataset.player || "").localeCompare(b.dataset.player || "");
+        }
+
+        if (mode === "operator-priority") {
+          const priorityDelta = operatorScore(b) - operatorScore(a);
+          if (priorityDelta !== 0) return priorityDelta;
+          return numeric(b, "kde") - numeric(a, "kde");
+        }
+
+        const key = mode.replace("-desc", "");
+        return numeric(b, key) - numeric(a, key);
+      });
+
+      cards.forEach(function(card){
+        grid.appendChild(card);
+      });
+    }
+
+    function matchesFilter(card, filter){
+      const state = card.dataset.state || "";
+      const operator = card.dataset.operator || "";
+
+      if (filter === "all") return true;
+      if (filter === "decay") return state === "BREAKDOWN_RISK";
+      if (filter === "emergence") return state === "EMERGENCE";
+      if (filter === "instability") return state === "INSTABILITY";
+      if (filter === "exit-reduce") return operator === "EXIT / BENCH IMMEDIATELY" || operator === "REDUCE EXPOSURE";
+      if (filter === "track-stash") return operator === "INITIATE TRACKING" || operator === "TRACK / STASH";
+
+      return true;
+    }
+
+    function applyFilter(filter){
+      const cards = Array.from(grid.querySelectorAll(".card"));
+      cards.forEach(function(card){
+        card.style.display = matchesFilter(card, filter) ? "" : "none";
+      });
+    }
+
+    const filterbar = document.getElementById("kde-filterbar");
+    if (filterbar) {
+      filterbar.addEventListener("click", function(event){
+        const chip = event.target.closest(".kde-filter-chip");
+        if (!chip) return;
+
+        filterbar.querySelectorAll(".kde-filter-chip").forEach(function(item){
+          item.classList.remove("is-active");
+        });
+
+        chip.classList.add("is-active");
+        applyFilter(chip.dataset.filter || "all");
+      });
+    }
+
+    select.addEventListener("change", function(){
+      sortCards(select.value);
+      const activeChip = document.querySelector(".kde-filter-chip.is-active");
+      applyFilter(activeChip ? activeChip.dataset.filter : "all");
+    });
+
+    sortCards(select.value);
+    applyFilter("all");
+  })();
+</script>
+
 </body>
 </html>
