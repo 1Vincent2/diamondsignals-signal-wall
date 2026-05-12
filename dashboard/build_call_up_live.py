@@ -1952,6 +1952,213 @@ HTML_TEMPLATE = Template(
     }
 
     {{ shell_styles | safe }}
+
+    /* PROMOTION_WATCH_FIELD_GUIDE_V1 */
+    .pw-field-guide-trigger {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 2147482500;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(96, 165, 250, 0.28);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(96,165,250,0.18), transparent 34%),
+        rgba(5, 8, 14, 0.94);
+      color: #f8fafc;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      box-shadow: 0 14px 32px rgba(0,0,0,0.38), 0 0 22px rgba(96,165,250,0.10);
+      cursor: pointer;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .pw-field-guide-trigger::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #60a5fa;
+      box-shadow: 0 0 12px rgba(96,165,250,0.7);
+    }
+
+    .pw-field-guide-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2147482501;
+      background: rgba(0,0,0,0.58);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+    }
+
+    .pw-field-guide-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2147482502;
+      width: min(560px, 100vw);
+      transform: translateX(100%);
+      transition: transform 0.24s ease;
+      background:
+        radial-gradient(circle at 24% 0%, rgba(96,165,250,0.16), transparent 34%),
+        linear-gradient(180deg, #0b1018 0%, #05070b 100%);
+      border-left: 1px solid rgba(255,255,255,0.10);
+      box-shadow: -24px 0 70px rgba(0,0,0,0.58);
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pw-field-guide-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .pw-field-guide-drawer.open {
+      transform: translateX(0);
+    }
+
+    .pw-field-guide-head {
+      padding: 22px 22px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .pw-field-guide-kicker {
+      font-family: var(--mono);
+      font-size: 10px;
+      line-height: 1;
+      color: #60a5fa;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .pw-field-guide-title {
+      margin: 0;
+      font-family: var(--sans);
+      font-size: clamp(26px, 4vw, 38px);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+      font-weight: 850;
+      color: #ffffff;
+    }
+
+    .pw-field-guide-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: #fff;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .pw-field-guide-body {
+      padding: 18px 22px 24px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      display: grid;
+      gap: 14px;
+    }
+
+    .pw-guide-card {
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 20px;
+      background: rgba(255,255,255,0.035);
+      padding: 15px;
+    }
+
+    .pw-guide-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.15em;
+      color: #93c5fd;
+      text-transform: uppercase;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .pw-guide-copy {
+      margin: 0;
+      color: rgba(248,250,252,0.76);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .pw-guide-list {
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .pw-guide-list li {
+      position: relative;
+      padding-left: 15px;
+      color: rgba(248,250,252,0.72);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .pw-guide-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 5px;
+      height: 5px;
+      border-radius: 999px;
+      background: #60a5fa;
+      box-shadow: 0 0 10px rgba(96,165,250,0.45);
+    }
+
+    @media screen and (max-width: 760px) {
+      .pw-field-guide-trigger {
+        right: 12px;
+        bottom: 14px;
+        min-height: 38px;
+        padding: 0 12px;
+        font-size: 9px;
+        letter-spacing: 0.12em;
+      }
+
+      .pw-field-guide-drawer {
+        width: min(92vw, 420px);
+      }
+
+      .pw-field-guide-head {
+        padding: 18px 16px 14px;
+      }
+
+      .pw-field-guide-body {
+        padding: 14px 14px 20px;
+      }
+
+      .pw-guide-card {
+        border-radius: 17px;
+        padding: 13px;
+      }
+    }
+
     {{ ledger_styles | safe }}
 
     @media (max-width: 980px) {
@@ -2378,7 +2585,102 @@ HTML_TEMPLATE = Template(
         </div>
       </div>
 
-    {{ footer_html | safe }}
+  
+  <!-- PROMOTION_WATCH_FIELD_GUIDE_V1 -->
+  <button class="pw-field-guide-trigger" type="button" onclick="openPromotionWatchGuide()" aria-controls="promotionWatchFieldGuide" aria-expanded="false">
+    FIELD GUIDE
+  </button>
+
+  <div class="pw-field-guide-overlay" id="promotionWatchGuideOverlay" onclick="closePromotionWatchGuide()"></div>
+
+  <aside class="pw-field-guide-drawer" id="promotionWatchFieldGuide" aria-hidden="true">
+    <div class="pw-field-guide-head">
+      <div>
+        <div class="pw-field-guide-kicker">FIELD GUIDE_V1.0 // PROMOTION WATCH</div>
+        <h2 class="pw-field-guide-title">AAA Movement Zone</h2>
+      </div>
+      <button class="pw-field-guide-close" type="button" onclick="closePromotionWatchGuide()" aria-label="Close Promotion Watch field guide">×</button>
+    </div>
+
+    <div class="pw-field-guide-body">
+      <section class="pw-guide-card">
+        <div class="pw-guide-label">Surface Objective</div>
+        <p class="pw-guide-copy">
+          Promotion Watch isolates Triple-A assets moving toward MLB relevance before the public market fully prices the call-up window. The page is split between fresh final-slate AAA production, 14-day movement, and recent MLB arrival confirmation.
+        </p>
+      </section>
+
+      <section class="pw-guide-card">
+        <div class="pw-guide-label">72 HR Board</div>
+        <p class="pw-guide-copy">
+          The 72 HR board is the live acceleration layer. It prioritizes players flashing recent production, roster pressure, and near-term call-up plausibility.
+        </p>
+        <ul class="pw-guide-list">
+          <li>Use it for fast-moving AAA assets after the latest final slate.</li>
+          <li>Higher scores indicate stronger short-window extraction pressure.</li>
+          <li>Best used as an early alert, not a final confirmation.</li>
+        </ul>
+      </section>
+
+      <section class="pw-guide-card">
+        <div class="pw-guide-label">14 DAY Board</div>
+        <p class="pw-guide-copy">
+          The 14 DAY board acts as the steadier scouting window. It reduces one-game noise and highlights players whose production has held across a broader movement sample.
+        </p>
+        <ul class="pw-guide-list">
+          <li>Use it to separate single-slate noise from sustained AAA signal.</li>
+          <li>Pairs with the 72 HR board for acceleration plus confirmation.</li>
+          <li>Stale or source-limited windows should be treated as degraded intelligence.</li>
+        </ul>
+      </section>
+
+      <section class="pw-guide-card">
+        <div class="pw-guide-label">Fresh AAA Hitters</div>
+        <p class="pw-guide-copy">
+          The hitter ledger reads the latest AAA final slate for offensive pressure. Core signals include power events, run production, plate discipline, and short-window production spikes.
+        </p>
+        <ul class="pw-guide-list">
+          <li>HR, extra-base hits, RBI, runs, and total bases help flag impact outcomes.</li>
+          <li>BB/K and strikeout control help distinguish real approach from empty box-score heat.</li>
+          <li>Recent production matters most when paired with roster-path logic.</li>
+        </ul>
+      </section>
+
+      <section class="pw-guide-card">
+        <div class="pw-guide-label">Fresh AAA Pitchers</div>
+        <p class="pw-guide-copy">
+          The pitcher ledger reads the latest AAA final slate for command, bat-missing, and role-readiness signals. It is designed to spot arms forcing MLB consideration.
+        </p>
+        <ul class="pw-guide-list">
+          <li>Strikeouts, innings, earned runs, walks, and run prevention shape the first read.</li>
+          <li>K/BB pressure helps identify cleaner skill translation.</li>
+          <li>Reliever and starter paths should be interpreted differently when role data is visible.</li>
+        </ul>
+      </section>
+
+      <section class="pw-guide-card">
+        <div class="pw-guide-label">Movement Layer</div>
+        <p class="pw-guide-copy">
+          Recent MLB arrivals are the confirmation feed. They show whether the system is detecting players close enough to the transaction layer to matter for roster action.
+        </p>
+        <ul class="pw-guide-list">
+          <li>Promotion events validate the surveillance pipeline.</li>
+          <li>Arrival history helps tune future thresholds.</li>
+          <li>Use this as confirmation, not the only source of edge.</li>
+        </ul>
+      </section>
+
+      <section class="pw-guide-card">
+        <div class="pw-guide-label">Operator Rule</div>
+        <p class="pw-guide-copy">
+          Treat Promotion Watch as an early-extraction surface. The mission is not to wait for the fantasy market to react. The mission is to detect acceleration, verify the path, and initiate tracking before the roster window closes.
+        </p>
+      </section>
+    </div>
+  </aside>
+
+
+  {{ footer_html | safe }}
   </div>
 
   <script src="/player-search.js"></script>
@@ -2445,6 +2747,39 @@ HTML_TEMPLATE = Template(
       switchPromotionTab("tab-14d", btn14);
     });
   </script>
+
+  <script>
+    function openPromotionWatchGuide() {
+      const overlay = document.getElementById("promotionWatchGuideOverlay");
+      const drawer = document.getElementById("promotionWatchFieldGuide");
+      const trigger = document.querySelector(".pw-field-guide-trigger");
+      if (overlay) overlay.classList.add("open");
+      if (drawer) {
+        drawer.classList.add("open");
+        drawer.setAttribute("aria-hidden", "false");
+      }
+      if (trigger) trigger.setAttribute("aria-expanded", "true");
+      document.body.classList.add("pw-field-guide-open");
+    }
+
+    function closePromotionWatchGuide() {
+      const overlay = document.getElementById("promotionWatchGuideOverlay");
+      const drawer = document.getElementById("promotionWatchFieldGuide");
+      const trigger = document.querySelector(".pw-field-guide-trigger");
+      if (overlay) overlay.classList.remove("open");
+      if (drawer) {
+        drawer.classList.remove("open");
+        drawer.setAttribute("aria-hidden", "true");
+      }
+      if (trigger) trigger.setAttribute("aria-expanded", "false");
+      document.body.classList.remove("pw-field-guide-open");
+    }
+
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Escape") closePromotionWatchGuide();
+    });
+  </script>
+
 </body>
 </html>
 """
