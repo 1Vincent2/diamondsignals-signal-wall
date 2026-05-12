@@ -2,12 +2,13 @@
 from __future__ import annotations
 
 import json
+import shutil
 import math
 from datetime import datetime, timedelta
 from pathlib import Path
 
 import pandas as pd
-from pybaseball import statcast
+from pybaseball import cache, statcast
 from jinja2 import Template
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -17,6 +18,10 @@ OUT_DIR = DIST_DIR / "admin"
 OUT_PATH = OUT_DIR / "kinetic_drift_signals.json"
 HTML_DIR = OUT_DIR / "kinetic-drift"
 HTML_PATH = HTML_DIR / "index.html"
+STATUS_DIR = DIST_DIR / "status"
+STATUS_PATH = STATUS_DIR / "kinetic-drift.json"
+SNAPSHOT_DIR = DIST_DIR / "_snapshots" / "kinetic-drift"
+SNAPSHOT_PATH = SNAPSHOT_DIR / "kinetic_drift_signals.json"
 TEMPLATE_PATH = BASE_DIR / "templates" / "admin" / "kinetic_drift.html"
 SHELL_STYLES_PATH = BASE_DIR / "templates" / "shell_styles.css"
 SHELL_NAV_PATH = BASE_DIR / "templates" / "shell_nav.html"
@@ -72,6 +77,7 @@ def std_or_none(series) -> float | None:
 
 def fetch_statcast_window(start_date: str, end_date: str) -> pd.DataFrame:
     print(f"Fetching Statcast from {start_date} to {end_date}...")
+    cache.enable()
     raw = statcast(start_dt=start_date, end_dt=end_date)
     if raw is None or raw.empty:
         return pd.DataFrame()
@@ -630,15 +636,112 @@ def write_json(signals: list[dict], start_date: str, end_date: str) -> None:
     print(f"Wrote kinetic drift preview -> {HTML_PATH}")
 
 
+def write_kde_status(
+    *,
+    build_started_at: datetime,
+    build_finished_at: datetime,
+    build_success: bool,
+    used_fallback: bool,
+    degraded: bool,
+    signal_count: int,
+    errors: list[str] | None = None,
+    notes: list[str] | None = None,
+) -> None:
+    STATUS_DIR.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "report_id": "kinetic_drift",
+        "state": "fresh" if build_success and not degraded else "degraded",
+        "build_success": build_success,
+        "used_fallback": used_fallback,
+        "degraded": degraded,
+        "threshold_minutes": 1440,
+        "build_started_at": build_started_at.isoformat(),
+        "build_finished_at": build_finished_at.isoformat(),
+        "source_updated_at": None,
+        "source_age_minutes": None,
+        "section_counts": {
+            "kinetic_drift_signals": signal_count,
+        },
+        "errors": errors or [],
+        "notes": notes or [],
+        "generated_at": build_finished_at.isoformat(),
+    }
+    STATUS_PATH.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    print(f"Wrote KDE status -> {STATUS_PATH}")
+
+
+def save_kde_snapshot() -> None:
+    if OUT_PATH.exists():
+        SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(OUT_PATH, SNAPSHOT_PATH)
+        print(f"Saved KDE snapshot -> {SNAPSHOT_PATH}")
+
+
+def restore_kde_snapshot() -> bool:
+    if SNAPSHOT_PATH.exists():
+        OUT_DIR.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(SNAPSHOT_PATH, OUT_PATH)
+        print(f"Restored KDE snapshot -> {OUT_PATH}")
+        return True
+    return False
+
+
 def main() -> None:
+    build_started_at = datetime.utcnow()
     end = datetime.utcnow().date()
     start = end - timedelta(days=LOOKBACK_DAYS)
 
-    raw = fetch_statcast_window(str(start), str(end))
-    pitches = load_fastball_pitches(raw)
-    appearances = build_pitcher_appearances(pitches)
-    signals = build_kinetic_signals(appearances)
-    write_json(signals, str(start), str(end))
+    try:
+        raw = fetch_statcast_window(str(start), str(end))
+        pitches = load_fastball_pitches(raw)
+        appearances = build_pitcher_appearances(pitches)
+        signals = build_kinetic_signals(appearances)
+
+        if not signals:
+            raise RuntimeError("KDE build produced zero signals.")
+
+        write_json(signals, str(start), str(end))
+        save_kde_snapshot()
+
+        build_finished_at = datetime.utcnow()
+        write_kde_status(
+            build_started_at=build_started_at,
+            build_finished_at=build_finished_at,
+            build_success=True,
+            used_fallback=False,
+            degraded=False,
+            signal_count=len(signals),
+            notes=[f"Fresh KDE build completed for Statcast window {start} to {end}."],
+        )
+
+    except Exception as error:
+        print(f"KDE build failed: {error}")
+
+        used_fallback = restore_kde_snapshot()
+        fallback_count = 0
+
+        if used_fallback and OUT_PATH.exists():
+            try:
+                payload = json.loads(OUT_PATH.read_text(encoding="utf-8"))
+                fallback_count = len(payload.get("signals", []))
+                write_json(payload.get("signals", []), str(start), str(end))
+            except Exception as fallback_error:
+                print(f"KDE fallback render failed: {fallback_error}")
+
+        build_finished_at = datetime.utcnow()
+        write_kde_status(
+            build_started_at=build_started_at,
+            build_finished_at=build_finished_at,
+            build_success=used_fallback,
+            used_fallback=used_fallback,
+            degraded=True,
+            signal_count=fallback_count,
+            errors=[str(error)],
+            notes=["KDE used the latest available snapshot." if used_fallback else "KDE failed and no snapshot was available."],
+        )
+
+        if not used_fallback:
+            raise
 
 
 if __name__ == "__main__":
