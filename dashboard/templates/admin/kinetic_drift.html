@@ -1255,6 +1255,35 @@ body.kde-field-guide-open{
       }
     }
 
+
+    /* KDE_WAVEFORM_COLOR_SYSTEM_HERO_V1 */
+    .kde-waveform-hero-legend{
+      margin:22px 0 18px;
+    }
+
+    .kde-waveform-hero-copy{
+      margin:0 0 16px;
+      max-width:760px;
+      color:rgba(229,231,235,.62);
+      font-family:var(--sans);
+      font-size:14px;
+      line-height:1.55;
+      letter-spacing:.04em;
+    }
+
+    @media (max-width:720px){
+      .kde-waveform-hero-legend{
+        margin:18px 0 16px;
+        padding:18px 16px;
+      }
+
+      .kde-waveform-hero-copy{
+        font-size:14px;
+        line-height:1.55;
+        letter-spacing:.08em;
+      }
+    }
+
   </style>
 </head>
 
@@ -1274,6 +1303,18 @@ body.kde-field-guide-open{
       Kinetic Drift isolates emerging biomechanical instability, velocity collapse,
       release-point fragmentation, and hidden shape gains before traditional outcome metrics fully react.
     </div>
+
+    <!-- KDE_WAVEFORM_COLOR_SYSTEM_HERO_V1 -->
+    <section class="kde-legend kde-waveform-hero-legend">
+      <span class="legend-title">WAVEFORM COLOR SYSTEM</span>
+      <p class="kde-waveform-hero-copy">
+        Color shows the dominant kinetic diagnosis. Shape shows whether the recent trace is accelerating, cooling, or holding.
+      </p>
+      <span class="legend-chip legend-red"><span class="legend-dot"></span>RED = DECAY / FATIGUE RISK</span>
+      <span class="legend-chip legend-green"><span class="legend-dot"></span>LIME = EMERGENCE / POWER GAIN</span>
+      <span class="legend-chip legend-blue"><span class="legend-dot"></span>CYAN = MECHANICAL INSTABILITY</span>
+    </section>
+
 
 
     <div class="kde-sortbar">

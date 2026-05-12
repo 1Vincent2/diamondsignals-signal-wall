@@ -628,6 +628,7 @@ def write_json(signals: list[dict], start_date: str, end_date: str) -> None:
         template.render(
             signals=signals,
             payload=payload,
+            generated_at=payload.get("generated_at", ""),
             shell_styles=SHELL_STYLES_PATH.read_text(encoding="utf-8"),
             shell_nav=Template(SHELL_NAV_PATH.read_text(encoding="utf-8")).render(active_nav="kinetic_drift"),
         ),
