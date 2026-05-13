@@ -1633,6 +1633,94 @@ body.kde-field-guide-open{
   color: rgba(148,163,184,.82);
 }
 
+
+/* KDE_MOBILE_RECOVERY_LOCK_V1
+   Restores the pre-desktop-pass mobile hierarchy without changing desktop KDE. */
+@media screen and (max-width:760px){
+  body{
+    padding:76px 12px 22px !important;
+    overflow-x:hidden !important;
+  }
+
+  .shell{
+    width:100% !important;
+    max-width:100% !important;
+    margin:0 auto !important;
+  }
+
+  .hero,
+  .kde-hero,
+  .kde-hero-grid,
+  .kde-hero-shell,
+  .kde-proof-grid,
+  .kde-method-grid,
+  .kde-signal-grid,
+  .grid,
+  .signals-grid,
+  .cards-grid{
+    display:block !important;
+    grid-template-columns:1fr !important;
+    width:100% !important;
+  }
+
+  .hero-card,
+  .summary-card,
+  .kde-panel,
+  .kde-card,
+  .signal-card,
+  .operator-command{
+    width:100% !important;
+    max-width:100% !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+  }
+
+  h1,
+  .hero-title,
+  .kde-title{
+    max-width:100% !important;
+    font-size:clamp(32px, 11vw, 46px) !important;
+    line-height:.94 !important;
+    letter-spacing:-.06em !important;
+    overflow-wrap:normal !important;
+    word-break:normal !important;
+  }
+
+  .sub,
+  .hero-sub,
+  .kde-sub{
+    max-width:100% !important;
+    font-size:14px !important;
+    line-height:1.48 !important;
+  }
+
+  .kde-filterbar,
+  .filterbar{
+    display:flex !important;
+    overflow-x:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+    gap:8px !important;
+    padding-bottom:4px !important;
+  }
+
+  .kde-filterbar button,
+  .filterbar button,
+  .kde-sort-select{
+    flex:0 0 auto !important;
+    white-space:nowrap !important;
+  }
+
+  .kde-field-guide-trigger{
+    right:12px !important;
+    bottom:12px !important;
+    z-index:2147482500 !important;
+  }
+
+  .kde-field-guide-drawer{
+    width:min(92vw, 420px) !important;
+  }
+}
+
 </style>
 </head>
 
