@@ -658,8 +658,8 @@ def write_kde_status(
         "threshold_minutes": 1440,
         "build_started_at": build_started_at.isoformat(),
         "build_finished_at": build_finished_at.isoformat(),
-        "source_updated_at": None,
-        "source_age_minutes": None,
+        "source_updated_at": build_finished_at.isoformat(),
+        "source_age_minutes": 0.0,
         "section_counts": {
             "kinetic_drift_signals": signal_count,
         },

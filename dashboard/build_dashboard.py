@@ -2664,12 +2664,14 @@ def main() -> None:
     )
     print("Wrote dist/signals.json")
 
+    build_finished_at = utc_now_iso()
     status_payload = build_report_status(
         "signal_wall",
         build_success=bool(promoted_live and promoted_front_door),
         threshold_minutes=180,
         build_started_at=build_started_at,
-        build_finished_at=utc_now_iso(),
+        build_finished_at=build_finished_at,
+        source_updated_at=build_finished_at,
         section_counts=sections,
         degraded=not validation["ok"],
         errors=validation["messages"],
