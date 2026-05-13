@@ -302,7 +302,224 @@
       .asset-body{grid-template-columns:1fr}
       .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
-  </style>
+  
+/* WAIVER_FIELD_GUIDE_V1 */
+.waiver-field-guide-trigger{
+  margin:16px 0 18px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid rgba(157,255,107,.34);
+  border-radius:999px;
+  padding:10px 14px;
+  background:rgba(157,255,107,.075);
+  color:rgba(220,255,210,.96);
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  cursor:pointer;
+  box-shadow:0 0 24px rgba(157,255,107,.08);
+}
+
+.waiver-field-guide-trigger:hover{
+  border-color:rgba(157,255,107,.62);
+  background:rgba(157,255,107,.12);
+}
+
+.waiver-field-guide-overlay{
+  position:fixed;
+  inset:0;
+  z-index:9998;
+  background:rgba(0,0,0,.62);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .18s ease;
+}
+
+.waiver-field-guide-overlay.open{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.waiver-field-guide-drawer{
+  position:fixed;
+  top:18px;
+  right:18px;
+  bottom:18px;
+  z-index:9999;
+  width:min(460px, calc(100vw - 36px));
+  border:1px solid rgba(157,255,107,.24);
+  border-radius:26px;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(157,255,107,.12), transparent 34%),
+    linear-gradient(180deg, rgba(18,24,18,.98), rgba(5,8,10,.98));
+  box-shadow:-28px 0 90px rgba(0,0,0,.58), 0 0 42px rgba(157,255,107,.08);
+  transform:translateX(calc(100% + 34px));
+  transition:transform .22s ease;
+  overflow:hidden;
+}
+
+.waiver-field-guide-drawer.open{
+  transform:translateX(0);
+}
+
+.waiver-field-guide-head{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  align-items:flex-start;
+  padding:20px 20px 14px;
+  border-bottom:1px solid rgba(255,255,255,.09);
+}
+
+.waiver-field-guide-kicker{
+  font-family:var(--mono);
+  color:var(--lime);
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+
+.waiver-field-guide-title{
+  margin:7px 0 0;
+  color:#f8fafc;
+  font-size:25px;
+  line-height:1.05;
+  letter-spacing:-.04em;
+}
+
+.waiver-field-guide-close{
+  width:34px;
+  height:34px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.045);
+  color:#f8fafc;
+  cursor:pointer;
+  font-size:20px;
+  line-height:1;
+}
+
+.waiver-field-guide-body{
+  height:calc(100% - 86px);
+  overflow:auto;
+  padding:18px 20px 22px;
+}
+
+.waiver-field-guide-card{
+  border:1px solid rgba(255,255,255,.085);
+  border-radius:18px;
+  padding:14px;
+  background:rgba(255,255,255,.035);
+  margin-bottom:12px;
+}
+
+.waiver-field-guide-label{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:rgba(229,231,235,.70);
+}
+
+.waiver-field-guide-card p,
+.waiver-field-guide-card li{
+  color:rgba(229,231,235,.68);
+  font-size:13px;
+  line-height:1.55;
+}
+
+.waiver-field-guide-card p{
+  margin:8px 0 0;
+}
+
+.waiver-field-guide-card ul{
+  margin:10px 0 0;
+  padding-left:18px;
+}
+
+.waiver-field-guide-card strong{
+  color:#f8fafc;
+}
+
+.guide-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  display:inline-block;
+  box-shadow:0 0 14px currentColor;
+}
+
+.guide-dot.ownership{ color:#9dff6b; background:#9dff6b; }
+.guide-dot.window{ color:#54c7ff; background:#54c7ff; }
+.guide-dot.type{ color:#9f7aea; background:#9f7aea; }
+.guide-dot.defect{ color:#ffbf69; background:#ffbf69; }
+.guide-dot.command{ color:#f8fafc; background:#f8fafc; }
+.guide-dot.risk{ color:#ff6b6b; background:#ff6b6b; }
+
+.metric.metric-ownership-gate{
+  border-color:rgba(157,255,107,.22);
+  background:rgba(157,255,107,.045);
+}
+
+.metric.metric-signal-window{
+  border-color:rgba(84,199,255,.22);
+  background:rgba(84,199,255,.045);
+}
+
+.metric.metric-asset-type{
+  border-color:rgba(159,122,234,.22);
+  background:rgba(159,122,234,.045);
+}
+
+.metric.metric-market-defect{
+  border-color:rgba(255,191,105,.24);
+  background:rgba(255,191,105,.045);
+}
+
+.metric.metric-command{
+  border-color:rgba(248,250,252,.16);
+  background:rgba(248,250,252,.035);
+}
+
+.metric.metric-risk{
+  border-color:rgba(255,107,107,.24);
+  background:rgba(255,107,107,.04);
+}
+
+body.waiver-field-guide-open{
+  overflow:hidden;
+}
+
+@media(max-width:900px){
+  .waiver-field-guide-trigger{
+    width:100%;
+    justify-content:center;
+    margin:14px 0 16px;
+  }
+
+  .waiver-field-guide-drawer{
+    top:0;
+    right:0;
+    bottom:0;
+    width:88vw;
+    max-width:430px;
+    border-radius:24px 0 0 24px;
+  }
+
+  .waiver-field-guide-title{
+    font-size:22px;
+  }
+}
+
+</style>
 </head>
 
 <body>
@@ -324,6 +541,11 @@
       <span>Ownership gate: ≤ 20% rostered</span>
       <span>Command language: acquire, stash, monitor, avoid</span>
     </div>
+      <button class="waiver-field-guide-trigger" type="button" onclick="openWaiverFieldGuide()" aria-controls="waiverFieldGuide" aria-expanded="false">
+        FIELD GUIDE
+      </button>
+
+
 
     <section class="market-grid">
       <div class="market-card">
@@ -366,7 +588,7 @@
 
         <div class="metric-grid">
           {% for metric in asset.metrics %}
-          <div class="metric">
+          <div class="metric metric-{{ metric.label | lower | replace(' ', '-') }}">
             <span>{{ metric.label }}</span>
             <b>{{ metric.value }}</b>
           </div>
@@ -384,6 +606,95 @@
     <div class="footer-note">
       Generated {{ generated_at }} // Waiver Wire Open Market v1 // Isolated fast builder // Desktop-first QA pass
     </div>
-  </main>
+  
+  <div class="waiver-field-guide-overlay" id="waiverFieldGuideOverlay" onclick="closeWaiverFieldGuide()"></div>
+
+  <aside class="waiver-field-guide-drawer" id="waiverFieldGuide" aria-hidden="true">
+    <div class="waiver-field-guide-head">
+      <div>
+        <div class="waiver-field-guide-kicker">WAIVER WIRE // FIELD GUIDE</div>
+        <h2 class="waiver-field-guide-title">Open Market Protocol</h2>
+      </div>
+      <button class="waiver-field-guide-close" type="button" onclick="closeWaiverFieldGuide()" aria-label="Close Waiver Wire field guide">×</button>
+    </div>
+
+    <div class="waiver-field-guide-body">
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label"><i class="guide-dot ownership"></i> Ownership Gate</div>
+        <p>The availability filter. Lower ownership means a wider acquisition window. Higher ownership means the market is already starting to absorb the asset.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label"><i class="guide-dot window"></i> Signal Window</div>
+        <p>The urgency band. <strong>72H</strong> means move quickly. <strong>96H</strong> allows monitoring. <strong>7D</strong> is a slower stash window.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label"><i class="guide-dot type"></i> Asset Type</div>
+        <p>Separates Arms from Bats so the operator balances roster construction instead of blindly chasing every signal.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label"><i class="guide-dot defect"></i> Market Defect</div>
+        <p>The reason the asset is still mispriced: ERA Lag, Role Fog, Command Discount, Role Block, Contact Discount, Call-Up Lag, or similar public-market hesitation.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label"><i class="guide-dot command"></i> Command</div>
+        <p>The roster behavior: <strong>Claim</strong>, <strong>Add</strong>, <strong>Stash</strong>, <strong>Track</strong>, or <strong>Monitor</strong>.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label"><i class="guide-dot risk"></i> Risk</div>
+        <p>Exposure sizing. Medium can justify stronger action. High means volatility weapon, not blind acquisition.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Surface Strategy</div>
+        <p>Prioritize cards where the market defect is temporary, the signal window is short, and the command is stronger than public ownership implies. The edge is the mismatch between hidden physics and public hesitation.</p>
+      </section>
+    </div>
+  </aside>
+
+    </main>
+
+<script id="waiver-field-guide-script">
+function openWaiverFieldGuide() {
+  const drawer = document.getElementById("waiverFieldGuide");
+  const overlay = document.getElementById("waiverFieldGuideOverlay");
+  const trigger = document.querySelector(".waiver-field-guide-trigger");
+
+  if (drawer) {
+    drawer.classList.add("open");
+    drawer.setAttribute("aria-hidden", "false");
+  }
+
+  if (overlay) overlay.classList.add("open");
+  if (trigger) trigger.setAttribute("aria-expanded", "true");
+  document.body.classList.add("waiver-field-guide-open");
+
+  if (navigator.vibrate) navigator.vibrate(18);
+}
+
+function closeWaiverFieldGuide() {
+  const drawer = document.getElementById("waiverFieldGuide");
+  const overlay = document.getElementById("waiverFieldGuideOverlay");
+  const trigger = document.querySelector(".waiver-field-guide-trigger");
+
+  if (drawer) {
+    drawer.classList.remove("open");
+    drawer.setAttribute("aria-hidden", "true");
+  }
+
+  if (overlay) overlay.classList.remove("open");
+  if (trigger) trigger.setAttribute("aria-expanded", "false");
+  document.body.classList.remove("waiver-field-guide-open");
+}
+
+document.addEventListener("keydown", function(event) {
+  if (event.key === "Escape") closeWaiverFieldGuide();
+});
+</script>
+
 </body>
 </html>
