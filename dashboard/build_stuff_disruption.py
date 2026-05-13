@@ -3,17 +3,21 @@ from __future__ import annotations
 
 import json
 import math
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pandas as pd
 from jinja2 import Template
 from pybaseball import statcast
 
+from dashboard.lib.report_status import build_report_status
+
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
 DIST_DIR = REPO_ROOT / "dist"
 APEX_DIR = DIST_DIR / "stuff-disruption-feed"
+STATUS_DIR = DIST_DIR / "status"
+STUFF_DISRUPTION_STATUS_PATH = STATUS_DIR / "stuff-disruption.json"
 TEMPLATES_DIR = BASE_DIR / "templates"
 
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
@@ -1729,7 +1733,51 @@ HTML_TEMPLATE = Template(
 )
 
 
+
+def write_stuff_disruption_status(
+    *,
+    build_started_at: str,
+    build_finished_at: str,
+    cards,
+) -> None:
+    STATUS_DIR.mkdir(parents=True, exist_ok=True)
+
+    card_count = int(len(cards)) if cards is not None else 0
+    degraded = card_count == 0
+
+    alert_counts = {}
+    for row in cards or []:
+        alert = str(row.get("primary_alert") or row.get("alert") or "UNKNOWN").strip() or "UNKNOWN"
+        alert_counts[alert] = alert_counts.get(alert, 0) + 1
+
+    status_payload = build_report_status(
+        "stuff_disruption",
+        build_success=True,
+        threshold_minutes=240,
+        build_started_at=build_started_at,
+        build_finished_at=build_finished_at,
+        source_updated_at=build_finished_at,
+        section_counts={
+            "stuff_disruption_cards": card_count,
+            "alert_groups": len(alert_counts),
+        },
+        degraded=degraded,
+        notes=[
+            f"Stuff+ Disruption built with {card_count} active disruption cards."
+        ],
+    )
+
+    status_payload["alert_counts"] = alert_counts
+
+    STUFF_DISRUPTION_STATUS_PATH.write_text(
+        json.dumps(status_payload, indent=2),
+        encoding="utf-8",
+    )
+    print(f"Wrote Stuff+ Disruption status -> {STUFF_DISRUPTION_STATUS_PATH}")
+
+
 def write_stuff_disruption_feed() -> None:
+    build_started_at = datetime.now(timezone.utc).isoformat()
     DIST_DIR.mkdir(parents=True, exist_ok=True)
     APEX_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -1763,6 +1811,13 @@ def write_stuff_disruption_feed() -> None:
         encoding="utf-8",
     )
     print("Wrote dist/stuff_disruption_feed.json")
+
+    build_finished_at = datetime.now(timezone.utc).isoformat()
+    write_stuff_disruption_status(
+        build_started_at=build_started_at,
+        build_finished_at=build_finished_at,
+        cards=cards,
+    )
 
     copy_static_assets()
 
