@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import hashlib
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import json
 import math
 import os
@@ -12,11 +12,15 @@ from jinja2 import Template
 from pybaseball import statcast
 from supabase import create_client
 
+from dashboard.lib.report_status import build_report_status
+
 
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
 DIST_DIR = REPO_ROOT / "dist"
 IVB_DIR = DIST_DIR / "ivb-heat-map"
+STATUS_DIR = DIST_DIR / "status"
+IVB_HEAT_MAP_STATUS_PATH = STATUS_DIR / "ivb-heat-map.json"
 TEMPLATES_DIR = BASE_DIR / "templates"
 
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
@@ -1788,7 +1792,49 @@ def build_zone_transition_id_sets(pitches: pd.DataFrame) -> tuple[set[int], set[
     return entered_apex_ids, entered_dead_zone_ids, exited_dead_zone_ids
 
 
+
+def write_ivb_heat_map_status(
+    *,
+    build_started_at: str,
+    build_finished_at: str,
+    heat_cards,
+    climbers,
+    dead_zone_count,
+) -> None:
+    STATUS_DIR.mkdir(parents=True, exist_ok=True)
+
+    tile_count = int(len(heat_cards)) if heat_cards is not None else 0
+    climber_count = int(len(climbers)) if climbers is not None else 0
+    dead_zone_count = int(dead_zone_count or 0)
+    degraded = tile_count == 0
+
+    status_payload = build_report_status(
+        "ivb_heat_map",
+        build_success=True,
+        threshold_minutes=240,
+        build_started_at=build_started_at,
+        build_finished_at=build_finished_at,
+        source_updated_at=build_finished_at,
+        section_counts={
+            "ivb_tiles": tile_count,
+            "ivb_climbers": climber_count,
+            "dead_zone": dead_zone_count,
+        },
+        degraded=degraded,
+        notes=[
+            f"IVB Heat Map built with {tile_count} active tiles, {climber_count} climbers, and {dead_zone_count} dead-zone flags."
+        ],
+    )
+
+    IVB_HEAT_MAP_STATUS_PATH.write_text(
+        json.dumps(status_payload, indent=2),
+        encoding="utf-8",
+    )
+    print(f"Wrote IVB Heat Map status -> {IVB_HEAT_MAP_STATUS_PATH}")
+
+
 def write_ivb_heat_map() -> None:
+    build_started_at = datetime.now(timezone.utc).isoformat()
     DIST_DIR.mkdir(parents=True, exist_ok=True)
     IVB_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -1880,6 +1926,15 @@ def write_ivb_heat_map() -> None:
     }
     (DIST_DIR / "ivb_heat_map.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
     print("Wrote dist/ivb_heat_map.json")
+
+    build_finished_at = datetime.now(timezone.utc).isoformat()
+    write_ivb_heat_map_status(
+        build_started_at=build_started_at,
+        build_finished_at=build_finished_at,
+        heat_cards=heat_cards,
+        climbers=climbers,
+        dead_zone_count=dead_zone_count,
+    )
 
 
 if __name__ == "__main__":
