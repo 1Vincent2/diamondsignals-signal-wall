@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Waiver Wire // Open Market</title>
+
+  <style>
+{{ shell_styles | safe }}
+
+    :root{
+      --bg:#07090c;
+      --panel:#0d1117;
+      --border:rgba(255,255,255,.08);
+      --text:#f3f6fb;
+      --muted:rgba(255,255,255,.58);
+      --dim:rgba(255,255,255,.40);
+      --cyan:#54c7ff;
+      --lime:#9dff6b;
+      --red:#ff6b6b;
+      --amber:#ffbf69;
+      --purple:#9f7aea;
+      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      background:
+        radial-gradient(circle at 16% 4%, rgba(157,255,107,.10), transparent 26%),
+        radial-gradient(circle at 82% 0%, rgba(84,199,255,.09), transparent 26%),
+        var(--bg);
+      color:var(--text);
+      font-family:Inter,system-ui,sans-serif;
+      padding:32px;
+    }
+
+    .shell{
+      max-width:1600px;
+      margin:0 auto;
+    }
+
+    .eyebrow{
+      color:var(--lime);
+      font-size:12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:10px;
+      font-family:var(--mono);
+    }
+
+    h1{
+      margin:18px 0 0;
+      max-width:1060px;
+      color:#f7f8fa;
+      font-size:34px;
+      line-height:1.12;
+      letter-spacing:-0.04em;
+      font-weight:650;
+      text-transform:none;
+    }
+
+    .sub{
+      color:var(--muted);
+      max-width:940px;
+      font-size:18px;
+      line-height:1.6;
+      margin:16px 0 0;
+    }
+
+    .command-strip{
+      margin:18px 0 16px;
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:8px;
+      border:1px solid rgba(163,230,53,.20);
+      border-radius:18px;
+      padding:10px 12px;
+      background:
+        radial-gradient(circle at 6% 0%, rgba(163,230,53,.11), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07), 0 0 28px rgba(163,230,53,.035);
+      font-family:var(--mono);
+      font-size:10px;
+      line-height:1.5;
+      letter-spacing:.105em;
+      color:rgba(229,231,235,.62);
+    }
+
+    .command-strip strong{
+      color:rgba(190,242,100,.96);
+      font-weight:900;
+      letter-spacing:.14em;
+    }
+
+    .market-grid{
+      margin:18px 0 24px;
+      display:grid;
+      grid-template-columns:1.1fr .9fr .9fr;
+      gap:12px;
+    }
+
+    .market-card{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:14px 15px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015)),
+        rgba(0,0,0,.18);
+    }
+
+    .market-card span{
+      display:block;
+      color:var(--dim);
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .market-card b{
+      display:block;
+      margin-top:7px;
+      color:#f8fafc;
+      font-size:22px;
+      letter-spacing:-.04em;
+      line-height:1.05;
+    }
+
+    .grid{
+      display:grid;
+      gap:16px;
+    }
+
+    .asset-card{
+      border:1px solid rgba(255,255,255,.085);
+      border-radius:22px;
+      padding:18px;
+      background:
+        radial-gradient(circle at 4% 0%, rgba(157,255,107,.075), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.014)),
+        rgba(0,0,0,.20);
+      box-shadow:0 18px 60px rgba(0,0,0,.28);
+    }
+
+    .asset-top{
+      display:flex;
+      justify-content:space-between;
+      gap:18px;
+      align-items:flex-start;
+    }
+
+    .asset-name{
+      font-size:25px;
+      line-height:1.08;
+      letter-spacing:-.045em;
+      font-weight:760;
+      color:#f8fafc;
+    }
+
+    .asset-meta{
+      margin-top:7px;
+      font-family:var(--mono);
+      color:var(--dim);
+      font-size:10px;
+      letter-spacing:.11em;
+      text-transform:uppercase;
+    }
+
+    .claim-pill{
+      flex:0 0 auto;
+      border-radius:999px;
+      padding:9px 12px;
+      border:1px solid rgba(157,255,107,.36);
+      background:rgba(157,255,107,.08);
+      color:rgba(220,255,210,.96);
+      font-family:var(--mono);
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    .claim-pill.monitor{
+      border-color:rgba(84,199,255,.34);
+      background:rgba(84,199,255,.08);
+      color:rgba(220,244,255,.96);
+    }
+
+    .claim-pill.stash{
+      border-color:rgba(255,191,105,.36);
+      background:rgba(255,191,105,.08);
+      color:rgba(255,238,205,.96);
+    }
+
+    .asset-body{
+      margin-top:15px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .readout{
+      border:1px solid rgba(255,255,255,.075);
+      border-radius:16px;
+      padding:12px;
+      background:rgba(0,0,0,.22);
+    }
+
+    .readout span{
+      display:block;
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.13em;
+      color:var(--lime);
+      text-transform:uppercase;
+      margin-bottom:7px;
+    }
+
+    .readout p{
+      margin:0;
+      color:rgba(229,231,235,.68);
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .metric-grid{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:9px;
+    }
+
+    .metric{
+      border:1px solid rgba(255,255,255,.07);
+      border-radius:14px;
+      padding:10px;
+      background:rgba(255,255,255,.025);
+      min-height:74px;
+    }
+
+    .metric span{
+      display:block;
+      font-family:var(--mono);
+      color:rgba(229,231,235,.40);
+      font-size:9px;
+      letter-spacing:.10em;
+      line-height:1.35;
+      text-transform:uppercase;
+    }
+
+    .metric b{
+      display:block;
+      margin-top:7px;
+      color:#f8fafc;
+      font-size:18px;
+      line-height:1.08;
+      letter-spacing:-.035em;
+    }
+
+    .verdict{
+      margin-top:14px;
+      border-left:2px solid var(--lime);
+      padding-left:12px;
+    }
+
+    .verdict span{
+      display:block;
+      font-family:var(--mono);
+      color:var(--lime);
+      font-size:10px;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .verdict p{
+      margin:6px 0 0;
+      color:rgba(229,231,235,.70);
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .footer-note{
+      margin:24px 0 6px;
+      border-top:1px solid rgba(255,255,255,.10);
+      padding-top:14px;
+      font-family:var(--mono);
+      font-size:9px;
+      line-height:1.5;
+      letter-spacing:.11em;
+      color:rgba(229,231,235,.42);
+      text-transform:uppercase;
+    }
+
+    @media(max-width:900px){
+      body{padding:18px}
+      .market-grid{grid-template-columns:1fr}
+      .asset-top{flex-direction:column}
+      .asset-body{grid-template-columns:1fr}
+      .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+  </style>
+</head>
+
+<body>
+  {{ shell_nav | safe }}
+
+  <main class="shell">
+    <div class="eyebrow">WAIVER WIRE // OPEN MARKET</div>
+
+    <h1>Unrostered assets. Mispriced physics. 72-hour extraction window.</h1>
+
+    <p class="sub">
+      This surface scans low-rostered players whose public market price has not caught up to a measurable change in movement,
+      command, bat-path stability, or role opportunity.
+    </p>
+
+    <div class="command-strip">
+      <strong>72-HOUR OPEN MARKET EXTRACTION</strong>
+      <span>Pitcher-first mid-May claim surface</span>
+      <span>Ownership gate: ≤ 20% rostered</span>
+      <span>Command language: acquire, stash, monitor, avoid</span>
+    </div>
+
+    <section class="market-grid">
+      <div class="market-card">
+        <span>Primary command</span>
+        <b>Priority Waiver Claim</b>
+      </div>
+      <div class="market-card">
+        <span>Shark window</span>
+        <b>Mid-May</b>
+      </div>
+      <div class="market-card">
+        <span>Market defect</span>
+        <b>Box-score lag</b>
+      </div>
+    </section>
+
+    <section class="grid">
+      {% for asset in assets %}
+      <article class="asset-card">
+        <div class="asset-top">
+          <div>
+            <div class="asset-name">{{ asset.player_name }}</div>
+            <div class="asset-meta">{{ asset.team }} // {{ asset.position }} // ROSTERED {{ asset.rostered_pct }}%</div>
+          </div>
+
+          <div class="claim-pill {{ asset.command_class }}">{{ asset.command }}</div>
+        </div>
+
+        <div class="asset-body">
+          <div class="readout">
+            <span>Surface suppression</span>
+            <p>{{ asset.surface_profile }}</p>
+          </div>
+
+          <div class="readout">
+            <span>Forensic trigger</span>
+            <p>{{ asset.forensic_trigger }}</p>
+          </div>
+        </div>
+
+        <div class="metric-grid">
+          {% for metric in asset.metrics %}
+          <div class="metric">
+            <span>{{ metric.label }}</span>
+            <b>{{ metric.value }}</b>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="verdict">
+          <span>Market read // {{ asset.market_status }}</span>
+          <p>{{ asset.verdict }}</p>
+        </div>
+      </article>
+      {% endfor %}
+    </section>
+
+    <div class="footer-note">
+      Generated {{ generated_at }} // Waiver Wire Open Market v1 // Isolated fast builder // Desktop-first QA pass
+    </div>
+  </main>
+</body>
+</html>
