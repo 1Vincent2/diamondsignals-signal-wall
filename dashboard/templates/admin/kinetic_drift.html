@@ -1284,7 +1284,356 @@ body.kde-field-guide-open{
       }
     }
 
-  </style>
+  
+
+
+@media screen and (min-width: 761px) {
+  .kde-hero-waveform-system {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 16px !important;
+    padding: 20px 22px !important;
+    align-items: start !important;
+  }
+
+  .kde-hero-waveform-system .kde-hero-waveform-title,
+  .kde-hero-waveform-system .legend-title {
+    display: block !important;
+    margin: 0 !important;
+    min-width: 0 !important;
+  }
+
+  .kde-hero-waveform-system .kde-hero-waveform-copy {
+    margin: 0 !important;
+    max-width: 820px !important;
+    min-width: 0 !important;
+    line-height: 1.55 !important;
+  }
+
+  .kde-hero-waveform-system .kde-hero-waveform-chips {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .kde-hero-waveform-system .legend-chip {
+    width: 100% !important;
+    min-width: 0 !important;
+    justify-content: flex-start !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+    padding: 9px 11px !important;
+  }
+}
+
+@media screen and (min-width: 761px) and (max-width: 1120px) {
+  .kde-hero-waveform-system .kde-hero-waveform-chips {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+
+/* KDE_WAVEFORM_COLOR_SYSTEM_HERO_REBUILD_V1
+   Rebuilt hero waveform explanation block. Desktop-first; mobile remains stacked/readable. */
+.kde-waveform-color-hero {
+  margin: 28px 0 22px;
+  border: 1px solid rgba(148, 163, 184, .22);
+  border-radius: 24px;
+  padding: 18px 20px;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(34, 211, 238, .14), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015)),
+    rgba(0,0,0,.28);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.045);
+}
+
+.kde-waveform-color-title {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 900;
+  color: rgba(248,250,252,.92);
+}
+
+.kde-waveform-color-copy {
+  margin: 8px 0 0;
+  max-width: 900px;
+  color: rgba(229,231,235,.66);
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 650;
+}
+
+.kde-waveform-color-chips {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.kde-waveform-color-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 999px;
+  padding: 9px 12px;
+  background: rgba(0,0,0,.26);
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.2;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.kde-waveform-color-chip::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+
+.kde-waveform-color-chip.red {
+  color: rgba(255,102,102,.95);
+}
+
+.kde-waveform-color-chip.red::before {
+  background: rgba(255,67,67,.95);
+  box-shadow: 0 0 16px rgba(255,67,67,.42);
+}
+
+.kde-waveform-color-chip.lime {
+  color: rgba(163,230,53,.95);
+}
+
+.kde-waveform-color-chip.lime::before {
+  background: rgba(132,204,22,.96);
+  box-shadow: 0 0 16px rgba(132,204,22,.42);
+}
+
+.kde-waveform-color-chip.cyan {
+  color: rgba(34,211,238,.95);
+}
+
+.kde-waveform-color-chip.cyan::before {
+  background: rgba(34,211,238,.96);
+  box-shadow: 0 0 16px rgba(34,211,238,.42);
+}
+
+@media screen and (min-width: 761px) and (max-width: 1120px) {
+  .kde-waveform-color-chips {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .kde-waveform-color-hero {
+    margin: 20px 0 16px;
+    border-radius: 20px;
+    padding: 15px;
+  }
+
+  .kde-waveform-color-copy {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .kde-waveform-color-chips {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .kde-waveform-color-chip {
+    font-size: 9.5px;
+    padding: 8px 10px;
+  }
+}
+
+
+/* KDE_TWO_COLUMN_GRID_FINAL_OVERRIDE_V1
+   Final CSS-order lock. This intentionally appears last and overrides prior stacked grid attempts. */
+#kde-card-grid,
+#kde-card-grid.grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 18px !important;
+  align-items: start !important;
+}
+
+#kde-card-grid > *,
+#kde-card-grid.grid > *,
+#kde-card-grid .card {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+
+#kde-card-grid .waveform,
+#kde-card-grid .kde-waveform,
+#kde-card-grid svg,
+#kde-card-grid canvas {
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+
+/* KDE_HERO_TITLE_LOCK_V1 */
+.kde-hero-title-lock {
+  font-size: 48px !important;
+}
+
+
+/* KDE_METRIC_SCORE_COLOR_SYSTEM_V1 */
+.metric {
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+.metric.score-low {
+  border-color: rgba(148,163,184,.12) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.014)),
+    rgba(0,0,0,.20) !important;
+}
+
+.metric.score-low .v {
+  color: rgba(248,250,252,.88) !important;
+}
+
+.metric.score-watch {
+  border-color: rgba(245,158,11,.28) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(245,158,11,.10), transparent 48%),
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.014)),
+    rgba(0,0,0,.22) !important;
+}
+
+.metric.score-watch .v {
+  color: rgba(251,191,36,.98) !important;
+}
+
+.metric.score-high,
+.metric.score-critical {
+  border-color: rgba(255,87,87,.34) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255,67,67,.13), transparent 48%),
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.014)),
+    rgba(0,0,0,.24) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 0 26px rgba(255,67,67,.075) !important;
+}
+
+.metric.score-high .v,
+.metric.score-critical .v {
+  color: rgba(255,115,115,.98) !important;
+  text-shadow: 0 0 18px rgba(255,67,67,.18);
+}
+
+.metric.score-positive,
+.metric.score-positive-elite {
+  border-color: rgba(132,204,22,.32) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(132,204,22,.14), transparent 48%),
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.014)),
+    rgba(0,0,0,.22) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 0 26px rgba(132,204,22,.075) !important;
+}
+
+.metric.score-positive .v,
+.metric.score-positive-elite .v {
+  color: rgba(163,230,53,.98) !important;
+  text-shadow: 0 0 18px rgba(132,204,22,.16);
+}
+
+.metric.score-instability-watch,
+.metric.score-instability-high {
+  border-color: rgba(34,211,238,.30) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(34,211,238,.13), transparent 48%),
+    linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.014)),
+    rgba(0,0,0,.22) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 0 26px rgba(34,211,238,.07) !important;
+}
+
+.metric.score-instability-watch .v,
+.metric.score-instability-high .v {
+  color: rgba(34,211,238,.98) !important;
+  text-shadow: 0 0 18px rgba(34,211,238,.16);
+}
+
+.metric.score-confidence-low {
+  border-color: rgba(255,87,87,.24) !important;
+}
+
+.metric.score-confidence-low .v {
+  color: rgba(255,140,140,.95) !important;
+}
+
+.metric.score-confidence-mid {
+  border-color: rgba(245,158,11,.28) !important;
+}
+
+.metric.score-confidence-mid .v {
+  color: rgba(251,191,36,.98) !important;
+}
+
+.metric.score-confidence-high {
+  border-color: rgba(248,250,252,.22) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(132,204,22,.10), transparent 44%),
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.016)),
+    rgba(0,0,0,.22) !important;
+}
+
+.metric.score-confidence-high .v {
+  color: rgba(248,250,252,.98) !important;
+}
+
+
+/* KDE_FIELD_GUIDE_INLINE_COLOR_TONES_V1 */
+.kde-guide-tone {
+  font-weight: 900;
+  letter-spacing: .03em;
+}
+
+.kde-guide-tone.red {
+  color: rgba(255,115,115,.98);
+  text-shadow: 0 0 14px rgba(255,67,67,.20);
+}
+
+.kde-guide-tone.lime {
+  color: rgba(163,230,53,.98);
+  text-shadow: 0 0 14px rgba(132,204,22,.20);
+}
+
+.kde-guide-tone.cyan {
+  color: rgba(34,211,238,.98);
+  text-shadow: 0 0 14px rgba(34,211,238,.20);
+}
+
+.kde-guide-tone.amber {
+  color: rgba(251,191,36,.98);
+  text-shadow: 0 0 14px rgba(245,158,11,.18);
+}
+
+.kde-guide-tone.bright {
+  color: rgba(248,250,252,.98);
+  text-shadow: 0 0 14px rgba(248,250,252,.12);
+}
+
+.kde-guide-tone.muted {
+  color: rgba(148,163,184,.82);
+}
+
+</style>
 </head>
 
 <body>
@@ -1295,27 +1644,26 @@ body.kde-field-guide-open{
       DIAMONDSIGNALS // KINETIC DRIFT ENGINE — ACTIVE PREVIEW
     </div>
 
-    <h1>
-      Recursive movement drift before the box score reprices the asset.
+    <h1 class="kde-hero-title-lock">
+      Kinetic Decay Audit
     </h1>
 
     <div class="sub">
-      Kinetic Drift isolates emerging biomechanical instability, velocity collapse,
-      release-point fragmentation, and hidden shape gains before traditional outcome metrics fully react.
+      The Kinetic Drift Engine (KDE) monitors recursive movement drift to identify emerging biomechanical instability and velocity collapse. Secure the lead before traditional outcome metrics and the market fully react to the hidden shape gains.
     </div>
 
-    <!-- KDE_WAVEFORM_COLOR_SYSTEM_HERO_V1 -->
-    <section class="kde-legend kde-waveform-hero-legend">
-      <span class="legend-title">WAVEFORM COLOR SYSTEM</span>
-      <p class="kde-waveform-hero-copy">
+    <!-- KDE_WAVEFORM_COLOR_SYSTEM_HERO_REBUILD_V2 -->
+    <section class="kde-waveform-color-hero" aria-label="Waveform color system">
+      <h2 class="kde-waveform-color-title">WAVEFORM COLOR SYSTEM</h2>
+      <p class="kde-waveform-color-copy">
         Color shows the dominant kinetic diagnosis. Shape shows whether the recent trace is accelerating, cooling, or holding.
       </p>
-      <span class="legend-chip legend-red"><span class="legend-dot"></span>RED = DECAY / FATIGUE RISK</span>
-      <span class="legend-chip legend-green"><span class="legend-dot"></span>LIME = EMERGENCE / POWER GAIN</span>
-      <span class="legend-chip legend-blue"><span class="legend-dot"></span>CYAN = MECHANICAL INSTABILITY</span>
+      <div class="kde-waveform-color-chips">
+        <div class="kde-waveform-color-chip red">RED = DECAY / FATIGUE RISK</div>
+        <div class="kde-waveform-color-chip lime">LIME = EMERGENCE / POWER GAIN</div>
+        <div class="kde-waveform-color-chip cyan">CYAN = MECHANICAL INSTABILITY</div>
+      </div>
     </section>
-
-
 
     <div class="kde-sortbar">
       <div class="kde-sort-control">
@@ -1452,22 +1800,22 @@ body.kde-field-guide-open{
 
         <div class="metrics">
 
-          <div class="metric">
+          <div class="metric metric-risk {% if row.kinetic_risk_score >= 80 %}score-critical{% elif row.kinetic_risk_score >= 60 %}score-high{% elif row.kinetic_risk_score >= 35 %}score-watch{% else %}score-low{% endif %}">
             <div class="k">KINETIC RISK</div>
             <div class="v">{{ row.kinetic_risk_score }}</div>
           </div>
 
-          <div class="metric">
+          <div class="metric metric-emergence {% if row.kinetic_emergence_score >= 80 %}score-positive-elite{% elif row.kinetic_emergence_score >= 60 %}score-positive{% elif row.kinetic_emergence_score >= 35 %}score-watch{% else %}score-low{% endif %}">
             <div class="k">EMERGENCE</div>
             <div class="v">{{ row.kinetic_emergence_score }}</div>
           </div>
 
-          <div class="metric">
+          <div class="metric metric-instability {% if row.kinetic_instability_score >= 80 %}score-critical{% elif row.kinetic_instability_score >= 60 %}score-instability-high{% elif row.kinetic_instability_score >= 35 %}score-instability-watch{% else %}score-low{% endif %}">
             <div class="k">INSTABILITY</div>
             <div class="v">{{ row.kinetic_instability_score }}</div>
           </div>
 
-          <div class="metric">
+          <div class="metric metric-confidence {% if row.confidence_score >= 80 %}score-confidence-high{% elif row.confidence_score >= 60 %}score-confidence-mid{% elif row.confidence_score >= 35 %}score-watch{% else %}score-confidence-low{% endif %}">
             <div class="k">CONFIDENCE</div>
             <div class="v">{{ row.confidence_score }}</div>
           </div>
@@ -1652,6 +2000,18 @@ body.kde-field-guide-open{
             <li><strong>KIS:</strong> Kinetic Instability Score. Release/mechanical volatility signal.</li>
             <li><strong>Confidence:</strong> Trust read based on sample strength and stability of the detected pattern.</li>
             <li><strong>Operator Command:</strong> Action posture for the asset: monitor, track, exploit, or avoid depending on drift profile.</li>
+          </ul>
+        </section>
+
+        <section class="kde-field-guide-card">
+          <div class="kde-field-guide-label">Metric Color System</div>
+          <ul class="kde-field-guide-list">
+            <li><strong>Kinetic Risk:</strong> <span class="kde-guide-tone red">red</span> indicates elevated decay / fatigue risk; <span class="kde-guide-tone muted">muted</span> indicates lower immediate risk.</li>
+            <li><strong>Emergence:</strong> <span class="kde-guide-tone lime">lime</span> indicates active breakout, power, or stuff-gain pressure.</li>
+            <li><strong>Instability:</strong> <span class="kde-guide-tone cyan">cyan</span> indicates mechanical volatility, release disruption, or unstable movement behavior.</li>
+            <li><strong>Confidence:</strong> <span class="kde-guide-tone bright">bright/clean</span> read indicates higher trust; <span class="kde-guide-tone amber">amber</span> indicates watch-level confidence; <span class="kde-guide-tone red">red</span> indicates weaker trust.</li>
+            <li><strong>Amber:</strong> <span class="kde-guide-tone amber">watch zone</span>. The signal is forming but not yet fully confirmed.</li>
+            <li><strong>Muted:</strong> <span class="kde-guide-tone muted">low-signal zone</span>. The metric is present but not currently driving the diagnosis.</li>
           </ul>
         </section>
 
