@@ -1437,15 +1437,12 @@ def write_velocity_decay_status(
     degraded = card_count == 0
 
     risk_counts = {}
+    alert_counts = {}
     for row in cards or []:
-        risk = str(
-            row.get("risk_label")
-            or row.get("risk_band")
-            or row.get("diagnosis")
-            or row.get("alert")
-            or "UNKNOWN"
-        ).strip() or "UNKNOWN"
+        risk = str(row.get("risk_tier") or "UNKNOWN").strip() or "UNKNOWN"
+        alert = str(row.get("primary_alert") or "UNKNOWN").strip() or "UNKNOWN"
         risk_counts[risk] = risk_counts.get(risk, 0) + 1
+        alert_counts[alert] = alert_counts.get(alert, 0) + 1
 
     status_payload = build_report_status(
         "velocity_decay",
@@ -1465,6 +1462,7 @@ def write_velocity_decay_status(
     )
 
     status_payload["risk_counts"] = risk_counts
+    status_payload["alert_counts"] = alert_counts
 
     VELOCITY_DECAY_STATUS_PATH.write_text(
         json.dumps(status_payload, indent=2),
