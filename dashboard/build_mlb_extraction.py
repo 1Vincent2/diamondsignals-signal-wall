@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 import math
 import json
@@ -9,11 +9,15 @@ import re
 import pandas as pd
 from jinja2 import Template
 
+from dashboard.lib.report_status import build_report_status
+
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
 DIST_DIR = REPO_ROOT / "dist"
 HIDDEN_GEMS_DIR = DIST_DIR / "hidden-gems"
 HIDDEN_GEMS_JSON = HIDDEN_GEMS_DIR / "mlb_extraction_ledger.json"
+STATUS_DIR = DIST_DIR / "status"
+MLB_EXTRACTION_STATUS_PATH = STATUS_DIR / "mlb-extraction.json"
 TEMPLATES_DIR = BASE_DIR / "templates"
 
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
@@ -943,7 +947,47 @@ def write_mlb_extraction_json(pitchers, hitters, generated_at: str, latest_week_
     )
 
 
+def write_mlb_extraction_status(
+    *,
+    build_started_at: str,
+    build_finished_at: str,
+    pitchers,
+    hitters,
+    source_window: str,
+) -> None:
+    STATUS_DIR.mkdir(parents=True, exist_ok=True)
+
+    pitcher_count = int(len(pitchers)) if pitchers is not None else 0
+    hitter_count = int(len(hitters)) if hitters is not None else 0
+    degraded = pitcher_count == 0 or hitter_count == 0
+
+    status_payload = build_report_status(
+        "mlb_extraction",
+        build_success=True,
+        threshold_minutes=240,
+        build_started_at=build_started_at,
+        build_finished_at=build_finished_at,
+        source_updated_at=build_finished_at,
+        section_counts={
+            "pitcher_extractions": pitcher_count,
+            "hitter_extractions": hitter_count,
+            "top_signals": min(pitcher_count + hitter_count, 12),
+        },
+        degraded=degraded,
+        notes=[
+            f"MLB Extraction Ledger built from source window {source_window}."
+        ],
+    )
+
+    MLB_EXTRACTION_STATUS_PATH.write_text(
+        json.dumps(status_payload, indent=2),
+        encoding="utf-8",
+    )
+    print(f"Wrote MLB Extraction status -> {MLB_EXTRACTION_STATUS_PATH}")
+
+
 def render_html() -> str:
+    build_started_at = datetime.now(timezone.utc).isoformat()
     hitter_source, pitcher_source, source_window = load_hidden_gems_source_frame()
 
     hitter_team_lookup = {}
@@ -969,6 +1013,15 @@ def render_html() -> str:
 
     generated_at = datetime.now().strftime("%Y-%m-%d %I:%M %p")
     write_mlb_extraction_json(pitchers, hitters, generated_at, source_window)
+
+    build_finished_at = datetime.now(timezone.utc).isoformat()
+    write_mlb_extraction_status(
+        build_started_at=build_started_at,
+        build_finished_at=build_finished_at,
+        pitchers=pitchers,
+        hitters=hitters,
+        source_window=source_window,
+    )
 
     return HTML_TEMPLATE.render(
         generated_at=generated_at,
