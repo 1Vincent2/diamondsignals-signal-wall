@@ -1721,6 +1721,42 @@ body.kde-field-guide-open{
   }
 }
 
+
+/* KDE_MOBILE_TRUE_SINGLE_COLUMN_V2
+   ID-specific override: defeats desktop #kde-card-grid two-column lock on mobile. */
+@media screen and (max-width:760px){
+  #kde-card-grid,
+  #kde-card-grid.grid{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:14px !important;
+    width:100% !important;
+  }
+
+  #kde-card-grid > *,
+  #kde-card-grid.grid > *,
+  #kde-card-grid .card{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+  }
+
+  #kde-card-grid .card,
+  #kde-card-grid article,
+  #kde-card-grid .operator-command{
+    margin-left:0 !important;
+    margin-right:0 !important;
+  }
+
+  #kde-card-grid .waveform,
+  #kde-card-grid .kde-waveform,
+  #kde-card-grid svg,
+  #kde-card-grid canvas{
+    max-width:100% !important;
+    overflow:hidden !important;
+  }
+}
+
 </style>
 </head>
 
