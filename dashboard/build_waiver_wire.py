@@ -1,16 +1,22 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
+import json
 
 from jinja2 import Template
+
+from dashboard.lib.report_status import build_report_status
 
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
 DIST_DIR = REPO_ROOT / "dist"
 HTML_DIR = DIST_DIR / "waiver-wire"
 HTML_PATH = HTML_DIR / "index.html"
+JSON_PATH = DIST_DIR / "waiver_wire.json"
+STATUS_DIR = DIST_DIR / "status"
+WAIVER_WIRE_STATUS_PATH = STATUS_DIR / "waiver-wire.json"
 
 TEMPLATE_PATH = BASE_DIR / "templates" / "waiver_wire.html"
 SHELL_STYLES_PATH = BASE_DIR / "templates" / "shell_styles.css"
@@ -113,7 +119,52 @@ def build_assets() -> list[dict]:
     ]
 
 
+
+def write_waiver_wire_status(
+    *,
+    build_started_at: str,
+    build_finished_at: str,
+    assets: list[dict],
+) -> None:
+    STATUS_DIR.mkdir(parents=True, exist_ok=True)
+
+    asset_count = int(len(assets)) if assets is not None else 0
+    degraded = asset_count == 0
+
+    command_counts = {}
+    for row in assets or []:
+        command = str(row.get("command") or "UNKNOWN").strip() or "UNKNOWN"
+        command_counts[command] = command_counts.get(command, 0) + 1
+
+    status_payload = build_report_status(
+        "waiver_wire",
+        build_success=True,
+        threshold_minutes=240,
+        build_started_at=build_started_at,
+        build_finished_at=build_finished_at,
+        source_updated_at=build_finished_at,
+        section_counts={
+            "waiver_assets": asset_count,
+            "command_groups": len(command_counts),
+        },
+        degraded=degraded,
+        notes=[
+            f"Waiver Wire Open Market built with {asset_count} active open-market assets."
+        ],
+    )
+
+    status_payload["command_counts"] = command_counts
+    status_payload["mode"] = "static_editable_v1"
+
+    WAIVER_WIRE_STATUS_PATH.write_text(
+        json.dumps(status_payload, indent=2),
+        encoding="utf-8",
+    )
+    print(f"Wrote Waiver Wire status -> {WAIVER_WIRE_STATUS_PATH}")
+
+
 def render() -> None:
+    build_started_at = datetime.now(timezone.utc).isoformat()
     HTML_DIR.mkdir(parents=True, exist_ok=True)
 
     assets = build_assets()
@@ -134,6 +185,21 @@ def render() -> None:
 
     print(f"Wrote waiver wire surface -> {HTML_PATH}")
     print(f"Assets rendered: {len(assets)}")
+
+    payload = {
+        "generated_at": generated_at,
+        "mode": "static_editable_v1",
+        "assets": assets,
+    }
+    JSON_PATH.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    print(f"Wrote waiver wire payload -> {JSON_PATH}")
+
+    build_finished_at = datetime.now(timezone.utc).isoformat()
+    write_waiver_wire_status(
+        build_started_at=build_started_at,
+        build_finished_at=build_finished_at,
+        assets=assets,
+    )
 
 
 def main() -> None:
