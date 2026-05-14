@@ -9,12 +9,28 @@ GUARD = r'''<script>
   var path = window.location.pathname || "/";
 
   var isGatePage = path === "/" || path === "/index.html";
+
+  /*
+    PUBLIC_PROMO_PATHS
+    Temporary marketing allowlist for X / Reddit traffic.
+    These pages remain public while the rest of the Signal Wall system stays gated.
+  */
+  var publicPromoPaths = [
+    "/live/",
+    "/admin/kinetic-drift/",
+    "/waiver-wire/"
+  ];
+
+  var isPublicPromoPath = publicPromoPaths.some(function(publicPath) {
+    return path === publicPath || path.indexOf(publicPath) === 0;
+  });
+
   var isLocal =
     window.location.hostname === "localhost" ||
     window.location.hostname === "127.0.0.1" ||
     window.location.hostname === "";
 
-  if (isLocal || isGatePage) return;
+  if (isLocal || isGatePage || isPublicPromoPath) return;
 
   function readCookie(name) {
     return document.cookie

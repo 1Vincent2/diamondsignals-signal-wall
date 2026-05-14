@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-05-06T19:58:15.180158+00:00",
+  "generated_at": "2026-05-14T15:53:33.804887+00:00",
   "source_count": 7,
-  "players_indexed": 126,
-  "missing_player_id_count": 21,
+  "players_indexed": 129,
+  "missing_player_id_count": 19,
   "missing_team_count": 0,
   "missing_position_count": 0,
   "duplicate_id_count": 0,
@@ -29,15 +29,6 @@
       "player_id": null,
       "player_name": "Blas Castaño",
       "team": "UNK",
-      "position": "P",
-      "reports_triggered": [
-        "Promotion Watch"
-      ]
-    },
-    {
-      "player_id": null,
-      "player_name": "Brendan Beck",
-      "team": "New York Yankees",
       "position": "P",
       "reports_triggered": [
         "Promotion Watch"
@@ -174,15 +165,6 @@
       "player_name": "Spencer Packard",
       "team": "Seattle Mariners",
       "position": "OF",
-      "reports_triggered": [
-        "Promotion Watch"
-      ]
-    },
-    {
-      "player_id": null,
-      "player_name": "Sung-mun Song",
-      "team": "UNK",
-      "position": "INF",
       "reports_triggered": [
         "Promotion Watch"
       ]

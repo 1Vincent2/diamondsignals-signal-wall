@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-06T19:58:15.179104+00:00",
-  "player_count": 105,
+  "generated_at": "2026-05-14T15:53:33.804041+00:00",
+  "player_count": 110,
   "players": [
     {
       "id": 544150,
@@ -87,21 +87,9 @@
       "trend": "Active"
     },
     {
-      "id": 900252848,
+      "id": 900362151,
       "name": "Bailey Ober",
-      "org": "TB",
-      "role": "P",
-      "signal": "IVB Heat Map",
-      "note": "Backfilled from DiamondSignals active signal overlay.",
-      "signal_tier": "ACTIVE_SIGNAL",
-      "decision_bias": "MONITOR",
-      "risk": "Unknown",
-      "trend": "Active"
-    },
-    {
-      "id": 656986,
-      "name": "Bennett Sousa",
-      "org": "BAL",
+      "org": "WSH",
       "role": "P",
       "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
@@ -137,9 +125,33 @@
     {
       "id": 699134,
       "name": "Bradgley Rodriguez",
-      "org": "SD",
+      "org": "MIL",
       "role": "P",
-      "signal": "Velocity Decay",
+      "signal": "IVB Heat Map",
+      "note": "Backfilled from DiamondSignals active signal overlay.",
+      "signal_tier": "ACTIVE_SIGNAL",
+      "decision_bias": "MONITOR",
+      "risk": "Unknown",
+      "trend": "Active"
+    },
+    {
+      "id": 694341,
+      "name": "Brendan Beck",
+      "org": "New York Yankees",
+      "role": "P",
+      "signal": "Promotion Watch",
+      "note": "Backfilled from DiamondSignals active signal overlay.",
+      "signal_tier": "ACTIVE_SIGNAL",
+      "decision_bias": "MONITOR",
+      "risk": "Unknown",
+      "trend": "Active"
+    },
+    {
+      "id": 687396,
+      "name": "Brent Headrick",
+      "org": "BAL",
+      "role": "P",
+      "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
       "signal_tier": "ACTIVE_SIGNAL",
       "decision_bias": "MONITOR",
@@ -161,7 +173,7 @@
     {
       "id": 695391,
       "name": "Brett Harris",
-      "org": "Athletics",
+      "org": "Las Vegas Aviators",
       "role": "3B",
       "signal": "Promotion Watch",
       "note": "Backfilled from DiamondSignals active signal overlay.",
@@ -188,6 +200,30 @@
       "org": "WSH",
       "role": "SP",
       "signal": "MLB Extraction Ledger",
+      "note": "Backfilled from DiamondSignals active signal overlay.",
+      "signal_tier": "ACTIVE_SIGNAL",
+      "decision_bias": "MONITOR",
+      "risk": "Unknown",
+      "trend": "Active"
+    },
+    {
+      "id": 900756856,
+      "name": "Cade Povich",
+      "org": "MIA",
+      "role": "P",
+      "signal": "IVB Heat Map",
+      "note": "Backfilled from DiamondSignals active signal overlay.",
+      "signal_tier": "ACTIVE_SIGNAL",
+      "decision_bias": "MONITOR",
+      "risk": "Unknown",
+      "trend": "Active"
+    },
+    {
+      "id": 671922,
+      "name": "Cade Smith",
+      "org": "CLE",
+      "role": "P",
+      "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
       "signal_tier": "ACTIVE_SIGNAL",
       "decision_bias": "MONITOR",
@@ -315,42 +351,6 @@
       "trend": "Active"
     },
     {
-      "id": 663485,
-      "name": "Cole Sands",
-      "org": "MIN",
-      "role": "P",
-      "signal": "IVB Heat Map",
-      "note": "Backfilled from DiamondSignals active signal overlay.",
-      "signal_tier": "ACTIVE_SIGNAL",
-      "decision_bias": "MONITOR",
-      "risk": "Unknown",
-      "trend": "Active"
-    },
-    {
-      "id": 681867,
-      "name": "Cooper Criswell",
-      "org": "MIN",
-      "role": "P",
-      "signal": "IVB Heat Map",
-      "note": "Backfilled from DiamondSignals active signal overlay.",
-      "signal_tier": "ACTIVE_SIGNAL",
-      "decision_bias": "MONITOR",
-      "risk": "Unknown",
-      "trend": "Active"
-    },
-    {
-      "id": 688158,
-      "name": "David Morgan",
-      "org": "SD",
-      "role": "P",
-      "signal": "IVB Heat Map",
-      "note": "Backfilled from DiamondSignals active signal overlay.",
-      "signal_tier": "ACTIVE_SIGNAL",
-      "decision_bias": "MONITOR",
-      "risk": "Unknown",
-      "trend": "Active"
-    },
-    {
       "id": 800311,
       "name": "Didier Fuentes",
       "org": "Atlanta Braves",
@@ -375,9 +375,9 @@
       "trend": "Active"
     },
     {
-      "id": 900171285,
+      "id": 900424805,
       "name": "Drew Pomeranz",
-      "org": "KC",
+      "org": "LAA",
       "role": "P",
       "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
@@ -399,9 +399,9 @@
       "trend": "Active"
     },
     {
-      "id": 900046943,
+      "id": 900918760,
       "name": "Dylan Lee",
-      "org": "ATL",
+      "org": "LAD",
       "role": "P",
       "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
@@ -451,6 +451,18 @@
       "name": "Emilio Pagán",
       "org": "CIN",
       "role": "P",
+      "signal": "Velocity Decay",
+      "note": "Backfilled from DiamondSignals active signal overlay.",
+      "signal_tier": "ACTIVE_SIGNAL",
+      "decision_bias": "MONITOR",
+      "risk": "Unknown",
+      "trend": "Active"
+    },
+    {
+      "id": 900018644,
+      "name": "Erik Sabrowski",
+      "org": "KC",
+      "role": "P",
       "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
       "signal_tier": "ACTIVE_SIGNAL",
@@ -471,11 +483,11 @@
       "trend": "Active"
     },
     {
-      "id": 900931031,
-      "name": "Garrett Acton",
-      "org": "TB",
-      "role": "P",
-      "signal": "IVB Heat Map",
+      "id": 666277,
+      "name": "George Soriano",
+      "org": "STL",
+      "role": "SP",
+      "signal": "MLB Extraction Ledger",
       "note": "Backfilled from DiamondSignals active signal overlay.",
       "signal_tier": "ACTIVE_SIGNAL",
       "decision_bias": "MONITOR",
@@ -483,11 +495,11 @@
       "trend": "Active"
     },
     {
-      "id": 666277,
-      "name": "George Soriano",
-      "org": "STL",
-      "role": "SP",
-      "signal": "MLB Extraction Ledger",
+      "id": 642397,
+      "name": "Gregory Soto",
+      "org": "PIT",
+      "role": "P",
+      "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
       "signal_tier": "ACTIVE_SIGNAL",
       "decision_bias": "MONITOR",
@@ -507,9 +519,9 @@
       "trend": "Active"
     },
     {
-      "id": 663687,
-      "name": "Hogan Harris",
-      "org": "ATH",
+      "id": 900753402,
+      "name": "Gus Varland",
+      "org": "WSH",
       "role": "P",
       "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
@@ -531,9 +543,9 @@
       "trend": "Active"
     },
     {
-      "id": 693855,
-      "name": "Ian Seymour",
-      "org": "CLE",
+      "id": 685801,
+      "name": "Hunter Bigge",
+      "org": "TOR",
       "role": "P",
       "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
@@ -543,9 +555,9 @@
       "trend": "Active"
     },
     {
-      "id": 900222914,
+      "id": 900651756,
       "name": "Jack Dreyer",
-      "org": "LAD",
+      "org": "HOU",
       "role": "P",
       "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
@@ -560,6 +572,18 @@
       "org": "TEX",
       "role": "SP",
       "signal": "MLB Extraction Ledger",
+      "note": "Backfilled from DiamondSignals active signal overlay.",
+      "signal_tier": "ACTIVE_SIGNAL",
+      "decision_bias": "MONITOR",
+      "risk": "Unknown",
+      "trend": "Active"
+    },
+    {
+      "id": 656641,
+      "name": "Jacob Latz",
+      "org": "TEX",
+      "role": "P",
+      "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
       "signal_tier": "ACTIVE_SIGNAL",
       "decision_bias": "MONITOR",
@@ -591,18 +615,6 @@
       "trend": "Active"
     },
     {
-      "id": 656234,
-      "name": "Jake Bird",
-      "org": "TEX",
-      "role": "P",
-      "signal": "IVB Heat Map",
-      "note": "Backfilled from DiamondSignals active signal overlay.",
-      "signal_tier": "ACTIVE_SIGNAL",
-      "decision_bias": "MONITOR",
-      "risk": "Unknown",
-      "trend": "Active"
-    },
-    {
       "id": 669920,
       "name": "Jason Alexander",
       "org": "Houston Astros",
@@ -627,9 +639,9 @@
       "trend": "Active"
     },
     {
-      "id": 605488,
-      "name": "Jeffrey Springs",
-      "org": "ATH",
+      "id": 661395,
+      "name": "Jhoan Duran",
+      "org": "BOS",
       "role": "P",
       "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
@@ -644,6 +656,18 @@
       "org": "STL",
       "role": "BAT",
       "signal": "MLB Extraction Ledger",
+      "note": "Backfilled from DiamondSignals active signal overlay.",
+      "signal_tier": "ACTIVE_SIGNAL",
+      "decision_bias": "MONITOR",
+      "risk": "Unknown",
+      "trend": "Active"
+    },
+    {
+      "id": 670167,
+      "name": "John Schreiber",
+      "org": "KC",
+      "role": "P",
+      "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
       "signal_tier": "ACTIVE_SIGNAL",
       "decision_bias": "MONITOR",
@@ -701,7 +725,7 @@
     {
       "id": 683742,
       "name": "Jose Franco",
-      "org": "Cincinnati Reds",
+      "org": "Louisville Bats",
       "role": "P",
       "signal": "Promotion Watch",
       "note": "Backfilled from DiamondSignals active signal overlay.",
@@ -723,9 +747,9 @@
       "trend": "Active"
     },
     {
-      "id": 666661,
-      "name": "Juan Morillo",
-      "org": "MIL",
+      "id": 675848,
+      "name": "Juan Mejia",
+      "org": "PHI",
       "role": "P",
       "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
@@ -771,11 +795,35 @@
       "trend": "Active"
     },
     {
+      "id": 489446,
+      "name": "Kirby Yates",
+      "org": "CLE",
+      "role": "P",
+      "signal": "IVB Heat Map",
+      "note": "Backfilled from DiamondSignals active signal overlay.",
+      "signal_tier": "ACTIVE_SIGNAL",
+      "decision_bias": "MONITOR",
+      "risk": "Unknown",
+      "trend": "Active"
+    },
+    {
       "id": 690986,
       "name": "Kyle Harrison",
       "org": "MIL",
       "role": "SP",
       "signal": "MLB Extraction Ledger",
+      "note": "Backfilled from DiamondSignals active signal overlay.",
+      "signal_tier": "ACTIVE_SIGNAL",
+      "decision_bias": "MONITOR",
+      "risk": "Unknown",
+      "trend": "Active"
+    },
+    {
+      "id": 701121,
+      "name": "Logan VanWey",
+      "org": "CIN",
+      "role": "P",
+      "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
       "signal_tier": "ACTIVE_SIGNAL",
       "decision_bias": "MONITOR",
@@ -812,18 +860,6 @@
       "org": "WSH",
       "role": "BAT",
       "signal": "MLB Extraction Ledger",
-      "note": "Backfilled from DiamondSignals active signal overlay.",
-      "signal_tier": "ACTIVE_SIGNAL",
-      "decision_bias": "MONITOR",
-      "risk": "Unknown",
-      "trend": "Active"
-    },
-    {
-      "id": 596133,
-      "name": "Luke Weaver",
-      "org": "NYM",
-      "role": "P",
-      "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
       "signal_tier": "ACTIVE_SIGNAL",
       "decision_bias": "MONITOR",
@@ -893,7 +929,7 @@
     {
       "id": 680730,
       "name": "Mitchell Parker",
-      "org": "NYM",
+      "org": "MIA",
       "role": "P",
       "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
@@ -905,7 +941,7 @@
     {
       "id": 683232,
       "name": "Nick Mears",
-      "org": "ATH",
+      "org": "KC",
       "role": "P",
       "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
@@ -920,18 +956,6 @@
       "org": "CWS",
       "role": "P",
       "signal": "Velocity Decay",
-      "note": "Backfilled from DiamondSignals active signal overlay.",
-      "signal_tier": "ACTIVE_SIGNAL",
-      "decision_bias": "MONITOR",
-      "risk": "Unknown",
-      "trend": "Active"
-    },
-    {
-      "id": 674370,
-      "name": "Osvaldo Bido",
-      "org": "CWS",
-      "role": "P",
-      "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
       "signal_tier": "ACTIVE_SIGNAL",
       "decision_bias": "MONITOR",
@@ -1047,11 +1071,11 @@
       "trend": "Active"
     },
     {
-      "id": 656794,
-      "name": "Sean Newcomb",
-      "org": "CWS",
+      "id": 594580,
+      "name": "Sam Moll",
+      "org": "CIN",
       "role": "P",
-      "signal": "Stuff+ Disruption",
+      "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
       "signal_tier": "ACTIVE_SIGNAL",
       "decision_bias": "MONITOR",
@@ -1059,11 +1083,23 @@
       "trend": "Active"
     },
     {
-      "id": 900170009,
-      "name": "Simeon Woods Richardson",
-      "org": "TB",
+      "id": 640455,
+      "name": "Sean Manaea",
+      "org": "AZ",
       "role": "P",
       "signal": "IVB Heat Map",
+      "note": "Backfilled from DiamondSignals active signal overlay.",
+      "signal_tier": "ACTIVE_SIGNAL",
+      "decision_bias": "MONITOR",
+      "risk": "Unknown",
+      "trend": "Active"
+    },
+    {
+      "id": 656794,
+      "name": "Sean Newcomb",
+      "org": "CWS",
+      "role": "P",
+      "signal": "Stuff+ Disruption",
       "note": "Backfilled from DiamondSignals active signal overlay.",
       "signal_tier": "ACTIVE_SIGNAL",
       "decision_bias": "MONITOR",
@@ -1083,6 +1119,18 @@
       "trend": "Active"
     },
     {
+      "id": 823550,
+      "name": "Sung-mun Song",
+      "org": "San Diego Padres",
+      "role": "3B",
+      "signal": "Promotion Watch",
+      "note": "Backfilled from DiamondSignals active signal overlay.",
+      "signal_tier": "ACTIVE_SIGNAL",
+      "decision_bias": "MONITOR",
+      "risk": "Unknown",
+      "trend": "Active"
+    },
+    {
       "id": 676440,
       "name": "Tanner Bibee",
       "org": "CLE",
@@ -1095,9 +1143,21 @@
       "trend": "Active"
     },
     {
-      "id": 900293472,
+      "id": 573124,
+      "name": "Taylor Rogers",
+      "org": "CLE",
+      "role": "P",
+      "signal": "IVB Heat Map",
+      "note": "Backfilled from DiamondSignals active signal overlay.",
+      "signal_tier": "ACTIVE_SIGNAL",
+      "decision_bias": "MONITOR",
+      "risk": "Unknown",
+      "trend": "Active"
+    },
+    {
+      "id": 900593692,
       "name": "Tobias Myers",
-      "org": "NYM",
+      "org": "COL",
       "role": "P",
       "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
@@ -1119,21 +1179,9 @@
       "trend": "Active"
     },
     {
-      "id": 900070641,
-      "name": "Trevor Megill",
-      "org": "MIL",
-      "role": "P",
-      "signal": "IVB Heat Map",
-      "note": "Backfilled from DiamondSignals active signal overlay.",
-      "signal_tier": "ACTIVE_SIGNAL",
-      "decision_bias": "MONITOR",
-      "risk": "Unknown",
-      "trend": "Active"
-    },
-    {
-      "id": 900002113,
+      "id": 900838170,
       "name": "Trevor Richards",
-      "org": "PHI",
+      "org": "CWS",
       "role": "P",
       "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
@@ -1160,18 +1208,6 @@
       "org": "LAD",
       "role": "SP",
       "signal": "MLB Extraction Ledger",
-      "note": "Backfilled from DiamondSignals active signal overlay.",
-      "signal_tier": "ACTIVE_SIGNAL",
-      "decision_bias": "MONITOR",
-      "risk": "Unknown",
-      "trend": "Active"
-    },
-    {
-      "id": 900829524,
-      "name": "Tyler Mahle",
-      "org": "PHI",
-      "role": "P",
-      "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
       "signal_tier": "ACTIVE_SIGNAL",
       "decision_bias": "MONITOR",
@@ -1215,6 +1251,18 @@
       "trend": "Active"
     },
     {
+      "id": 666974,
+      "name": "Yennier Cano",
+      "org": "BAL",
+      "role": "P",
+      "signal": "IVB Heat Map",
+      "note": "Backfilled from DiamondSignals active signal overlay.",
+      "signal_tier": "ACTIVE_SIGNAL",
+      "decision_bias": "MONITOR",
+      "risk": "Unknown",
+      "trend": "Active"
+    },
+    {
       "id": 672782,
       "name": "Yoendrys Gómez",
       "org": "TB",
@@ -1244,6 +1292,18 @@
       "org": "Toronto Blue Jays",
       "role": "LF",
       "signal": "Promotion Watch",
+      "note": "Backfilled from DiamondSignals active signal overlay.",
+      "signal_tier": "ACTIVE_SIGNAL",
+      "decision_bias": "MONITOR",
+      "risk": "Unknown",
+      "trend": "Active"
+    },
+    {
+      "id": 900445822,
+      "name": "Yuki Matsui",
+      "org": "SD",
+      "role": "P",
+      "signal": "IVB Heat Map",
       "note": "Backfilled from DiamondSignals active signal overlay.",
       "signal_tier": "ACTIVE_SIGNAL",
       "decision_bias": "MONITOR",

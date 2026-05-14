@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-06T19:58:15.179104+00:00",
-  "player_count": 126,
+  "generated_at": "2026-05-14T15:53:33.804041+00:00",
+  "player_count": 129,
   "source_count": 7,
   "players": [
     {
@@ -32,6 +32,7 @@
             "k_pct": "13.6%",
             "bb_pct": "13.6%",
             "k_bb_ratio": "1.00",
+            "babip": "0.178",
             "batters_faced": 66,
             "strikeouts": 9,
             "walks": 9
@@ -50,7 +51,7 @@
         "k_pct": "13.6%",
         "bb_pct": "13.6%",
         "k_bb_ratio": "1.00",
-        "babip": null,
+        "babip": "0.178",
         "batters_faced": 66,
         "strikeouts": 9,
         "walks": 9
@@ -79,13 +80,13 @@
             "body_copy": "Average impact has improved faster than the box-score line. The market is still staring at the wrong layer.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "10.9%",
-            "k_pct": "15.4%",
-            "bb_k_ratio": "0.71",
-            "babip": ".291",
-            "plate_appearances": 156,
-            "strikeouts": 24,
-            "walks": 17
+            "bb_pct": "9.8%",
+            "k_pct": "15.8%",
+            "bb_k_ratio": "0.62",
+            "babip": ".300",
+            "plate_appearances": 183,
+            "strikeouts": 29,
+            "walks": 18
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         }
@@ -98,13 +99,13 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "10.9%",
-        "k_pct": "15.4%",
-        "bb_k_ratio": "0.71",
-        "babip": ".291",
-        "plate_appearances": 156,
-        "strikeouts": 24,
-        "walks": 17
+        "bb_pct": "9.8%",
+        "k_pct": "15.8%",
+        "bb_k_ratio": "0.62",
+        "babip": ".300",
+        "plate_appearances": 183,
+        "strikeouts": 29,
+        "walks": 18
       }
     },
     {
@@ -121,22 +122,22 @@
           "report_key": "ivb_heat_map",
           "report_label": "IVB Heat Map",
           "section": "heat_cards",
-          "generated_at": "2026-05-01T08:12:57.471574",
+          "generated_at": "2026-05-13T10:40:02.740775",
           "metrics": {
-            "ivb_vs_avg": "+10.3\"",
-            "ivb_raw": "21.2\"",
-            "vaa": "-4.0°",
+            "ivb_vs_avg": "+9.1\"",
+            "ivb_raw": "21.3\"",
+            "vaa": "-4.1°",
             "whiff_probability": "HIGH",
             "dead_zone_label": "CLEAR",
             "heat_class": "hot",
             "band_label": "Apex Carry",
             "heat_tag": "HOT // APEX RISE",
-            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.0°."
+            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.1°."
           },
           "source_path": "dist/ivb_heat_map.json"
         }
       ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/681911/headshot/67/current",
       "bats": "L",
       "throws": "L",
@@ -203,6 +204,7 @@
             "k_pct": "6.0%",
             "bb_pct": "16.0%",
             "k_bb_ratio": "0.38",
+            "babip": "0.314",
             "batters_faced": 50,
             "strikeouts": 3,
             "walks": 8
@@ -221,6 +223,7 @@
             "k_pct": "6.0%",
             "bb_pct": "16.0%",
             "k_bb_ratio": "0.38",
+            "babip": "0.314",
             "batters_faced": 50,
             "strikeouts": 3,
             "walks": 8
@@ -239,7 +242,7 @@
         "k_pct": "6.0%",
         "bb_pct": "16.0%",
         "k_bb_ratio": "0.38",
-        "babip": null,
+        "babip": "0.314",
         "batters_faced": 50,
         "strikeouts": 3,
         "walks": 8
@@ -272,11 +275,12 @@
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
             "k_pct": "19.7%",
-            "bb_pct": "6.1%",
-            "k_bb_ratio": "3.25",
-            "batters_faced": 66,
-            "strikeouts": 13,
-            "walks": 4
+            "bb_pct": "6.6%",
+            "k_bb_ratio": "3.00",
+            "babip": "0.352",
+            "batters_faced": 76,
+            "strikeouts": 15,
+            "walks": 5
           },
           "source_path": "dist/velocity_decay_monitor.json"
         }
@@ -290,12 +294,12 @@
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
         "k_pct": "19.7%",
-        "bb_pct": "6.1%",
-        "k_bb_ratio": "3.25",
-        "babip": null,
-        "batters_faced": 66,
-        "strikeouts": 13,
-        "walks": 4
+        "bb_pct": "6.6%",
+        "k_bb_ratio": "3.00",
+        "babip": "0.352",
+        "batters_faced": 76,
+        "strikeouts": 15,
+        "walks": 5
       }
     },
     {
@@ -317,12 +321,13 @@
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "26.0%",
-            "bb_pct": "6.8%",
-            "k_bb_ratio": "3.80",
-            "batters_faced": 73,
-            "strikeouts": 19,
-            "walks": 5
+            "k_pct": "25.9%",
+            "bb_pct": "8.2%",
+            "k_bb_ratio": "3.14",
+            "babip": "0.255",
+            "batters_faced": 85,
+            "strikeouts": 22,
+            "walks": 7
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         },
@@ -334,12 +339,13 @@
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "26.0%",
-            "bb_pct": "6.8%",
-            "k_bb_ratio": "3.80",
-            "batters_faced": 73,
-            "strikeouts": 19,
-            "walks": 5
+            "k_pct": "25.9%",
+            "bb_pct": "8.2%",
+            "k_bb_ratio": "3.14",
+            "babip": "0.255",
+            "batters_faced": 85,
+            "strikeouts": 22,
+            "walks": 7
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         },
@@ -359,12 +365,13 @@
             "analysis": "Elite ballistic profile detected. Ride and approach angle are both moving in the right direction, creating a high-end breakout structure.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "26.0%",
-            "bb_pct": "6.8%",
-            "k_bb_ratio": "3.80",
-            "batters_faced": 73,
-            "strikeouts": 19,
-            "walks": 5
+            "k_pct": "25.9%",
+            "bb_pct": "8.2%",
+            "k_bb_ratio": "3.14",
+            "babip": "0.255",
+            "batters_faced": 85,
+            "strikeouts": 22,
+            "walks": 7
           },
           "source_path": "dist/stuff_disruption_feed.json"
         }
@@ -377,13 +384,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "26.0%",
-        "bb_pct": "6.8%",
-        "k_bb_ratio": "3.80",
-        "babip": null,
-        "batters_faced": 73,
-        "strikeouts": 19,
-        "walks": 5
+        "k_pct": "25.9%",
+        "bb_pct": "8.2%",
+        "k_bb_ratio": "3.14",
+        "babip": "0.255",
+        "batters_faced": 85,
+        "strikeouts": 22,
+        "walks": 7
       }
     },
     {
@@ -451,10 +458,10 @@
       }
     },
     {
-      "player_id": 900252848,
+      "player_id": 900362151,
       "player_name": "Bailey Ober",
       "search_name": "bailey ober",
-      "team": "TB",
+      "team": "WSH",
       "position": "P",
       "reports_triggered": [
         "IVB Heat Map"
@@ -464,71 +471,26 @@
           "report_key": "ivb_heat_map",
           "report_label": "IVB Heat Map",
           "section": "heat_cards",
-          "generated_at": "2026-05-01T08:12:57.471574",
+          "generated_at": "2026-05-13T10:40:02.740775",
           "metrics": {
-            "ivb_vs_avg": "+8.8\"",
-            "ivb_raw": "16.6\"",
-            "vaa": "-4.8°",
+            "ivb_vs_avg": "+8.5\"",
+            "ivb_raw": "16.7\"",
+            "vaa": "-5.2°",
             "whiff_probability": "LOW",
             "dead_zone_label": "COLD",
             "heat_class": "neutral",
             "band_label": "Standard Carry",
             "heat_tag": "NEUTRAL // MLB RANGE",
-            "brief": "Movement reads in the standard carry band. Shape is beating the velo bucket baseline. Approach angle checks in at -4.8°."
+            "brief": "Movement reads in the standard carry band. Shape is beating the velo bucket baseline. Approach angle checks in at -5.2°."
           },
           "source_path": "dist/ivb_heat_map.json"
         }
       ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/641927/headshot/67/current",
       "bats": "R",
       "throws": "R",
       "universe_match": true
-    },
-    {
-      "player_id": 656986,
-      "player_name": "Bennett Sousa",
-      "search_name": "bennett sousa",
-      "team": "BAL",
-      "position": "P",
-      "reports_triggered": [
-        "IVB Heat Map"
-      ],
-      "signals": [
-        {
-          "report_key": "ivb_heat_map",
-          "report_label": "IVB Heat Map",
-          "section": "climbers",
-          "generated_at": "2026-05-01T08:12:57.471574",
-          "metrics": {
-            "season_context": "COMMAND_PROFILE",
-            "season": 2026,
-            "k_pct": "23.5%",
-            "bb_pct": "29.4%",
-            "k_bb_ratio": "0.80",
-            "batters_faced": 17,
-            "strikeouts": 4,
-            "walks": 5
-          },
-          "source_path": "dist/ivb_heat_map.json"
-        }
-      ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/656986/headshot/67/current",
-      "bats": "L",
-      "throws": "L",
-      "universe_match": true,
-      "season_context": {
-        "season_context": "COMMAND_PROFILE",
-        "season": 2026,
-        "k_pct": "23.5%",
-        "bb_pct": "29.4%",
-        "k_bb_ratio": "0.80",
-        "babip": null,
-        "batters_faced": 17,
-        "strikeouts": 4,
-        "walks": 5
-      }
     },
     {
       "player_id": null,
@@ -603,13 +565,13 @@
           "metrics": {
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "5.6%",
-            "k_pct": "29.2%",
-            "bb_k_ratio": "0.19",
-            "babip": ".327",
-            "plate_appearances": 89,
-            "strikeouts": 26,
-            "walks": 5
+            "bb_pct": "6.0%",
+            "k_pct": "30.0%",
+            "bb_k_ratio": "0.20",
+            "babip": ".367",
+            "plate_appearances": 100,
+            "strikeouts": 30,
+            "walks": 6
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         },
@@ -621,13 +583,13 @@
           "metrics": {
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "5.6%",
-            "k_pct": "29.2%",
-            "bb_k_ratio": "0.19",
-            "babip": ".327",
-            "plate_appearances": 89,
-            "strikeouts": 26,
-            "walks": 5
+            "bb_pct": "6.0%",
+            "k_pct": "30.0%",
+            "bb_k_ratio": "0.20",
+            "babip": ".367",
+            "plate_appearances": 100,
+            "strikeouts": 30,
+            "walks": 6
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         }
@@ -640,13 +602,13 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "5.6%",
-        "k_pct": "29.2%",
-        "bb_k_ratio": "0.19",
-        "babip": ".327",
-        "plate_appearances": 89,
-        "strikeouts": 26,
-        "walks": 5
+        "bb_pct": "6.0%",
+        "k_pct": "30.0%",
+        "bb_k_ratio": "0.20",
+        "babip": ".367",
+        "plate_appearances": 100,
+        "strikeouts": 30,
+        "walks": 6
       }
     },
     {
@@ -672,13 +634,13 @@
             "body_copy": "Average impact has improved faster than the box-score line. The market is still staring at the wrong layer.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "5.2%",
-            "k_pct": "19.5%",
-            "bb_k_ratio": "0.27",
-            "babip": ".281",
-            "plate_appearances": 154,
-            "strikeouts": 30,
-            "walks": 8
+            "bb_pct": "6.5%",
+            "k_pct": "16.8%",
+            "bb_k_ratio": "0.39",
+            "babip": ".259",
+            "plate_appearances": 184,
+            "strikeouts": 31,
+            "walks": 12
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         }
@@ -691,25 +653,44 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "5.2%",
-        "k_pct": "19.5%",
-        "bb_k_ratio": "0.27",
-        "babip": ".281",
-        "plate_appearances": 154,
-        "strikeouts": 30,
-        "walks": 8
+        "bb_pct": "6.5%",
+        "k_pct": "16.8%",
+        "bb_k_ratio": "0.39",
+        "babip": ".259",
+        "plate_appearances": 184,
+        "strikeouts": 31,
+        "walks": 12
       }
     },
     {
       "player_id": 699134,
       "player_name": "Bradgley Rodriguez",
       "search_name": "bradgley rodriguez",
-      "team": "SD",
+      "team": "MIL",
       "position": "P",
       "reports_triggered": [
+        "IVB Heat Map",
         "Velocity Decay"
       ],
       "signals": [
+        {
+          "report_key": "ivb_heat_map",
+          "report_label": "IVB Heat Map",
+          "section": "climbers",
+          "generated_at": "2026-05-13T10:40:02.740775",
+          "metrics": {
+            "season_context": "COMMAND_PROFILE",
+            "season": 2026,
+            "k_pct": "18.5%",
+            "bb_pct": "6.2%",
+            "k_bb_ratio": "3.00",
+            "babip": "0.250",
+            "batters_faced": 81,
+            "strikeouts": 15,
+            "walks": 5
+          },
+          "source_path": "dist/ivb_heat_map.json"
+        },
         {
           "report_key": "velocity_decay",
           "report_label": "Velocity Decay",
@@ -726,17 +707,18 @@
             "analysis": "Significant raw power loss detected. Arm fatigue likely. Immediate benching recommended.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "17.1%",
-            "bb_pct": "7.1%",
-            "k_bb_ratio": "2.40",
-            "batters_faced": 70,
-            "strikeouts": 12,
+            "k_pct": "18.5%",
+            "bb_pct": "6.2%",
+            "k_bb_ratio": "3.00",
+            "babip": "0.250",
+            "batters_faced": 81,
+            "strikeouts": 15,
             "walks": 5
           },
           "source_path": "dist/velocity_decay_monitor.json"
         }
       ],
-      "latest_generated_at": "2026-04-30T14:56:12.706032",
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/699134/headshot/67/current",
       "bats": "R",
       "throws": "R",
@@ -744,17 +726,17 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "17.1%",
-        "bb_pct": "7.1%",
-        "k_bb_ratio": "2.40",
-        "babip": null,
-        "batters_faced": 70,
-        "strikeouts": 12,
+        "k_pct": "18.5%",
+        "bb_pct": "6.2%",
+        "k_bb_ratio": "3.00",
+        "babip": "0.250",
+        "batters_faced": 81,
+        "strikeouts": 15,
         "walks": 5
       }
     },
     {
-      "player_id": null,
+      "player_id": 694341,
       "player_name": "Brendan Beck",
       "search_name": "brendan beck",
       "team": "New York Yankees",
@@ -776,13 +758,37 @@
             "metric_2": "7",
             "metric_3_label": "BB",
             "metric_3": "1",
-            "why": "K/BB 7.00 • 7 K • 1 BB over 22 BF"
+            "why": "K/BB 7.00 • 7 K • 1 BB over 22 BF",
+            "season_context": "COMMAND_PROFILE",
+            "season": 2026,
+            "k_pct": "7.7%",
+            "bb_pct": "23.1%",
+            "k_bb_ratio": "0.33",
+            "babip": "0.125",
+            "batters_faced": 13,
+            "strikeouts": 1,
+            "walks": 3
           },
           "source_path": "dist/typical-call-up/promotion_watch.json"
         }
       ],
       "latest_generated_at": "2026-04-30 02:57 PM",
-      "manual_identity_resolver": true
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/694341/headshot/67/current",
+      "bats": "R",
+      "throws": "R",
+      "universe_match": true,
+      "manual_identity_resolver": true,
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "7.7%",
+        "bb_pct": "23.1%",
+        "k_bb_ratio": "0.33",
+        "babip": "0.125",
+        "batters_faced": 13,
+        "strikeouts": 1,
+        "walks": 3
+      }
     },
     {
       "player_id": null,
@@ -816,6 +822,52 @@
       "manual_identity_resolver": true
     },
     {
+      "player_id": 687396,
+      "player_name": "Brent Headrick",
+      "search_name": "brent headrick",
+      "team": "BAL",
+      "position": "P",
+      "reports_triggered": [
+        "IVB Heat Map"
+      ],
+      "signals": [
+        {
+          "report_key": "ivb_heat_map",
+          "report_label": "IVB Heat Map",
+          "section": "entered_apex",
+          "generated_at": "2026-05-13T10:40:02.740775",
+          "metrics": {
+            "season_context": "COMMAND_PROFILE",
+            "season": 2026,
+            "k_pct": "25.0%",
+            "bb_pct": "8.7%",
+            "k_bb_ratio": "2.88",
+            "babip": "0.321",
+            "batters_faced": 92,
+            "strikeouts": 23,
+            "walks": 8
+          },
+          "source_path": "dist/ivb_heat_map.json"
+        }
+      ],
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/687396/headshot/67/current",
+      "bats": "L",
+      "throws": "L",
+      "universe_match": true,
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "25.0%",
+        "bb_pct": "8.7%",
+        "k_bb_ratio": "2.88",
+        "babip": "0.321",
+        "batters_faced": 92,
+        "strikeouts": 23,
+        "walks": 8
+      }
+    },
+    {
       "player_id": "667670",
       "player_name": "BRENT ROOKER",
       "search_name": "brent rooker",
@@ -833,13 +885,13 @@
           "metrics": {
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "8.6%",
-            "k_pct": "33.3%",
-            "bb_k_ratio": "0.26",
-            "babip": ".182",
-            "plate_appearances": 81,
-            "strikeouts": 27,
-            "walks": 7
+            "bb_pct": "11.7%",
+            "k_pct": "31.5%",
+            "bb_k_ratio": "0.37",
+            "babip": ".224",
+            "plate_appearances": 111,
+            "strikeouts": 35,
+            "walks": 13
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         },
@@ -851,13 +903,13 @@
           "metrics": {
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "8.6%",
-            "k_pct": "33.3%",
-            "bb_k_ratio": "0.26",
-            "babip": ".182",
-            "plate_appearances": 81,
-            "strikeouts": 27,
-            "walks": 7
+            "bb_pct": "11.7%",
+            "k_pct": "31.5%",
+            "bb_k_ratio": "0.37",
+            "babip": ".224",
+            "plate_appearances": 111,
+            "strikeouts": 35,
+            "walks": 13
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         }
@@ -870,20 +922,20 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "8.6%",
-        "k_pct": "33.3%",
-        "bb_k_ratio": "0.26",
-        "babip": ".182",
-        "plate_appearances": 81,
-        "strikeouts": 27,
-        "walks": 7
+        "bb_pct": "11.7%",
+        "k_pct": "31.5%",
+        "bb_k_ratio": "0.37",
+        "babip": ".224",
+        "plate_appearances": 111,
+        "strikeouts": 35,
+        "walks": 13
       }
     },
     {
       "player_id": 695391,
       "player_name": "Brett Harris",
       "search_name": "brett harris",
-      "team": "Athletics",
+      "team": "Las Vegas Aviators",
       "position": "3B",
       "reports_triggered": [
         "Promotion Watch"
@@ -898,11 +950,11 @@
             "why": "Athletics recalled 3B Brett Harris from Las Vegas Aviators.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "20.0%",
-            "k_pct": "40.0%",
+            "bb_pct": "16.7%",
+            "k_pct": "33.3%",
             "bb_k_ratio": "0.50",
             "babip": ".000",
-            "plate_appearances": 5,
+            "plate_appearances": 6,
             "strikeouts": 2,
             "walks": 1
           },
@@ -918,11 +970,11 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "20.0%",
-        "k_pct": "40.0%",
+        "bb_pct": "16.7%",
+        "k_pct": "33.3%",
         "bb_k_ratio": "0.50",
         "babip": ".000",
-        "plate_appearances": 5,
+        "plate_appearances": 6,
         "strikeouts": 2,
         "walks": 1
       }
@@ -953,12 +1005,13 @@
             "analysis": "Significant raw power loss detected. Arm fatigue likely. Immediate benching recommended.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "30.8%",
-            "bb_pct": "24.6%",
-            "k_bb_ratio": "1.25",
-            "batters_faced": 65,
-            "strikeouts": 20,
-            "walks": 16
+            "k_pct": "30.0%",
+            "bb_pct": "24.3%",
+            "k_bb_ratio": "1.24",
+            "babip": "0.346",
+            "batters_faced": 70,
+            "strikeouts": 21,
+            "walks": 17
           },
           "source_path": "dist/velocity_decay_monitor.json"
         }
@@ -971,13 +1024,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "30.8%",
-        "bb_pct": "24.6%",
-        "k_bb_ratio": "1.25",
-        "babip": null,
-        "batters_faced": 65,
-        "strikeouts": 20,
-        "walks": 16
+        "k_pct": "30.0%",
+        "bb_pct": "24.3%",
+        "k_bb_ratio": "1.24",
+        "babip": "0.346",
+        "batters_faced": 70,
+        "strikeouts": 21,
+        "walks": 17
       }
     },
     {
@@ -1003,12 +1056,13 @@
             "body_copy": "Underlying pitch quality is holding firmer than the surface line. The market read still looks behind the actual signal.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "24.2%",
-            "bb_pct": "10.3%",
-            "k_bb_ratio": "2.35",
-            "batters_faced": 165,
-            "strikeouts": 40,
-            "walks": 17
+            "k_pct": "23.2%",
+            "bb_pct": "9.5%",
+            "k_bb_ratio": "2.44",
+            "babip": "0.378",
+            "batters_faced": 190,
+            "strikeouts": 44,
+            "walks": 18
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         }
@@ -1021,13 +1075,94 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "24.2%",
-        "bb_pct": "10.3%",
-        "k_bb_ratio": "2.35",
-        "babip": null,
-        "batters_faced": 165,
-        "strikeouts": 40,
-        "walks": 17
+        "k_pct": "23.2%",
+        "bb_pct": "9.5%",
+        "k_bb_ratio": "2.44",
+        "babip": "0.378",
+        "batters_faced": 190,
+        "strikeouts": 44,
+        "walks": 18
+      }
+    },
+    {
+      "player_id": 900756856,
+      "player_name": "Cade Povich",
+      "search_name": "cade povich",
+      "team": "MIA",
+      "position": "P",
+      "reports_triggered": [
+        "IVB Heat Map"
+      ],
+      "signals": [
+        {
+          "report_key": "ivb_heat_map",
+          "report_label": "IVB Heat Map",
+          "section": "heat_cards",
+          "generated_at": "2026-05-13T10:40:02.740775",
+          "metrics": {
+            "ivb_vs_avg": "+7.6\"",
+            "ivb_raw": "19.5\"",
+            "vaa": "-4.9°",
+            "whiff_probability": "MEDIUM",
+            "dead_zone_label": "CLEAR",
+            "heat_class": "hot",
+            "band_label": "Apex Carry",
+            "heat_tag": "HOT // APEX RISE",
+            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.9°."
+          },
+          "source_path": "dist/ivb_heat_map.json"
+        }
+      ],
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/700249/headshot/67/current",
+      "bats": "L",
+      "throws": "L",
+      "universe_match": true
+    },
+    {
+      "player_id": 671922,
+      "player_name": "Cade Smith",
+      "search_name": "cade smith",
+      "team": "CLE",
+      "position": "P",
+      "reports_triggered": [
+        "IVB Heat Map"
+      ],
+      "signals": [
+        {
+          "report_key": "ivb_heat_map",
+          "report_label": "IVB Heat Map",
+          "section": "entered_apex",
+          "generated_at": "2026-05-13T10:40:02.740775",
+          "metrics": {
+            "season_context": "COMMAND_PROFILE",
+            "season": 2026,
+            "k_pct": "34.9%",
+            "bb_pct": "4.8%",
+            "k_bb_ratio": "7.25",
+            "babip": "0.367",
+            "batters_faced": 83,
+            "strikeouts": 29,
+            "walks": 4
+          },
+          "source_path": "dist/ivb_heat_map.json"
+        }
+      ],
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/671922/headshot/67/current",
+      "bats": "R",
+      "throws": "R",
+      "universe_match": true,
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "34.9%",
+        "bb_pct": "4.8%",
+        "k_bb_ratio": "7.25",
+        "babip": "0.367",
+        "batters_faced": 83,
+        "strikeouts": 29,
+        "walks": 4
       }
     },
     {
@@ -1049,12 +1184,13 @@
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "28.1%",
-            "bb_pct": "12.5%",
-            "k_bb_ratio": "2.25",
-            "batters_faced": 64,
-            "strikeouts": 18,
-            "walks": 8
+            "k_pct": "24.1%",
+            "bb_pct": "15.2%",
+            "k_bb_ratio": "1.58",
+            "babip": "0.156",
+            "batters_faced": 79,
+            "strikeouts": 19,
+            "walks": 12
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         },
@@ -1066,12 +1202,13 @@
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "28.1%",
-            "bb_pct": "12.5%",
-            "k_bb_ratio": "2.25",
-            "batters_faced": 64,
-            "strikeouts": 18,
-            "walks": 8
+            "k_pct": "24.1%",
+            "bb_pct": "15.2%",
+            "k_bb_ratio": "1.58",
+            "babip": "0.156",
+            "batters_faced": 79,
+            "strikeouts": 19,
+            "walks": 12
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         },
@@ -1091,12 +1228,13 @@
             "analysis": "Elite ballistic profile detected. Ride and approach angle are both moving in the right direction, creating a high-end breakout structure.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "28.1%",
-            "bb_pct": "12.5%",
-            "k_bb_ratio": "2.25",
-            "batters_faced": 64,
-            "strikeouts": 18,
-            "walks": 8
+            "k_pct": "24.1%",
+            "bb_pct": "15.2%",
+            "k_bb_ratio": "1.58",
+            "babip": "0.156",
+            "batters_faced": 79,
+            "strikeouts": 19,
+            "walks": 12
           },
           "source_path": "dist/stuff_disruption_feed.json"
         }
@@ -1109,13 +1247,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "28.1%",
-        "bb_pct": "12.5%",
-        "k_bb_ratio": "2.25",
-        "babip": null,
-        "batters_faced": 64,
-        "strikeouts": 18,
-        "walks": 8
+        "k_pct": "24.1%",
+        "bb_pct": "15.2%",
+        "k_bb_ratio": "1.58",
+        "babip": "0.156",
+        "batters_faced": 79,
+        "strikeouts": 19,
+        "walks": 12
       }
     },
     {
@@ -1137,12 +1275,13 @@
             "why": "Pittsburgh Pirates recalled RHP Cam Sanders from Indianapolis Indians.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "26.7%",
-            "bb_pct": "13.3%",
-            "k_bb_ratio": "2.00",
-            "batters_faced": 15,
-            "strikeouts": 4,
-            "walks": 2
+            "k_pct": "25.9%",
+            "bb_pct": "18.5%",
+            "k_bb_ratio": "1.40",
+            "babip": "0.462",
+            "batters_faced": 27,
+            "strikeouts": 7,
+            "walks": 5
           },
           "source_path": "dist/typical-call-up/promotion_watch.json"
         }
@@ -1155,13 +1294,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "26.7%",
-        "bb_pct": "13.3%",
-        "k_bb_ratio": "2.00",
-        "babip": null,
-        "batters_faced": 15,
-        "strikeouts": 4,
-        "walks": 2
+        "k_pct": "25.9%",
+        "bb_pct": "18.5%",
+        "k_bb_ratio": "1.40",
+        "babip": "0.462",
+        "batters_faced": 27,
+        "strikeouts": 7,
+        "walks": 5
       }
     },
     {
@@ -1190,11 +1329,12 @@
             "why": "Whiff rate 18.3% (+0.0 pts vs baseline), FB velo 97.6 mph (+1.5).",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "29.3%",
-            "bb_pct": "5.0%",
-            "k_bb_ratio": "5.89",
-            "batters_faced": 181,
-            "strikeouts": 53,
+            "k_pct": "29.2%",
+            "bb_pct": "4.5%",
+            "k_bb_ratio": "6.56",
+            "babip": "0.250",
+            "batters_faced": 202,
+            "strikeouts": 59,
             "walks": 9
           },
           "source_path": "dist/signals.json"
@@ -1208,12 +1348,12 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "29.3%",
-        "bb_pct": "5.0%",
-        "k_bb_ratio": "5.89",
-        "babip": null,
-        "batters_faced": 181,
-        "strikeouts": 53,
+        "k_pct": "29.2%",
+        "bb_pct": "4.5%",
+        "k_bb_ratio": "6.56",
+        "babip": "0.250",
+        "batters_faced": 202,
+        "strikeouts": 59,
         "walks": 9
       }
     },
@@ -1334,12 +1474,13 @@
             "body_copy": "Velocity has moved first and the bat-miss support is already there. The visible line usually catches up later.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "28.6%",
-            "bb_pct": "8.1%",
-            "k_bb_ratio": "3.54",
-            "batters_faced": 161,
-            "strikeouts": 46,
-            "walks": 13
+            "k_pct": "26.1%",
+            "bb_pct": "8.7%",
+            "k_bb_ratio": "3.00",
+            "babip": "0.237",
+            "batters_faced": 184,
+            "strikeouts": 48,
+            "walks": 16
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         },
@@ -1356,12 +1497,13 @@
             "body_copy": "Velocity has moved first and the bat-miss support is already there. The visible line usually catches up later.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "28.6%",
-            "bb_pct": "8.1%",
-            "k_bb_ratio": "3.54",
-            "batters_faced": 161,
-            "strikeouts": 46,
-            "walks": 13
+            "k_pct": "26.1%",
+            "bb_pct": "8.7%",
+            "k_bb_ratio": "3.00",
+            "babip": "0.237",
+            "batters_faced": 184,
+            "strikeouts": 48,
+            "walks": 16
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         },
@@ -1381,12 +1523,13 @@
             "why": "Whiff rate 17.8% (+0.1 pts vs baseline), FB velo 98.3 mph (+0.7).",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "28.6%",
-            "bb_pct": "8.1%",
-            "k_bb_ratio": "3.54",
-            "batters_faced": 161,
-            "strikeouts": 46,
-            "walks": 13
+            "k_pct": "26.1%",
+            "bb_pct": "8.7%",
+            "k_bb_ratio": "3.00",
+            "babip": "0.237",
+            "batters_faced": 184,
+            "strikeouts": 48,
+            "walks": 16
           },
           "source_path": "dist/signals.json"
         }
@@ -1399,13 +1542,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "28.6%",
-        "bb_pct": "8.1%",
-        "k_bb_ratio": "3.54",
-        "babip": null,
-        "batters_faced": 161,
-        "strikeouts": 46,
-        "walks": 13
+        "k_pct": "26.1%",
+        "bb_pct": "8.7%",
+        "k_bb_ratio": "3.00",
+        "babip": "0.237",
+        "batters_faced": 184,
+        "strikeouts": 48,
+        "walks": 16
       }
     },
     {
@@ -1429,6 +1572,7 @@
             "season": 2026,
             "k_pct": "20.0%",
             "bb_pct": "0.0%",
+            "babip": "0.000",
             "batters_faced": 5,
             "strikeouts": 1,
             "walks": 0
@@ -1447,7 +1591,7 @@
         "k_pct": "20.0%",
         "bb_pct": "0.0%",
         "k_bb_ratio": null,
-        "babip": null,
+        "babip": "0.000",
         "batters_faced": 5,
         "strikeouts": 1,
         "walks": 0
@@ -1479,11 +1623,12 @@
             "why": "Whiff rate 18.6% (+0.1 pts vs baseline), FB velo 95.7 mph (+0.4).",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "29.9%",
-            "bb_pct": "7.3%",
-            "k_bb_ratio": "4.08",
-            "batters_faced": 164,
-            "strikeouts": 49,
+            "k_pct": "29.3%",
+            "bb_pct": "6.3%",
+            "k_bb_ratio": "4.67",
+            "babip": "0.223",
+            "batters_faced": 191,
+            "strikeouts": 56,
             "walks": 12
           },
           "source_path": "dist/signals.json"
@@ -1497,12 +1642,12 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "29.9%",
-        "bb_pct": "7.3%",
-        "k_bb_ratio": "4.08",
-        "babip": null,
-        "batters_faced": 164,
-        "strikeouts": 49,
+        "k_pct": "29.3%",
+        "bb_pct": "6.3%",
+        "k_bb_ratio": "4.67",
+        "babip": "0.223",
+        "batters_faced": 191,
+        "strikeouts": 56,
         "walks": 12
       }
     },
@@ -1525,12 +1670,13 @@
             "why": "New York Mets recalled RHP Christian Scott from Syracuse Mets.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "31.0%",
-            "bb_pct": "17.2%",
-            "k_bb_ratio": "1.80",
-            "batters_faced": 29,
-            "strikeouts": 9,
-            "walks": 5
+            "k_pct": "28.6%",
+            "bb_pct": "12.9%",
+            "k_bb_ratio": "2.22",
+            "babip": "0.324",
+            "batters_faced": 70,
+            "strikeouts": 20,
+            "walks": 9
           },
           "source_path": "dist/typical-call-up/promotion_watch.json"
         }
@@ -1543,13 +1689,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "31.0%",
-        "bb_pct": "17.2%",
-        "k_bb_ratio": "1.80",
-        "babip": null,
-        "batters_faced": 29,
-        "strikeouts": 9,
-        "walks": 5
+        "k_pct": "28.6%",
+        "bb_pct": "12.9%",
+        "k_bb_ratio": "2.22",
+        "babip": "0.324",
+        "batters_faced": 70,
+        "strikeouts": 20,
+        "walks": 9
       }
     },
     {
@@ -1570,13 +1716,13 @@
           "metrics": {
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "6.2%",
-            "k_pct": "37.5%",
-            "bb_k_ratio": "0.17",
-            "babip": ".500",
-            "plate_appearances": 16,
-            "strikeouts": 6,
-            "walks": 1
+            "bb_pct": "5.9%",
+            "k_pct": "38.2%",
+            "bb_k_ratio": "0.15",
+            "babip": ".278",
+            "plate_appearances": 34,
+            "strikeouts": 13,
+            "walks": 2
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         },
@@ -1588,13 +1734,13 @@
           "metrics": {
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "6.2%",
-            "k_pct": "37.5%",
-            "bb_k_ratio": "0.17",
-            "babip": ".500",
-            "plate_appearances": 16,
-            "strikeouts": 6,
-            "walks": 1
+            "bb_pct": "5.9%",
+            "k_pct": "38.2%",
+            "bb_k_ratio": "0.15",
+            "babip": ".278",
+            "plate_appearances": 34,
+            "strikeouts": 13,
+            "walks": 2
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         }
@@ -1607,13 +1753,13 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "6.2%",
-        "k_pct": "37.5%",
-        "bb_k_ratio": "0.17",
-        "babip": ".500",
-        "plate_appearances": 16,
-        "strikeouts": 6,
-        "walks": 1
+        "bb_pct": "5.9%",
+        "k_pct": "38.2%",
+        "bb_k_ratio": "0.15",
+        "babip": ".278",
+        "plate_appearances": 34,
+        "strikeouts": 13,
+        "walks": 2
       }
     },
     {
@@ -1638,6 +1784,7 @@
             "k_pct": "12.3%",
             "bb_pct": "15.1%",
             "k_bb_ratio": "0.82",
+            "babip": "0.275",
             "batters_faced": 73,
             "strikeouts": 9,
             "walks": 11
@@ -1655,6 +1802,7 @@
             "k_pct": "12.3%",
             "bb_pct": "15.1%",
             "k_bb_ratio": "0.82",
+            "babip": "0.275",
             "batters_faced": 73,
             "strikeouts": 9,
             "walks": 11
@@ -1680,6 +1828,7 @@
             "k_pct": "12.3%",
             "bb_pct": "15.1%",
             "k_bb_ratio": "0.82",
+            "babip": "0.275",
             "batters_faced": 73,
             "strikeouts": 9,
             "walks": 11
@@ -1698,7 +1847,7 @@
         "k_pct": "12.3%",
         "bb_pct": "15.1%",
         "k_bb_ratio": "0.82",
-        "babip": null,
+        "babip": "0.275",
         "batters_faced": 73,
         "strikeouts": 9,
         "walks": 11
@@ -1758,12 +1907,13 @@
             "body_copy": "Velocity has moved first and the bat-miss support is already there. The visible line usually catches up later.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "29.7%",
+            "k_pct": "29.8%",
             "bb_pct": "15.2%",
-            "k_bb_ratio": "1.95",
-            "batters_faced": 138,
-            "strikeouts": 41,
-            "walks": 21
+            "k_bb_ratio": "1.96",
+            "babip": "0.233",
+            "batters_faced": 151,
+            "strikeouts": 45,
+            "walks": 23
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         },
@@ -1780,12 +1930,13 @@
             "body_copy": "Velocity has moved first and the bat-miss support is already there. The visible line usually catches up later.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "29.7%",
+            "k_pct": "29.8%",
             "bb_pct": "15.2%",
-            "k_bb_ratio": "1.95",
-            "batters_faced": 138,
-            "strikeouts": 41,
-            "walks": 21
+            "k_bb_ratio": "1.96",
+            "babip": "0.233",
+            "batters_faced": 151,
+            "strikeouts": 45,
+            "walks": 23
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         }
@@ -1798,148 +1949,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "29.7%",
+        "k_pct": "29.8%",
         "bb_pct": "15.2%",
-        "k_bb_ratio": "1.95",
-        "babip": null,
-        "batters_faced": 138,
-        "strikeouts": 41,
-        "walks": 21
-      }
-    },
-    {
-      "player_id": 663485,
-      "player_name": "Cole Sands",
-      "search_name": "cole sands",
-      "team": "MIN",
-      "position": "P",
-      "reports_triggered": [
-        "IVB Heat Map"
-      ],
-      "signals": [
-        {
-          "report_key": "ivb_heat_map",
-          "report_label": "IVB Heat Map",
-          "section": "fallers",
-          "generated_at": "2026-05-01T08:12:57.471574",
-          "metrics": {
-            "season_context": "COMMAND_PROFILE",
-            "season": 2026,
-            "k_pct": "22.0%",
-            "bb_pct": "8.0%",
-            "k_bb_ratio": "2.75",
-            "batters_faced": 50,
-            "strikeouts": 11,
-            "walks": 4
-          },
-          "source_path": "dist/ivb_heat_map.json"
-        }
-      ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/663485/headshot/67/current",
-      "bats": "R",
-      "throws": "R",
-      "universe_match": true,
-      "season_context": {
-        "season_context": "COMMAND_PROFILE",
-        "season": 2026,
-        "k_pct": "22.0%",
-        "bb_pct": "8.0%",
-        "k_bb_ratio": "2.75",
-        "babip": null,
-        "batters_faced": 50,
-        "strikeouts": 11,
-        "walks": 4
-      }
-    },
-    {
-      "player_id": 681867,
-      "player_name": "Cooper Criswell",
-      "search_name": "cooper criswell",
-      "team": "MIN",
-      "position": "P",
-      "reports_triggered": [
-        "IVB Heat Map"
-      ],
-      "signals": [
-        {
-          "report_key": "ivb_heat_map",
-          "report_label": "IVB Heat Map",
-          "section": "fallers",
-          "generated_at": "2026-05-01T08:12:57.471574",
-          "metrics": {
-            "season_context": "COMMAND_PROFILE",
-            "season": 2026,
-            "k_pct": "25.0%",
-            "bb_pct": "5.4%",
-            "k_bb_ratio": "4.67",
-            "batters_faced": 56,
-            "strikeouts": 14,
-            "walks": 3
-          },
-          "source_path": "dist/ivb_heat_map.json"
-        }
-      ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/681867/headshot/67/current",
-      "bats": "R",
-      "throws": "R",
-      "universe_match": true,
-      "season_context": {
-        "season_context": "COMMAND_PROFILE",
-        "season": 2026,
-        "k_pct": "25.0%",
-        "bb_pct": "5.4%",
-        "k_bb_ratio": "4.67",
-        "babip": null,
-        "batters_faced": 56,
-        "strikeouts": 14,
-        "walks": 3
-      }
-    },
-    {
-      "player_id": 688158,
-      "player_name": "David Morgan",
-      "search_name": "david morgan",
-      "team": "SD",
-      "position": "P",
-      "reports_triggered": [
-        "IVB Heat Map"
-      ],
-      "signals": [
-        {
-          "report_key": "ivb_heat_map",
-          "report_label": "IVB Heat Map",
-          "section": "climbers",
-          "generated_at": "2026-05-01T08:12:57.471574",
-          "metrics": {
-            "season_context": "COMMAND_PROFILE",
-            "season": 2026,
-            "k_pct": "22.1%",
-            "bb_pct": "16.2%",
-            "k_bb_ratio": "1.36",
-            "batters_faced": 68,
-            "strikeouts": 15,
-            "walks": 11
-          },
-          "source_path": "dist/ivb_heat_map.json"
-        }
-      ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/688158/headshot/67/current",
-      "bats": "R",
-      "throws": "R",
-      "universe_match": true,
-      "season_context": {
-        "season_context": "COMMAND_PROFILE",
-        "season": 2026,
-        "k_pct": "22.1%",
-        "bb_pct": "16.2%",
-        "k_bb_ratio": "1.36",
-        "babip": null,
-        "batters_faced": 68,
-        "strikeouts": 15,
-        "walks": 11
+        "k_bb_ratio": "1.96",
+        "babip": "0.233",
+        "batters_faced": 151,
+        "strikeouts": 45,
+        "walks": 23
       }
     },
     {
@@ -1961,12 +1977,13 @@
             "why": "Atlanta Braves recalled RHP Didier Fuentes from Gwinnett Stripers.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "26.7%",
-            "bb_pct": "6.7%",
-            "k_bb_ratio": "4.00",
-            "batters_faced": 45,
-            "strikeouts": 12,
-            "walks": 3
+            "k_pct": "29.7%",
+            "bb_pct": "7.8%",
+            "k_bb_ratio": "3.80",
+            "babip": "0.263",
+            "batters_faced": 64,
+            "strikeouts": 19,
+            "walks": 5
           },
           "source_path": "dist/typical-call-up/promotion_watch.json"
         }
@@ -1979,13 +1996,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "26.7%",
-        "bb_pct": "6.7%",
-        "k_bb_ratio": "4.00",
-        "babip": null,
-        "batters_faced": 45,
-        "strikeouts": 12,
-        "walks": 3
+        "k_pct": "29.7%",
+        "bb_pct": "7.8%",
+        "k_bb_ratio": "3.80",
+        "babip": "0.263",
+        "batters_faced": 64,
+        "strikeouts": 19,
+        "walks": 5
       }
     },
     {
@@ -2014,12 +2031,13 @@
             "why": "K/BB 5.00 • 10 K • 2 BB over 40 BF",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "29.6%",
-            "bb_pct": "22.2%",
-            "k_bb_ratio": "1.33",
-            "batters_faced": 27,
-            "strikeouts": 8,
-            "walks": 6
+            "k_pct": "22.9%",
+            "bb_pct": "16.7%",
+            "k_bb_ratio": "1.38",
+            "babip": "0.241",
+            "batters_faced": 48,
+            "strikeouts": 11,
+            "walks": 8
           },
           "source_path": "dist/typical-call-up/promotion_watch.json"
         }
@@ -2032,20 +2050,20 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "29.6%",
-        "bb_pct": "22.2%",
-        "k_bb_ratio": "1.33",
-        "babip": null,
-        "batters_faced": 27,
-        "strikeouts": 8,
-        "walks": 6
+        "k_pct": "22.9%",
+        "bb_pct": "16.7%",
+        "k_bb_ratio": "1.38",
+        "babip": "0.241",
+        "batters_faced": 48,
+        "strikeouts": 11,
+        "walks": 8
       }
     },
     {
-      "player_id": 900171285,
+      "player_id": 900424805,
       "player_name": "Drew Pomeranz",
       "search_name": "drew pomeranz",
-      "team": "KC",
+      "team": "LAA",
       "position": "P",
       "reports_triggered": [
         "IVB Heat Map"
@@ -2055,22 +2073,22 @@
           "report_key": "ivb_heat_map",
           "report_label": "IVB Heat Map",
           "section": "heat_cards",
-          "generated_at": "2026-05-01T08:12:57.471574",
+          "generated_at": "2026-05-13T10:40:02.740775",
           "metrics": {
-            "ivb_vs_avg": "+6.7\"",
-            "ivb_raw": "18.6\"",
-            "vaa": "-4.9°",
+            "ivb_vs_avg": "+6.9\"",
+            "ivb_raw": "19.0\"",
+            "vaa": "-4.7°",
             "whiff_probability": "MEDIUM",
-            "dead_zone_label": "COLD",
+            "dead_zone_label": "CLEAR",
             "heat_class": "hot",
             "band_label": "Apex Carry",
             "heat_tag": "HOT // APEX RISE",
-            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.9°."
+            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.7°."
           },
           "source_path": "dist/ivb_heat_map.json"
         }
       ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/519141/headshot/67/current",
       "bats": "R",
       "throws": "L",
@@ -2103,13 +2121,13 @@
             "why": "Avg EV 84.9 mph (+4.1 vs baseline), barrel-like rate 15.4%.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "28.6%",
-            "k_pct": "14.3%",
-            "bb_k_ratio": "2.00",
-            "babip": ".000",
-            "plate_appearances": 21,
-            "strikeouts": 3,
-            "walks": 6
+            "bb_pct": "20.0%",
+            "k_pct": "22.5%",
+            "bb_k_ratio": "0.89",
+            "babip": ".056",
+            "plate_appearances": 40,
+            "strikeouts": 9,
+            "walks": 8
           },
           "source_path": "dist/signals.json"
         },
@@ -2122,13 +2140,13 @@
             "why": "Chicago White Sox selected the contract of C Drew Romo from Charlotte Knights.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "28.6%",
-            "k_pct": "14.3%",
-            "bb_k_ratio": "2.00",
-            "babip": ".000",
-            "plate_appearances": 21,
-            "strikeouts": 3,
-            "walks": 6
+            "bb_pct": "20.0%",
+            "k_pct": "22.5%",
+            "bb_k_ratio": "0.89",
+            "babip": ".056",
+            "plate_appearances": 40,
+            "strikeouts": 9,
+            "walks": 8
           },
           "source_path": "dist/typical-call-up/promotion_watch.json"
         }
@@ -2141,20 +2159,20 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "28.6%",
-        "k_pct": "14.3%",
-        "bb_k_ratio": "2.00",
-        "babip": ".000",
-        "plate_appearances": 21,
-        "strikeouts": 3,
-        "walks": 6
+        "bb_pct": "20.0%",
+        "k_pct": "22.5%",
+        "bb_k_ratio": "0.89",
+        "babip": ".056",
+        "plate_appearances": 40,
+        "strikeouts": 9,
+        "walks": 8
       }
     },
     {
-      "player_id": 900046943,
+      "player_id": 900918760,
       "player_name": "Dylan Lee",
       "search_name": "dylan lee",
-      "team": "ATL",
+      "team": "LAD",
       "position": "P",
       "reports_triggered": [
         "IVB Heat Map"
@@ -2164,22 +2182,22 @@
           "report_key": "ivb_heat_map",
           "report_label": "IVB Heat Map",
           "section": "heat_cards",
-          "generated_at": "2026-05-01T08:12:57.471574",
+          "generated_at": "2026-05-13T10:40:02.740775",
           "metrics": {
-            "ivb_vs_avg": "+7.0\"",
+            "ivb_vs_avg": "+6.7\"",
             "ivb_raw": "19.5\"",
-            "vaa": "-5.6°",
+            "vaa": "-5.3°",
             "whiff_probability": "MEDIUM",
             "dead_zone_label": "CLEAR",
             "heat_class": "hot",
             "band_label": "Apex Carry",
             "heat_tag": "HOT // APEX RISE",
-            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -5.6°."
+            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -5.3°."
           },
           "source_path": "dist/ivb_heat_map.json"
         }
       ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/669276/headshot/67/current",
       "bats": "L",
       "throws": "L",
@@ -2211,12 +2229,13 @@
             "why": "Whiff rate 18.2% (+0.1 pts vs baseline), FB velo 96.4 mph (+0.8).",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "21.6%",
-            "bb_pct": "8.2%",
-            "k_bb_ratio": "2.64",
-            "batters_faced": 171,
-            "strikeouts": 37,
-            "walks": 14
+            "k_pct": "22.4%",
+            "bb_pct": "7.8%",
+            "k_bb_ratio": "2.87",
+            "babip": "0.312",
+            "batters_faced": 192,
+            "strikeouts": 43,
+            "walks": 15
           },
           "source_path": "dist/signals.json"
         }
@@ -2229,13 +2248,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "21.6%",
-        "bb_pct": "8.2%",
-        "k_bb_ratio": "2.64",
-        "babip": null,
-        "batters_faced": 171,
-        "strikeouts": 37,
-        "walks": 14
+        "k_pct": "22.4%",
+        "bb_pct": "7.8%",
+        "k_bb_ratio": "2.87",
+        "babip": "0.312",
+        "batters_faced": 192,
+        "strikeouts": 43,
+        "walks": 15
       }
     },
     {
@@ -2292,12 +2311,12 @@
             "body_copy": "The damage profile is live even if the visible output still looks incomplete. This is a hard-contact mismatch.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "10.7%",
-            "k_pct": "28.3%",
-            "bb_k_ratio": "0.38",
-            "babip": ".333",
-            "plate_appearances": 159,
-            "strikeouts": 45,
+            "bb_pct": "8.9%",
+            "k_pct": "27.7%",
+            "bb_k_ratio": "0.32",
+            "babip": ".369",
+            "plate_appearances": 191,
+            "strikeouts": 53,
             "walks": 17
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
@@ -2315,12 +2334,12 @@
             "body_copy": "The damage profile is live even if the visible output still looks incomplete. This is a hard-contact mismatch.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "10.7%",
-            "k_pct": "28.3%",
-            "bb_k_ratio": "0.38",
-            "babip": ".333",
-            "plate_appearances": 159,
-            "strikeouts": 45,
+            "bb_pct": "8.9%",
+            "k_pct": "27.7%",
+            "bb_k_ratio": "0.32",
+            "babip": ".369",
+            "plate_appearances": 191,
+            "strikeouts": 53,
             "walks": 17
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
@@ -2334,12 +2353,12 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "10.7%",
-        "k_pct": "28.3%",
-        "bb_k_ratio": "0.38",
-        "babip": ".333",
-        "plate_appearances": 159,
-        "strikeouts": 45,
+        "bb_pct": "8.9%",
+        "k_pct": "27.7%",
+        "bb_k_ratio": "0.32",
+        "babip": ".369",
+        "plate_appearances": 191,
+        "strikeouts": 53,
         "walks": 17
       }
     },
@@ -2372,6 +2391,7 @@
             "k_pct": "11.4%",
             "bb_pct": "18.2%",
             "k_bb_ratio": "0.62",
+            "babip": "0.345",
             "batters_faced": 44,
             "strikeouts": 5,
             "walks": 8
@@ -2390,7 +2410,7 @@
         "k_pct": "11.4%",
         "bb_pct": "18.2%",
         "k_bb_ratio": "0.62",
-        "babip": null,
+        "babip": "0.345",
         "batters_faced": 44,
         "strikeouts": 5,
         "walks": 8
@@ -2403,44 +2423,9 @@
       "team": "CIN",
       "position": "P",
       "reports_triggered": [
-        "IVB Heat Map",
         "Velocity Decay"
       ],
       "signals": [
-        {
-          "report_key": "ivb_heat_map",
-          "report_label": "IVB Heat Map",
-          "section": "climbers",
-          "generated_at": "2026-05-01T08:12:57.471574",
-          "metrics": {
-            "season_context": "COMMAND_PROFILE",
-            "season": 2026,
-            "k_pct": "17.7%",
-            "bb_pct": "9.7%",
-            "k_bb_ratio": "1.83",
-            "batters_faced": 62,
-            "strikeouts": 11,
-            "walks": 6
-          },
-          "source_path": "dist/ivb_heat_map.json"
-        },
-        {
-          "report_key": "ivb_heat_map",
-          "report_label": "IVB Heat Map",
-          "section": "entered_apex",
-          "generated_at": "2026-05-01T08:12:57.471574",
-          "metrics": {
-            "season_context": "COMMAND_PROFILE",
-            "season": 2026,
-            "k_pct": "17.7%",
-            "bb_pct": "9.7%",
-            "k_bb_ratio": "1.83",
-            "batters_faced": 62,
-            "strikeouts": 11,
-            "walks": 6
-          },
-          "source_path": "dist/ivb_heat_map.json"
-        },
         {
           "report_key": "velocity_decay",
           "report_label": "Velocity Decay",
@@ -2460,6 +2445,7 @@
             "k_pct": "17.7%",
             "bb_pct": "9.7%",
             "k_bb_ratio": "1.83",
+            "babip": "0.268",
             "batters_faced": 62,
             "strikeouts": 11,
             "walks": 6
@@ -2467,7 +2453,7 @@
           "source_path": "dist/velocity_decay_monitor.json"
         }
       ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
+      "latest_generated_at": "2026-04-30T14:56:12.706032",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/641941/headshot/67/current",
       "bats": "L",
       "throws": "R",
@@ -2478,11 +2464,46 @@
         "k_pct": "17.7%",
         "bb_pct": "9.7%",
         "k_bb_ratio": "1.83",
-        "babip": null,
+        "babip": "0.268",
         "batters_faced": 62,
         "strikeouts": 11,
         "walks": 6
       }
+    },
+    {
+      "player_id": 900018644,
+      "player_name": "Erik Sabrowski",
+      "search_name": "erik sabrowski",
+      "team": "KC",
+      "position": "P",
+      "reports_triggered": [
+        "IVB Heat Map"
+      ],
+      "signals": [
+        {
+          "report_key": "ivb_heat_map",
+          "report_label": "IVB Heat Map",
+          "section": "heat_cards",
+          "generated_at": "2026-05-13T10:40:02.740775",
+          "metrics": {
+            "ivb_vs_avg": "+6.9\"",
+            "ivb_raw": "19.6\"",
+            "vaa": "-4.2°",
+            "whiff_probability": "HIGH",
+            "dead_zone_label": "CLEAR",
+            "heat_class": "hot",
+            "band_label": "Apex Carry",
+            "heat_tag": "HOT // APEX RISE",
+            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.2°."
+          },
+          "source_path": "dist/ivb_heat_map.json"
+        }
+      ],
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/681870/headshot/67/current",
+      "bats": "R",
+      "throws": "L",
+      "universe_match": true
     },
     {
       "player_id": "518585",
@@ -2491,7 +2512,8 @@
       "team": "NYY",
       "position": "SP",
       "reports_triggered": [
-        "MLB Extraction Ledger"
+        "MLB Extraction Ledger",
+        "IVB Heat Map"
       ],
       "signals": [
         {
@@ -2507,12 +2529,13 @@
             "body_copy": "Velocity has moved first and the bat-miss support is already there. The visible line usually catches up later.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "32.3%",
-            "bb_pct": "16.1%",
-            "k_bb_ratio": "2.00",
-            "batters_faced": 62,
-            "strikeouts": 20,
-            "walks": 10
+            "k_pct": "32.4%",
+            "bb_pct": "14.9%",
+            "k_bb_ratio": "2.18",
+            "babip": "0.314",
+            "batters_faced": 74,
+            "strikeouts": 24,
+            "walks": 11
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         },
@@ -2529,17 +2552,36 @@
             "body_copy": "Velocity has moved first and the bat-miss support is already there. The visible line usually catches up later.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "32.3%",
-            "bb_pct": "16.1%",
-            "k_bb_ratio": "2.00",
-            "batters_faced": 62,
-            "strikeouts": 20,
-            "walks": 10
+            "k_pct": "32.4%",
+            "bb_pct": "14.9%",
+            "k_bb_ratio": "2.18",
+            "babip": "0.314",
+            "batters_faced": 74,
+            "strikeouts": 24,
+            "walks": 11
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
+        },
+        {
+          "report_key": "ivb_heat_map",
+          "report_label": "IVB Heat Map",
+          "section": "fallers",
+          "generated_at": "2026-05-13T10:40:02.740775",
+          "metrics": {
+            "season_context": "COMMAND_PROFILE",
+            "season": 2026,
+            "k_pct": "32.4%",
+            "bb_pct": "14.9%",
+            "k_bb_ratio": "2.18",
+            "babip": "0.314",
+            "batters_faced": 74,
+            "strikeouts": 24,
+            "walks": 11
+          },
+          "source_path": "dist/ivb_heat_map.json"
         }
       ],
-      "latest_generated_at": "2026-04-30 02:57 PM",
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/518585/headshot/67/current",
       "bats": "R",
       "throws": "R",
@@ -2547,49 +2589,14 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "32.3%",
-        "bb_pct": "16.1%",
-        "k_bb_ratio": "2.00",
-        "babip": null,
-        "batters_faced": 62,
-        "strikeouts": 20,
-        "walks": 10
+        "k_pct": "32.4%",
+        "bb_pct": "14.9%",
+        "k_bb_ratio": "2.18",
+        "babip": "0.314",
+        "batters_faced": 74,
+        "strikeouts": 24,
+        "walks": 11
       }
-    },
-    {
-      "player_id": 900931031,
-      "player_name": "Garrett Acton",
-      "search_name": "garrett acton",
-      "team": "TB",
-      "position": "P",
-      "reports_triggered": [
-        "IVB Heat Map"
-      ],
-      "signals": [
-        {
-          "report_key": "ivb_heat_map",
-          "report_label": "IVB Heat Map",
-          "section": "heat_cards",
-          "generated_at": "2026-05-01T08:12:57.471574",
-          "metrics": {
-            "ivb_vs_avg": "+7.6\"",
-            "ivb_raw": "20.7\"",
-            "vaa": "-4.9°",
-            "whiff_probability": "MEDIUM",
-            "dead_zone_label": "CLEAR",
-            "heat_class": "hot",
-            "band_label": "Apex Carry",
-            "heat_tag": "HOT // APEX RISE",
-            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.9°."
-          },
-          "source_path": "dist/ivb_heat_map.json"
-        }
-      ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/670183/headshot/67/current",
-      "bats": "L",
-      "throws": "R",
-      "universe_match": true
     },
     {
       "player_id": "666277",
@@ -2614,12 +2621,13 @@
             "body_copy": "Underlying pitch quality is holding firmer than the surface line. The market read still looks behind the actual signal.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "19.7%",
-            "bb_pct": "13.6%",
-            "k_bb_ratio": "1.44",
-            "batters_faced": 66,
-            "strikeouts": 13,
-            "walks": 9
+            "k_pct": "19.5%",
+            "bb_pct": "13.0%",
+            "k_bb_ratio": "1.50",
+            "babip": "0.204",
+            "batters_faced": 77,
+            "strikeouts": 15,
+            "walks": 10
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         }
@@ -2632,13 +2640,59 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "19.7%",
-        "bb_pct": "13.6%",
-        "k_bb_ratio": "1.44",
-        "babip": null,
-        "batters_faced": 66,
-        "strikeouts": 13,
-        "walks": 9
+        "k_pct": "19.5%",
+        "bb_pct": "13.0%",
+        "k_bb_ratio": "1.50",
+        "babip": "0.204",
+        "batters_faced": 77,
+        "strikeouts": 15,
+        "walks": 10
+      }
+    },
+    {
+      "player_id": 642397,
+      "player_name": "Gregory Soto",
+      "search_name": "gregory soto",
+      "team": "PIT",
+      "position": "P",
+      "reports_triggered": [
+        "IVB Heat Map"
+      ],
+      "signals": [
+        {
+          "report_key": "ivb_heat_map",
+          "report_label": "IVB Heat Map",
+          "section": "climbers",
+          "generated_at": "2026-05-13T10:40:02.740775",
+          "metrics": {
+            "season_context": "COMMAND_PROFILE",
+            "season": 2026,
+            "k_pct": "32.9%",
+            "bb_pct": "8.9%",
+            "k_bb_ratio": "3.71",
+            "babip": "0.159",
+            "batters_faced": 79,
+            "strikeouts": 26,
+            "walks": 7
+          },
+          "source_path": "dist/ivb_heat_map.json"
+        }
+      ],
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/642397/headshot/67/current",
+      "bats": "L",
+      "throws": "L",
+      "universe_match": true,
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "32.9%",
+        "bb_pct": "8.9%",
+        "k_bb_ratio": "3.71",
+        "babip": "0.159",
+        "batters_faced": 79,
+        "strikeouts": 26,
+        "walks": 7
       }
     },
     {
@@ -2689,10 +2743,6 @@
         }
       ],
       "latest_generated_at": "2026-05-01T13:13:41.553216+00:00",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/665052/headshot/67/current",
-      "bats": "L",
-      "throws": "R",
-      "universe_match": true,
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
@@ -2706,10 +2756,10 @@
       }
     },
     {
-      "player_id": 663687,
-      "player_name": "Hogan Harris",
-      "search_name": "hogan harris",
-      "team": "ATH",
+      "player_id": 900753402,
+      "player_name": "Gus Varland",
+      "search_name": "gus varland",
+      "team": "WSH",
       "position": "P",
       "reports_triggered": [
         "IVB Heat Map"
@@ -2718,37 +2768,27 @@
         {
           "report_key": "ivb_heat_map",
           "report_label": "IVB Heat Map",
-          "section": "entered_apex",
-          "generated_at": "2026-05-01T08:12:57.471574",
+          "section": "heat_cards",
+          "generated_at": "2026-05-13T10:40:02.740775",
           "metrics": {
-            "season_context": "COMMAND_PROFILE",
-            "season": 2026,
-            "k_pct": "21.6%",
-            "bb_pct": "18.2%",
-            "k_bb_ratio": "1.19",
-            "batters_faced": 88,
-            "strikeouts": 19,
-            "walks": 16
+            "ivb_vs_avg": "+7.0\"",
+            "ivb_raw": "20.1\"",
+            "vaa": "-3.4°",
+            "whiff_probability": "HIGH",
+            "dead_zone_label": "CLEAR",
+            "heat_class": "hot",
+            "band_label": "Apex Carry",
+            "heat_tag": "HOT // APEX RISE",
+            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -3.4°."
           },
           "source_path": "dist/ivb_heat_map.json"
         }
       ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/663687/headshot/67/current",
-      "bats": "R",
-      "throws": "L",
-      "universe_match": true,
-      "season_context": {
-        "season_context": "COMMAND_PROFILE",
-        "season": 2026,
-        "k_pct": "21.6%",
-        "bb_pct": "18.2%",
-        "k_bb_ratio": "1.19",
-        "babip": null,
-        "batters_faced": 88,
-        "strikeouts": 19,
-        "walks": 16
-      }
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/681402/headshot/67/current",
+      "bats": "L",
+      "throws": "R",
+      "universe_match": true
     },
     {
       "player_id": 682995,
@@ -2772,6 +2812,7 @@
             "k_pct": "13.3%",
             "bb_pct": "15.0%",
             "k_bb_ratio": "0.89",
+            "babip": "0.289",
             "batters_faced": 60,
             "strikeouts": 8,
             "walks": 9
@@ -2790,17 +2831,17 @@
         "k_pct": "13.3%",
         "bb_pct": "15.0%",
         "k_bb_ratio": "0.89",
-        "babip": null,
+        "babip": "0.289",
         "batters_faced": 60,
         "strikeouts": 8,
         "walks": 9
       }
     },
     {
-      "player_id": 693855,
-      "player_name": "Ian Seymour",
-      "search_name": "ian seymour",
-      "team": "CLE",
+      "player_id": 685801,
+      "player_name": "Hunter Bigge",
+      "search_name": "hunter bigge",
+      "team": "TOR",
       "position": "P",
       "reports_triggered": [
         "IVB Heat Map"
@@ -2809,36 +2850,37 @@
         {
           "report_key": "ivb_heat_map",
           "report_label": "IVB Heat Map",
-          "section": "fallers",
-          "generated_at": "2026-05-01T08:12:57.471574",
+          "section": "entered_apex",
+          "generated_at": "2026-05-13T10:40:02.740775",
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "26.3%",
-            "bb_pct": "9.2%",
-            "k_bb_ratio": "2.86",
-            "batters_faced": 76,
-            "strikeouts": 20,
-            "walks": 7
+            "k_pct": "19.7%",
+            "bb_pct": "13.1%",
+            "k_bb_ratio": "1.50",
+            "babip": "0.100",
+            "batters_faced": 61,
+            "strikeouts": 12,
+            "walks": 8
           },
           "source_path": "dist/ivb_heat_map.json"
         }
       ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/693855/headshot/67/current",
-      "bats": "L",
-      "throws": "L",
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/685801/headshot/67/current",
+      "bats": "R",
+      "throws": "R",
       "universe_match": true,
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "26.3%",
-        "bb_pct": "9.2%",
-        "k_bb_ratio": "2.86",
-        "babip": null,
-        "batters_faced": 76,
-        "strikeouts": 20,
-        "walks": 7
+        "k_pct": "19.7%",
+        "bb_pct": "13.1%",
+        "k_bb_ratio": "1.50",
+        "babip": "0.100",
+        "batters_faced": 61,
+        "strikeouts": 12,
+        "walks": 8
       }
     },
     {
@@ -2873,10 +2915,10 @@
       "manual_identity_resolver": true
     },
     {
-      "player_id": 900222914,
+      "player_id": 900651756,
       "player_name": "Jack Dreyer",
       "search_name": "jack dreyer",
-      "team": "LAD",
+      "team": "HOU",
       "position": "P",
       "reports_triggered": [
         "IVB Heat Map"
@@ -2886,22 +2928,22 @@
           "report_key": "ivb_heat_map",
           "report_label": "IVB Heat Map",
           "section": "heat_cards",
-          "generated_at": "2026-05-01T08:12:57.471574",
+          "generated_at": "2026-05-13T10:40:02.740775",
           "metrics": {
-            "ivb_vs_avg": "+7.4\"",
+            "ivb_vs_avg": "+7.7\"",
             "ivb_raw": "20.3\"",
-            "vaa": "-4.3°",
+            "vaa": "-4.4°",
             "whiff_probability": "HIGH",
             "dead_zone_label": "CLEAR",
             "heat_class": "hot",
             "band_label": "Apex Carry",
             "heat_tag": "HOT // APEX RISE",
-            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.3°."
+            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.4°."
           },
           "source_path": "dist/ivb_heat_map.json"
         }
       ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/676263/headshot/67/current",
       "bats": "R",
       "throws": "L",
@@ -2930,11 +2972,12 @@
             "body_copy": "Whiff support is improving while the fastball is still firm. The market has not fully priced in the shape change yet.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "31.3%",
-            "bb_pct": "5.3%",
-            "k_bb_ratio": "5.88",
-            "batters_faced": 150,
-            "strikeouts": 47,
+            "k_pct": "32.8%",
+            "bb_pct": "4.6%",
+            "k_bb_ratio": "7.12",
+            "babip": "0.262",
+            "batters_faced": 174,
+            "strikeouts": 57,
             "walks": 8
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
@@ -2952,11 +2995,12 @@
             "body_copy": "Whiff support is improving while the fastball is still firm. The market has not fully priced in the shape change yet.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "31.3%",
-            "bb_pct": "5.3%",
-            "k_bb_ratio": "5.88",
-            "batters_faced": 150,
-            "strikeouts": 47,
+            "k_pct": "32.8%",
+            "bb_pct": "4.6%",
+            "k_bb_ratio": "7.12",
+            "babip": "0.262",
+            "batters_faced": 174,
+            "strikeouts": 57,
             "walks": 8
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
@@ -2970,13 +3014,59 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "31.3%",
-        "bb_pct": "5.3%",
-        "k_bb_ratio": "5.88",
-        "babip": null,
-        "batters_faced": 150,
-        "strikeouts": 47,
+        "k_pct": "32.8%",
+        "bb_pct": "4.6%",
+        "k_bb_ratio": "7.12",
+        "babip": "0.262",
+        "batters_faced": 174,
+        "strikeouts": 57,
         "walks": 8
+      }
+    },
+    {
+      "player_id": 656641,
+      "player_name": "Jacob Latz",
+      "search_name": "jacob latz",
+      "team": "TEX",
+      "position": "P",
+      "reports_triggered": [
+        "IVB Heat Map"
+      ],
+      "signals": [
+        {
+          "report_key": "ivb_heat_map",
+          "report_label": "IVB Heat Map",
+          "section": "entered_apex",
+          "generated_at": "2026-05-13T10:40:02.740775",
+          "metrics": {
+            "season_context": "COMMAND_PROFILE",
+            "season": 2026,
+            "k_pct": "21.5%",
+            "bb_pct": "6.3%",
+            "k_bb_ratio": "3.40",
+            "babip": "0.125",
+            "batters_faced": 79,
+            "strikeouts": 17,
+            "walks": 5
+          },
+          "source_path": "dist/ivb_heat_map.json"
+        }
+      ],
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/656641/headshot/67/current",
+      "bats": "R",
+      "throws": "L",
+      "universe_match": true,
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "21.5%",
+        "bb_pct": "6.3%",
+        "k_bb_ratio": "3.40",
+        "babip": "0.125",
+        "batters_faced": 79,
+        "strikeouts": 17,
+        "walks": 5
       }
     },
     {
@@ -3003,12 +3093,13 @@
             "body_copy": "Whiff support is improving while the fastball is still firm. The market has not fully priced in the shape change yet.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "38.1%",
-            "bb_pct": "9.7%",
-            "k_bb_ratio": "3.93",
-            "batters_faced": 155,
-            "strikeouts": 59,
-            "walks": 15
+            "k_pct": "39.6%",
+            "bb_pct": "8.4%",
+            "k_bb_ratio": "4.71",
+            "babip": "0.260",
+            "batters_faced": 202,
+            "strikeouts": 80,
+            "walks": 17
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         },
@@ -3025,12 +3116,13 @@
             "body_copy": "Whiff support is improving while the fastball is still firm. The market has not fully priced in the shape change yet.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "38.1%",
-            "bb_pct": "9.7%",
-            "k_bb_ratio": "3.93",
-            "batters_faced": 155,
-            "strikeouts": 59,
-            "walks": 15
+            "k_pct": "39.6%",
+            "bb_pct": "8.4%",
+            "k_bb_ratio": "4.71",
+            "babip": "0.260",
+            "batters_faced": 202,
+            "strikeouts": 80,
+            "walks": 17
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         },
@@ -3050,12 +3142,13 @@
             "why": "Whiff rate 22.4% (+0.1 pts vs baseline), FB velo 100.7 mph (+1.4).",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "38.1%",
-            "bb_pct": "9.7%",
-            "k_bb_ratio": "3.93",
-            "batters_faced": 155,
-            "strikeouts": 59,
-            "walks": 15
+            "k_pct": "39.6%",
+            "bb_pct": "8.4%",
+            "k_bb_ratio": "4.71",
+            "babip": "0.260",
+            "batters_faced": 202,
+            "strikeouts": 80,
+            "walks": 17
           },
           "source_path": "dist/signals.json"
         }
@@ -3068,13 +3161,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "38.1%",
-        "bb_pct": "9.7%",
-        "k_bb_ratio": "3.93",
-        "babip": null,
-        "batters_faced": 155,
-        "strikeouts": 59,
-        "walks": 15
+        "k_pct": "39.6%",
+        "bb_pct": "8.4%",
+        "k_bb_ratio": "4.71",
+        "babip": "0.260",
+        "batters_faced": 202,
+        "strikeouts": 80,
+        "walks": 17
       }
     },
     {
@@ -3095,13 +3188,13 @@
           "metrics": {
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "4.7%",
-            "k_pct": "32.6%",
-            "bb_k_ratio": "0.14",
-            "babip": ".280",
-            "plate_appearances": 43,
-            "strikeouts": 14,
-            "walks": 2
+            "bb_pct": "5.7%",
+            "k_pct": "35.8%",
+            "bb_k_ratio": "0.16",
+            "babip": ".241",
+            "plate_appearances": 53,
+            "strikeouts": 19,
+            "walks": 3
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         },
@@ -3113,13 +3206,13 @@
           "metrics": {
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "4.7%",
-            "k_pct": "32.6%",
-            "bb_k_ratio": "0.14",
-            "babip": ".280",
-            "plate_appearances": 43,
-            "strikeouts": 14,
-            "walks": 2
+            "bb_pct": "5.7%",
+            "k_pct": "35.8%",
+            "bb_k_ratio": "0.16",
+            "babip": ".241",
+            "plate_appearances": 53,
+            "strikeouts": 19,
+            "walks": 3
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         }
@@ -3132,57 +3225,12 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "4.7%",
-        "k_pct": "32.6%",
-        "bb_k_ratio": "0.14",
-        "babip": ".280",
-        "plate_appearances": 43,
-        "strikeouts": 14,
-        "walks": 2
-      }
-    },
-    {
-      "player_id": 656234,
-      "player_name": "Jake Bird",
-      "search_name": "jake bird",
-      "team": "TEX",
-      "position": "P",
-      "reports_triggered": [
-        "IVB Heat Map"
-      ],
-      "signals": [
-        {
-          "report_key": "ivb_heat_map",
-          "report_label": "IVB Heat Map",
-          "section": "climbers",
-          "generated_at": "2026-05-01T08:12:57.471574",
-          "metrics": {
-            "season_context": "COMMAND_PROFILE",
-            "season": 2026,
-            "k_pct": "24.5%",
-            "bb_pct": "6.1%",
-            "k_bb_ratio": "4.00",
-            "batters_faced": 49,
-            "strikeouts": 12,
-            "walks": 3
-          },
-          "source_path": "dist/ivb_heat_map.json"
-        }
-      ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/656234/headshot/67/current",
-      "bats": "R",
-      "throws": "R",
-      "universe_match": true,
-      "season_context": {
-        "season_context": "COMMAND_PROFILE",
-        "season": 2026,
-        "k_pct": "24.5%",
-        "bb_pct": "6.1%",
-        "k_bb_ratio": "4.00",
-        "babip": null,
-        "batters_faced": 49,
-        "strikeouts": 12,
+        "bb_pct": "5.7%",
+        "k_pct": "35.8%",
+        "bb_k_ratio": "0.16",
+        "babip": ".241",
+        "plate_appearances": 53,
+        "strikeouts": 19,
         "walks": 3
       }
     },
@@ -3212,11 +3260,12 @@
             "why": "K/BB 7.00 • 7 K • 0 BB over 23 BF",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "20.0%",
-            "bb_pct": "20.0%",
-            "k_bb_ratio": "1.00",
-            "batters_faced": 25,
-            "strikeouts": 5,
+            "k_pct": "17.6%",
+            "bb_pct": "14.7%",
+            "k_bb_ratio": "1.20",
+            "babip": "0.429",
+            "batters_faced": 34,
+            "strikeouts": 6,
             "walks": 5
           },
           "source_path": "dist/typical-call-up/promotion_watch.json"
@@ -3230,12 +3279,12 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "20.0%",
-        "bb_pct": "20.0%",
-        "k_bb_ratio": "1.00",
-        "babip": null,
-        "batters_faced": 25,
-        "strikeouts": 5,
+        "k_pct": "17.6%",
+        "bb_pct": "14.7%",
+        "k_bb_ratio": "1.20",
+        "babip": "0.429",
+        "batters_faced": 34,
+        "strikeouts": 6,
         "walks": 5
       }
     },
@@ -3258,12 +3307,12 @@
             "why": "New York Yankees recalled LF Jasson Domínguez from Scranton/Wilkes-Barre RailRiders.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "3.6%",
-            "k_pct": "10.7%",
-            "bb_k_ratio": "0.33",
-            "babip": ".227",
-            "plate_appearances": 28,
-            "strikeouts": 3,
+            "bb_pct": "3.1%",
+            "k_pct": "12.5%",
+            "bb_k_ratio": "0.25",
+            "babip": ".200",
+            "plate_appearances": 32,
+            "strikeouts": 4,
             "walks": 1
           },
           "source_path": "dist/typical-call-up/promotion_watch.json"
@@ -3277,20 +3326,20 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "3.6%",
-        "k_pct": "10.7%",
-        "bb_k_ratio": "0.33",
-        "babip": ".227",
-        "plate_appearances": 28,
-        "strikeouts": 3,
+        "bb_pct": "3.1%",
+        "k_pct": "12.5%",
+        "bb_k_ratio": "0.25",
+        "babip": ".200",
+        "plate_appearances": 32,
+        "strikeouts": 4,
         "walks": 1
       }
     },
     {
-      "player_id": 605488,
-      "player_name": "Jeffrey Springs",
-      "search_name": "jeffrey springs",
-      "team": "ATH",
+      "player_id": 661395,
+      "player_name": "Jhoan Duran",
+      "search_name": "jhoan duran",
+      "team": "BOS",
       "position": "P",
       "reports_triggered": [
         "IVB Heat Map"
@@ -3299,36 +3348,37 @@
         {
           "report_key": "ivb_heat_map",
           "report_label": "IVB Heat Map",
-          "section": "entered_apex",
-          "generated_at": "2026-05-01T08:12:57.471574",
+          "section": "fallers",
+          "generated_at": "2026-05-13T10:40:02.740775",
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "22.2%",
-            "bb_pct": "7.6%",
-            "k_bb_ratio": "2.92",
-            "batters_faced": 158,
-            "strikeouts": 35,
-            "walks": 12
+            "k_pct": "37.2%",
+            "bb_pct": "9.3%",
+            "k_bb_ratio": "4.00",
+            "babip": "0.348",
+            "batters_faced": 43,
+            "strikeouts": 16,
+            "walks": 4
           },
           "source_path": "dist/ivb_heat_map.json"
         }
       ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/605488/headshot/67/current",
-      "bats": "L",
-      "throws": "L",
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/661395/headshot/67/current",
+      "bats": "R",
+      "throws": "R",
       "universe_match": true,
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "22.2%",
-        "bb_pct": "7.6%",
-        "k_bb_ratio": "2.92",
-        "babip": null,
-        "batters_faced": 158,
-        "strikeouts": 35,
-        "walks": 12
+        "k_pct": "37.2%",
+        "bb_pct": "9.3%",
+        "k_bb_ratio": "4.00",
+        "babip": "0.348",
+        "batters_faced": 43,
+        "strikeouts": 16,
+        "walks": 4
       }
     },
     {
@@ -3386,12 +3436,12 @@
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
             "bb_pct": "10.9%",
-            "k_pct": "17.6%",
-            "bb_k_ratio": "0.62",
-            "babip": ".250",
-            "plate_appearances": 165,
-            "strikeouts": 29,
-            "walks": 18
+            "k_pct": "17.1%",
+            "bb_k_ratio": "0.64",
+            "babip": ".262",
+            "plate_appearances": 193,
+            "strikeouts": 33,
+            "walks": 21
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         },
@@ -3409,12 +3459,12 @@
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
             "bb_pct": "10.9%",
-            "k_pct": "17.6%",
-            "bb_k_ratio": "0.62",
-            "babip": ".250",
-            "plate_appearances": 165,
-            "strikeouts": 29,
-            "walks": 18
+            "k_pct": "17.1%",
+            "bb_k_ratio": "0.64",
+            "babip": ".262",
+            "plate_appearances": 193,
+            "strikeouts": 33,
+            "walks": 21
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         }
@@ -3428,12 +3478,58 @@
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
         "bb_pct": "10.9%",
-        "k_pct": "17.6%",
-        "bb_k_ratio": "0.62",
-        "babip": ".250",
-        "plate_appearances": 165,
-        "strikeouts": 29,
-        "walks": 18
+        "k_pct": "17.1%",
+        "bb_k_ratio": "0.64",
+        "babip": ".262",
+        "plate_appearances": 193,
+        "strikeouts": 33,
+        "walks": 21
+      }
+    },
+    {
+      "player_id": 670167,
+      "player_name": "John Schreiber",
+      "search_name": "john schreiber",
+      "team": "KC",
+      "position": "P",
+      "reports_triggered": [
+        "IVB Heat Map"
+      ],
+      "signals": [
+        {
+          "report_key": "ivb_heat_map",
+          "report_label": "IVB Heat Map",
+          "section": "climbers",
+          "generated_at": "2026-05-13T10:40:02.740775",
+          "metrics": {
+            "season_context": "COMMAND_PROFILE",
+            "season": 2026,
+            "k_pct": "9.3%",
+            "bb_pct": "13.3%",
+            "k_bb_ratio": "0.70",
+            "babip": "0.245",
+            "batters_faced": 75,
+            "strikeouts": 7,
+            "walks": 10
+          },
+          "source_path": "dist/ivb_heat_map.json"
+        }
+      ],
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/670167/headshot/67/current",
+      "bats": "R",
+      "throws": "R",
+      "universe_match": true,
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "9.3%",
+        "bb_pct": "13.3%",
+        "k_bb_ratio": "0.70",
+        "babip": "0.245",
+        "batters_faced": 75,
+        "strikeouts": 7,
+        "walks": 10
       }
     },
     {
@@ -3493,11 +3589,11 @@
             "why": "Aggressive contact shape",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "7.0%",
-            "k_pct": "14.0%",
+            "bb_pct": "6.7%",
+            "k_pct": "13.3%",
             "bb_k_ratio": "0.50",
-            "babip": ".290",
-            "plate_appearances": 86,
+            "babip": ".288",
+            "plate_appearances": 90,
             "strikeouts": 12,
             "walks": 6
           },
@@ -3512,11 +3608,11 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "7.0%",
-        "k_pct": "14.0%",
+        "bb_pct": "6.7%",
+        "k_pct": "13.3%",
         "bb_k_ratio": "0.50",
-        "babip": ".290",
-        "plate_appearances": 86,
+        "babip": ".288",
+        "plate_appearances": 90,
         "strikeouts": 12,
         "walks": 6
       }
@@ -3607,6 +3703,7 @@
             "k_pct": "25.0%",
             "bb_pct": "11.8%",
             "k_bb_ratio": "2.12",
+            "babip": "0.184",
             "batters_faced": 68,
             "strikeouts": 17,
             "walks": 8
@@ -3625,7 +3722,7 @@
         "k_pct": "25.0%",
         "bb_pct": "11.8%",
         "k_bb_ratio": "2.12",
-        "babip": null,
+        "babip": "0.184",
         "batters_faced": 68,
         "strikeouts": 17,
         "walks": 8
@@ -3657,13 +3754,13 @@
             "why": "Avg EV 90.9 mph (+5.6 vs baseline), barrel-like rate 2.4%.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "10.7%",
-            "k_pct": "28.7%",
-            "bb_k_ratio": "0.37",
-            "babip": ".375",
-            "plate_appearances": 150,
-            "strikeouts": 43,
-            "walks": 16
+            "bb_pct": "10.8%",
+            "k_pct": "28.4%",
+            "bb_k_ratio": "0.38",
+            "babip": ".358",
+            "plate_appearances": 176,
+            "strikeouts": 50,
+            "walks": 19
           },
           "source_path": "dist/signals.json"
         }
@@ -3676,20 +3773,20 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "10.7%",
-        "k_pct": "28.7%",
-        "bb_k_ratio": "0.37",
-        "babip": ".375",
-        "plate_appearances": 150,
-        "strikeouts": 43,
-        "walks": 16
+        "bb_pct": "10.8%",
+        "k_pct": "28.4%",
+        "bb_k_ratio": "0.38",
+        "babip": ".358",
+        "plate_appearances": 176,
+        "strikeouts": 50,
+        "walks": 19
       }
     },
     {
       "player_id": 683742,
       "player_name": "Jose Franco",
       "search_name": "jose franco",
-      "team": "Cincinnati Reds",
+      "team": "Louisville Bats",
       "position": "P",
       "reports_triggered": [
         "Promotion Watch"
@@ -3704,12 +3801,13 @@
             "why": "Cincinnati Reds recalled RHP Jose Franco from Louisville Bats.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "18.6%",
-            "bb_pct": "16.9%",
-            "k_bb_ratio": "1.10",
-            "batters_faced": 59,
-            "strikeouts": 11,
-            "walks": 10
+            "k_pct": "17.9%",
+            "bb_pct": "16.4%",
+            "k_bb_ratio": "1.09",
+            "babip": "0.310",
+            "batters_faced": 67,
+            "strikeouts": 12,
+            "walks": 11
           },
           "source_path": "dist/typical-call-up/promotion_watch.json"
         }
@@ -3722,13 +3820,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "18.6%",
-        "bb_pct": "16.9%",
-        "k_bb_ratio": "1.10",
-        "babip": null,
-        "batters_faced": 59,
-        "strikeouts": 11,
-        "walks": 10
+        "k_pct": "17.9%",
+        "bb_pct": "16.4%",
+        "k_bb_ratio": "1.09",
+        "babip": "0.310",
+        "batters_faced": 67,
+        "strikeouts": 12,
+        "walks": 11
       }
     },
     {
@@ -3750,12 +3848,13 @@
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "23.0%",
-            "bb_pct": "14.9%",
-            "k_bb_ratio": "1.54",
-            "batters_faced": 87,
-            "strikeouts": 20,
-            "walks": 13
+            "k_pct": "23.2%",
+            "bb_pct": "14.7%",
+            "k_bb_ratio": "1.57",
+            "babip": "0.185",
+            "batters_faced": 95,
+            "strikeouts": 22,
+            "walks": 14
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         },
@@ -3767,12 +3866,13 @@
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "23.0%",
-            "bb_pct": "14.9%",
-            "k_bb_ratio": "1.54",
-            "batters_faced": 87,
-            "strikeouts": 20,
-            "walks": 13
+            "k_pct": "23.2%",
+            "bb_pct": "14.7%",
+            "k_bb_ratio": "1.57",
+            "babip": "0.185",
+            "batters_faced": 95,
+            "strikeouts": 22,
+            "walks": 14
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         },
@@ -3792,12 +3892,13 @@
             "analysis": "Movement quality appears to be improving through more efficient spin conversion, not just raw effort. Breakout conditions are building.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "23.0%",
-            "bb_pct": "14.9%",
-            "k_bb_ratio": "1.54",
-            "batters_faced": 87,
-            "strikeouts": 20,
-            "walks": 13
+            "k_pct": "23.2%",
+            "bb_pct": "14.7%",
+            "k_bb_ratio": "1.57",
+            "babip": "0.185",
+            "batters_faced": 95,
+            "strikeouts": 22,
+            "walks": 14
           },
           "source_path": "dist/stuff_disruption_feed.json"
         }
@@ -3810,20 +3911,20 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "23.0%",
-        "bb_pct": "14.9%",
-        "k_bb_ratio": "1.54",
-        "babip": null,
-        "batters_faced": 87,
-        "strikeouts": 20,
-        "walks": 13
+        "k_pct": "23.2%",
+        "bb_pct": "14.7%",
+        "k_bb_ratio": "1.57",
+        "babip": "0.185",
+        "batters_faced": 95,
+        "strikeouts": 22,
+        "walks": 14
       }
     },
     {
-      "player_id": 666661,
-      "player_name": "Juan Morillo",
-      "search_name": "juan morillo",
-      "team": "MIL",
+      "player_id": 675848,
+      "player_name": "Juan Mejia",
+      "search_name": "juan mejia",
+      "team": "PHI",
       "position": "P",
       "reports_triggered": [
         "IVB Heat Map"
@@ -3833,35 +3934,36 @@
           "report_key": "ivb_heat_map",
           "report_label": "IVB Heat Map",
           "section": "climbers",
-          "generated_at": "2026-05-01T08:12:57.471574",
+          "generated_at": "2026-05-13T10:40:02.740775",
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "31.1%",
-            "bb_pct": "6.6%",
-            "k_bb_ratio": "4.75",
-            "batters_faced": 61,
-            "strikeouts": 19,
-            "walks": 4
+            "k_pct": "28.7%",
+            "bb_pct": "10.3%",
+            "k_bb_ratio": "2.78",
+            "babip": "0.400",
+            "batters_faced": 87,
+            "strikeouts": 25,
+            "walks": 9
           },
           "source_path": "dist/ivb_heat_map.json"
         }
       ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/666661/headshot/67/current",
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/675848/headshot/67/current",
       "bats": "R",
       "throws": "R",
       "universe_match": true,
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "31.1%",
-        "bb_pct": "6.6%",
-        "k_bb_ratio": "4.75",
-        "babip": null,
-        "batters_faced": 61,
-        "strikeouts": 19,
-        "walks": 4
+        "k_pct": "28.7%",
+        "bb_pct": "10.3%",
+        "k_bb_ratio": "2.78",
+        "babip": "0.400",
+        "batters_faced": 87,
+        "strikeouts": 25,
+        "walks": 9
       }
     },
     {
@@ -3887,13 +3989,13 @@
             "body_copy": "Barrel-like contact is showing up often enough to matter. The surface stats have not fully caught up yet.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "15.1%",
-            "k_pct": "16.3%",
-            "bb_k_ratio": "0.93",
-            "babip": ".339",
-            "plate_appearances": 86,
-            "strikeouts": 14,
-            "walks": 13
+            "bb_pct": "13.0%",
+            "k_pct": "15.7%",
+            "bb_k_ratio": "0.83",
+            "babip": ".282",
+            "plate_appearances": 115,
+            "strikeouts": 18,
+            "walks": 15
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         },
@@ -3910,13 +4012,13 @@
             "body_copy": "Barrel-like contact is showing up often enough to matter. The surface stats have not fully caught up yet.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "15.1%",
-            "k_pct": "16.3%",
-            "bb_k_ratio": "0.93",
-            "babip": ".339",
-            "plate_appearances": 86,
-            "strikeouts": 14,
-            "walks": 13
+            "bb_pct": "13.0%",
+            "k_pct": "15.7%",
+            "bb_k_ratio": "0.83",
+            "babip": ".282",
+            "plate_appearances": 115,
+            "strikeouts": 18,
+            "walks": 15
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         }
@@ -3929,13 +4031,13 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "15.1%",
-        "k_pct": "16.3%",
-        "bb_k_ratio": "0.93",
-        "babip": ".339",
-        "plate_appearances": 86,
-        "strikeouts": 14,
-        "walks": 13
+        "bb_pct": "13.0%",
+        "k_pct": "15.7%",
+        "bb_k_ratio": "0.83",
+        "babip": ".282",
+        "plate_appearances": 115,
+        "strikeouts": 18,
+        "walks": 15
       }
     },
     {
@@ -3961,13 +4063,13 @@
             "body_copy": "Average impact has improved faster than the box-score line. The market is still staring at the wrong layer.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "12.3%",
-            "k_pct": "17.4%",
+            "bb_pct": "11.5%",
+            "k_pct": "16.4%",
             "bb_k_ratio": "0.70",
-            "babip": ".250",
-            "plate_appearances": 155,
-            "strikeouts": 27,
-            "walks": 19
+            "babip": ".248",
+            "plate_appearances": 183,
+            "strikeouts": 30,
+            "walks": 21
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         }
@@ -3980,13 +4082,13 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "12.3%",
-        "k_pct": "17.4%",
+        "bb_pct": "11.5%",
+        "k_pct": "16.4%",
         "bb_k_ratio": "0.70",
-        "babip": ".250",
-        "plate_appearances": 155,
-        "strikeouts": 27,
-        "walks": 19
+        "babip": ".248",
+        "plate_appearances": 183,
+        "strikeouts": 30,
+        "walks": 21
       }
     },
     {
@@ -4015,12 +4117,13 @@
             "analysis": "Velocity loss paired with shortening extension. Strong indicator of latent injury or mechanical breakdown risk.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "24.7%",
-            "bb_pct": "7.9%",
-            "k_bb_ratio": "3.14",
-            "batters_faced": 89,
-            "strikeouts": 22,
-            "walks": 7
+            "k_pct": "22.1%",
+            "bb_pct": "7.7%",
+            "k_bb_ratio": "2.88",
+            "babip": "0.246",
+            "batters_faced": 104,
+            "strikeouts": 23,
+            "walks": 8
           },
           "source_path": "dist/velocity_decay_monitor.json"
         }
@@ -4033,13 +4136,59 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "24.7%",
-        "bb_pct": "7.9%",
-        "k_bb_ratio": "3.14",
-        "babip": null,
-        "batters_faced": 89,
-        "strikeouts": 22,
-        "walks": 7
+        "k_pct": "22.1%",
+        "bb_pct": "7.7%",
+        "k_bb_ratio": "2.88",
+        "babip": "0.246",
+        "batters_faced": 104,
+        "strikeouts": 23,
+        "walks": 8
+      }
+    },
+    {
+      "player_id": 489446,
+      "player_name": "Kirby Yates",
+      "search_name": "kirby yates",
+      "team": "CLE",
+      "position": "P",
+      "reports_triggered": [
+        "IVB Heat Map"
+      ],
+      "signals": [
+        {
+          "report_key": "ivb_heat_map",
+          "report_label": "IVB Heat Map",
+          "section": "fallers",
+          "generated_at": "2026-05-13T10:40:02.740775",
+          "metrics": {
+            "season_context": "COMMAND_PROFILE",
+            "season": 2026,
+            "k_pct": "22.2%",
+            "bb_pct": "11.1%",
+            "k_bb_ratio": "2.00",
+            "babip": "0.500",
+            "batters_faced": 9,
+            "strikeouts": 2,
+            "walks": 1
+          },
+          "source_path": "dist/ivb_heat_map.json"
+        }
+      ],
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/489446/headshot/67/current",
+      "bats": "L",
+      "throws": "R",
+      "universe_match": true,
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "22.2%",
+        "bb_pct": "11.1%",
+        "k_bb_ratio": "2.00",
+        "babip": "0.500",
+        "batters_faced": 9,
+        "strikeouts": 2,
+        "walks": 1
       }
     },
     {
@@ -4065,12 +4214,13 @@
             "body_copy": "The miss profile is stronger than the surface line suggests. Underlying pitch quality is beating public perception.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "29.2%",
-            "bb_pct": "7.5%",
-            "k_bb_ratio": "3.89",
-            "batters_faced": 120,
-            "strikeouts": 35,
-            "walks": 9
+            "k_pct": "29.3%",
+            "bb_pct": "9.3%",
+            "k_bb_ratio": "3.15",
+            "babip": "0.312",
+            "batters_faced": 140,
+            "strikeouts": 41,
+            "walks": 13
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         }
@@ -4083,13 +4233,58 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "29.2%",
-        "bb_pct": "7.5%",
-        "k_bb_ratio": "3.89",
-        "babip": null,
-        "batters_faced": 120,
-        "strikeouts": 35,
-        "walks": 9
+        "k_pct": "29.3%",
+        "bb_pct": "9.3%",
+        "k_bb_ratio": "3.15",
+        "babip": "0.312",
+        "batters_faced": 140,
+        "strikeouts": 41,
+        "walks": 13
+      }
+    },
+    {
+      "player_id": 701121,
+      "player_name": "Logan VanWey",
+      "search_name": "logan vanwey",
+      "team": "CIN",
+      "position": "P",
+      "reports_triggered": [
+        "IVB Heat Map"
+      ],
+      "signals": [
+        {
+          "report_key": "ivb_heat_map",
+          "report_label": "IVB Heat Map",
+          "section": "fallers",
+          "generated_at": "2026-05-13T10:40:02.740775",
+          "metrics": {
+            "season_context": "COMMAND_PROFILE",
+            "season": 2026,
+            "k_pct": "42.9%",
+            "bb_pct": "0.0%",
+            "babip": "0.250",
+            "batters_faced": 7,
+            "strikeouts": 3,
+            "walks": 0
+          },
+          "source_path": "dist/ivb_heat_map.json"
+        }
+      ],
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/701121/headshot/67/current",
+      "bats": "R",
+      "throws": "R",
+      "universe_match": true,
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "42.9%",
+        "bb_pct": "0.0%",
+        "k_bb_ratio": null,
+        "babip": "0.250",
+        "batters_faced": 7,
+        "strikeouts": 3,
+        "walks": 0
       }
     },
     {
@@ -4115,12 +4310,13 @@
             "body_copy": "Whiff support is improving while the fastball is still firm. The market has not fully priced in the shape change yet.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "39.7%",
-            "bb_pct": "9.6%",
-            "k_bb_ratio": "4.14",
-            "batters_faced": 73,
-            "strikeouts": 29,
-            "walks": 7
+            "k_pct": "36.8%",
+            "bb_pct": "10.3%",
+            "k_bb_ratio": "3.56",
+            "babip": "0.370",
+            "batters_faced": 87,
+            "strikeouts": 32,
+            "walks": 9
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         },
@@ -4137,12 +4333,13 @@
             "body_copy": "Whiff support is improving while the fastball is still firm. The market has not fully priced in the shape change yet.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "39.7%",
-            "bb_pct": "9.6%",
-            "k_bb_ratio": "4.14",
-            "batters_faced": 73,
-            "strikeouts": 29,
-            "walks": 7
+            "k_pct": "36.8%",
+            "bb_pct": "10.3%",
+            "k_bb_ratio": "3.56",
+            "babip": "0.370",
+            "batters_faced": 87,
+            "strikeouts": 32,
+            "walks": 9
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         }
@@ -4155,13 +4352,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "39.7%",
-        "bb_pct": "9.6%",
-        "k_bb_ratio": "4.14",
-        "babip": null,
-        "batters_faced": 73,
-        "strikeouts": 29,
-        "walks": 7
+        "k_pct": "36.8%",
+        "bb_pct": "10.3%",
+        "k_bb_ratio": "3.56",
+        "babip": "0.370",
+        "batters_faced": 87,
+        "strikeouts": 32,
+        "walks": 9
       }
     },
     {
@@ -4214,12 +4411,13 @@
             "why": "Kansas City Royals recalled RHP Luinder Avila from Omaha Storm Chasers.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "20.5%",
-            "bb_pct": "9.1%",
-            "k_bb_ratio": "2.25",
-            "batters_faced": 44,
-            "strikeouts": 9,
-            "walks": 4
+            "k_pct": "22.6%",
+            "bb_pct": "11.3%",
+            "k_bb_ratio": "2.00",
+            "babip": "0.450",
+            "batters_faced": 62,
+            "strikeouts": 14,
+            "walks": 7
           },
           "source_path": "dist/typical-call-up/promotion_watch.json"
         }
@@ -4232,13 +4430,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "20.5%",
-        "bb_pct": "9.1%",
-        "k_bb_ratio": "2.25",
-        "babip": null,
-        "batters_faced": 44,
-        "strikeouts": 9,
-        "walks": 4
+        "k_pct": "22.6%",
+        "bb_pct": "11.3%",
+        "k_bb_ratio": "2.00",
+        "babip": "0.450",
+        "batters_faced": 62,
+        "strikeouts": 14,
+        "walks": 7
       }
     },
     {
@@ -4264,12 +4462,12 @@
             "body_copy": "Average impact has improved faster than the box-score line. The market is still staring at the wrong layer.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "3.6%",
-            "k_pct": "17.0%",
-            "bb_k_ratio": "0.21",
-            "babip": ".273",
-            "plate_appearances": 112,
-            "strikeouts": 19,
+            "bb_pct": "3.1%",
+            "k_pct": "15.4%",
+            "bb_k_ratio": "0.20",
+            "babip": ".301",
+            "plate_appearances": 130,
+            "strikeouts": 20,
             "walks": 4
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
@@ -4283,57 +4481,12 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "3.6%",
-        "k_pct": "17.0%",
-        "bb_k_ratio": "0.21",
-        "babip": ".273",
-        "plate_appearances": 112,
-        "strikeouts": 19,
-        "walks": 4
-      }
-    },
-    {
-      "player_id": 596133,
-      "player_name": "Luke Weaver",
-      "search_name": "luke weaver",
-      "team": "NYM",
-      "position": "P",
-      "reports_triggered": [
-        "IVB Heat Map"
-      ],
-      "signals": [
-        {
-          "report_key": "ivb_heat_map",
-          "report_label": "IVB Heat Map",
-          "section": "entered_apex",
-          "generated_at": "2026-05-01T08:12:57.471574",
-          "metrics": {
-            "season_context": "COMMAND_PROFILE",
-            "season": 2026,
-            "k_pct": "22.4%",
-            "bb_pct": "6.9%",
-            "k_bb_ratio": "3.25",
-            "batters_faced": 58,
-            "strikeouts": 13,
-            "walks": 4
-          },
-          "source_path": "dist/ivb_heat_map.json"
-        }
-      ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/596133/headshot/67/current",
-      "bats": "R",
-      "throws": "R",
-      "universe_match": true,
-      "season_context": {
-        "season_context": "COMMAND_PROFILE",
-        "season": 2026,
-        "k_pct": "22.4%",
-        "bb_pct": "6.9%",
-        "k_bb_ratio": "3.25",
-        "babip": null,
-        "batters_faced": 58,
-        "strikeouts": 13,
+        "bb_pct": "3.1%",
+        "k_pct": "15.4%",
+        "bb_k_ratio": "0.20",
+        "babip": ".301",
+        "plate_appearances": 130,
+        "strikeouts": 20,
         "walks": 4
       }
     },
@@ -4356,12 +4509,13 @@
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "55.2%",
-            "bb_pct": "5.2%",
-            "k_bb_ratio": "10.67",
-            "batters_faced": 58,
-            "strikeouts": 32,
-            "walks": 3
+            "k_pct": "55.6%",
+            "bb_pct": "6.9%",
+            "k_bb_ratio": "8.00",
+            "babip": "0.296",
+            "batters_faced": 72,
+            "strikeouts": 40,
+            "walks": 5
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         },
@@ -4373,12 +4527,13 @@
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "55.2%",
-            "bb_pct": "5.2%",
-            "k_bb_ratio": "10.67",
-            "batters_faced": 58,
-            "strikeouts": 32,
-            "walks": 3
+            "k_pct": "55.6%",
+            "bb_pct": "6.9%",
+            "k_bb_ratio": "8.00",
+            "babip": "0.296",
+            "batters_faced": 72,
+            "strikeouts": 40,
+            "walks": 5
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         },
@@ -4398,12 +4553,13 @@
             "analysis": "Shape profile is moving, but not yet in a fully qualified disruption tier. Keep this arm on the radar for another appearance.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "55.2%",
-            "bb_pct": "5.2%",
-            "k_bb_ratio": "10.67",
-            "batters_faced": 58,
-            "strikeouts": 32,
-            "walks": 3
+            "k_pct": "55.6%",
+            "bb_pct": "6.9%",
+            "k_bb_ratio": "8.00",
+            "babip": "0.296",
+            "batters_faced": 72,
+            "strikeouts": 40,
+            "walks": 5
           },
           "source_path": "dist/stuff_disruption_feed.json"
         }
@@ -4416,13 +4572,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "55.2%",
-        "bb_pct": "5.2%",
-        "k_bb_ratio": "10.67",
-        "babip": null,
-        "batters_faced": 58,
-        "strikeouts": 32,
-        "walks": 3
+        "k_pct": "55.6%",
+        "bb_pct": "6.9%",
+        "k_bb_ratio": "8.00",
+        "babip": "0.296",
+        "batters_faced": 72,
+        "strikeouts": 40,
+        "walks": 5
       }
     },
     {
@@ -4451,12 +4607,13 @@
             "analysis": "Significant raw power loss detected. Arm fatigue likely. Immediate benching recommended.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "37.9%",
-            "bb_pct": "12.1%",
-            "k_bb_ratio": "3.14",
-            "batters_faced": 58,
-            "strikeouts": 22,
-            "walks": 7
+            "k_pct": "34.3%",
+            "bb_pct": "11.9%",
+            "k_bb_ratio": "2.88",
+            "babip": "0.314",
+            "batters_faced": 67,
+            "strikeouts": 23,
+            "walks": 8
           },
           "source_path": "dist/velocity_decay_monitor.json"
         }
@@ -4469,13 +4626,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "37.9%",
-        "bb_pct": "12.1%",
-        "k_bb_ratio": "3.14",
-        "babip": null,
-        "batters_faced": 58,
-        "strikeouts": 22,
-        "walks": 7
+        "k_pct": "34.3%",
+        "bb_pct": "11.9%",
+        "k_bb_ratio": "2.88",
+        "babip": "0.314",
+        "batters_faced": 67,
+        "strikeouts": 23,
+        "walks": 8
       }
     },
     {
@@ -4504,13 +4661,13 @@
             "why": "Avg EV 88.3 mph (+8.4 vs baseline), barrel-like rate 3.6%.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "12.3%",
-            "k_pct": "22.1%",
-            "bb_k_ratio": "0.56",
-            "babip": ".281",
-            "plate_appearances": 154,
-            "strikeouts": 34,
-            "walks": 19
+            "bb_pct": "14.8%",
+            "k_pct": "21.9%",
+            "bb_k_ratio": "0.68",
+            "babip": ".288",
+            "plate_appearances": 183,
+            "strikeouts": 40,
+            "walks": 27
           },
           "source_path": "dist/signals.json"
         }
@@ -4523,13 +4680,13 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "12.3%",
-        "k_pct": "22.1%",
-        "bb_k_ratio": "0.56",
-        "babip": ".281",
-        "plate_appearances": 154,
-        "strikeouts": 34,
-        "walks": 19
+        "bb_pct": "14.8%",
+        "k_pct": "21.9%",
+        "bb_k_ratio": "0.68",
+        "babip": ".288",
+        "plate_appearances": 183,
+        "strikeouts": 40,
+        "walks": 27
       }
     },
     {
@@ -4555,13 +4712,13 @@
             "body_copy": "Impact quality is already ahead of the production line. The bat has moved before the market has reacted.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "17.5%",
-            "k_pct": "27.5%",
-            "bb_k_ratio": "0.64",
-            "babip": ".429",
-            "plate_appearances": 40,
-            "strikeouts": 11,
-            "walks": 7
+            "bb_pct": "16.9%",
+            "k_pct": "25.4%",
+            "bb_k_ratio": "0.67",
+            "babip": ".438",
+            "plate_appearances": 59,
+            "strikeouts": 15,
+            "walks": 10
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         },
@@ -4578,13 +4735,13 @@
             "body_copy": "Impact quality is already ahead of the production line. The bat has moved before the market has reacted.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "17.5%",
-            "k_pct": "27.5%",
-            "bb_k_ratio": "0.64",
-            "babip": ".429",
-            "plate_appearances": 40,
-            "strikeouts": 11,
-            "walks": 7
+            "bb_pct": "16.9%",
+            "k_pct": "25.4%",
+            "bb_k_ratio": "0.67",
+            "babip": ".438",
+            "plate_appearances": 59,
+            "strikeouts": 15,
+            "walks": 10
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         }
@@ -4597,13 +4754,13 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "17.5%",
-        "k_pct": "27.5%",
-        "bb_k_ratio": "0.64",
-        "babip": ".429",
-        "plate_appearances": 40,
-        "strikeouts": 11,
-        "walks": 7
+        "bb_pct": "16.9%",
+        "k_pct": "25.4%",
+        "bb_k_ratio": "0.67",
+        "babip": ".438",
+        "plate_appearances": 59,
+        "strikeouts": 15,
+        "walks": 10
       }
     },
     {
@@ -4632,11 +4789,12 @@
             "analysis": "Significant raw power loss detected. Arm fatigue likely. Immediate benching recommended.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "17.6%",
-            "bb_pct": "7.8%",
-            "k_bb_ratio": "2.25",
-            "batters_faced": 51,
-            "strikeouts": 9,
+            "k_pct": "16.7%",
+            "bb_pct": "6.1%",
+            "k_bb_ratio": "2.75",
+            "babip": "0.375",
+            "batters_faced": 66,
+            "strikeouts": 11,
             "walks": 4
           },
           "source_path": "dist/velocity_decay_monitor.json"
@@ -4650,12 +4808,12 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "17.6%",
-        "bb_pct": "7.8%",
-        "k_bb_ratio": "2.25",
-        "babip": null,
-        "batters_faced": 51,
-        "strikeouts": 9,
+        "k_pct": "16.7%",
+        "bb_pct": "6.1%",
+        "k_bb_ratio": "2.75",
+        "babip": "0.375",
+        "batters_faced": 66,
+        "strikeouts": 11,
         "walks": 4
       }
     },
@@ -4663,7 +4821,7 @@
       "player_id": 680730,
       "player_name": "Mitchell Parker",
       "search_name": "mitchell parker",
-      "team": "NYM",
+      "team": "MIA",
       "position": "P",
       "reports_triggered": [
         "IVB Heat Map"
@@ -4673,21 +4831,22 @@
           "report_key": "ivb_heat_map",
           "report_label": "IVB Heat Map",
           "section": "entered_apex",
-          "generated_at": "2026-05-01T08:12:57.471574",
+          "generated_at": "2026-05-13T10:40:02.740775",
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "21.8%",
+            "k_pct": "20.7%",
             "bb_pct": "7.3%",
-            "k_bb_ratio": "3.00",
-            "batters_faced": 55,
-            "strikeouts": 12,
-            "walks": 4
+            "k_bb_ratio": "2.83",
+            "babip": "0.245",
+            "batters_faced": 82,
+            "strikeouts": 17,
+            "walks": 6
           },
           "source_path": "dist/ivb_heat_map.json"
         }
       ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/680730/headshot/67/current",
       "bats": "L",
       "throws": "L",
@@ -4695,20 +4854,20 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "21.8%",
+        "k_pct": "20.7%",
         "bb_pct": "7.3%",
-        "k_bb_ratio": "3.00",
-        "babip": null,
-        "batters_faced": 55,
-        "strikeouts": 12,
-        "walks": 4
+        "k_bb_ratio": "2.83",
+        "babip": "0.245",
+        "batters_faced": 82,
+        "strikeouts": 17,
+        "walks": 6
       }
     },
     {
       "player_id": 683232,
       "player_name": "Nick Mears",
       "search_name": "nick mears",
-      "team": "ATH",
+      "team": "KC",
       "position": "P",
       "reports_triggered": [
         "IVB Heat Map"
@@ -4718,21 +4877,22 @@
           "report_key": "ivb_heat_map",
           "report_label": "IVB Heat Map",
           "section": "entered_apex",
-          "generated_at": "2026-05-01T08:12:57.471574",
+          "generated_at": "2026-05-13T10:40:02.740775",
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "20.0%",
-            "bb_pct": "14.0%",
-            "k_bb_ratio": "1.43",
-            "batters_faced": 50,
-            "strikeouts": 10,
+            "k_pct": "18.3%",
+            "bb_pct": "11.7%",
+            "k_bb_ratio": "1.57",
+            "babip": "0.250",
+            "batters_faced": 60,
+            "strikeouts": 11,
             "walks": 7
           },
           "source_path": "dist/ivb_heat_map.json"
         }
       ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/683232/headshot/67/current",
       "bats": "R",
       "throws": "R",
@@ -4740,12 +4900,12 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "20.0%",
-        "bb_pct": "14.0%",
-        "k_bb_ratio": "1.43",
-        "babip": null,
-        "batters_faced": 50,
-        "strikeouts": 10,
+        "k_pct": "18.3%",
+        "bb_pct": "11.7%",
+        "k_bb_ratio": "1.57",
+        "babip": "0.250",
+        "batters_faced": 60,
+        "strikeouts": 11,
         "walks": 7
       }
     },
@@ -4837,12 +4997,13 @@
             "analysis": "Velocity loss paired with shortening extension. Strong indicator of latent injury or mechanical breakdown risk.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "23.5%",
-            "bb_pct": "14.1%",
-            "k_bb_ratio": "1.67",
-            "batters_faced": 85,
-            "strikeouts": 20,
-            "walks": 12
+            "k_pct": "20.8%",
+            "bb_pct": "16.8%",
+            "k_bb_ratio": "1.24",
+            "babip": "0.227",
+            "batters_faced": 125,
+            "strikeouts": 26,
+            "walks": 21
           },
           "source_path": "dist/velocity_decay_monitor.json"
         }
@@ -4855,58 +5016,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "23.5%",
-        "bb_pct": "14.1%",
-        "k_bb_ratio": "1.67",
-        "babip": null,
-        "batters_faced": 85,
-        "strikeouts": 20,
-        "walks": 12
-      }
-    },
-    {
-      "player_id": 674370,
-      "player_name": "Osvaldo Bido",
-      "search_name": "osvaldo bido",
-      "team": "CWS",
-      "position": "P",
-      "reports_triggered": [
-        "IVB Heat Map"
-      ],
-      "signals": [
-        {
-          "report_key": "ivb_heat_map",
-          "report_label": "IVB Heat Map",
-          "section": "fallers",
-          "generated_at": "2026-05-01T08:12:57.471574",
-          "metrics": {
-            "season_context": "COMMAND_PROFILE",
-            "season": 2026,
-            "k_pct": "15.3%",
-            "bb_pct": "13.9%",
-            "k_bb_ratio": "1.10",
-            "batters_faced": 72,
-            "strikeouts": 11,
-            "walks": 10
-          },
-          "source_path": "dist/ivb_heat_map.json"
-        }
-      ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/674370/headshot/67/current",
-      "bats": "R",
-      "throws": "R",
-      "universe_match": true,
-      "season_context": {
-        "season_context": "COMMAND_PROFILE",
-        "season": 2026,
-        "k_pct": "15.3%",
-        "bb_pct": "13.9%",
-        "k_bb_ratio": "1.10",
-        "babip": null,
-        "batters_faced": 72,
-        "strikeouts": 11,
-        "walks": 10
+        "k_pct": "20.8%",
+        "bb_pct": "16.8%",
+        "k_bb_ratio": "1.24",
+        "babip": "0.227",
+        "batters_faced": 125,
+        "strikeouts": 26,
+        "walks": 21
       }
     },
     {
@@ -4935,13 +5051,13 @@
             "why": "Power spike • Plate skill support • Recent HR pressure",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "5.6%",
-            "k_pct": "42.1%",
-            "bb_k_ratio": "0.13",
-            "babip": ".327",
-            "plate_appearances": 107,
-            "strikeouts": 45,
-            "walks": 6
+            "bb_pct": "6.8%",
+            "k_pct": "40.7%",
+            "bb_k_ratio": "0.17",
+            "babip": ".316",
+            "plate_appearances": 118,
+            "strikeouts": 48,
+            "walks": 8
           },
           "source_path": "dist/typical-call-up/promotion_watch.json"
         }
@@ -4954,13 +5070,13 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "5.6%",
-        "k_pct": "42.1%",
-        "bb_k_ratio": "0.13",
-        "babip": ".327",
-        "plate_appearances": 107,
-        "strikeouts": 45,
-        "walks": 6
+        "bb_pct": "6.8%",
+        "k_pct": "40.7%",
+        "bb_k_ratio": "0.17",
+        "babip": ".316",
+        "plate_appearances": 118,
+        "strikeouts": 48,
+        "walks": 8
       }
     },
     {
@@ -4982,12 +5098,13 @@
             "why": "Washington Nationals recalled RHP Paxton Schultz from Rochester Red Wings.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "21.4%",
-            "bb_pct": "3.6%",
-            "k_bb_ratio": "6.00",
-            "batters_faced": 56,
-            "strikeouts": 12,
-            "walks": 2
+            "k_pct": "23.9%",
+            "bb_pct": "4.5%",
+            "k_bb_ratio": "5.33",
+            "babip": "0.273",
+            "batters_faced": 67,
+            "strikeouts": 16,
+            "walks": 3
           },
           "source_path": "dist/typical-call-up/promotion_watch.json"
         }
@@ -5000,13 +5117,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "21.4%",
-        "bb_pct": "3.6%",
-        "k_bb_ratio": "6.00",
-        "babip": null,
-        "batters_faced": 56,
-        "strikeouts": 12,
-        "walks": 2
+        "k_pct": "23.9%",
+        "bb_pct": "4.5%",
+        "k_bb_ratio": "5.33",
+        "babip": "0.273",
+        "batters_faced": 67,
+        "strikeouts": 16,
+        "walks": 3
       }
     },
     {
@@ -5066,12 +5183,12 @@
             "why": "Avg EV 89.8 mph (+3.3 vs baseline), barrel-like rate 6.9%.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "13.5%",
-            "k_pct": "24.5%",
-            "bb_k_ratio": "0.55",
-            "babip": ".270",
-            "plate_appearances": 155,
-            "strikeouts": 38,
+            "bb_pct": "11.2%",
+            "k_pct": "24.6%",
+            "bb_k_ratio": "0.46",
+            "babip": ".252",
+            "plate_appearances": 187,
+            "strikeouts": 46,
             "walks": 21
           },
           "source_path": "dist/signals.json"
@@ -5085,12 +5202,12 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "13.5%",
-        "k_pct": "24.5%",
-        "bb_k_ratio": "0.55",
-        "babip": ".270",
-        "plate_appearances": 155,
-        "strikeouts": 38,
+        "bb_pct": "11.2%",
+        "k_pct": "24.6%",
+        "bb_k_ratio": "0.46",
+        "babip": ".252",
+        "plate_appearances": 187,
+        "strikeouts": 46,
         "walks": 21
       }
     },
@@ -5117,13 +5234,13 @@
             "body_copy": "Average impact has improved faster than the box-score line. The market is still staring at the wrong layer.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "6.8%",
-            "k_pct": "27.7%",
-            "bb_k_ratio": "0.24",
-            "babip": ".319",
-            "plate_appearances": 148,
-            "strikeouts": 41,
-            "walks": 10
+            "bb_pct": "7.5%",
+            "k_pct": "25.9%",
+            "bb_k_ratio": "0.29",
+            "babip": ".306",
+            "plate_appearances": 174,
+            "strikeouts": 45,
+            "walks": 13
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         }
@@ -5136,13 +5253,13 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "6.8%",
-        "k_pct": "27.7%",
-        "bb_k_ratio": "0.24",
-        "babip": ".319",
-        "plate_appearances": 148,
-        "strikeouts": 41,
-        "walks": 10
+        "bb_pct": "7.5%",
+        "k_pct": "25.9%",
+        "bb_k_ratio": "0.29",
+        "babip": ".306",
+        "plate_appearances": 174,
+        "strikeouts": 45,
+        "walks": 13
       }
     },
     {
@@ -5168,13 +5285,13 @@
             "body_copy": "Average impact has improved faster than the box-score line. The market is still staring at the wrong layer.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "14.4%",
-            "k_pct": "27.5%",
+            "bb_pct": "14.0%",
+            "k_pct": "26.8%",
             "bb_k_ratio": "0.52",
-            "babip": ".400",
-            "plate_appearances": 153,
-            "strikeouts": 42,
-            "walks": 22
+            "babip": ".451",
+            "plate_appearances": 179,
+            "strikeouts": 48,
+            "walks": 25
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         }
@@ -5187,13 +5304,13 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "14.4%",
-        "k_pct": "27.5%",
+        "bb_pct": "14.0%",
+        "k_pct": "26.8%",
         "bb_k_ratio": "0.52",
-        "babip": ".400",
-        "plate_appearances": 153,
-        "strikeouts": 42,
-        "walks": 22
+        "babip": ".451",
+        "plate_appearances": 179,
+        "strikeouts": 48,
+        "walks": 25
       }
     },
     {
@@ -5214,13 +5331,13 @@
           "metrics": {
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "8.3%",
-            "k_pct": "25.0%",
-            "bb_k_ratio": "0.33",
-            "babip": ".133",
-            "plate_appearances": 48,
-            "strikeouts": 12,
-            "walks": 4
+            "bb_pct": "9.8%",
+            "k_pct": "26.2%",
+            "bb_k_ratio": "0.38",
+            "babip": ".135",
+            "plate_appearances": 61,
+            "strikeouts": 16,
+            "walks": 6
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         },
@@ -5232,13 +5349,13 @@
           "metrics": {
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "8.3%",
-            "k_pct": "25.0%",
-            "bb_k_ratio": "0.33",
-            "babip": ".133",
-            "plate_appearances": 48,
-            "strikeouts": 12,
-            "walks": 4
+            "bb_pct": "9.8%",
+            "k_pct": "26.2%",
+            "bb_k_ratio": "0.38",
+            "babip": ".135",
+            "plate_appearances": 61,
+            "strikeouts": 16,
+            "walks": 6
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         }
@@ -5251,13 +5368,13 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "8.3%",
-        "k_pct": "25.0%",
-        "bb_k_ratio": "0.33",
-        "babip": ".133",
-        "plate_appearances": 48,
-        "strikeouts": 12,
-        "walks": 4
+        "bb_pct": "9.8%",
+        "k_pct": "26.2%",
+        "bb_k_ratio": "0.38",
+        "babip": ".135",
+        "plate_appearances": 61,
+        "strikeouts": 16,
+        "walks": 6
       }
     },
     {
@@ -5268,7 +5385,6 @@
       "position": "SP",
       "reports_triggered": [
         "Apex Extraction",
-        "IVB Heat Map",
         "Stuff+ Disruption"
       ],
       "signals": [
@@ -5280,11 +5396,12 @@
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "16.9%",
-            "bb_pct": "7.2%",
-            "k_bb_ratio": "2.33",
-            "batters_faced": 83,
-            "strikeouts": 14,
+            "k_pct": "20.7%",
+            "bb_pct": "6.5%",
+            "k_bb_ratio": "3.17",
+            "babip": "0.308",
+            "batters_faced": 92,
+            "strikeouts": 19,
             "walks": 6
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
@@ -5297,31 +5414,15 @@
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "16.9%",
-            "bb_pct": "7.2%",
-            "k_bb_ratio": "2.33",
-            "batters_faced": 83,
-            "strikeouts": 14,
+            "k_pct": "20.7%",
+            "bb_pct": "6.5%",
+            "k_bb_ratio": "3.17",
+            "babip": "0.308",
+            "batters_faced": 92,
+            "strikeouts": 19,
             "walks": 6
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
-        },
-        {
-          "report_key": "ivb_heat_map",
-          "report_label": "IVB Heat Map",
-          "section": "climbers",
-          "generated_at": "2026-05-01T08:12:57.471574",
-          "metrics": {
-            "season_context": "COMMAND_PROFILE",
-            "season": 2026,
-            "k_pct": "16.9%",
-            "bb_pct": "7.2%",
-            "k_bb_ratio": "2.33",
-            "batters_faced": 83,
-            "strikeouts": 14,
-            "walks": 6
-          },
-          "source_path": "dist/ivb_heat_map.json"
         },
         {
           "report_key": "stuff_disruption",
@@ -5339,11 +5440,12 @@
             "analysis": "Movement quality appears to be improving through more efficient spin conversion, not just raw effort. Breakout conditions are building.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "16.9%",
-            "bb_pct": "7.2%",
-            "k_bb_ratio": "2.33",
-            "batters_faced": 83,
-            "strikeouts": 14,
+            "k_pct": "20.7%",
+            "bb_pct": "6.5%",
+            "k_bb_ratio": "3.17",
+            "babip": "0.308",
+            "batters_faced": 92,
+            "strikeouts": 19,
             "walks": 6
           },
           "source_path": "dist/stuff_disruption_feed.json"
@@ -5357,12 +5459,12 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "16.9%",
-        "bb_pct": "7.2%",
-        "k_bb_ratio": "2.33",
-        "babip": null,
-        "batters_faced": 83,
-        "strikeouts": 14,
+        "k_pct": "20.7%",
+        "bb_pct": "6.5%",
+        "k_bb_ratio": "3.17",
+        "babip": "0.308",
+        "batters_faced": 92,
+        "strikeouts": 19,
         "walks": 6
       }
     },
@@ -5373,8 +5475,7 @@
       "team": "LAA",
       "position": "SP",
       "reports_triggered": [
-        "MLB Extraction Ledger",
-        "IVB Heat Map"
+        "MLB Extraction Ledger"
       ],
       "signals": [
         {
@@ -5390,34 +5491,18 @@
             "body_copy": "Whiff support is improving while the fastball is still firm. The market has not fully priced in the shape change yet.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "29.8%",
-            "bb_pct": "13.1%",
-            "k_bb_ratio": "2.27",
-            "batters_faced": 84,
-            "strikeouts": 25,
+            "k_pct": "31.9%",
+            "bb_pct": "12.1%",
+            "k_bb_ratio": "2.64",
+            "babip": "0.255",
+            "batters_faced": 91,
+            "strikeouts": 29,
             "walks": 11
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
-        },
-        {
-          "report_key": "ivb_heat_map",
-          "report_label": "IVB Heat Map",
-          "section": "fallers",
-          "generated_at": "2026-05-01T08:12:57.471574",
-          "metrics": {
-            "season_context": "COMMAND_PROFILE",
-            "season": 2026,
-            "k_pct": "29.8%",
-            "bb_pct": "13.1%",
-            "k_bb_ratio": "2.27",
-            "batters_faced": 84,
-            "strikeouts": 25,
-            "walks": 11
-          },
-          "source_path": "dist/ivb_heat_map.json"
         }
       ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
+      "latest_generated_at": "2026-04-30 02:57 PM",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/666171/headshot/67/current",
       "bats": "R",
       "throws": "R",
@@ -5425,12 +5510,12 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "29.8%",
-        "bb_pct": "13.1%",
-        "k_bb_ratio": "2.27",
-        "babip": null,
-        "batters_faced": 84,
-        "strikeouts": 25,
+        "k_pct": "31.9%",
+        "bb_pct": "12.1%",
+        "k_bb_ratio": "2.64",
+        "babip": "0.255",
+        "batters_faced": 91,
+        "strikeouts": 29,
         "walks": 11
       }
     },
@@ -5460,11 +5545,12 @@
             "analysis": "Velocity loss paired with shortening extension. Strong indicator of latent injury or mechanical breakdown risk.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "28.0%",
-            "bb_pct": "13.3%",
-            "k_bb_ratio": "2.10",
-            "batters_faced": 75,
-            "strikeouts": 21,
+            "k_pct": "27.5%",
+            "bb_pct": "12.5%",
+            "k_bb_ratio": "2.20",
+            "babip": "0.196",
+            "batters_faced": 80,
+            "strikeouts": 22,
             "walks": 10
           },
           "source_path": "dist/velocity_decay_monitor.json"
@@ -5478,12 +5564,58 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "28.0%",
-        "bb_pct": "13.3%",
-        "k_bb_ratio": "2.10",
-        "babip": null,
-        "batters_faced": 75,
-        "strikeouts": 21,
+        "k_pct": "27.5%",
+        "bb_pct": "12.5%",
+        "k_bb_ratio": "2.20",
+        "babip": "0.196",
+        "batters_faced": 80,
+        "strikeouts": 22,
+        "walks": 10
+      }
+    },
+    {
+      "player_id": 594580,
+      "player_name": "Sam Moll",
+      "search_name": "sam moll",
+      "team": "CIN",
+      "position": "P",
+      "reports_triggered": [
+        "IVB Heat Map"
+      ],
+      "signals": [
+        {
+          "report_key": "ivb_heat_map",
+          "report_label": "IVB Heat Map",
+          "section": "fallers",
+          "generated_at": "2026-05-13T10:40:02.740775",
+          "metrics": {
+            "season_context": "COMMAND_PROFILE",
+            "season": 2026,
+            "k_pct": "20.3%",
+            "bb_pct": "13.5%",
+            "k_bb_ratio": "1.50",
+            "babip": "0.233",
+            "batters_faced": 74,
+            "strikeouts": 15,
+            "walks": 10
+          },
+          "source_path": "dist/ivb_heat_map.json"
+        }
+      ],
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/594580/headshot/67/current",
+      "bats": "L",
+      "throws": "L",
+      "universe_match": true,
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "20.3%",
+        "bb_pct": "13.5%",
+        "k_bb_ratio": "1.50",
+        "babip": "0.233",
+        "batters_faced": 74,
+        "strikeouts": 15,
         "walks": 10
       }
     },
@@ -5519,6 +5651,52 @@
       "manual_identity_resolver": true
     },
     {
+      "player_id": 640455,
+      "player_name": "Sean Manaea",
+      "search_name": "sean manaea",
+      "team": "AZ",
+      "position": "P",
+      "reports_triggered": [
+        "IVB Heat Map"
+      ],
+      "signals": [
+        {
+          "report_key": "ivb_heat_map",
+          "report_label": "IVB Heat Map",
+          "section": "climbers",
+          "generated_at": "2026-05-13T10:40:02.740775",
+          "metrics": {
+            "season_context": "COMMAND_PROFILE",
+            "season": 2026,
+            "k_pct": "23.2%",
+            "bb_pct": "9.8%",
+            "k_bb_ratio": "2.36",
+            "babip": "0.382",
+            "batters_faced": 112,
+            "strikeouts": 26,
+            "walks": 11
+          },
+          "source_path": "dist/ivb_heat_map.json"
+        }
+      ],
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/640455/headshot/67/current",
+      "bats": "R",
+      "throws": "L",
+      "universe_match": true,
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "23.2%",
+        "bb_pct": "9.8%",
+        "k_bb_ratio": "2.36",
+        "babip": "0.382",
+        "batters_faced": 112,
+        "strikeouts": 26,
+        "walks": 11
+      }
+    },
+    {
       "player_id": 656794,
       "player_name": "Sean Newcomb",
       "search_name": "sean newcomb",
@@ -5544,11 +5722,12 @@
             "analysis": "Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "24.4%",
-            "bb_pct": "9.3%",
-            "k_bb_ratio": "2.62",
-            "batters_faced": 86,
-            "strikeouts": 21,
+            "k_pct": "23.0%",
+            "bb_pct": "8.0%",
+            "k_bb_ratio": "2.88",
+            "babip": "0.333",
+            "batters_faced": 100,
+            "strikeouts": 23,
             "walks": 8
           },
           "source_path": "dist/stuff_disruption_feed.json"
@@ -5562,49 +5741,14 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "24.4%",
-        "bb_pct": "9.3%",
-        "k_bb_ratio": "2.62",
-        "babip": null,
-        "batters_faced": 86,
-        "strikeouts": 21,
+        "k_pct": "23.0%",
+        "bb_pct": "8.0%",
+        "k_bb_ratio": "2.88",
+        "babip": "0.333",
+        "batters_faced": 100,
+        "strikeouts": 23,
         "walks": 8
       }
-    },
-    {
-      "player_id": 900170009,
-      "player_name": "Simeon Woods Richardson",
-      "search_name": "simeon woods richardson",
-      "team": "TB",
-      "position": "P",
-      "reports_triggered": [
-        "IVB Heat Map"
-      ],
-      "signals": [
-        {
-          "report_key": "ivb_heat_map",
-          "report_label": "IVB Heat Map",
-          "section": "heat_cards",
-          "generated_at": "2026-05-01T08:12:57.471574",
-          "metrics": {
-            "ivb_vs_avg": "+7.4\"",
-            "ivb_raw": "19.3\"",
-            "vaa": "-5.1°",
-            "whiff_probability": "MEDIUM",
-            "dead_zone_label": "COLD",
-            "heat_class": "hot",
-            "band_label": "Apex Carry",
-            "heat_tag": "HOT // APEX RISE",
-            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -5.1°."
-          },
-          "source_path": "dist/ivb_heat_map.json"
-        }
-      ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/680573/headshot/67/current",
-      "bats": "R",
-      "throws": "R",
-      "universe_match": true
     },
     {
       "player_id": null,
@@ -5660,13 +5804,13 @@
             "body_copy": "Barrel-like contact is showing up often enough to matter. The surface stats have not fully caught up yet.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "15.0%",
-            "k_pct": "30.7%",
-            "bb_k_ratio": "0.49",
-            "babip": ".275",
-            "plate_appearances": 140,
-            "strikeouts": 43,
-            "walks": 21
+            "bb_pct": "14.5%",
+            "k_pct": "32.1%",
+            "bb_k_ratio": "0.45",
+            "babip": ".272",
+            "plate_appearances": 165,
+            "strikeouts": 53,
+            "walks": 24
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         },
@@ -5683,13 +5827,13 @@
             "body_copy": "Barrel-like contact is showing up often enough to matter. The surface stats have not fully caught up yet.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "15.0%",
-            "k_pct": "30.7%",
-            "bb_k_ratio": "0.49",
-            "babip": ".275",
-            "plate_appearances": 140,
-            "strikeouts": 43,
-            "walks": 21
+            "bb_pct": "14.5%",
+            "k_pct": "32.1%",
+            "bb_k_ratio": "0.45",
+            "babip": ".272",
+            "plate_appearances": 165,
+            "strikeouts": 53,
+            "walks": 24
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         }
@@ -5702,21 +5846,21 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "15.0%",
-        "k_pct": "30.7%",
-        "bb_k_ratio": "0.49",
-        "babip": ".275",
-        "plate_appearances": 140,
-        "strikeouts": 43,
-        "walks": 21
+        "bb_pct": "14.5%",
+        "k_pct": "32.1%",
+        "bb_k_ratio": "0.45",
+        "babip": ".272",
+        "plate_appearances": 165,
+        "strikeouts": 53,
+        "walks": 24
       }
     },
     {
-      "player_id": null,
+      "player_id": 823550,
       "player_name": "Sung-mun Song",
       "search_name": "sung mun song",
-      "team": "UNK",
-      "position": "INF",
+      "team": "San Diego Padres",
+      "position": "3B",
       "reports_triggered": [
         "Promotion Watch"
       ],
@@ -5727,13 +5871,37 @@
           "section": "recent_arrivals",
           "generated_at": "2026-04-30 02:57 PM",
           "metrics": {
-            "why": "San Diego Padres recalled 3B Sung-Mun Song from El Paso Chihuahuas."
+            "why": "San Diego Padres recalled 3B Sung-Mun Song from El Paso Chihuahuas.",
+            "season_context": "PLATE_DISCIPLINE",
+            "season": 2026,
+            "bb_pct": "14.3%",
+            "k_pct": "28.6%",
+            "bb_k_ratio": "0.50",
+            "babip": ".250",
+            "plate_appearances": 14,
+            "strikeouts": 4,
+            "walks": 2
           },
           "source_path": "dist/typical-call-up/promotion_watch.json"
         }
       ],
       "latest_generated_at": "2026-04-30 02:57 PM",
-      "manual_identity_resolver": true
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/823550/headshot/67/current",
+      "bats": "L",
+      "throws": "R",
+      "universe_match": true,
+      "manual_identity_resolver": true,
+      "season_context": {
+        "season_context": "PLATE_DISCIPLINE",
+        "season": 2026,
+        "bb_pct": "14.3%",
+        "k_pct": "28.6%",
+        "bb_k_ratio": "0.50",
+        "babip": ".250",
+        "plate_appearances": 14,
+        "strikeouts": 4,
+        "walks": 2
+      }
     },
     {
       "player_id": 676440,
@@ -5761,12 +5929,13 @@
             "analysis": "Significant raw power loss detected. Arm fatigue likely. Immediate benching recommended.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "20.9%",
+            "k_pct": "23.2%",
             "bb_pct": "9.3%",
-            "k_bb_ratio": "2.25",
-            "batters_faced": 172,
-            "strikeouts": 36,
-            "walks": 16
+            "k_bb_ratio": "2.50",
+            "babip": "0.293",
+            "batters_faced": 194,
+            "strikeouts": 45,
+            "walks": 18
           },
           "source_path": "dist/velocity_decay_monitor.json"
         }
@@ -5779,20 +5948,66 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "20.9%",
+        "k_pct": "23.2%",
         "bb_pct": "9.3%",
-        "k_bb_ratio": "2.25",
-        "babip": null,
-        "batters_faced": 172,
-        "strikeouts": 36,
-        "walks": 16
+        "k_bb_ratio": "2.50",
+        "babip": "0.293",
+        "batters_faced": 194,
+        "strikeouts": 45,
+        "walks": 18
       }
     },
     {
-      "player_id": 900293472,
+      "player_id": 573124,
+      "player_name": "Taylor Rogers",
+      "search_name": "taylor rogers",
+      "team": "CLE",
+      "position": "P",
+      "reports_triggered": [
+        "IVB Heat Map"
+      ],
+      "signals": [
+        {
+          "report_key": "ivb_heat_map",
+          "report_label": "IVB Heat Map",
+          "section": "climbers",
+          "generated_at": "2026-05-13T10:40:02.740775",
+          "metrics": {
+            "season_context": "COMMAND_PROFILE",
+            "season": 2026,
+            "k_pct": "17.8%",
+            "bb_pct": "8.2%",
+            "k_bb_ratio": "2.17",
+            "babip": "0.377",
+            "batters_faced": 73,
+            "strikeouts": 13,
+            "walks": 6
+          },
+          "source_path": "dist/ivb_heat_map.json"
+        }
+      ],
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/573124/headshot/67/current",
+      "bats": "L",
+      "throws": "L",
+      "universe_match": true,
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "17.8%",
+        "bb_pct": "8.2%",
+        "k_bb_ratio": "2.17",
+        "babip": "0.377",
+        "batters_faced": 73,
+        "strikeouts": 13,
+        "walks": 6
+      }
+    },
+    {
+      "player_id": 900593692,
       "player_name": "Tobias Myers",
       "search_name": "tobias myers",
-      "team": "NYM",
+      "team": "COL",
       "position": "P",
       "reports_triggered": [
         "IVB Heat Map"
@@ -5802,22 +6017,22 @@
           "report_key": "ivb_heat_map",
           "report_label": "IVB Heat Map",
           "section": "heat_cards",
-          "generated_at": "2026-05-01T08:12:57.471574",
+          "generated_at": "2026-05-13T10:40:02.740775",
           "metrics": {
-            "ivb_vs_avg": "+7.3\"",
-            "ivb_raw": "19.3\"",
-            "vaa": "-4.9°",
+            "ivb_vs_avg": "+6.7\"",
+            "ivb_raw": "18.2\"",
+            "vaa": "-5.3°",
             "whiff_probability": "MEDIUM",
             "dead_zone_label": "CLEAR",
             "heat_class": "hot",
             "band_label": "Apex Carry",
             "heat_tag": "HOT // APEX RISE",
-            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -4.9°."
+            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -5.3°."
           },
           "source_path": "dist/ivb_heat_map.json"
         }
       ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/668964/headshot/67/current",
       "bats": "R",
       "throws": "R",
@@ -5842,13 +6057,13 @@
             "why": "Cleveland Guardians selected the contract of 2B Travis Bazzana from Columbus Clippers.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "20.7%",
-            "k_pct": "13.8%",
-            "bb_k_ratio": "1.50",
-            "babip": ".211",
-            "plate_appearances": 29,
-            "strikeouts": 4,
-            "walks": 6
+            "bb_pct": "20.3%",
+            "k_pct": "15.3%",
+            "bb_k_ratio": "1.33",
+            "babip": ".257",
+            "plate_appearances": 59,
+            "strikeouts": 9,
+            "walks": 12
           },
           "source_path": "dist/typical-call-up/promotion_watch.json"
         }
@@ -5861,55 +6076,20 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "20.7%",
-        "k_pct": "13.8%",
-        "bb_k_ratio": "1.50",
-        "babip": ".211",
-        "plate_appearances": 29,
-        "strikeouts": 4,
-        "walks": 6
+        "bb_pct": "20.3%",
+        "k_pct": "15.3%",
+        "bb_k_ratio": "1.33",
+        "babip": ".257",
+        "plate_appearances": 59,
+        "strikeouts": 9,
+        "walks": 12
       }
     },
     {
-      "player_id": 900070641,
-      "player_name": "Trevor Megill",
-      "search_name": "trevor megill",
-      "team": "MIL",
-      "position": "P",
-      "reports_triggered": [
-        "IVB Heat Map"
-      ],
-      "signals": [
-        {
-          "report_key": "ivb_heat_map",
-          "report_label": "IVB Heat Map",
-          "section": "heat_cards",
-          "generated_at": "2026-05-01T08:12:57.471574",
-          "metrics": {
-            "ivb_vs_avg": "+6.9\"",
-            "ivb_raw": "20.7\"",
-            "vaa": "-5.3°",
-            "whiff_probability": "MEDIUM",
-            "dead_zone_label": "CLEAR",
-            "heat_class": "hot",
-            "band_label": "Apex Carry",
-            "heat_tag": "HOT // APEX RISE",
-            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -5.3°."
-          },
-          "source_path": "dist/ivb_heat_map.json"
-        }
-      ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/656730/headshot/67/current",
-      "bats": "L",
-      "throws": "R",
-      "universe_match": true
-    },
-    {
-      "player_id": 900002113,
+      "player_id": 900838170,
       "player_name": "Trevor Richards",
       "search_name": "trevor richards",
-      "team": "PHI",
+      "team": "CWS",
       "position": "P",
       "reports_triggered": [
         "IVB Heat Map"
@@ -5919,22 +6099,22 @@
           "report_key": "ivb_heat_map",
           "report_label": "IVB Heat Map",
           "section": "heat_cards",
-          "generated_at": "2026-05-01T08:12:57.471574",
+          "generated_at": "2026-05-13T10:40:02.740775",
           "metrics": {
-            "ivb_vs_avg": "+8.8\"",
-            "ivb_raw": "20.7\"",
-            "vaa": "-5.3°",
+            "ivb_vs_avg": "+7.5\"",
+            "ivb_raw": "19.9\"",
+            "vaa": "-5.1°",
             "whiff_probability": "MEDIUM",
             "dead_zone_label": "CLEAR",
             "heat_class": "hot",
             "band_label": "Apex Carry",
             "heat_tag": "HOT // APEX RISE",
-            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -5.3°."
+            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -5.1°."
           },
           "source_path": "dist/ivb_heat_map.json"
         }
       ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/670950/headshot/67/current",
       "bats": "R",
       "throws": "R",
@@ -5954,22 +6134,22 @@
           "report_key": "ivb_heat_map",
           "report_label": "IVB Heat Map",
           "section": "heat_cards",
-          "generated_at": "2026-05-01T08:12:57.471574",
+          "generated_at": "2026-05-13T10:40:02.740775",
           "metrics": {
-            "ivb_vs_avg": "+7.2\"",
+            "ivb_vs_avg": "+7.6\"",
             "ivb_raw": "20.3\"",
-            "vaa": "-5.8°",
+            "vaa": "-5.9°",
             "whiff_probability": "MEDIUM",
             "dead_zone_label": "CLEAR",
             "heat_class": "hot",
             "band_label": "Apex Carry",
             "heat_tag": "HOT // APEX RISE",
-            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -5.8°."
+            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -5.9°."
           },
           "source_path": "dist/ivb_heat_map.json"
         }
       ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
       "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/702056/headshot/67/current",
       "bats": "R",
       "throws": "R",
@@ -6001,6 +6181,7 @@
             "k_pct": "33.1%",
             "bb_pct": "8.8%",
             "k_bb_ratio": "3.77",
+            "babip": "0.185",
             "batters_faced": 148,
             "strikeouts": 49,
             "walks": 13
@@ -6019,46 +6200,11 @@
         "k_pct": "33.1%",
         "bb_pct": "8.8%",
         "k_bb_ratio": "3.77",
-        "babip": null,
+        "babip": "0.185",
         "batters_faced": 148,
         "strikeouts": 49,
         "walks": 13
       }
-    },
-    {
-      "player_id": 900829524,
-      "player_name": "Tyler Mahle",
-      "search_name": "tyler mahle",
-      "team": "PHI",
-      "position": "P",
-      "reports_triggered": [
-        "IVB Heat Map"
-      ],
-      "signals": [
-        {
-          "report_key": "ivb_heat_map",
-          "report_label": "IVB Heat Map",
-          "section": "heat_cards",
-          "generated_at": "2026-05-01T08:12:57.471574",
-          "metrics": {
-            "ivb_vs_avg": "+6.4\"",
-            "ivb_raw": "17.0\"",
-            "vaa": "-4.9°",
-            "whiff_probability": "LOW",
-            "dead_zone_label": "COLD",
-            "heat_class": "neutral",
-            "band_label": "Standard Carry",
-            "heat_tag": "NEUTRAL // MLB RANGE",
-            "brief": "Movement reads in the standard carry band. Shape is beating the velo bucket baseline. Approach angle checks in at -4.9°."
-          },
-          "source_path": "dist/ivb_heat_map.json"
-        }
-      ],
-      "latest_generated_at": "2026-05-01T08:12:57.471574",
-      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/641816/headshot/67/current",
-      "bats": "R",
-      "throws": "R",
-      "universe_match": true
     },
     {
       "player_id": "701719",
@@ -6068,7 +6214,6 @@
       "position": "SP",
       "reports_triggered": [
         "Apex Extraction",
-        "IVB Heat Map",
         "Stuff+ Disruption"
       ],
       "signals": [
@@ -6080,12 +6225,13 @@
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "17.8%",
-            "bb_pct": "11.1%",
-            "k_bb_ratio": "1.60",
-            "batters_faced": 45,
-            "strikeouts": 8,
-            "walks": 5
+            "k_pct": "20.3%",
+            "bb_pct": "11.9%",
+            "k_bb_ratio": "1.71",
+            "babip": "0.216",
+            "batters_faced": 59,
+            "strikeouts": 12,
+            "walks": 7
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         },
@@ -6097,31 +6243,15 @@
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "17.8%",
-            "bb_pct": "11.1%",
-            "k_bb_ratio": "1.60",
-            "batters_faced": 45,
-            "strikeouts": 8,
-            "walks": 5
+            "k_pct": "20.3%",
+            "bb_pct": "11.9%",
+            "k_bb_ratio": "1.71",
+            "babip": "0.216",
+            "batters_faced": 59,
+            "strikeouts": 12,
+            "walks": 7
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
-        },
-        {
-          "report_key": "ivb_heat_map",
-          "report_label": "IVB Heat Map",
-          "section": "fallers",
-          "generated_at": "2026-05-01T08:12:57.471574",
-          "metrics": {
-            "season_context": "COMMAND_PROFILE",
-            "season": 2026,
-            "k_pct": "17.8%",
-            "bb_pct": "11.1%",
-            "k_bb_ratio": "1.60",
-            "batters_faced": 45,
-            "strikeouts": 8,
-            "walks": 5
-          },
-          "source_path": "dist/ivb_heat_map.json"
         },
         {
           "report_key": "stuff_disruption",
@@ -6139,12 +6269,13 @@
             "analysis": "Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "17.8%",
-            "bb_pct": "11.1%",
-            "k_bb_ratio": "1.60",
-            "batters_faced": 45,
-            "strikeouts": 8,
-            "walks": 5
+            "k_pct": "20.3%",
+            "bb_pct": "11.9%",
+            "k_bb_ratio": "1.71",
+            "babip": "0.216",
+            "batters_faced": 59,
+            "strikeouts": 12,
+            "walks": 7
           },
           "source_path": "dist/stuff_disruption_feed.json"
         }
@@ -6157,13 +6288,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "17.8%",
-        "bb_pct": "11.1%",
-        "k_bb_ratio": "1.60",
-        "babip": null,
-        "batters_faced": 45,
-        "strikeouts": 8,
-        "walks": 5
+        "k_pct": "20.3%",
+        "bb_pct": "11.9%",
+        "k_bb_ratio": "1.71",
+        "babip": "0.216",
+        "batters_faced": 59,
+        "strikeouts": 12,
+        "walks": 7
       }
     },
     {
@@ -6185,12 +6316,13 @@
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "18.2%",
-            "bb_pct": "12.1%",
-            "k_bb_ratio": "1.50",
-            "batters_faced": 66,
-            "strikeouts": 12,
-            "walks": 8
+            "k_pct": "17.7%",
+            "bb_pct": "12.7%",
+            "k_bb_ratio": "1.40",
+            "babip": "0.385",
+            "batters_faced": 79,
+            "strikeouts": 14,
+            "walks": 10
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         },
@@ -6202,12 +6334,13 @@
           "metrics": {
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "18.2%",
-            "bb_pct": "12.1%",
-            "k_bb_ratio": "1.50",
-            "batters_faced": 66,
-            "strikeouts": 12,
-            "walks": 8
+            "k_pct": "17.7%",
+            "bb_pct": "12.7%",
+            "k_bb_ratio": "1.40",
+            "babip": "0.385",
+            "batters_faced": 79,
+            "strikeouts": 14,
+            "walks": 10
           },
           "source_path": "dist/apex-extraction/apex_extraction.json"
         },
@@ -6227,12 +6360,13 @@
             "analysis": "Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "18.2%",
-            "bb_pct": "12.1%",
-            "k_bb_ratio": "1.50",
-            "batters_faced": 66,
-            "strikeouts": 12,
-            "walks": 8
+            "k_pct": "17.7%",
+            "bb_pct": "12.7%",
+            "k_bb_ratio": "1.40",
+            "babip": "0.385",
+            "batters_faced": 79,
+            "strikeouts": 14,
+            "walks": 10
           },
           "source_path": "dist/stuff_disruption_feed.json"
         }
@@ -6245,13 +6379,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "18.2%",
-        "bb_pct": "12.1%",
-        "k_bb_ratio": "1.50",
-        "babip": null,
-        "batters_faced": 66,
-        "strikeouts": 12,
-        "walks": 8
+        "k_pct": "17.7%",
+        "bb_pct": "12.7%",
+        "k_bb_ratio": "1.40",
+        "babip": "0.385",
+        "batters_faced": 79,
+        "strikeouts": 14,
+        "walks": 10
       }
     },
     {
@@ -6309,13 +6443,13 @@
             "body_copy": "Average impact has improved faster than the box-score line. The market is still staring at the wrong layer.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "8.8%",
-            "k_pct": "10.9%",
-            "bb_k_ratio": "0.81",
-            "babip": ".333",
-            "plate_appearances": 147,
-            "strikeouts": 16,
-            "walks": 13
+            "bb_pct": "8.0%",
+            "k_pct": "12.5%",
+            "bb_k_ratio": "0.64",
+            "babip": ".318",
+            "plate_appearances": 176,
+            "strikeouts": 22,
+            "walks": 14
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         },
@@ -6332,13 +6466,13 @@
             "body_copy": "Average impact has improved faster than the box-score line. The market is still staring at the wrong layer.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "8.8%",
-            "k_pct": "10.9%",
-            "bb_k_ratio": "0.81",
-            "babip": ".333",
-            "plate_appearances": 147,
-            "strikeouts": 16,
-            "walks": 13
+            "bb_pct": "8.0%",
+            "k_pct": "12.5%",
+            "bb_k_ratio": "0.64",
+            "babip": ".318",
+            "plate_appearances": 176,
+            "strikeouts": 22,
+            "walks": 14
           },
           "source_path": "dist/hidden-gems/mlb_extraction_ledger.json"
         },
@@ -6358,13 +6492,13 @@
             "why": "Avg EV 92.0 mph (+7.2 vs baseline), barrel-like rate 5.6%.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "8.8%",
-            "k_pct": "10.9%",
-            "bb_k_ratio": "0.81",
-            "babip": ".333",
-            "plate_appearances": 147,
-            "strikeouts": 16,
-            "walks": 13
+            "bb_pct": "8.0%",
+            "k_pct": "12.5%",
+            "bb_k_ratio": "0.64",
+            "babip": ".318",
+            "plate_appearances": 176,
+            "strikeouts": 22,
+            "walks": 14
           },
           "source_path": "dist/signals.json"
         }
@@ -6377,13 +6511,59 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "8.8%",
-        "k_pct": "10.9%",
-        "bb_k_ratio": "0.81",
-        "babip": ".333",
-        "plate_appearances": 147,
-        "strikeouts": 16,
-        "walks": 13
+        "bb_pct": "8.0%",
+        "k_pct": "12.5%",
+        "bb_k_ratio": "0.64",
+        "babip": ".318",
+        "plate_appearances": 176,
+        "strikeouts": 22,
+        "walks": 14
+      }
+    },
+    {
+      "player_id": 666974,
+      "player_name": "Yennier Cano",
+      "search_name": "yennier cano",
+      "team": "BAL",
+      "position": "P",
+      "reports_triggered": [
+        "IVB Heat Map"
+      ],
+      "signals": [
+        {
+          "report_key": "ivb_heat_map",
+          "report_label": "IVB Heat Map",
+          "section": "fallers",
+          "generated_at": "2026-05-13T10:40:02.740775",
+          "metrics": {
+            "season_context": "COMMAND_PROFILE",
+            "season": 2026,
+            "k_pct": "19.6%",
+            "bb_pct": "3.6%",
+            "k_bb_ratio": "5.50",
+            "babip": "0.143",
+            "batters_faced": 56,
+            "strikeouts": 11,
+            "walks": 2
+          },
+          "source_path": "dist/ivb_heat_map.json"
+        }
+      ],
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/666974/headshot/67/current",
+      "bats": "R",
+      "throws": "R",
+      "universe_match": true,
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "19.6%",
+        "bb_pct": "3.6%",
+        "k_bb_ratio": "5.50",
+        "babip": "0.143",
+        "batters_faced": 56,
+        "strikeouts": 11,
+        "walks": 2
       }
     },
     {
@@ -6412,10 +6592,11 @@
             "analysis": "Velocity loss paired with shortening extension. Strong indicator of latent injury or mechanical breakdown risk.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "15.9%",
-            "bb_pct": "12.2%",
+            "k_pct": "14.9%",
+            "bb_pct": "11.5%",
             "k_bb_ratio": "1.30",
-            "batters_faced": 82,
+            "babip": "0.246",
+            "batters_faced": 87,
             "strikeouts": 13,
             "walks": 10
           },
@@ -6430,11 +6611,11 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "15.9%",
-        "bb_pct": "12.2%",
+        "k_pct": "14.9%",
+        "bb_pct": "11.5%",
         "k_bb_ratio": "1.30",
-        "babip": null,
-        "batters_faced": 82,
+        "babip": "0.246",
+        "batters_faced": 87,
         "strikeouts": 13,
         "walks": 10
       }
@@ -6465,12 +6646,13 @@
             "analysis": "Shape profile is moving, but not yet in a fully qualified disruption tier. Keep this arm on the radar for another appearance.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "25.3%",
-            "bb_pct": "11.6%",
-            "k_bb_ratio": "2.18",
-            "batters_faced": 95,
-            "strikeouts": 24,
-            "walks": 11
+            "k_pct": "24.3%",
+            "bb_pct": "13.1%",
+            "k_bb_ratio": "1.86",
+            "babip": "0.279",
+            "batters_faced": 107,
+            "strikeouts": 26,
+            "walks": 14
           },
           "source_path": "dist/stuff_disruption_feed.json"
         }
@@ -6483,13 +6665,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "25.3%",
-        "bb_pct": "11.6%",
-        "k_bb_ratio": "2.18",
-        "babip": null,
-        "batters_faced": 95,
-        "strikeouts": 24,
-        "walks": 11
+        "k_pct": "24.3%",
+        "bb_pct": "13.1%",
+        "k_bb_ratio": "1.86",
+        "babip": "0.279",
+        "batters_faced": 107,
+        "strikeouts": 26,
+        "walks": 14
       }
     },
     {
@@ -6511,13 +6693,13 @@
             "why": "Toronto Blue Jays selected the contract of LF Yohendrick Pinango from Buffalo Bisons.",
             "season_context": "PLATE_DISCIPLINE",
             "season": 2026,
-            "bb_pct": "3.8%",
-            "k_pct": "11.5%",
-            "bb_k_ratio": "0.33",
-            "babip": ".455",
-            "plate_appearances": 26,
-            "strikeouts": 3,
-            "walks": 1
+            "bb_pct": "7.7%",
+            "k_pct": "10.3%",
+            "bb_k_ratio": "0.75",
+            "babip": ".406",
+            "plate_appearances": 39,
+            "strikeouts": 4,
+            "walks": 3
           },
           "source_path": "dist/typical-call-up/promotion_watch.json"
         }
@@ -6530,14 +6712,49 @@
       "season_context": {
         "season_context": "PLATE_DISCIPLINE",
         "season": 2026,
-        "bb_pct": "3.8%",
-        "k_pct": "11.5%",
-        "bb_k_ratio": "0.33",
-        "babip": ".455",
-        "plate_appearances": 26,
-        "strikeouts": 3,
-        "walks": 1
+        "bb_pct": "7.7%",
+        "k_pct": "10.3%",
+        "bb_k_ratio": "0.75",
+        "babip": ".406",
+        "plate_appearances": 39,
+        "strikeouts": 4,
+        "walks": 3
       }
+    },
+    {
+      "player_id": 900445822,
+      "player_name": "Yuki Matsui",
+      "search_name": "yuki matsui",
+      "team": "SD",
+      "position": "P",
+      "reports_triggered": [
+        "IVB Heat Map"
+      ],
+      "signals": [
+        {
+          "report_key": "ivb_heat_map",
+          "report_label": "IVB Heat Map",
+          "section": "heat_cards",
+          "generated_at": "2026-05-13T10:40:02.740775",
+          "metrics": {
+            "ivb_vs_avg": "+7.2\"",
+            "ivb_raw": "18.8\"",
+            "vaa": "-5.3°",
+            "whiff_probability": "MEDIUM",
+            "dead_zone_label": "COLD",
+            "heat_class": "hot",
+            "band_label": "Apex Carry",
+            "heat_tag": "HOT // APEX RISE",
+            "brief": "Fastball shape enters apex-rise territory. Shape is beating the velo bucket baseline. Approach angle checks in at -5.3°."
+          },
+          "source_path": "dist/ivb_heat_map.json"
+        }
+      ],
+      "latest_generated_at": "2026-05-13T10:40:02.740775",
+      "headshot_url": "https://img.mlbstatic.com/mlb-photos/image/upload/w_180,q_100/v1/people/673513/headshot/67/current",
+      "bats": "L",
+      "throws": "L",
+      "universe_match": true
     },
     {
       "player_id": 641793,
@@ -6565,12 +6782,13 @@
             "analysis": "Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.",
             "season_context": "COMMAND_PROFILE",
             "season": 2026,
-            "k_pct": "11.3%",
-            "bb_pct": "8.0%",
-            "k_bb_ratio": "1.42",
-            "batters_faced": 150,
+            "k_pct": "10.1%",
+            "bb_pct": "7.7%",
+            "k_bb_ratio": "1.31",
+            "babip": "0.252",
+            "batters_faced": 168,
             "strikeouts": 17,
-            "walks": 12
+            "walks": 13
           },
           "source_path": "dist/stuff_disruption_feed.json"
         }
@@ -6583,13 +6801,13 @@
       "season_context": {
         "season_context": "COMMAND_PROFILE",
         "season": 2026,
-        "k_pct": "11.3%",
-        "bb_pct": "8.0%",
-        "k_bb_ratio": "1.42",
-        "babip": null,
-        "batters_faced": 150,
+        "k_pct": "10.1%",
+        "bb_pct": "7.7%",
+        "k_bb_ratio": "1.31",
+        "babip": "0.252",
+        "batters_faced": 168,
         "strikeouts": 17,
-        "walks": 12
+        "walks": 13
       }
     }
   ]
