@@ -2408,7 +2408,8 @@ def scout_shell_html() -> str:
     async function fetchJsonWithFallback(paths) {
       for (const path of paths) {
         try {
-          const res = await fetch(path);
+          const bust = path.includes("?") ? "&" : "?";
+          const res = await fetch(path + bust + "v=" + Date.now(), { cache: "no-store" });
           if (res.ok) {
             console.log("[SCOUT] loaded JSON from", path);
             return await res.json();
@@ -2437,9 +2438,9 @@ def scout_shell_html() -> str:
 
       try {
         const dossierPayload = await fetchJsonWithFallback([
+          "/dossier_canon.json",
           "../../dossier_canon.json",
           "../dossier_canon.json",
-          "/dossier_canon.json",
           "/dist/dossier_canon.json"
         ]);
 

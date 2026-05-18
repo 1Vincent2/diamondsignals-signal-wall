@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-05-18T19:53:38.132784+00:00",
+  "generated_at": "2026-05-18T21:02:48.779061+00:00",
   "source": "merged_operational_status_feed",
   "source_priority": [
     "supabase_truth_tables_if_available",
     "mlb_statsapi_transactions",
     "mlb_statsapi_roster"
   ],
-  "player_count": 3715,
+  "player_count": 3716,
   "players": [
     {
       "player_name": "A.J. Minter",
@@ -5548,11 +5548,10 @@
     {
       "player_name": "Chase Solesky",
       "team": "Tampa Bay Rays",
-      "team_id": 139,
-      "raw_status": "Reassigned to Minors",
-      "source": "mlb_statsapi_roster",
-      "status_reason": "MLB roster feed reports Reassigned to Minors. Verify before deployment.",
-      "roster_type": "40Man"
+      "raw_status": "WATCHLIST_ONLY_TRANSACTION",
+      "source": "mlb_statsapi_transactions",
+      "status_reason": "Tampa Bay Rays signed free agent RHP Chase Solesky to a minor league contract. Signed as Free Agent SFA",
+      "transaction_date": "2026-01-07"
     },
     {
       "player_name": "Chase Watkins",
@@ -6256,6 +6255,15 @@
       "source": "mlb_statsapi_transactions",
       "status_reason": "Texas Rangers signed free agent RHP Cole Stasio to a minor league contract. Signed as Free Agent SFA",
       "transaction_date": "2026-01-12"
+    },
+    {
+      "player_name": "Cole Sulser",
+      "team": "Tampa Bay Rays",
+      "team_id": 139,
+      "raw_status": "Injured 15-Day",
+      "source": "mlb_statsapi_roster",
+      "status_reason": "MLB roster feed reports Injured 15-Day. Verify before deployment.",
+      "roster_type": "40Man"
     },
     {
       "player_name": "Cole Wilcox",
@@ -15322,9 +15330,9 @@
       "player_name": "Joe Boyle",
       "team": "Tampa Bay Rays",
       "team_id": 139,
-      "raw_status": "Injured 15-Day",
+      "raw_status": "Reassigned to Minors",
       "source": "mlb_statsapi_roster",
-      "status_reason": "MLB roster feed reports Injured 15-Day. Verify before deployment.",
+      "status_reason": "MLB roster feed reports Reassigned to Minors. Verify before deployment.",
       "roster_type": "40Man"
     },
     {
@@ -30318,6 +30326,6 @@
     "supabase_status_table_unavailable player_operational_status: {'message': \"Could not find the table 'public.player_operational_status' in the schema cache\", 'code': 'PGRST205', 'hint': \"Perhaps you meant the table 'public.player_daily_metrics'\", 'details': None}",
     "supabase_status_table_unavailable player_truth_status: {'message': \"Could not find the table 'public.player_truth_status' in the schema cache\", 'code': 'PGRST205', 'hint': \"Perhaps you meant the table 'public.player_daily_metrics'\", 'details': None}",
     "supabase_status_table_unavailable mlb_player_status: {'message': \"Could not find the table 'public.mlb_player_status' in the schema cache\", 'code': 'PGRST205', 'hint': \"Perhaps you meant the table 'public.milb_players'\", 'details': None}",
-    "mlb_transactions_loaded: 8742 rows"
+    "mlb_transactions_loaded: 8746 rows"
   ]
 }
