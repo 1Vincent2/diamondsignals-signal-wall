@@ -1,0 +1,13 @@
+<section class="player-lookup-panel" aria-label="{{ lookup_label or 'Player lookup' }}">
+  <div>
+    <span>{{ lookup_kicker or 'PLAYER LOOKUP // MOBILE PARITY' }}</span>
+    <strong>{{ lookup_title or 'Search active report assets' }}</strong>
+  </div>
+  <input
+    id="{{ lookup_input_id or 'playerSearch' }}"
+    type="search"
+    placeholder="{{ lookup_placeholder or 'Search player, team, command, status...' }}"
+    oninput="{{ lookup_handler or 'filterReportCards()' }}"
+    autocomplete="off"
+  />
+</section>

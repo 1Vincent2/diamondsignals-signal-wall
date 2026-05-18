@@ -520,7 +520,7 @@ body.waiver-field-guide-open{
 }
 
 
-.waiver-lookup-panel{
+.player-lookup-panel{
   margin: 22px 0 18px;
   display:flex;
   align-items:center;
@@ -532,20 +532,20 @@ body.waiver-field-guide-open{
   background:linear-gradient(135deg,rgba(15,23,42,.76),rgba(2,6,23,.9));
   box-shadow:0 18px 45px rgba(0,0,0,.25);
 }
-.waiver-lookup-panel span{
+.player-lookup-panel span{
   display:block;
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
   font-size:10px;
   letter-spacing:.16em;
   color:rgba(157,255,107,.78);
 }
-.waiver-lookup-panel strong{
+.player-lookup-panel strong{
   display:block;
   margin-top:4px;
   color:#f8fafc;
   font-size:14px;
 }
-.waiver-lookup-panel input{
+.player-lookup-panel input{
   width:min(420px,100%);
   border:1px solid rgba(56,189,248,.28);
   border-radius:999px;
@@ -617,13 +617,13 @@ body.waiver-field-guide-open{
   color:#9dff6b;
 }
 @media (max-width: 720px){
-  .waiver-lookup-panel{
+  .player-lookup-panel{
     display:block;
     position:sticky;
     top:10px;
     z-index:20;
   }
-  .waiver-lookup-panel input{
+  .player-lookup-panel input{
     margin-top:12px;
   }
   .card-action-row{
@@ -823,13 +823,13 @@ body.waiver-field-guide-open{
         <b>Box-score lag</b>
       </div>
     </section>
-      <section class="waiver-lookup-panel" aria-label="Waiver Wire player lookup">
-        <div>
-          <span>PLAYER LOOKUP // MOBILE PARITY</span>
-          <strong>Search active open-market assets</strong>
-        </div>
-        <input id="waiverPlayerSearch" type="search" placeholder="Search player, team, command, status..." oninput="filterWaiverCards()" autocomplete="off" />
-      </section>
+      {% set lookup_label = "Waiver Wire player lookup" %}
+      {% set lookup_kicker = "PLAYER LOOKUP // MOBILE PARITY" %}
+      {% set lookup_title = "Search active open-market assets" %}
+      {% set lookup_input_id = "waiverPlayerSearch" %}
+      {% set lookup_placeholder = "Search player, team, command, status..." %}
+      {% set lookup_handler = "filterWaiverCards()" %}
+      {% include "components/player_lookup_panel.html" %}
 
       <section class="grid" id="waiverAssetGrid">
         {% for asset in assets %}

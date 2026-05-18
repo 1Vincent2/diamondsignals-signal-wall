@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 import json
 
-from jinja2 import Template
+from jinja2 import Environment, FileSystemLoader, Template
 
 from dashboard.lib.report_status import build_report_status
 from dashboard.lib.player_operational_status import apply_operational_status
@@ -400,7 +400,8 @@ def render() -> None:
         if row.get("deployment_state") in {"DEPLOYMENT_LOCKED", "SUPPRESS"}
     ]
 
-    template = Template(TEMPLATE_PATH.read_text(encoding="utf-8"))
+    template_env = Environment(loader=FileSystemLoader(str(TEMPLATE_PATH.parent)))
+    template = template_env.get_template(TEMPLATE_PATH.name)
     shell_nav = Template(SHELL_NAV_PATH.read_text(encoding="utf-8")).render(active_nav="waiver_wire")
 
     HTML_PATH.write_text(
