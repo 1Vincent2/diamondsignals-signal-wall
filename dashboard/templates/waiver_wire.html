@@ -519,6 +519,153 @@ body.waiver-field-guide-open{
   }
 }
 
+
+.waiver-lookup-panel{
+  margin: 22px 0 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:14px;
+  border:1px solid rgba(148,163,184,.18);
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(15,23,42,.76),rgba(2,6,23,.9));
+  box-shadow:0 18px 45px rgba(0,0,0,.25);
+}
+.waiver-lookup-panel span{
+  display:block;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10px;
+  letter-spacing:.16em;
+  color:rgba(157,255,107,.78);
+}
+.waiver-lookup-panel strong{
+  display:block;
+  margin-top:4px;
+  color:#f8fafc;
+  font-size:14px;
+}
+.waiver-lookup-panel input{
+  width:min(420px,100%);
+  border:1px solid rgba(56,189,248,.28);
+  border-radius:999px;
+  background:rgba(2,6,23,.78);
+  color:#f8fafc;
+  padding:12px 14px;
+  outline:none;
+}
+.asset-card{
+  cursor:pointer;
+}
+.asset-card.is-hidden-by-search{
+  display:none;
+}
+.ops-strip{
+  margin:14px 0;
+  padding:12px;
+  border-radius:16px;
+  border:1px solid rgba(148,163,184,.16);
+  background:rgba(2,6,23,.58);
+}
+.ops-strip div{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:6px;
+}
+.ops-strip span{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10px;
+  letter-spacing:.14em;
+  color:rgba(148,163,184,.78);
+}
+.ops-strip b{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:11px;
+  letter-spacing:.1em;
+  color:#9dff6b;
+}
+.ops-strip p{
+  margin:8px 0 0;
+  color:rgba(226,232,240,.78);
+  font-size:12px;
+  line-height:1.45;
+}
+.ops-strip.deployment-locked b,
+.ops-strip.eligibility-unverified b{
+  color:#fb7185;
+}
+.ops-strip.surveillance-only b,
+.ops-strip.watchlist-only b{
+  color:#38bdf8;
+}
+.card-action-row{
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid rgba(148,163,184,.14);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10px;
+  letter-spacing:.12em;
+  color:rgba(226,232,240,.68);
+}
+.card-action-row b{
+  color:#9dff6b;
+}
+@media (max-width: 720px){
+  .waiver-lookup-panel{
+    display:block;
+    position:sticky;
+    top:10px;
+    z-index:20;
+  }
+  .waiver-lookup-panel input{
+    margin-top:12px;
+  }
+  .card-action-row{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+}
+
+.frozen-signal-section{
+  margin-top:34px;
+  padding-top:24px;
+  border-top:1px solid rgba(251,113,133,.22);
+}
+.frozen-head{
+  margin-bottom:16px;
+  padding:16px;
+  border:1px solid rgba(251,113,133,.22);
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(127,29,29,.18),rgba(2,6,23,.84));
+}
+.frozen-head span{
+  display:block;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10px;
+  letter-spacing:.16em;
+  color:#fb7185;
+}
+.frozen-head strong{
+  display:block;
+  margin-top:6px;
+  color:#f8fafc;
+  font-size:18px;
+}
+.frozen-head p{
+  margin:8px 0 0;
+  color:rgba(226,232,240,.72);
+  line-height:1.55;
+}
+.frozen-card{
+  border-color:rgba(251,113,133,.26) !important;
+  background:linear-gradient(180deg,rgba(127,29,29,.14),rgba(2,6,23,.84)) !important;
+}
 </style>
 </head>
 
@@ -561,47 +708,117 @@ body.waiver-field-guide-open{
         <b>Box-score lag</b>
       </div>
     </section>
+      <section class="waiver-lookup-panel" aria-label="Waiver Wire player lookup">
+        <div>
+          <span>PLAYER LOOKUP // MOBILE PARITY</span>
+          <strong>Search active open-market assets</strong>
+        </div>
+        <input id="waiverPlayerSearch" type="search" placeholder="Search player, team, command, status..." oninput="filterWaiverCards()" autocomplete="off" />
+      </section>
 
-    <section class="grid">
-      {% for asset in assets %}
-      <article class="asset-card">
-        <div class="asset-top">
-          <div>
-            <div class="asset-name">{{ asset.player_name }}</div>
-            <div class="asset-meta">{{ asset.team }} // {{ asset.position }} // ROSTERED {{ asset.rostered_pct }}%</div>
+      <section class="grid" id="waiverAssetGrid">
+        {% for asset in assets %}
+        <article class="asset-card" data-search="{{ asset.search_blob }}" data-audit-url="{{ asset.audit_url }}" onclick="openPlayerAudit(this)" tabindex="0" role="button" aria-label="Open performance audit for {{ asset.player_name }}">
+          <div class="asset-top">
+            <div>
+              <div class="asset-name">{{ asset.player_name }}</div>
+              <div class="asset-meta">{{ asset.team }} // {{ asset.position }} // ROSTERED {{ asset.rostered_pct }}% // ID {{ asset.player_id }}</div>
+            </div>
+
+            <div class="claim-pill {{ asset.command_class }}">{{ asset.command }}</div>
           </div>
 
-          <div class="claim-pill {{ asset.command_class }}">{{ asset.command }}</div>
+          <div class="ops-strip {{ asset.deployment_state | lower | replace('_', '-') }}">
+            <div>
+              <span>OPERATIONAL STATUS</span>
+              <b>{{ asset.deployment_label }}</b>
+            </div>
+            <div>
+              <span>BODY / ROSTER STATE</span>
+              <b>{{ asset.operational_status }}</b>
+            </div>
+            <p>{{ asset.status_reason }}</p>
+          </div>
+
+          <div class="asset-body">
+            <div class="readout">
+              <span>Surface suppression</span>
+              <p>{{ asset.surface_profile }}</p>
+            </div>
+
+            <div class="readout">
+              <span>Forensic trigger</span>
+              <p>{{ asset.forensic_trigger }}</p>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            {% for metric in asset.metrics %}
+            <div class="metric metric-{{ metric.label | lower | replace(' ', '-') }}">
+              <span>{{ metric.label }}</span>
+              <b>{{ metric.value }}</b>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div class="verdict">
+            <span>Market read // {{ asset.market_status }}</span>
+            <p>{{ asset.verdict }}</p>
+          </div>
+
+          <div class="card-action-row">
+            <span>{{ asset.card_action }}</span>
+            <b>PERFORMANCE AUDIT →</b>
+          </div>
+        </article>
+        {% endfor %}
+      </section>
+      
+      {% if frozen_assets %}
+      <section class="frozen-signal-section">
+        <div class="frozen-head">
+          <span>FROZEN SIGNALS // SURVEILLANCE ONLY</span>
+          <strong>Signal detected. Deployment blocked.</strong>
+          <p>These players retain forensic value but are removed from the primary waiver-action board until operational status clears.</p>
         </div>
 
-        <div class="asset-body">
-          <div class="readout">
-            <span>Surface suppression</span>
-            <p>{{ asset.surface_profile }}</p>
-          </div>
+        <div class="grid frozen-grid">
+          {% for asset in frozen_assets %}
+          <article class="asset-card frozen-card" data-search="{{ asset.search_blob }}" data-audit-url="{{ asset.audit_url }}" onclick="openPlayerAudit(this)" tabindex="0" role="button" aria-label="Open performance audit for {{ asset.player_name }}">
+            <div class="asset-top">
+              <div>
+                <div class="asset-name">{{ asset.player_name }}</div>
+                <div class="asset-meta">{{ asset.team }} // {{ asset.position }} // ROSTERED {{ asset.rostered_pct }}% // ID {{ asset.player_id }}</div>
+              </div>
+              <div class="claim-pill stash">{{ asset.card_action }}</div>
+            </div>
 
-          <div class="readout">
-            <span>Forensic trigger</span>
-            <p>{{ asset.forensic_trigger }}</p>
-          </div>
-        </div>
+            <div class="ops-strip {{ asset.deployment_state | lower | replace('_', '-') }}">
+              <div>
+                <span>OPERATIONAL STATUS</span>
+                <b>{{ asset.deployment_label }}</b>
+              </div>
+              <div>
+                <span>BODY / ROSTER STATE</span>
+                <b>{{ asset.operational_status }}</b>
+              </div>
+              <p>{{ asset.status_reason }}</p>
+            </div>
 
-        <div class="metric-grid">
-          {% for metric in asset.metrics %}
-          <div class="metric metric-{{ metric.label | lower | replace(' ', '-') }}">
-            <span>{{ metric.label }}</span>
-            <b>{{ metric.value }}</b>
-          </div>
+            <div class="verdict">
+              <span>Market read // {{ asset.market_status }}</span>
+              <p>{{ asset.verdict }}</p>
+            </div>
+
+            <div class="card-action-row">
+              <span>{{ asset.card_action }}</span>
+              <b>PERFORMANCE AUDIT →</b>
+            </div>
+          </article>
           {% endfor %}
         </div>
-
-        <div class="verdict">
-          <span>Market read // {{ asset.market_status }}</span>
-          <p>{{ asset.verdict }}</p>
-        </div>
-      </article>
-      {% endfor %}
-    </section>
+      </section>
+      {% endif %}
 
     <div class="footer-note">
       Generated {{ generated_at }} // Waiver Wire Open Market v1 // Isolated fast builder // Desktop-first QA pass
@@ -657,6 +874,32 @@ body.waiver-field-guide-open{
   </aside>
 
     </main>
+
+<script id="waiver-hardening-script">
+function filterWaiverCards() {
+  const input = document.getElementById("waiverPlayerSearch");
+  const q = (input && input.value ? input.value : "").trim().toLowerCase();
+  document.querySelectorAll(".asset-card").forEach(card => {
+    const blob = (card.getAttribute("data-search") || "").toLowerCase();
+    card.classList.toggle("is-hidden-by-search", q && !blob.includes(q));
+  });
+}
+
+function openPlayerAudit(card) {
+  const url = card && card.getAttribute("data-audit-url");
+  if (!url) return;
+  window.location.href = url;
+}
+
+document.addEventListener("keydown", function(event) {
+  const card = event.target && event.target.closest ? event.target.closest(".asset-card") : null;
+  if (!card) return;
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    openPlayerAudit(card);
+  }
+});
+</script>
 
 <script id="waiver-field-guide-script">
 function openWaiverFieldGuide() {

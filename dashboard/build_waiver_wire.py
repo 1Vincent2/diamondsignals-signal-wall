@@ -8,6 +8,7 @@ import json
 from jinja2 import Template
 
 from dashboard.lib.report_status import build_report_status
+from dashboard.lib.player_operational_status import apply_operational_status
 
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
@@ -46,9 +47,21 @@ def build_assets() -> list[dict]:
         market_defect: str,
         command_metric: str,
         risk: str,
+        player_id: str = "",
+        audit_slug: str = "",
+        deployment_state: str = "DEPLOYMENT_CLEAR",
+        deployment_label: str = "DEPLOYMENT CLEAR",
+        operational_status: str = "ACTIVE",
+        status_reason: str = "Status clear at build time",
+        card_action: str = "OPEN PERFORMANCE AUDIT",
+        visibility_state: str = "primary",
     ) -> dict:
+        safe_slug = audit_slug or player_name.lower().replace(".", "").replace(" ", "-")
         return {
             "player_name": player_name,
+            "player_id": player_id or safe_slug,
+            "audit_slug": safe_slug,
+            "audit_url": f"/admin/player-forensics/?player={safe_slug}",
             "team": team,
             "position": position,
             "rostered_pct": rostered_pct,
@@ -58,6 +71,13 @@ def build_assets() -> list[dict]:
             "surface_profile": surface_profile,
             "forensic_trigger": forensic_trigger,
             "verdict": verdict,
+            "deployment_state": deployment_state,
+            "deployment_label": deployment_label,
+            "operational_status": operational_status,
+            "status_reason": status_reason,
+            "card_action": card_action,
+            "visibility_state": visibility_state,
+            "search_blob": " ".join([player_name, team, position, command, market_status, deployment_label, operational_status]).lower(),
             "metrics": [
                 {"label": "Ownership Gate", "value": ownership_gate},
                 {"label": "Signal Window", "value": signal_window},
@@ -301,9 +321,18 @@ def write_waiver_wire_status(
     degraded = asset_count == 0
 
     command_counts = {}
+    deployment_counts = {}
+    visibility_counts = {}
+
     for row in assets or []:
         command = str(row.get("command") or "UNKNOWN").strip() or "UNKNOWN"
         command_counts[command] = command_counts.get(command, 0) + 1
+
+        deployment = str(row.get("deployment_state") or "UNKNOWN").strip() or "UNKNOWN"
+        deployment_counts[deployment] = deployment_counts.get(deployment, 0) + 1
+
+        visibility = str(row.get("visibility_state") or "UNKNOWN").strip() or "UNKNOWN"
+        visibility_counts[visibility] = visibility_counts.get(visibility, 0) + 1
 
     status_payload = build_report_status(
         "waiver_wire",
@@ -314,16 +343,33 @@ def write_waiver_wire_status(
         source_updated_at=build_finished_at,
         section_counts={
             "waiver_assets": asset_count,
+            "primary_assets": visibility_counts.get("primary", 0),
+            "frozen_assets": visibility_counts.get("deployment_locked", 0) + visibility_counts.get("suppressed", 0),
             "command_groups": len(command_counts),
+            "deployment_clear": deployment_counts.get("DEPLOYMENT_CLEAR", 0),
+            "deployment_locked": deployment_counts.get("DEPLOYMENT_LOCKED", 0),
+            "watchlist_only": deployment_counts.get("WATCHLIST_ONLY", 0),
+            "surveillance_only": deployment_counts.get("SURVEILLANCE_ONLY", 0),
+            "eligibility_unverified": deployment_counts.get("ELIGIBILITY_UNVERIFIED", 0),
         },
         degraded=degraded,
         notes=[
-            f"Waiver Wire Open Market built with {asset_count} active open-market assets."
+            f"Waiver Wire Open Market built with {asset_count} total assets; "
+            f"{visibility_counts.get('primary', 0)} primary and "
+            f"{visibility_counts.get('deployment_locked', 0) + visibility_counts.get('suppressed', 0)} frozen."
         ],
     )
 
     status_payload["command_counts"] = command_counts
-    status_payload["mode"] = "static_editable_v1"
+    status_payload["deployment_counts"] = deployment_counts
+    status_payload["visibility_counts"] = visibility_counts
+    status_payload["hardening_notes"] = [
+        "Signal detection is separated from deployment eligibility.",
+        "Deployment-locked players are removed from the primary Waiver Wire board.",
+        "Frozen Signals section preserves surveillance value without implying roster actionability.",
+        "Manual operational override layer is active until live MLB status ingestion is wired.",
+    ]
+    status_payload["mode"] = "static_editable_v1_hardened"
 
     WAIVER_WIRE_STATUS_PATH.write_text(
         json.dumps(status_payload, indent=2),
@@ -337,14 +383,27 @@ def render() -> None:
     HTML_DIR.mkdir(parents=True, exist_ok=True)
 
     assets = build_assets()
+
+    assets = [apply_operational_status(row) for row in assets]
+
     generated_at = datetime.utcnow().isoformat(timespec="seconds") + "Z"
+
+    primary_assets = [
+        row for row in assets
+        if row.get("deployment_state") not in {"DEPLOYMENT_LOCKED", "SUPPRESS"}
+    ]
+    frozen_assets = [
+        row for row in assets
+        if row.get("deployment_state") in {"DEPLOYMENT_LOCKED", "SUPPRESS"}
+    ]
 
     template = Template(TEMPLATE_PATH.read_text(encoding="utf-8"))
     shell_nav = Template(SHELL_NAV_PATH.read_text(encoding="utf-8")).render(active_nav="waiver_wire")
 
     HTML_PATH.write_text(
         template.render(
-            assets=assets,
+            assets=primary_assets,
+            frozen_assets=frozen_assets,
             generated_at=generated_at,
             shell_styles=SHELL_STYLES_PATH.read_text(encoding="utf-8"),
             shell_nav=shell_nav,
@@ -357,8 +416,10 @@ def render() -> None:
 
     payload = {
         "generated_at": generated_at,
-        "mode": "static_editable_v1",
-        "assets": assets,
+        "mode": "static_editable_v1_hardened",
+        "assets": primary_assets,
+        "frozen_assets": frozen_assets,
+        "all_assets": assets,
     }
     JSON_PATH.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     print(f"Wrote waiver wire payload -> {JSON_PATH}")
