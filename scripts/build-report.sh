@@ -5,6 +5,7 @@ REPORT="${1:-}"
 
 case "$REPORT" in
   waiver-wire|waiver)
+    PYTHONPATH=. python3 dashboard/lib/build_operational_status_feed.py
     PYTHONPATH=. python3 dashboard/build_waiver_wire.py
     ;;
   all)

@@ -6,7 +6,6 @@ from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-STATUS_FEED_PATH = REPO_ROOT / "dashboard" / "data" / "player_operational_status_overrides.json"
 DYNAMIC_STATUS_FEED_PATH = REPO_ROOT / "dashboard" / "data" / "status" / "mlb_operational_status_feed.json"
 
 BLOCKED_OPERATIONAL_STATUSES = {
@@ -31,14 +30,6 @@ WATCHLIST_ONLY_STATUSES = {
     "AA",
 }
 
-
-FALLBACK_OPERATIONAL_OVERRIDES: dict[str, dict[str, Any]] = {
-    "luis l. ortiz": {
-        "raw_status": "NON-DISCIPLINARY LEAVE",
-        "status_reason": "Blocked from primary waiver deployment. Keep as surveillance-only until MLB status clears.",
-        "status_source": "manual_fallback",
-    },
-}
 
 
 def normalize_player_key(player_name: str) -> str:
@@ -80,20 +71,8 @@ def load_dynamic_status_feed() -> dict[str, dict[str, Any]]:
 
 
 def load_status_feed() -> dict[str, dict[str, Any]]:
-    if not STATUS_FEED_PATH.exists():
-        return {}
-
-    try:
-        data = json.loads(STATUS_FEED_PATH.read_text(encoding="utf-8"))
-        if not isinstance(data, dict):
-            return {}
-        return {
-            normalize_player_key(key): value
-            for key, value in data.items()
-            if isinstance(value, dict)
-        }
-    except Exception:
-        return {}
+    # Manual local status overrides are disabled for production truth.
+    return {}
 
 
 def get_operational_override(player_name: str) -> dict[str, Any]:
@@ -107,13 +86,13 @@ def get_operational_override(player_name: str) -> dict[str, Any]:
     if key in manual_feed:
         return manual_feed[key]
 
-    return FALLBACK_OPERATIONAL_OVERRIDES.get(key, {})
+    return {}
 
 
 def classify_status(raw_status: str) -> dict[str, str]:
     status = normalize_status(raw_status)
 
-    if status in BLOCKED_OPERATIONAL_STATUSES:
+    if status == "DEPLOYMENT_LOCKED_TRANSACTION" or status in BLOCKED_OPERATIONAL_STATUSES:
         return {
             "deployment_state": "DEPLOYMENT_LOCKED",
             "deployment_label": "SIGNAL PRESENT // DEPLOYMENT LOCKED",
@@ -122,7 +101,7 @@ def classify_status(raw_status: str) -> dict[str, str]:
             "visibility_state": "deployment_locked",
         }
 
-    if status in WATCHLIST_ONLY_STATUSES:
+    if status == "WATCHLIST_ONLY_TRANSACTION" or status in WATCHLIST_ONLY_STATUSES:
         return {
             "deployment_state": "WATCHLIST_ONLY",
             "deployment_label": "WATCHLIST ONLY",
@@ -154,10 +133,11 @@ def display_status_source(status_source: str) -> str:
 
     labels = {
         "default_active": "VERIFIED ACTIVE",
-        "local_status_feed": "LOCAL STATUS FEED",
         "manual_fallback": "MANUAL FALLBACK",
-        "temporary_seed": "DYNAMIC STATUS FEED",
         "dynamic_status_feed": "DYNAMIC STATUS FEED",
+        "mlb_statsapi_roster": "MLB ROSTER STATUS",
+        "mlb_statsapi_transactions": "MLB TRANSACTION STATUS",
+        "merged_operational_status_feed": "MERGED STATUS FEED",
     }
 
     return labels.get(source, source.upper().replace("_", " "))
