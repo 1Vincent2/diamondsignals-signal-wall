@@ -666,6 +666,38 @@ body.waiver-field-guide-open{
   border-color:rgba(251,113,133,.26) !important;
   background:linear-gradient(180deg,rgba(127,29,29,.14),rgba(2,6,23,.84)) !important;
 }
+
+.status-provenance{
+  margin-top:12px;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid rgba(251,113,133,.22);
+  background:rgba(127,29,29,.12);
+}
+.status-provenance div{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+}
+.status-provenance span{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10px;
+  letter-spacing:.14em;
+  color:rgba(251,113,133,.88);
+}
+.status-provenance b{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:11px;
+  letter-spacing:.08em;
+  color:#fda4af;
+}
+.status-provenance p{
+  margin:8px 0 0;
+  color:rgba(226,232,240,.78);
+  font-size:12px;
+  line-height:1.45;
+}
 </style>
 </head>
 
@@ -808,6 +840,14 @@ body.waiver-field-guide-open{
             <div class="verdict">
               <span>Market read // {{ asset.market_status }}</span>
               <p>{{ asset.verdict }}</p>
+            </div>
+
+            <div class="status-provenance">
+              <div>
+                <span>STATUS SOURCE</span>
+                <b>{{ asset.status_source }}</b>
+              </div>
+              <p>{{ asset.status_reason }}</p>
             </div>
 
             <div class="card-action-row">
