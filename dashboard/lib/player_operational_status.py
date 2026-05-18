@@ -1,7 +1,12 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any
 
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+STATUS_FEED_PATH = REPO_ROOT / "dashboard" / "data" / "player_operational_status_overrides.json"
 
 BLOCKED_OPERATIONAL_STATUSES = {
     "10-DAY IL",
@@ -26,11 +31,11 @@ WATCHLIST_ONLY_STATUSES = {
 }
 
 
-OPERATIONAL_OVERRIDES: dict[str, dict[str, Any]] = {
+FALLBACK_OPERATIONAL_OVERRIDES: dict[str, dict[str, Any]] = {
     "luis l. ortiz": {
         "raw_status": "NON-DISCIPLINARY LEAVE",
         "status_reason": "Blocked from primary waiver deployment. Keep as surveillance-only until MLB status clears.",
-        "status_source": "manual_override",
+        "status_source": "manual_fallback",
     },
 }
 
@@ -41,6 +46,33 @@ def normalize_player_key(player_name: str) -> str:
 
 def normalize_status(raw_status: str) -> str:
     return str(raw_status or "ACTIVE").upper().strip()
+
+
+def load_status_feed() -> dict[str, dict[str, Any]]:
+    if not STATUS_FEED_PATH.exists():
+        return {}
+
+    try:
+        data = json.loads(STATUS_FEED_PATH.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            return {}
+        return {
+            normalize_player_key(key): value
+            for key, value in data.items()
+            if isinstance(value, dict)
+        }
+    except Exception:
+        return {}
+
+
+def get_operational_override(player_name: str) -> dict[str, Any]:
+    key = normalize_player_key(player_name)
+    feed = load_status_feed()
+
+    if key in feed:
+        return feed[key]
+
+    return FALLBACK_OPERATIONAL_OVERRIDES.get(key, {})
 
 
 def classify_status(raw_status: str) -> dict[str, str]:
@@ -95,15 +127,28 @@ def rebuild_search_blob(row: dict[str, Any]) -> None:
 
 
 def apply_operational_status(row: dict[str, Any]) -> dict[str, Any]:
-    key = normalize_player_key(row.get("player_name", ""))
-    override = OPERATIONAL_OVERRIDES.get(key, {})
+    override = get_operational_override(row.get("player_name", ""))
 
-    raw_status = override.get("raw_status", row.get("raw_status", row.get("operational_status", "ACTIVE")))
+    raw_status = override.get(
+        "raw_status",
+        row.get("raw_status", row.get("operational_status", "ACTIVE")),
+    )
     classified = classify_status(raw_status)
 
     row.update(classified)
-    row["status_reason"] = override.get("status_reason", row.get("status_reason", "Status clear at build time."))
-    row["status_source"] = override.get("status_source", row.get("status_source", "default_active"))
+    row["status_reason"] = override.get(
+        "status_reason",
+        row.get("status_reason", "Status clear at build time."),
+    )
+    row["status_source"] = override.get(
+        "status_source",
+        row.get("status_source", "default_active"),
+    )
+
+    # Keep rendered metric tiles synchronized with the operational-status layer.
+    for metric in row.get("metrics", []):
+        if metric.get("label") == "Status Source":
+            metric["value"] = row["status_source"]
 
     rebuild_search_blob(row)
     return row
