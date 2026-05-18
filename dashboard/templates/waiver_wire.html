@@ -753,6 +753,23 @@ body.waiver-field-guide-open{
   .mobile-waiver-hero{ display:block; }
   .risk-disclaimer{ display:none; }
 }
+
+.performance-audit-button{
+  appearance:none;
+  border:1px solid rgba(157,255,107,.36);
+  border-radius:999px;
+  background:rgba(157,255,107,.08);
+  color:#9dff6b;
+  padding:8px 11px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10px;
+  letter-spacing:.12em;
+  cursor:pointer;
+}
+.performance-audit-button:hover{
+  border-color:rgba(157,255,107,.62);
+  background:rgba(157,255,107,.14);
+}
 </style>
 </head>
 
@@ -883,7 +900,9 @@ body.waiver-field-guide-open{
 
           <div class="card-action-row">
             <span>{{ asset.card_action }}</span>
-            <b>PERFORMANCE AUDIT →</b>
+            <button class="performance-audit-button" type="button" onclick="event.stopPropagation(); openPlayerAudit(this.closest('.asset-card'));">
+                PERFORMANCE AUDIT →
+              </button>
           </div>
         </article>
         {% endfor %}
@@ -935,7 +954,9 @@ body.waiver-field-guide-open{
 
             <div class="card-action-row">
               <span>{{ asset.card_action }}</span>
-              <b>PERFORMANCE AUDIT →</b>
+              <button class="performance-audit-button" type="button" onclick="event.stopPropagation(); openPlayerAudit(this.closest('.asset-card'));">
+                PERFORMANCE AUDIT →
+              </button>
             </div>
           </article>
           {% endfor %}
