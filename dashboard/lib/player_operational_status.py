@@ -7,6 +7,7 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 STATUS_FEED_PATH = REPO_ROOT / "dashboard" / "data" / "player_operational_status_overrides.json"
+DYNAMIC_STATUS_FEED_PATH = REPO_ROOT / "dashboard" / "data" / "status" / "mlb_operational_status_feed.json"
 
 BLOCKED_OPERATIONAL_STATUSES = {
     "10-DAY IL",
@@ -48,6 +49,36 @@ def normalize_status(raw_status: str) -> str:
     return str(raw_status or "ACTIVE").upper().strip()
 
 
+def load_dynamic_status_feed() -> dict[str, dict[str, Any]]:
+    if not DYNAMIC_STATUS_FEED_PATH.exists():
+        return {}
+
+    try:
+        data = json.loads(DYNAMIC_STATUS_FEED_PATH.read_text(encoding="utf-8"))
+        players = data.get("players", []) if isinstance(data, dict) else []
+        if not isinstance(players, list):
+            return {}
+
+        feed: dict[str, dict[str, Any]] = {}
+        for row in players:
+            if not isinstance(row, dict):
+                continue
+            player_name = row.get("player_name")
+            if not player_name:
+                continue
+            feed[normalize_player_key(player_name)] = {
+                "raw_status": row.get("raw_status", "UNKNOWN"),
+                "status_reason": row.get(
+                    "status_reason",
+                    "Dynamic operational feed marked this player as non-standard status.",
+                ),
+                "status_source": row.get("source", "dynamic_status_feed"),
+            }
+        return feed
+    except Exception:
+        return {}
+
+
 def load_status_feed() -> dict[str, dict[str, Any]]:
     if not STATUS_FEED_PATH.exists():
         return {}
@@ -67,10 +98,14 @@ def load_status_feed() -> dict[str, dict[str, Any]]:
 
 def get_operational_override(player_name: str) -> dict[str, Any]:
     key = normalize_player_key(player_name)
-    feed = load_status_feed()
 
-    if key in feed:
-        return feed[key]
+    dynamic_feed = load_dynamic_status_feed()
+    if key in dynamic_feed:
+        return dynamic_feed[key]
+
+    manual_feed = load_status_feed()
+    if key in manual_feed:
+        return manual_feed[key]
 
     return FALLBACK_OPERATIONAL_OVERRIDES.get(key, {})
 
