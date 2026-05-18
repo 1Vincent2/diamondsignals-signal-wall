@@ -197,13 +197,22 @@ def build_assets() -> list[dict]:
     ) -> dict:
         safe_slug = audit_slug or player_name.lower().replace(".", "").replace(" ", "-")
         resolved_player_id = str(player_id or resolve_player_id_by_name(player_name, team) or "").strip()
-        scout_url = f"/scout/{resolved_player_id}/" if resolved_player_id.isdigit() else "#"
+        scout_path = REPO_ROOT / "dist" / "scout" / resolved_player_id / "index.html" if resolved_player_id.isdigit() else None
+        scout_url = f"/scout/{resolved_player_id}/" if scout_path and scout_path.exists() else ""
+        watchlist_url = (
+            "https://app.diamondsignals.ai/watchlist"
+            f"?player_id={resolved_player_id}"
+            f"&player_name={player_name.replace(' ', '%20')}"
+            "&source=waiver-wire"
+        )
 
         return {
             "player_name": player_name,
             "player_id": resolved_player_id,
             "audit_slug": safe_slug,
-            "audit_url": scout_url,
+            "audit_url": scout_url or watchlist_url,
+            "watchlist_url": watchlist_url,
+            "has_scout_page": bool(scout_url),
             "team": team,
             "position": position,
             "rostered_pct": rostered_pct,

@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-05-18T18:03:23.583224+00:00",
+  "generated_at": "2026-05-18T19:53:38.132784+00:00",
   "source": "merged_operational_status_feed",
   "source_priority": [
     "supabase_truth_tables_if_available",
     "mlb_statsapi_transactions",
     "mlb_statsapi_roster"
   ],
-  "player_count": 3713,
+  "player_count": 3715,
   "players": [
     {
       "player_name": "A.J. Minter",
       "team": "New York Mets",
       "team_id": 121,
-      "raw_status": "Injured 15-Day",
+      "raw_status": "Injured 60-Day",
       "source": "mlb_statsapi_roster",
-      "status_reason": "MLB roster feed reports Injured 15-Day. Verify before deployment.",
+      "status_reason": "MLB roster feed reports Injured 60-Day. Verify before deployment.",
       "roster_type": "40Man"
     },
     {
@@ -5987,11 +5987,12 @@
     },
     {
       "player_name": "Codi Heuer",
-      "team": "Columbus Clippers",
-      "raw_status": "WATCHLIST_ONLY_TRANSACTION",
-      "source": "mlb_statsapi_transactions",
-      "status_reason": "Cleveland Guardians optioned RHP Codi Heuer to Columbus Clippers. Optioned OPT",
-      "transaction_date": "2026-03-22"
+      "team": "Cleveland Guardians",
+      "team_id": 114,
+      "raw_status": "Reassigned to Minors",
+      "source": "mlb_statsapi_roster",
+      "status_reason": "MLB roster feed reports Reassigned to Minors. Verify before deployment.",
+      "roster_type": "40Man"
     },
     {
       "player_name": "Cody Bolton",
@@ -9198,11 +9199,10 @@
     {
       "player_name": "Eli Morgan",
       "team": "Kansas City Royals",
-      "team_id": 118,
-      "raw_status": "Reassigned to Minors",
-      "source": "mlb_statsapi_roster",
-      "status_reason": "MLB roster feed reports Reassigned to Minors. Verify before deployment.",
-      "roster_type": "40Man"
+      "raw_status": "WATCHLIST_ONLY_TRANSACTION",
+      "source": "mlb_statsapi_transactions",
+      "status_reason": "Kansas City Royals signed free agent RHP Eli Morgan to a minor league contract. Signed as Free Agent SFA",
+      "transaction_date": "2026-01-30"
     },
     {
       "player_name": "Eli Serrano III",
@@ -9367,11 +9367,12 @@
     },
     {
       "player_name": "Elmer Rodr\u00edguez",
-      "team": "Scranton/Wilkes-Barre RailRiders",
-      "raw_status": "WATCHLIST_ONLY_TRANSACTION",
-      "source": "mlb_statsapi_transactions",
-      "status_reason": "New York Yankees optioned RHP Elmer Rodr\u00edguez to Scranton/Wilkes-Barre RailRiders. Optioned OPT",
-      "transaction_date": "2026-03-09"
+      "team": "New York Yankees",
+      "team_id": 147,
+      "raw_status": "Reassigned to Minors",
+      "source": "mlb_statsapi_roster",
+      "status_reason": "MLB roster feed reports Reassigned to Minors. Verify before deployment.",
+      "roster_type": "40Man"
     },
     {
       "player_name": "Eloy Jim\u00e9nez",
@@ -10376,6 +10377,15 @@
       "source": "mlb_statsapi_transactions",
       "status_reason": "SS Felix Morrobel assigned to Los Angeles Angels. Assigned ASG",
       "transaction_date": "2026-02-26"
+    },
+    {
+      "player_name": "Felix Reyes",
+      "team": "Philadelphia Phillies",
+      "team_id": 143,
+      "raw_status": "Reassigned to Minors",
+      "source": "mlb_statsapi_roster",
+      "status_reason": "MLB roster feed reports Reassigned to Minors. Verify before deployment.",
+      "roster_type": "40Man"
     },
     {
       "player_name": "Felnin Celesten",
@@ -15526,11 +15536,12 @@
     },
     {
       "player_name": "Joey Gerber",
-      "team": "Syracuse Mets",
-      "raw_status": "WATCHLIST_ONLY_TRANSACTION",
-      "source": "mlb_statsapi_transactions",
-      "status_reason": "New York Mets optioned RHP Joey Gerber to Syracuse Mets. Optioned OPT",
-      "transaction_date": "2026-03-19"
+      "team": "New York Mets",
+      "team_id": 121,
+      "raw_status": "Reassigned to Minors",
+      "source": "mlb_statsapi_roster",
+      "status_reason": "MLB roster feed reports Reassigned to Minors. Verify before deployment.",
+      "roster_type": "40Man"
     },
     {
       "player_name": "Joey Loperfido",
@@ -16549,10 +16560,10 @@
       "player_name": "Jose Espada",
       "team": "Baltimore Orioles",
       "team_id": 110,
-      "raw_status": "Reassigned to Minors",
+      "raw_status": "Designated for Assignment",
       "source": "mlb_statsapi_roster",
-      "status_reason": "MLB roster feed reports Reassigned to Minors. Verify before deployment.",
-      "roster_type": "40Man"
+      "status_reason": "MLB roster feed reports Designated for Assignment. Verify before deployment.",
+      "roster_type": "fullSeason"
     },
     {
       "player_name": "Jose Feliz",
@@ -18749,6 +18760,15 @@
       "raw_status": "Injured 60-Day",
       "source": "mlb_statsapi_roster",
       "status_reason": "MLB roster feed reports Injured 60-Day. Verify before deployment.",
+      "roster_type": "40Man"
+    },
+    {
+      "player_name": "Kris Bubic",
+      "team": "Kansas City Royals",
+      "team_id": 118,
+      "raw_status": "Injured 15-Day",
+      "source": "mlb_statsapi_roster",
+      "status_reason": "MLB roster feed reports Injured 15-Day. Verify before deployment.",
       "roster_type": "40Man"
     },
     {
@@ -21562,11 +21582,12 @@
     },
     {
       "player_name": "Michael Siani",
-      "team": "Oklahoma City Comets",
-      "raw_status": "WATCHLIST_ONLY_TRANSACTION",
-      "source": "mlb_statsapi_transactions",
-      "status_reason": "Los Angeles Dodgers optioned CF Michael Siani to Oklahoma City Comets. Optioned OPT",
-      "transaction_date": "2026-03-16"
+      "team": "Baltimore Orioles",
+      "team_id": 110,
+      "raw_status": "Reassigned to Minors",
+      "source": "mlb_statsapi_roster",
+      "status_reason": "MLB roster feed reports Reassigned to Minors. Verify before deployment.",
+      "roster_type": "40Man"
     },
     {
       "player_name": "Michael Snyder",
@@ -23033,12 +23054,11 @@
     },
     {
       "player_name": "Otto Kemp",
-      "team": "Philadelphia Phillies",
-      "team_id": 143,
-      "raw_status": "Reassigned to Minors",
-      "source": "mlb_statsapi_roster",
-      "status_reason": "MLB roster feed reports Reassigned to Minors. Verify before deployment.",
-      "roster_type": "40Man"
+      "team": "Lehigh Valley IronPigs",
+      "raw_status": "WATCHLIST_ONLY_TRANSACTION",
+      "source": "mlb_statsapi_transactions",
+      "status_reason": "Philadelphia Phillies optioned OF Otto Kemp to Lehigh Valley IronPigs. Optioned OPT",
+      "transaction_date": "2026-04-18"
     },
     {
       "player_name": "Owen Ayers",
@@ -26454,12 +26474,11 @@
     },
     {
       "player_name": "Shawn Armstrong",
-      "team": "Cleveland Guardians",
-      "team_id": 114,
-      "raw_status": "Injured 15-Day",
-      "source": "mlb_statsapi_roster",
-      "status_reason": "MLB roster feed reports Injured 15-Day. Verify before deployment.",
-      "roster_type": "40Man"
+      "team": "Akron RubberDucks",
+      "raw_status": "WATCHLIST_ONLY_TRANSACTION",
+      "source": "mlb_statsapi_transactions",
+      "status_reason": "Cleveland Guardians sent RHP Shawn Armstrong on a rehab assignment to Akron RubberDucks. Assigned ASG",
+      "transaction_date": "2026-05-12"
     },
     {
       "player_name": "Shawn Dubin",
@@ -30299,6 +30318,6 @@
     "supabase_status_table_unavailable player_operational_status: {'message': \"Could not find the table 'public.player_operational_status' in the schema cache\", 'code': 'PGRST205', 'hint': \"Perhaps you meant the table 'public.player_daily_metrics'\", 'details': None}",
     "supabase_status_table_unavailable player_truth_status: {'message': \"Could not find the table 'public.player_truth_status' in the schema cache\", 'code': 'PGRST205', 'hint': \"Perhaps you meant the table 'public.player_daily_metrics'\", 'details': None}",
     "supabase_status_table_unavailable mlb_player_status: {'message': \"Could not find the table 'public.mlb_player_status' in the schema cache\", 'code': 'PGRST205', 'hint': \"Perhaps you meant the table 'public.milb_players'\", 'details': None}",
-    "mlb_transactions_loaded: 8728 rows"
+    "mlb_transactions_loaded: 8742 rows"
   ]
 }

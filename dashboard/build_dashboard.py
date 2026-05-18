@@ -1209,7 +1209,15 @@ def write_scout_metrics(df: pd.DataFrame) -> dict:
     print("Wrote dist/scout_metrics.json")
     return payload
 
-def load_supplemental_aaa_dossier_players() -> list[dict]:
+def load_supplemental_milb_dossier_players() -> list[dict]:
+    """
+    Supplemental identity universe for players not present in MLB statcast/raw dashboard data.
+
+    Priority:
+    - MLB raw dashboard data remains primary.
+    - AAA signal base supplements promoted/call-up candidates.
+    - milb_raw_weekly supplements broader AAA/AA/A player identity where available.
+    """
     try:
         from supabase import create_client
         import os
@@ -1218,19 +1226,43 @@ def load_supplemental_aaa_dossier_players() -> list[dict]:
         key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
         sb = create_client(url, key)
 
-        resp = (
-            sb.table("milb_aaa_weekly_signal_base")
-            .select("player_id,player_name,org,week_start")
-            .order("week_start", desc=True)
-            .limit(1200)
-            .execute()
-)
+        rows: list[dict] = []
 
-        data = resp.data or []
-        if not data:
+        sources = [
+            {
+                "table": "milb_aaa_weekly_signal_base",
+                "select": "player_id,player_name,org,level,position_group,week_start",
+                "team_col": "org",
+                "limit": 2000,
+            },
+            {
+                "table": "milb_raw_weekly",
+                "select": "player_id,player_name,org_mlb_team,level,position_group,bats,throws,age,week_start,updated_at",
+                "team_col": "org_mlb_team",
+                "limit": 5000,
+            },
+        ]
+
+        for source in sources:
+            try:
+                resp = (
+                    sb.table(source["table"])
+                    .select(source["select"])
+                    .order("week_start", desc=True)
+                    .limit(source["limit"])
+                    .execute()
+                )
+                for row in resp.data or []:
+                    row["_team_col"] = source["team_col"]
+                    row["_source_table"] = source["table"]
+                    rows.append(row)
+            except Exception as exc:
+                print(f"[DOSSIER_SUPPLEMENT] skipped {source['table']}: {exc}")
+
+        if not rows:
             return []
 
-        df_extra = pd.DataFrame(data)
+        df_extra = pd.DataFrame(rows)
         if df_extra.empty or "player_id" not in df_extra.columns:
             return []
 
@@ -1240,13 +1272,21 @@ def load_supplemental_aaa_dossier_players() -> list[dict]:
             return []
 
         df_extra["player_id"] = df_extra["player_id"].astype(int)
+
         if "week_start" in df_extra.columns:
             df_extra["week_start"] = pd.to_datetime(df_extra["week_start"], errors="coerce")
 
-        df_extra = df_extra.sort_values(
-            ["player_id", "week_start"] if "week_start" in df_extra.columns else ["player_id"],
-            ascending=[True, False] if "week_start" in df_extra.columns else [True],
-        ).drop_duplicates(subset=["player_id"], keep="first")
+        sort_cols = ["player_id"]
+        ascending = [True]
+
+        if "week_start" in df_extra.columns:
+            sort_cols.append("week_start")
+            ascending.append(False)
+
+        df_extra = (
+            df_extra.sort_values(sort_cols, ascending=ascending)
+            .drop_duplicates(subset=["player_id"], keep="first")
+        )
 
         supplemental_players: list[dict] = []
 
@@ -1256,8 +1296,10 @@ def load_supplemental_aaa_dossier_players() -> list[dict]:
                 continue
 
             full_name = str(row.get("player_name") or "").strip() or f"Player {pid}"
-
-            team_value = str(row.get("org") or "").strip()  
+            team_col = str(row.get("_team_col") or "org").strip()
+            team_value = str(row.get(team_col) or row.get("org") or row.get("org_mlb_team") or "").strip()
+            level_value = str(row.get("level") or "").strip()
+            position_value = str(row.get("position_group") or "").strip()
 
             supplemental_players.append(
                 {
@@ -1267,19 +1309,24 @@ def load_supplemental_aaa_dossier_players() -> list[dict]:
                     "last_name": "",
                     "team": team_value,
                     "team_name": team_value,
-                    "position": "",
-                    "bats": "",
-                    "throws": "",
-                    "status": "",
+                    "level": level_value,
+                    "position": position_value,
+                    "bats": str(row.get("bats") or "").strip(),
+                    "throws": str(row.get("throws") or "").strip(),
+                    "age": row.get("age"),
+                    "status": "MILB_SUPPLEMENTAL_UNIVERSE",
                     "headshot_url": build_headshot_url(pid),
                 }
             )
 
+        print(f"[DOSSIER_SUPPLEMENT] supplemental MiLB players loaded: {len(supplemental_players)}")
         return supplemental_players
 
-    except Exception:
+    except Exception as exc:
+        print(f"[DOSSIER_SUPPLEMENT] unavailable: {exc}")
         return []
-    
+
+
 def write_dossier_canon(
     df: pd.DataFrame,
     hitter_signals: pd.DataFrame,
@@ -1291,7 +1338,38 @@ def write_dossier_canon(
         if isinstance(player_index_payload, dict)
         else []
     )
-    supplemental_players = load_supplemental_aaa_dossier_players()
+    supplemental_players = load_supplemental_milb_dossier_players()
+
+
+    waiver_path = DIST_DIR / "waiver_wire.json"
+    if waiver_path.exists():
+        try:
+            waiver_payload = json.loads(waiver_path.read_text(encoding="utf-8"))
+            waiver_rows = waiver_payload.get("all_assets", []) or waiver_payload.get("assets", [])
+
+            for row in waiver_rows:
+                pid = safe_int(row.get("player_id"))
+                if pid is None:
+                    continue
+
+                supplemental_players.append({
+                    "player_id": pid,
+                    "full_name": str(row.get("player_name") or "").strip() or f"Player {pid}",
+                    "first_name": "",
+                    "last_name": "",
+                    "team": str(row.get("team") or "").strip(),
+                    "team_name": str(row.get("team") or "").strip(),
+                    "level": "MLB_OR_WAIVER",
+                    "position": str(row.get("position") or "").strip(),
+                    "bats": "",
+                    "throws": "",
+                    "status": "WAIVER_SUPPLEMENTAL_UNIVERSE",
+                    "headshot_url": build_headshot_url(pid),
+                })
+
+            print(f"[DOSSIER_SUPPLEMENT] waiver players considered: {len(waiver_rows)}")
+        except Exception as exc:
+            print(f"[DOSSIER_SUPPLEMENT] waiver supplemental unavailable: {exc}")
 
     existing_ids = {
         str(p.get("player_id") or "").strip()
