@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T17:37:30.374930+00:00",
+  "generated_at": "2026-05-18T18:03:23.583224+00:00",
   "source": "merged_operational_status_feed",
   "source_priority": [
     "supabase_truth_tables_if_available",
