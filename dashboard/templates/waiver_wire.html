@@ -698,6 +698,61 @@ body.waiver-field-guide-open{
   font-size:12px;
   line-height:1.45;
 }
+
+.risk-disclaimer{
+  max-width:980px;
+  margin:12px 0 18px;
+  color:rgba(226,232,240,.46);
+  font-size:10px;
+  line-height:1.45;
+  letter-spacing:.01em;
+}
+.risk-disclaimer strong{
+  color:rgba(248,250,252,.62);
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:9px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.mobile-waiver-hero{ display:none; }
+
+.mobile-risk-disclosure{
+  margin:12px 0 14px;
+  border:1px solid rgba(148,163,184,.16);
+  border-radius:14px;
+  background:rgba(2,6,23,.52);
+  padding:10px 12px;
+}
+.mobile-risk-disclosure summary{
+  cursor:pointer;
+  list-style:none;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10px;
+  letter-spacing:.08em;
+  color:rgba(226,232,240,.76);
+}
+.mobile-risk-disclosure summary::-webkit-details-marker{ display:none; }
+.mobile-risk-disclosure summary span{
+  display:block;
+  margin-top:4px;
+  color:rgba(157,255,107,.72);
+  font-size:9px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.mobile-risk-disclosure p{
+  margin:10px 0 0;
+  color:rgba(226,232,240,.58);
+  font-size:11px;
+  line-height:1.45;
+}
+
+@media (max-width: 720px){
+  .desktop-waiver-hero{ display:none; }
+  .mobile-waiver-hero{ display:block; }
+  .risk-disclaimer{ display:none; }
+}
 </style>
 </head>
 
@@ -707,12 +762,40 @@ body.waiver-field-guide-open{
   <main class="shell">
     <div class="eyebrow">WAIVER WIRE // OPEN MARKET</div>
 
-    <h1>Unrostered assets. Mispriced physics. 72-hour extraction window.</h1>
+      <div class="desktop-waiver-hero">
+    <h1>Unrostered Assets. Mispriced Physics. The 72-Hour Window.</h1>
 
     <p class="sub">
-      This surface scans low-rostered players whose public market price has not caught up to a measurable change in movement,
-      command, bat-path stability, or role opportunity.
+      This surface scans low-rostered assets whose market price hasn’t caught up to elite underlying shifts in movement,
+      command, and bat-path mechanics.
     </p>
+      </div>
+
+      <p class="risk-disclaimer">
+        <strong>Model Parameters &amp; Edge Limitations:</strong>
+        This surface operates on pure, unadulterated performance physics. It does not ingest fluid qualitative variables like day-to-day injuries,
+        late-scratch medicals, or sudden managerial whims. Because the 72-hour window moves faster than official injury reporting infrastructure,
+        users must cross-reference health status before committing capital. The data shows you who is breaking out; your job is to verify they are on the field.
+      </p>
+
+
+      <div class="mobile-waiver-hero">
+        <h1>Unrostered Assets. The 72-Hour Window.</h1>
+        <p class="sub">
+          Scanning low-rostered assets whose market price hasn’t caught up to elite underlying shifts in physics, mechanics, or role optimization.
+        </p>
+
+        <details class="mobile-risk-disclosure">
+          <summary>💡 Model Parameters &amp; Edge Limitations <span>Tap to Expand</span></summary>
+          <p>
+            This surface operates on pure performance physics and moves faster than official injury reporting infrastructure.
+            It does not ingest fluid qualitative variables like day-to-day injuries or late-scratch medicals.
+          </p>
+          <p>
+            The data highlights the mechanical breakout; your job is to verify physical availability before committing capital.
+          </p>
+        </details>
+      </div>
 
     <div class="command-strip">
       <strong>72-HOUR OPEN MARKET EXTRACTION</strong>
