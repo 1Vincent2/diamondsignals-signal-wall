@@ -149,6 +149,20 @@ def classify_status(raw_status: str) -> dict[str, str]:
     }
 
 
+def display_status_source(status_source: str) -> str:
+    source = str(status_source or "").strip()
+
+    labels = {
+        "default_active": "VERIFIED ACTIVE",
+        "local_status_feed": "LOCAL STATUS FEED",
+        "manual_fallback": "MANUAL FALLBACK",
+        "temporary_seed": "DYNAMIC STATUS FEED",
+        "dynamic_status_feed": "DYNAMIC STATUS FEED",
+    }
+
+    return labels.get(source, source.upper().replace("_", " "))
+
+
 def rebuild_search_blob(row: dict[str, Any]) -> None:
     row["search_blob"] = " ".join([
         str(row.get("player_name", "")),
@@ -179,11 +193,12 @@ def apply_operational_status(row: dict[str, Any]) -> dict[str, Any]:
         "status_source",
         row.get("status_source", "default_active"),
     )
+    row["status_source_label"] = display_status_source(row["status_source"])
 
     # Keep rendered metric tiles synchronized with the operational-status layer.
     for metric in row.get("metrics", []):
         if metric.get("label") == "Status Source":
-            metric["value"] = row["status_source"]
+            metric["value"] = row["status_source_label"]
 
     rebuild_search_blob(row)
     return row

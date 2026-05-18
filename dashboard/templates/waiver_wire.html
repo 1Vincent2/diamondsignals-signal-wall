@@ -845,7 +845,7 @@ body.waiver-field-guide-open{
             <div class="status-provenance">
               <div>
                 <span>STATUS SOURCE</span>
-                <b>{{ asset.status_source }}</b>
+                <b>{{ asset.status_source_label or asset.status_source }}</b>
               </div>
               <p>{{ asset.status_reason }}</p>
             </div>
