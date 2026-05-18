@@ -55,6 +55,7 @@ def build_assets() -> list[dict]:
         status_reason: str = "Status clear at build time",
         card_action: str = "OPEN PERFORMANCE AUDIT",
         visibility_state: str = "primary",
+        status_source: str = "default_active",
     ) -> dict:
         safe_slug = audit_slug or player_name.lower().replace(".", "").replace(" ", "-")
         return {
@@ -77,6 +78,7 @@ def build_assets() -> list[dict]:
             "status_reason": status_reason,
             "card_action": card_action,
             "visibility_state": visibility_state,
+            "status_source": status_source,
             "search_blob": " ".join([player_name, team, position, command, market_status, deployment_label, operational_status]).lower(),
             "metrics": [
                 {"label": "Ownership Gate", "value": ownership_gate},
@@ -85,6 +87,7 @@ def build_assets() -> list[dict]:
                 {"label": "Market Defect", "value": market_defect},
                 {"label": "Command", "value": command_metric},
                 {"label": "Risk", "value": risk},
+                {"label": "Status Source", "value": status_source},
             ],
         }
 
