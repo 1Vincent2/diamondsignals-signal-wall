@@ -1327,6 +1327,92 @@ def load_supplemental_milb_dossier_players() -> list[dict]:
         return []
 
 
+
+def load_player_signal_context_lookup() -> dict[str, dict]:
+    """Load season-context + signal metrics keyed by canonical player_id for Performance Audit support tiles."""
+    path = DIST_DIR / "admin" / "player_signal_index.json"
+    if not path.exists():
+        print("[DOSSIER_CONTEXT] missing player_signal_index.json")
+        return {}
+
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        print(f"[DOSSIER_CONTEXT] unable to read player_signal_index.json: {exc}")
+        return {}
+
+    lookup: dict[str, dict] = {}
+    players = payload.get("players", []) if isinstance(payload, dict) else []
+
+    for player in players:
+        pid = str(player.get("player_id") or "").strip()
+        if not pid or pid.lower() == "none":
+            continue
+
+        ctx = player.get("season_context") if isinstance(player.get("season_context"), dict) else None
+        signals = player.get("signals") if isinstance(player.get("signals"), list) else []
+
+        merged_metrics = {}
+        for sig in signals:
+            metrics = sig.get("metrics") if isinstance(sig, dict) else None
+            if isinstance(metrics, dict):
+                merged_metrics.update({k: v for k, v in metrics.items() if v not in (None, "")})
+
+        lookup[pid] = {
+            "season_context": ctx,
+            "signals": signals,
+            "support_metrics": build_support_metrics(ctx, merged_metrics, player),
+        }
+
+    print(f"[DOSSIER_CONTEXT] loaded support context for {len(lookup)} players")
+    return lookup
+
+
+def build_support_metrics(ctx: Optional[dict], metrics: Optional[dict], player: Optional[dict] = None) -> dict:
+    """Normalize support metrics for all Performance Audit cards."""
+    ctx = ctx if isinstance(ctx, dict) else {}
+    metrics = metrics if isinstance(metrics, dict) else {}
+    player = player if isinstance(player, dict) else {}
+
+    def pick(*keys, default="—"):
+        for source in (ctx, metrics, player):
+            for key in keys:
+                val = source.get(key)
+                if val not in (None, ""):
+                    return val
+        return default
+
+    context_type = str(
+        pick("season_context", "context", "profile_type", default="")
+    ).upper()
+
+    position = str(player.get("position") or metrics.get("position") or "").upper()
+    is_hitter = context_type == "PLATE_DISCIPLINE" or any(pos in position for pos in ["B", "OF", "DH", "SS", "C"])
+
+    if is_hitter:
+        return {
+            "profile": "PLATE_DISCIPLINE",
+            "tiles": [
+                {"label": "SEAGER", "value": pick("seager_score")},
+                {"label": "BABIP", "value": pick("babip")},
+                {"label": "BB/K", "value": pick("bb_k_ratio")},
+                {"label": "BB%", "value": pick("bb_pct")},
+                {"label": "K%", "value": pick("k_pct")},
+            ],
+        }
+
+    return {
+        "profile": "COMMAND_PROFILE",
+        "tiles": [
+            {"label": "K/BB", "value": pick("k_bb_ratio")},
+            {"label": "BABIP", "value": pick("babip")},
+            {"label": "K%", "value": pick("k_pct")},
+            {"label": "BB%", "value": pick("bb_pct")},
+            {"label": "BF", "value": pick("batters_faced")},
+        ],
+    }
+
+
 def write_dossier_canon(
     df: pd.DataFrame,
     hitter_signals: pd.DataFrame,
@@ -1388,6 +1474,8 @@ def write_dossier_canon(
         **build_scout_pitcher_metrics(df),
     }
 
+    player_signal_context_lookup = load_player_signal_context_lookup()
+
     signal_lookup: dict[str, dict] = {}
 
     if not hitter_signals.empty:
@@ -1421,6 +1509,7 @@ def write_dossier_canon(
 
         scout = scout_metrics.get(player_id, {})
         signal = signal_lookup.get(player_id, {})
+        signal_context = player_signal_context_lookup.get(player_id, {})
 
         canon_players[player_id] = {
             "player_id": player_id,
@@ -1437,6 +1526,9 @@ def write_dossier_canon(
             "trend_points_7d": signal.get("trend_points_7d", ""),
             "trend_note": signal.get("trend_note"),
             "rostered_by_user": False,
+            "season_context": signal_context.get("season_context"),
+            "signals": signal_context.get("signals", []),
+            "support_metrics": signal_context.get("support_metrics"),
         }
 
         if scout:
@@ -2254,6 +2346,71 @@ def scout_shell_html() -> str:
     @media (max-width: 900px) {
       .player-id-grid { grid-template-columns: 1fr; justify-items: start; }
       .signal-stack { justify-items: start; min-width: 0; }
+
+      .support-card {
+        padding: 16px;
+        margin-bottom: 16px;
+        display: none;
+      }
+      .support-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      .support-title {
+        font-family: var(--mono);
+        font-size: 10px;
+        line-height: 1;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--blue);
+        font-weight: 800;
+      }
+      .support-profile {
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--lime-hot);
+        border: 1px solid rgba(182,255,0,0.18);
+        background: rgba(182,255,0,0.04);
+        border-radius: 999px;
+        padding: 7px 10px;
+        white-space: nowrap;
+      }
+      .support-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .support-tile {
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 12px;
+        padding: 10px;
+        background: rgba(255,255,255,0.025);
+        min-width: 0;
+      }
+      .support-label {
+        font-family: var(--mono);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        font-weight: 800;
+        margin-bottom: 6px;
+      }
+      .support-value {
+        font-family: var(--mono);
+        font-size: 16px;
+        color: var(--text);
+        font-weight: 800;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
       .metrics-grid { grid-template-columns: 1fr; }
     }
 
@@ -2321,6 +2478,16 @@ def scout_shell_html() -> str:
         <span class="signal-pill" id="scoutConfidencePill">Confidence</span>
       </div>
     </section>
+
+      <section class="section-card support-card" id="supportMetricsCard">
+        <div class="support-head">
+          <div class="support-title">Support Metrics // Season Context</div>
+          <div class="support-profile" id="supportProfile">CONTEXT</div>
+        </div>
+        <div class="support-grid" id="supportMetricsGrid"></div>
+      </section>
+
+
 
     <section class="metrics-grid">
       <article class="metric-card">
@@ -2421,6 +2588,42 @@ def scout_shell_html() -> str:
       throw new Error("All JSON fetch paths failed");
     }
 
+      function escapeHtml(value) {
+        return String(value ?? "—")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function renderSupportMetrics(player) {
+        const card = document.getElementById("supportMetricsCard");
+        const grid = document.getElementById("supportMetricsGrid");
+        const profile = document.getElementById("supportProfile");
+
+        if (!card || !grid || !profile) return;
+
+        const support = player && player.support_metrics ? player.support_metrics : null;
+        const tiles = support && Array.isArray(support.tiles) ? support.tiles : [];
+
+        if (!support || !tiles.length) {
+          card.style.display = "none";
+          grid.innerHTML = "";
+          return;
+        }
+
+        profile.textContent = support.profile || "SUPPORT";
+        grid.innerHTML = tiles.map(tile => `
+          <div class="support-tile">
+            <div class="support-label">${escapeHtml(tile.label || "Metric")}</div>
+            <div class="support-value">${escapeHtml(tile.value ?? "—")}</div>
+          </div>
+        `).join("");
+
+        card.style.display = "block";
+      }
+
     async function loadScoutPlayer() {
       const pathParts = window.location.pathname.split("/").filter(Boolean);
       const scoutIndex = pathParts.indexOf("scout");
@@ -2484,6 +2687,7 @@ def scout_shell_html() -> str:
           `${player.canonical_score_label || "Signal Score"} ${player.canonical_score ?? "--"}`;
         document.getElementById("scoutTrendPill").textContent = player.trend_note || "Trend";
         document.getElementById("scoutConfidencePill").textContent = "CANONICAL";
+          renderSupportMetrics(player);
 
         if (scoutMetrics) {
           setZone("zone1", scoutMetrics.ballistics || {});
