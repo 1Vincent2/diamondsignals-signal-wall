@@ -8,6 +8,7 @@ PREBUILD_COMMANDS = [
 
 MODULES = [
     "dashboard.build_player_signal_index",
+    "dashboard.build_canonical_player_universe",
     "dashboard.build_dashboard",
     "dashboard.build_signal_wall_v2",
     "dashboard.build_call_up_live",
