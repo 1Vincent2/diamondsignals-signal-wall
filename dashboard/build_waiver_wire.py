@@ -4,12 +4,16 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from pathlib import Path
 import json
-import requests
 
 from jinja2 import Environment, FileSystemLoader, Template
 
 from dashboard.lib.report_status import build_report_status
 from dashboard.lib.player_operational_status import apply_operational_status
+from dashboard.lib.player_identity import (
+    load_canonical_player_universe,
+    build_name_lookup,
+    resolve_player_identity,
+)
 
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
@@ -24,142 +28,10 @@ TEMPLATE_PATH = BASE_DIR / "templates" / "waiver_wire.html"
 SHELL_STYLES_PATH = BASE_DIR / "templates" / "shell_styles.css"
 SHELL_NAV_PATH = BASE_DIR / "templates" / "shell_nav.html"
 
+CANONICAL_PLAYERS = load_canonical_player_universe()
+CANONICAL_NAME_LOOKUP = build_name_lookup(CANONICAL_PLAYERS)
 
 
-def normalize_player_name_key(name: str) -> str:
-    return " ".join(str(name or "").lower().replace(".", "").split())
-
-
-def load_player_id_lookup() -> dict[str, str]:
-    lookup: dict[str, str] = {}
-
-    candidate_paths = [
-        DIST_DIR / "admin" / "player_signal_index.json",
-        DIST_DIR / "signals.json",
-    ]
-
-    for path in candidate_paths:
-        if not path.exists():
-            continue
-
-        try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
-        except Exception:
-            continue
-
-        rows = []
-        if isinstance(payload, dict):
-            for key in ["players", "signals", "items", "rows"]:
-                value = payload.get(key)
-                if isinstance(value, list):
-                    rows.extend(value)
-        elif isinstance(payload, list):
-            rows.extend(payload)
-
-        for row in rows:
-            if not isinstance(row, dict):
-                continue
-
-            name = (
-                row.get("player_name")
-                or row.get("name")
-                or row.get("full_name")
-                or row.get("hitter")
-                or row.get("pitcher")
-            )
-            player_id = (
-                row.get("resolved_player_id")
-                or row.get("player_id")
-                or row.get("mlbam_id")
-                or row.get("id")
-            )
-
-            if not name or not player_id:
-                continue
-
-            player_id = str(player_id).strip()
-            if player_id.isdigit():
-                lookup[normalize_player_name_key(name)] = player_id
-
-    return lookup
-
-
-PLAYER_ID_LOOKUP = load_player_id_lookup()
-MLB_LOOKUP_CACHE: dict[str, str] = {}
-
-
-def compact_name_variants(name: str) -> list[str]:
-    raw = str(name or "").strip()
-    parts = raw.replace(".", "").split()
-
-    variants = [raw]
-    if len(parts) >= 3 and len(parts[1]) == 1:
-        variants.append(" ".join([parts[0], *parts[2:]]))
-
-    return list(dict.fromkeys([v for v in variants if v]))
-
-
-def team_matches(person: dict, team: str) -> bool:
-    target = str(team or "").strip().lower()
-    if not target:
-        return True
-
-    current_team = person.get("currentTeam") or {}
-    values = [
-        current_team.get("name"),
-        current_team.get("abbreviation"),
-        current_team.get("teamName"),
-        current_team.get("clubName"),
-    ]
-
-    return any(str(v or "").strip().lower() == target for v in values)
-
-
-def resolve_player_id_from_mlb_statsapi(name: str, team: str = "") -> str:
-    key = normalize_player_name_key(name)
-    if not key:
-        return ""
-
-    if key in MLB_LOOKUP_CACHE:
-        return MLB_LOOKUP_CACHE[key]
-
-    try:
-        all_people = []
-        for variant in compact_name_variants(name):
-            response = requests.get(
-                "https://statsapi.mlb.com/api/v1/people/search",
-                params={"names": variant, "sportIds": 1, "hydrate": "currentTeam"},
-                timeout=10,
-            )
-            response.raise_for_status()
-            all_people.extend(response.json().get("people", []) or [])
-
-        for person in all_people:
-            full_name = person.get("fullName") or ""
-            if normalize_player_name_key(full_name) == key and team_matches(person, team) and person.get("id"):
-                MLB_LOOKUP_CACHE[key] = str(person["id"])
-                return MLB_LOOKUP_CACHE[key]
-
-        for person in all_people:
-            if team_matches(person, team) and person.get("id"):
-                MLB_LOOKUP_CACHE[key] = str(person["id"])
-                return MLB_LOOKUP_CACHE[key]
-
-        if all_people and all_people[0].get("id"):
-            MLB_LOOKUP_CACHE[key] = str(all_people[0]["id"])
-            return MLB_LOOKUP_CACHE[key]
-
-    except Exception:
-        return ""
-
-    return ""
-
-
-def resolve_player_id_by_name(name: str, team: str = "") -> str:
-    return (
-        PLAYER_ID_LOOKUP.get(normalize_player_name_key(name), "")
-        or resolve_player_id_from_mlb_statsapi(name, team)
-    )
 
 
 def build_assets() -> list[dict]:
@@ -195,10 +67,21 @@ def build_assets() -> list[dict]:
         visibility_state: str = "primary",
         status_source: str = "default_active",
     ) -> dict:
+        identity = resolve_player_identity(
+            player_id=player_id,
+            player_name=player_name,
+            team=team,
+            players=CANONICAL_PLAYERS,
+            name_lookup=CANONICAL_NAME_LOOKUP,
+        )
+
+        resolved_player_id = str(identity.get("player_id") or "").strip()
+        player_name = identity.get("player_name") or player_name
+        team = identity.get("team") or team
+        position = identity.get("position") or position
+
         safe_slug = audit_slug or player_name.lower().replace(".", "").replace(" ", "-")
-        resolved_player_id = str(player_id or resolve_player_id_by_name(player_name, team) or "").strip()
-        scout_path = REPO_ROOT / "dist" / "scout" / resolved_player_id / "index.html" if resolved_player_id.isdigit() else None
-        scout_url = f"/scout/{resolved_player_id}/" if scout_path and scout_path.exists() else ""
+        scout_url = identity.get("scout_url") or ""
         watchlist_url = (
             "https://app.diamondsignals.ai/watchlist"
             f"?player_id={resolved_player_id}"
@@ -213,6 +96,10 @@ def build_assets() -> list[dict]:
             "audit_url": scout_url or watchlist_url,
             "watchlist_url": watchlist_url,
             "has_scout_page": bool(scout_url),
+            "identity_source": identity.get("identity_source"),
+            "headshot_url": identity.get("headshot_url"),
+            "scout_url": scout_url,
+            "resolved_player_id": resolved_player_id,
             "team": team,
             "position": position,
             "rostered_pct": rostered_pct,
