@@ -1338,8 +1338,9 @@ def write_dossier_canon(
         if isinstance(player_index_payload, dict)
         else []
     )
-    supplemental_players = load_supplemental_milb_dossier_players()
 
+    supplemental_players = load_supplemental_milb_dossier_players()
+    waiver_lookup: dict[str, dict] = {}
 
     waiver_path = DIST_DIR / "waiver_wire.json"
     if waiver_path.exists():
@@ -1351,6 +1352,8 @@ def write_dossier_canon(
                 pid = safe_int(row.get("player_id"))
                 if pid is None:
                     continue
+
+                waiver_lookup[str(pid)] = row
 
                 supplemental_players.append({
                     "player_id": pid,
@@ -1421,6 +1424,92 @@ def write_dossier_canon(
 
         scout = scout_metrics.get(player_id, {})
         signal = signal_lookup.get(player_id, {})
+        waiver = waiver_lookup.get(player_id)
+
+        source_surfaces = []
+        signals_triggered = []
+
+        if signal:
+            source_surfaces.append("signal_wall")
+            signals_triggered.append({
+                "surface_source": "signal_wall",
+                "signal_type": "edge_score",
+                "signal_strength": signal.get("canonical_score"),
+                "signal_label": signal.get("canonical_score_label"),
+                "trend_points_7d": signal.get("trend_points_7d", ""),
+            })
+
+        if waiver:
+            source_surfaces.append("waiver_wire")
+            signals_triggered.append({
+                "surface_source": "waiver_wire",
+                "signal_type": "open_market_asymmetry",
+                "signal_strength": safe_float(
+                    waiver.get("edge_score")
+                    or waiver.get("signal_score")
+                    or waiver.get("score")
+                    or waiver.get("priority_score")
+                ),
+                "ownership": safe_float(
+                    waiver.get("ownership")
+                    or waiver.get("ownership_pct")
+                    or waiver.get("roster_pct")
+                    or waiver.get("rostered_pct")
+                ),
+            })
+
+        if waiver:
+            operational_status = str(waiver.get("operational_status") or "").upper()
+            deployment_state = str(waiver.get("deployment_state") or "").upper()
+
+            if deployment_state == "WATCHLIST_ONLY":
+                action_priority = {
+                    "recommended_action": "TRACK",
+                    "routing_state": "WATCHLIST_ONLY",
+                    "confidence": 0.5,
+                }
+            elif any(term in operational_status for term in ["INJURED", "IL", "60-DAY", "15-DAY"]):
+                action_priority = {
+                    "recommended_action": "TRACK",
+                    "routing_state": "INJURY_QUARANTINE",
+                    "confidence": 0.38,
+                }
+            elif any(term in operational_status for term in ["REASSIGNED", "MINORS", "OPTIONED"]):
+                action_priority = {
+                    "recommended_action": "STASH_MONITOR",
+                    "routing_state": "NOT_DEPLOYABLE",
+                    "confidence": 0.42,
+                }
+            elif any(term in operational_status for term in ["DESIGNATED", "DFA", "RELEASED"]):
+                action_priority = {
+                    "recommended_action": "WATCH_ONLY",
+                    "routing_state": "TRANSACTION_QUARANTINE",
+                    "confidence": 0.25,
+                }
+            else:
+                action_priority = {
+                    "recommended_action": "PROVISION_TO_WATCHLIST",
+                    "routing_state": "OPEN_MARKET_SIGNAL",
+                    "confidence": 0.72,
+                }
+        elif signal:
+            action_priority = {
+                "recommended_action": "INITIATE_TRACKING",
+                "routing_state": "SIGNAL_WALL_SIGNAL",
+                "confidence": 0.64,
+            }
+        elif scout:
+            action_priority = {
+                "recommended_action": "TRACK",
+                "routing_state": "SCOUT_METRICS_ONLY",
+                "confidence": 0.48,
+            }
+        else:
+            action_priority = {
+                "recommended_action": "TRACK",
+                "routing_state": "IDENTITY_ONLY",
+                "confidence": 0,
+            }
 
         canon_players[player_id] = {
             "player_id": player_id,
@@ -1437,10 +1526,12 @@ def write_dossier_canon(
             "trend_points_7d": signal.get("trend_points_7d", ""),
             "trend_note": signal.get("trend_note"),
             "rostered_by_user": False,
+            "scout_metrics": scout or None,
+            "signals_triggered": signals_triggered,
+            "source_surfaces": source_surfaces,
+            "waiver_wire": waiver or None,
+            "action_priority": action_priority,
         }
-
-        if scout:
-            canon_players[player_id]["scout_metrics"] = scout
 
     payload = {
         "generated_at": datetime.now().isoformat(),
@@ -1451,9 +1542,9 @@ def write_dossier_canon(
         json.dumps(payload, indent=2),
         encoding="utf-8",
     )
+
     print("Wrote dist/dossier_canon.json")
     return payload
-
 
 def copy_static_assets() -> None:
     js_src = Path("src/js/player-search.js")
