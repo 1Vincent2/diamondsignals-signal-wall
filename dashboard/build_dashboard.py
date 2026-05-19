@@ -1368,6 +1368,75 @@ def load_player_signal_context_lookup() -> dict[str, dict]:
     return lookup
 
 
+
+
+
+def build_scout_support_metrics(scout: Optional[dict]) -> Optional[dict]:
+    """Fallback support strip for any player with scout_metrics.
+
+    Reads the normalized scout_metrics zone shape:
+    ballistics/movement/results -> label_1/value_1 ... label_4/value_4.
+    """
+    if not scout:
+        return None
+
+    ballistics = scout.get("ballistics") or {}
+    movement = scout.get("movement") or {}
+    results = scout.get("results") or {}
+    player_type = str(scout.get("player_type") or "").lower()
+
+    def zone_lookup(zone: dict) -> dict:
+        out = {}
+        for i in range(1, 5):
+            label = zone.get(f"label_{i}")
+            value = zone.get(f"value_{i}")
+            if label and value not in (None, "", "—", "--"):
+                out[str(label).strip().upper()] = value
+        return out
+
+    merged = {}
+    for zone in (ballistics, movement, results):
+        merged.update(zone_lookup(zone))
+
+    def get(label: str):
+        return merged.get(label.upper())
+
+    def fmt(value, suffix: str = ""):
+        if value in (None, "", "—", "--"):
+            return "—"
+        if isinstance(value, (int, float)):
+            if suffix == "%":
+                return f"{value:.1f}%"
+            if "VELO" in suffix:
+                return f"{value:.1f}"
+            if suffix == "FT":
+                return f"{value:.1f} ft"
+            if suffix == "IN":
+                return f"{value:.1f} in"
+            return f"{value:.1f}"
+        return str(value)
+
+    if player_type == "pitcher":
+        tiles = [
+            {"label": "FB AVG VELO", "value": fmt(get("FB Avg Velo"))},
+            {"label": "FB MAX VELO", "value": fmt(get("FB Max Velo"))},
+            {"label": "FB IVB", "value": fmt(get("FB IVB"), "IN")},
+            {"label": "K%", "value": fmt(get("K %"), "%")},
+            {"label": "WHIFF%", "value": fmt(get("Whiff %"), "%")},
+        ]
+    else:
+        tiles = [
+            {"label": "AVG EV", "value": fmt(get("Avg Exit Velo"))},
+            {"label": "MAX EV", "value": fmt(get("Max Exit Velo"))},
+            {"label": "HARD HIT%", "value": fmt(get("Hard Hit %"), "%")},
+            {"label": "BARREL%", "value": fmt(get("Barrel %"), "%")},
+            {"label": "XBA", "value": fmt(get("xBA"))},
+        ]
+
+    tiles = [t for t in tiles if t["value"] != "—"]
+    return {"profile": "SCOUT_PROFILE", "tiles": tiles[:5]} if tiles else None
+
+
 def build_support_metrics(ctx: Optional[dict], metrics: Optional[dict], player: Optional[dict] = None) -> dict:
     """Normalize support metrics for all Performance Audit cards."""
     ctx = ctx if isinstance(ctx, dict) else {}
@@ -1528,7 +1597,7 @@ def write_dossier_canon(
             "rostered_by_user": False,
             "season_context": signal_context.get("season_context"),
             "signals": signal_context.get("signals", []),
-            "support_metrics": signal_context.get("support_metrics"),
+            "support_metrics": signal_context.get("support_metrics") or build_scout_support_metrics(scout),
         }
 
         if scout:
@@ -2046,6 +2115,9 @@ HTML_TEMPLATE = Template(
       }
     }
 
+
+
+
   </style>
 </head>
 <body>
@@ -2343,15 +2415,14 @@ def scout_shell_html() -> str:
     .briefing-kicker { font-size: 10px; line-height: 1; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); font-weight: 800; margin-bottom: 12px; }
     .briefing-copy { margin: 0; color: var(--soft); font-size: 15px; line-height: 1.6; max-width: 900px; }
 
-    @media (max-width: 900px) {
-      .player-id-grid { grid-template-columns: 1fr; justify-items: start; }
-      .signal-stack { justify-items: start; min-width: 0; }
-
+    
+      
       .support-card {
+        display: none;
         padding: 16px;
         margin-bottom: 16px;
-        display: none;
       }
+
       .support-head {
         display: flex;
         align-items: center;
@@ -2359,6 +2430,7 @@ def scout_shell_html() -> str:
         gap: 12px;
         margin-bottom: 12px;
       }
+
       .support-title {
         font-family: var(--mono);
         font-size: 10px;
@@ -2368,6 +2440,7 @@ def scout_shell_html() -> str:
         color: var(--blue);
         font-weight: 800;
       }
+
       .support-profile {
         font-family: var(--mono);
         font-size: 10px;
@@ -2380,30 +2453,34 @@ def scout_shell_html() -> str:
         padding: 7px 10px;
         white-space: nowrap;
       }
+
       .support-grid {
         display: grid;
         grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 8px;
+        gap: 10px;
       }
+
       .support-tile {
-        border: 1px solid rgba(255,255,255,0.06);
-        border-radius: 12px;
-        padding: 10px;
-        background: rgba(255,255,255,0.025);
         min-width: 0;
+        border: 1px solid rgba(255,255,255,0.07);
+        background: rgba(255,255,255,0.025);
+        border-radius: 14px;
+        padding: 11px 12px;
       }
+
       .support-label {
         font-family: var(--mono);
         font-size: 10px;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--muted);
-        font-weight: 800;
+        color: var(--soft);
         margin-bottom: 6px;
       }
+
       .support-value {
         font-family: var(--mono);
-        font-size: 16px;
+        font-size: 18px;
+        line-height: 1.05;
         color: var(--text);
         font-weight: 800;
         white-space: nowrap;
@@ -2411,20 +2488,59 @@ def scout_shell_html() -> str:
         text-overflow: ellipsis;
       }
 
-      .metrics-grid { grid-template-columns: 1fr; }
-    }
+      /* PERFORMANCE AUDIT SCOUT LAYOUT LOCK */
+      @media (min-width: 761px) {
+        .metrics-grid {
+          display: grid !important;
+          grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+          gap: 16px !important;
+          align-items: stretch !important;
+        }
 
-    @media (max-width: 640px) {
-      .topbar-inner, .app, .topnav-inner, .search-strip-inner { width: min(100%, calc(100% - 16px)); }
-      .search-strip-inner { justify-content: stretch; }
-      .player-search { width: 100%; }
-      .player-search-input { height: 36px; font-size: 12px; }
-      .headshot-shell { width: 92px; height: 92px; border-radius: 18px; }
-      .player-name { font-size: 28px; }
-    }
+        .metrics-grid .metric-card {
+          min-width: 0 !important;
+          width: auto !important;
+        }
 
-    {shell_styles}
-  </style>
+        .support-grid {
+          display: grid !important;
+          grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+          gap: 10px !important;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .player-id-grid {
+          grid-template-columns: 1fr;
+          justify-items: start;
+        }
+
+        .signal-stack {
+          justify-items: start;
+          min-width: 0;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .support-head {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .metrics-grid {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          gap: 14px !important;
+        }
+
+        .support-grid {
+          display: grid !important;
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          gap: 10px !important;
+        }
+      }
+
+</style>
 </head>
 <body>
   <div class="topbar">
@@ -2712,8 +2828,10 @@ def scout_shell_html() -> str:
 </body>
 </html>
 """
-    nav_html = Template(NAV_TEMPLATE).render(active_nav="scout_dossier")
-    search_html = SEARCH_TEMPLATE
+    # Scout Performance Audit uses its own clean topbar.
+    # Do not inject global nav/search shells here; they create duplicate command-nav artifacts.
+    nav_html = ""
+    search_html = ""
     shell_styles = SHELL_STYLES_TEMPLATE
 
     return (
