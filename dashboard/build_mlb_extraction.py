@@ -10,6 +10,12 @@ import pandas as pd
 from jinja2 import Template
 
 from dashboard.lib.report_status import build_report_status
+from dashboard.lib.player_identity import (
+    load_canonical_player_universe,
+    build_name_lookup,
+    resolve_player_identity,
+    canonicalize_player_row,
+)
 
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
@@ -28,6 +34,9 @@ SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding=
 TIMEZONE_LABEL = "America/New_York"
 SOURCE_BADGE = "SRC: EDGE_PIPELINE_v1"
 MODEL_BADGE = "MLB_EXTRACTION_v1"
+
+CANONICAL_PLAYERS = load_canonical_player_universe()
+CANONICAL_NAME_LOOKUP = build_name_lookup(CANONICAL_PLAYERS)
 
 MLB_CODES = {
     "ARI", "ATL", "BAL", "BOS", "CHC", "CWS", "CIN", "CLE", "COL", "DET",
@@ -67,85 +76,39 @@ MLB_NAME_TO_CODE = {
     "blue jays": "TOR",
     "nationals": "WSH",
 }
-_ID_RESOLUTION_CACHE: dict[str, str] = {}
-
-
-def resolve_player_id_by_name(name: str) -> str:
-    safe = str(name or "").strip()
-    if not safe:
-        return ""
-
-    cached = _ID_RESOLUTION_CACHE.get(safe)
-    if cached is not None:
-        return cached
-
-    try:
-        import requests
-
-        url = "https://statsapi.mlb.com/api/v1/people/search"
-        resp = requests.get(url, params={"names": safe}, timeout=15)
-        resp.raise_for_status()
-        payload = resp.json()
-        people = payload.get("people", []) or []
-
-        if people:
-            pid = str(people[0].get("id") or "").strip()
-            _ID_RESOLUTION_CACHE[safe] = pid
-            return pid
-    except Exception:
-        pass
-
-    _ID_RESOLUTION_CACHE[safe] = ""
-    return ""
-
-
 def backfill_resolved_player_ids(df: pd.DataFrame) -> pd.DataFrame:
     if df.empty:
         return df.copy()
 
     out = df.copy()
+    canonical_rows = []
 
-    if "player_id" in out.columns:
-        out["player_id"] = out["player_id"].fillna("").astype(str).str.strip()
-    else:
-        out["player_id"] = ""
-
-    out["resolved_player_id"] = out["player_id"]
-
-    missing_mask = out["resolved_player_id"].eq("")
-    if missing_mask.any() and "player_name" in out.columns:
-        out.loc[missing_mask, "resolved_player_id"] = (
-            out.loc[missing_mask, "player_name"]
-            .fillna("")
-            .astype(str)
-            .map(resolve_player_id_by_name)
+    for _, row in out.iterrows():
+        canonical_rows.append(
+            canonicalize_player_row(
+                row.to_dict(),
+                players=CANONICAL_PLAYERS,
+                name_lookup=CANONICAL_NAME_LOOKUP,
+            )
         )
 
-    out["resolved_player_id"] = out["resolved_player_id"].fillna("").astype(str).str.strip()
-    return out
+    return pd.DataFrame(canonical_rows, index=out.index)
 
-def fetch_player_team_identity(player_id: int) -> dict:
-    try:
-        import requests
 
-        url = f"https://statsapi.mlb.com/api/v1/people/{player_id}?hydrate=currentTeam"
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()
-        payload = response.json()
-        people = payload.get("people", []) or []
-        if not people:
-            return {}
+def fetch_player_team_identity(player_id: int | str) -> dict:
+    identity = resolve_player_identity(
+        player_id=player_id,
+        players=CANONICAL_PLAYERS,
+        name_lookup=CANONICAL_NAME_LOOKUP,
+    )
 
-        person = people[0]
-        current_team = person.get("currentTeam") or {}
-        team_name = str(current_team.get("name") or "").strip()
+    team = str(identity.get("team") or identity.get("current_team") or "").strip()
+    team_code = team if team in MLB_CODES else map_team_to_code(team)
 
-        return {
-            "display_org": team_name or "Active MLB",
-            "display_team": map_team_to_code(team_name) if team_name else "MLB",
-        }
-    except Exception:
-        return {}
+    return {
+        "display_org": team or "Active MLB",
+        "display_team": team_code if team_code in MLB_CODES else "MLB",
+    }
 
 
 def zscore(series: pd.Series) -> pd.Series:
@@ -862,9 +825,9 @@ def _json_records(df, kind: str) -> list[dict]:
     for idx, row in df.head(12).reset_index(drop=True).iterrows():
         raw = {k: _json_clean_value(v) for k, v in row.to_dict().items()}
 
-        player_id = str(raw.get("player_id") or raw.get("batter") or raw.get("pitcher") or "").strip()
+        player_id = str(raw.get("resolved_player_id") or raw.get("player_id") or raw.get("batter") or raw.get("pitcher") or "").strip()
         name = str(raw.get("player_name") or raw.get("name") or "Player X").strip()
-        team = str(raw.get("display_team") or raw.get("team") or raw.get("display_org") or "MLB").strip()
+        team = str(raw.get("display_team") or raw.get("team") or raw.get("current_team") or raw.get("display_org") or "MLB").strip()
         score = raw.get("hidden_gems_score") or raw.get("edge_score") or raw.get("signal_score") or 0
 
         try:
@@ -903,6 +866,10 @@ def _json_records(df, kind: str) -> list[dict]:
             "rank": int(idx + 1),
             "kind": kind,
             "player_id": player_id,
+            "resolved_player_id": str(raw.get("resolved_player_id") or player_id),
+            "identity_source": raw.get("identity_source"),
+            "headshot_url": raw.get("headshot_url"),
+            "scout_url": raw.get("scout_url"),
             "name": name,
             "displayName": name.upper(),
             "team": team,
