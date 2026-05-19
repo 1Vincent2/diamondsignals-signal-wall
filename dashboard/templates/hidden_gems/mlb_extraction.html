@@ -1451,6 +1451,61 @@
 
 
 
+  
+    .audit-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(106,166,255,0.22);
+      background: rgba(106,166,255,0.06);
+      color: var(--blue-soft);
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: 160ms ease;
+    }
+
+    .audit-link:hover {
+      border-color: rgba(182,255,0,0.32);
+      color: var(--lime-hot);
+      background: rgba(182,255,0,0.06);
+    }
+
+    .context-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .context-metric {
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 8px;
+      background: rgba(0,0,0,0.18);
+    }
+
+    .context-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--tiny);
+      margin-bottom: 4px;
+    }
+
+    .context-value {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
   </style>
 </head>
 <body>
@@ -1551,6 +1606,9 @@
                   <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
                 </div>
                 <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
+                {% if row.resolved_player_id %}
+                <a class="audit-link" href="/scout/{{ row.resolved_player_id }}/">PERFORMANCE AUDIT</a>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -1610,9 +1668,30 @@
                   <span class="tooltip-bubble">Market estimates how overlooked the profile still appears to be relative to the underlying quality.</span>
                 </span>
               </div>
-              <div class="metric-value pending">PENDING</div>
+              <div class="metric-value">{{ row.metric_3 }}</div>
             </div>
           </div>
+              {% if row.context_metric_1_label %}
+              <div class="context-metrics">
+                <div class="context-metric">
+                  <div class="context-label">{{ row.context_metric_1_label }}</div>
+                  <div class="context-value">{{ row.context_metric_1 }}</div>
+                </div>
+                <div class="context-metric">
+                  <div class="context-label">{{ row.context_metric_2_label }}</div>
+                  <div class="context-value">{{ row.context_metric_2 }}</div>
+                </div>
+                <div class="context-metric">
+                  <div class="context-label">{{ row.context_metric_3_label }}</div>
+                  <div class="context-value">{{ row.context_metric_3 }}</div>
+                </div>
+                <div class="context-metric">
+                  <div class="context-label">{{ row.context_metric_4_label }}</div>
+                  <div class="context-value">{{ row.context_metric_4 }}</div>
+                </div>
+              </div>
+              {% endif %}
+
 
           <div class="why why-full"><strong>Extraction Thesis:</strong> {{ row.why_hidden }}</div>
         </article>
@@ -1668,6 +1747,9 @@
                   <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
                 </div>
                 <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
+                {% if row.resolved_player_id %}
+                <a class="audit-link" href="/scout/{{ row.resolved_player_id }}/">PERFORMANCE AUDIT</a>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -1727,9 +1809,30 @@
                   <span class="tooltip-bubble">Market estimates how overlooked or underpriced the player still appears relative to the underlying bat.</span>
                 </span>
               </div>
-              <div class="metric-value pending">PENDING</div>
+              <div class="metric-value">{{ row.metric_3 }}</div>
             </div>
           </div>
+              {% if row.context_metric_1_label %}
+              <div class="context-metrics">
+                <div class="context-metric">
+                  <div class="context-label">{{ row.context_metric_1_label }}</div>
+                  <div class="context-value">{{ row.context_metric_1 }}</div>
+                </div>
+                <div class="context-metric">
+                  <div class="context-label">{{ row.context_metric_2_label }}</div>
+                  <div class="context-value">{{ row.context_metric_2 }}</div>
+                </div>
+                <div class="context-metric">
+                  <div class="context-label">{{ row.context_metric_3_label }}</div>
+                  <div class="context-value">{{ row.context_metric_3 }}</div>
+                </div>
+                <div class="context-metric">
+                  <div class="context-label">{{ row.context_metric_4_label }}</div>
+                  <div class="context-value">{{ row.context_metric_4 }}</div>
+                </div>
+              </div>
+              {% endif %}
+
 
           <div class="why why-full"><strong>Extraction Thesis:</strong> {{ row.why_hidden }}</div>
         </article>

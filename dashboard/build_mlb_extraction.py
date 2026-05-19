@@ -24,6 +24,87 @@ HIDDEN_GEMS_DIR = DIST_DIR / "hidden-gems"
 HIDDEN_GEMS_JSON = HIDDEN_GEMS_DIR / "mlb_extraction_ledger.json"
 STATUS_DIR = DIST_DIR / "status"
 MLB_EXTRACTION_STATUS_PATH = STATUS_DIR / "mlb-extraction.json"
+PLAYER_SIGNAL_INDEX_PATH = DIST_DIR / "admin" / "player_signal_index.json"
+
+
+def _load_player_signal_context() -> dict[str, dict]:
+    if not PLAYER_SIGNAL_INDEX_PATH.exists():
+        return {}
+
+    try:
+        payload = json.loads(PLAYER_SIGNAL_INDEX_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+    lookup = {}
+    for player in payload.get("players", []) or []:
+        player_id = str(player.get("player_id") or "").strip()
+        if not player_id:
+            continue
+
+        merged = {}
+        for signal in player.get("signals", []) or []:
+            metrics = signal.get("metrics") or {}
+            if isinstance(metrics, dict):
+                merged.update(metrics)
+
+        lookup[player_id] = merged
+
+    return lookup
+
+
+PLAYER_SIGNAL_CONTEXT = _load_player_signal_context()
+
+
+def _context_metric_value(player_id: str, *keys, default="—"):
+    metrics = PLAYER_SIGNAL_CONTEXT.get(str(player_id or "").strip(), {})
+    for key in keys:
+        value = metrics.get(key)
+        if value not in (None, ""):
+            return value
+    return default
+
+
+def add_player_context_metrics(df: pd.DataFrame, kind: str) -> pd.DataFrame:
+    if df is None or df.empty:
+        return df
+
+    out = df.copy()
+
+    if "resolved_player_id" in out.columns:
+        id_col = "resolved_player_id"
+    elif "player_id" in out.columns:
+        id_col = "player_id"
+    else:
+        out["context_metric_1_label"] = "SEASON"
+        out["context_metric_1"] = "—"
+        out["context_metric_2_label"] = "BABIP"
+        out["context_metric_2"] = "—"
+        out["context_metric_3_label"] = "SAMPLE"
+        out["context_metric_3"] = "—"
+        return out
+
+    if kind == "hitter":
+        out["context_metric_1_label"] = "SEAGER"
+        out["context_metric_1"] = out[id_col].map(lambda pid: _context_metric_value(pid, "seager_score"))
+        out["context_metric_2_label"] = "BABIP"
+        out["context_metric_2"] = out[id_col].map(lambda pid: _context_metric_value(pid, "babip"))
+        out["context_metric_3_label"] = "BB/K"
+        out["context_metric_3"] = out[id_col].map(lambda pid: _context_metric_value(pid, "bb_k_ratio"))
+        out["context_metric_4_label"] = "PA"
+        out["context_metric_4"] = out[id_col].map(lambda pid: _context_metric_value(pid, "plate_appearances"))
+    else:
+        out["context_metric_1_label"] = "K/BB"
+        out["context_metric_1"] = out[id_col].map(lambda pid: _context_metric_value(pid, "k_bb_ratio"))
+        out["context_metric_2_label"] = "BABIP"
+        out["context_metric_2"] = out[id_col].map(lambda pid: _context_metric_value(pid, "babip"))
+        out["context_metric_3_label"] = "BF"
+        out["context_metric_3"] = out[id_col].map(lambda pid: _context_metric_value(pid, "batters_faced"))
+        out["context_metric_4_label"] = "SEASON"
+        out["context_metric_4"] = out[id_col].map(lambda pid: _context_metric_value(pid, "season"))
+
+    return out
+
 TEMPLATES_DIR = BASE_DIR / "templates"
 
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
@@ -380,7 +461,8 @@ def build_hidden_gems_hitters_from_mlb(signals: pd.DataFrame, team_lookup: dict[
     latest["trend_note"] = latest.get("sample_note", "MLB Statcast")
     latest["trend_glow"] = latest.get("trend_glow", False)
 
-    return latest.sort_values("hidden_gems_score", ascending=False).head(12).reset_index(drop=True)
+    latest = latest.sort_values("hidden_gems_score", ascending=False).head(12).reset_index(drop=True)
+    return add_player_context_metrics(latest, "hitter")
 
 
 def build_hidden_gems_pitchers_from_mlb(signals: pd.DataFrame, team_lookup: dict[int, dict] | None = None) -> pd.DataFrame:
@@ -489,7 +571,8 @@ def build_hidden_gems_pitchers_from_mlb(signals: pd.DataFrame, team_lookup: dict
     latest["trend_note"] = latest.get("sample_note", "MLB Statcast")
     latest["trend_glow"] = latest.get("trend_glow", False)
 
-    return latest.sort_values("hidden_gems_score", ascending=False).head(12).reset_index(drop=True)
+    latest = latest.sort_values("hidden_gems_score", ascending=False).head(12).reset_index(drop=True)
+    return add_player_context_metrics(latest, "pitcher")
 
 
 def build_pitcher_trend_lookup(df: pd.DataFrame) -> dict[str, dict]:
@@ -870,6 +953,15 @@ def _json_records(df, kind: str) -> list[dict]:
             "identity_source": raw.get("identity_source"),
             "headshot_url": raw.get("headshot_url"),
             "scout_url": raw.get("scout_url"),
+            "audit_url": raw.get("scout_url") or (f"/scout/{player_id}/" if player_id else ""),
+            "context_metric_1_label": raw.get("context_metric_1_label"),
+            "context_metric_1": raw.get("context_metric_1"),
+            "context_metric_2_label": raw.get("context_metric_2_label"),
+            "context_metric_2": raw.get("context_metric_2"),
+            "context_metric_3_label": raw.get("context_metric_3_label"),
+            "context_metric_3": raw.get("context_metric_3"),
+            "context_metric_4_label": raw.get("context_metric_4_label"),
+            "context_metric_4": raw.get("context_metric_4"),
             "name": name,
             "displayName": name.upper(),
             "team": team,
