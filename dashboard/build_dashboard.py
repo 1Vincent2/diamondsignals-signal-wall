@@ -2437,12 +2437,17 @@ def scout_shell_html() -> str:
       }
 
       try {
-        const dossierPayload = await fetchJsonWithFallback([
-          "/dossier_canon.json",
-          "../../dossier_canon.json",
-          "../dossier_canon.json",
-          "/dist/dossier_canon.json"
-        ]);
+        window.__DS_SCOUT_PLAYER__ = __SCOUT_PLAYER_JSON__;
+
+        const embeddedPlayer = window.__DS_SCOUT_PLAYER__ || null;
+        const dossierPayload = embeddedPlayer && String(embeddedPlayer.player_id) === String(playerId)
+          ? { players: { [String(playerId)]: embeddedPlayer } }
+          : await fetchJsonWithFallback([
+              "/dossier_canon.json",
+              "../../dossier_canon.json",
+              "../dossier_canon.json",
+              "/dist/dossier_canon.json"
+            ]);
 
         const players = dossierPayload && dossierPayload.players ? dossierPayload.players : {};
         const player = players[String(playerId)] || null;
@@ -2519,8 +2524,9 @@ def write_scout_pages(dossier_payload: dict) -> None:
     scout_dir.mkdir(parents=True, exist_ok=True)
 
     shell_html = scout_shell_html()
+    index_shell_html = shell_html.replace("__SCOUT_PLAYER_JSON__", "null")
 
-    (scout_dir / "index.html").write_text(shell_html, encoding="utf-8")
+    (scout_dir / "index.html").write_text(index_shell_html, encoding="utf-8")
     print("Wrote dist/scout/index.html")
 
     players = dossier_payload.get("players", {}) if isinstance(dossier_payload, dict) else {}
@@ -2529,7 +2535,11 @@ def write_scout_pages(dossier_payload: dict) -> None:
     for player_id in player_ids:
         player_dir = scout_dir / str(player_id)
         player_dir.mkdir(parents=True, exist_ok=True)
-        (player_dir / "index.html").write_text(shell_html, encoding="utf-8")
+        player_html = shell_html.replace(
+            "__SCOUT_PLAYER_JSON__",
+            json.dumps(players[player_id], separators=(",", ":"), ensure_ascii=False),
+        )
+        (player_dir / "index.html").write_text(player_html, encoding="utf-8")
 
     print(f"Wrote {len(player_ids)} player dossier pages under dist/scout/<player_id>/index.html")
 
