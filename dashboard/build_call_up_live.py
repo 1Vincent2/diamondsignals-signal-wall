@@ -2291,7 +2291,7 @@ HTML_TEMPLATE = Template(
         <div class="tabs tabs-aaa" role="tablist" aria-label="Promotion watch windows">
           <button type="button" class="tab" id="tab-btn-72h" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
           <button type="button" class="tab active" id="tab-btn-14d" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
-          <button type="button" class="tab" id="tab-btn-aaa-gems" onclick="switchPromotionTab('tab-aaa-gems', this)">AAA GEMS</button>
+          <button type="button" class="tab" id="tab-btn-aaa-gems" onclick="switchPromotionTab('tab-aaa-gems', this)">DEPTH RADAR</button>
         </div>
 
         <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
@@ -2573,14 +2573,14 @@ HTML_TEMPLATE = Template(
         <div class="section">
           <div class="section-head">
             <div>
-              <div class="section-kicker">AAA Gems</div>
-              <h2 class="section-title">AAA Gems — Legacy Surface Parked</h2>
+              <div class="section-kicker">Depth Radar</div>
+              <h2 class="section-title">Depth Radar — Source-Locked Pipeline</h2>
             </div>
             <div class="section-badge">Offline</div>
           </div>
 
           <div class="placeholder">
-            AAA Gems was the legacy Hidden Gems-style prospect layer. It has been parked while Promotion Watch prioritizes fresh 72 HR, 14 DAY, and Movement Layer surveillance. The concept is preserved for future rebuild as a dedicated AAA latent-alpha tab.
+            Depth Radar is reserved for AA, A, and D1 college surveillance. This tab remains source-locked until live lower-minors or college rows are wired. No static player seeds are rendered here.
           </div>
         </div>
       </div>
@@ -2728,7 +2728,7 @@ HTML_TEMPLATE = Template(
         if (summaryMode) summaryMode.textContent = "AAA";
         if (summarySignals) summarySignals.textContent = "{{ total_signals }}";
       } else if (panelId === "tab-aaa-gems") {
-        if (summaryWindow) summaryWindow.textContent = "AAA GEMS";
+        if (summaryWindow) summaryWindow.textContent = "DEPTH RADAR";
         if (summaryMode) summaryMode.textContent = "PARKED";
         if (summarySignals) summarySignals.textContent = "0";
       } else {
@@ -3239,12 +3239,15 @@ def render_html() -> str:
     elif "source_updated_at" in locals() and source_updated_at:
         live_feed_label = source_updated_at
 
+    depth_radar_rows = []
+
     sections = {
         "pitchers_72hr": len(pitchers_72),
         "hitters_72hr": len(hitters_72),
         "pitchers_14day": len(pitchers_14),
         "hitters_14day": len(hitters_14),
         "recent_arrivals": len(archive_arrivals),
+        "depth_radar": len(depth_radar_rows),
     }
 
     validation = build_validation_report(
@@ -3253,13 +3256,14 @@ def render_html() -> str:
             validate_required_sections(
                 "promotion_watch",
                 sections,
-                ["pitchers_72hr", "hitters_72hr", "pitchers_14day", "hitters_14day", "recent_arrivals"],
+                ["pitchers_72hr", "hitters_72hr", "pitchers_14day", "hitters_14day", "recent_arrivals", "depth_radar"],
             ),
             validate_min_rows("pitchers_72hr", sections["pitchers_72hr"], 0),
             validate_min_rows("hitters_72hr", sections["hitters_72hr"], 0),
             validate_min_rows("pitchers_14day", sections["pitchers_14day"], 0),
             validate_min_rows("hitters_14day", sections["hitters_14day"], 0),
             validate_min_rows("recent_arrivals", sections["recent_arrivals"], 0),
+            validate_min_rows("depth_radar", sections["depth_radar"], 0),
         ],
     )
 
@@ -3284,6 +3288,7 @@ def render_html() -> str:
     status_payload["pipeline_layers"] = [
         "dynamic_aaa_movement_feed",
         "dynamic_recent_mlb_arrivals_feed",
+        "depth_radar_source_locked",
         "freshness_status_tracked",
         "section_count_validation",
         "ui_empty_state_only",
@@ -3293,7 +3298,8 @@ def render_html() -> str:
         "Promotion Watch is a dynamic prospect movement surface, not a static prospect list.",
         "Placeholder language in the template is limited to empty-state UI messaging.",
         "Freshness, degraded state, section counts, and source_updated_at are published in the status payload.",
-        "72 HR, 14 DAY, and Recent Arrivals sections remain independently counted for QA.",
+        "72 HR, 14 DAY, Recent Arrivals, and Depth Radar sections remain independently counted for QA.",
+        "Depth Radar is source-locked until AA, A, or D1 college pipelines are wired.",
     ]
 
     write_status_file(status_payload)
@@ -3323,6 +3329,7 @@ def render_html() -> str:
             "pitchers_14day": safe_records(pitchers_14, 12),
             "hitters_14day": safe_records(hitters_14, 12),
             "recent_arrivals": archive_arrivals[:16] if isinstance(archive_arrivals, list) else safe_records(archive_arrivals, 16),
+            "depth_radar": depth_radar_rows,
         },
     }
 
