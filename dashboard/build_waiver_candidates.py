@@ -139,15 +139,63 @@ def build_market_eligibility_index() -> dict:
     return index
 
 
-def lookup_market_eligibility(row: dict, player_name: str, market_index: dict) -> dict | None:
+def normalized_name(value: str) -> str:
+    return " ".join(str(value or "").strip().lower().replace(",", "").split())
+
+
+def build_loose_market_name_index(market_index: dict) -> dict:
+    loose = {}
+    seen_keys = set()
+
+    for row in market_index.values():
+        player_name = normalized_name(row.get("player_name") or row.get("name") or "")
+        if not player_name:
+            continue
+
+        dedupe_key = row.get("player_key") or row.get("player_id") or player_name
+        pair_key = (player_name, dedupe_key)
+        if pair_key in seen_keys:
+            continue
+
+        seen_keys.add(pair_key)
+        loose.setdefault(player_name, []).append(row)
+
+    return loose
+
+
+def lookup_market_eligibility(
+    row: dict,
+    player_name: str,
+    market_index: dict,
+    loose_market_index: dict | None = None,
+) -> tuple[dict | None, str]:
     for key in market_keys_for_row(row, player_name):
         hit = market_index.get(key)
         if hit:
-            return hit
-    return None
+            return hit, "strict"
+
+    # Controlled fallback:
+    # Allow name-only market eligibility only when the source row has a stable
+    # DiamondSignals/MLBAM player_id and Yahoo has exactly one verified
+    # low-rostered player with that normalized name.
+    source_player_id = str(row.get("player_id") or row.get("mlbam_id") or "").strip()
+    if not source_player_id or loose_market_index is None:
+        return None, "none"
+
+    hits = loose_market_index.get(normalized_name(player_name), [])
+    if len(hits) == 1:
+        return hits[0], "verified_unique_name"
+
+    return None, "none"
 
 
-def candidate_from_row(row: dict, source: str, rank: int, market_index: dict) -> dict | None:
+def candidate_from_row(
+    row: dict,
+    source: str,
+    rank: int,
+    market_index: dict,
+    loose_market_index: dict | None = None,
+) -> dict | None:
     player_name = row.get("player_name") or row.get("name") or row.get("full_name")
     if not player_name:
         return None
@@ -155,7 +203,12 @@ def candidate_from_row(row: dict, source: str, rank: int, market_index: dict) ->
     if is_blocked_waiver_candidate(row, player_name):
         return None
 
-    market_row = lookup_market_eligibility(row, player_name, market_index)
+    market_row, market_match_type = lookup_market_eligibility(
+        row,
+        player_name,
+        market_index,
+        loose_market_index,
+    )
     if not market_row:
         return None
 
@@ -179,6 +232,10 @@ def candidate_from_row(row: dict, source: str, rank: int, market_index: dict) ->
         "market_pct_verified": market_pct_verified,
         "market_provider": market_row.get("market_provider") or market_row.get("provider") or "platform_api",
         "market_source": market_row.get("market_source") or "platform_api",
+        "market_match_type": market_match_type,
+        "market_player_id": market_row.get("player_id"),
+        "market_player_key": market_row.get("player_key"),
+        "market_team": market_row.get("team"),
         "command": row.get("command") or "WATCHLIST PROVISION",
         "command_class": row.get("command_class") or "monitor",
         "market_status": row.get("market_status") or f"{source_label} CANDIDATE",
@@ -222,6 +279,7 @@ def collect_apex() -> list[dict]:
 
 def build_candidates() -> dict:
     market_index = build_market_eligibility_index()
+    loose_market_index = build_loose_market_name_index(market_index)
 
     source_rows = [
         ("signal_wall", collect_signal_wall()),
@@ -236,7 +294,13 @@ def build_candidates() -> dict:
         for rank, row in enumerate(rows, start=1):
             if not isinstance(row, dict):
                 continue
-            candidate = candidate_from_row(row, source, rank, market_index)
+            candidate = candidate_from_row(
+                row,
+                source,
+                rank,
+                market_index,
+                loose_market_index,
+            )
             if not candidate:
                 continue
 
@@ -266,6 +330,7 @@ def build_candidates() -> dict:
         "eligibility_policy": "platform_api_verified_market_pct_required",
         "market_eligibility_source": str(MARKET_ELIGIBILITY_PATH.relative_to(ROOT)),
         "market_eligibility_index_count": len(market_index),
+        "loose_market_name_index_count": len(loose_market_index),
         "blocked_player_count": len(BLOCKED_WAIVER_PLAYER_IDS),
         "candidates": candidates,
     }
