@@ -43,11 +43,7 @@ SHELL_NAV_PATH = BASE_DIR / "templates" / "shell_nav.html"
 CANONICAL_PLAYERS = load_canonical_player_universe()
 CANONICAL_NAME_LOOKUP = build_name_lookup(CANONICAL_PLAYERS)
 
-WAIVER_IDENTITY_OVERRIDES = {
-    ("luis l. ortiz", "cle"): "682847",
-    ("hayden birdsong", "sf"): "806185",
-    ("aj smith-shawver", "atl"): "700363",
-}
+WAIVER_IDENTITY_OVERRIDES = {}
 
 
 WAIVER_PIPELINE_MODE = "verified_dynamic_candidates_only_v1"
@@ -234,6 +230,8 @@ def build_waiver_pipeline_assets() -> list[dict]:
 
 
 
+
+
 def _build_asset(
     player_name: str,
     team: str,
@@ -259,8 +257,17 @@ def _build_asset(
     status_reason: str = "Status clear at build time",
     card_action: str = "OPEN PERFORMANCE AUDIT",
     visibility_state: str = "primary",
-    status_source: str = "default_active",
+    status_source: str = "verified_candidate_file",
 ) -> dict:
+    """
+    Dynamic Waiver asset factory.
+
+    This function is intentionally retained because verified upstream candidates
+    still need normalization, canonical identity resolution, scout URLs, metrics,
+    and action URLs before render.
+
+    It must not contain or call static demo player fixtures.
+    """
     identity = resolve_player_identity(
         player_id=player_id,
         player_name=player_name,
@@ -269,7 +276,7 @@ def _build_asset(
         name_lookup=CANONICAL_NAME_LOOKUP,
     )
 
-    resolved_player_id = str(identity.get("player_id") or "").strip()
+    resolved_player_id = str(identity.get("player_id") or player_id or "").strip()
     player_name = identity.get("player_name") or player_name
     team = identity.get("team") or team
     position = identity.get("position") or position
@@ -320,7 +327,15 @@ def _build_asset(
         "card_action": card_action,
         "visibility_state": visibility_state,
         "status_source": status_source,
-        "search_blob": " ".join([player_name, team, position, command, market_status, deployment_label, operational_status]).lower(),
+        "search_blob": " ".join([
+            str(player_name),
+            str(team),
+            str(position),
+            str(command),
+            str(market_status),
+            str(deployment_label),
+            str(operational_status),
+        ]).lower(),
         "metrics": [
             {"label": "Ownership Gate", "value": ownership_gate},
             {"label": "Signal Window", "value": signal_window},
@@ -334,231 +349,10 @@ def _build_asset(
 
 
 
-def archived_legacy_static_demo_assets() -> list[dict]:
-    """
-    Archived local design fixture only.
-    Not called by render(), build_waiver_pipeline_assets(), or production output.
-    Production Waiver Wire renders only verified dynamic candidate-file assets.
-    """
-    return [
-        _build_asset(
-            "Luis L. Ortiz",
-            "CLE",
-            "SP/RP",
-            18,
-            "PRIORITY WAIVER CLAIM",
-            "",
-            "UNPRICED MOVEMENT CHANGE",
-            "Traditional fantasy managers still see a volatile arm with uneven surface outcomes. That keeps the acquisition cost suppressed.",
-            "Recent pitch-shape indicators point toward a more stable attack path: improved fastball-plane utility, better extension signal, and a cleaner secondary tunnel profile.",
-            "Acquire before the next visible box-score event. This is the exact window where physics changes can reprice faster than public ownership reacts.",
-            "≤20%",
-            "72H",
-            "Arm",
-            "ERA Lag",
-            "Claim",
-            "Med",
-        ),
-        _build_asset(
-            "Hayden Birdsong",
-            "SF",
-            "SP",
-            14,
-            "STASH / MONITOR",
-            "stash",
-            "ROLE + STUFF WATCH",
-            "The public market has not fully priced the volatility because the role and innings path remain unstable.",
-            "Raw pitch traits remain extraction-worthy when command tightens. This profile belongs on the open-market radar before a cleaner outing forces attention.",
-            "Do not chase blindly, but provision to watchlist or stash in deeper formats. The upside is visible before the mainstream ownership curve moves.",
-            "≤15%",
-            "96H",
-            "Arm",
-            "Role Fog",
-            "Stash",
-            "High",
-        ),
-        _build_asset(
-            "Ben Rice",
-            "NYY",
-            "C/1B",
-            19,
-            "MONITOR BAT-PATH STABILITY",
-            "monitor",
-            "HITTER VOLATILITY COMPRESSION",
-            "Casual managers see playing-time uncertainty and category volatility. That suppresses ownership despite a useful power-path profile.",
-            "The hitter version of this surface watches swing-decision stability, damage-zone contact, and volatility compression before the stat line confirms.",
-            "Monitor as the hitter-side proof case. If role clarity improves while bat-path stability holds, the wire price can disappear quickly.",
-            "≤20%",
-            "72H",
-            "Bat",
-            "Role Lag",
-            "Track",
-            "Med",
-        ),
-        _build_asset(
-            "Edward Cabrera",
-            "MIA",
-            "SP",
-            21,
-            "VOLATILITY CLAIM",
-            "stash",
-            "STUFF OUTPACES TRUST",
-            "The market still treats the profile as a command-risk headache, which keeps the acquisition cost below the raw arsenal ceiling.",
-            "Velocity, breaking-ball shape, and strikeout-pressure indicators create a classic open-market asymmetry: ugly surface risk hiding impact stuff.",
-            "Provision as a controlled upside arm. The window closes quickly if command stabilizes for even one clean start.",
-            "≤25%",
-            "72H",
-            "Arm",
-            "Command Discount",
-            "Stash",
-            "High",
-        ),
-        _build_asset(
-            "AJ Smith-Shawver",
-            "ATL",
-            "SP",
-            12,
-            "SPECULATIVE STASH",
-            "stash",
-            "PROMOTION + ROLE LEVERAGE",
-            "Public ownership remains suppressed because the active role path is cloudy, but the skill set can reprice the moment opportunity clears.",
-            "This is a role-lag play: prospect pedigree, power arsenal, and rotation fragility create a fast-moving acquisition window.",
-            "Track aggressively in deeper formats. The correct move is often before the official role confirmation.",
-            "≤15%",
-            "96H",
-            "Arm",
-            "Role Lag",
-            "Track",
-            "Med",
-        ),
-        _build_asset(
-            "Cade Horton",
-            "CHC",
-            "SP",
-            23,
-            "ADD WHERE AVAILABLE",
-            "",
-            "CALL-UP ATTENTION GAP",
-            "The market is partially aware, but shallow-league availability can still exist where managers are slow to react to promotion windows.",
-            "Pitchability plus bat-missing indicators give the profile immediate fantasy relevance if the innings path holds.",
-            "Claim where still exposed. This is no longer a hidden asset in sharper rooms, but some public markets will lag.",
-            "≤25%",
-            "48H",
-            "Arm",
-            "Promotion Lag",
-            "Claim",
-            "Med",
-        ),
-        _build_asset(
-            "Quinn Priester",
-            "MIL",
-            "SP",
-            9,
-            "DEEP LEAGUE TRACK",
-            "monitor",
-            "ENVIRONMENT CHANGE WATCH",
-            "The market still prices the prior version of the pitcher. Context and development environment can matter before surface ratios catch up.",
-            "Improved usage, pitch mix, and organizational context create a low-cost observation point for deeper leagues.",
-            "Do not overpay. Track as a cheap arm whose price can jump if the new environment unlocks command or shape gains.",
-            "≤10%",
-            "96H",
-            "Arm",
-            "Context Lag",
-            "Track",
-            "Med",
-        ),
-        _build_asset(
-            "Zebby Matthews",
-            "MIN",
-            "SP",
-            7,
-            "WATCHLIST PROVISION",
-            "monitor",
-            "COMMAND-FIRST ASCENT",
-            "Low public ownership reflects limited mainstream urgency, not a lack of usable fantasy signal.",
-            "Strike-throwing stability and role proximity make this a pre-market tracking asset before the call-up headline arrives.",
-            "Provision to watchlist now. The profile is more valuable as an early tracking asset than as a late public chase.",
-            "≤10%",
-            "7D",
-            "Arm",
-            "Headline Lag",
-            "Track",
-            "Low",
-        ),
-        _build_asset(
-            "Dylan Crews",
-            "WSH",
-            "OF",
-            24,
-            "BAT STASH",
-            "stash",
-            "PEDIGREE DISCOUNT WINDOW",
-            "The public market may hesitate if the first box-score wave is uneven, creating a temporary discount on talent.",
-            "Underlying bat speed, approach quality, and role runway can matter before the slash line stabilizes.",
-            "Stash where available. The name value can reprice fast once production syncs with opportunity.",
-            "≤25%",
-            "7D",
-            "Bat",
-            "Box-Score Lag",
-            "Stash",
-            "Med",
-        ),
-        _build_asset(
-            "Coby Mayo",
-            "BAL",
-            "3B/1B",
-            16,
-            "POWER-PATH STASH",
-            "stash",
-            "ROLE BLOCK DISCOUNT",
-            "The market discounts the bat because the roster fit is messy. That is exactly where power can remain underpriced.",
-            "Damage-zone contact and raw power create a fast repricing risk if playing time opens suddenly.",
-            "Provision as a power upside stash. The correct entry is before the lineup card makes the role obvious.",
-            "≤20%",
-            "7D",
-            "Bat",
-            "Role Block",
-            "Stash",
-            "Med",
-        ),
-        _build_asset(
-            "Kyle Manzardo",
-            "CLE",
-            "1B",
-            22,
-            "MONITOR DAMAGE WINDOW",
-            "monitor",
-            "PLATOON + POWER SIGNAL",
-            "Casual formats may still treat him as a limited role bat, keeping the price manageable.",
-            "Approach quality and left-handed damage potential make him a useful watch when role clarity improves.",
-            "Track in formats where power scarcity matters. Move faster if lineup position or playing-time share improves.",
-            "≤25%",
-            "72H",
-            "Bat",
-            "Role Lag",
-            "Track",
-            "Med",
-        ),
-        _build_asset(
-            "Rece Hinds",
-            "CIN",
-            "OF",
-            8,
-            "HIGH-VOLATILITY WATCH",
-            "monitor",
-            "POWER OUTLIER PROFILE",
-            "The market sees swing-and-miss risk first. That keeps a massive power outcome discounted.",
-            "Barrel impact and raw damage potential create asymmetric upside if contact stabilizes even briefly.",
-            "Track only in deeper or power-starved formats. This is not a safe asset, but it is a volatility weapon.",
-            "≤10%",
-            "96H",
-            "Bat",
-            "Contact Discount",
-            "Track",
-            "High",
-        ),
-    ]
-
+# Static Waiver demo/player fixtures intentionally removed.
+# Waiver Wire is verified-dynamic only:
+#   market eligibility feed -> upstream signal candidate file -> Waiver render.
+# No hardcoded player-name fallback is allowed.
 
 
 def write_waiver_wire_status(
