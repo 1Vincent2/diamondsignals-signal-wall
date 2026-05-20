@@ -2,7 +2,7 @@
   "report": "Apex Extraction",
   "subtitle": "Subsurface MLB Breakout Ledger",
   "version": "apex_extraction_v0.1",
-  "generated_at": "2026-05-20T11:01:29.361541+00:00",
+  "generated_at": "2026-05-20T11:12:34.026633+00:00",
   "status": "real_data_v0.2",
   "logic": {
     "apex_score": "physical_shift_score*0.45 + vision_delta_score*0.25 + market_latency_score*0.30",
