@@ -5,6 +5,8 @@ PREBUILD_COMMANDS = [
     ([sys.executable, "scripts/build_aaa_hitter_refresh.py"], "scripts/build_aaa_hitter_refresh.py"),
     ([sys.executable, "scripts/test_aaa_transactions.py"], "scripts/test_aaa_transactions.py"),
     ([sys.executable, "scripts/build_depth_radar_refresh.py"], "scripts/build_depth_radar_refresh.py"),
+    ([sys.executable, "-m", "dashboard.build_market_eligibility"], "dashboard/build_market_eligibility.py"),
+    ([sys.executable, "-m", "dashboard.build_waiver_candidates"], "dashboard/build_waiver_candidates.py"),
 ]
 
 MODULES = [

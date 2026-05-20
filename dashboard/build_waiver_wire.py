@@ -55,10 +55,10 @@ WAIVER_PIPELINE_LAYERS = [
     "candidate_pool_file_only",
     "verified_market_eligibility_required",
     "no_static_seed_fallback",
-    "market_attention_pending_dynamic_feed",
-    "physics_signal_pending_dynamic_feed",
-    "role_opportunity_pending_dynamic_feed",
-    "waiver_score_pending_dynamic_model",
+    "market_attention_candidate_file_enrichment",
+    "physics_signal_candidate_file_enrichment",
+    "role_opportunity_candidate_file_enrichment",
+    "waiver_score_candidate_file_rank_v1",
 ]
 
 
@@ -184,7 +184,7 @@ def build_candidate_pool() -> list[dict]:
 def attach_market_attention_layer(assets: list[dict]) -> list[dict]:
     for asset in assets:
         asset["market_attention"] = {
-            "source": "static_seed_placeholder",
+            "source": "candidate_file_dynamic_pending_enrichment",
             "rostered_pct": asset.get("rostered_pct"),
             "ownership_gate": next(
                 (m.get("value") for m in asset.get("metrics", []) if m.get("label") == "Ownership Gate"),
@@ -197,7 +197,7 @@ def attach_market_attention_layer(assets: list[dict]) -> list[dict]:
 def attach_physics_signal_layer(assets: list[dict]) -> list[dict]:
     for asset in assets:
         asset["physics_signal"] = {
-            "source": "static_seed_placeholder",
+            "source": "candidate_file_dynamic_pending_enrichment",
             "forensic_trigger": asset.get("forensic_trigger"),
             "surface_profile": asset.get("surface_profile"),
         }
@@ -207,7 +207,7 @@ def attach_physics_signal_layer(assets: list[dict]) -> list[dict]:
 def attach_role_opportunity_layer(assets: list[dict]) -> list[dict]:
     for asset in assets:
         asset["role_opportunity"] = {
-            "source": "static_seed_placeholder",
+            "source": "candidate_file_dynamic_pending_enrichment",
             "deployment_state": asset.get("deployment_state"),
             "operational_status": asset.get("operational_status"),
             "status_source": asset.get("status_source"),
@@ -218,7 +218,7 @@ def attach_role_opportunity_layer(assets: list[dict]) -> list[dict]:
 def score_waiver_assets(assets: list[dict]) -> list[dict]:
     for index, asset in enumerate(assets, start=1):
         asset["waiver_score"] = asset.get("waiver_score") or max(1, 100 - index)
-        asset["scoring_mode"] = "static_seed_rank_placeholder"
+        asset["scoring_mode"] = "candidate_file_priority_rank"
     return assets
 
 
@@ -334,11 +334,11 @@ def _build_asset(
 
 
 
-def build_assets() -> list[dict]:
+def archived_legacy_static_demo_assets() -> list[dict]:
     """
-    V1 uses editable static intelligence cards.
-    Later this can be wired to roster %, market-attention feed, Statcast deltas,
-    pitch-shape drift, Stuff+ movement, KDE, role-opportunity feeds, and live availability.
+    Archived local design fixture only.
+    Not called by render(), build_waiver_pipeline_assets(), or production output.
+    Production Waiver Wire renders only verified dynamic candidate-file assets.
     """
     return [
         _build_asset(
