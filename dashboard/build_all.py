@@ -18,6 +18,7 @@ MODULES = [
     "dashboard.build_ivb_heat_map",
     "dashboard.build_velocity_decay",
     "dashboard.build_stuff_disruption",
+    "dashboard.build_waiver_candidates",
     "dashboard.build_waiver_wire",
 ]
 
