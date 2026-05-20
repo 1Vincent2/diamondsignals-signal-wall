@@ -151,6 +151,24 @@ def classify(status: dict, payloads: list[dict], builder_text: str) -> tuple[str
         notes.append("verified_market_eligibility_required:true")
         return "LIVE_DYNAMIC_VERIFIED_MARKET", notes
 
+    hardened_mlb_extraction_mode = (
+        status.get("mode") == "real_data_v0.1_hardened"
+        and state == "fresh"
+        and build_success is True
+        and used_fallback is not True
+        and not degraded
+        and "real_statcast_source_window" in mode_blob
+        and "canonical_player_universe" in mode_blob
+        and "independent_mlb_extraction_scoring" in mode_blob
+    )
+
+    if hardened_mlb_extraction_mode:
+        notes.append("hardened_mlb_extraction_mode:true")
+        notes.append("real_statcast_source_window:true")
+        notes.append("canonical_player_universe:true")
+        notes.append("independent_mlb_extraction_scoring:true")
+        return "LIVE_DYNAMIC_HARDENED", notes
+
     if static_hits:
         notes.append("static_or_placeholder_terms:" + ",".join(static_hits))
     if dynamic_hits:

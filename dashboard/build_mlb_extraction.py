@@ -1034,9 +1034,27 @@ def write_mlb_extraction_status(
         },
         degraded=degraded,
         notes=[
-            f"MLB Extraction Ledger built from source window {source_window}."
+            f"MLB Extraction Ledger built from source window {source_window}.",
+            "MLB Extraction uses real Statcast source data and canonical player identity routing.",
+            "Selection/scoring logic remains independent from Waiver Wire and Apex Extraction.",
         ],
     )
+
+    status_payload["mode"] = "real_data_v0.1_hardened"
+    status_payload["pipeline_layers"] = [
+        "real_statcast_source_window",
+        "canonical_player_universe",
+        "performance_audit_route_ready",
+        "independent_mlb_extraction_scoring",
+        "freshness_status_tracked",
+        "no_static_seed_fallback",
+    ]
+    status_payload["hardening_notes"] = [
+        "MLB Extraction is a dynamic MLB-only exploitation surface built from real Statcast source windows.",
+        "The surface shares canonical player identity / Performance Audit routing with Apex and Waiver systems.",
+        "MLB Extraction preserves independent selection/scoring logic and is not a Waiver eligibility filter.",
+        "Freshness, section counts, degraded state, and source window are published in the status payload.",
+    ]
 
     MLB_EXTRACTION_STATUS_PATH.write_text(
         json.dumps(status_payload, indent=2),
