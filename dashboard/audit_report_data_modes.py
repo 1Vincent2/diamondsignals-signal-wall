@@ -130,20 +130,26 @@ def classify(status: dict, payloads: list[dict], builder_text: str) -> tuple[str
     section_counts = status.get("section_counts") or {}
     waiver_asset_count = int(section_counts.get("waiver_assets") or 0)
 
-    verified_empty_waiver_mode = (
+    verified_waiver_mode = (
         status.get("mode") == "verified_dynamic_candidates_only_v1"
-        and waiver_asset_count == 0
         and "no_static_seed_fallback" in mode_blob
         and "verified_market_eligibility_required" in mode_blob
         and build_success is True
         and used_fallback is not True
     )
 
-    if verified_empty_waiver_mode:
+    if verified_waiver_mode and waiver_asset_count == 0:
         notes.append("verified_empty_waiver_mode:true")
         notes.append("no_static_seed_fallback:true")
         notes.append("verified_market_eligibility_required:true")
         return "LIVE_DYNAMIC_VERIFIED_EMPTY", notes
+
+    if verified_waiver_mode and waiver_asset_count > 0 and state == "fresh" and not degraded:
+        notes.append("verified_live_waiver_mode:true")
+        notes.append(f"verified_waiver_assets:{waiver_asset_count}")
+        notes.append("no_static_seed_fallback:true")
+        notes.append("verified_market_eligibility_required:true")
+        return "LIVE_DYNAMIC_VERIFIED_MARKET", notes
 
     if static_hits:
         notes.append("static_or_placeholder_terms:" + ",".join(static_hits))
