@@ -10,6 +10,7 @@ DIST = ROOT / "dist"
 SIGNALS_PATH = DIST / "signals.json"
 MLB_EXTRACTION_PATH = DIST / "hidden-gems" / "mlb_extraction_ledger.json"
 APEX_PATH = DIST / "apex-extraction" / "apex_extraction.json"
+MARKET_ELIGIBILITY_PATH = DIST / "market" / "waiver_market_eligibility.json"
 OUT_PATH = DIST / "waiver_candidates.json"
 
 MAX_CANDIDATES = 12
@@ -80,7 +81,65 @@ def is_blocked_waiver_candidate(row: dict, player_name: str) -> bool:
     return name_key in BLOCKED_WAIVER_NAME_KEYS
 
 
-def candidate_from_row(row: dict, source: str, rank: int) -> dict | None:
+
+def market_keys_for_row(row: dict, player_name: str) -> list[str]:
+    player_id = str(row.get("player_id") or row.get("mlbam_id") or "").strip()
+    name_key = str(player_name or "").strip().lower()
+    team = str(row.get("team") or row.get("mlb_team") or "").strip().lower()
+
+    keys = []
+    if player_id:
+        keys.append(f"id:{player_id}")
+    if name_key:
+        keys.append(f"name:{name_key}:{team}")
+        keys.append(f"name:{name_key}")
+    return keys
+
+
+def build_market_eligibility_index() -> dict:
+    payload = read_json(MARKET_ELIGIBILITY_PATH) or {}
+    rows = as_list(payload.get("players"))
+
+    index = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+
+        player_name = row.get("player_name") or row.get("name") or row.get("full_name")
+        if not player_name:
+            continue
+
+        verified = row.get("market_pct_verified") is True
+        rostered_pct = pct(
+            row.get("rostered_pct")
+            or row.get("roster_pct")
+            or row.get("ownership_pct")
+            or row.get("ownership"),
+            default=None,
+        )
+
+        if not verified or rostered_pct is None or rostered_pct > MAX_ROSTERED_PCT:
+            continue
+
+        for key in market_keys_for_row(row, player_name):
+            index[key] = {
+                **row,
+                "rostered_pct": rostered_pct,
+                "market_pct_verified": True,
+            }
+
+    return index
+
+
+def lookup_market_eligibility(row: dict, player_name: str, market_index: dict) -> dict | None:
+    for key in market_keys_for_row(row, player_name):
+        hit = market_index.get(key)
+        if hit:
+            return hit
+    return None
+
+
+def candidate_from_row(row: dict, source: str, rank: int, market_index: dict) -> dict | None:
     player_name = row.get("player_name") or row.get("name") or row.get("full_name")
     if not player_name:
         return None
@@ -88,21 +147,14 @@ def candidate_from_row(row: dict, source: str, rank: int) -> dict | None:
     if is_blocked_waiver_candidate(row, player_name):
         return None
 
-    market_pct_verified = has_verified_market_pct(row)
-    rostered_pct = pct(
-        row.get("rostered_pct")
-        or row.get("roster_pct")
-        or row.get("ownership_pct")
-        or row.get("ownership"),
-        default=None,
-    )
-
-    # Missing market data is not waiver eligibility. It is unverified.
-    # Do not let upstream signal surfaces imply open-market availability.
-    if rostered_pct is None:
+    market_row = lookup_market_eligibility(row, player_name, market_index)
+    if not market_row:
         return None
 
-    if rostered_pct > MAX_ROSTERED_PCT:
+    market_pct_verified = True
+    rostered_pct = market_row.get("rostered_pct")
+
+    if rostered_pct is None or rostered_pct > MAX_ROSTERED_PCT:
         return None
 
     position = row.get("position") or row.get("pos") or ""
@@ -117,6 +169,8 @@ def candidate_from_row(row: dict, source: str, rank: int) -> dict | None:
         "position": str(position).strip(),
         "rostered_pct": rostered_pct,
         "market_pct_verified": market_pct_verified,
+        "market_provider": market_row.get("market_provider") or market_row.get("provider") or "platform_api",
+        "market_source": market_row.get("market_source") or "platform_api",
         "command": row.get("command") or "WATCHLIST PROVISION",
         "command_class": row.get("command_class") or "monitor",
         "market_status": row.get("market_status") or f"{source_label} CANDIDATE",
@@ -159,6 +213,8 @@ def collect_apex() -> list[dict]:
 
 
 def build_candidates() -> dict:
+    market_index = build_market_eligibility_index()
+
     source_rows = [
         ("signal_wall", collect_signal_wall()),
         ("mlb_extraction", collect_mlb_extraction()),
@@ -172,7 +228,7 @@ def build_candidates() -> dict:
         for rank, row in enumerate(rows, start=1):
             if not isinstance(row, dict):
                 continue
-            candidate = candidate_from_row(row, source, rank)
+            candidate = candidate_from_row(row, source, rank, market_index)
             if not candidate:
                 continue
 
@@ -199,7 +255,9 @@ def build_candidates() -> dict:
         ],
         "candidate_count": len(candidates),
         "max_rostered_pct": MAX_ROSTERED_PCT,
-        "eligibility_policy": "verified_market_pct_required",
+        "eligibility_policy": "platform_api_verified_market_pct_required",
+        "market_eligibility_source": str(MARKET_ELIGIBILITY_PATH.relative_to(ROOT)),
+        "market_eligibility_index_count": len(market_index),
         "blocked_player_count": len(BLOCKED_WAIVER_PLAYER_IDS),
         "candidates": candidates,
     }
