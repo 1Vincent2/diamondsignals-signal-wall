@@ -15,6 +15,23 @@ OUT_PATH = DIST / "waiver_candidates.json"
 MAX_CANDIDATES = 12
 MAX_ROSTERED_PCT = 35
 
+BLOCKED_WAIVER_PLAYER_IDS = {
+    # Obvious rostered/market-priced stars should never enter Waiver/Open Market
+    # without an explicit verified low-rostered market feed.
+    "677951",  # Bobby Witt Jr.
+    "656941",  # Kyle Schwarber
+    "691406",  # Junior Caminero
+    "695578",  # James Wood
+}
+
+BLOCKED_WAIVER_NAME_KEYS = {
+    "bobby witt",
+    "bobby witt jr.",
+    "kyle schwarber",
+    "junior caminero",
+    "james wood",
+}
+
 
 def read_json(path: Path):
     if not path.exists():
@@ -38,11 +55,29 @@ def player_key(row: dict) -> str:
     return f"name:{name}:{team}"
 
 
-def pct(value, default=0):
+def pct(value, default=None):
+    if value in (None, "", "—", "N/A", "NA"):
+        return default
     try:
         return int(float(value))
     except Exception:
         return default
+
+
+def has_verified_market_pct(row: dict) -> bool:
+    return any(
+        row.get(key) not in (None, "", "—", "N/A", "NA")
+        for key in ("rostered_pct", "roster_pct", "ownership_pct", "ownership")
+    )
+
+
+def is_blocked_waiver_candidate(row: dict, player_name: str) -> bool:
+    player_id = str(row.get("player_id") or row.get("mlbam_id") or "").strip()
+    if player_id in BLOCKED_WAIVER_PLAYER_IDS:
+        return True
+
+    name_key = str(player_name or "").strip().lower()
+    return name_key in BLOCKED_WAIVER_NAME_KEYS
 
 
 def candidate_from_row(row: dict, source: str, rank: int) -> dict | None:
@@ -50,13 +85,22 @@ def candidate_from_row(row: dict, source: str, rank: int) -> dict | None:
     if not player_name:
         return None
 
+    if is_blocked_waiver_candidate(row, player_name):
+        return None
+
+    market_pct_verified = has_verified_market_pct(row)
     rostered_pct = pct(
         row.get("rostered_pct")
         or row.get("roster_pct")
         or row.get("ownership_pct")
-        or row.get("ownership")
-        or 0
+        or row.get("ownership"),
+        default=None,
     )
+
+    # Missing market data is not waiver eligibility. It is unverified.
+    # Do not let upstream signal surfaces imply open-market availability.
+    if rostered_pct is None:
+        return None
 
     if rostered_pct > MAX_ROSTERED_PCT:
         return None
@@ -72,6 +116,7 @@ def candidate_from_row(row: dict, source: str, rank: int) -> dict | None:
         "team": str(team).strip(),
         "position": str(position).strip(),
         "rostered_pct": rostered_pct,
+        "market_pct_verified": market_pct_verified,
         "command": row.get("command") or "WATCHLIST PROVISION",
         "command_class": row.get("command_class") or "monitor",
         "market_status": row.get("market_status") or f"{source_label} CANDIDATE",
@@ -154,6 +199,8 @@ def build_candidates() -> dict:
         ],
         "candidate_count": len(candidates),
         "max_rostered_pct": MAX_ROSTERED_PCT,
+        "eligibility_policy": "verified_market_pct_required",
+        "blocked_player_count": len(BLOCKED_WAIVER_PLAYER_IDS),
         "candidates": candidates,
     }
 
