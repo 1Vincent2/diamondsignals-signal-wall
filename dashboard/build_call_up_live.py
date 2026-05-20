@@ -2574,14 +2574,22 @@ HTML_TEMPLATE = Template(
           <div class="section-head">
             <div>
               <div class="section-kicker">Depth Radar</div>
-              <h2 class="section-title">Depth Radar — Source-Locked Pipeline</h2>
+              <h2 class="section-title">Depth Radar — Lower-Minors Surveillance</h2>
             </div>
-            <div class="section-badge">Offline</div>
+            <div class="section-badge">Top {{ depth_radar_rows|length }}</div>
           </div>
 
-          <div class="placeholder">
-            Depth Radar is reserved for AA, A, and D1 college surveillance. This tab remains source-locked until live lower-minors or college rows are wired. No static player seeds are rendered here.
+          {% if depth_radar_rows %}
+          <div class="grid">
+            {% for row in depth_radar_rows %}
+              {{ live_ledger_card.render(row=row) }}
+            {% endfor %}
           </div>
+          {% else %}
+          <div class="placeholder">
+            Depth Radar is source-locked until verified AA, A, or D1 college rows are available. No static player seeds are rendered here.
+          </div>
+          {% endif %}
         </div>
       </div>
 
@@ -2729,8 +2737,8 @@ HTML_TEMPLATE = Template(
         if (summarySignals) summarySignals.textContent = "{{ total_signals }}";
       } else if (panelId === "tab-aaa-gems") {
         if (summaryWindow) summaryWindow.textContent = "DEPTH RADAR";
-        if (summaryMode) summaryMode.textContent = "PARKED";
-        if (summarySignals) summarySignals.textContent = "0";
+        if (summaryMode) summaryMode.textContent = "LOWER-MINORS";
+        if (summarySignals) summarySignals.textContent = "{{ depth_radar_rows|length }}";
       } else {
         if (summaryWindow) summaryWindow.textContent = "14 DAY";
         if (summaryMode) summaryMode.textContent = "SCOUT";
@@ -3114,6 +3122,46 @@ def load_fresh_aaa_pitcher_refresh() -> pd.DataFrame:
     df["why"] = df.apply(_why, axis=1)
     return df.sort_values(["edge_score", "so", "bb", "h"], ascending=[False, False, True, True]).reset_index(drop=True)
 
+def load_depth_radar_rows(limit: int = 24) -> list[dict]:
+    path = DIST_DIR / "depth_radar_refresh.json"
+    if not path.exists():
+        return []
+
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+
+    rows = payload.get("top_rows") or []
+    if not isinstance(rows, list):
+        return []
+
+    safe_rows = []
+    for row in rows[:limit]:
+        if not isinstance(row, dict):
+            continue
+
+        safe_rows.append({
+            "player_name": row.get("player_name") or "Unknown Player",
+            "resolved_player_id": str(row.get("player_id") or row.get("resolved_player_id") or "").strip(),
+            "display_team": row.get("org") or row.get("team") or row.get("level") or "MILB",
+            "display_org": row.get("level") or "DEPTH",
+            "signal_type": row.get("signal_type") or row.get("type") or "Depth",
+            "edge_score": row.get("edge_score") or 0,
+            "score_class": row.get("score_class") or classify_score(row.get("edge_score") or 0),
+            "metric_1": row.get("metric_1") or row.get("level") or "MILB",
+            "metric_2": row.get("metric_2") or row.get("snapshot_date") or "",
+            "metric_3": row.get("metric_3") or row.get("depth_score") or "",
+            "sample_note": row.get("sample_note") or "AA/A final boxscore",
+            "source_badge": row.get("source_badge") or "SRC: DEPTH_RADAR_v0.1",
+            "score_version": row.get("score_version") or "DEPTH_v0.1",
+            "why": row.get("why") or "Lower-minors signal surfaced from verified final boxscore ingestion.",
+            "avatar": initials(row.get("player_name") or ""),
+        })
+
+    return safe_rows
+
+
 def load_source_frame() -> tuple[pd.DataFrame, list[str]]:
     return fetch_recent_aaa_weekly_signal_base()
 
@@ -3239,7 +3287,7 @@ def render_html() -> str:
     elif "source_updated_at" in locals() and source_updated_at:
         live_feed_label = source_updated_at
 
-    depth_radar_rows = []
+    depth_radar_rows = load_depth_radar_rows(limit=24)
 
     sections = {
         "pitchers_72hr": len(pitchers_72),
@@ -3299,7 +3347,7 @@ def render_html() -> str:
         "Placeholder language in the template is limited to empty-state UI messaging.",
         "Freshness, degraded state, section counts, and source_updated_at are published in the status payload.",
         "72 HR, 14 DAY, Recent Arrivals, and Depth Radar sections remain independently counted for QA.",
-        "Depth Radar is source-locked until AA, A, or D1 college pipelines are wired.",
+        "Depth Radar renders verified AA, High-A, and Low-A rows when available; D1 college remains source-locked.",
     ]
 
     write_status_file(status_payload)
@@ -3374,6 +3422,7 @@ def render_html() -> str:
         hitters_14=hitters_14.to_dict(orient="records"),
         pitchers_14=pitchers_14.to_dict(orient="records"),
         archive_arrivals=archive_arrivals,
+        depth_radar_rows=depth_radar_rows,
         pitchers_14_message=pitchers_14_message,
         hitters_14_message=hitters_14_message,
         arrivals_message=arrivals_message,
