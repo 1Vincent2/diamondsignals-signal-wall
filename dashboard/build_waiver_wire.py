@@ -42,6 +42,12 @@ SHELL_NAV_PATH = BASE_DIR / "templates" / "shell_nav.html"
 CANONICAL_PLAYERS = load_canonical_player_universe()
 CANONICAL_NAME_LOOKUP = build_name_lookup(CANONICAL_PLAYERS)
 
+WAIVER_IDENTITY_OVERRIDES = {
+    ("luis l. ortiz", "cle"): "682847",
+    ("hayden birdsong", "sf"): "806185",
+    ("aj smith-shawver", "atl"): "700363",
+}
+
 
 
 
@@ -90,6 +96,10 @@ def build_assets() -> list[dict]:
         player_name = identity.get("player_name") or player_name
         team = identity.get("team") or team
         position = identity.get("position") or position
+
+        override_key = (str(player_name).strip().lower(), str(team).strip().lower())
+        if not resolved_player_id and override_key in WAIVER_IDENTITY_OVERRIDES:
+            resolved_player_id = WAIVER_IDENTITY_OVERRIDES[override_key]
 
         safe_slug = audit_slug or player_name.lower().replace(".", "").replace(" ", "-")
         scout_url = str(identity.get("scout_url") or "").strip()
