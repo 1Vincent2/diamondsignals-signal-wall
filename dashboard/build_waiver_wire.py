@@ -50,9 +50,11 @@ WAIVER_IDENTITY_OVERRIDES = {
 }
 
 
-WAIVER_PIPELINE_MODE = "candidate_file_ready_v1"
+WAIVER_PIPELINE_MODE = "verified_dynamic_candidates_only_v1"
 WAIVER_PIPELINE_LAYERS = [
-    "candidate_pool_file_or_seed",
+    "candidate_pool_file_only",
+    "verified_market_eligibility_required",
+    "no_static_seed_fallback",
     "market_attention_pending_dynamic_feed",
     "physics_signal_pending_dynamic_feed",
     "role_opportunity_pending_dynamic_feed",
@@ -168,18 +170,15 @@ def build_candidate_pool() -> list[dict]:
     """
     Candidate source priority:
     1. Dynamic/generated candidate file: dist/waiver_candidates.json
-    2. Existing seed board as a publish-safe fallback
+    2. Empty standby state when no verified market-eligible candidates exist
 
-    The fallback is deliberately labeled so audits can detect it.
+    No static/pre-seeded Waiver assets are allowed in production output.
     """
     candidate_rows = load_waiver_candidate_file()
     if candidate_rows:
         return [asset_from_candidate(row) for row in candidate_rows]
 
-    assets = build_assets()
-    for asset in assets:
-        asset["candidate_source"] = "static_seed_fallback"
-    return assets
+    return []
 
 
 def attach_market_attention_layer(assets: list[dict]) -> list[dict]:
@@ -620,6 +619,7 @@ def write_waiver_wire_status(
         "Signal detection is separated from deployment eligibility.",
         "Deployment-locked players are removed from the primary Waiver Wire board.",
         "Frozen Signals section preserves surveillance value without implying roster actionability.",
+        "No static/pre-seeded Waiver assets are rendered when verified candidates are unavailable.",
         "Manual operational override layer is active until live MLB status ingestion is wired.",
     ]
     status_payload["mode"] = WAIVER_PIPELINE_MODE
