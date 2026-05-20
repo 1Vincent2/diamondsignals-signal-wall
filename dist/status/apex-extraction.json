@@ -1,0 +1,31 @@
+{
+  "report_id": "apex-extraction",
+  "state": "fresh",
+  "build_success": true,
+  "used_fallback": false,
+  "degraded": false,
+  "threshold_minutes": 1440,
+  "build_started_at": "2026-05-20T11:23:37.204679+00:00",
+  "build_finished_at": "2026-05-20T11:23:37.222606+00:00",
+  "source_updated_at": "2026-05-20T11:23:37.216774+00:00",
+  "source_age_minutes": 0.0,
+  "section_counts": {
+    "total_candidates": 16,
+    "apex_bats": 8,
+    "apex_arms": 8
+  },
+  "errors": [],
+  "notes": [
+    "Apex Extraction built with 16 candidates.",
+    "Performance Audit links are generated from canonical player_id values.",
+    "Apex uses the shared Performance Audit evidence layer while preserving separate Apex selection/scoring logic."
+  ],
+  "generated_at": "2026-05-20T11:23:37.222637+00:00",
+  "mode": "real_data_v0.2_hardened",
+  "surface": "Apex Extraction",
+  "hardening_notes": [
+    "Shares canonical player identity / Performance Audit route pattern with MLB Extraction.",
+    "Maintains independent Apex scoring and candidate selection logic.",
+    "Audit-link integrity is covered by dashboard/audit_apex_extraction_links.py."
+  ]
+}

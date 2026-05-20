@@ -2,6 +2,12 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+try:
+    from dashboard.lib.report_status import build_report_status, utc_now_iso
+except ModuleNotFoundError:
+    import sys
+    sys.path.append(str(Path(__file__).resolve().parents[1]))
+    from dashboard.lib.report_status import build_report_status, utc_now_iso
 from datetime import datetime, timezone
 
 from jinja2 import Template
@@ -10,6 +16,8 @@ from jinja2 import Template
 OUT_DIR = Path("dist/apex-extraction")
 OUT_JSON = OUT_DIR / "apex_extraction.json"
 OUT_HTML = OUT_DIR / "index.html"
+STATUS_DIR = Path("dist/status")
+APEX_EXTRACTION_STATUS_PATH = STATUS_DIR / "apex-extraction.json"
 
 BASE_DIR = Path(__file__).resolve().parent
 TEMPLATES_DIR = BASE_DIR / "templates"
@@ -2104,11 +2112,88 @@ def render_html(payload: dict) -> str:
 </html>"""
 
 
+
+def write_apex_extraction_status(payload: dict, *, build_started_at: str, build_finished_at: str) -> None:
+    STATUS_DIR.mkdir(parents=True, exist_ok=True)
+
+    counts = payload.get("counts", {}) or {}
+    apex_bats = payload.get("apex_bats", []) or []
+    apex_arms = payload.get("apex_arms", []) or []
+    total = int(counts.get("total") or (len(apex_bats) + len(apex_arms)))
+
+    section_counts = {
+        "total_candidates": total,
+        "apex_bats": int(counts.get("bats") or len(apex_bats)),
+        "apex_arms": int(counts.get("arms") or len(apex_arms)),
+    }
+
+    missing_player_ids = []
+    missing_names = []
+
+    for row in apex_bats + apex_arms:
+        if not row.get("player_id"):
+            missing_player_ids.append(str(row.get("name") or "UNKNOWN"))
+        if not row.get("name"):
+            missing_names.append(str(row.get("player_id") or "UNKNOWN"))
+
+    errors = []
+    notes = []
+
+    if total <= 0:
+        errors.append("Apex Extraction produced zero candidates.")
+
+    if missing_player_ids:
+        errors.append(f"Missing player_id for {len(missing_player_ids)} Apex candidates.")
+
+    if missing_names:
+        errors.append(f"Missing player name for {len(missing_names)} Apex candidates.")
+
+    notes.append(f"Apex Extraction built with {total} candidates.")
+    notes.append("Performance Audit links are generated from canonical player_id values.")
+    notes.append("Apex uses the shared Performance Audit evidence layer while preserving separate Apex selection/scoring logic.")
+
+    status_payload = build_report_status(
+        "apex-extraction",
+        build_success=(len(errors) == 0),
+        threshold_minutes=1440,
+        build_started_at=build_started_at,
+        build_finished_at=build_finished_at,
+        source_updated_at=payload.get("generated_at"),
+        section_counts=section_counts,
+        degraded=False,
+        errors=errors,
+        notes=notes,
+    )
+
+    status_payload["mode"] = "real_data_v0.2_hardened"
+    status_payload["surface"] = "Apex Extraction"
+    status_payload["hardening_notes"] = [
+        "Shares canonical player identity / Performance Audit route pattern with MLB Extraction.",
+        "Maintains independent Apex scoring and candidate selection logic.",
+        "Audit-link integrity is covered by dashboard/audit_apex_extraction_links.py.",
+    ]
+
+    APEX_EXTRACTION_STATUS_PATH.write_text(
+        json.dumps(status_payload, indent=2),
+        encoding="utf-8",
+    )
+    print(f"Wrote Apex Extraction status -> {APEX_EXTRACTION_STATUS_PATH}")
+
 def main() -> None:
+    build_started_at = utc_now_iso()
+
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     payload = build_payload()
     OUT_JSON.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     OUT_HTML.write_text(render_html(payload), encoding="utf-8")
+
+    build_finished_at = utc_now_iso()
+    write_apex_extraction_status(
+        payload,
+        build_started_at=build_started_at,
+        build_finished_at=build_finished_at,
+    )
+
     print(f"Wrote {OUT_JSON} with {payload['counts']['total']} Apex candidates")
     print(f"Wrote {OUT_HTML}")
 
