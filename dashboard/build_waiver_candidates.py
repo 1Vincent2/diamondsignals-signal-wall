@@ -84,15 +84,23 @@ def is_blocked_waiver_candidate(row: dict, player_name: str) -> bool:
 
 def market_keys_for_row(row: dict, player_name: str) -> list[str]:
     player_id = str(row.get("player_id") or row.get("mlbam_id") or "").strip()
+    yahoo_player_id = str(row.get("yahoo_player_id") or row.get("player_key") or "").strip()
     name_key = str(player_name or "").strip().lower()
     team = str(row.get("team") or row.get("mlb_team") or "").strip().lower()
 
     keys = []
+
     if player_id:
         keys.append(f"id:{player_id}")
-    if name_key:
-        keys.append(f"name:{name_key}:{team}")
-        keys.append(f"name:{name_key}")
+
+    if yahoo_player_id:
+        keys.append(f"yahoo:{yahoo_player_id}")
+
+    # Do not use loose name-only matching for Waiver eligibility.
+    # Market eligibility must survive at least name + team, or a stable ID.
+    if name_key and team:
+        keys.append(f"name_team:{name_key}:{team}")
+
     return keys
 
 
