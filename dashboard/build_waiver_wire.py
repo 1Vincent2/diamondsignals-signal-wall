@@ -10,16 +10,21 @@ from jinja2 import Environment, FileSystemLoader, Template
 try:
     from dashboard.lib.report_status import build_report_status
     from dashboard.lib.player_operational_status import apply_operational_status
+    from dashboard.lib.player_identity import (
+        load_canonical_player_universe,
+        build_name_lookup,
+        resolve_player_identity,
+    )
 except ModuleNotFoundError:
     import sys
     sys.path.append(str(Path(__file__).resolve().parents[1]))
     from dashboard.lib.report_status import build_report_status
     from dashboard.lib.player_operational_status import apply_operational_status
-from dashboard.lib.player_identity import (
-    load_canonical_player_universe,
-    build_name_lookup,
-    resolve_player_identity,
-)
+    from dashboard.lib.player_identity import (
+        load_canonical_player_universe,
+        build_name_lookup,
+        resolve_player_identity,
+    )
 
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
