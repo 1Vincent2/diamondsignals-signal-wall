@@ -34,6 +34,7 @@ HTML_PATH = HTML_DIR / "index.html"
 JSON_PATH = DIST_DIR / "waiver_wire.json"
 STATUS_DIR = DIST_DIR / "status"
 WAIVER_WIRE_STATUS_PATH = STATUS_DIR / "waiver-wire.json"
+WAIVER_CANDIDATE_PATH = DIST_DIR / "waiver_candidates.json"
 
 TEMPLATE_PATH = BASE_DIR / "templates" / "waiver_wire.html"
 SHELL_STYLES_PATH = BASE_DIR / "templates" / "shell_styles.css"
@@ -49,22 +50,120 @@ WAIVER_IDENTITY_OVERRIDES = {
 }
 
 
-WAIVER_PIPELINE_MODE = "pipeline_scaffold_v1_static_seed"
+WAIVER_PIPELINE_MODE = "candidate_file_ready_v1"
 WAIVER_PIPELINE_LAYERS = [
-    "candidate_pool_static_seed",
-    "market_attention_placeholder",
-    "physics_signal_placeholder",
-    "role_opportunity_placeholder",
-    "waiver_score_placeholder",
+    "candidate_pool_file_or_seed",
+    "market_attention_pending_dynamic_feed",
+    "physics_signal_pending_dynamic_feed",
+    "role_opportunity_pending_dynamic_feed",
+    "waiver_score_pending_dynamic_model",
 ]
+
+
+def load_waiver_candidate_file() -> list[dict]:
+    """
+    Optional dynamic candidate rail.
+
+    Expected future source:
+    dist/waiver_candidates.json
+
+    Supported shapes:
+    - {"assets": [...]}
+    - {"candidates": [...]}
+    - [...]
+    """
+    if not WAIVER_CANDIDATE_PATH.exists():
+        return []
+
+    try:
+        raw = json.loads(WAIVER_CANDIDATE_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+
+    if isinstance(raw, list):
+        return [row for row in raw if isinstance(row, dict)]
+
+    if isinstance(raw, dict):
+        rows = raw.get("assets") or raw.get("candidates") or []
+        if isinstance(rows, list):
+            return [row for row in rows if isinstance(row, dict)]
+
+    return []
+
+
+def normalize_candidate_row(row: dict) -> dict:
+    """
+    Normalize a dynamic candidate into the existing Waiver card contract.
+    Missing fields are filled conservatively so the surface remains publish-safe.
+    """
+    player_name = str(row.get("player_name") or row.get("name") or "").strip()
+    team = str(row.get("team") or "").strip()
+    position = str(row.get("position") or "").strip()
+    rostered_pct = int(float(row.get("rostered_pct") or row.get("roster_pct") or 0))
+
+    return {
+        "player_name": player_name,
+        "team": team,
+        "position": position,
+        "rostered_pct": rostered_pct,
+        "command": row.get("command") or "WATCHLIST PROVISION",
+        "command_class": row.get("command_class") or "monitor",
+        "market_status": row.get("market_status") or "DYNAMIC CANDIDATE",
+        "surface_profile": row.get("surface_profile") or "Candidate entered through the dynamic Waiver candidate rail.",
+        "forensic_trigger": row.get("forensic_trigger") or "Awaiting full physics-layer attribution.",
+        "verdict": row.get("verdict") or "Track until full market, role, and physics layers are attached.",
+        "deployment_state": row.get("deployment_state") or "DEPLOYMENT_CLEAR",
+        "deployment_label": row.get("deployment_label") or "DEPLOYMENT CLEAR",
+        "operational_status": row.get("operational_status") or "ACTIVE",
+        "status_reason": row.get("status_reason") or "Candidate file source; verify status before deployment.",
+        "card_action": row.get("card_action") or "OPEN PERFORMANCE AUDIT",
+        "visibility_state": row.get("visibility_state") or "primary",
+        "status_source": row.get("status_source") or "candidate_file",
+        "asset_type": row.get("asset_type") or "Open Market",
+        "market_defect": row.get("market_defect") or "Market Lag",
+        "command_metric": row.get("command_metric") or "Track",
+        "risk": row.get("risk") or "Med",
+        "ownership_gate": row.get("ownership_gate") or f"≤{rostered_pct}%" if rostered_pct else "Unverified",
+        "signal_window": row.get("signal_window") or "72H",
+        "player_id": str(row.get("player_id") or "").strip(),
+        "audit_slug": row.get("audit_slug") or "",
+        "_candidate_source": "waiver_candidate_file",
+    }
+
+
+def asset_from_candidate(row: dict) -> dict:
+    """
+    Reserved for the next activation step.
+
+    Candidate-file detection is wired, but rendering from external candidates
+    will not be enabled until the Waiver asset factory is extracted from the
+    current seed builder. This prevents an untested candidate file from breaking
+    the public surface.
+    """
+    raise NotImplementedError("Waiver candidate-file rendering is not activated yet.")
 
 
 def build_candidate_pool() -> list[dict]:
     """
-    Current seed pool. This preserves the existing board while creating the
-    replacement seam for dynamic candidate ingestion.
+    Candidate source priority:
+    1. Dynamic/generated candidate file: dist/waiver_candidates.json
+    2. Existing seed board as a publish-safe fallback
+
+    The fallback is deliberately labeled so audits can detect it.
     """
-    return build_assets()
+    candidate_rows = load_waiver_candidate_file()
+    if candidate_rows:
+        # Dynamic candidate ingestion rail is detected but not yet activated for rendering.
+        # Next patch will extract the asset factory so candidate rows can render directly.
+        assets = build_assets()
+        for asset in assets:
+            asset["candidate_source"] = "candidate_file_detected_static_render_fallback"
+        return assets
+
+    assets = build_assets()
+    for asset in assets:
+        asset["candidate_source"] = "static_seed_fallback"
+    return assets
 
 
 def attach_market_attention_layer(assets: list[dict]) -> list[dict]:
