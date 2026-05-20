@@ -49,6 +49,75 @@ WAIVER_IDENTITY_OVERRIDES = {
 }
 
 
+WAIVER_PIPELINE_MODE = "pipeline_scaffold_v1_static_seed"
+WAIVER_PIPELINE_LAYERS = [
+    "candidate_pool_static_seed",
+    "market_attention_placeholder",
+    "physics_signal_placeholder",
+    "role_opportunity_placeholder",
+    "waiver_score_placeholder",
+]
+
+
+def build_candidate_pool() -> list[dict]:
+    """
+    Current seed pool. This preserves the existing board while creating the
+    replacement seam for dynamic candidate ingestion.
+    """
+    return build_assets()
+
+
+def attach_market_attention_layer(assets: list[dict]) -> list[dict]:
+    for asset in assets:
+        asset["market_attention"] = {
+            "source": "static_seed_placeholder",
+            "rostered_pct": asset.get("rostered_pct"),
+            "ownership_gate": next(
+                (m.get("value") for m in asset.get("metrics", []) if m.get("label") == "Ownership Gate"),
+                None,
+            ),
+        }
+    return assets
+
+
+def attach_physics_signal_layer(assets: list[dict]) -> list[dict]:
+    for asset in assets:
+        asset["physics_signal"] = {
+            "source": "static_seed_placeholder",
+            "forensic_trigger": asset.get("forensic_trigger"),
+            "surface_profile": asset.get("surface_profile"),
+        }
+    return assets
+
+
+def attach_role_opportunity_layer(assets: list[dict]) -> list[dict]:
+    for asset in assets:
+        asset["role_opportunity"] = {
+            "source": "static_seed_placeholder",
+            "deployment_state": asset.get("deployment_state"),
+            "operational_status": asset.get("operational_status"),
+            "status_source": asset.get("status_source"),
+        }
+    return assets
+
+
+def score_waiver_assets(assets: list[dict]) -> list[dict]:
+    for index, asset in enumerate(assets, start=1):
+        asset["waiver_score"] = asset.get("waiver_score") or max(1, 100 - index)
+        asset["scoring_mode"] = "static_seed_rank_placeholder"
+    return assets
+
+
+def build_waiver_pipeline_assets() -> list[dict]:
+    assets = build_candidate_pool()
+    assets = attach_market_attention_layer(assets)
+    assets = attach_physics_signal_layer(assets)
+    assets = attach_role_opportunity_layer(assets)
+    assets = score_waiver_assets(assets)
+    return assets
+
+
+
 
 
 def build_assets() -> list[dict]:
@@ -436,7 +505,8 @@ def write_waiver_wire_status(
         "Frozen Signals section preserves surveillance value without implying roster actionability.",
         "Manual operational override layer is active until live MLB status ingestion is wired.",
     ]
-    status_payload["mode"] = "static_editable_v1_hardened"
+    status_payload["mode"] = WAIVER_PIPELINE_MODE
+    status_payload["pipeline_layers"] = WAIVER_PIPELINE_LAYERS
 
     WAIVER_WIRE_STATUS_PATH.write_text(
         json.dumps(status_payload, indent=2),
@@ -449,7 +519,7 @@ def render() -> None:
     build_started_at = datetime.now(timezone.utc).isoformat()
     HTML_DIR.mkdir(parents=True, exist_ok=True)
 
-    assets = build_assets()
+    assets = build_waiver_pipeline_assets()
 
     assets = [apply_operational_status(row) for row in assets]
 
@@ -484,7 +554,8 @@ def render() -> None:
 
     payload = {
         "generated_at": generated_at,
-        "mode": "static_editable_v1_hardened",
+        "mode": WAIVER_PIPELINE_MODE,
+        "pipeline_layers": WAIVER_PIPELINE_LAYERS,
         "assets": primary_assets,
         "frozen_assets": frozen_assets,
         "all_assets": assets,
