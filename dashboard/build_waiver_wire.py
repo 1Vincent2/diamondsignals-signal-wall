@@ -87,7 +87,13 @@ def build_assets() -> list[dict]:
         position = identity.get("position") or position
 
         safe_slug = audit_slug or player_name.lower().replace(".", "").replace(" ", "-")
-        scout_url = identity.get("scout_url") or ""
+        scout_url = str(identity.get("scout_url") or "").strip()
+        if scout_url == "#":
+            scout_url = ""
+
+        if resolved_player_id:
+            scout_url = f"/scout/{resolved_player_id}/"
+
         watchlist_url = (
             "https://app.diamondsignals.ai/watchlist"
             f"?player_id={resolved_player_id}"
