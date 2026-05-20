@@ -482,6 +482,7 @@ def render_signal_card(row: dict) -> str:
         class="apex-card {heat_class}"
         id="apex-player-{row.get("player_id", "")}"
         data-player-id="{row.get("player_id", "")}"
+          data-profile-url="/scout/{row.get("player_id", "")}/"
         data-player-name="{row.get("name", "")}"
         data-player-team="{row.get("team", "MLB")}"
         data-player-role="{row.get("role", "ASSET")}"
@@ -540,6 +541,10 @@ def render_signal_card(row: dict) -> str:
           <span>COMMAND</span>
           <strong>{action}</strong>
         </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/{row.get("player_id", "")}/">PERFORMANCE AUDIT</a>
+          </div>
+
 
         <button
           type="button"

@@ -2,7 +2,7 @@
   "report": "Apex Extraction",
   "subtitle": "Subsurface MLB Breakout Ledger",
   "version": "apex_extraction_v0.1",
-  "generated_at": "2026-05-14T15:57:45.045436+00:00",
+  "generated_at": "2026-05-20T11:01:29.361541+00:00",
   "status": "real_data_v0.2",
   "logic": {
     "apex_score": "physical_shift_score*0.45 + vision_delta_score*0.25 + market_latency_score*0.30",
@@ -46,16 +46,16 @@
   },
   "top_signals": [
     {
-      "player_id": "502671",
-      "name": "PAUL GOLDSCHMIDT",
-      "team": "New York Yankees",
+      "player_id": "660710",
+      "name": "RODOLFO DUR\u00c1N",
+      "team": "San Diego Padres",
       "role": "BAT",
       "signal_family": "APEX BAT",
-      "physical_shift_score": 100.0,
-      "vision_delta_score": 87.3,
-      "market_latency_score": 79.0,
-      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.289 against xBA 0.411, a strong +0.123 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.8 mph at peak exit velocity. The contact mix was supported by a 4.2% barrel rate and 33.8% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
-      "supporting_metric": "Max EV 109.8 mph // xBA 0.411 vs AVG 0.289",
+      "physical_shift_score": 94.7,
+      "vision_delta_score": 81.9,
+      "market_latency_score": 92.6,
+      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.071 against xBA 0.345, a strong +0.274 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 108.3 mph at peak exit velocity. The contact mix was supported by a 4.8% barrel rate and 28.6% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
+      "supporting_metric": "Max EV 108.3 mph // xBA 0.345 vs AVG 0.071",
       "market_note": "Surface production may be lagging the underlying contact profile.",
       "action": "ADD",
       "forensic_metrics": [
@@ -63,7 +63,7 @@
           "category": "Physics",
           "code": "DHH_PROXY",
           "label": "Dynamic Hard-Hit",
-          "value": "109.8 mph",
+          "value": "108.3 mph",
           "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
         },
         {
@@ -77,11 +77,140 @@
           "category": "Market",
           "code": "HIGH_STAKES_DELTA",
           "label": "High-Stakes Delta",
-          "value": "+0.123",
+          "value": "+0.274",
           "purpose": "Identifies the value gap between expected quality and public results."
         }
       ],
-      "apex_score": 90.5,
+      "apex_score": 90.9,
+      "trigger_count": 3,
+      "physical_shift": true,
+      "vision_delta": true,
+      "market_latency": true,
+      "verdict": "APEX EXTRACTION"
+    },
+    {
+      "player_id": "693409",
+      "name": "C\u00c9SAR PRIETO",
+      "team": "St. Louis Cardinals",
+      "role": "BAT",
+      "signal_family": "APEX BAT",
+      "physical_shift_score": 96.9,
+      "vision_delta_score": 77.5,
+      "market_latency_score": 90.8,
+      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.000 against xBA 0.253, a strong +0.253 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 108.9 mph at peak exit velocity. The contact mix was supported by a 0.0% barrel rate and 42.9% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
+      "supporting_metric": "Max EV 108.9 mph // xBA 0.253 vs AVG 0.000",
+      "market_note": "Surface production may be lagging the underlying contact profile.",
+      "action": "ADD",
+      "forensic_metrics": [
+        {
+          "category": "Physics",
+          "code": "DHH_PROXY",
+          "label": "Dynamic Hard-Hit",
+          "value": "108.9 mph",
+          "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
+        },
+        {
+          "category": "Vision",
+          "code": "LA_CONSISTENCY",
+          "label": "LA Consistency",
+          "value": "Surgical",
+          "purpose": "Shows whether the swing plane is converting force into flight."
+        },
+        {
+          "category": "Market",
+          "code": "HIGH_STAKES_DELTA",
+          "label": "High-Stakes Delta",
+          "value": "+0.253",
+          "purpose": "Identifies the value gap between expected quality and public results."
+        }
+      ],
+      "apex_score": 90.2,
+      "trigger_count": 3,
+      "physical_shift": true,
+      "vision_delta": true,
+      "market_latency": true,
+      "verdict": "APEX EXTRACTION"
+    },
+    {
+      "player_id": "677588",
+      "name": "JOS\u00c9 TENA",
+      "team": "Washington Nationals",
+      "role": "BAT",
+      "signal_family": "APEX BAT",
+      "physical_shift_score": 100.0,
+      "vision_delta_score": 82.3,
+      "market_latency_score": 80.1,
+      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.192 against xBA 0.438, a strong +0.246 gap that points to better underlying contact than the box score suggests. The top-end damage was real, with a max exit velocity of 114.0 mph, which is premium impact territory. The contact mix was supported by a 0.0% barrel rate and 36.4% hard-hit rate over the recent window. Net assessment: Platinum Buy. The past week looks stronger under the hood than the surface line, with enough impact authority to support a bullish forward read.",
+      "supporting_metric": "Max EV 114.0 mph // xBA 0.438 vs AVG 0.192",
+      "market_note": "Surface production may be lagging the underlying contact profile.",
+      "action": "ADD",
+      "forensic_metrics": [
+        {
+          "category": "Physics",
+          "code": "DHH_PROXY",
+          "label": "Dynamic Hard-Hit",
+          "value": "114.0 mph",
+          "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
+        },
+        {
+          "category": "Vision",
+          "code": "LA_CONSISTENCY",
+          "label": "LA Consistency",
+          "value": "Surgical",
+          "purpose": "Shows whether the swing plane is converting force into flight."
+        },
+        {
+          "category": "Market",
+          "code": "HIGH_STAKES_DELTA",
+          "label": "High-Stakes Delta",
+          "value": "+0.246",
+          "purpose": "Identifies the value gap between expected quality and public results."
+        }
+      ],
+      "apex_score": 89.6,
+      "trigger_count": 3,
+      "physical_shift": true,
+      "vision_delta": true,
+      "market_latency": true,
+      "verdict": "APEX EXTRACTION"
+    },
+    {
+      "player_id": "668939",
+      "name": "ADLEY RUTSCHMAN",
+      "team": "Baltimore Orioles",
+      "role": "BAT",
+      "signal_family": "APEX BAT",
+      "physical_shift_score": 100.0,
+      "vision_delta_score": 85.7,
+      "market_latency_score": 76.6,
+      "primary_signal": "He showed positive separation between results and contact quality this week. AVG came in at 0.275 with xBA at 0.370, a +0.095 edge that supports a constructive buy signal. The top-end damage was real, with a max exit velocity of 110.3 mph, which is premium impact territory. The contact mix was supported by a 3.4% barrel rate and 28.6% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
+      "supporting_metric": "Max EV 110.3 mph // xBA 0.370 vs AVG 0.275",
+      "market_note": "Surface production may be lagging the underlying contact profile.",
+      "action": "ADD",
+      "forensic_metrics": [
+        {
+          "category": "Physics",
+          "code": "DHH_PROXY",
+          "label": "Dynamic Hard-Hit",
+          "value": "110.3 mph",
+          "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
+        },
+        {
+          "category": "Vision",
+          "code": "LA_CONSISTENCY",
+          "label": "LA Consistency",
+          "value": "Surgical",
+          "purpose": "Shows whether the swing plane is converting force into flight."
+        },
+        {
+          "category": "Market",
+          "code": "HIGH_STAKES_DELTA",
+          "label": "High-Stakes Delta",
+          "value": "+0.095",
+          "purpose": "Identifies the value gap between expected quality and public results."
+        }
+      ],
+      "apex_score": 89.4,
       "trigger_count": 3,
       "physical_shift": true,
       "vision_delta": true,
@@ -94,11 +223,11 @@
       "team": "Detroit Tigers",
       "role": "BAT",
       "signal_family": "APEX BAT",
-      "physical_shift_score": 99.0,
-      "vision_delta_score": 81.9,
-      "market_latency_score": 82.7,
-      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.205 against xBA 0.367, a strong +0.163 gap that points to better underlying contact than the box score suggests. The top-end damage was real, with a max exit velocity of 110.0 mph, which is premium impact territory. The contact mix was supported by a 3.3% barrel rate and 27.6% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
-      "supporting_metric": "Max EV 110.0 mph // xBA 0.367 vs AVG 0.205",
+      "physical_shift_score": 97.0,
+      "vision_delta_score": 81.2,
+      "market_latency_score": 82.2,
+      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.200 against xBA 0.358, a strong +0.158 gap that points to better underlying contact than the box score suggests. The top-end damage was real, with a max exit velocity of 110.0 mph, which is premium impact territory. The contact mix was supported by a 3.2% barrel rate and 23.4% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
+      "supporting_metric": "Max EV 110.0 mph // xBA 0.358 vs AVG 0.200",
       "market_note": "Surface production may be lagging the underlying contact profile.",
       "action": "ADD",
       "forensic_metrics": [
@@ -120,11 +249,11 @@
           "category": "Market",
           "code": "HIGH_STAKES_DELTA",
           "label": "High-Stakes Delta",
-          "value": "+0.163",
+          "value": "+0.158",
           "purpose": "Identifies the value gap between expected quality and public results."
         }
       ],
-      "apex_score": 89.8,
+      "apex_score": 88.6,
       "trigger_count": 3,
       "physical_shift": true,
       "vision_delta": true,
@@ -132,16 +261,59 @@
       "verdict": "APEX EXTRACTION"
     },
     {
-      "player_id": "689296",
-      "name": "NUNEZ, ANTHONY",
-      "team": "BAL",
+      "player_id": "677870",
+      "name": "LEO JIM\u00c9NEZ",
+      "team": "Miami Marlins",
+      "role": "BAT",
+      "signal_family": "APEX BAT",
+      "physical_shift_score": 91.6,
+      "vision_delta_score": 85.5,
+      "market_latency_score": 85.2,
+      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.214 against xBA 0.406, a strong +0.191 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 107.9 mph at peak exit velocity. The contact mix was supported by a 4.2% barrel rate and 27.1% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
+      "supporting_metric": "Max EV 107.9 mph // xBA 0.406 vs AVG 0.214",
+      "market_note": "Surface production may be lagging the underlying contact profile.",
+      "action": "ADD",
+      "forensic_metrics": [
+        {
+          "category": "Physics",
+          "code": "DHH_PROXY",
+          "label": "Dynamic Hard-Hit",
+          "value": "107.9 mph",
+          "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
+        },
+        {
+          "category": "Vision",
+          "code": "LA_CONSISTENCY",
+          "label": "LA Consistency",
+          "value": "Surgical",
+          "purpose": "Shows whether the swing plane is converting force into flight."
+        },
+        {
+          "category": "Market",
+          "code": "HIGH_STAKES_DELTA",
+          "label": "High-Stakes Delta",
+          "value": "+0.191",
+          "purpose": "Identifies the value gap between expected quality and public results."
+        }
+      ],
+      "apex_score": 88.2,
+      "trigger_count": 3,
+      "physical_shift": true,
+      "vision_delta": true,
+      "market_latency": true,
+      "verdict": "APEX EXTRACTION"
+    },
+    {
+      "player_id": "607192",
+      "name": "GLASNOW, TYLER",
+      "team": "HOU",
       "role": "SP",
       "signal_family": "APEX ARM",
       "physical_shift_score": 100.0,
-      "vision_delta_score": 78.0,
+      "vision_delta_score": 71.3,
       "market_latency_score": 84,
       "primary_signal": "Elite ballistic profile detected. Ride and approach angle are both moving in the right direction, creating a high-end breakout structure.",
-      "supporting_metric": "iVB Delta +4.6\" // VAA Delta -0.6\u00b0",
+      "supporting_metric": "iVB Delta +2.4\" // VAA Delta -0.8\u00b0",
       "market_note": "Public results may be lagging the shape-change signal.",
       "action": "ADD",
       "forensic_metrics": [
@@ -149,14 +321,14 @@
           "category": "Geometry",
           "code": "VAA_DELTA",
           "label": "VAA Delta",
-          "value": "-0.6\u00b0",
+          "value": "-0.8\u00b0",
           "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
         },
         {
           "category": "Deception",
           "code": "SSW_PROXY",
           "label": "Movement Deviation",
-          "value": "+4.8\"",
+          "value": "+2.2\"",
           "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
         },
         {
@@ -167,7 +339,7 @@
           "purpose": "Identifies the value gap between physical signal and public attention."
         }
       ],
-      "apex_score": 89.7,
+      "apex_score": 88.0,
       "trigger_count": 3,
       "physical_shift": true,
       "vision_delta": true,
@@ -175,16 +347,16 @@
       "verdict": "APEX EXTRACTION"
     },
     {
-      "player_id": "702284",
-      "name": "COLE YOUNG",
-      "team": "Seattle Mariners",
+      "player_id": "691781",
+      "name": "BRADY HOUSE",
+      "team": "Rochester Red Wings",
       "role": "BAT",
       "signal_family": "APEX BAT",
-      "physical_shift_score": 99.5,
-      "vision_delta_score": 83.1,
-      "market_latency_score": 78.4,
-      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.273 against xBA 0.388, a strong +0.115 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.9 mph at peak exit velocity. The contact mix was supported by a 3.1% barrel rate and 30.2% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
-      "supporting_metric": "Max EV 109.9 mph // xBA 0.388 vs AVG 0.273",
+      "physical_shift_score": 96.0,
+      "vision_delta_score": 79.7,
+      "market_latency_score": 81.7,
+      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.218 against xBA 0.371, a strong +0.153 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.5 mph at peak exit velocity. The contact mix was supported by a 2.1% barrel rate and 29.2% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
+      "supporting_metric": "Max EV 109.5 mph // xBA 0.371 vs AVG 0.218",
       "market_note": "Surface production may be lagging the underlying contact profile.",
       "action": "ADD",
       "forensic_metrics": [
@@ -192,7 +364,7 @@
           "category": "Physics",
           "code": "DHH_PROXY",
           "label": "Dynamic Hard-Hit",
-          "value": "109.9 mph",
+          "value": "109.5 mph",
           "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
         },
         {
@@ -206,94 +378,8 @@
           "category": "Market",
           "code": "HIGH_STAKES_DELTA",
           "label": "High-Stakes Delta",
-          "value": "+0.115",
+          "value": "+0.153",
           "purpose": "Identifies the value gap between expected quality and public results."
-        }
-      ],
-      "apex_score": 89.1,
-      "trigger_count": 3,
-      "physical_shift": true,
-      "vision_delta": true,
-      "market_latency": true,
-      "verdict": "APEX EXTRACTION"
-    },
-    {
-      "player_id": "663330",
-      "name": "JAHMAI JONES",
-      "team": "Detroit Tigers",
-      "role": "BAT",
-      "signal_family": "APEX BAT",
-      "physical_shift_score": 100.0,
-      "vision_delta_score": 77.5,
-      "market_latency_score": 78.2,
-      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.231 against xBA 0.456, a strong +0.225 gap that points to better underlying contact than the box score suggests. The top-end damage was real, with a max exit velocity of 111.7 mph, which is premium impact territory. The contact mix was supported by a 0.0% barrel rate and 36.7% hard-hit rate over the recent window. Net assessment: Platinum Buy. The past week looks stronger under the hood than the surface line, with enough impact authority to support a bullish forward read.",
-      "supporting_metric": "Max EV 111.7 mph // xBA 0.456 vs AVG 0.231",
-      "market_note": "Surface production may be lagging the underlying contact profile.",
-      "action": "ADD",
-      "forensic_metrics": [
-        {
-          "category": "Physics",
-          "code": "DHH_PROXY",
-          "label": "Dynamic Hard-Hit",
-          "value": "111.7 mph",
-          "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
-        },
-        {
-          "category": "Vision",
-          "code": "LA_CONSISTENCY",
-          "label": "LA Consistency",
-          "value": "Surgical",
-          "purpose": "Shows whether the swing plane is converting force into flight."
-        },
-        {
-          "category": "Market",
-          "code": "HIGH_STAKES_DELTA",
-          "label": "High-Stakes Delta",
-          "value": "+0.225",
-          "purpose": "Identifies the value gap between expected quality and public results."
-        }
-      ],
-      "apex_score": 87.8,
-      "trigger_count": 3,
-      "physical_shift": true,
-      "vision_delta": true,
-      "market_latency": true,
-      "verdict": "APEX EXTRACTION"
-    },
-    {
-      "player_id": "663558",
-      "name": "MOR\u00c1N, JOVANI",
-      "team": "TOR",
-      "role": "SP",
-      "signal_family": "APEX ARM",
-      "physical_shift_score": 100.0,
-      "vision_delta_score": 91.1,
-      "market_latency_score": 66,
-      "primary_signal": "Movement quality appears to be improving through more efficient spin conversion, not just raw effort. Breakout conditions are building.",
-      "supporting_metric": "iVB Delta +6.2\" // VAA Delta +1.1\u00b0",
-      "market_note": "Public results may be lagging the shape-change signal.",
-      "action": "WATCH",
-      "forensic_metrics": [
-        {
-          "category": "Geometry",
-          "code": "VAA_DELTA",
-          "label": "VAA Delta",
-          "value": "+1.1\u00b0",
-          "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
-        },
-        {
-          "category": "Deception",
-          "code": "SSW_PROXY",
-          "label": "Movement Deviation",
-          "value": "+3.2\"",
-          "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
-        },
-        {
-          "category": "Market",
-          "code": "HIGH_STAKES_DELTA",
-          "label": "High-Stakes Delta",
-          "value": "Public Late",
-          "purpose": "Identifies the value gap between physical signal and public attention."
         }
       ],
       "apex_score": 87.6,
@@ -304,16 +390,16 @@
       "verdict": "APEX EXTRACTION"
     },
     {
-      "player_id": "695578",
-      "name": "JAMES WOOD",
-      "team": "Washington Nationals",
+      "player_id": "542303",
+      "name": "MARCELL OZUNA",
+      "team": "Pittsburgh Pirates",
       "role": "BAT",
       "signal_family": "APEX BAT",
-      "physical_shift_score": 100.0,
-      "vision_delta_score": 75.5,
-      "market_latency_score": 78.4,
-      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.228 against xBA 0.455, a strong +0.227 gap that points to better underlying contact than the box score suggests. The top-end damage was real, with a max exit velocity of 114.6 mph, which is premium impact territory. The contact mix was supported by a 5.9% barrel rate and 40.6% hard-hit rate over the recent window. Net assessment: Platinum Buy. The past week looks stronger under the hood than the surface line, with enough impact authority to support a bullish forward read.",
-      "supporting_metric": "Max EV 114.6 mph // xBA 0.455 vs AVG 0.228",
+      "physical_shift_score": 95.3,
+      "vision_delta_score": 80.9,
+      "market_latency_score": 81.4,
+      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.177 against xBA 0.326, a strong +0.149 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.5 mph at peak exit velocity. The contact mix was supported by a 3.1% barrel rate and 24.5% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
+      "supporting_metric": "Max EV 109.5 mph // xBA 0.326 vs AVG 0.177",
       "market_note": "Surface production may be lagging the underlying contact profile.",
       "action": "ADD",
       "forensic_metrics": [
@@ -321,179 +407,7 @@
           "category": "Physics",
           "code": "DHH_PROXY",
           "label": "Dynamic Hard-Hit",
-          "value": "114.6 mph",
-          "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
-        },
-        {
-          "category": "Vision",
-          "code": "LA_CONSISTENCY",
-          "label": "LA Consistency",
-          "value": "11.5\u00b0",
-          "purpose": "Shows whether the swing plane is converting force into flight."
-        },
-        {
-          "category": "Market",
-          "code": "HIGH_STAKES_DELTA",
-          "label": "High-Stakes Delta",
-          "value": "+0.227",
-          "purpose": "Identifies the value gap between expected quality and public results."
-        }
-      ],
-      "apex_score": 87.4,
-      "trigger_count": 3,
-      "physical_shift": true,
-      "vision_delta": true,
-      "market_latency": true,
-      "verdict": "APEX EXTRACTION"
-    },
-    {
-      "player_id": "668873",
-      "name": "KILIAN, CALEB",
-      "team": "SF",
-      "role": "SP",
-      "signal_family": "APEX ARM",
-      "physical_shift_score": 100.0,
-      "vision_delta_score": 65.3,
-      "market_latency_score": 84,
-      "primary_signal": "Elite ballistic profile detected. Ride and approach angle are both moving in the right direction, creating a high-end breakout structure.",
-      "supporting_metric": "iVB Delta +1.6\" // VAA Delta -0.4\u00b0",
-      "market_note": "Public results may be lagging the shape-change signal.",
-      "action": "ADD",
-      "forensic_metrics": [
-        {
-          "category": "Geometry",
-          "code": "VAA_DELTA",
-          "label": "VAA Delta",
-          "value": "-0.4\u00b0",
-          "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
-        },
-        {
-          "category": "Deception",
-          "code": "SSW_PROXY",
-          "label": "Movement Deviation",
-          "value": "+2.5\"",
-          "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
-        },
-        {
-          "category": "Market",
-          "code": "HIGH_STAKES_DELTA",
-          "label": "High-Stakes Delta",
-          "value": "Public Late",
-          "purpose": "Identifies the value gap between physical signal and public attention."
-        }
-      ],
-      "apex_score": 86.5,
-      "trigger_count": 3,
-      "physical_shift": true,
-      "vision_delta": true,
-      "market_latency": true,
-      "verdict": "APEX EXTRACTION"
-    },
-    {
-      "player_id": "701719",
-      "name": "SAMANIEGO, TYLER",
-      "team": "BAL",
-      "role": "SP",
-      "signal_family": "APEX ARM",
-      "physical_shift_score": 100.0,
-      "vision_delta_score": 88.5,
-      "market_latency_score": 58,
-      "primary_signal": "Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.",
-      "supporting_metric": "iVB Delta +5.7\" // VAA Delta +1.1\u00b0",
-      "market_note": "Public results may be lagging the shape-change signal.",
-      "action": "WATCH",
-      "forensic_metrics": [
-        {
-          "category": "Geometry",
-          "code": "VAA_DELTA",
-          "label": "VAA Delta",
-          "value": "+1.1\u00b0",
-          "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
-        },
-        {
-          "category": "Deception",
-          "code": "SSW_PROXY",
-          "label": "Movement Deviation",
-          "value": "+5.3\"",
-          "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
-        },
-        {
-          "category": "Market",
-          "code": "HIGH_STAKES_DELTA",
-          "label": "High-Stakes Delta",
-          "value": "Public Late",
-          "purpose": "Identifies the value gap between physical signal and public attention."
-        }
-      ],
-      "apex_score": 84.5,
-      "trigger_count": 2,
-      "physical_shift": true,
-      "vision_delta": true,
-      "market_latency": false,
-      "verdict": "SUBSURFACE BREAKOUT"
-    },
-    {
-      "player_id": "805999",
-      "name": "A.J. EWING",
-      "team": "New York Mets",
-      "role": "BAT",
-      "signal_family": "APEX BAT",
-      "physical_shift_score": 79.7,
-      "vision_delta_score": 73.6,
-      "market_latency_score": 100.0,
-      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.200 against xBA 0.589, a strong +0.389 gap that points to better underlying contact than the box score suggests. The max exit velocity checked in at 104.2 mph, which was more solid than explosive. The contact mix was supported by a 14.3% barrel rate and 28.6% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
-      "supporting_metric": "Max EV 104.2 mph // xBA 0.589 vs AVG 0.200",
-      "market_note": "Surface production may be lagging the underlying contact profile.",
-      "action": "ADD",
-      "forensic_metrics": [
-        {
-          "category": "Physics",
-          "code": "DHH_PROXY",
-          "label": "Dynamic Hard-Hit",
-          "value": "104.2 mph",
-          "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
-        },
-        {
-          "category": "Vision",
-          "code": "LA_CONSISTENCY",
-          "label": "LA Consistency",
-          "value": "3.1\u00b0",
-          "purpose": "Shows whether the swing plane is converting force into flight."
-        },
-        {
-          "category": "Market",
-          "code": "HIGH_STAKES_DELTA",
-          "label": "High-Stakes Delta",
-          "value": "+0.389",
-          "purpose": "Identifies the value gap between expected quality and public results."
-        }
-      ],
-      "apex_score": 84.3,
-      "trigger_count": 3,
-      "physical_shift": true,
-      "vision_delta": true,
-      "market_latency": true,
-      "verdict": "APEX EXTRACTION"
-    },
-    {
-      "player_id": "660710",
-      "name": "RODOLFO DUR\u00c1N",
-      "team": "San Diego Padres",
-      "role": "BAT",
-      "signal_family": "APEX BAT",
-      "physical_shift_score": 83.6,
-      "vision_delta_score": 71.2,
-      "market_latency_score": 95.9,
-      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.000 against xBA 0.310, a strong +0.310 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 107.6 mph at peak exit velocity. The contact mix was supported by a 0.0% barrel rate and 25.0% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
-      "supporting_metric": "Max EV 107.6 mph // xBA 0.310 vs AVG 0.000",
-      "market_note": "Surface production may be lagging the underlying contact profile.",
-      "action": "ADD",
-      "forensic_metrics": [
-        {
-          "category": "Physics",
-          "code": "DHH_PROXY",
-          "label": "Dynamic Hard-Hit",
-          "value": "107.6 mph",
+          "value": "109.5 mph",
           "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
         },
         {
@@ -507,11 +421,11 @@
           "category": "Market",
           "code": "HIGH_STAKES_DELTA",
           "label": "High-Stakes Delta",
-          "value": "+0.310",
+          "value": "+0.149",
           "purpose": "Identifies the value gap between expected quality and public results."
         }
       ],
-      "apex_score": 84.2,
+      "apex_score": 87.5,
       "trigger_count": 3,
       "physical_shift": true,
       "vision_delta": true,
@@ -519,42 +433,42 @@
       "verdict": "APEX EXTRACTION"
     },
     {
-      "player_id": "695336",
-      "name": "THOMAS SAGGESE",
-      "team": "St. Louis Cardinals",
-      "role": "BAT",
-      "signal_family": "APEX BAT",
-      "physical_shift_score": 80.1,
-      "vision_delta_score": 71.2,
-      "market_latency_score": 100.0,
-      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.000 against xBA 0.358, a strong +0.358 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.7 mph at peak exit velocity. The contact mix was supported by a 0.0% barrel rate and 25.0% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
-      "supporting_metric": "Max EV 109.7 mph // xBA 0.358 vs AVG 0.000",
-      "market_note": "Surface production may be lagging the underlying contact profile.",
+      "player_id": "678020",
+      "name": "HALVORSEN, SETH",
+      "team": "PIT",
+      "role": "SP",
+      "signal_family": "APEX ARM",
+      "physical_shift_score": 100.0,
+      "vision_delta_score": 67.7,
+      "market_latency_score": 84,
+      "primary_signal": "Elite ballistic profile detected. Ride and approach angle are both moving in the right direction, creating a high-end breakout structure.",
+      "supporting_metric": "iVB Delta +2.2\" // VAA Delta -0.5\u00b0",
+      "market_note": "Public results may be lagging the shape-change signal.",
       "action": "ADD",
       "forensic_metrics": [
         {
-          "category": "Physics",
-          "code": "DHH_PROXY",
-          "label": "Dynamic Hard-Hit",
-          "value": "109.7 mph",
-          "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
+          "category": "Geometry",
+          "code": "VAA_DELTA",
+          "label": "VAA Delta",
+          "value": "-0.5\u00b0",
+          "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
         },
         {
-          "category": "Vision",
-          "code": "LA_CONSISTENCY",
-          "label": "LA Consistency",
-          "value": "12.2\u00b0",
-          "purpose": "Shows whether the swing plane is converting force into flight."
+          "category": "Deception",
+          "code": "SSW_PROXY",
+          "label": "Movement Deviation",
+          "value": "+2.0\"",
+          "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
         },
         {
           "category": "Market",
           "code": "HIGH_STAKES_DELTA",
           "label": "High-Stakes Delta",
-          "value": "+0.358",
-          "purpose": "Identifies the value gap between expected quality and public results."
+          "value": "Public Late",
+          "purpose": "Identifies the value gap between physical signal and public attention."
         }
       ],
-      "apex_score": 83.8,
+      "apex_score": 87.1,
       "trigger_count": 3,
       "physical_shift": true,
       "vision_delta": true,
@@ -562,16 +476,16 @@
       "verdict": "APEX EXTRACTION"
     },
     {
-      "player_id": "676760",
-      "name": "MARINACCIO, RON",
-      "team": "SD",
+      "player_id": "699134",
+      "name": "RODRIGUEZ, BRADGLEY",
+      "team": "MIL",
       "role": "SP",
       "signal_family": "APEX ARM",
       "physical_shift_score": 100.0,
-      "vision_delta_score": 74.3,
+      "vision_delta_score": 85.0,
       "market_latency_score": 66,
       "primary_signal": "Movement quality appears to be improving through more efficient spin conversion, not just raw effort. Breakout conditions are building.",
-      "supporting_metric": "iVB Delta +3.2\" // VAA Delta +0.6\u00b0",
+      "supporting_metric": "iVB Delta +5.1\" // VAA Delta +0.9\u00b0",
       "market_note": "Public results may be lagging the shape-change signal.",
       "action": "WATCH",
       "forensic_metrics": [
@@ -579,14 +493,14 @@
           "category": "Geometry",
           "code": "VAA_DELTA",
           "label": "VAA Delta",
-          "value": "+0.6\u00b0",
+          "value": "+0.9\u00b0",
           "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
         },
         {
           "category": "Deception",
           "code": "SSW_PROXY",
           "label": "Movement Deviation",
-          "value": "+7.4\"",
+          "value": "+5.2\"",
           "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
         },
         {
@@ -597,7 +511,7 @@
           "purpose": "Identifies the value gap between physical signal and public attention."
         }
       ],
-      "apex_score": 83.4,
+      "apex_score": 86.0,
       "trigger_count": 3,
       "physical_shift": true,
       "vision_delta": true,
@@ -605,16 +519,16 @@
       "verdict": "APEX EXTRACTION"
     },
     {
-      "player_id": "672335",
-      "name": "P\u00c9REZ, CIONEL",
-      "team": "NYM",
+      "player_id": "608372",
+      "name": "SUGANO, TOMOYUKI",
+      "team": "PHI",
       "role": "SP",
       "signal_family": "APEX ARM",
       "physical_shift_score": 100.0,
-      "vision_delta_score": 82.3,
-      "market_latency_score": 58,
-      "primary_signal": "Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.",
-      "supporting_metric": "iVB Delta +4.1\" // VAA Delta +1.2\u00b0",
+      "vision_delta_score": 69.8,
+      "market_latency_score": 66,
+      "primary_signal": "Movement quality appears to be improving through more efficient spin conversion, not just raw effort. Breakout conditions are building.",
+      "supporting_metric": "iVB Delta +3.1\" // VAA Delta +0.1\u00b0",
       "market_note": "Public results may be lagging the shape-change signal.",
       "action": "WATCH",
       "forensic_metrics": [
@@ -622,14 +536,14 @@
           "category": "Geometry",
           "code": "VAA_DELTA",
           "label": "VAA Delta",
-          "value": "+1.2\u00b0",
+          "value": "+0.1\u00b0",
           "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
         },
         {
           "category": "Deception",
           "code": "SSW_PROXY",
           "label": "Movement Deviation",
-          "value": "+3.1\"",
+          "value": "+6.7\"",
           "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
         },
         {
@@ -640,24 +554,24 @@
           "purpose": "Identifies the value gap between physical signal and public attention."
         }
       ],
-      "apex_score": 83.0,
-      "trigger_count": 2,
+      "apex_score": 82.2,
+      "trigger_count": 3,
       "physical_shift": true,
       "vision_delta": true,
-      "market_latency": false,
-      "verdict": "SUBSURFACE BREAKOUT"
+      "market_latency": true,
+      "verdict": "APEX EXTRACTION"
     },
     {
-      "player_id": "680767",
-      "name": "VODNIK, VICTOR",
-      "team": "NYM",
+      "player_id": "666277",
+      "name": "SORIANO, GEORGE",
+      "team": "STL",
       "role": "SP",
       "signal_family": "APEX ARM",
       "physical_shift_score": 100.0,
-      "vision_delta_score": 76.5,
+      "vision_delta_score": 75.4,
       "market_latency_score": 58,
       "primary_signal": "Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.",
-      "supporting_metric": "iVB Delta +2.6\" // VAA Delta +1.2\u00b0",
+      "supporting_metric": "iVB Delta +3.5\" // VAA Delta +0.8\u00b0",
       "market_note": "Public results may be lagging the shape-change signal.",
       "action": "WATCH",
       "forensic_metrics": [
@@ -665,14 +579,14 @@
           "category": "Geometry",
           "code": "VAA_DELTA",
           "label": "VAA Delta",
-          "value": "+1.2\u00b0",
+          "value": "+0.8\u00b0",
           "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
         },
         {
           "category": "Deception",
           "code": "SSW_PROXY",
           "label": "Movement Deviation",
-          "value": "+3.5\"",
+          "value": "+4.6\"",
           "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
         },
         {
@@ -683,7 +597,7 @@
           "purpose": "Identifies the value gap between physical signal and public attention."
         }
       ],
-      "apex_score": 81.5,
+      "apex_score": 81.2,
       "trigger_count": 2,
       "physical_shift": true,
       "vision_delta": true,
@@ -691,16 +605,59 @@
       "verdict": "SUBSURFACE BREAKOUT"
     },
     {
-      "player_id": "695243",
-      "name": "MILLER, MASON",
-      "team": "SD",
+      "player_id": "623437",
+      "name": "TOPA, JUSTIN",
+      "team": "MIN",
       "role": "SP",
       "signal_family": "APEX ARM",
       "physical_shift_score": 100.0,
-      "vision_delta_score": 76.1,
+      "vision_delta_score": 74.4,
+      "market_latency_score": 58,
+      "primary_signal": "Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.",
+      "supporting_metric": "iVB Delta +3.4\" // VAA Delta +0.7\u00b0",
+      "market_note": "Public results may be lagging the shape-change signal.",
+      "action": "WATCH",
+      "forensic_metrics": [
+        {
+          "category": "Geometry",
+          "code": "VAA_DELTA",
+          "label": "VAA Delta",
+          "value": "+0.7\u00b0",
+          "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
+        },
+        {
+          "category": "Deception",
+          "code": "SSW_PROXY",
+          "label": "Movement Deviation",
+          "value": "+3.4\"",
+          "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
+        },
+        {
+          "category": "Market",
+          "code": "HIGH_STAKES_DELTA",
+          "label": "High-Stakes Delta",
+          "value": "Public Late",
+          "purpose": "Identifies the value gap between physical signal and public attention."
+        }
+      ],
+      "apex_score": 81.0,
+      "trigger_count": 2,
+      "physical_shift": true,
+      "vision_delta": true,
+      "market_latency": false,
+      "verdict": "SUBSURFACE BREAKOUT"
+    },
+    {
+      "player_id": "815083",
+      "name": "FARRIS, MITCH",
+      "team": "TOR",
+      "role": "SP",
+      "signal_family": "APEX ARM",
+      "physical_shift_score": 100.0,
+      "vision_delta_score": 73.9,
       "market_latency_score": 58,
       "primary_signal": "Shape profile is moving, but not yet in a fully qualified disruption tier. Keep this arm on the radar for another appearance.",
-      "supporting_metric": "iVB Delta +4.6\" // VAA Delta +0.2\u00b0",
+      "supporting_metric": "iVB Delta +3.0\" // VAA Delta +0.7\u00b0",
       "market_note": "Public results may be lagging the shape-change signal.",
       "action": "WATCH",
       "forensic_metrics": [
@@ -708,14 +665,14 @@
           "category": "Geometry",
           "code": "VAA_DELTA",
           "label": "VAA Delta",
-          "value": "+0.2\u00b0",
+          "value": "+0.7\u00b0",
           "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
         },
         {
           "category": "Deception",
           "code": "SSW_PROXY",
           "label": "Movement Deviation",
-          "value": "+2.9\"",
+          "value": "+3.0\"",
           "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
         },
         {
@@ -726,7 +683,50 @@
           "purpose": "Identifies the value gap between physical signal and public attention."
         }
       ],
-      "apex_score": 81.4,
+      "apex_score": 80.9,
+      "trigger_count": 2,
+      "physical_shift": true,
+      "vision_delta": true,
+      "market_latency": false,
+      "verdict": "SUBSURFACE BREAKOUT"
+    },
+    {
+      "player_id": "662253",
+      "name": "MU\u00d1OZ, ANDR\u00c9S",
+      "team": "HOU",
+      "role": "SP",
+      "signal_family": "APEX ARM",
+      "physical_shift_score": 100.0,
+      "vision_delta_score": 69.1,
+      "market_latency_score": 58,
+      "primary_signal": "Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.",
+      "supporting_metric": "iVB Delta +3.6\" // VAA Delta +0.1\u00b0",
+      "market_note": "Public results may be lagging the shape-change signal.",
+      "action": "WATCH",
+      "forensic_metrics": [
+        {
+          "category": "Geometry",
+          "code": "VAA_DELTA",
+          "label": "VAA Delta",
+          "value": "+0.1\u00b0",
+          "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
+        },
+        {
+          "category": "Deception",
+          "code": "SSW_PROXY",
+          "label": "Movement Deviation",
+          "value": "+5.7\"",
+          "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
+        },
+        {
+          "category": "Market",
+          "code": "HIGH_STAKES_DELTA",
+          "label": "High-Stakes Delta",
+          "value": "Public Late",
+          "purpose": "Identifies the value gap between physical signal and public attention."
+        }
+      ],
+      "apex_score": 79.7,
       "trigger_count": 2,
       "physical_shift": true,
       "vision_delta": true,
@@ -736,16 +736,16 @@
   ],
   "apex_bats": [
     {
-      "player_id": "502671",
-      "name": "PAUL GOLDSCHMIDT",
-      "team": "New York Yankees",
+      "player_id": "660710",
+      "name": "RODOLFO DUR\u00c1N",
+      "team": "San Diego Padres",
       "role": "BAT",
       "signal_family": "APEX BAT",
-      "physical_shift_score": 100.0,
-      "vision_delta_score": 87.3,
-      "market_latency_score": 79.0,
-      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.289 against xBA 0.411, a strong +0.123 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.8 mph at peak exit velocity. The contact mix was supported by a 4.2% barrel rate and 33.8% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
-      "supporting_metric": "Max EV 109.8 mph // xBA 0.411 vs AVG 0.289",
+      "physical_shift_score": 94.7,
+      "vision_delta_score": 81.9,
+      "market_latency_score": 92.6,
+      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.071 against xBA 0.345, a strong +0.274 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 108.3 mph at peak exit velocity. The contact mix was supported by a 4.8% barrel rate and 28.6% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
+      "supporting_metric": "Max EV 108.3 mph // xBA 0.345 vs AVG 0.071",
       "market_note": "Surface production may be lagging the underlying contact profile.",
       "action": "ADD",
       "forensic_metrics": [
@@ -753,7 +753,7 @@
           "category": "Physics",
           "code": "DHH_PROXY",
           "label": "Dynamic Hard-Hit",
-          "value": "109.8 mph",
+          "value": "108.3 mph",
           "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
         },
         {
@@ -767,11 +767,140 @@
           "category": "Market",
           "code": "HIGH_STAKES_DELTA",
           "label": "High-Stakes Delta",
-          "value": "+0.123",
+          "value": "+0.274",
           "purpose": "Identifies the value gap between expected quality and public results."
         }
       ],
-      "apex_score": 90.5,
+      "apex_score": 90.9,
+      "trigger_count": 3,
+      "physical_shift": true,
+      "vision_delta": true,
+      "market_latency": true,
+      "verdict": "APEX EXTRACTION"
+    },
+    {
+      "player_id": "693409",
+      "name": "C\u00c9SAR PRIETO",
+      "team": "St. Louis Cardinals",
+      "role": "BAT",
+      "signal_family": "APEX BAT",
+      "physical_shift_score": 96.9,
+      "vision_delta_score": 77.5,
+      "market_latency_score": 90.8,
+      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.000 against xBA 0.253, a strong +0.253 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 108.9 mph at peak exit velocity. The contact mix was supported by a 0.0% barrel rate and 42.9% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
+      "supporting_metric": "Max EV 108.9 mph // xBA 0.253 vs AVG 0.000",
+      "market_note": "Surface production may be lagging the underlying contact profile.",
+      "action": "ADD",
+      "forensic_metrics": [
+        {
+          "category": "Physics",
+          "code": "DHH_PROXY",
+          "label": "Dynamic Hard-Hit",
+          "value": "108.9 mph",
+          "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
+        },
+        {
+          "category": "Vision",
+          "code": "LA_CONSISTENCY",
+          "label": "LA Consistency",
+          "value": "Surgical",
+          "purpose": "Shows whether the swing plane is converting force into flight."
+        },
+        {
+          "category": "Market",
+          "code": "HIGH_STAKES_DELTA",
+          "label": "High-Stakes Delta",
+          "value": "+0.253",
+          "purpose": "Identifies the value gap between expected quality and public results."
+        }
+      ],
+      "apex_score": 90.2,
+      "trigger_count": 3,
+      "physical_shift": true,
+      "vision_delta": true,
+      "market_latency": true,
+      "verdict": "APEX EXTRACTION"
+    },
+    {
+      "player_id": "677588",
+      "name": "JOS\u00c9 TENA",
+      "team": "Washington Nationals",
+      "role": "BAT",
+      "signal_family": "APEX BAT",
+      "physical_shift_score": 100.0,
+      "vision_delta_score": 82.3,
+      "market_latency_score": 80.1,
+      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.192 against xBA 0.438, a strong +0.246 gap that points to better underlying contact than the box score suggests. The top-end damage was real, with a max exit velocity of 114.0 mph, which is premium impact territory. The contact mix was supported by a 0.0% barrel rate and 36.4% hard-hit rate over the recent window. Net assessment: Platinum Buy. The past week looks stronger under the hood than the surface line, with enough impact authority to support a bullish forward read.",
+      "supporting_metric": "Max EV 114.0 mph // xBA 0.438 vs AVG 0.192",
+      "market_note": "Surface production may be lagging the underlying contact profile.",
+      "action": "ADD",
+      "forensic_metrics": [
+        {
+          "category": "Physics",
+          "code": "DHH_PROXY",
+          "label": "Dynamic Hard-Hit",
+          "value": "114.0 mph",
+          "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
+        },
+        {
+          "category": "Vision",
+          "code": "LA_CONSISTENCY",
+          "label": "LA Consistency",
+          "value": "Surgical",
+          "purpose": "Shows whether the swing plane is converting force into flight."
+        },
+        {
+          "category": "Market",
+          "code": "HIGH_STAKES_DELTA",
+          "label": "High-Stakes Delta",
+          "value": "+0.246",
+          "purpose": "Identifies the value gap between expected quality and public results."
+        }
+      ],
+      "apex_score": 89.6,
+      "trigger_count": 3,
+      "physical_shift": true,
+      "vision_delta": true,
+      "market_latency": true,
+      "verdict": "APEX EXTRACTION"
+    },
+    {
+      "player_id": "668939",
+      "name": "ADLEY RUTSCHMAN",
+      "team": "Baltimore Orioles",
+      "role": "BAT",
+      "signal_family": "APEX BAT",
+      "physical_shift_score": 100.0,
+      "vision_delta_score": 85.7,
+      "market_latency_score": 76.6,
+      "primary_signal": "He showed positive separation between results and contact quality this week. AVG came in at 0.275 with xBA at 0.370, a +0.095 edge that supports a constructive buy signal. The top-end damage was real, with a max exit velocity of 110.3 mph, which is premium impact territory. The contact mix was supported by a 3.4% barrel rate and 28.6% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
+      "supporting_metric": "Max EV 110.3 mph // xBA 0.370 vs AVG 0.275",
+      "market_note": "Surface production may be lagging the underlying contact profile.",
+      "action": "ADD",
+      "forensic_metrics": [
+        {
+          "category": "Physics",
+          "code": "DHH_PROXY",
+          "label": "Dynamic Hard-Hit",
+          "value": "110.3 mph",
+          "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
+        },
+        {
+          "category": "Vision",
+          "code": "LA_CONSISTENCY",
+          "label": "LA Consistency",
+          "value": "Surgical",
+          "purpose": "Shows whether the swing plane is converting force into flight."
+        },
+        {
+          "category": "Market",
+          "code": "HIGH_STAKES_DELTA",
+          "label": "High-Stakes Delta",
+          "value": "+0.095",
+          "purpose": "Identifies the value gap between expected quality and public results."
+        }
+      ],
+      "apex_score": 89.4,
       "trigger_count": 3,
       "physical_shift": true,
       "vision_delta": true,
@@ -784,11 +913,11 @@
       "team": "Detroit Tigers",
       "role": "BAT",
       "signal_family": "APEX BAT",
-      "physical_shift_score": 99.0,
-      "vision_delta_score": 81.9,
-      "market_latency_score": 82.7,
-      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.205 against xBA 0.367, a strong +0.163 gap that points to better underlying contact than the box score suggests. The top-end damage was real, with a max exit velocity of 110.0 mph, which is premium impact territory. The contact mix was supported by a 3.3% barrel rate and 27.6% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
-      "supporting_metric": "Max EV 110.0 mph // xBA 0.367 vs AVG 0.205",
+      "physical_shift_score": 97.0,
+      "vision_delta_score": 81.2,
+      "market_latency_score": 82.2,
+      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.200 against xBA 0.358, a strong +0.158 gap that points to better underlying contact than the box score suggests. The top-end damage was real, with a max exit velocity of 110.0 mph, which is premium impact territory. The contact mix was supported by a 3.2% barrel rate and 23.4% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
+      "supporting_metric": "Max EV 110.0 mph // xBA 0.358 vs AVG 0.200",
       "market_note": "Surface production may be lagging the underlying contact profile.",
       "action": "ADD",
       "forensic_metrics": [
@@ -810,11 +939,11 @@
           "category": "Market",
           "code": "HIGH_STAKES_DELTA",
           "label": "High-Stakes Delta",
-          "value": "+0.163",
+          "value": "+0.158",
           "purpose": "Identifies the value gap between expected quality and public results."
         }
       ],
-      "apex_score": 89.8,
+      "apex_score": 88.6,
       "trigger_count": 3,
       "physical_shift": true,
       "vision_delta": true,
@@ -822,16 +951,16 @@
       "verdict": "APEX EXTRACTION"
     },
     {
-      "player_id": "702284",
-      "name": "COLE YOUNG",
-      "team": "Seattle Mariners",
+      "player_id": "677870",
+      "name": "LEO JIM\u00c9NEZ",
+      "team": "Miami Marlins",
       "role": "BAT",
       "signal_family": "APEX BAT",
-      "physical_shift_score": 99.5,
-      "vision_delta_score": 83.1,
-      "market_latency_score": 78.4,
-      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.273 against xBA 0.388, a strong +0.115 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.9 mph at peak exit velocity. The contact mix was supported by a 3.1% barrel rate and 30.2% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
-      "supporting_metric": "Max EV 109.9 mph // xBA 0.388 vs AVG 0.273",
+      "physical_shift_score": 91.6,
+      "vision_delta_score": 85.5,
+      "market_latency_score": 85.2,
+      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.214 against xBA 0.406, a strong +0.191 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 107.9 mph at peak exit velocity. The contact mix was supported by a 4.2% barrel rate and 27.1% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
+      "supporting_metric": "Max EV 107.9 mph // xBA 0.406 vs AVG 0.214",
       "market_note": "Surface production may be lagging the underlying contact profile.",
       "action": "ADD",
       "forensic_metrics": [
@@ -839,7 +968,7 @@
           "category": "Physics",
           "code": "DHH_PROXY",
           "label": "Dynamic Hard-Hit",
-          "value": "109.9 mph",
+          "value": "107.9 mph",
           "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
         },
         {
@@ -853,11 +982,11 @@
           "category": "Market",
           "code": "HIGH_STAKES_DELTA",
           "label": "High-Stakes Delta",
-          "value": "+0.115",
+          "value": "+0.191",
           "purpose": "Identifies the value gap between expected quality and public results."
         }
       ],
-      "apex_score": 89.1,
+      "apex_score": 88.2,
       "trigger_count": 3,
       "physical_shift": true,
       "vision_delta": true,
@@ -865,16 +994,16 @@
       "verdict": "APEX EXTRACTION"
     },
     {
-      "player_id": "663330",
-      "name": "JAHMAI JONES",
-      "team": "Detroit Tigers",
+      "player_id": "691781",
+      "name": "BRADY HOUSE",
+      "team": "Rochester Red Wings",
       "role": "BAT",
       "signal_family": "APEX BAT",
-      "physical_shift_score": 100.0,
-      "vision_delta_score": 77.5,
-      "market_latency_score": 78.2,
-      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.231 against xBA 0.456, a strong +0.225 gap that points to better underlying contact than the box score suggests. The top-end damage was real, with a max exit velocity of 111.7 mph, which is premium impact territory. The contact mix was supported by a 0.0% barrel rate and 36.7% hard-hit rate over the recent window. Net assessment: Platinum Buy. The past week looks stronger under the hood than the surface line, with enough impact authority to support a bullish forward read.",
-      "supporting_metric": "Max EV 111.7 mph // xBA 0.456 vs AVG 0.231",
+      "physical_shift_score": 96.0,
+      "vision_delta_score": 79.7,
+      "market_latency_score": 81.7,
+      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.218 against xBA 0.371, a strong +0.153 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.5 mph at peak exit velocity. The contact mix was supported by a 2.1% barrel rate and 29.2% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
+      "supporting_metric": "Max EV 109.5 mph // xBA 0.371 vs AVG 0.218",
       "market_note": "Surface production may be lagging the underlying contact profile.",
       "action": "ADD",
       "forensic_metrics": [
@@ -882,7 +1011,7 @@
           "category": "Physics",
           "code": "DHH_PROXY",
           "label": "Dynamic Hard-Hit",
-          "value": "111.7 mph",
+          "value": "109.5 mph",
           "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
         },
         {
@@ -896,268 +1025,8 @@
           "category": "Market",
           "code": "HIGH_STAKES_DELTA",
           "label": "High-Stakes Delta",
-          "value": "+0.225",
+          "value": "+0.153",
           "purpose": "Identifies the value gap between expected quality and public results."
-        }
-      ],
-      "apex_score": 87.8,
-      "trigger_count": 3,
-      "physical_shift": true,
-      "vision_delta": true,
-      "market_latency": true,
-      "verdict": "APEX EXTRACTION"
-    },
-    {
-      "player_id": "695578",
-      "name": "JAMES WOOD",
-      "team": "Washington Nationals",
-      "role": "BAT",
-      "signal_family": "APEX BAT",
-      "physical_shift_score": 100.0,
-      "vision_delta_score": 75.5,
-      "market_latency_score": 78.4,
-      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.228 against xBA 0.455, a strong +0.227 gap that points to better underlying contact than the box score suggests. The top-end damage was real, with a max exit velocity of 114.6 mph, which is premium impact territory. The contact mix was supported by a 5.9% barrel rate and 40.6% hard-hit rate over the recent window. Net assessment: Platinum Buy. The past week looks stronger under the hood than the surface line, with enough impact authority to support a bullish forward read.",
-      "supporting_metric": "Max EV 114.6 mph // xBA 0.455 vs AVG 0.228",
-      "market_note": "Surface production may be lagging the underlying contact profile.",
-      "action": "ADD",
-      "forensic_metrics": [
-        {
-          "category": "Physics",
-          "code": "DHH_PROXY",
-          "label": "Dynamic Hard-Hit",
-          "value": "114.6 mph",
-          "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
-        },
-        {
-          "category": "Vision",
-          "code": "LA_CONSISTENCY",
-          "label": "LA Consistency",
-          "value": "11.5\u00b0",
-          "purpose": "Shows whether the swing plane is converting force into flight."
-        },
-        {
-          "category": "Market",
-          "code": "HIGH_STAKES_DELTA",
-          "label": "High-Stakes Delta",
-          "value": "+0.227",
-          "purpose": "Identifies the value gap between expected quality and public results."
-        }
-      ],
-      "apex_score": 87.4,
-      "trigger_count": 3,
-      "physical_shift": true,
-      "vision_delta": true,
-      "market_latency": true,
-      "verdict": "APEX EXTRACTION"
-    },
-    {
-      "player_id": "805999",
-      "name": "A.J. EWING",
-      "team": "New York Mets",
-      "role": "BAT",
-      "signal_family": "APEX BAT",
-      "physical_shift_score": 79.7,
-      "vision_delta_score": 73.6,
-      "market_latency_score": 100.0,
-      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.200 against xBA 0.589, a strong +0.389 gap that points to better underlying contact than the box score suggests. The max exit velocity checked in at 104.2 mph, which was more solid than explosive. The contact mix was supported by a 14.3% barrel rate and 28.6% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
-      "supporting_metric": "Max EV 104.2 mph // xBA 0.589 vs AVG 0.200",
-      "market_note": "Surface production may be lagging the underlying contact profile.",
-      "action": "ADD",
-      "forensic_metrics": [
-        {
-          "category": "Physics",
-          "code": "DHH_PROXY",
-          "label": "Dynamic Hard-Hit",
-          "value": "104.2 mph",
-          "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
-        },
-        {
-          "category": "Vision",
-          "code": "LA_CONSISTENCY",
-          "label": "LA Consistency",
-          "value": "3.1\u00b0",
-          "purpose": "Shows whether the swing plane is converting force into flight."
-        },
-        {
-          "category": "Market",
-          "code": "HIGH_STAKES_DELTA",
-          "label": "High-Stakes Delta",
-          "value": "+0.389",
-          "purpose": "Identifies the value gap between expected quality and public results."
-        }
-      ],
-      "apex_score": 84.3,
-      "trigger_count": 3,
-      "physical_shift": true,
-      "vision_delta": true,
-      "market_latency": true,
-      "verdict": "APEX EXTRACTION"
-    },
-    {
-      "player_id": "660710",
-      "name": "RODOLFO DUR\u00c1N",
-      "team": "San Diego Padres",
-      "role": "BAT",
-      "signal_family": "APEX BAT",
-      "physical_shift_score": 83.6,
-      "vision_delta_score": 71.2,
-      "market_latency_score": 95.9,
-      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.000 against xBA 0.310, a strong +0.310 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 107.6 mph at peak exit velocity. The contact mix was supported by a 0.0% barrel rate and 25.0% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
-      "supporting_metric": "Max EV 107.6 mph // xBA 0.310 vs AVG 0.000",
-      "market_note": "Surface production may be lagging the underlying contact profile.",
-      "action": "ADD",
-      "forensic_metrics": [
-        {
-          "category": "Physics",
-          "code": "DHH_PROXY",
-          "label": "Dynamic Hard-Hit",
-          "value": "107.6 mph",
-          "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
-        },
-        {
-          "category": "Vision",
-          "code": "LA_CONSISTENCY",
-          "label": "LA Consistency",
-          "value": "Surgical",
-          "purpose": "Shows whether the swing plane is converting force into flight."
-        },
-        {
-          "category": "Market",
-          "code": "HIGH_STAKES_DELTA",
-          "label": "High-Stakes Delta",
-          "value": "+0.310",
-          "purpose": "Identifies the value gap between expected quality and public results."
-        }
-      ],
-      "apex_score": 84.2,
-      "trigger_count": 3,
-      "physical_shift": true,
-      "vision_delta": true,
-      "market_latency": true,
-      "verdict": "APEX EXTRACTION"
-    },
-    {
-      "player_id": "695336",
-      "name": "THOMAS SAGGESE",
-      "team": "St. Louis Cardinals",
-      "role": "BAT",
-      "signal_family": "APEX BAT",
-      "physical_shift_score": 80.1,
-      "vision_delta_score": 71.2,
-      "market_latency_score": 100.0,
-      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.000 against xBA 0.358, a strong +0.358 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.7 mph at peak exit velocity. The contact mix was supported by a 0.0% barrel rate and 25.0% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
-      "supporting_metric": "Max EV 109.7 mph // xBA 0.358 vs AVG 0.000",
-      "market_note": "Surface production may be lagging the underlying contact profile.",
-      "action": "ADD",
-      "forensic_metrics": [
-        {
-          "category": "Physics",
-          "code": "DHH_PROXY",
-          "label": "Dynamic Hard-Hit",
-          "value": "109.7 mph",
-          "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
-        },
-        {
-          "category": "Vision",
-          "code": "LA_CONSISTENCY",
-          "label": "LA Consistency",
-          "value": "12.2\u00b0",
-          "purpose": "Shows whether the swing plane is converting force into flight."
-        },
-        {
-          "category": "Market",
-          "code": "HIGH_STAKES_DELTA",
-          "label": "High-Stakes Delta",
-          "value": "+0.358",
-          "purpose": "Identifies the value gap between expected quality and public results."
-        }
-      ],
-      "apex_score": 83.8,
-      "trigger_count": 3,
-      "physical_shift": true,
-      "vision_delta": true,
-      "market_latency": true,
-      "verdict": "APEX EXTRACTION"
-    }
-  ],
-  "apex_arms": [
-    {
-      "player_id": "689296",
-      "name": "NUNEZ, ANTHONY",
-      "team": "BAL",
-      "role": "SP",
-      "signal_family": "APEX ARM",
-      "physical_shift_score": 100.0,
-      "vision_delta_score": 78.0,
-      "market_latency_score": 84,
-      "primary_signal": "Elite ballistic profile detected. Ride and approach angle are both moving in the right direction, creating a high-end breakout structure.",
-      "supporting_metric": "iVB Delta +4.6\" // VAA Delta -0.6\u00b0",
-      "market_note": "Public results may be lagging the shape-change signal.",
-      "action": "ADD",
-      "forensic_metrics": [
-        {
-          "category": "Geometry",
-          "code": "VAA_DELTA",
-          "label": "VAA Delta",
-          "value": "-0.6\u00b0",
-          "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
-        },
-        {
-          "category": "Deception",
-          "code": "SSW_PROXY",
-          "label": "Movement Deviation",
-          "value": "+4.8\"",
-          "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
-        },
-        {
-          "category": "Market",
-          "code": "HIGH_STAKES_DELTA",
-          "label": "High-Stakes Delta",
-          "value": "Public Late",
-          "purpose": "Identifies the value gap between physical signal and public attention."
-        }
-      ],
-      "apex_score": 89.7,
-      "trigger_count": 3,
-      "physical_shift": true,
-      "vision_delta": true,
-      "market_latency": true,
-      "verdict": "APEX EXTRACTION"
-    },
-    {
-      "player_id": "663558",
-      "name": "MOR\u00c1N, JOVANI",
-      "team": "TOR",
-      "role": "SP",
-      "signal_family": "APEX ARM",
-      "physical_shift_score": 100.0,
-      "vision_delta_score": 91.1,
-      "market_latency_score": 66,
-      "primary_signal": "Movement quality appears to be improving through more efficient spin conversion, not just raw effort. Breakout conditions are building.",
-      "supporting_metric": "iVB Delta +6.2\" // VAA Delta +1.1\u00b0",
-      "market_note": "Public results may be lagging the shape-change signal.",
-      "action": "WATCH",
-      "forensic_metrics": [
-        {
-          "category": "Geometry",
-          "code": "VAA_DELTA",
-          "label": "VAA Delta",
-          "value": "+1.1\u00b0",
-          "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
-        },
-        {
-          "category": "Deception",
-          "code": "SSW_PROXY",
-          "label": "Movement Deviation",
-          "value": "+3.2\"",
-          "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
-        },
-        {
-          "category": "Market",
-          "code": "HIGH_STAKES_DELTA",
-          "label": "High-Stakes Delta",
-          "value": "Public Late",
-          "purpose": "Identifies the value gap between physical signal and public attention."
         }
       ],
       "apex_score": 87.6,
@@ -1168,16 +1037,61 @@
       "verdict": "APEX EXTRACTION"
     },
     {
-      "player_id": "668873",
-      "name": "KILIAN, CALEB",
-      "team": "SF",
+      "player_id": "542303",
+      "name": "MARCELL OZUNA",
+      "team": "Pittsburgh Pirates",
+      "role": "BAT",
+      "signal_family": "APEX BAT",
+      "physical_shift_score": 95.3,
+      "vision_delta_score": 80.9,
+      "market_latency_score": 81.4,
+      "primary_signal": "He materially outperformed his surface AVG quality this week. The profile shows AVG 0.177 against xBA 0.326, a strong +0.149 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.5 mph at peak exit velocity. The contact mix was supported by a 3.1% barrel rate and 24.5% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.",
+      "supporting_metric": "Max EV 109.5 mph // xBA 0.326 vs AVG 0.177",
+      "market_note": "Surface production may be lagging the underlying contact profile.",
+      "action": "ADD",
+      "forensic_metrics": [
+        {
+          "category": "Physics",
+          "code": "DHH_PROXY",
+          "label": "Dynamic Hard-Hit",
+          "value": "109.5 mph",
+          "purpose": "Proxy for flight-optimized damage while true DHH is being wired."
+        },
+        {
+          "category": "Vision",
+          "code": "LA_CONSISTENCY",
+          "label": "LA Consistency",
+          "value": "Surgical",
+          "purpose": "Shows whether the swing plane is converting force into flight."
+        },
+        {
+          "category": "Market",
+          "code": "HIGH_STAKES_DELTA",
+          "label": "High-Stakes Delta",
+          "value": "+0.149",
+          "purpose": "Identifies the value gap between expected quality and public results."
+        }
+      ],
+      "apex_score": 87.5,
+      "trigger_count": 3,
+      "physical_shift": true,
+      "vision_delta": true,
+      "market_latency": true,
+      "verdict": "APEX EXTRACTION"
+    }
+  ],
+  "apex_arms": [
+    {
+      "player_id": "607192",
+      "name": "GLASNOW, TYLER",
+      "team": "HOU",
       "role": "SP",
       "signal_family": "APEX ARM",
       "physical_shift_score": 100.0,
-      "vision_delta_score": 65.3,
+      "vision_delta_score": 71.3,
       "market_latency_score": 84,
       "primary_signal": "Elite ballistic profile detected. Ride and approach angle are both moving in the right direction, creating a high-end breakout structure.",
-      "supporting_metric": "iVB Delta +1.6\" // VAA Delta -0.4\u00b0",
+      "supporting_metric": "iVB Delta +2.4\" // VAA Delta -0.8\u00b0",
       "market_note": "Public results may be lagging the shape-change signal.",
       "action": "ADD",
       "forensic_metrics": [
@@ -1185,14 +1099,14 @@
           "category": "Geometry",
           "code": "VAA_DELTA",
           "label": "VAA Delta",
-          "value": "-0.4\u00b0",
+          "value": "-0.8\u00b0",
           "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
         },
         {
           "category": "Deception",
           "code": "SSW_PROXY",
           "label": "Movement Deviation",
-          "value": "+2.5\"",
+          "value": "+2.2\"",
           "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
         },
         {
@@ -1203,7 +1117,7 @@
           "purpose": "Identifies the value gap between physical signal and public attention."
         }
       ],
-      "apex_score": 86.5,
+      "apex_score": 88.0,
       "trigger_count": 3,
       "physical_shift": true,
       "vision_delta": true,
@@ -1211,31 +1125,31 @@
       "verdict": "APEX EXTRACTION"
     },
     {
-      "player_id": "701719",
-      "name": "SAMANIEGO, TYLER",
-      "team": "BAL",
+      "player_id": "678020",
+      "name": "HALVORSEN, SETH",
+      "team": "PIT",
       "role": "SP",
       "signal_family": "APEX ARM",
       "physical_shift_score": 100.0,
-      "vision_delta_score": 88.5,
-      "market_latency_score": 58,
-      "primary_signal": "Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.",
-      "supporting_metric": "iVB Delta +5.7\" // VAA Delta +1.1\u00b0",
+      "vision_delta_score": 67.7,
+      "market_latency_score": 84,
+      "primary_signal": "Elite ballistic profile detected. Ride and approach angle are both moving in the right direction, creating a high-end breakout structure.",
+      "supporting_metric": "iVB Delta +2.2\" // VAA Delta -0.5\u00b0",
       "market_note": "Public results may be lagging the shape-change signal.",
-      "action": "WATCH",
+      "action": "ADD",
       "forensic_metrics": [
         {
           "category": "Geometry",
           "code": "VAA_DELTA",
           "label": "VAA Delta",
-          "value": "+1.1\u00b0",
+          "value": "-0.5\u00b0",
           "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
         },
         {
           "category": "Deception",
           "code": "SSW_PROXY",
           "label": "Movement Deviation",
-          "value": "+5.3\"",
+          "value": "+2.0\"",
           "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
         },
         {
@@ -1246,24 +1160,24 @@
           "purpose": "Identifies the value gap between physical signal and public attention."
         }
       ],
-      "apex_score": 84.5,
-      "trigger_count": 2,
+      "apex_score": 87.1,
+      "trigger_count": 3,
       "physical_shift": true,
       "vision_delta": true,
-      "market_latency": false,
-      "verdict": "SUBSURFACE BREAKOUT"
+      "market_latency": true,
+      "verdict": "APEX EXTRACTION"
     },
     {
-      "player_id": "676760",
-      "name": "MARINACCIO, RON",
-      "team": "SD",
+      "player_id": "699134",
+      "name": "RODRIGUEZ, BRADGLEY",
+      "team": "MIL",
       "role": "SP",
       "signal_family": "APEX ARM",
       "physical_shift_score": 100.0,
-      "vision_delta_score": 74.3,
+      "vision_delta_score": 85.0,
       "market_latency_score": 66,
       "primary_signal": "Movement quality appears to be improving through more efficient spin conversion, not just raw effort. Breakout conditions are building.",
-      "supporting_metric": "iVB Delta +3.2\" // VAA Delta +0.6\u00b0",
+      "supporting_metric": "iVB Delta +5.1\" // VAA Delta +0.9\u00b0",
       "market_note": "Public results may be lagging the shape-change signal.",
       "action": "WATCH",
       "forensic_metrics": [
@@ -1271,14 +1185,14 @@
           "category": "Geometry",
           "code": "VAA_DELTA",
           "label": "VAA Delta",
-          "value": "+0.6\u00b0",
+          "value": "+0.9\u00b0",
           "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
         },
         {
           "category": "Deception",
           "code": "SSW_PROXY",
           "label": "Movement Deviation",
-          "value": "+7.4\"",
+          "value": "+5.2\"",
           "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
         },
         {
@@ -1289,7 +1203,7 @@
           "purpose": "Identifies the value gap between physical signal and public attention."
         }
       ],
-      "apex_score": 83.4,
+      "apex_score": 86.0,
       "trigger_count": 3,
       "physical_shift": true,
       "vision_delta": true,
@@ -1297,16 +1211,16 @@
       "verdict": "APEX EXTRACTION"
     },
     {
-      "player_id": "672335",
-      "name": "P\u00c9REZ, CIONEL",
-      "team": "NYM",
+      "player_id": "608372",
+      "name": "SUGANO, TOMOYUKI",
+      "team": "PHI",
       "role": "SP",
       "signal_family": "APEX ARM",
       "physical_shift_score": 100.0,
-      "vision_delta_score": 82.3,
-      "market_latency_score": 58,
-      "primary_signal": "Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.",
-      "supporting_metric": "iVB Delta +4.1\" // VAA Delta +1.2\u00b0",
+      "vision_delta_score": 69.8,
+      "market_latency_score": 66,
+      "primary_signal": "Movement quality appears to be improving through more efficient spin conversion, not just raw effort. Breakout conditions are building.",
+      "supporting_metric": "iVB Delta +3.1\" // VAA Delta +0.1\u00b0",
       "market_note": "Public results may be lagging the shape-change signal.",
       "action": "WATCH",
       "forensic_metrics": [
@@ -1314,14 +1228,14 @@
           "category": "Geometry",
           "code": "VAA_DELTA",
           "label": "VAA Delta",
-          "value": "+1.2\u00b0",
+          "value": "+0.1\u00b0",
           "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
         },
         {
           "category": "Deception",
           "code": "SSW_PROXY",
           "label": "Movement Deviation",
-          "value": "+3.1\"",
+          "value": "+6.7\"",
           "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
         },
         {
@@ -1332,24 +1246,24 @@
           "purpose": "Identifies the value gap between physical signal and public attention."
         }
       ],
-      "apex_score": 83.0,
-      "trigger_count": 2,
+      "apex_score": 82.2,
+      "trigger_count": 3,
       "physical_shift": true,
       "vision_delta": true,
-      "market_latency": false,
-      "verdict": "SUBSURFACE BREAKOUT"
+      "market_latency": true,
+      "verdict": "APEX EXTRACTION"
     },
     {
-      "player_id": "680767",
-      "name": "VODNIK, VICTOR",
-      "team": "NYM",
+      "player_id": "666277",
+      "name": "SORIANO, GEORGE",
+      "team": "STL",
       "role": "SP",
       "signal_family": "APEX ARM",
       "physical_shift_score": 100.0,
-      "vision_delta_score": 76.5,
+      "vision_delta_score": 75.4,
       "market_latency_score": 58,
       "primary_signal": "Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.",
-      "supporting_metric": "iVB Delta +2.6\" // VAA Delta +1.2\u00b0",
+      "supporting_metric": "iVB Delta +3.5\" // VAA Delta +0.8\u00b0",
       "market_note": "Public results may be lagging the shape-change signal.",
       "action": "WATCH",
       "forensic_metrics": [
@@ -1357,14 +1271,14 @@
           "category": "Geometry",
           "code": "VAA_DELTA",
           "label": "VAA Delta",
-          "value": "+1.2\u00b0",
+          "value": "+0.8\u00b0",
           "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
         },
         {
           "category": "Deception",
           "code": "SSW_PROXY",
           "label": "Movement Deviation",
-          "value": "+3.5\"",
+          "value": "+4.6\"",
           "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
         },
         {
@@ -1375,7 +1289,7 @@
           "purpose": "Identifies the value gap between physical signal and public attention."
         }
       ],
-      "apex_score": 81.5,
+      "apex_score": 81.2,
       "trigger_count": 2,
       "physical_shift": true,
       "vision_delta": true,
@@ -1383,16 +1297,59 @@
       "verdict": "SUBSURFACE BREAKOUT"
     },
     {
-      "player_id": "695243",
-      "name": "MILLER, MASON",
-      "team": "SD",
+      "player_id": "623437",
+      "name": "TOPA, JUSTIN",
+      "team": "MIN",
       "role": "SP",
       "signal_family": "APEX ARM",
       "physical_shift_score": 100.0,
-      "vision_delta_score": 76.1,
+      "vision_delta_score": 74.4,
+      "market_latency_score": 58,
+      "primary_signal": "Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.",
+      "supporting_metric": "iVB Delta +3.4\" // VAA Delta +0.7\u00b0",
+      "market_note": "Public results may be lagging the shape-change signal.",
+      "action": "WATCH",
+      "forensic_metrics": [
+        {
+          "category": "Geometry",
+          "code": "VAA_DELTA",
+          "label": "VAA Delta",
+          "value": "+0.7\u00b0",
+          "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
+        },
+        {
+          "category": "Deception",
+          "code": "SSW_PROXY",
+          "label": "Movement Deviation",
+          "value": "+3.4\"",
+          "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
+        },
+        {
+          "category": "Market",
+          "code": "HIGH_STAKES_DELTA",
+          "label": "High-Stakes Delta",
+          "value": "Public Late",
+          "purpose": "Identifies the value gap between physical signal and public attention."
+        }
+      ],
+      "apex_score": 81.0,
+      "trigger_count": 2,
+      "physical_shift": true,
+      "vision_delta": true,
+      "market_latency": false,
+      "verdict": "SUBSURFACE BREAKOUT"
+    },
+    {
+      "player_id": "815083",
+      "name": "FARRIS, MITCH",
+      "team": "TOR",
+      "role": "SP",
+      "signal_family": "APEX ARM",
+      "physical_shift_score": 100.0,
+      "vision_delta_score": 73.9,
       "market_latency_score": 58,
       "primary_signal": "Shape profile is moving, but not yet in a fully qualified disruption tier. Keep this arm on the radar for another appearance.",
-      "supporting_metric": "iVB Delta +4.6\" // VAA Delta +0.2\u00b0",
+      "supporting_metric": "iVB Delta +3.0\" // VAA Delta +0.7\u00b0",
       "market_note": "Public results may be lagging the shape-change signal.",
       "action": "WATCH",
       "forensic_metrics": [
@@ -1400,14 +1357,14 @@
           "category": "Geometry",
           "code": "VAA_DELTA",
           "label": "VAA Delta",
-          "value": "+0.2\u00b0",
+          "value": "+0.7\u00b0",
           "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
         },
         {
           "category": "Deception",
           "code": "SSW_PROXY",
           "label": "Movement Deviation",
-          "value": "+2.9\"",
+          "value": "+3.0\"",
           "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
         },
         {
@@ -1418,7 +1375,50 @@
           "purpose": "Identifies the value gap between physical signal and public attention."
         }
       ],
-      "apex_score": 81.4,
+      "apex_score": 80.9,
+      "trigger_count": 2,
+      "physical_shift": true,
+      "vision_delta": true,
+      "market_latency": false,
+      "verdict": "SUBSURFACE BREAKOUT"
+    },
+    {
+      "player_id": "662253",
+      "name": "MU\u00d1OZ, ANDR\u00c9S",
+      "team": "HOU",
+      "role": "SP",
+      "signal_family": "APEX ARM",
+      "physical_shift_score": 100.0,
+      "vision_delta_score": 69.1,
+      "market_latency_score": 58,
+      "primary_signal": "Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.",
+      "supporting_metric": "iVB Delta +3.6\" // VAA Delta +0.1\u00b0",
+      "market_note": "Public results may be lagging the shape-change signal.",
+      "action": "WATCH",
+      "forensic_metrics": [
+        {
+          "category": "Geometry",
+          "code": "VAA_DELTA",
+          "label": "VAA Delta",
+          "value": "+0.1\u00b0",
+          "purpose": "Tracks whether the fastball is entering the zone on a flatter, more damaging plane."
+        },
+        {
+          "category": "Deception",
+          "code": "SSW_PROXY",
+          "label": "Movement Deviation",
+          "value": "+5.7\"",
+          "purpose": "Proxy for late movement or seam-driven deception before direct SSW is wired."
+        },
+        {
+          "category": "Market",
+          "code": "HIGH_STAKES_DELTA",
+          "label": "High-Stakes Delta",
+          "value": "Public Late",
+          "purpose": "Identifies the value gap between physical signal and public attention."
+        }
+      ],
+      "apex_score": 79.7,
       "trigger_count": 2,
       "physical_shift": true,
       "vision_delta": true,
