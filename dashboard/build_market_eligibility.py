@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import base64
 import json
 import os
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -61,6 +64,43 @@ def env_ready() -> bool:
     return all(bool(os.getenv(key)) for key in REQUIRED_ENV)
 
 
+def get_yahoo_access_token() -> tuple[str | None, dict]:
+    client_id = os.getenv("YAHOO_CLIENT_ID")
+    client_secret = os.getenv("YAHOO_CLIENT_SECRET")
+    refresh_token = os.getenv("YAHOO_REFRESH_TOKEN")
+
+    if not client_id or not client_secret or not refresh_token:
+        return None, {"error": "missing_yahoo_oauth_env"}
+
+    body = urlencode({
+        "grant_type": "refresh_token",
+        "refresh_token": refresh_token,
+    }).encode("utf-8")
+
+    basic = base64.b64encode(
+        f"{client_id}:{client_secret}".encode("utf-8")
+    ).decode("utf-8")
+
+    req = Request(
+        "https://api.login.yahoo.com/oauth2/get_token",
+        data=body,
+        headers={
+            "Authorization": f"Basic {basic}",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Accept": "application/json",
+        },
+        method="POST",
+    )
+
+    try:
+        with urlopen(req, timeout=30) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except Exception as exc:
+        return None, {"error": "refresh_token_exchange_failed", "detail": str(exc)}
+
+    return payload.get("access_token"), payload
+
+
 def build_empty_payload(reason: str) -> dict:
     return {
         "generated_at": utc_now(),
@@ -92,10 +132,18 @@ def build_market_eligibility() -> dict:
             "Yahoo Fantasy API credentials are not connected yet."
         )
 
+    access_token, token_payload = get_yahoo_access_token()
+    if not access_token:
+        payload = build_empty_payload(
+            "Yahoo Fantasy API refresh-token exchange failed."
+        )
+        payload["feed_state"] = "token_refresh_failed"
+        payload["errors"] = [token_payload]
+        return payload
+
     # Placeholder for the next activation patch:
-    # 1. Exchange YAHOO_REFRESH_TOKEN for access token.
-    # 2. Request MLB fantasy player ownership / percent_owned.
-    # 3. Normalize to DiamondSignals market eligibility rows:
+    # 1. Request MLB fantasy player ownership / percent_owned.
+    # 2. Normalize to DiamondSignals market eligibility rows:
     #
     # {
     #   "player_id": "mlbam_or_canonical_id",
@@ -110,9 +158,16 @@ def build_market_eligibility() -> dict:
     # }
     #
     # Until endpoint/auth is wired, fail closed.
-    return build_empty_payload(
-        "Yahoo Fantasy API credentials detected, but live endpoint activation is not wired yet."
+    payload = build_empty_payload(
+        "Yahoo Fantasy API access token refreshed successfully, but live endpoint activation is not wired yet."
     )
+    payload["feed_state"] = "token_ready_endpoint_pending"
+    payload["token_state"] = {
+        "access_token": "FOUND",
+        "expires_in": token_payload.get("expires_in"),
+        "token_type": token_payload.get("token_type"),
+    }
+    return payload
 
 
 def main() -> None:
