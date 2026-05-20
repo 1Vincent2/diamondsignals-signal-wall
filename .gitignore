@@ -4,3 +4,8 @@ dist/
 
 # Local Netlify folder
 .netlify
+
+# Local secrets / credentials
+.env
+.env.local
+.env.*
