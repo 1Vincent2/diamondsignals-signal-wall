@@ -132,15 +132,36 @@ def normalize_candidate_row(row: dict) -> dict:
 
 
 def asset_from_candidate(row: dict) -> dict:
-    """
-    Reserved for the next activation step.
-
-    Candidate-file detection is wired, but rendering from external candidates
-    will not be enabled until the Waiver asset factory is extracted from the
-    current seed builder. This prevents an untested candidate file from breaking
-    the public surface.
-    """
-    raise NotImplementedError("Waiver candidate-file rendering is not activated yet.")
+    candidate = normalize_candidate_row(row)
+    asset = _build_asset(
+        candidate["player_name"],
+        candidate["team"],
+        candidate["position"],
+        candidate["rostered_pct"],
+        candidate["command"],
+        candidate["command_class"],
+        candidate["market_status"],
+        candidate["surface_profile"],
+        candidate["forensic_trigger"],
+        candidate["verdict"],
+        candidate["ownership_gate"],
+        candidate["signal_window"],
+        candidate["asset_type"],
+        candidate["market_defect"],
+        candidate["command_metric"],
+        candidate["risk"],
+        player_id=candidate["player_id"],
+        audit_slug=candidate["audit_slug"],
+        deployment_state=candidate["deployment_state"],
+        deployment_label=candidate["deployment_label"],
+        operational_status=candidate["operational_status"],
+        status_reason=candidate["status_reason"],
+        card_action=candidate["card_action"],
+        visibility_state=candidate["visibility_state"],
+        status_source=candidate["status_source"],
+    )
+    asset["candidate_source"] = candidate["_candidate_source"]
+    return asset
 
 
 def build_candidate_pool() -> list[dict]:
@@ -153,12 +174,7 @@ def build_candidate_pool() -> list[dict]:
     """
     candidate_rows = load_waiver_candidate_file()
     if candidate_rows:
-        # Dynamic candidate ingestion rail is detected but not yet activated for rendering.
-        # Next patch will extract the asset factory so candidate rows can render directly.
-        assets = build_assets()
-        for asset in assets:
-            asset["candidate_source"] = "candidate_file_detected_static_render_fallback"
-        return assets
+        return [asset_from_candidate(row) for row in candidate_rows]
 
     assets = build_assets()
     for asset in assets:
@@ -219,112 +235,114 @@ def build_waiver_pipeline_assets() -> list[dict]:
 
 
 
+def _build_asset(
+    player_name: str,
+    team: str,
+    position: str,
+    rostered_pct: int,
+    command: str,
+    command_class: str,
+    market_status: str,
+    surface_profile: str,
+    forensic_trigger: str,
+    verdict: str,
+    ownership_gate: str,
+    signal_window: str,
+    asset_type: str,
+    market_defect: str,
+    command_metric: str,
+    risk: str,
+    player_id: str = "",
+    audit_slug: str = "",
+    deployment_state: str = "DEPLOYMENT_CLEAR",
+    deployment_label: str = "DEPLOYMENT CLEAR",
+    operational_status: str = "ACTIVE",
+    status_reason: str = "Status clear at build time",
+    card_action: str = "OPEN PERFORMANCE AUDIT",
+    visibility_state: str = "primary",
+    status_source: str = "default_active",
+) -> dict:
+    identity = resolve_player_identity(
+        player_id=player_id,
+        player_name=player_name,
+        team=team,
+        players=CANONICAL_PLAYERS,
+        name_lookup=CANONICAL_NAME_LOOKUP,
+    )
+
+    resolved_player_id = str(identity.get("player_id") or "").strip()
+    player_name = identity.get("player_name") or player_name
+    team = identity.get("team") or team
+    position = identity.get("position") or position
+
+    override_key = (str(player_name).strip().lower(), str(team).strip().lower())
+    if not resolved_player_id and override_key in WAIVER_IDENTITY_OVERRIDES:
+        resolved_player_id = WAIVER_IDENTITY_OVERRIDES[override_key]
+
+    safe_slug = audit_slug or player_name.lower().replace(".", "").replace(" ", "-")
+    scout_url = str(identity.get("scout_url") or "").strip()
+    if scout_url == "#":
+        scout_url = ""
+
+    if resolved_player_id:
+        scout_url = f"/scout/{resolved_player_id}/"
+
+    watchlist_url = (
+        "https://app.diamondsignals.ai/watchlist"
+        f"?player_id={resolved_player_id}"
+        f"&player_name={player_name.replace(' ', '%20')}"
+        "&source=waiver-wire"
+    )
+
+    return {
+        "player_name": player_name,
+        "player_id": resolved_player_id,
+        "audit_slug": safe_slug,
+        "audit_url": scout_url or watchlist_url,
+        "watchlist_url": watchlist_url,
+        "has_scout_page": bool(scout_url),
+        "identity_source": identity.get("identity_source"),
+        "headshot_url": identity.get("headshot_url"),
+        "scout_url": scout_url,
+        "resolved_player_id": resolved_player_id,
+        "team": team,
+        "position": position,
+        "rostered_pct": rostered_pct,
+        "command": command,
+        "command_class": command_class,
+        "market_status": market_status,
+        "surface_profile": surface_profile,
+        "forensic_trigger": forensic_trigger,
+        "verdict": verdict,
+        "deployment_state": deployment_state,
+        "deployment_label": deployment_label,
+        "operational_status": operational_status,
+        "status_reason": status_reason,
+        "card_action": card_action,
+        "visibility_state": visibility_state,
+        "status_source": status_source,
+        "search_blob": " ".join([player_name, team, position, command, market_status, deployment_label, operational_status]).lower(),
+        "metrics": [
+            {"label": "Ownership Gate", "value": ownership_gate},
+            {"label": "Signal Window", "value": signal_window},
+            {"label": "Asset Type", "value": asset_type},
+            {"label": "Market Defect", "value": market_defect},
+            {"label": "Command", "value": command_metric},
+            {"label": "Risk", "value": risk},
+            {"label": "Status Source", "value": status_source},
+        ],
+    }
+
+
+
 def build_assets() -> list[dict]:
     """
     V1 uses editable static intelligence cards.
     Later this can be wired to roster %, market-attention feed, Statcast deltas,
     pitch-shape drift, Stuff+ movement, KDE, role-opportunity feeds, and live availability.
     """
-    def asset(
-        player_name: str,
-        team: str,
-        position: str,
-        rostered_pct: int,
-        command: str,
-        command_class: str,
-        market_status: str,
-        surface_profile: str,
-        forensic_trigger: str,
-        verdict: str,
-        ownership_gate: str,
-        signal_window: str,
-        asset_type: str,
-        market_defect: str,
-        command_metric: str,
-        risk: str,
-        player_id: str = "",
-        audit_slug: str = "",
-        deployment_state: str = "DEPLOYMENT_CLEAR",
-        deployment_label: str = "DEPLOYMENT CLEAR",
-        operational_status: str = "ACTIVE",
-        status_reason: str = "Status clear at build time",
-        card_action: str = "OPEN PERFORMANCE AUDIT",
-        visibility_state: str = "primary",
-        status_source: str = "default_active",
-    ) -> dict:
-        identity = resolve_player_identity(
-            player_id=player_id,
-            player_name=player_name,
-            team=team,
-            players=CANONICAL_PLAYERS,
-            name_lookup=CANONICAL_NAME_LOOKUP,
-        )
-
-        resolved_player_id = str(identity.get("player_id") or "").strip()
-        player_name = identity.get("player_name") or player_name
-        team = identity.get("team") or team
-        position = identity.get("position") or position
-
-        override_key = (str(player_name).strip().lower(), str(team).strip().lower())
-        if not resolved_player_id and override_key in WAIVER_IDENTITY_OVERRIDES:
-            resolved_player_id = WAIVER_IDENTITY_OVERRIDES[override_key]
-
-        safe_slug = audit_slug or player_name.lower().replace(".", "").replace(" ", "-")
-        scout_url = str(identity.get("scout_url") or "").strip()
-        if scout_url == "#":
-            scout_url = ""
-
-        if resolved_player_id:
-            scout_url = f"/scout/{resolved_player_id}/"
-
-        watchlist_url = (
-            "https://app.diamondsignals.ai/watchlist"
-            f"?player_id={resolved_player_id}"
-            f"&player_name={player_name.replace(' ', '%20')}"
-            "&source=waiver-wire"
-        )
-
-        return {
-            "player_name": player_name,
-            "player_id": resolved_player_id,
-            "audit_slug": safe_slug,
-            "audit_url": scout_url or watchlist_url,
-            "watchlist_url": watchlist_url,
-            "has_scout_page": bool(scout_url),
-            "identity_source": identity.get("identity_source"),
-            "headshot_url": identity.get("headshot_url"),
-            "scout_url": scout_url,
-            "resolved_player_id": resolved_player_id,
-            "team": team,
-            "position": position,
-            "rostered_pct": rostered_pct,
-            "command": command,
-            "command_class": command_class,
-            "market_status": market_status,
-            "surface_profile": surface_profile,
-            "forensic_trigger": forensic_trigger,
-            "verdict": verdict,
-            "deployment_state": deployment_state,
-            "deployment_label": deployment_label,
-            "operational_status": operational_status,
-            "status_reason": status_reason,
-            "card_action": card_action,
-            "visibility_state": visibility_state,
-            "status_source": status_source,
-            "search_blob": " ".join([player_name, team, position, command, market_status, deployment_label, operational_status]).lower(),
-            "metrics": [
-                {"label": "Ownership Gate", "value": ownership_gate},
-                {"label": "Signal Window", "value": signal_window},
-                {"label": "Asset Type", "value": asset_type},
-                {"label": "Market Defect", "value": market_defect},
-                {"label": "Command", "value": command_metric},
-                {"label": "Risk", "value": risk},
-                {"label": "Status Source", "value": status_source},
-            ],
-        }
-
     return [
-        asset(
+        _build_asset(
             "Luis L. Ortiz",
             "CLE",
             "SP/RP",
@@ -342,7 +360,7 @@ def build_assets() -> list[dict]:
             "Claim",
             "Med",
         ),
-        asset(
+        _build_asset(
             "Hayden Birdsong",
             "SF",
             "SP",
@@ -360,7 +378,7 @@ def build_assets() -> list[dict]:
             "Stash",
             "High",
         ),
-        asset(
+        _build_asset(
             "Ben Rice",
             "NYY",
             "C/1B",
@@ -378,7 +396,7 @@ def build_assets() -> list[dict]:
             "Track",
             "Med",
         ),
-        asset(
+        _build_asset(
             "Edward Cabrera",
             "MIA",
             "SP",
@@ -396,7 +414,7 @@ def build_assets() -> list[dict]:
             "Stash",
             "High",
         ),
-        asset(
+        _build_asset(
             "AJ Smith-Shawver",
             "ATL",
             "SP",
@@ -414,7 +432,7 @@ def build_assets() -> list[dict]:
             "Track",
             "Med",
         ),
-        asset(
+        _build_asset(
             "Cade Horton",
             "CHC",
             "SP",
@@ -432,7 +450,7 @@ def build_assets() -> list[dict]:
             "Claim",
             "Med",
         ),
-        asset(
+        _build_asset(
             "Quinn Priester",
             "MIL",
             "SP",
@@ -450,7 +468,7 @@ def build_assets() -> list[dict]:
             "Track",
             "Med",
         ),
-        asset(
+        _build_asset(
             "Zebby Matthews",
             "MIN",
             "SP",
@@ -468,7 +486,7 @@ def build_assets() -> list[dict]:
             "Track",
             "Low",
         ),
-        asset(
+        _build_asset(
             "Dylan Crews",
             "WSH",
             "OF",
@@ -486,7 +504,7 @@ def build_assets() -> list[dict]:
             "Stash",
             "Med",
         ),
-        asset(
+        _build_asset(
             "Coby Mayo",
             "BAL",
             "3B/1B",
@@ -504,7 +522,7 @@ def build_assets() -> list[dict]:
             "Stash",
             "Med",
         ),
-        asset(
+        _build_asset(
             "Kyle Manzardo",
             "CLE",
             "1B",
@@ -522,7 +540,7 @@ def build_assets() -> list[dict]:
             "Track",
             "Med",
         ),
-        asset(
+        _build_asset(
             "Rece Hinds",
             "CIN",
             "OF",
