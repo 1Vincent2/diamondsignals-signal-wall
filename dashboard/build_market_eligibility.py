@@ -30,6 +30,29 @@ REQUIRED_ENV = [
 ]
 
 
+def load_local_env() -> None:
+    """
+    Local development helper only.
+    Loads .env into os.environ without printing secrets.
+    Netlify/prod should still use real environment variables.
+    """
+    env_path = ROOT / ".env"
+    if not env_path.exists():
+        return
+
+    for line in env_path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+
+        if key and key not in os.environ:
+            os.environ[key] = value
+
+
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -62,6 +85,8 @@ def build_empty_payload(reason: str) -> dict:
 
 
 def build_market_eligibility() -> dict:
+    load_local_env()
+
     if not env_ready():
         return build_empty_payload(
             "Yahoo Fantasy API credentials are not connected yet."
