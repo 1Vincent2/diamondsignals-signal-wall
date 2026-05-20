@@ -1,0 +1,104 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import json
+import os
+from datetime import datetime, timezone
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+DIST = ROOT / "dist"
+MARKET_DIR = DIST / "market"
+OUT_PATH = MARKET_DIR / "waiver_market_eligibility.json"
+
+# V2 design:
+# - No manual CSV
+# - No exported file
+# - No static/pre-seeded players
+# - This file is generated only from live platform/API ownership feeds
+#
+# Next activation target:
+# - Yahoo Fantasy Sports API OAuth + percent_owned / ownership endpoint
+# - Optional later: ESPN/Fantrax/NFBC/rotowire-style market feeds if licensed/available
+
+MAX_ROSTERED_PCT = int(os.getenv("WAIVER_MAX_ROSTERED_PCT", "35"))
+
+REQUIRED_ENV = [
+    "YAHOO_CLIENT_ID",
+    "YAHOO_CLIENT_SECRET",
+    "YAHOO_REFRESH_TOKEN",
+]
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def env_ready() -> bool:
+    return all(bool(os.getenv(key)) for key in REQUIRED_ENV)
+
+
+def build_empty_payload(reason: str) -> dict:
+    return {
+        "generated_at": utc_now(),
+        "mode": "market_eligibility_v2",
+        "source": "platform_api",
+        "provider": "yahoo_fantasy_api",
+        "feed_state": "not_connected",
+        "build_success": True,
+        "degraded": True,
+        "max_rostered_pct": MAX_ROSTERED_PCT,
+        "eligibility_policy": "platform_api_verified_rostered_pct_required",
+        "players": [],
+        "player_count": 0,
+        "errors": [],
+        "notes": [
+            reason,
+            "No manual/exported/pre-seeded Waiver eligibility data is used.",
+            "Waiver players render only after verified platform/API rostered percentage data is ingested.",
+        ],
+        "required_env": REQUIRED_ENV,
+    }
+
+
+def build_market_eligibility() -> dict:
+    if not env_ready():
+        return build_empty_payload(
+            "Yahoo Fantasy API credentials are not connected yet."
+        )
+
+    # Placeholder for the next activation patch:
+    # 1. Exchange YAHOO_REFRESH_TOKEN for access token.
+    # 2. Request MLB fantasy player ownership / percent_owned.
+    # 3. Normalize to DiamondSignals market eligibility rows:
+    #
+    # {
+    #   "player_id": "mlbam_or_canonical_id",
+    #   "player_name": "Name",
+    #   "team": "NYY",
+    #   "position": "OF",
+    #   "rostered_pct": 17,
+    #   "market_pct_verified": true,
+    #   "market_provider": "yahoo_fantasy_api",
+    #   "market_source": "platform_api",
+    #   "eligible": true
+    # }
+    #
+    # Until endpoint/auth is wired, fail closed.
+    return build_empty_payload(
+        "Yahoo Fantasy API credentials detected, but live endpoint activation is not wired yet."
+    )
+
+
+def main() -> None:
+    MARKET_DIR.mkdir(parents=True, exist_ok=True)
+    payload = build_market_eligibility()
+    OUT_PATH.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    print(f"Wrote market eligibility feed -> {OUT_PATH}")
+    print(f"feed_state: {payload.get('feed_state')}")
+    print(f"player_count: {payload.get('player_count')}")
+
+
+if __name__ == "__main__":
+    main()
