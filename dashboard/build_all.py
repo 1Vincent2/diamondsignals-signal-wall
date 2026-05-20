@@ -2,8 +2,9 @@ import subprocess
 import sys
 
 PREBUILD_COMMANDS = [
-    [sys.executable, "scripts/build_aaa_hitter_refresh.py"],
-    [sys.executable, "scripts/test_aaa_transactions.py"],
+    ([sys.executable, "scripts/build_aaa_hitter_refresh.py"], "scripts/build_aaa_hitter_refresh.py"),
+    ([sys.executable, "scripts/test_aaa_transactions.py"], "scripts/test_aaa_transactions.py"),
+    ([sys.executable, "scripts/build_depth_radar_refresh.py"], "scripts/build_depth_radar_refresh.py"),
 ]
 
 MODULES = [
@@ -36,8 +37,8 @@ def run_command(cmd: list[str], label: str) -> None:
         raise SystemExit(f"{label} failed with exit code {result.returncode}")
 
 def main() -> None:
-    for cmd in PREBUILD_COMMANDS:
-        run_command(cmd, "scripts/build_aaa_hitter_refresh.py")
+    for cmd, label in PREBUILD_COMMANDS:
+        run_command(cmd, label)
     for module_name in MODULES:
         run_module(module_name)
     run_command([sys.executable, "scripts/inject_access_gate_guard.py"], "scripts/inject_access_gate_guard.py")
