@@ -57,6 +57,12 @@ REPORTS = [
         "payloads": ["dist/waiver_wire.json"],
         "builders": ["dashboard/build_waiver_wire.py"],
     },
+    {
+        "name": "Depth Radar",
+        "status": "dist/status/depth-radar.json",
+        "payloads": ["dist/depth_radar_refresh.json"],
+        "builders": ["scripts/build_depth_radar_refresh.py", "dashboard/build_call_up_live.py"],
+    },
 ]
 
 STATIC_PATTERNS = [
@@ -138,6 +144,18 @@ def classify(status: dict, payloads: list[dict], builder_text: str) -> tuple[str
         and used_fallback is not True
     )
 
+    verified_depth_radar_mode = (
+        status.get("mode") == "milb_lower_levels_statsapi_boxscores_v0.1"
+        and state == "fresh"
+        and build_success is True
+        and used_fallback is not True
+        and not degraded
+        and "statsapi_milb_schedule" in mode_blob
+        and "statsapi_milb_boxscore" in mode_blob
+        and "aa_high_a_low_a" in mode_blob
+        and "no_static_player_seed_fallback" in mode_blob
+    )
+
     if verified_waiver_mode and waiver_asset_count == 0:
         notes.append("verified_empty_waiver_mode:true")
         notes.append("no_static_seed_fallback:true")
@@ -186,6 +204,14 @@ def classify(status: dict, payloads: list[dict], builder_text: str) -> tuple[str
         notes.append("dynamic_aaa_movement_feed:true")
         notes.append("dynamic_recent_mlb_arrivals_feed:true")
         notes.append("ui_empty_state_only:true")
+        notes.append("no_static_player_seed_fallback:true")
+        return "LIVE_DYNAMIC_HARDENED", notes
+
+    if verified_depth_radar_mode:
+        notes.append("verified_depth_radar_mode:true")
+        notes.append("statsapi_milb_schedule:true")
+        notes.append("statsapi_milb_boxscore:true")
+        notes.append("aa_high_a_low_a:true")
         notes.append("no_static_player_seed_fallback:true")
         return "LIVE_DYNAMIC_HARDENED", notes
 
