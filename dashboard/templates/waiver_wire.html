@@ -900,9 +900,9 @@ body.waiver-field-guide-open{
 
           <div class="card-action-row">
             <span>{{ asset.card_action }}</span>
-            <button class="performance-audit-button" type="button" onclick="event.stopPropagation(); openPlayerAudit(this.closest('.asset-card'));">
+            <a class="performance-audit-button" href="{{ asset.audit_url }}" onclick="event.stopPropagation();">
                 PERFORMANCE AUDIT →
-              </button>
+            </a>
           </div>
         </article>
         {% endfor %}
@@ -954,9 +954,9 @@ body.waiver-field-guide-open{
 
             <div class="card-action-row">
               <span>{{ asset.card_action }}</span>
-              <button class="performance-audit-button" type="button" onclick="event.stopPropagation(); openPlayerAudit(this.closest('.asset-card'));">
+              <a class="performance-audit-button" href="{{ asset.audit_url }}" onclick="event.stopPropagation();">
                 PERFORMANCE AUDIT →
-              </button>
+            </a>
             </div>
           </article>
           {% endfor %}
