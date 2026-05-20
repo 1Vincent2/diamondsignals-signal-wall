@@ -3273,7 +3273,29 @@ def render_html() -> str:
         section_counts=sections,
         degraded=not validation["ok"],
         errors=validation["messages"],
+        notes=[
+            "Promotion Watch uses dynamic AAA/MLB movement feeds with freshness validation.",
+            "72 HR, 14 DAY, and recent-arrivals sections are published with explicit section counts.",
+            "Empty-state placeholders are UI fallbacks only and are not static seeded player intelligence.",
+        ],
     )
+
+    status_payload["mode"] = "dynamic_promotion_watch_v0.1_hardened"
+    status_payload["pipeline_layers"] = [
+        "dynamic_aaa_movement_feed",
+        "dynamic_recent_mlb_arrivals_feed",
+        "freshness_status_tracked",
+        "section_count_validation",
+        "ui_empty_state_only",
+        "no_static_player_seed_fallback",
+    ]
+    status_payload["hardening_notes"] = [
+        "Promotion Watch is a dynamic prospect movement surface, not a static prospect list.",
+        "Placeholder language in the template is limited to empty-state UI messaging.",
+        "Freshness, degraded state, section counts, and source_updated_at are published in the status payload.",
+        "72 HR, 14 DAY, and Recent Arrivals sections remain independently counted for QA.",
+    ]
+
     write_status_file(status_payload)
 
     def safe_records(frame, limit=12):
@@ -3290,7 +3312,10 @@ def render_html() -> str:
         "generated_at": datetime.now().strftime("%Y-%m-%d %I:%M %p"),
         "timezone": TIMEZONE_LABEL,
         "status": status_payload.get("state"),
+        "mode": status_payload.get("mode"),
         "source_updated_at": source_updated_at,
+        "pipeline_layers": status_payload.get("pipeline_layers"),
+        "hardening_notes": status_payload.get("hardening_notes"),
         "section_counts": sections,
         "top_signals": {
             "pitchers_72hr": safe_records(pitchers_72, 12),

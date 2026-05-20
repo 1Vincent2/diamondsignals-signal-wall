@@ -169,6 +169,26 @@ def classify(status: dict, payloads: list[dict], builder_text: str) -> tuple[str
         notes.append("independent_mlb_extraction_scoring:true")
         return "LIVE_DYNAMIC_HARDENED", notes
 
+    hardened_promotion_watch_mode = (
+        status.get("mode") == "dynamic_promotion_watch_v0.1_hardened"
+        and state == "fresh"
+        and build_success is True
+        and used_fallback is not True
+        and not degraded
+        and "dynamic_aaa_movement_feed" in mode_blob
+        and "dynamic_recent_mlb_arrivals_feed" in mode_blob
+        and "ui_empty_state_only" in mode_blob
+        and "no_static_player_seed_fallback" in mode_blob
+    )
+
+    if hardened_promotion_watch_mode:
+        notes.append("hardened_promotion_watch_mode:true")
+        notes.append("dynamic_aaa_movement_feed:true")
+        notes.append("dynamic_recent_mlb_arrivals_feed:true")
+        notes.append("ui_empty_state_only:true")
+        notes.append("no_static_player_seed_fallback:true")
+        return "LIVE_DYNAMIC_HARDENED", notes
+
     if static_hits:
         notes.append("static_or_placeholder_terms:" + ",".join(static_hits))
     if dynamic_hits:
