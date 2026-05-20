@@ -5,16 +5,35 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+try:
+    from dashboard.lib.player_identity import (
+        load_canonical_player_universe,
+        build_name_lookup,
+        resolve_player_identity,
+    )
+except ModuleNotFoundError:
+    import sys
+    sys.path.append(str(Path(__file__).resolve().parents[1]))
+    from dashboard.lib.player_identity import (
+        load_canonical_player_universe,
+        build_name_lookup,
+        resolve_player_identity,
+    )
+
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
 SIGNALS_PATH = DIST / "signals.json"
 MLB_EXTRACTION_PATH = DIST / "hidden-gems" / "mlb_extraction_ledger.json"
 APEX_PATH = DIST / "apex-extraction" / "apex_extraction.json"
+DEPTH_RADAR_PATH = DIST / "depth_radar_refresh.json"
 MARKET_ELIGIBILITY_PATH = DIST / "market" / "waiver_market_eligibility.json"
 OUT_PATH = DIST / "waiver_candidates.json"
 
 MAX_CANDIDATES = 12
 MAX_ROSTERED_PCT = 35
+
+CANONICAL_PLAYERS = load_canonical_player_universe()
+CANONICAL_NAME_LOOKUP = build_name_lookup(CANONICAL_PLAYERS)
 
 BLOCKED_WAIVER_PLAYER_IDS = {
     # Obvious rostered/market-priced stars should never enter Waiver/Open Market
@@ -45,6 +64,71 @@ def read_json(path: Path):
 
 def as_list(value):
     return value if isinstance(value, list) else []
+
+
+def display_name_variants(value: str) -> list[str]:
+    raw = str(value or "").strip()
+    if not raw:
+        return []
+
+    variants = [raw]
+
+    # Some upstream rows arrive as "Last, First".
+    if "," in raw:
+        parts = [p.strip() for p in raw.split(",", 1)]
+        if len(parts) == 2 and parts[0] and parts[1]:
+            variants.append(f"{parts[1]} {parts[0]}")
+
+    # Some upstream rows arrive in all caps.
+    title_case = raw.title()
+    if title_case not in variants:
+        variants.append(title_case)
+
+    return variants
+
+
+def enrich_source_identity(row: dict, player_name: str) -> dict:
+    """
+    Strengthen upstream signal rows before Waiver market eligibility lookup.
+
+    The Waiver gate remains verified-market-only. This only improves the input
+    identity fields so source rows with weak names can match canonical MLBAM/team
+    records before the Yahoo/market eligibility join.
+    """
+    candidate = dict(row)
+
+    for name_variant in display_name_variants(player_name):
+        identity = resolve_player_identity(
+            player_id=str(candidate.get("player_id") or candidate.get("mlbam_id") or "").strip(),
+            player_name=name_variant,
+            team=str(candidate.get("team") or candidate.get("mlb_team") or "").strip(),
+            players=CANONICAL_PLAYERS,
+            name_lookup=CANONICAL_NAME_LOOKUP,
+        )
+
+        resolved_id = str(identity.get("player_id") or "").strip()
+        resolved_name = str(identity.get("player_name") or "").strip()
+        resolved_team = str(identity.get("team") or "").strip()
+        resolved_position = str(identity.get("position") or "").strip()
+
+        if resolved_id:
+            candidate["player_id"] = resolved_id
+            candidate["mlbam_id"] = resolved_id
+
+        if resolved_name:
+            candidate["player_name"] = resolved_name
+
+        if resolved_team:
+            candidate["team"] = resolved_team
+            candidate["mlb_team"] = resolved_team
+
+        if resolved_position and not candidate.get("position"):
+            candidate["position"] = resolved_position
+
+        if resolved_id or resolved_team:
+            return candidate
+
+    return candidate
 
 
 def player_key(row: dict) -> str:
@@ -200,6 +284,9 @@ def candidate_from_row(
     if not player_name:
         return None
 
+    row = enrich_source_identity(row, player_name)
+    player_name = row.get("player_name") or row.get("name") or row.get("full_name") or player_name
+
     if is_blocked_waiver_candidate(row, player_name):
         return None
 
@@ -256,7 +343,15 @@ def candidate_from_row(
 def collect_signal_wall() -> list[dict]:
     data = read_json(SIGNALS_PATH) or {}
     rows = []
-    for key in ("signals", "top_signals", "players", "pitchers", "hitters"):
+    for key in (
+        "signals",
+        "top_signals",
+        "top_pitchers",
+        "top_hitters",
+        "players",
+        "pitchers",
+        "hitters",
+    ):
         rows.extend(as_list(data.get(key)))
     return rows
 
@@ -272,8 +367,27 @@ def collect_mlb_extraction() -> list[dict]:
 def collect_apex() -> list[dict]:
     data = read_json(APEX_PATH) or {}
     rows = []
-    for key in ("apex_bats", "apex_arms", "assets", "players"):
+    for key in ("top_signals", "apex_bats", "apex_arms", "assets", "players"):
         rows.extend(as_list(data.get(key)))
+    return rows
+
+
+def collect_depth_radar() -> list[dict]:
+    data = read_json(DEPTH_RADAR_PATH) or {}
+    rows = []
+
+    for row in as_list(data.get("hitters")):
+        if isinstance(row, dict):
+            rows.append({**row, "position": row.get("position") or "BAT"})
+
+    for row in as_list(data.get("pitchers")):
+        if isinstance(row, dict):
+            rows.append({**row, "position": row.get("position") or "P"})
+
+    for row in as_list(data.get("top_rows")):
+        if isinstance(row, dict):
+            rows.append(row)
+
     return rows
 
 
@@ -285,6 +399,7 @@ def build_candidates() -> dict:
         ("signal_wall", collect_signal_wall()),
         ("mlb_extraction", collect_mlb_extraction()),
         ("apex_extraction", collect_apex()),
+        ("depth_radar", collect_depth_radar()),
     ]
 
     candidates = []
@@ -324,6 +439,7 @@ def build_candidates() -> dict:
             str(SIGNALS_PATH.relative_to(ROOT)),
             str(MLB_EXTRACTION_PATH.relative_to(ROOT)),
             str(APEX_PATH.relative_to(ROOT)),
+            str(DEPTH_RADAR_PATH.relative_to(ROOT)),
         ],
         "candidate_count": len(candidates),
         "max_rostered_pct": MAX_ROSTERED_PCT,
