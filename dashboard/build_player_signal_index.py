@@ -457,6 +457,9 @@ def build_identity_audit(players, source_count):
 
 def pick_metrics(item):
     keep = {}
+    # PLAYER_SIGNAL_INDEX_KEEP_SIGNAL_WALL_CONTEXT_METRICS_V1
+    # Preserve cross-surface context metrics from Signal Wall so downstream
+    # Performance Audit cards can inherit BABIP / SEAGER when the UI needs them.
     keys = [
         "edge_score", "score", "risk_score", "disruption_score",
         "diagnosis", "primary_alert", "apex_tier", "risk_tier",
@@ -467,6 +470,14 @@ def pick_metrics(item):
         "metric_1_label", "metric_1", "metric_2_label", "metric_2", "metric_3_label", "metric_3",
         "contact_risk", "dead_zone_label", "heat_class", "band_label", "heat_tag",
         "analysis", "brief", "why", "body_copy",
+
+        # Season / plate-discipline context carried by Signal Wall + enrichment.
+        "season_context", "season",
+        "seager_score", "babip",
+        "bb_k_ratio", "k_bb_ratio",
+        "bb_pct", "k_pct",
+        "plate_appearances", "batters_faced",
+        "strikeouts", "walks",
     ]
     for k in keys:
         if k in item and item.get(k) not in (None, ""):

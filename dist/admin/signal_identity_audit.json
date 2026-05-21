@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-05-14T15:53:33.804887+00:00",
+  "generated_at": "2026-05-21T19:18:03.649154+00:00",
   "source_count": 7,
-  "players_indexed": 129,
-  "missing_player_id_count": 19,
-  "missing_team_count": 0,
-  "missing_position_count": 0,
+  "players_indexed": 149,
+  "missing_player_id_count": 16,
+  "missing_team_count": 1,
+  "missing_position_count": 19,
   "duplicate_id_count": 0,
   "missing_player_id": [
     {
@@ -21,15 +21,6 @@
       "player_name": "Blaine Crim",
       "team": "Texas Rangers",
       "position": "1B",
-      "reports_triggered": [
-        "Promotion Watch"
-      ]
-    },
-    {
-      "player_id": null,
-      "player_name": "Blas Castaño",
-      "team": "UNK",
-      "position": "P",
       "reports_triggered": [
         "Promotion Watch"
       ]
@@ -99,15 +90,6 @@
     },
     {
       "player_id": null,
-      "player_name": "Jhostynxon Garcia",
-      "team": "Boston Red Sox",
-      "position": "OF",
-      "reports_triggered": [
-        "Promotion Watch"
-      ]
-    },
-    {
-      "player_id": null,
       "player_name": "Jonah Tong",
       "team": "New York Mets",
       "position": "P",
@@ -126,18 +108,9 @@
     },
     {
       "player_id": null,
-      "player_name": "Nick Morabito",
-      "team": "New York Mets",
-      "position": "OF",
-      "reports_triggered": [
-        "Promotion Watch"
-      ]
-    },
-    {
-      "player_id": null,
-      "player_name": "Nick Sogard",
-      "team": "Boston Red Sox",
-      "position": "INF",
+      "player_name": "Mason Barnett",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
@@ -179,7 +152,189 @@
       ]
     }
   ],
-  "missing_team": [],
-  "missing_position": [],
+  "missing_team": [
+    {
+      "player_id": null,
+      "player_name": "Mason Barnett",
+      "team": null,
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    }
+  ],
+  "missing_position": [
+    {
+      "player_id": 666165,
+      "player_name": "Blake Sabol",
+      "team": "Durham Bulls",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 802408,
+      "player_name": "Brycen Mautz",
+      "team": "Memphis Redbirds",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 673995,
+      "player_name": "Davis Wendzel",
+      "team": "Indianapolis Indians",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 671155,
+      "player_name": "Ivan Johnson",
+      "team": "Louisville Bats",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 686563,
+      "player_name": "Jonathan Cannon",
+      "team": "Charlotte Knights",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 670062,
+      "player_name": "Julian Garcia",
+      "team": "Louisville Bats",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 678577,
+      "player_name": "Junior Perez",
+      "team": "Las Vegas Aviators",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 669722,
+      "player_name": "Logan Davidson",
+      "team": "Durham Bulls",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 680689,
+      "player_name": "Lyon Richardson",
+      "team": "Louisville Bats",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Mason Barnett",
+      "team": null,
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 668472,
+      "player_name": "Nick Pratto",
+      "team": "Round Rock Express",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 670232,
+      "player_name": "Ramón Rodríguez",
+      "team": "Nashville Sounds",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 702045,
+      "player_name": "Rorik Maltrud",
+      "team": "Columbus Clippers",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 676116,
+      "player_name": "Ryan Noda",
+      "team": "Norfolk Tides",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 694536,
+      "player_name": "Trent Baker",
+      "team": "St. Paul Saints",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 671143,
+      "player_name": "Trenton Denholm",
+      "team": "Columbus Clippers",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 694494,
+      "player_name": "Ty Johnson",
+      "team": "Durham Bulls",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 691002,
+      "player_name": "Yohandy Morales",
+      "team": "Rochester Red Wings",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 570560,
+      "player_name": "Yolmer Sánchez",
+      "team": "Salt Lake Bees",
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    }
+  ],
   "duplicate_ids": {}
 }

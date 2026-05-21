@@ -1,82 +1,106 @@
 {
-  "generated_at": "2026-05-19T17:13:44.169312",
+  "generated_at": "2026-05-21T15:18:10.516544",
   "top_pitchers": [
     {
-      "player_name": "Mey, Luis",
-      "edge_score": 79.7,
+      "player_name": "Imai, Tatsuya",
+      "edge_score": 80.8,
       "metric_1_label": "Miss Engine",
-      "metric_1": 20.5,
+      "metric_1": 25.7,
       "metric_2_label": "Velocity Fuel",
-      "metric_2": 99.4,
+      "metric_2": 95.8,
       "metric_3_label": "Release Deception",
-      "metric_3": "6.6 ft",
-      "season_context": null,
-      "why": "Whiff rate 20.5% (+0.1 pts vs baseline), FB velo 99.4 mph (+1.2).",
+      "metric_3": "6.0 ft",
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "25.3%",
+        "bb_pct": "16.9%",
+        "k_bb_ratio": "1.50",
+        "babip": "0.317",
+        "batters_faced": 83,
+        "strikeouts": 21,
+        "walks": 14
+      },
+      "why": "Whiff rate 25.7% (+0.1 pts vs baseline), FB velo 95.8 mph (+1.1).",
+      "badges": [
+        "Whiff Lift",
+        "Velo Jump",
+        "Extension Gain"
+      ]
+    },
+    {
+      "player_name": "Ryan, Joe",
+      "edge_score": 70.6,
+      "metric_1_label": "Miss Engine",
+      "metric_1": 15.9,
+      "metric_2_label": "Velocity Fuel",
+      "metric_2": 93.4,
+      "metric_3_label": "Release Deception",
+      "metric_3": "6.9 ft",
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "27.1%",
+        "bb_pct": "6.2%",
+        "k_bb_ratio": "4.36",
+        "babip": "0.264",
+        "batters_faced": 225,
+        "strikeouts": 61,
+        "walks": 14
+      },
+      "why": "Whiff rate 15.9% (+0.1 pts vs baseline), FB velo 93.4 mph (+0.8).",
+      "badges": [
+        "Whiff Lift",
+        "Velo Jump",
+        "Extension Gain"
+      ]
+    },
+    {
+      "player_name": "Rojas, Kendry",
+      "edge_score": 69.4,
+      "metric_1_label": "Miss Engine",
+      "metric_1": 16.1,
+      "metric_2_label": "Velocity Fuel",
+      "metric_2": 95.7,
+      "metric_3_label": "Release Deception",
+      "metric_3": "6.8 ft",
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "22.4%",
+        "bb_pct": "18.4%",
+        "k_bb_ratio": "1.22",
+        "babip": "0.357",
+        "batters_faced": 49,
+        "strikeouts": 11,
+        "walks": 9
+      },
+      "why": "Whiff rate 16.1% (+0.1 pts vs baseline), FB velo 95.7 mph (+0.8).",
       "badges": [
         "Whiff Lift",
         "Velo Jump"
       ]
     },
     {
-      "player_name": "Miller, Mason",
-      "edge_score": 71.0,
-      "metric_1_label": "Miss Engine",
-      "metric_1": 17.1,
-      "metric_2_label": "Velocity Fuel",
-      "metric_2": 101.3,
-      "metric_3_label": "Release Deception",
-      "metric_3": "6.8 ft",
-      "season_context": {
-        "season_context": "COMMAND_PROFILE",
-        "season": 2026,
-        "k_pct": "55.6%",
-        "bb_pct": "6.9%",
-        "k_bb_ratio": "8.00",
-        "babip": "0.296",
-        "batters_faced": 72,
-        "strikeouts": 40,
-        "walks": 5
-      },
-      "why": "Whiff rate 17.1% (-0.0 pts vs baseline), FB velo 101.3 mph (+1.4).",
-      "badges": [
-        "Velo Jump"
-      ]
-    },
-    {
-      "player_name": "Misiorowski, Jacob",
-      "edge_score": 70.8,
-      "metric_1_label": "Miss Engine",
-      "metric_1": 19.4,
-      "metric_2_label": "Velocity Fuel",
-      "metric_2": 100.6,
-      "metric_3_label": "Release Deception",
-      "metric_3": "7.5 ft",
-      "season_context": {
-        "season_context": "COMMAND_PROFILE",
-        "season": 2026,
-        "k_pct": "39.6%",
-        "bb_pct": "8.4%",
-        "k_bb_ratio": "4.71",
-        "babip": "0.260",
-        "batters_faced": 202,
-        "strikeouts": 80,
-        "walks": 17
-      },
-      "why": "Whiff rate 19.4% (+0.0 pts vs baseline), FB velo 100.6 mph (-0.2).",
-      "badges": [
-        "Trend Confirming"
-      ]
-    },
-    {
       "player_name": "Martin, Davis",
-      "edge_score": 69.7,
+      "edge_score": 69.2,
       "metric_1_label": "Miss Engine",
       "metric_1": 16.5,
       "metric_2_label": "Velocity Fuel",
       "metric_2": 94.0,
       "metric_3_label": "Release Deception",
       "metric_3": "6.8 ft",
-      "season_context": null,
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "27.4%",
+        "bb_pct": "4.7%",
+        "k_bb_ratio": "5.90",
+        "babip": "0.300",
+        "batters_faced": 215,
+        "strikeouts": 59,
+        "walks": 10
+      },
       "why": "Whiff rate 16.5% (+0.0 pts vs baseline), FB velo 94.0 mph (+1.1).",
       "badges": [
         "Velo Jump",
@@ -84,101 +108,164 @@
       ]
     },
     {
-      "player_name": "Taylor, Grant",
+      "player_name": "Burns, Chase",
       "edge_score": 69.2,
       "metric_1_label": "Miss Engine",
-      "metric_1": 16.2,
+      "metric_1": 19.3,
       "metric_2_label": "Velocity Fuel",
-      "metric_2": 98.3,
+      "metric_2": 97.9,
       "metric_3_label": "Release Deception",
-      "metric_3": "7.3 ft",
-      "season_context": null,
-      "why": "Whiff rate 16.2% (+0.0 pts vs baseline), FB velo 98.3 mph (+0.6).",
+      "metric_3": "6.4 ft",
+      "season_context": {
+        "season_context": "COMMAND_PROFILE",
+        "season": 2026,
+        "k_pct": "28.2%",
+        "bb_pct": "7.9%",
+        "k_bb_ratio": "3.56",
+        "babip": "0.226",
+        "batters_faced": 227,
+        "strikeouts": 64,
+        "walks": 18
+      },
+      "why": "Whiff rate 19.3% (+0.0 pts vs baseline), FB velo 97.9 mph (-0.3).",
       "badges": [
-        "Whiff Lift"
+        "Whiff Lift",
+        "Extension Gain"
       ]
     }
   ],
   "top_hitters": [
     {
-      "player_name": "Eric Haase",
+      "player_name": "Heriberto Hernandez",
       "edge_score": 95.0,
       "metric_1_label": "Blast Path",
-      "metric_1": 90.0,
+      "metric_1": 97.3,
       "metric_2_label": "Blast Rate",
-      "metric_2": 27.3,
+      "metric_2": 14.3,
       "metric_3_label": "Apex Damage",
-      "metric_3": 103.6,
-      "season_context": null,
-      "seager_score": 35.1,
-      "why": "Avg EV 90.0 mph (+11.8 vs baseline), barrel-like rate 27.3%.",
+      "metric_3": 107.9,
+      "season_context": {
+        "season_context": "PLATE_DISCIPLINE",
+        "season": 2026,
+        "bb_pct": "11.3%",
+        "k_pct": "20.6%",
+        "bb_k_ratio": "0.55",
+        "babip": ".203",
+        "plate_appearances": 97,
+        "strikeouts": 20,
+        "walks": 11
+      },
+      "seager_score": 28.9,
+      "why": "Avg EV 97.3 mph (+16.1 vs baseline), barrel-like rate 14.3%.",
       "badges": [
         "EV Burst",
         "Barrel Jump"
       ]
     },
     {
-      "player_name": "Jac Caglianone",
-      "edge_score": 91.2,
+      "player_name": "C\u00e9sar Prieto",
+      "edge_score": 95.0,
       "metric_1_label": "Blast Path",
-      "metric_1": 98.6,
+      "metric_1": 95.0,
       "metric_2_label": "Blast Rate",
-      "metric_2": 6.2,
+      "metric_2": 12.5,
       "metric_3_label": "Apex Damage",
-      "metric_3": 114.5,
-      "season_context": null,
-      "seager_score": 41.2,
-      "why": "Avg EV 98.6 mph (+15.6 vs baseline), barrel-like rate 6.2%.",
+      "metric_3": 108.9,
+      "season_context": {
+        "season_context": "PLATE_DISCIPLINE",
+        "season": 2026,
+        "bb_pct": "0.0%",
+        "k_pct": "8.3%",
+        "bb_k_ratio": "0.00",
+        "babip": ".000",
+        "plate_appearances": 12,
+        "strikeouts": 1,
+        "walks": 0
+      },
+      "seager_score": 41.1,
+      "why": "Avg EV 95.0 mph (+16.8 vs baseline), barrel-like rate 12.5%.",
+      "badges": [
+        "EV Burst",
+        "Barrel Jump",
+        "Impact EV"
+      ]
+    },
+    {
+      "player_name": "Jake Burger",
+      "edge_score": 78.0,
+      "metric_1_label": "Blast Path",
+      "metric_1": 90.8,
+      "metric_2_label": "Blast Rate",
+      "metric_2": 7.7,
+      "metric_3_label": "Apex Damage",
+      "metric_3": 110.9,
+      "season_context": {
+        "season_context": "PLATE_DISCIPLINE",
+        "season": 2026,
+        "bb_pct": "5.7%",
+        "k_pct": "25.8%",
+        "bb_k_ratio": "0.22",
+        "babip": ".285",
+        "plate_appearances": 194,
+        "strikeouts": 50,
+        "walks": 11
+      },
+      "seager_score": 27.4,
+      "why": "Avg EV 90.8 mph (+7.4 vs baseline), barrel-like rate 7.7%.",
       "badges": [
         "EV Burst",
         "Impact EV"
       ]
     },
     {
-      "player_name": "Derek Hill",
-      "edge_score": 82.7,
+      "player_name": "Jac Caglianone",
+      "edge_score": 73.8,
       "metric_1_label": "Blast Path",
-      "metric_1": 90.4,
+      "metric_1": 91.0,
       "metric_2_label": "Blast Rate",
-      "metric_2": 10.0,
+      "metric_2": 5.9,
       "metric_3_label": "Apex Damage",
-      "metric_3": 105.9,
-      "season_context": null,
-      "seager_score": 31.5,
-      "why": "Avg EV 90.4 mph (+16.4 vs baseline), barrel-like rate 10.0%.",
+      "metric_3": 113.4,
+      "season_context": {
+        "season_context": "PLATE_DISCIPLINE",
+        "season": 2026,
+        "bb_pct": "7.5%",
+        "k_pct": "30.0%",
+        "bb_k_ratio": "0.25",
+        "babip": ".344",
+        "plate_appearances": 160,
+        "strikeouts": 48,
+        "walks": 12
+      },
+      "seager_score": 39.1,
+      "why": "Avg EV 91.0 mph (+8.3 vs baseline), barrel-like rate 5.9%.",
       "badges": [
-        "EV Burst"
+        "EV Burst",
+        "Impact EV"
       ]
     },
     {
       "player_name": "Jeremiah Jackson",
-      "edge_score": 77.7,
+      "edge_score": 73.4,
       "metric_1_label": "Blast Path",
-      "metric_1": 93.2,
+      "metric_1": 91.8,
       "metric_2_label": "Blast Rate",
-      "metric_2": 3.6,
+      "metric_2": 4.0,
       "metric_3_label": "Apex Damage",
       "metric_3": 110.9,
-      "season_context": null,
-      "seager_score": 38.3,
-      "why": "Avg EV 93.2 mph (+10.0 vs baseline), barrel-like rate 3.6%.",
-      "badges": [
-        "EV Burst",
-        "Impact EV"
-      ]
-    },
-    {
-      "player_name": "Corbin Carroll",
-      "edge_score": 76.4,
-      "metric_1_label": "Blast Path",
-      "metric_1": 93.3,
-      "metric_2_label": "Blast Rate",
-      "metric_2": 3.7,
-      "metric_3_label": "Apex Damage",
-      "metric_3": 111.8,
-      "season_context": null,
-      "seager_score": 34.6,
-      "why": "Avg EV 93.3 mph (+8.8 vs baseline), barrel-like rate 3.7%.",
+      "season_context": {
+        "season_context": "PLATE_DISCIPLINE",
+        "season": 2026,
+        "bb_pct": "1.9%",
+        "k_pct": "21.2%",
+        "bb_k_ratio": "0.09",
+        "babip": ".283",
+        "plate_appearances": 156,
+        "strikeouts": 33,
+        "walks": 3
+      },
+      "seager_score": 37.7,
+      "why": "Avg EV 91.8 mph (+8.0 vs baseline), barrel-like rate 4.0%.",
       "badges": [
         "EV Burst",
         "Impact EV"

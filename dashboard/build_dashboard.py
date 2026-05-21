@@ -868,6 +868,7 @@ def _build_hitter_result_frame(df: pd.DataFrame) -> pd.DataFrame:
     return bbe_grouped.merge(result_grouped, on="batter", how="left")
 
 
+# SCOUT_HITTER_METRICS_BABIP_SEAGER_SOURCE_RESTORED_V2
 def build_scout_hitter_metrics(df: pd.DataFrame) -> dict:
     merged = _build_hitter_result_frame(df)
     if merged.empty:
@@ -1009,6 +1010,10 @@ def build_scout_hitter_metrics(df: pd.DataFrame) -> dict:
                 "value_3": None,
                 "label_4": "Signal",
                 "value_4": signal_label,
+                "label_5": "BABIP",
+                "value_5": row.get("babip"),
+                "label_6": "SEAGER",
+                "value_6": row.get("seager_score"),
             },
             "briefing": " ".join(parts) if parts else "Live hitter profile loaded.",
         }
@@ -1387,7 +1392,7 @@ def build_scout_support_metrics(scout: Optional[dict]) -> Optional[dict]:
 
     def zone_lookup(zone: dict) -> dict:
         out = {}
-        for i in range(1, 5):
+        for i in range(1, 9):
             label = zone.get(f"label_{i}")
             value = zone.get(f"value_{i}")
             if label and value not in (None, "", "—", "--"):
@@ -1431,12 +1436,15 @@ def build_scout_support_metrics(scout: Optional[dict]) -> Optional[dict]:
             {"label": "HARD HIT%", "value": fmt(get("Hard Hit %"), "%")},
             {"label": "BARREL%", "value": fmt(get("Barrel %"), "%")},
             {"label": "XBA", "value": fmt(get("xBA"))},
+            {"label": "BABIP", "value": fmt(get("BABIP"))},
+            {"label": "SEAGER", "value": fmt(get("SEAGER"))},
         ]
 
     tiles = [t for t in tiles if t["value"] != "—"]
-    return {"profile": "SCOUT_PROFILE", "tiles": tiles[:5]} if tiles else None
+    return {"profile": "SCOUT_PROFILE", "tiles": tiles[:7]} if tiles else None
 
 
+# PERFORMANCE_AUDIT_SUPPORT_METRICS_BABIP_SEAGER_RESTORED_V1
 def build_support_metrics(ctx: Optional[dict], metrics: Optional[dict], player: Optional[dict] = None) -> dict:
     """Normalize support metrics for all Performance Audit cards."""
     ctx = ctx if isinstance(ctx, dict) else {}
@@ -1580,6 +1588,37 @@ def write_dossier_canon(
         signal = signal_lookup.get(player_id, {})
         signal_context = player_signal_context_lookup.get(player_id, {})
 
+        scout_support = build_scout_support_metrics(scout)
+        context_support = signal_context.get("support_metrics")
+
+        support_metrics = context_support or scout_support
+
+        # PERFORMANCE_AUDIT_CONTEXT_TILES_MERGE_BABIP_SEAGER_V2
+        # If scout physics tiles are the visible support strip, append BABIP/SEAGER from
+        # the normalized signal context when those values are available.
+        if scout_support and context_support:
+            base_tiles = list(scout_support.get("tiles") or [])
+            existing = {
+                str(tile.get("label") or "").upper()
+                for tile in base_tiles
+                if isinstance(tile, dict)
+            }
+
+            for tile in context_support.get("tiles") or []:
+                if not isinstance(tile, dict):
+                    continue
+                label = str(tile.get("label") or "").upper()
+                value = tile.get("value")
+                if label in {"BABIP", "SEAGER"} and label not in existing and value not in (None, "", "—", "--"):
+                    base_tiles.append(tile)
+                    existing.add(label)
+
+            support_metrics = {
+                **scout_support,
+                "profile": context_support.get("profile") or scout_support.get("profile") or "SCOUT_PROFILE",
+                "tiles": base_tiles[:7],
+            }
+
         canon_players[player_id] = {
             "player_id": player_id,
             "player_name": player.get("full_name") or "Unknown Player",
@@ -1597,7 +1636,7 @@ def write_dossier_canon(
             "rostered_by_user": False,
             "season_context": signal_context.get("season_context"),
             "signals": signal_context.get("signals", []),
-            "support_metrics": signal_context.get("support_metrics") or build_scout_support_metrics(scout),
+            "support_metrics": support_metrics,
         }
 
         if scout:
@@ -2721,13 +2760,51 @@ def scout_shell_html() -> str:
         if (!card || !grid || !profile) return;
 
         const support = player && player.support_metrics ? player.support_metrics : null;
-        const tiles = support && Array.isArray(support.tiles) ? support.tiles : [];
+        const baseTiles = support && Array.isArray(support.tiles) ? support.tiles : [];
 
-        if (!support || !tiles.length) {
+        if (!support || !baseTiles.length) {
           card.style.display = "none";
           grid.innerHTML = "";
           return;
         }
+
+        /* PERFORMANCE_AUDIT_RENDER_BABIP_SEAGER_APPEND_V2
+           Preserve BABIP + SEAGER in the Performance Audit support strip whenever
+           they exist in support_metrics, season_context, player root, or scout results. */
+        const tiles = [...baseTiles];
+        const labels = new Set(
+          tiles.map(tile => String(tile && tile.label ? tile.label : "").toUpperCase())
+        );
+
+        const appendTile = (label, value) => {
+          if (value === null || value === undefined || value === "" || value === "—" || value === "--") return;
+          const upper = String(label).toUpperCase();
+          if (labels.has(upper)) return;
+          labels.add(upper);
+          tiles.push({ label, value });
+        };
+
+        const findExistingTile = (label) => {
+          const upper = String(label).toUpperCase();
+          const hit = baseTiles.find(tile => String(tile.label || "").toUpperCase() === upper);
+          return hit ? hit.value : null;
+        };
+
+        const findScoutResult = (label) => {
+          const results = player && player.scout_metrics && player.scout_metrics.results ? player.scout_metrics.results : {};
+          const wanted = String(label).toUpperCase();
+          for (let i = 1; i <= 8; i += 1) {
+            if (String(results[`label_${i}`] || "").toUpperCase() === wanted) {
+              return results[`value_${i}`];
+            }
+          }
+          return null;
+        };
+
+        const ctx = player && player.season_context ? player.season_context : {};
+
+        appendTile("BABIP", ctx.babip ?? player.babip ?? findExistingTile("BABIP") ?? findScoutResult("BABIP"));
+        appendTile("SEAGER", ctx.seager_score ?? player.seager_score ?? findExistingTile("SEAGER") ?? findScoutResult("SEAGER"));
 
         profile.textContent = support.profile || "SUPPORT";
         grid.innerHTML = tiles.map(tile => `
