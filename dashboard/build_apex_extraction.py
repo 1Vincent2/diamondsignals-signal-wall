@@ -1564,7 +1564,7 @@ def render_html(payload: dict) -> str:
         .section-kicker {{
           font-size: 10px !important;
           line-height: 1 !important;
-          letter-spacing: 0.18em !important;
+          letter-spacing: 0.14em !important;
           font-weight: 800 !important;
         }}
 
@@ -1603,7 +1603,7 @@ def render_html(payload: dict) -> str:
         }}
 
         .meta {{
-          font-size: 12px !important;
+          font-size: 9px !important;
           line-height: 1.25 !important;
           letter-spacing: 0.16em !important;
         }}
@@ -1724,7 +1724,7 @@ def render_html(payload: dict) -> str:
         }}
 
         .grid strong {{
-          font-size: 16px !important;
+          font-size: 12px !important;
           line-height: 18px !important;
         }}
 
@@ -1739,7 +1739,7 @@ def render_html(payload: dict) -> str:
       /* APEX_MOBILE_FINAL_CARD_DENSITY_V2 */
       @media screen and (max-width: 760px) {{
         section.cards {{
-          gap: 12px !important;
+          gap: 8px !important;
         }}
 
         section.cards .apex-card {{
@@ -1945,6 +1945,157 @@ def render_html(payload: dict) -> str:
           color: #ccff00 !important;
           font-size: 14px !important;
           line-height: 1 !important;
+        }}
+      }}
+
+
+
+
+
+
+      /* APEX_MOBILE_MENU_MATCHED_FIELD_GUIDE_V3
+         Mobile/tablet fix: remove Field Guide from topbar rail and restyle it to match the mobile Menu pill.
+         Desktop Field Guide remains controlled by APEX_DESKTOP_FLOATING_FIELD_GUIDE_PILL_V1. */
+      @media screen and (max-width: 900px) {{
+        .topbar-center {{
+          display: block !important;
+          width: 0 !important;
+          height: 0 !important;
+          min-height: 0 !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          overflow: visible !important;
+        }}
+
+        .topbar .field-guide-pill,
+        .field-guide-pill {{
+          position: fixed !important;
+          right: 14px !important;
+          bottom: calc(16px + env(safe-area-inset-bottom)) !important;
+          top: auto !important;
+          left: auto !important;
+          z-index: 2147483002 !important;
+
+          width: auto !important;
+          max-width: calc(100vw - 28px) !important;
+          min-width: 0 !important;
+          min-height: 42px !important;
+          padding: 0 16px !important;
+
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 8px !important;
+
+          border-radius: 999px !important;
+          border: 1px solid rgba(204,255,0,0.58) !important;
+          background:
+            radial-gradient(circle at 24% 50%, rgba(204,255,0,0.24), transparent 38%),
+            linear-gradient(180deg, rgba(8,12,16,0.98), rgba(2,4,7,0.99)) !important;
+          color: #f8fafc !important;
+
+          box-shadow:
+            0 0 0 1px rgba(204,255,0,0.10),
+            0 0 18px rgba(204,255,0,0.24),
+            0 0 34px rgba(204,255,0,0.12),
+            inset 0 1px 0 rgba(255,255,255,0.10) !important;
+
+          backdrop-filter: blur(16px) !important;
+          -webkit-backdrop-filter: blur(16px) !important;
+
+          font-family: var(--mono, "JetBrains Mono", "Roboto Mono", monospace) !important;
+          font-size: 9px !important;
+          font-weight: 900 !important;
+          letter-spacing: 0.14em !important;
+          line-height: 1 !important;
+          text-transform: uppercase !important;
+          white-space: nowrap !important;
+          cursor: pointer !important;
+          transform: none !important;
+        }}
+
+        .topbar .field-guide-pill:hover,
+        .field-guide-pill:hover {{
+          transform: none !important;
+          border-color: rgba(204,255,0,0.70) !important;
+        }}
+
+        .topbar .field-guide-icon,
+        .field-guide-icon {{
+          color: #ccff00 !important;
+          font-size: 12px !important;
+          line-height: 1 !important;
+          text-shadow:
+            0 0 12px rgba(204,255,0,0.72),
+            0 0 24px rgba(204,255,0,0.38) !important;
+        }}
+
+        .field-guide-drawer {{
+          width: min(100vw, 430px) !important;
+          max-width: 100vw !important;
+        }}
+      }}
+
+
+
+
+      /* APEX_FIELD_GUIDE_DRAWER_CLOSE_FIX_V1
+         Removes inherited white button artifact and pins close control top-right inside drawer. */
+      .field-guide-top {{
+        position: relative !important;
+        padding-right: 58px !important;
+      }}
+
+      .field-guide-close {{
+        position: absolute !important;
+        top: 18px !important;
+        right: 18px !important;
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        min-height: 36px !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        border: 1px solid rgba(255,255,255,0.14) !important;
+        border-radius: 999px !important;
+        background: rgba(255,255,255,0.035) !important;
+        color: rgba(255,255,255,0.90) !important;
+
+        box-shadow: none !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+
+        font-family: Arial, Helvetica, sans-serif !important;
+        font-size: 24px !important;
+        font-weight: 300 !important;
+        line-height: 1 !important;
+        letter-spacing: 0 !important;
+        text-transform: none !important;
+        cursor: pointer !important;
+      }}
+
+      .field-guide-close:hover {{
+        background: rgba(255,255,255,0.07) !important;
+        border-color: rgba(204,255,0,0.34) !important;
+        color: #ffffff !important;
+      }}
+
+      @media screen and (max-width: 900px) {{
+        .field-guide-top {{
+          padding-right: 54px !important;
+        }}
+
+        .field-guide-close {{
+          top: 16px !important;
+          right: 16px !important;
+          width: 34px !important;
+          height: 34px !important;
+          min-width: 34px !important;
+          min-height: 34px !important;
+          font-size: 23px !important;
         }}
       }}
 
