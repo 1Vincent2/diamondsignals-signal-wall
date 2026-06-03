@@ -1825,6 +1825,54 @@ def render_html(payload: dict) -> str:
 
 
 
+
+      /* APEX_FIELD_GUIDE_CLOSED_STATE_LOCK_V1
+         Drawer/backdrop hidden by default; opens only when body.field-guide-open is present. */
+      .field-guide-backdrop {{
+        position: fixed !important;
+        inset: 0 !important;
+        z-index: 2147483003 !important;
+        background: rgba(0,0,0,0.62) !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transition: opacity 180ms ease !important;
+      }}
+
+      body.field-guide-open .field-guide-backdrop {{
+        opacity: 1 !important;
+        pointer-events: auto !important;
+      }}
+
+      .field-guide-drawer {{
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        left: auto !important;
+        width: min(92vw, 430px) !important;
+        max-width: 92vw !important;
+        height: 100dvh !important;
+        z-index: 2147483004 !important;
+        transform: translateX(104%) !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        transition: transform 220ms ease !important;
+        background:
+          radial-gradient(circle at 20% 0%, rgba(204,255,0,0.10), transparent 34%),
+          linear-gradient(180deg, rgba(10,13,18,0.98), rgba(3,5,8,0.99)) !important;
+        border-left: 1px solid rgba(204,255,0,0.18) !important;
+        box-shadow: -24px 0 70px rgba(0,0,0,0.62) !important;
+      }}
+
+      body.field-guide-open .field-guide-drawer {{
+        transform: translateX(0) !important;
+      }}
+
+      body.field-guide-open {{
+        overflow: hidden !important;
+      }}
+
+
   </style>
 </head>
 <body>
