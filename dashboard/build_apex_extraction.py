@@ -1827,6 +1827,73 @@ def render_html(payload: dict) -> str:
 
 
 
+
+      /* APEX_MOBILE_GRID_LOCK_V1
+         Mobile-only containment: player cards and card detail metrics must collapse to one column.
+         Does not touch desktop or global shell nav. */
+      @media screen and (max-width: 760px) {{
+        html,
+        body {{
+          max-width: 100% !important;
+          overflow-x: hidden !important;
+        }}
+
+        .app {{
+          width: min(100%, calc(100vw - 24px)) !important;
+          max-width: calc(100vw - 24px) !important;
+          overflow-x: hidden !important;
+        }}
+
+        .hero {{
+          grid-template-columns: 1fr !important;
+          width: 100% !important;
+          max-width: 100% !important;
+        }}
+
+        section.cards,
+        .cards {{
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          overflow-x: hidden !important;
+        }}
+
+        section.cards .apex-card,
+        .apex-card {{
+          width: 100% !important;
+          max-width: 100% !important;
+          min-width: 0 !important;
+          overflow: hidden !important;
+        }}
+
+        section.cards .apex-card .grid,
+        .apex-card .grid,
+        .grid {{
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          min-width: 0 !important;
+        }}
+
+        section.cards .apex-card .forensic-strip,
+        .apex-card .forensic-strip,
+        .forensic-strip {{
+          grid-template-columns: 1fr !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          min-width: 0 !important;
+        }}
+
+        .grid > *,
+        .forensic-strip > * {{
+          min-width: 0 !important;
+          max-width: 100% !important;
+        }}
+      }}
+
+
       /* APEX_DESKTOP_FLOATING_FIELD_GUIDE_PILL_V1
          Desktop-only fix: make standalone Apex Field Guide match Signal Wall floating pill behavior.
          Mobile intentionally untouched. */
