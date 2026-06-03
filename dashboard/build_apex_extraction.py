@@ -1826,6 +1826,62 @@ def render_html(payload: dict) -> str:
 
 
 
+
+      /* APEX_DESKTOP_FLOATING_FIELD_GUIDE_PILL_V1
+         Desktop-only fix: make standalone Apex Field Guide match Signal Wall floating pill behavior.
+         Mobile intentionally untouched. */
+      @media screen and (min-width: 761px) {{
+        .field-guide-pill {{
+          position: fixed !important;
+          right: max(24px, calc((100vw - 1180px) / 2 + 24px)) !important;
+          bottom: 24px !important;
+          top: auto !important;
+          left: auto !important;
+          z-index: 2147483002 !important;
+          appearance: none !important;
+          -webkit-appearance: none !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 10px !important;
+          min-height: 46px !important;
+          padding: 0 18px !important;
+          border-radius: 999px !important;
+          border: 1px solid rgba(204,255,0,0.38) !important;
+          background:
+            radial-gradient(circle at 18% 50%, rgba(204,255,0,0.14), transparent 42%),
+            rgba(7,10,14,0.92) !important;
+          color: #ffffff !important;
+          box-shadow:
+            0 0 22px rgba(204,255,0,0.10),
+            inset 0 1px 0 rgba(255,255,255,0.08) !important;
+          backdrop-filter: blur(14px) !important;
+          font-family: var(--mono, "JetBrains Mono", "Roboto Mono", monospace) !important;
+          font-size: 11px !important;
+          font-weight: 900 !important;
+          letter-spacing: 0.16em !important;
+          line-height: 1 !important;
+          text-transform: uppercase !important;
+          cursor: pointer !important;
+          white-space: nowrap !important;
+        }}
+
+        .field-guide-pill:hover {{
+          transform: translateY(-1px) !important;
+          border-color: rgba(204,255,0,0.58) !important;
+          box-shadow:
+            0 0 28px rgba(204,255,0,0.18),
+            inset 0 1px 0 rgba(255,255,255,0.10) !important;
+        }}
+
+        .field-guide-icon {{
+          color: #ccff00 !important;
+          font-size: 14px !important;
+          line-height: 1 !important;
+        }}
+      }}
+
+
       /* APEX_FIELD_GUIDE_CLOSED_STATE_LOCK_V1
          Drawer/backdrop hidden by default; opens only when body.field-guide-open is present. */
       .field-guide-backdrop {{
