@@ -11,6 +11,7 @@ except ModuleNotFoundError:
 from datetime import datetime, timezone
 
 from jinja2 import Template
+import re
 
 
 OUT_DIR = Path("dist/apex-extraction")
@@ -576,7 +577,33 @@ def render_html(payload: dict) -> str:
         generated_label = datetime.fromisoformat(str(generated).replace("Z", "+00:00")).strftime("%Y-%m-%d %I:%M %p")
     except Exception:
         generated_label = str(generated)
+    # APEX_MOBILE_FIELD_GUIDE_SHELL_NAV_INJECTION_V4
+    # Mobile-only Field Guide lives inside the shared sticky shell nav BEFORE Menu:
+    # [Field Guide] [Menu]. Desktop keeps the original standalone Field Guide button.
     nav_html = Template(NAV_TEMPLATE).render(active_nav="apex_extraction")
+    apex_mobile_field_guide = """
+      <button
+        class="apex-mobile-field-guide-trigger"
+        type="button"
+        data-open-field-guide
+        aria-label="Open Apex Extraction Field Guide"
+      >
+        <span class="apex-mobile-field-guide-icon">ⓘ</span>
+        <span>Field Guide</span>
+      </button>
+    """
+
+    menu_pattern = r'(?P<indent>\s*)<button\s+class="ds-mobile-menu-trigger"'
+    nav_html, replacements = re.subn(
+        menu_pattern,
+        lambda match: apex_mobile_field_guide + "\n" + match.group("indent") + '<button class="ds-mobile-menu-trigger"',
+        nav_html,
+        count=1,
+    )
+
+    if replacements != 1:
+        raise RuntimeError("Apex mobile Field Guide injection failed: shell nav Menu trigger not found.")
+
     search_html = Template(SEARCH_TEMPLATE).render()
     shell_styles = SHELL_STYLES_TEMPLATE
 
@@ -1523,18 +1550,6 @@ def render_html(payload: dict) -> str:
           letter-spacing: 0.14em !important;
         }}
 
-        .field-guide-pill {{
-          right: 14px !important;
-          bottom: 14px !important;
-          padding: 10px 12px !important;
-          font-size: 9px !important;
-          letter-spacing: 0.14em !important;
-        }}
-
-        .field-guide-drawer {{
-          width: calc(100vw - 16px) !important;
-          padding: 22px !important;
-        }}
       }}
 
       /* APEX_HIDE_MOBILE_SUMMARY_GRID_V1 */
@@ -1825,7 +1840,128 @@ def render_html(payload: dict) -> str:
 
 
 
-  </style>
+  
+      /* APEX_MOBILE_FIELD_GUIDE_SHELL_NAV_CSS_V5
+         Permanent mobile-only Field Guide shell-nav integration.
+         Mobile command rail: [Field Guide] [Menu].
+         Desktop standalone Field Guide remains untouched. */
+      .apex-mobile-field-guide-trigger {{
+        display: none;
+      }}
+
+      @media screen and (max-width: 760px) {{
+        body > .field-guide-pill[data-open-field-guide] {{
+          display: none !important;
+        }}
+
+        .topnav.ds-shell-nav .topnav-inner {{
+          justify-content: flex-end !important;
+          align-items: center !important;
+          gap: 8px !important;
+          padding-right: 10px !important;
+        }}
+
+        .topnav.ds-shell-nav .topnav-links {{
+          display: none !important;
+        }}
+
+        .apex-mobile-field-guide-trigger {{
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 8px !important;
+          height: 44px !important;
+          min-height: 44px !important;
+          min-width: 142px !important;
+          max-width: 152px !important;
+          padding: 0 14px !important;
+          border-radius: 999px !important;
+          border: 1px solid rgba(204,255,0,0.34) !important;
+          background:
+            radial-gradient(circle at 25% 18%, rgba(204,255,0,0.16), transparent 34%),
+            linear-gradient(180deg, rgba(10,13,18,0.96), rgba(3,5,8,0.98)) !important;
+          color: rgba(248,250,252,0.94) !important;
+          box-shadow:
+            0 0 22px rgba(204,255,0,0.18),
+            inset 0 1px 0 rgba(255,255,255,0.06) !important;
+          font-family: var(--mono) !important;
+          font-size: 9.5px !important;
+          font-weight: 900 !important;
+          letter-spacing: 0.13em !important;
+          text-transform: uppercase !important;
+          white-space: nowrap !important;
+          cursor: pointer !important;
+          position: relative !important;
+          z-index: 2147483002 !important;
+          appearance: none !important;
+          -webkit-appearance: none !important;
+        }}
+
+        .apex-mobile-field-guide-icon {{
+          color: #ccff00 !important;
+          font-size: 14px !important;
+          line-height: 1 !important;
+        }}
+
+        .field-guide-backdrop {{
+          z-index: 2147483003 !important;
+        }}
+
+        .field-guide-drawer {{
+          z-index: 2147483004 !important;
+          width: min(92vw, 430px) !important;
+          max-width: 92vw !important;
+          height: 100dvh !important;
+          overflow-y: auto !important;
+          -webkit-overflow-scrolling: touch !important;
+        }}
+
+        .field-guide-top {{
+          position: sticky !important;
+          top: 0 !important;
+          z-index: 2 !important;
+        }}
+
+        .field-guide-close {{
+          width: auto !important;
+          min-width: 96px !important;
+          height: 42px !important;
+          padding: 0 14px !important;
+          font-size: 0 !important;
+        }}
+
+        .field-guide-close::before {{
+          content: "← BACK" !important;
+          font-size: 10px !important;
+        }}
+
+        .summary-card {{
+          padding: 14px !important;
+          gap: 10px !important;
+        }}
+
+        .summary-value {{
+          font-size: clamp(22px, 7vw, 34px) !important;
+          line-height: 0.95 !important;
+        }}
+
+        .status-note {{
+          font-size: 10px !important;
+          line-height: 1.35 !important;
+        }}
+      }}
+
+      @media screen and (max-width: 420px) {{
+        .apex-mobile-field-guide-trigger {{
+          min-width: 128px !important;
+          max-width: 136px !important;
+          padding: 0 11px !important;
+          font-size: 8.5px !important;
+          letter-spacing: 0.11em !important;
+        }}
+      }}
+
+</style>
 </head>
 <body>
   <div class="field-guide-backdrop" data-close-field-guide></div>
