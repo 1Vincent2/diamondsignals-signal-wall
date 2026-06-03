@@ -321,6 +321,296 @@
   }
 }
 
+
+/* WAIVER_DESKTOP_FLOATING_FIELD_GUIDE_PILL_V1
+   Desktop-only Apex-style utility placement.
+   Keeps Field Guide out of document flow and aligned near the report shell edge. */
+@media (min-width:901px){
+  .waiver-field-guide-trigger{
+    position:fixed !important;
+    top:96px !important;
+    right:max(24px, calc((100vw - 1280px) / 2 + 24px)) !important;
+    z-index:1200 !important;
+    margin:0 !important;
+    width:auto !important;
+  }
+}
+
+
+
+/* WAIVER_MOBILE_HERO_TITLE_SPLIT_V1
+   Apex-style mobile title hierarchy:
+   primary title + smaller bold window subtitle. */
+@media(max-width:760px){
+  .mobile-waiver-hero h1{
+    font-size:42px !important;
+    line-height:1.05 !important;
+    letter-spacing:-0.055em !important;
+    margin-bottom:10px !important;
+  }
+
+  .mobile-waiver-window-title{
+    margin:0 0 20px !important;
+    color:#f8fafc !important;
+    font-size:18px !important;
+    line-height:1.1 !important;
+    font-weight:900 !important;
+    letter-spacing:-0.02em !important;
+  }
+}
+
+/* WAIVER_MOBILE_TOP_SAFE_AREA_AND_DRAWER_STACK_FIX_V1
+   Mobile-only correction.
+   Prevent the fixed Menu shell from covering the Waiver title area.
+   Keep Field Guide drawer/header/close control above the Menu layer while open. */
+@media(max-width:760px){
+  main{
+    padding-top:calc(52px + env(safe-area-inset-top)) !important;
+  }
+
+  .mobile-waiver-hero,
+  .desktop-waiver-hero{
+    scroll-margin-top:calc(100px + env(safe-area-inset-top)) !important;
+  }
+
+  .eyebrow{
+    display:block !important;
+    margin-top:0 !important;
+    padding-top:0 !important;
+  }
+
+  .waiver-field-guide-overlay{
+    z-index:30000 !important;
+  }
+
+  .waiver-field-guide-drawer{
+    z-index:30001 !important;
+    top:0 !important;
+    right:0 !important;
+    bottom:0 !important;
+    width:100vw !important;
+    max-width:none !important;
+    border-radius:0 !important;
+    transform:translateX(105%) !important;
+  }
+
+  .waiver-field-guide-drawer.open{
+    transform:translateX(0) !important;
+  }
+
+  .waiver-field-guide-head{
+    position:sticky !important;
+    top:0 !important;
+    z-index:3 !important;
+    min-height:118px !important;
+    padding:calc(20px + env(safe-area-inset-top)) 64px 18px 20px !important;
+    background:
+      radial-gradient(circle at 8% 0%, rgba(157,255,107,.16), transparent 34%),
+      linear-gradient(180deg, rgba(18,24,18,.99), rgba(5,8,10,.97)) !important;
+    border-bottom:1px solid rgba(157,255,107,.20) !important;
+  }
+
+  .waiver-field-guide-kicker{
+    display:block !important;
+  }
+
+  .waiver-field-guide-title{
+    display:block !important;
+    margin-top:8px !important;
+    font-size:28px !important;
+    line-height:1.05 !important;
+  }
+
+  .waiver-field-guide-close{
+    position:absolute !important;
+    top:calc(18px + env(safe-area-inset-top)) !important;
+    right:18px !important;
+    z-index:4 !important;
+    display:grid !important;
+    place-items:center !important;
+    width:40px !important;
+    height:40px !important;
+    border-radius:999px !important;
+    border:1px solid rgba(255,255,255,.20) !important;
+    background:rgba(255,255,255,.075) !important;
+    color:#f8fafc !important;
+    font-size:26px !important;
+    line-height:1 !important;
+  }
+
+  .waiver-field-guide-body{
+    height:calc(100% - 118px) !important;
+    padding:18px 20px calc(34px + env(safe-area-inset-bottom)) !important;
+    overflow:auto !important;
+  }
+
+  body.waiver-field-guide-open .ds-mobile-menu-trigger{
+    opacity:0 !important;
+    pointer-events:none !important;
+  }
+}
+
+
+/* WAIVER_MOBILE_FIELD_GUIDE_HEADER_RESTORE_V1
+   Restore visible Field Guide title/header and close X on mobile drawer. */
+@media(max-width:760px){
+  .waiver-field-guide-drawer{
+    display:flex !important;
+    flex-direction:column !important;
+    overflow:hidden !important;
+  }
+
+  .waiver-field-guide-head{
+    flex:0 0 auto !important;
+    display:flex !important;
+    align-items:flex-start !important;
+    justify-content:space-between !important;
+    position:relative !important;
+    min-height:136px !important;
+    padding:calc(34px + env(safe-area-inset-top)) 72px 22px 20px !important;
+    background:
+      radial-gradient(circle at 8% 0%, rgba(157,255,107,.18), transparent 34%),
+      linear-gradient(180deg, rgba(18,24,18,.99), rgba(5,8,10,.98)) !important;
+    border-bottom:1px solid rgba(157,255,107,.24) !important;
+    transform:none !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .waiver-field-guide-head > div{
+    display:block !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .waiver-field-guide-kicker{
+    display:block !important;
+    color:#9dff6b !important;
+    font-family:var(--mono) !important;
+    font-size:10px !important;
+    line-height:1.2 !important;
+    letter-spacing:.16em !important;
+    text-transform:uppercase !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .waiver-field-guide-title{
+    display:block !important;
+    margin:10px 0 0 !important;
+    color:#f8fafc !important;
+    font-size:30px !important;
+    line-height:1.05 !important;
+    letter-spacing:-.045em !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .waiver-field-guide-close{
+    position:absolute !important;
+    top:calc(30px + env(safe-area-inset-top)) !important;
+    right:18px !important;
+    z-index:10 !important;
+    display:grid !important;
+    place-items:center !important;
+    width:42px !important;
+    height:42px !important;
+    border-radius:999px !important;
+    border:1px solid rgba(255,255,255,.24) !important;
+    background:rgba(255,255,255,.09) !important;
+    color:#f8fafc !important;
+    font-size:30px !important;
+    line-height:1 !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .waiver-field-guide-body{
+    flex:1 1 auto !important;
+    height:auto !important;
+    overflow:auto !important;
+    padding:18px 20px calc(36px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+
+/* WAIVER_MOBILE_FIELD_GUIDE_HEADER_FINAL_LOCK_V1
+   Final mobile drawer header lock.
+   Pull header below device/shell collision zone and keep close X visible. */
+@media(max-width:760px){
+  .waiver-field-guide-drawer{
+    display:flex !important;
+    flex-direction:column !important;
+    padding-top:calc(54px + env(safe-area-inset-top)) !important;
+    overflow:hidden !important;
+  }
+
+  .waiver-field-guide-head{
+    position:relative !important;
+    flex:0 0 auto !important;
+    min-height:104px !important;
+    padding:18px 76px 20px 20px !important;
+    transform:none !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    overflow:visible !important;
+    background:
+      radial-gradient(circle at 8% 0%, rgba(157,255,107,.18), transparent 34%),
+      linear-gradient(180deg, rgba(18,24,18,.99), rgba(5,8,10,.98)) !important;
+    border-bottom:1px solid rgba(157,255,107,.24) !important;
+  }
+
+  .waiver-field-guide-kicker{
+    display:block !important;
+    margin:0 0 8px !important;
+    color:#9dff6b !important;
+    font-family:var(--mono) !important;
+    font-size:10px !important;
+    line-height:1.2 !important;
+    letter-spacing:.16em !important;
+    text-transform:uppercase !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .waiver-field-guide-title{
+    display:block !important;
+    margin:0 !important;
+    color:#f8fafc !important;
+    font-size:30px !important;
+    line-height:1.05 !important;
+    letter-spacing:-.045em !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .waiver-field-guide-close{
+    position:absolute !important;
+    top:18px !important;
+    right:18px !important;
+    z-index:20 !important;
+    display:grid !important;
+    place-items:center !important;
+    width:42px !important;
+    height:42px !important;
+    border-radius:999px !important;
+    border:1px solid rgba(255,255,255,.24) !important;
+    background:rgba(255,255,255,.09) !important;
+    color:#f8fafc !important;
+    font-size:30px !important;
+    line-height:1 !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .waiver-field-guide-body{
+    flex:1 1 auto !important;
+    height:auto !important;
+    overflow:auto !important;
+    padding:18px 20px calc(36px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
 /* WAIVER_FIELD_GUIDE_V1 */
 .waiver-field-guide-trigger{
   margin:16px 0 18px;
