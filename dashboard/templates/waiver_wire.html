@@ -611,6 +611,348 @@
   }
 }
 
+
+.waiver-shell-header,
+.waiver-desktop-hero-grid{
+  display:none;
+}
+
+/* WAIVER_DESKTOP_SIGNAL_WALL_HERO_GRID_V1
+   Desktop Signal Wall alignment pass:
+   completed header band, two-column hero, summary card, and desktop title hierarchy. */
+@media(min-width:901px){
+  .waiver-shell-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    margin:0 0 18px;
+    padding:18px 22px;
+    border:1px solid rgba(255,255,255,.08);
+    background:
+      radial-gradient(circle at 4% 50%, rgba(182,255,0,.16), transparent 22%),
+      linear-gradient(90deg, rgba(2,6,23,.94), rgba(2,8,14,.78));
+    box-shadow:inset 0 -1px 0 rgba(182,255,0,.12), 0 18px 60px rgba(0,0,0,.24);
+  }
+
+  .waiver-shell-brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  .waiver-shell-orb{
+    width:18px;
+    height:18px;
+    border-radius:999px;
+    background:#b6ff00;
+    box-shadow:0 0 18px rgba(182,255,0,.82), 0 0 42px rgba(182,255,0,.28);
+  }
+
+  .waiver-shell-brand strong{
+    display:block;
+    color:#f8fafc;
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+  }
+
+  .waiver-shell-brand span{
+    display:block;
+    margin-top:4px;
+    color:rgba(148,163,184,.82);
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+  }
+
+  .waiver-shell-live{
+    text-align:right;
+    color:#b6ff00;
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:900;
+    line-height:1.45;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+  }
+
+  .waiver-shell-live span{
+    display:block;
+    color:rgba(226,232,240,.72);
+    font-weight:700;
+    letter-spacing:.12em;
+  }
+
+  .waiver-desktop-hero-grid{
+    display:grid;
+    grid-template-columns:minmax(0,1.95fr) minmax(330px,.95fr);
+    gap:16px;
+    align-items:stretch;
+    margin:38px 0 22px;
+  }
+
+  .waiver-desktop-hero-copy,
+  .waiver-signal-summary-card{
+    border:1px solid rgba(255,255,255,.095);
+    border-radius:2px;
+    background:
+      radial-gradient(circle at 6% 0%, rgba(157,255,107,.08), transparent 34%),
+      linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.014)),
+      rgba(0,0,0,.24);
+    box-shadow:0 22px 70px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.05);
+  }
+
+  .waiver-desktop-hero-copy{
+    padding:34px 38px 36px;
+  }
+
+  .waiver-desktop-hero-copy .eyebrow{
+    margin:0 0 18px;
+    color:#9dff6b;
+    font-family:var(--mono);
+    font-size:13px;
+    font-weight:900;
+    letter-spacing:.24em;
+    text-transform:uppercase;
+  }
+
+  .desktop-waiver-hero h1{
+    margin:0;
+    color:#f8fafc;
+    font-size:48px;
+    line-height:.98;
+    letter-spacing:-.065em;
+    font-weight:850;
+  }
+
+  .waiver-desktop-subtitle{
+    margin:14px 0 0;
+    color:#f8fafc;
+    font-size:24px;
+    line-height:1.08;
+    letter-spacing:-.035em;
+    font-weight:900;
+  }
+
+  .desktop-waiver-hero .sub{
+    max-width:900px;
+    margin:22px 0 0;
+    color:rgba(229,231,235,.78);
+    font-size:17px;
+    line-height:1.5;
+  }
+
+  .desktop-waiver-hero .risk-disclaimer{
+    margin:22px 0 0;
+    max-width:980px;
+  }
+
+  .waiver-signal-summary-card{
+    position:relative;
+    padding:34px 34px 28px;
+    overflow:visible;
+  }
+
+  .waiver-summary-kicker{
+    color:rgba(148,163,184,.78);
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+  }
+
+  .waiver-summary-mode{
+    margin:8px 0 18px;
+    color:#f8fafc;
+    font-size:32px;
+    line-height:1;
+    letter-spacing:-.045em;
+    font-weight:900;
+    text-transform:uppercase;
+  }
+
+  .waiver-summary-list{
+    display:grid;
+    gap:12px;
+    margin-top:18px;
+  }
+
+  .waiver-summary-item span{
+    display:block;
+    color:rgba(148,163,184,.72);
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+  }
+
+  .waiver-summary-item b{
+    display:block;
+    margin-top:3px;
+    color:#f8fafc;
+    font-size:25px;
+    line-height:1.05;
+    letter-spacing:-.045em;
+  }
+
+  .waiver-summary-footer{
+    margin-top:22px;
+    padding-top:14px;
+    border-top:1px solid rgba(255,255,255,.12);
+    color:#9dff6b;
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+  }
+
+  .waiver-summary-guide{
+    position:absolute !important;
+    right:-42px !important;
+    top:72px !important;
+    z-index:20 !important;
+    margin:0 !important;
+    width:auto !important;
+    min-height:44px !important;
+    padding:0 18px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    white-space:nowrap !important;
+  }
+
+  .waiver-shell-header + .topnav,
+  .waiver-shell-header ~ .topnav{
+    margin-top:0;
+  }
+}
+
+
+/* WAIVER_DESKTOP_SIGNAL_WALL_HERO_REFINEMENT_V2
+   Desktop-only refinement after Signal Wall hero grid install.
+   Adjust title weight/spacing, remove duplicate floating Field Guide, soften WIRE card type,
+   and restore two-column desktop player grid. */
+@media(min-width:901px){
+  .desktop-waiver-hero h1{
+    font-size:48px !important;
+    line-height:1.02 !important;
+    letter-spacing:-0.035em !important;
+    font-weight:760 !important;
+  }
+
+  .waiver-desktop-subtitle{
+    font-size:24px !important;
+    line-height:1.1 !important;
+    letter-spacing:-0.018em !important;
+    font-weight:800 !important;
+  }
+
+  .waiver-summary-mode{
+    font-size:30px !important;
+    line-height:1 !important;
+    letter-spacing:-0.02em !important;
+    font-weight:760 !important;
+  }
+
+  /* Hide the old standalone desktop Field Guide trigger.
+     Keep only the summary-card Field Guide pill on desktop. */
+  main.shell > .waiver-field-guide-trigger:not(.waiver-summary-guide){
+    display:none !important;
+  }
+
+  #waiverAssetGrid.grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    align-items:start !important;
+  }
+
+  .frozen-grid.grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    align-items:start !important;
+  }
+
+  .asset-card{
+    min-width:0 !important;
+  }
+}
+
+
+/* WAIVER_DESKTOP_FIELD_GUIDE_FLOAT_EDGE_FIX_V1
+   Desktop-only: make the Signal Summary Field Guide pill float off the card edge
+   like the Signal Wall reference. */
+@media(min-width:901px){
+  main.shell,
+  .waiver-desktop-hero-grid,
+  .waiver-signal-summary-card{
+    overflow:visible !important;
+  }
+
+  .waiver-signal-summary-card .waiver-summary-guide{
+    position:absolute !important;
+    top:72px !important;
+    right:0 !important;
+    transform:translateX(50%) !important;
+    z-index:50 !important;
+    margin:0 !important;
+    width:auto !important;
+    min-height:44px !important;
+    padding:0 20px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    white-space:nowrap !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,.10),
+      0 0 22px rgba(182,255,0,.24),
+      0 0 44px rgba(182,255,0,.12),
+      inset 0 1px 0 rgba(255,255,255,.08) !important;
+  }
+
+  main.shell > .waiver-field-guide-trigger:not(.waiver-summary-guide){
+    display:none !important;
+  }
+}
+
+
+/* WAIVER_DESKTOP_FIELD_GUIDE_IN_CARD_FINAL_V1
+   Desktop-only final placement.
+   Keep Field Guide inside the Signal Summary card as a stable card action. */
+@media(min-width:901px){
+  .waiver-signal-summary-card{
+    overflow:hidden !important;
+  }
+
+  .waiver-signal-summary-card .waiver-summary-guide{
+    position:absolute !important;
+    right:34px !important;
+    top:86px !important;
+    transform:none !important;
+    z-index:20 !important;
+    margin:0 !important;
+    width:auto !important;
+    min-height:42px !important;
+    padding:0 18px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    white-space:nowrap !important;
+    border-radius:999px !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,.10),
+      0 0 18px rgba(182,255,0,.18),
+      inset 0 1px 0 rgba(255,255,255,.08) !important;
+  }
+
+  main.shell > .waiver-field-guide-trigger:not(.waiver-summary-guide){
+    display:none !important;
+  }
+}
+
 /* WAIVER_FIELD_GUIDE_V1 */
 .waiver-field-guide-trigger{
   margin:16px 0 18px;
@@ -1156,23 +1498,69 @@ body.waiver-field-guide-open{
   {{ shell_nav | safe }}
 
   <main class="shell">
-    <div class="eyebrow">WAIVER WIRE // OPEN MARKET</div>
+      <section class="waiver-shell-header" aria-label="DiamondSignals Waiver Wire header">
+        <div class="waiver-shell-brand">
+          <i class="waiver-shell-orb" aria-hidden="true"></i>
+          <div>
+            <strong>DIAMONDSIGNALS</strong>
+            <span>Signal Wall // Open Market Chassis</span>
+          </div>
+        </div>
+        <div class="waiver-shell-live">
+          ● LIVE
+          <span>{{ generated_at }}</span>
+        </div>
+      </section>
 
-      <div class="desktop-waiver-hero">
-    <h1>Unrostered Assets. Mispriced Physics. The 72-Hour Window.</h1>
+      <section class="waiver-desktop-hero-grid">
+        <div class="waiver-desktop-hero-copy">
+          <div class="eyebrow">WAIVER WIRE // OPEN MARKET</div>
 
-    <p class="sub">
-      This surface scans low-rostered assets whose market price hasn’t caught up to elite underlying shifts in movement,
-      command, and bat-path mechanics.
-    </p>
-      </div>
+          <div class="desktop-waiver-hero">
+            <h1>Unrostered Assets</h1>
+            <div class="waiver-desktop-subtitle">Mispriced Physics. The 72-Hour Window.</div>
 
-      <p class="risk-disclaimer">
-        <strong>Model Parameters &amp; Edge Limitations:</strong>
-        This surface operates on pure, unadulterated performance physics. It does not ingest fluid qualitative variables like day-to-day injuries,
-        late-scratch medicals, or sudden managerial whims. Because the 72-hour window moves faster than official injury reporting infrastructure,
-        users must cross-reference health status before committing capital. The data shows you who is breaking out; your job is to verify they are on the field.
-      </p>
+            <p class="sub">
+              This surface scans low-rostered assets whose market price hasn’t caught up to elite underlying shifts in movement,
+              command, and bat-path mechanics.
+            </p>
+          </div>
+
+          <p class="risk-disclaimer">
+            <strong>Model Parameters &amp; Edge Limitations:</strong>
+            This surface operates on pure, unadulterated performance physics. It does not ingest fluid qualitative variables like day-to-day injuries,
+            late-scratch medicals, or sudden managerial whims. Because the 72-hour window moves faster than official injury reporting infrastructure,
+            users must cross-reference health status before committing capital. The data shows you who is breaking out; your job is to verify they are on the field.
+          </p>
+        </div>
+
+        <aside class="waiver-signal-summary-card" aria-label="Waiver Wire signal summary">
+          <div class="waiver-summary-kicker">MODE</div>
+          <div class="waiver-summary-mode">WIRE</div>
+
+          <div class="waiver-summary-list">
+            <div class="waiver-summary-item">
+              <span>Candidates</span>
+              <b>{{ assets|length }}</b>
+            </div>
+            <div class="waiver-summary-item">
+              <span>Window</span>
+              <b>72H</b>
+            </div>
+            <div class="waiver-summary-item">
+              <span>Ownership Gate</span>
+              <b>≤20%</b>
+            </div>
+          </div>
+
+          <div class="waiver-summary-footer">OPEN_MARKET // PHYSICS-FIRST ACTIVE</div>
+
+          <button class="waiver-field-guide-trigger waiver-summary-guide" type="button" onclick="openWaiverFieldGuide()" aria-controls="waiverFieldGuide" aria-expanded="false">
+            FIELD GUIDE
+          </button>
+        </aside>
+      </section>
+
 
 
       <div class="mobile-waiver-hero">
@@ -1359,40 +1747,98 @@ body.waiver-field-guide-open{
     </div>
 
     <div class="waiver-field-guide-body">
+      
+      <!-- WAIVER_FIELD_GUIDE_COMPLETE_METRIC_LEGEND_V1 -->
       <section class="waiver-field-guide-card">
         <div class="waiver-field-guide-label"><i class="guide-dot ownership"></i> Ownership Gate</div>
-        <p>The availability filter. Lower ownership means a wider acquisition window. Higher ownership means the market is already starting to absorb the asset.</p>
+        <p>The roster-availability filter. Lower ownership means the market has not fully absorbed the player yet. The Waiver surface focuses on assets that are still broadly actionable before public demand catches up.</p>
       </section>
 
       <section class="waiver-field-guide-card">
         <div class="waiver-field-guide-label"><i class="guide-dot window"></i> Signal Window</div>
-        <p>The urgency band. <strong>72H</strong> means move quickly. <strong>96H</strong> allows monitoring. <strong>7D</strong> is a slower stash window.</p>
+        <p>The urgency clock. <strong>72H</strong> means the asset may need action quickly. <strong>96H</strong> allows a little more monitoring. <strong>7D</strong> is a slower stash or surveillance window.</p>
       </section>
 
       <section class="waiver-field-guide-card">
         <div class="waiver-field-guide-label"><i class="guide-dot type"></i> Asset Type</div>
-        <p>Separates Arms from Bats so the operator balances roster construction instead of blindly chasing every signal.</p>
+        <p>Classifies the player as an <strong>Arm</strong>, <strong>Bat</strong>, or other roster asset type so the operator can balance needs instead of blindly chasing every signal.</p>
       </section>
 
       <section class="waiver-field-guide-card">
         <div class="waiver-field-guide-label"><i class="guide-dot defect"></i> Market Defect</div>
-        <p>The reason the asset is still mispriced: ERA Lag, Role Fog, Command Discount, Role Block, Contact Discount, Call-Up Lag, or similar public-market hesitation.</p>
+        <p>The reason the asset remains mispriced. Examples include <strong>Market Lag</strong>, ERA lag, role fog, command discount, role block, contact discount, call-up lag, or public hesitation around recent volatility.</p>
       </section>
 
       <section class="waiver-field-guide-card">
         <div class="waiver-field-guide-label"><i class="guide-dot command"></i> Command</div>
-        <p>The roster behavior: <strong>Claim</strong>, <strong>Add</strong>, <strong>Stash</strong>, <strong>Track</strong>, or <strong>Monitor</strong>.</p>
+        <p>The roster instruction generated from the signal. <strong>Claim</strong>, <strong>Add</strong>, <strong>Stash</strong>, <strong>Track</strong>, and <strong>Monitor</strong> indicate escalating or reduced action intensity.</p>
       </section>
 
       <section class="waiver-field-guide-card">
         <div class="waiver-field-guide-label"><i class="guide-dot risk"></i> Risk</div>
-        <p>Exposure sizing. Medium can justify stronger action. High means volatility weapon, not blind acquisition.</p>
+        <p>Exposure sizing. <strong>Low</strong> is cleaner. <strong>Medium</strong> can justify action if the role is clear. <strong>High</strong> means volatility weapon, not blind acquisition.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Primary Command</div>
+        <p>The top-level board instruction for the current Waiver scan. Example: <strong>Priority Waiver Claim</strong> means the surface is finding assets that may justify active claim consideration.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Shark Window</div>
+        <p>The current market-timing window for the board. This is the period where public ownership, role clarity, or box-score recognition may still lag the underlying signal.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Operational Status</div>
+        <p>The deployment-readiness readout. <strong>Deployment Clear</strong> means the card is eligible for active consideration. Locked, frozen, or surveillance states mean the signal exists but action may be blocked.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Body / Roster State</div>
+        <p>The current availability/roster condition used by the surface. <strong>Active</strong> means the player is not blocked by the known status layer. Always cross-check late injury, lineup, and transaction news before acting.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Status Source</div>
+        <p>The provenance of the status readout. <strong>Candidate File</strong> means the player came from the dynamic Waiver candidate intake file / upstream signal candidate pool. It is not a static demo fixture. Treat it as verified candidate sourcing, but still confirm current MLB roster, injury, and role context before deployment.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Surface Suppression</div>
+        <p>The reason the public market may still be discounting the asset. This can include weak box-score optics, low roster percentage, role uncertainty, recent volatility, or delayed market recognition.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Forensic Trigger</div>
+        <p>The underlying reason the asset entered the open-market candidate pool. This may come from Signal Wall, Apex Extraction, movement, command, bat-path, role, or other physics-first signals.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Market Read</div>
+        <p>The final plain-English diagnosis tying the metrics together. It explains why the asset is actionable, trackable, blocked, or only suitable for surveillance.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Watchlist Provision</div>
+        <p>The staging instruction. Use this when the asset deserves tracking or roster-terminal attention, but may not yet justify a direct roster move.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Performance Audit</div>
+        <p>The deeper player-level evidence trail. The audit link should open the player’s underlying signal dossier so the operator can inspect the supporting data before acting.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Frozen Signals</div>
+        <p>Players with signal value but blocked deployment. These remain useful for surveillance, but should not be treated as clean acquisition targets until the operational status clears.</p>
       </section>
 
       <section class="waiver-field-guide-card">
         <div class="waiver-field-guide-label">Surface Strategy</div>
         <p>Prioritize cards where the market defect is temporary, the signal window is short, and the command is stronger than public ownership implies. The edge is the mismatch between hidden physics and public hesitation.</p>
       </section>
+
     </div>
   </aside>
 
