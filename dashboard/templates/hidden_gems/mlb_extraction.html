@@ -246,6 +246,256 @@
     }
 
     
+
+/* MLB_EXTRACTION_MOBILE_APEX_STYLE_FIELD_GUIDE_V1
+   Mobile-only: match Apex mobile Field Guide treatment.
+   Sticky bottom-right pill, slightly smaller than Menu, high glow, no section-level duplicate buttons. */
+@media(max-width:760px){
+  .summary-card .mlb-extraction-summary-guide{
+    position:fixed !important;
+    right:18px !important;
+    bottom:calc(18px + env(safe-area-inset-bottom)) !important;
+    z-index:1400 !important;
+    width:auto !important;
+    max-width:max-content !important;
+    min-width:0 !important;
+    height:44px !important;
+    min-height:44px !important;
+    padding:0 16px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    border-radius:999px !important;
+    border:1px solid rgba(182,255,0,0.58) !important;
+    background:
+      radial-gradient(circle at 18% 50%, rgba(182,255,0,0.16), transparent 42%),
+      rgba(7,10,14,0.94) !important;
+    color:rgba(247,248,250,0.98) !important;
+    font-family:var(--mono) !important;
+    font-size:10px !important;
+    font-weight:900 !important;
+    letter-spacing:0.14em !important;
+    text-transform:uppercase !important;
+    white-space:nowrap !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.10),
+      0 0 18px rgba(182,255,0,0.22),
+      0 0 34px rgba(182,255,0,0.10),
+      inset 0 1px 0 rgba(255,255,255,0.08) !important;
+  }
+
+  .summary-card .mlb-extraction-summary-guide:active{
+    transform:scale(0.98);
+    border-color:rgba(182,255,0,0.76) !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.18),
+      0 0 24px rgba(182,255,0,0.28),
+      inset 0 1px 0 rgba(255,255,255,0.10) !important;
+  }
+
+  .section-head-actions .field-guide-btn:not(.mlb-extraction-summary-guide){
+    display:none !important;
+  }
+}
+
+
+
+
+/* MLB_EXTRACTION_MOBILE_FIELD_GUIDE_DRAWER_HEADER_SAFE_OFFSET_V2
+   Mobile-only: lower drawer header content below the fixed mobile shell/safe-area band.
+   Keeps the close X visible and prevents title clipping. */
+@media(max-width:760px){
+  .drawer-panel.open .drawer-head{
+    min-height:172px !important;
+    padding:
+      calc(82px + env(safe-area-inset-top))
+      72px
+      22px
+      20px !important;
+  }
+
+  .drawer-panel.open .drawer-kicker{
+    display:block !important;
+    margin:0 0 8px !important;
+    font-size:10px !important;
+    line-height:1.15 !important;
+  }
+
+  .drawer-panel.open .drawer-title{
+    display:block !important;
+    margin:0 !important;
+    font-size:28px !important;
+    line-height:1.05 !important;
+    letter-spacing:-0.045em !important;
+  }
+
+  .drawer-panel.open .drawer-close{
+    top:calc(82px + env(safe-area-inset-top)) !important;
+    right:18px !important;
+  }
+
+  .drawer-panel.open .guide-intro{
+    margin-top:18px !important;
+  }
+}
+
+/* MLB_EXTRACTION_MOBILE_FIELD_GUIDE_DRAWER_STACK_FIX_V1
+   Mobile-only: keep Field Guide drawer/header/close control above fixed Menu shell.
+   Mirrors the Apex mobile drawer stack correction. */
+@media(max-width:760px){
+  .drawer-overlay{
+    z-index:30000 !important;
+  }
+
+  .drawer-panel{
+    z-index:30001 !important;
+    top:0 !important;
+    right:0 !important;
+    bottom:0 !important;
+    width:100vw !important;
+    max-width:none !important;
+    border-radius:0 !important;
+    transform:translateX(105%) !important;
+    overflow:hidden !important;
+  }
+
+  .drawer-panel.open{
+    transform:translateX(0) !important;
+  }
+
+  .drawer-head{
+    position:sticky !important;
+    top:0 !important;
+    z-index:3 !important;
+    min-height:118px !important;
+    padding:calc(20px + env(safe-area-inset-top)) 64px 18px 20px !important;
+    background:
+      radial-gradient(circle at 8% 0%, rgba(157,255,107,.16), transparent 34%),
+      linear-gradient(180deg, rgba(18,24,18,.99), rgba(5,8,10,.97)) !important;
+    border-bottom:1px solid rgba(157,255,107,.20) !important;
+  }
+
+  .drawer-title-wrap{
+    display:block !important;
+    min-width:0 !important;
+    padding-right:0 !important;
+  }
+
+  .drawer-kicker{
+    display:block !important;
+  }
+
+  .drawer-title{
+    display:block !important;
+    margin-top:8px !important;
+    font-size:28px !important;
+    line-height:1.05 !important;
+  }
+
+  .drawer-close{
+    position:absolute !important;
+    top:calc(18px + env(safe-area-inset-top)) !important;
+    right:18px !important;
+    z-index:4 !important;
+    display:grid !important;
+    place-items:center !important;
+    width:42px !important;
+    height:42px !important;
+    border-radius:999px !important;
+    border:1px solid rgba(255,255,255,.24) !important;
+    background:rgba(255,255,255,.09) !important;
+    color:#f8fafc !important;
+    font-size:0 !important;
+    line-height:1 !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .drawer-close::before{
+    content:"×";
+    font-size:30px;
+    line-height:1;
+  }
+
+  .guide-intro,
+  .guide-list{
+    position:relative !important;
+    z-index:1 !important;
+  }
+
+  .drawer-panel.open ~ .mlb-extraction-mobile-guide,
+  body.drawer-open .mlb-extraction-mobile-guide,
+  body.glossary-open .mlb-extraction-mobile-guide{
+    opacity:0 !important;
+    pointer-events:none !important;
+  }
+
+  body:has(.drawer-panel.open) .ds-mobile-menu-trigger{
+    opacity:0 !important;
+    pointer-events:none !important;
+  }
+}
+
+/* MLB_EXTRACTION_MOBILE_APEX_STYLE_FIELD_GUIDE_BUTTON_V2
+   Mobile-only Apex match:
+   dedicated glowing Field Guide pill, fixed bottom-right over content.
+   Desktop summary-card Field Guide remains unchanged. */
+.mlb-extraction-mobile-guide{
+  display:none;
+}
+
+@media(max-width:760px){
+  .mlb-extraction-mobile-guide{
+    position:fixed !important;
+    right:18px !important;
+    bottom:calc(92px + env(safe-area-inset-bottom)) !important;
+    z-index:1400 !important;
+    width:auto !important;
+    max-width:max-content !important;
+    min-width:0 !important;
+    height:44px !important;
+    min-height:44px !important;
+    padding:0 16px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    border-radius:999px !important;
+    border:1px solid rgba(182,255,0,0.58) !important;
+    background:
+      radial-gradient(circle at 18% 50%, rgba(182,255,0,0.16), transparent 42%),
+      rgba(7,10,14,0.94) !important;
+    color:rgba(247,248,250,0.98) !important;
+    font-family:var(--mono) !important;
+    font-size:10px !important;
+    font-weight:900 !important;
+    letter-spacing:0.14em !important;
+    text-transform:uppercase !important;
+    white-space:nowrap !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.10),
+      0 0 18px rgba(182,255,0,0.22),
+      0 0 34px rgba(182,255,0,0.10),
+      inset 0 1px 0 rgba(255,255,255,0.08) !important;
+  }
+
+  .mlb-extraction-mobile-guide:active{
+    transform:scale(0.98);
+    border-color:rgba(182,255,0,0.76) !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.18),
+      0 0 24px rgba(182,255,0,0.28),
+      inset 0 1px 0 rgba(255,255,255,0.10) !important;
+  }
+
+  .summary-card .mlb-extraction-summary-guide{
+    display:none !important;
+  }
+
+  .section-head-actions .field-guide-btn{
+    display:none !important;
+  }
+}
+
 /* MLB_EXTRACTION_DESKTOP_FIELD_GUIDE_IN_SUMMARY_CARD_V1
    Desktop-only correction.
    Place Field Guide inside the MLB Extraction summary card and remove section-level Operator Guide pills on desktop.
@@ -1602,6 +1852,11 @@
           <button type="button" class="field-guide-btn mlb-extraction-summary-guide" onclick="openGlossary()">Field Guide</button>
       </div>
     </section>
+
+    <button type="button" class="field-guide-btn mlb-extraction-mobile-guide" onclick="openGlossary()" aria-controls="glossaryDrawer" aria-expanded="false">
+      Field Guide
+    </button>
+
 
     <section class="section">
       <div class="section-head">
