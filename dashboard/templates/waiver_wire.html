@@ -303,6 +303,24 @@
       .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
   
+
+/* WAIVER_MOBILE_STICKY_FIELD_GUIDE_PILL_V2
+   Mobile-only fixed utility placement.
+   Field Guide stays accessible while scrolling without competing with the hero. */
+@media(max-width:760px){
+  .waiver-field-guide-trigger{
+    position:fixed !important;
+    right:18px !important;
+    bottom:calc(18px + env(safe-area-inset-bottom)) !important;
+    z-index:1400 !important;
+    margin:0 !important;
+    width:auto !important;
+    min-height:44px !important;
+    padding:0 16px !important;
+    border-radius:999px !important;
+  }
+}
+
 /* WAIVER_FIELD_GUIDE_V1 */
 .waiver-field-guide-trigger{
   margin:16px 0 18px;
@@ -499,11 +517,41 @@ body.waiver-field-guide-open{
 }
 
 @media(max-width:900px){
-  .waiver-field-guide-trigger{
-    width:100%;
-    justify-content:center;
-    margin:14px 0 16px;
-  }
+    /* WAIVER_MOBILE_MENU_MATCHED_FIELD_GUIDE_V1
+       Match the mobile Field Guide trigger to the global Menu pill behavior.
+       Do not let Field Guide become a full-width primary CTA on mobile. */
+    .waiver-field-guide-trigger{
+      width:auto;
+      min-height:46px;
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      margin:14px 0 16px;
+      padding:0 18px;
+      border-radius:999px;
+      border:1px solid rgba(182,255,0,0.58);
+      background:
+        radial-gradient(circle at 18% 50%, rgba(182,255,0,0.16), transparent 42%),
+        rgba(7,10,14,0.94);
+      color:rgba(247,248,250,0.98);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:0.14em;
+      box-shadow:
+        0 0 0 1px rgba(182,255,0,0.10),
+        0 0 18px rgba(182,255,0,0.22),
+        0 0 34px rgba(182,255,0,0.10),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    .waiver-field-guide-trigger:active{
+      transform:scale(0.98);
+      border-color:rgba(182,255,0,0.76);
+      box-shadow:
+        0 0 0 1px rgba(182,255,0,0.18),
+        0 0 24px rgba(182,255,0,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.10);
+    }
 
   .waiver-field-guide-drawer{
     top:0;
@@ -617,6 +665,47 @@ body.waiver-field-guide-open{
   color:#9dff6b;
 }
 @media (max-width: 720px){
+
+  /* WAIVER_FIELD_GUIDE_DRAWER_CLOSE_FIX_V1
+     Defensive Apex-style close control lock.
+     Prevent close X from dropping under title or inheriting card/button artifacts. */
+  .waiver-field-guide-head{
+    position:relative;
+    padding-right:64px;
+  }
+
+  .waiver-field-guide-close{
+    position:absolute;
+    top:16px;
+    right:18px;
+    width:34px;
+    height:34px;
+    display:grid;
+    place-items:center;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.045);
+    color:#f8fafc;
+    box-shadow:none;
+    cursor:pointer;
+    font-size:20px;
+    line-height:1;
+  }
+
+  /* WAIVER_FIELD_GUIDE_CLOSED_STATE_LOCK_V1
+     Keep overlay inert while closed and body scroll locked only while drawer is open. */
+  .waiver-field-guide-overlay{
+    pointer-events:none;
+  }
+
+  .waiver-field-guide-overlay.open{
+    pointer-events:auto;
+  }
+
+  body.waiver-field-guide-open{
+    overflow:hidden;
+  }
+
   .player-lookup-panel{
     display:block;
     position:sticky;
