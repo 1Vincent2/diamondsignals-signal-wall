@@ -245,7 +245,46 @@
       transition: 160ms ease;
     }
 
-    .field-guide-btn:hover {
+    
+/* MLB_EXTRACTION_DESKTOP_FIELD_GUIDE_IN_SUMMARY_CARD_V1
+   Desktop-only correction.
+   Place Field Guide inside the MLB Extraction summary card and remove section-level Operator Guide pills on desktop.
+   Mobile is intentionally untouched. */
+@media(min-width:901px){
+  .summary-card{
+    position:relative;
+    overflow:hidden;
+  }
+
+  .summary-card .mlb-extraction-summary-guide{
+    position:absolute;
+    right:18px;
+    top:18px;
+    z-index:20;
+    min-height:42px;
+    padding:0 18px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-color:rgba(182,255,0,0.34);
+    background:
+      radial-gradient(circle at 18% 50%, rgba(182,255,0,0.12), transparent 42%),
+      rgba(7,10,14,0.72);
+    color:rgba(247,248,250,0.98);
+    font-weight:900;
+    letter-spacing:0.12em;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.08),
+      0 0 18px rgba(182,255,0,0.14),
+      inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+
+  .section-head-actions .field-guide-btn{
+    display:none !important;
+  }
+}
+
+.field-guide-btn:hover {
       color: var(--text);
       border-color: rgba(106,166,255,0.20);
       background: rgba(106,166,255,0.06);
@@ -1538,6 +1577,7 @@
         </p>
       </div>
 
+
       <div class="summary-card">
         <div>
           <div class="summary-label">Mode</div>
@@ -1558,6 +1598,8 @@
         <div class="summary-mini">
           Buy-low lens: strong underlying traits, weaker visible results, and market-attention feed not yet wired.
         </div>
+
+          <button type="button" class="field-guide-btn mlb-extraction-summary-guide" onclick="openGlossary()">Field Guide</button>
       </div>
     </section>
 
@@ -1852,68 +1894,127 @@
     <div class="drawer-head">
       <div class="drawer-title-wrap">
         <div class="drawer-kicker">MLB Extraction Ledger // Field Guide</div>
-        <h2 class="drawer-title">How To Use This Board</h2>
+        <h2 class="drawer-title">Extraction Ledger Protocol</h2>
       </div>
       <button type="button" class="drawer-close" onclick="closeGlossary()">Close</button>
     </div>
-
-    <div class="guide-intro">
-      <div class="guide-intro-title">Read This In 10 Seconds</div>
-      <div class="guide-intro-copy">
-        Start with the Extraction Score, then audit Physics Core, Market Gap, and Public Exposure. The objective is to identify where the surface line is lagging the underlying profile.
-      </div>
-    </div>
-
-    <div class="guide-list">
-      <div class="guide-item">
-        <div class="guide-term">MLB Extraction</div>
-        <div class="guide-def">An active MLB player whose underlying profile is stronger than public-facing results and current market attention imply.</div>
+      <div class="guide-intro">
+        <div class="guide-intro-title">Read This In 10 Seconds</div>
+        <div class="guide-intro-copy">
+          Start with the Extraction Score, then audit Physics Core, Market Gap, Market Attention Feed, Diagnosis, and the Extraction Thesis.
+          The objective is to identify big-league players whose underlying signal is moving before broader market recognition corrects.
+        </div>
       </div>
 
-      <div class="guide-item">
-        <div class="guide-term">Latent Alpha</div>
-        <div class="guide-def">Unpriced upside. This appears when strong underlying indicators have not yet translated into broad market belief.</div>
+      <div class="guide-list">
+        <!-- MLB_EXTRACTION_FIELD_GUIDE_COMPLETE_METRIC_LEGEND_V1 -->
+
+        <div class="guide-item">
+          <div class="guide-term">MLB Extraction Ledger</div>
+          <div class="guide-def">The active big-league exploitation surface. It identifies MLB players whose underlying physical or skill profile is stronger than the visible public line implies.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">Extraction Score</div>
+          <div class="guide-def">The top-line conviction score. It blends underlying skill quality, gap between signal and surface results, and remaining market hesitation. Higher scores deserve first audit.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">Physics Core</div>
+          <div class="guide-def">The strength of the underlying player signal before the box score fully reflects it. For pitchers, this can include whiff support, velocity quality, extension, command shape, or pitch traits. For hitters, it can include damage quality, discipline, contact-path, barrel support, and role-backed impact indicators.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">Market Gap</div>
+          <div class="guide-def">The distance between the underlying signal and public-facing perception. A positive gap means the profile may be stronger than the current surface line, roster market, or recent box score suggests.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">Market Attention Feed</div>
+          <div class="guide-def">The public-recognition layer: ownership movement, adds/drops, watchlist activity, and market pressure. When shown as <strong>Feed Offline</strong>, the physics signal is active but the public-attention feed is not yet wired for that card.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">Pitcher Extractions</div>
+          <div class="guide-def">Pitchers whose internal signal is firmer than the visible line. These cards often come from whiff lift, velocity movement, extension gain, command improvement, workload stabilization, or trend confirmation.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">Hitter Extractions</div>
+          <div class="guide-def">Hitters whose underlying offensive traits are ahead of public pricing. These cards often come from barrel movement, plate-discipline gain, contact-path improvement, damage quality, or role expansion.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">Diagnosis</div>
+          <div class="guide-def">The machine-read reason the player surfaced. Examples include whiff lift, velocity jump, extension gain, trend confirmation, barrel jump, discipline gain, or watchlist-grade accumulation.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">Ballistics vs Surface</div>
+          <div class="guide-def">The visual proof strip. It compares internal movement/quality against visible surface results. Rising or glowing movement means the hidden signal is separating from stale public perception.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">Primary Extraction</div>
+          <div class="guide-def">The leading candidate in the section. This is the first asset to audit, not an automatic roster command.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">Mode: Edge</div>
+          <div class="guide-def">The surface is operating in exploitation mode: looking for player profiles where actionable signal exists before public pricing fully adjusts.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">Source Window</div>
+          <div class="guide-def">The date range used by the build. It tells the operator what sample window the board is using to rank the current extraction candidates.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">K/BB</div>
+          <div class="guide-def">Strikeout-to-walk ratio. For pitchers, it is a command and dominance read. It helps separate real skill movement from noisy short-sample production.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">BABIP</div>
+          <div class="guide-def">Batting average on balls in play. It helps identify whether recent results may be inflated, suppressed, or distorted by batted-ball luck and defensive context.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">BF</div>
+          <div class="guide-def">Batters faced. A pitcher sample-size and workload context metric. Larger samples give more stability; smaller samples require more caution.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">Season</div>
+          <div class="guide-def">The season context attached to the statistical layer. This helps distinguish current-year signal from older baseline information.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">Initiate Tracking</div>
+          <div class="guide-def">A staging action. The player should be monitored in the tracking/watchlist workflow before deciding whether to deploy, hold, ignore, or escalate.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">Performance Audit</div>
+          <div class="guide-def">The deeper player-level evidence trail. Use this before acting on a card so the supporting signal can be inspected directly.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">Extraction Thesis</div>
+          <div class="guide-def">The plain-English reason the card exists. It ties together score, diagnosis, physics, market gap, and visible surface lag.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">Public Exposure</div>
+          <div class="guide-def">Legacy market-visibility language from the original extraction model. In the current MLB Extraction surface, this concept is represented mainly through Market Attention Feed.</div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-term">How To Use This Board</div>
+          <div class="guide-def">Audit in order: Extraction Score, Physics Core, Market Gap, Market Attention Feed, Ballistics vs Surface, and Extraction Thesis. The edge is the mismatch between hidden signal movement and delayed public recognition.</div>
+        </div>
       </div>
 
-      <div class="guide-item">
-        <div class="guide-term">Ballistic Breakout</div>
-        <div class="guide-def">A profile where movement, shape, impact quality, or damage support points toward a stronger future result set than the current surface line implies.</div>
-      </div>
-
-      <div class="guide-item">
-        <div class="guide-term">Market Gap</div>
-        <div class="guide-def">The gap between stronger underlying traits and weaker visible outcomes. This is the core extraction lens.</div>
-      </div>
-
-      <div class="guide-item">
-        <div class="guide-term">Under-the-Hood Elite</div>
-        <div class="guide-def">A player whose deeper support metrics look stronger than their current public perception or box-score line.</div>
-      </div>
-
-      <div class="guide-item">
-        <div class="guide-term">Physics Core</div>
-        <div class="guide-def">The quality of the underlying profile. For pitchers this may include carry, whiff support, and velocity. For hitters this may include impact, power shape, and damage support.</div>
-      </div>
-
-      <div class="guide-item">
-        <div class="guide-term">Market Gap</div>
-        <div class="guide-def">A measure of how much the current visible results still lag the deeper profile.</div>
-      </div>
-
-      <div class="guide-item">
-        <div class="guide-term">Public Exposure</div>
-        <div class="guide-def">A rough estimate of how early the market still appears to be relative to the player’s underlying quality.</div>
-      </div>
-
-      <div class="guide-item">
-        <div class="guide-term">Ballistics vs Surface</div>
-        <div class="guide-def">This area frames the relationship between rising skill support and slower-moving public results. It is meant to help you spot profiles where the market may still be late.</div>
-      </div>
-
-      <div class="guide-item">
-        <div class="guide-term">How To Use This Board</div>
-        <div class="guide-def">Use this page to isolate extraction candidates, not already-obvious stars. The best names here combine strong underlying support, visible underperformance, and still-manageable public exposure.</div>
-      </div>
     </div>
   </aside>
 
