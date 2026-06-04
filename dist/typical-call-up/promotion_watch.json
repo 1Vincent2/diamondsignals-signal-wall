@@ -2,15 +2,15 @@
   "report": "Promotion Watch",
   "subtitle": "AAA Movement Zone / Call-Up Surveillance",
   "version": "promotion_watch_v0.1",
-  "generated_at": "2026-06-04 05:36 PM",
+  "generated_at": "2026-06-04 07:31 PM",
   "timezone": "America/New_York",
   "status": "fresh",
   "mode": "dynamic_promotion_watch_v0.1_hardened",
-  "source_updated_at": "2026-06-04T21:36:39.781856+00:00",
+  "source_updated_at": "2026-06-04T23:31:28.752071+00:00",
   "pipeline_layers": [
     "dynamic_aaa_movement_feed",
     "dynamic_recent_mlb_arrivals_feed",
-    "depth_radar_source_locked",
+    "aaa_gems_source_locked",
     "freshness_status_tracked",
     "aaa_weekly_window_age_guard",
     "section_count_validation",
@@ -22,8 +22,8 @@
     "Placeholder language in the template is limited to empty-state UI messaging.",
     "Freshness, degraded state, section counts, and source_updated_at are published in the status payload.",
     "AAA weekly 14-day source windows older than 28 days are rejected before ranking.",
-    "72 HR, 14 DAY, Recent Arrivals, and Depth Radar sections remain independently counted for QA.",
-    "Depth Radar renders verified AA, High-A, and Low-A rows when available; D1 college remains source-locked."
+    "72 HR, 14 DAY, Recent Arrivals, and AAA GEMS sections remain independently counted for QA.",
+    "AAA GEMS renders verified AA, High-A, and Low-A rows when available; D1 college remains source-locked."
   ],
   "section_counts": {
     "pitchers_72hr": 20,

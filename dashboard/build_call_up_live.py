@@ -2291,7 +2291,7 @@ HTML_TEMPLATE = Template(
         <div class="tabs tabs-aaa" role="tablist" aria-label="Promotion watch windows">
           <button type="button" class="tab" id="tab-btn-72h" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
           <button type="button" class="tab active" id="tab-btn-14d" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
-          <button type="button" class="tab" id="tab-btn-aaa-gems" onclick="switchPromotionTab('tab-aaa-gems', this)">DEPTH RADAR</button>
+          <button type="button" class="tab" id="tab-btn-aaa-gems" onclick="switchPromotionTab('tab-aaa-gems', this)">AAA GEMS</button>
         </div>
 
         <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
@@ -2573,8 +2573,8 @@ HTML_TEMPLATE = Template(
         <div class="section">
           <div class="section-head">
             <div>
-              <div class="section-kicker">Depth Radar</div>
-              <h2 class="section-title">Depth Radar — Lower-Minors Surveillance</h2>
+              <div class="section-kicker">AAA GEMS</div>
+              <h2 class="section-title">AAA GEMS — Lower-Minors Surveillance</h2>
             </div>
             <div class="section-badge">Top {{ depth_radar_rows|length }}</div>
           </div>
@@ -2587,7 +2587,7 @@ HTML_TEMPLATE = Template(
           </div>
           {% else %}
           <div class="placeholder">
-            Depth Radar is source-locked until verified AA, A, or D1 college rows are available. No static player seeds are rendered here.
+            AAA GEMS is source-locked until verified AA, A, or D1 college rows are available. No static player seeds are rendered here.
           </div>
           {% endif %}
         </div>
@@ -2736,7 +2736,7 @@ HTML_TEMPLATE = Template(
         if (summaryMode) summaryMode.textContent = "AAA";
         if (summarySignals) summarySignals.textContent = "{{ total_signals }}";
       } else if (panelId === "tab-aaa-gems") {
-        if (summaryWindow) summaryWindow.textContent = "DEPTH RADAR";
+        if (summaryWindow) summaryWindow.textContent = "AAA GEMS";
         if (summaryMode) summaryMode.textContent = "LOWER-MINORS";
         if (summarySignals) summarySignals.textContent = "{{ depth_radar_rows|length }}";
       } else {
@@ -3321,7 +3321,7 @@ def render_html() -> str:
     status_payload["pipeline_layers"] = [
         "dynamic_aaa_movement_feed",
         "dynamic_recent_mlb_arrivals_feed",
-        "depth_radar_source_locked",
+        "aaa_gems_source_locked",
         "freshness_status_tracked",
         "aaa_weekly_window_age_guard",
         "section_count_validation",
@@ -3333,8 +3333,8 @@ def render_html() -> str:
         "Placeholder language in the template is limited to empty-state UI messaging.",
         "Freshness, degraded state, section counts, and source_updated_at are published in the status payload.",
         "AAA weekly 14-day source windows older than 28 days are rejected before ranking.",
-        "72 HR, 14 DAY, Recent Arrivals, and Depth Radar sections remain independently counted for QA.",
-        "Depth Radar renders verified AA, High-A, and Low-A rows when available; D1 college remains source-locked.",
+        "72 HR, 14 DAY, Recent Arrivals, and AAA GEMS sections remain independently counted for QA.",
+        "AAA GEMS renders verified AA, High-A, and Low-A rows when available; D1 college remains source-locked.",
     ]
 
     write_status_file(status_payload)
