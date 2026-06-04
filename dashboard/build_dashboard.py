@@ -3262,8 +3262,8 @@ def main() -> None:
         write_status_file(status_payload)
         raise RuntimeError("No hitter or pitcher signals were produced.")
 
-    top_hitters = hitter_signals.head(5).copy()
-    top_pitchers = pitcher_signals.head(5).copy()
+    top_hitters = hitter_signals.head(10).copy()
+    top_pitchers = pitcher_signals.head(10).copy()
 
     top_hitters["player_id"] = top_hitters["batter"].fillna("").astype(str).str.strip()
     top_pitchers["player_id"] = top_pitchers["pitcher"].fillna("").astype(str).str.strip()
