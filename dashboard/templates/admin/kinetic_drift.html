@@ -1757,13 +1757,367 @@ body.kde-field-guide-open{
   }
 }
 
+
+/* KDE_DESKTOP_SINGLE_RAIL_APEX_ALIGNMENT_V5
+   Desktop-only KDE cleanup:
+   one rail controls hero, guide panel, sortbar, filters, and cards.
+   Prevents independent centering/squeezing between modules.
+   Field Guide remains fixed-position and outside layout flow. */
+@media screen and (min-width: 761px) {
+  body.kde-page {
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  body.kde-page .topbar {
+    display: block !important;
+    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+  }
+
+  body.kde-page .topbar-inner,
+  body.kde-page .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    transform: none !important;
+  }
+
+  body.kde-page .topbar-inner {
+    min-height: 148px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 28px !important;
+  }
+
+  body.kde-page .topbar .brand {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+  }
+
+  body.kde-page .topbar .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    animation: dsApexLivePulse 1.15s ease-in-out infinite !important;
+  }
+
+  body.kde-page .topbar .brand-kicker {
+    font-family: var(--sans) !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.02em !important;
+    font-weight: 950 !important;
+  }
+
+  body.kde-page .topbar .brand-title {
+    font-family: var(--sans) !important;
+    font-size: 18px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.025em !important;
+    font-weight: 850 !important;
+  }
+
+  body.kde-page .topbar .livebox {
+    justify-self: end !important;
+    min-width: 210px !important;
+    text-align: left !important;
+  }
+
+  body.kde-page .topnav.ds-shell-nav {
+    display: none !important;
+  }
+
+  body.kde-page .ds-pro-desktop-nav {
+    display: block !important;
+  }
+
+  body.kde-page .ds-pro-desktop-nav-links {
+    justify-content: flex-start !important;
+  }
+
+  body.kde-page .kde-content-rail {
+    width: min(1180px, calc(100% - 48px)) !important;
+    max-width: 1180px !important;
+    margin: 0 auto !important;
+    padding-top: 28px !important;
+  }
+
+  body.kde-page .kde-content-rail > * {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  body.kde-page .kde-hero-title-lock {
+    font-family: var(--sans) !important;
+    font-size: clamp(38px, 3.6vw, 54px) !important;
+    line-height: 1.0 !important;
+    letter-spacing: -0.055em !important;
+    font-weight: 820 !important;
+    max-width: 760px !important;
+  }
+
+  body.kde-page .kde-sub,
+  body.kde-page .kde-hero p {
+    max-width: 760px !important;
+  }
+
+  body.kde-page .kde-waveform-color-hero,
+  body.kde-page .kde-sortbar,
+  body.kde-page .kde-filterbar,
+  body.kde-page .kde-generated {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  body.kde-page #kde-card-grid,
+  body.kde-page #kde-card-grid.grid {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    align-items: start !important;
+  }
+
+  body.kde-page #kde-card-grid .card {
+    width: 100% !important;
+    max-width: none !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.kde-page .topbar {
+    display: none !important;
+  }
+
+  body.kde-page .kde-content-rail {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+
+
+/* KDE_DESKTOP_PRECISION_POLISH_V6
+   Final KDE desktop polish:
+   - Give upper-right LIVE dot breathing room.
+   - Move Field Guide into page-safe floating position like Signal Wall/Apex style.
+   - Reduce KDE hero title weight/letter squeeze. */
+@media screen and (min-width: 761px) {
+  body.kde-page .topbar .live-label {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    white-space: nowrap !important;
+  }
+
+  body.kde-page .topbar .live-dot {
+    margin-right: 2px !important;
+    flex: 0 0 auto !important;
+  }
+
+  body.kde-page .kde-field-guide-trigger {
+    position: fixed !important;
+    right: 28px !important;
+    bottom: 28px !important;
+    z-index: 2147482500 !important;
+    min-height: 42px !important;
+    padding: 0 18px !important;
+    border-radius: 999px !important;
+    transform: none !important;
+  }
+
+  body.kde-page .kde-hero-title-lock {
+    font-family: var(--sans) !important;
+    font-size: clamp(36px, 3.35vw, 50px) !important;
+    line-height: 1.02 !important;
+    letter-spacing: -0.042em !important;
+    font-weight: 760 !important;
+    max-width: 780px !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.kde-page .kde-field-guide-trigger {
+    right: 14px !important;
+    bottom: 14px !important;
+    max-width: calc(100vw - 28px) !important;
+  }
+}
+
+
+
+/* KDE_FIELD_GUIDE_SCROLL_FLOAT_PILL_V7
+   KDE Field Guide behavior correction:
+   - Remove bottom-fixed CTA behavior on desktop.
+   - Make Field Guide a scroll-floating/sticky pill inside the visual page rail.
+   - Keep it page-safe and aligned with the Apex/KDE content shell.
+   - Preserve mobile fixed behavior. */
+@media screen and (min-width: 761px) {
+  body.kde-page .kde-field-guide-trigger {
+    position: sticky !important;
+    top: 92px !important;
+    z-index: 80 !important;
+
+    display: inline-flex !important;
+    float: right !important;
+
+    margin-top: -18px !important;
+    margin-right: max(24px, calc((100vw - 1180px) / 2)) !important;
+    margin-bottom: 12px !important;
+
+    right: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+
+    min-height: 42px !important;
+    padding: 0 18px !important;
+    border-radius: 999px !important;
+
+    background:
+      linear-gradient(135deg, rgba(163,230,53,.16), rgba(6,182,212,.10)),
+      rgba(2,6,23,.92) !important;
+
+    box-shadow:
+      0 0 24px rgba(163,230,53,.16),
+      inset 0 1px 0 rgba(255,255,255,.07) !important;
+  }
+
+  body.kde-page .kde-field-guide-trigger::after {
+    content: "" !important;
+    display: table !important;
+    clear: both !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.kde-page .kde-field-guide-trigger {
+    position: fixed !important;
+    right: 14px !important;
+    bottom: 14px !important;
+    top: auto !important;
+    float: none !important;
+    margin: 0 !important;
+    max-width: calc(100vw - 28px) !important;
+  }
+}
+
+
+
+/* KDE_FIELD_GUIDE_VISIBLE_RIGHT_RAIL_FLOAT_V8
+   KDE Field Guide final placement:
+   - Force visible floating tactical pill.
+   - Not bottom-mounted.
+   - No float/sticky layout participation, so it cannot disappear or distort page modules.
+   - Tracks viewport while scrolling like a command overlay.
+   - Mobile remains bottom-right for thumb access. */
+@media screen and (min-width: 761px) {
+  body.kde-page .kde-field-guide-trigger {
+    position: fixed !important;
+    top: 245px !important;
+    right: max(24px, calc((100vw - 1180px) / 2 + 24px)) !important;
+    bottom: auto !important;
+    left: auto !important;
+
+    z-index: 2147482400 !important;
+
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+
+    float: none !important;
+    clear: none !important;
+    margin: 0 !important;
+    transform: none !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 9px !important;
+
+    min-height: 42px !important;
+    padding: 0 18px !important;
+    border-radius: 999px !important;
+
+    border: 1px solid rgba(163,230,53,.38) !important;
+    background:
+      linear-gradient(135deg, rgba(163,230,53,.17), rgba(6,182,212,.12)),
+      rgba(2,6,23,.94) !important;
+
+    color: rgba(248,250,252,.96) !important;
+    font-family: var(--mono) !important;
+    font-size: 10px !important;
+    font-weight: 900 !important;
+    letter-spacing: .16em !important;
+    text-transform: uppercase !important;
+
+    box-shadow:
+      0 0 28px rgba(163,230,53,.18),
+      0 0 48px rgba(6,182,212,.08),
+      inset 0 1px 0 rgba(255,255,255,.08) !important;
+  }
+
+  body.kde-page .kde-field-guide-trigger:hover {
+    border-color: rgba(163,230,53,.58) !important;
+    box-shadow:
+      0 0 34px rgba(163,230,53,.26),
+      0 0 58px rgba(6,182,212,.12),
+      inset 0 1px 0 rgba(255,255,255,.10) !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.kde-page .kde-field-guide-trigger {
+    position: fixed !important;
+    right: 14px !important;
+    bottom: 14px !important;
+    top: auto !important;
+    left: auto !important;
+
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+
+    float: none !important;
+    margin: 0 !important;
+    max-width: calc(100vw - 28px) !important;
+    z-index: 2147482400 !important;
+  }
+}
+
 </style>
 </head>
 
-<body>
+<body class="kde-page">
+  <!-- KDE_DESKTOP_EXACT_APEX_TOPBAR_STRUCTURE_V1 -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div class="brand-text">
+          <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
+          <div class="brand-title">Kinetic Drift // Inferred Movement Intelligence</div>
+        </div>
+      </div>
+
+      <div class="livebox">
+        <div class="live-label"><span class="live-dot"></span>LIVE</div>
+        <div class="live-time">{{ generated_at }}</div>
+      </div>
+    </div>
+  </div>
+
+{{ shell_nav_v2 | safe }}
 {{ shell_nav | safe }}
   <div class="shell">
 
+    <!-- KDE_CONTENT_RAIL_LOCK_V1_START -->
+  <main class="kde-content-rail">
     <div class="eyebrow">
       DIAMONDSIGNALS // KINETIC DRIFT ENGINE — ACTIVE PREVIEW
     </div>
@@ -2065,6 +2419,9 @@ body.kde-field-guide-open{
 
 
   <!-- KDE_FIELD_GUIDE_V1 -->
+    </main>
+  <!-- KDE_CONTENT_RAIL_LOCK_V1_END -->
+
   <button class="kde-field-guide-trigger" type="button" onclick="openKdeFieldGuide()" aria-controls="kdeFieldGuide" aria-expanded="false">
     FIELD GUIDE
   </button>

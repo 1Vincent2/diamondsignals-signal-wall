@@ -949,3 +949,120 @@
   }
 }
 
+/* KDE_DESKTOP_EXACT_APEX_TOPBAR_PARITY_LOCK_V1
+   Desktop-only KDE chrome parity:
+   - Apex-compatible DIAMONDSIGNALS topbar/logotype
+   - shared pro nav rail on desktop
+   - old shell nav suppressed on desktop only
+   - mobile drawer/nav and KDE Field Guide preserved */
+@media screen and (min-width: 761px) {
+  body.kde-page .topbar {
+    display: block !important;
+  }
+
+  body.kde-page .topbar-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    min-height: 148px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 28px !important;
+  }
+
+  body.kde-page .topbar .brand {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+    min-width: 0 !important;
+    transform: none !important;
+  }
+
+  body.kde-page .topbar .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 999px !important;
+    background: #b6ff00 !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.30),
+      0 0 20px rgba(182,255,0,0.82),
+      0 0 42px rgba(182,255,0,0.38) !important;
+    animation: dsApexLivePulse 1.15s ease-in-out infinite !important;
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+    transform-origin: center center !important;
+  }
+
+  body.kde-page .topbar .brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    min-width: 0 !important;
+  }
+
+  body.kde-page .topbar .brand-kicker {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    gap: 0 !important;
+    font-family: var(--sans) !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.02em !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+  }
+
+  body.kde-page .topbar .brand-kicker .brand-white {
+    color: #f8fafc !important;
+  }
+
+  body.kde-page .topbar .brand-kicker .brand-blue {
+    color: #4ea3ff !important;
+    text-shadow:
+      0 0 10px rgba(78,163,255,0.25),
+      0 0 22px rgba(78,163,255,0.16) !important;
+  }
+
+  body.kde-page .topbar .brand-title {
+    font-family: var(--sans) !important;
+    font-size: 18px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.025em !important;
+    font-weight: 850 !important;
+    color: #f8fafc !important;
+    text-transform: none !important;
+  }
+
+  body.kde-page .topbar .livebox {
+    justify-self: end !important;
+    min-width: 210px !important;
+    text-align: left !important;
+  }
+
+  body.kde-page .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    transform: none !important;
+  }
+
+  body.kde-page .ds-pro-desktop-nav-links {
+    justify-content: flex-start !important;
+  }
+
+  body.kde-page .topnav.ds-shell-nav {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.kde-page .topbar {
+    display: none !important;
+  }
+}
+

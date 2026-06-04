@@ -25,6 +25,7 @@ SNAPSHOT_PATH = SNAPSHOT_DIR / "kinetic_drift_signals.json"
 TEMPLATE_PATH = BASE_DIR / "templates" / "admin" / "kinetic_drift.html"
 SHELL_STYLES_PATH = BASE_DIR / "templates" / "shell_styles.css"
 SHELL_NAV_PATH = BASE_DIR / "templates" / "shell_nav.html"
+SHELL_NAV_V2_PATH = BASE_DIR / "templates" / "shell_nav_v2.html"
 
 LOOKBACK_DAYS = 45
 RECENT_APPEARANCES = 3
@@ -630,6 +631,7 @@ def write_json(signals: list[dict], start_date: str, end_date: str) -> None:
             payload=payload,
             generated_at=payload.get("generated_at", ""),
             shell_styles=SHELL_STYLES_PATH.read_text(encoding="utf-8"),
+            shell_nav_v2=Template(SHELL_NAV_V2_PATH.read_text(encoding="utf-8")).render(active_nav="kinetic_drift"),
             shell_nav=Template(SHELL_NAV_PATH.read_text(encoding="utf-8")).render(active_nav="kinetic_drift"),
         ),
         encoding="utf-8",
