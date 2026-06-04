@@ -2923,6 +2923,156 @@ def load_signal_wall_season_context_lookup():
     return by_id, by_name
 
 
+
+
+def _format_pct(value):
+    try:
+        if value is None or pd.isna(value):
+            return None
+        return f"{float(value) * 100:.1f}%"
+    except Exception:
+        return None
+
+
+def _format_ratio(value):
+    try:
+        if value is None or pd.isna(value):
+            return None
+        return f"{float(value):.2f}"
+    except Exception:
+        return None
+
+
+def _format_babip(value):
+    try:
+        if value is None or pd.isna(value):
+            return None
+        return f"{float(value):.3f}".replace("0.", ".")
+    except Exception:
+        return None
+
+
+def build_signal_wall_hitter_plate_context(raw: pd.DataFrame) -> dict:
+    """Build direct BABIP / BB% / K% / BB-K context for Signal Wall top hitters.
+
+    This prevents final cards from depending only on player_signal_index.json coverage.
+    The context is derived from the same fresh Statcast window used to produce Signal Wall.
+    """
+    if raw is None or raw.empty or "batter" not in raw.columns:
+        return {}
+
+    df = raw.copy()
+    df = df[df["batter"].notna()].copy()
+    if df.empty:
+        return {}
+
+    # Plate appearance proxy: use unique game/pitch-at-bat grouping when available,
+    # otherwise fall back to event rows.
+    if {"game_pk", "at_bat_number", "batter"}.issubset(df.columns):
+        pa_df = df.drop_duplicates(["game_pk", "at_bat_number", "batter"]).copy()
+    else:
+        pa_df = df[df.get("events").notna()].copy() if "events" in df.columns else df.copy()
+
+    if "events" not in pa_df.columns:
+        return {}
+
+    events = pa_df["events"].fillna("").astype(str).str.lower()
+
+    walks = events.isin(["walk", "intent_walk"])
+    strikeouts = events.isin(["strikeout", "strikeout_double_play"])
+
+    # BABIP approximation from Statcast event taxonomy:
+    # (H - HR) / (AB - K - HR + SF)
+    hits = events.isin(["single", "double", "triple", "home_run"])
+    homers = events.eq("home_run")
+    sac_flies = events.eq("sac_fly")
+    non_ab = events.isin([
+        "walk",
+        "intent_walk",
+        "hit_by_pitch",
+        "sac_bunt",
+        "sac_fly",
+        "catcher_interf",
+    ])
+    at_bats = (~non_ab).astype(int)
+
+    work = pa_df[["batter"]].copy()
+    work["pa"] = 1
+    work["walks"] = walks.astype(int)
+    work["strikeouts"] = strikeouts.astype(int)
+    work["hits"] = hits.astype(int)
+    work["homers"] = homers.astype(int)
+    work["sac_flies"] = sac_flies.astype(int)
+    work["at_bats"] = at_bats
+
+    grouped = work.groupby("batter", dropna=True).sum(numeric_only=True).reset_index()
+
+    context = {}
+    for _, row in grouped.iterrows():
+        pa = int(row.get("pa") or 0)
+        if pa <= 0:
+            continue
+
+        bb = int(row.get("walks") or 0)
+        k = int(row.get("strikeouts") or 0)
+        h = int(row.get("hits") or 0)
+        hr = int(row.get("homers") or 0)
+        ab = int(row.get("at_bats") or 0)
+        sf = int(row.get("sac_flies") or 0)
+
+        bb_pct = bb / pa if pa else None
+        k_pct = k / pa if pa else None
+        bb_k_ratio = bb / k if k else None
+
+        babip_den = ab - k - hr + sf
+        babip = ((h - hr) / babip_den) if babip_den > 0 else None
+
+        pid = _season_context_player_id(row.get("batter"))
+        if not pid:
+            continue
+
+        context[pid] = {
+            "season_context": "PLATE_DISCIPLINE",
+            "source": "signal_wall_statcast_window",
+            "bb_pct": _format_pct(bb_pct),
+            "k_pct": _format_pct(k_pct),
+            "bb_k_ratio": _format_ratio(bb_k_ratio),
+            "babip": _format_babip(babip),
+            "plate_appearances": pa,
+            "strikeouts": k,
+            "walks": bb,
+        }
+
+    return context
+
+
+def enrich_signal_wall_hitter_plate_context(raw: pd.DataFrame, hitters: pd.DataFrame) -> pd.DataFrame:
+    """Fill missing hitter season_context directly from fresh Signal Wall raw data."""
+    if hitters is None or hitters.empty:
+        return hitters
+
+    context_by_id = build_signal_wall_hitter_plate_context(raw)
+    if not context_by_id:
+        return hitters
+
+    out = hitters.copy()
+
+    def pick_direct_context(row):
+        existing = row.get("season_context")
+        if isinstance(existing, dict) and existing:
+            return existing
+
+        for field in ["resolved_player_id", "player_id", "batter", "mlbam_id", "id"]:
+            pid = _season_context_player_id(row.get(field))
+            if pid and pid in context_by_id:
+                return context_by_id[pid]
+
+        return existing if existing is not None else None
+
+    out["season_context"] = out.apply(pick_direct_context, axis=1)
+    return out
+
+
 def apply_signal_wall_season_context(df):
     if df is None or df.empty:
         return df
@@ -2996,6 +3146,8 @@ def main() -> None:
 
     top_hitters = apply_signal_wall_season_context(top_hitters)
     top_pitchers = apply_signal_wall_season_context(top_pitchers)
+
+    top_hitters = enrich_signal_wall_hitter_plate_context(raw, top_hitters)
 
     print("SIGNAL_WALL_RENDER_CONTEXT_HITTERS:", int(top_hitters["season_context"].notna().sum()) if "season_context" in top_hitters.columns else 0)
     print("SIGNAL_WALL_RENDER_CONTEXT_PITCHERS:", int(top_pitchers["season_context"].notna().sum()) if "season_context" in top_pitchers.columns else 0)
