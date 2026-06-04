@@ -5,14 +5,19 @@ from datetime import datetime
 from pathlib import Path
 from jinja2 import Template
 
+from dashboard.lib.publish_safe import write_temp_output, promote_output_if_valid, save_snapshot
+from dashboard.lib.report_validation import build_validation_report, validate_min_rows
+
 DIST_DIR = Path("dist")
 SIGNALS_JSON = DIST_DIR / "signals.json"
 OUT_DIR = DIST_DIR / "live-v2"
 OUT_PATH = OUT_DIR / "index.html"
 LIVE_DIR = DIST_DIR / "live"
 LIVE_PATH = LIVE_DIR / "index.html"
+SNAPSHOT_DIR = DIST_DIR / "_snapshots" / "signal-wall-v2"
 
 NAV_TEMPLATE_PATH = Path("dashboard/templates/shell_nav.html")
+SHELL_NAV_V2_TEMPLATE_PATH = Path("dashboard/templates/shell_nav_v2.html")
 SEARCH_TEMPLATE_PATH = Path("dashboard/templates/components/player_search.html")
 SHELL_STYLES_PATH = Path("dashboard/templates/shell_styles.css")
 
@@ -2016,7 +2021,261 @@ body.field-guide-open .field-guide-drawer {
 
 
 
-  </style>
+  
+
+/* SIGNAL_WALL_DESKTOP_APEX_CHROME_RAIL_V1
+   Desktop-only Signal Wall refinement:
+   - Use shared pro nav on desktop.
+   - Keep legacy shell nav for mobile drawer.
+   - Lock Signal Wall rail to Apex/KDE/Waiver desktop width.
+   - Keep Field Guide outside layout flow as tactical floating right-rail control.
+   - No data/scoring/status changes. */
+@media screen and (min-width: 761px) {
+  body.signal-wall-v2-typography-lock {
+    overflow-x: hidden !important;
+  }
+
+  body.signal-wall-v2-typography-lock .topbar {
+    position: relative !important;
+    top: auto !important;
+    z-index: 30 !important;
+    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+  }
+
+  body.signal-wall-v2-typography-lock .topbar-inner,
+  body.signal-wall-v2-typography-lock .app,
+  body.signal-wall-v2-typography-lock .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    max-width: 1180px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    transform: none !important;
+  }
+
+  body.signal-wall-v2-typography-lock .topbar-inner {
+    min-height: 148px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 28px !important;
+  }
+
+  body.signal-wall-v2-typography-lock .brand {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+  }
+
+  body.signal-wall-v2-typography-lock .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+  }
+
+  body.signal-wall-v2-typography-lock .brand-kicker {
+    font-family: var(--sans) !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.02em !important;
+    font-weight: 950 !important;
+  }
+
+  body.signal-wall-v2-typography-lock .brand-title {
+    font-family: var(--sans) !important;
+    font-size: 18px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.025em !important;
+    font-weight: 850 !important;
+  }
+
+  body.signal-wall-v2-typography-lock .livebox {
+    justify-self: end !important;
+    min-width: 210px !important;
+    text-align: left !important;
+  }
+
+  body.signal-wall-v2-typography-lock .live-label {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    white-space: nowrap !important;
+  }
+
+  body.signal-wall-v2-typography-lock .ds-pro-desktop-nav {
+    display: block !important;
+  }
+
+  body.signal-wall-v2-typography-lock .ds-pro-desktop-nav-links {
+    justify-content: flex-start !important;
+  }
+
+  body.signal-wall-v2-typography-lock .topnav.ds-shell-nav {
+    display: none !important;
+  }
+
+  body.signal-wall-v2-typography-lock .app {
+    padding-top: 28px !important;
+  }
+
+  body.signal-wall-v2-typography-lock .hero-title {
+    font-family: var(--sans) !important;
+    font-size: clamp(38px, 3.6vw, 54px) !important;
+    line-height: 1.0 !important;
+    letter-spacing: -0.052em !important;
+    font-weight: 820 !important;
+    max-width: 760px !important;
+  }
+
+  body.signal-wall-v2-typography-lock .field-guide-trigger {
+    position: fixed !important;
+    top: 188px !important;
+    right: max(24px, calc((100vw - 1180px) / 2 - 154px)) !important;
+    bottom: auto !important;
+    left: auto !important;
+    z-index: 2147482400 !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 9px !important;
+
+    min-height: 42px !important;
+    padding: 0 18px !important;
+    border-radius: 999px !important;
+    transform: none !important;
+
+    border: 1px solid rgba(163,230,53,.38) !important;
+    background:
+      linear-gradient(135deg, rgba(163,230,53,.17), rgba(6,182,212,.12)),
+      rgba(2,6,23,.94) !important;
+
+    color: rgba(248,250,252,.96) !important;
+    font-family: var(--mono) !important;
+    font-size: 10px !important;
+    font-weight: 900 !important;
+    letter-spacing: .16em !important;
+    text-transform: uppercase !important;
+
+    box-shadow:
+      0 0 28px rgba(163,230,53,.18),
+      0 0 48px rgba(6,182,212,.08),
+      inset 0 1px 0 rgba(255,255,255,.08) !important;
+  }
+
+  body.signal-wall-v2-typography-lock .field-guide-trigger:hover {
+    border-color: rgba(163,230,53,.58) !important;
+    box-shadow:
+      0 0 34px rgba(163,230,53,.26),
+      0 0 58px rgba(6,182,212,.12),
+      inset 0 1px 0 rgba(255,255,255,.10) !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.signal-wall-v2-typography-lock .field-guide-trigger {
+    position: fixed !important;
+    right: 14px !important;
+    bottom: 14px !important;
+    top: auto !important;
+    left: auto !important;
+    z-index: 2147482400 !important;
+  }
+}
+
+
+
+/* SIGNAL_WALL_LIVE_DOT_AND_FIELD_GUIDE_INSET_V2
+   Signal Wall cosmetic polish only:
+   - Larger pulsing LIVE dot with breathing room.
+   - Pull Field Guide pill inside viewport/content frame.
+   - No layout/data/card/scoring changes. */
+@keyframes signalWallLiveDotPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 12px rgba(182,255,0,.52),
+      0 0 26px rgba(182,255,0,.20);
+  }
+  50% {
+    transform: scale(1.22);
+    box-shadow:
+      0 0 18px rgba(182,255,0,.82),
+      0 0 42px rgba(182,255,0,.32);
+  }
+}
+
+@media screen and (min-width: 761px) {
+  body.signal-wall-v2-typography-lock .live-label {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    white-space: nowrap !important;
+  }
+
+  body.signal-wall-v2-typography-lock .live-label::first-letter {
+    color: transparent !important;
+  }
+
+  body.signal-wall-v2-typography-lock .live-label {
+    color: var(--lime) !important;
+  }
+
+  body.signal-wall-v2-typography-lock .live-label {
+    position: relative !important;
+  }
+
+  body.signal-wall-v2-typography-lock .live-label {
+    font-size: 11px !important;
+    letter-spacing: .18em !important;
+  }
+
+  body.signal-wall-v2-typography-lock .live-label::before {
+    content: "" !important;
+    width: 13px !important;
+    height: 13px !important;
+    border-radius: 999px !important;
+    background: var(--lime) !important;
+    box-shadow:
+      0 0 14px rgba(182,255,0,.58),
+      0 0 30px rgba(182,255,0,.22) !important;
+    animation: signalWallLiveDotPulse 1.25s ease-in-out infinite !important;
+    flex: 0 0 auto !important;
+  }
+
+  body.signal-wall-v2-typography-lock .live-label {
+    font-size: 0 !important;
+  }
+
+  body.signal-wall-v2-typography-lock .live-label::after {
+    content: "LIVE" !important;
+    font-family: var(--mono) !important;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    letter-spacing: .18em !important;
+    color: var(--lime) !important;
+  }
+
+  body.signal-wall-v2-typography-lock .field-guide-trigger {
+    top: 196px !important;
+    right: max(22px, calc((100vw - 1180px) / 2 + 22px)) !important;
+    z-index: 2147482400 !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.signal-wall-v2-typography-lock .live-label {
+    gap: 10px !important;
+  }
+
+  body.signal-wall-v2-typography-lock .field-guide-trigger {
+    right: 14px !important;
+    bottom: 14px !important;
+  }
+}
+
+</style>
 </head>
 
 <body class="signal-wall-v2-typography-lock">
@@ -2036,6 +2295,7 @@ body.field-guide-open .field-guide-drawer {
     </div>
   </div>
 
+  {{ nav_v2_html | safe }}
   {{ nav_html | safe }}
   {{ search_html | safe }}
 
@@ -2343,6 +2603,7 @@ def render_html() -> str:
     hitters = normalize_rows(payload.get("top_hitters") or [], "hitter")
 
     nav_template = load_text(NAV_TEMPLATE_PATH)
+    nav_v2_template = load_text(SHELL_NAV_V2_TEMPLATE_PATH)
     search_html = load_text(SEARCH_TEMPLATE_PATH)
     shell_styles = load_text(SHELL_STYLES_PATH)
 
@@ -2350,6 +2611,11 @@ def render_html() -> str:
         nav_html = Template(nav_template).render(active_nav="signal_wall") if nav_template else ""
     except Exception:
         nav_html = ""
+
+    try:
+        nav_v2_html = Template(nav_v2_template).render(active_nav="signal_wall") if nav_v2_template else ""
+    except Exception:
+        nav_v2_html = ""
 
     card_template = Template(CARD)
 
@@ -2361,23 +2627,71 @@ def render_html() -> str:
         pitchers=pitchers,
         hitters=hitters,
         nav_html=nav_html,
+        nav_v2_html=nav_v2_html,
         search_html=search_html,
         shell_styles=shell_styles,
         card=card,
     )
 
+
+def validate_rendered_html(html: str, pitchers_count: int, hitters_count: int) -> dict:
+    """Guard V2 live publish. This intentionally validates structure only.
+
+    Do not add mobile layout or cosmetic assertions here. Mobile is frozen.
+    """
+    checks = [
+        validate_min_rows("v2_pitcher_cards", pitchers_count, 1),
+        validate_min_rows("v2_hitter_cards", hitters_count, 1),
+    ]
+
+    required_markers = [
+        'body class="signal-wall-v2-typography-lock"',
+        'Signal Wall // Extraction Chassis',
+        'Today’s Signal Wall',
+        'field-guide-trigger',
+        'data-field-guide-open',
+        'topnav ds-shell-nav',
+        'ds-mobile-menu-trigger',
+        'signalWallLiveDotPulse',
+    ]
+
+    for marker_text in required_markers:
+        checks.append({
+            "ok": marker_text in html,
+            "message": f"required_html_marker:{marker_text}",
+        })
+
+    return build_validation_report("signal_wall_v2", checks)
+
+
 def main() -> None:
     if not SIGNALS_JSON.exists():
         raise SystemExit("Missing dist/signals.json. Run dashboard/build_dashboard.py first.")
+
+    payload = json.loads(SIGNALS_JSON.read_text(encoding="utf-8"))
+    pitchers_count = len(payload.get("top_pitchers") or [])
+    hitters_count = len(payload.get("top_hitters") or [])
+
     html = render_html()
+    validation = validate_rendered_html(html, pitchers_count, hitters_count)
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    OUT_PATH.write_text(html, encoding="utf-8")
-    print(f"Wrote {OUT_PATH}")
+    temp_out_path = write_temp_output(str(OUT_PATH), html)
+    promoted_out = promote_output_if_valid(temp_out_path, str(OUT_PATH), validation["ok"])
+    if promoted_out:
+        print(f"Wrote {OUT_PATH}")
+    else:
+        print("Skipped publishing Signal Wall V2 preview due to failed validation.")
 
     LIVE_DIR.mkdir(parents=True, exist_ok=True)
-    LIVE_PATH.write_text(html, encoding="utf-8")
-    print(f"Wrote {LIVE_PATH}")
+    temp_live_path = write_temp_output(str(LIVE_PATH), html)
+    promoted_live = promote_output_if_valid(temp_live_path, str(LIVE_PATH), validation["ok"])
+    if promoted_live:
+        save_snapshot(str(LIVE_PATH), str(SNAPSHOT_DIR / "index.html"))
+        print(f"Wrote {LIVE_PATH}")
+    else:
+        print("Skipped publishing live Signal Wall V2 due to failed validation.")
+        raise SystemExit("Signal Wall V2 validation failed: " + "; ".join(validation["messages"]))
 
 if __name__ == "__main__":
     main()
