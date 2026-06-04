@@ -667,3 +667,285 @@
   }
 }
 
+/* WAIVER_DESKTOP_APEX_SHELL_PARITY_V1
+   Desktop-only Waiver shell normalization.
+   Use Apex topbar/nav geometry verbatim; suppress old Waiver desktop header strip.
+   Preserve mobile shell/menu/Field Guide behavior. */
+@media screen and (min-width: 761px) {
+  body.waiver-page {
+    padding: 0 !important;
+  }
+
+  body.waiver-page .waiver-apex-parity-topbar {
+    display: block !important;
+  }
+
+  body.waiver-page .topbar-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    min-height: 148px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 28px !important;
+  }
+
+  body.waiver-page .topbar .brand {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+    min-width: 0 !important;
+    transform: none !important;
+  }
+
+  body.waiver-page .topbar .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 999px !important;
+    background: #b6ff00 !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.30),
+      0 0 20px rgba(182,255,0,0.82),
+      0 0 42px rgba(182,255,0,0.38) !important;
+    animation: dsApexLivePulse 1.15s ease-in-out infinite !important;
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+  }
+
+  body.waiver-page .topbar .brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    min-width: 0 !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    gap: 0 !important;
+    font-family: var(--sans, Inter, system-ui, sans-serif) !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.02em !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker .brand-white {
+    color: #f8fafc !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker .brand-blue {
+    color: #4ea3ff !important;
+    text-shadow:
+      0 0 10px rgba(78,163,255,0.25),
+      0 0 22px rgba(78,163,255,0.16) !important;
+  }
+
+  body.waiver-page .topbar .brand-title {
+    font-family: var(--sans, Inter, system-ui, sans-serif) !important;
+    font-size: 18px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.025em !important;
+    font-weight: 850 !important;
+    color: #f8fafc !important;
+    text-transform: none !important;
+  }
+
+  body.waiver-page .topbar .livebox {
+    justify-self: end !important;
+    min-width: 210px !important;
+    text-align: left !important;
+  }
+
+  body.waiver-page .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    transform: none !important;
+  }
+
+  body.waiver-page .ds-pro-desktop-nav-links {
+    justify-content: flex-start !important;
+    transform: none !important;
+  }
+
+  body.waiver-page .topnav.ds-shell-nav {
+    display: none !important;
+  }
+
+  body.waiver-page .waiver-shell-header {
+    display: none !important;
+  }
+
+  body.waiver-page .shell {
+    max-width: 1180px !important;
+    padding-top: 34px !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.waiver-page .waiver-apex-parity-topbar {
+    display: none !important;
+  }
+}
+
+/* WAIVER_DESKTOP_EXACT_APEX_TOPBAR_PARITY_LOCK_V2
+   Desktop-only Waiver top chrome now uses the exact Apex class structure.
+   Keep this scoped to Waiver and do not touch mobile drawer/menu/Field Guide. */
+@media screen and (min-width: 761px) {
+  body.waiver-page .topbar {
+    min-height: 148px !important;
+  }
+
+  body.waiver-page .topbar-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    min-height: 148px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 28px !important;
+  }
+
+  body.waiver-page .topbar .brand {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+    min-width: 0 !important;
+    transform: none !important;
+  }
+
+  body.waiver-page .topbar .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 999px !important;
+    background: #b6ff00 !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.30),
+      0 0 20px rgba(182,255,0,0.82),
+      0 0 42px rgba(182,255,0,0.38) !important;
+    animation: dsApexLivePulse 1.15s ease-in-out infinite !important;
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+  }
+
+  body.waiver-page .topbar .brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    min-width: 0 !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    gap: 0 !important;
+    font-family: var(--sans) !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.02em !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker .brand-white {
+    color: #f8fafc !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker .brand-blue {
+    color: #4ea3ff !important;
+    text-shadow:
+      0 0 10px rgba(78,163,255,0.25),
+      0 0 22px rgba(78,163,255,0.16) !important;
+  }
+
+  body.waiver-page .topbar .brand-title {
+    font-family: var(--sans) !important;
+    font-size: 18px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.025em !important;
+    font-weight: 850 !important;
+    color: #f8fafc !important;
+    text-transform: none !important;
+  }
+
+  body.waiver-page .topbar .livebox {
+    justify-self: end !important;
+    min-width: 210px !important;
+    text-align: left !important;
+  }
+
+  body.waiver-page .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    transform: none !important;
+  }
+
+  body.waiver-page .ds-pro-desktop-nav-links {
+    justify-content: flex-start !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.waiver-page .topbar {
+    display: none !important;
+  }
+}
+
+/* WAIVER_DESKTOP_EXACT_APEX_DOT_PULSE_LOCK_V1
+   Desktop-only Waiver pulse parity:
+   Waiver now uses the exact Apex .topbar/.brand-mark structure.
+   This guarantees the green DIAMONDSIGNALS dot pulses like Apex. */
+@keyframes dsApexLivePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.92;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.30),
+      0 0 20px rgba(182,255,0,0.82),
+      0 0 42px rgba(182,255,0,0.38);
+  }
+
+  50% {
+    transform: scale(1.16);
+    opacity: 1;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.42),
+      0 0 28px rgba(182,255,0,0.95),
+      0 0 58px rgba(182,255,0,0.52);
+  }
+}
+
+@media screen and (min-width: 761px) {
+  body.waiver-page .topbar .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 999px !important;
+    background: #b6ff00 !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.30),
+      0 0 20px rgba(182,255,0,0.82),
+      0 0 42px rgba(182,255,0,0.38) !important;
+    animation-name: dsApexLivePulse !important;
+    animation-duration: 1.15s !important;
+    animation-timing-function: ease-in-out !important;
+    animation-iteration-count: infinite !important;
+    transform-origin: center center !important;
+    will-change: transform, opacity, box-shadow !important;
+  }
+}
+

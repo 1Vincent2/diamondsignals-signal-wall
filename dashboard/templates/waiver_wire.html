@@ -1491,10 +1491,44 @@ body.waiver-field-guide-open{
   border-color:rgba(157,255,107,.62);
   background:rgba(157,255,107,.14);
 }
+
+
+
+/* WAIVER_HIDE_OLD_LOCAL_HEADER_AFTER_EXACT_APEX_TOPBAR_V1
+   Desktop-only: old Waiver local header is now retired.
+   Exact Apex .topbar owns the report chrome. */
+@media screen and (min-width: 761px) {
+  body.waiver-page .waiver-shell-header {
+    display: none !important;
+  }
+}
+
 </style>
 </head>
 
-<body>
+<body class="waiver-page">
+
+
+
+  <!-- WAIVER_DESKTOP_EXACT_APEX_TOPBAR_STRUCTURE_V1 -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div class="brand-text">
+          <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
+          <div class="brand-title">Waiver Wire // Open Market</div>
+        </div>
+      </div>
+
+      <div class="livebox">
+        <div class="live-label"><span class="live-dot"></span>LIVE</div>
+        <div class="live-time">{{ generated_at }}</div>
+      </div>
+    </div>
+  </div>
+
+  {{ shell_nav_v2 | safe }}
   {{ shell_nav | safe }}
 
   <main class="shell">

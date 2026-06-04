@@ -39,6 +39,7 @@ WAIVER_CANDIDATE_PATH = DIST_DIR / "waiver_candidates.json"
 TEMPLATE_PATH = BASE_DIR / "templates" / "waiver_wire.html"
 SHELL_STYLES_PATH = BASE_DIR / "templates" / "shell_styles.css"
 SHELL_NAV_PATH = BASE_DIR / "templates" / "shell_nav.html"
+SHELL_NAV_V2_PATH = BASE_DIR / "templates" / "shell_nav_v2.html"
 
 CANONICAL_PLAYERS = load_canonical_player_universe()
 CANONICAL_NAME_LOOKUP = build_name_lookup(CANONICAL_PLAYERS)
@@ -448,6 +449,7 @@ def render() -> None:
     template_env = Environment(loader=FileSystemLoader(str(TEMPLATE_PATH.parent)))
     template = template_env.get_template(TEMPLATE_PATH.name)
     shell_nav = Template(SHELL_NAV_PATH.read_text(encoding="utf-8")).render(active_nav="waiver_wire")
+    shell_nav_v2 = Template(SHELL_NAV_V2_PATH.read_text(encoding="utf-8")).render(active_nav="waiver_wire")
 
     HTML_PATH.write_text(
         template.render(
@@ -455,6 +457,7 @@ def render() -> None:
             frozen_assets=frozen_assets,
             generated_at=generated_at,
             shell_styles=SHELL_STYLES_PATH.read_text(encoding="utf-8"),
+            shell_nav_v2=shell_nav_v2,
             shell_nav=shell_nav,
         ),
         encoding="utf-8",
