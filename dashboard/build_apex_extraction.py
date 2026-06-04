@@ -22,6 +22,7 @@ APEX_EXTRACTION_STATUS_PATH = STATUS_DIR / "apex-extraction.json"
 BASE_DIR = Path(__file__).resolve().parent
 TEMPLATES_DIR = BASE_DIR / "templates"
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
+SHELL_NAV_V2_TEMPLATE = (TEMPLATES_DIR / "shell_nav_v2.html").read_text(encoding="utf-8")
 SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
 SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
 DATA_DIR = Path("dist")
@@ -577,6 +578,7 @@ def render_html(payload: dict) -> str:
     except Exception:
         generated_label = str(generated)
     nav_html = Template(NAV_TEMPLATE).render(active_nav="apex_extraction")
+    nav_v2_html = Template(SHELL_NAV_V2_TEMPLATE).render(active_nav="apex_extraction")
     search_html = Template(SEARCH_TEMPLATE).render()
     shell_styles = SHELL_STYLES_TEMPLATE
 
@@ -2100,6 +2102,105 @@ def render_html(payload: dict) -> str:
       }}
 
 
+
+      /* APEX_DESKTOP_TOPBAR_LOCKUP_ALIGN_V2
+         Desktop-only: align Apex logo lockup with nav rail, put green dot left of logo,
+         keep SIGNALS blue, preserve mobile layout and mobile drawer untouched. */
+      @media screen and (min-width: 761px) {{
+        .topbar-inner {{
+          width: min(1180px, calc(100% - 48px)) !important;
+          margin: 0 auto !important;
+          min-height: 148px !important;
+          display: grid !important;
+          grid-template-columns: minmax(0, 1fr) auto !important;
+          align-items: center !important;
+          gap: 28px !important;
+        }}
+
+        .topbar .brand {{
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: flex-start !important;
+          gap: 16px !important;
+          min-width: 0 !important;
+          transform: none !important;
+        }}
+
+        .topbar .brand-mark {{
+          width: 20px !important;
+          height: 20px !important;
+          min-width: 20px !important;
+          min-height: 20px !important;
+          border-radius: 999px !important;
+          background: #b6ff00 !important;
+          box-shadow:
+            0 0 0 1px rgba(182,255,0,0.30),
+            0 0 20px rgba(182,255,0,0.82),
+            0 0 42px rgba(182,255,0,0.38) !important;
+          animation: dsApexLivePulse 1.15s ease-in-out infinite !important;
+          flex: 0 0 auto !important;
+          margin: 0 !important;
+        }}
+
+        .topbar .brand-text {{
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: flex-start !important;
+          justify-content: center !important;
+          gap: 5px !important;
+          min-width: 0 !important;
+        }}
+
+        .topbar .brand-kicker {{
+          display: inline-flex !important;
+          align-items: baseline !important;
+          gap: 0 !important;
+          font-family: var(--sans) !important;
+          font-size: 22px !important;
+          line-height: 1 !important;
+          letter-spacing: -0.02em !important;
+          font-weight: 950 !important;
+          text-transform: uppercase !important;
+        }}
+
+        .topbar .brand-kicker .brand-white {{
+          color: #f8fafc !important;
+        }}
+
+        .topbar .brand-kicker .brand-blue {{
+          color: #4ea3ff !important;
+          text-shadow:
+            0 0 10px rgba(78,163,255,0.25),
+            0 0 22px rgba(78,163,255,0.16) !important;
+        }}
+
+        .topbar .brand-title {{
+          font-family: var(--sans) !important;
+          font-size: 18px !important;
+          line-height: 1.12 !important;
+          letter-spacing: -0.025em !important;
+          font-weight: 850 !important;
+          color: #f8fafc !important;
+          text-transform: none !important;
+        }}
+
+        .topbar .livebox {{
+          justify-self: end !important;
+          min-width: 210px !important;
+          text-align: left !important;
+        }}
+
+        .ds-pro-desktop-nav-inner {{
+          width: min(1180px, calc(100% - 48px)) !important;
+          margin: 0 auto !important;
+        }}
+
+        .ds-pro-desktop-nav-links {{
+          justify-content: flex-start !important;
+        }}
+      }}
+
       /* APEX_FIELD_GUIDE_CLOSED_STATE_LOCK_V1
          Drawer/backdrop hidden by default; opens only when body.field-guide-open is present. */
       .field-guide-backdrop {{
@@ -2145,6 +2246,8 @@ def render_html(payload: dict) -> str:
       body.field-guide-open {{
         overflow: hidden !important;
       }}
+
+
 
 
   </style>
@@ -2212,6 +2315,7 @@ def render_html(payload: dict) -> str:
     <span>Field Guide</span>
   </button>
 
+  {nav_v2_html}
   {nav_html}
   {search_html}
   <div class="app">

@@ -425,3 +425,245 @@
   }
 }
 
+/* DS_PRO_DESKTOP_NAV_V2_NAV_ONLY
+   Desktop-only professional command nav.
+   No mobile drawer, no mobile JS, no duplicate logo block. */
+@media screen and (min-width: 761px) {
+  .ds-pro-desktop-nav {
+    position: relative;
+    z-index: 39;
+    display: block;
+    border-top: 1px solid rgba(255,255,255,0.055);
+    border-bottom: 1px solid rgba(255,255,255,0.075);
+    background:
+      radial-gradient(circle at 0% 50%, rgba(182,255,0,0.13), transparent 30%),
+      linear-gradient(90deg, rgba(9,18,7,0.88), rgba(5,9,14,0.94) 46%, rgba(5,7,11,0.98));
+    backdrop-filter: blur(18px);
+  }
+
+  .ds-pro-desktop-nav + .topnav.ds-shell-nav {
+    display: none !important;
+  }
+
+  .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+    min-height: 74px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .ds-pro-desktop-nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 9px;
+    min-width: 0;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  .ds-pro-desktop-nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ds-pro-desktop-nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 36px;
+    padding: 0 13px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.11);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015));
+    color: rgba(226,232,240,0.86);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 9px;
+    line-height: 1;
+    letter-spacing: 0.085em;
+    font-weight: 900;
+    text-transform: uppercase;
+    white-space: nowrap;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.045),
+      0 0 0 1px rgba(255,255,255,0.02);
+    transition:
+      color 0.16s ease,
+      border-color 0.16s ease,
+      background 0.16s ease,
+      box-shadow 0.16s ease,
+      transform 0.16s ease;
+  }
+
+  .ds-pro-desktop-nav-link span {
+    color: rgba(182,255,0,0.92);
+  }
+
+  .ds-pro-desktop-nav-link:hover {
+    color: #f8fafc;
+    border-color: rgba(182,255,0,0.34);
+    background: rgba(182,255,0,0.075);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.06),
+      0 0 18px rgba(182,255,0,0.12);
+    transform: translateY(-1px);
+  }
+
+  .ds-pro-desktop-nav-link.active {
+    color: #f8fafc;
+    border-color: rgba(182,255,0,0.54);
+    background:
+      radial-gradient(circle at 18% 50%, rgba(182,255,0,0.22), transparent 52%),
+      rgba(182,255,0,0.095);
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.10),
+      0 0 24px rgba(182,255,0,0.20),
+      inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+
+  .ds-pro-desktop-nav-link-terminal {
+    border-color: rgba(96,165,250,0.32);
+    background:
+      radial-gradient(circle at 18% 50%, rgba(96,165,250,0.12), transparent 54%),
+      rgba(96,165,250,0.06);
+  }
+
+  .ds-pro-desktop-nav-link-terminal span {
+    color: rgba(125,211,252,0.95);
+  }
+}
+
+@media screen and (min-width: 761px) and (max-width: 1280px) {
+  .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 40px));
+    min-height: 68px;
+  }
+
+  .ds-pro-desktop-nav-links {
+    gap: 7px;
+  }
+
+  .ds-pro-desktop-nav-link {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 8px;
+    letter-spacing: 0.075em;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .ds-pro-desktop-nav {
+    display: none !important;
+  }
+}
+
+
+/* APEX_DESKTOP_TOPBAR_MOCKUP_LOCK_V1
+   Desktop-only Apex canary:
+   - Pulse dot sits left of DIAMOND/SIGNALS, not above it.
+   - DIAMOND white, SIGNALS blue.
+   - Top nav rail remains navigation-only and starts from same left rail.
+   - Mobile drawer/layout untouched. */
+@media screen and (min-width: 761px) {
+  body:has(.hero-title) .topbar {
+    min-height: 112px !important;
+  }
+
+  body:has(.hero-title) .topbar-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    min-height: 112px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 28px !important;
+  }
+
+  body:has(.hero-title) .topbar .brand {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 18px !important;
+    min-width: 0 !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 999px !important;
+    background: #b6ff00 !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.32),
+      0 0 18px rgba(182,255,0,0.82),
+      0 0 38px rgba(182,255,0,0.42) !important;
+    animation: dsApexLivePulse 1.15s ease-in-out infinite !important;
+    margin: 0 !important;
+    flex: 0 0 auto !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+    min-width: 0 !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-kicker {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    gap: 0 !important;
+    font-family: var(--sans) !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.015em !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-kicker .brand-white {
+    color: #f8fafc !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-kicker .brand-blue {
+    color: #4ea3ff !important;
+    text-shadow:
+      0 0 10px rgba(78,163,255,0.24),
+      0 0 22px rgba(78,163,255,0.16) !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-title {
+    font-family: var(--sans) !important;
+    font-size: 18px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.025em !important;
+    font-weight: 800 !important;
+    color: #f8fafc !important;
+    text-transform: none !important;
+  }
+
+  body:has(.hero-title) .topbar .livebox {
+    justify-self: end !important;
+    min-width: 190px !important;
+    text-align: left !important;
+  }
+
+  body:has(.hero-title) .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    justify-content: flex-start !important;
+  }
+
+  body:has(.hero-title) .ds-pro-desktop-nav-links {
+    justify-content: flex-start !important;
+    width: 100% !important;
+  }
+}
+
