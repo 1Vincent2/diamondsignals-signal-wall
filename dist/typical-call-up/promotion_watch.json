@@ -2,16 +2,17 @@
   "report": "Promotion Watch",
   "subtitle": "AAA Movement Zone / Call-Up Surveillance",
   "version": "promotion_watch_v0.1",
-  "generated_at": "2026-06-04 05:01 PM",
+  "generated_at": "2026-06-04 05:05 PM",
   "timezone": "America/New_York",
   "status": "fresh",
   "mode": "dynamic_promotion_watch_v0.1_hardened",
-  "source_updated_at": "2026-06-04T21:01:12.170365+00:00",
+  "source_updated_at": "2026-06-04T21:05:44.337584+00:00",
   "pipeline_layers": [
     "dynamic_aaa_movement_feed",
     "dynamic_recent_mlb_arrivals_feed",
     "depth_radar_source_locked",
     "freshness_status_tracked",
+    "aaa_weekly_window_age_guard",
     "section_count_validation",
     "ui_empty_state_only",
     "no_static_player_seed_fallback"
@@ -20,6 +21,7 @@
     "Promotion Watch is a dynamic prospect movement surface, not a static prospect list.",
     "Placeholder language in the template is limited to empty-state UI messaging.",
     "Freshness, degraded state, section counts, and source_updated_at are published in the status payload.",
+    "AAA weekly 14-day source windows older than 28 days are rejected before ranking.",
     "72 HR, 14 DAY, Recent Arrivals, and Depth Radar sections remain independently counted for QA.",
     "Depth Radar renders verified AA, High-A, and Low-A rows when available; D1 college remains source-locked."
   ],
@@ -691,7 +693,7 @@
         "so_p": 11.0,
         "bb_allowed": 1.0,
         "org": "Seattle Mariners",
-        "week_start": "2026-05-18 00:00:00",
+        "week_start": "2026-05-25 00:00:00",
         "kbb_p": 11.0,
         "k_rate_proxy": 0.16176470588235295,
         "bb_rate_proxy": 0.014705882352941176,
@@ -728,9 +730,9 @@
             "positive"
           ]
         ],
-        "trend_points": "0.0,31.0 120.0,3.0",
-        "trend_glow": true,
-        "trend_note": "2W"
+        "trend_points": "0.0,31.0 120.0,31.0",
+        "trend_glow": false,
+        "trend_note": "1W"
       },
       {
         "player_name": "River Ryan",
@@ -867,7 +869,7 @@
         "so_p": 15.0,
         "bb_allowed": 3.0,
         "org": "Atlanta Braves",
-        "week_start": "2026-05-18 00:00:00",
+        "week_start": "2026-05-25 00:00:00",
         "kbb_p": 5.0,
         "k_rate_proxy": 0.3191489361702128,
         "bb_rate_proxy": 0.06382978723404255,
@@ -943,9 +945,9 @@
             "positive"
           ]
         ],
-        "trend_points": "0.0,31.0 120.0,3.0",
-        "trend_glow": true,
-        "trend_note": "2W"
+        "trend_points": "0.0,31.0 120.0,31.0",
+        "trend_glow": false,
+        "trend_note": "1W"
       },
       {
         "player_name": "Josh Hendrickson",
@@ -1039,7 +1041,7 @@
         "so_p": 16.0,
         "bb_allowed": 6.0,
         "org": "San Francisco Giants",
-        "week_start": "2026-05-18 00:00:00",
+        "week_start": "2026-05-25 00:00:00",
         "kbb_p": 2.6666666666666665,
         "k_rate_proxy": 0.23529411764705882,
         "bb_rate_proxy": 0.08823529411764706,
@@ -1203,7 +1205,7 @@
         "hr": 6.0,
         "iso": 0.498,
         "org": "New York Mets",
-        "week_start": "2026-05-18 00:00:00",
+        "week_start": "2026-05-25 00:00:00",
         "kbb_h": 1.5714285714285714,
         "bb_rate": 0.1346153846153846,
         "k_rate": 0.21153846153846154,
@@ -1236,9 +1238,9 @@
             "positive"
           ]
         ],
-        "trend_points": "0.0,31.0 60.0,3.0 120.0,20.2",
+        "trend_points": "0.0,3.0 120.0,31.0",
         "trend_glow": false,
-        "trend_note": "3W"
+        "trend_note": "2W"
       },
       {
         "player_name": "James Tibbs Iii",
@@ -1281,9 +1283,9 @@
             "positive"
           ]
         ],
-        "trend_points": "0.0,31.0 120.0,3.0",
-        "trend_glow": true,
-        "trend_note": "2W"
+        "trend_points": "0.0,31.0 120.0,31.0",
+        "trend_glow": false,
+        "trend_note": "1W"
       },
       {
         "player_name": "Collin Price",
@@ -1342,7 +1344,7 @@
         "hr": 5.0,
         "iso": 0.46499999999999997,
         "org": "San Francisco Giants",
-        "week_start": "2026-05-18 00:00:00",
+        "week_start": "2026-05-25 00:00:00",
         "kbb_h": 2.0,
         "bb_rate": 0.10204081632653061,
         "k_rate": 0.20408163265306123,
@@ -1387,7 +1389,7 @@
         "hr": 3.0,
         "iso": 0.34450000000000003,
         "org": "Los Angeles Dodgers",
-        "week_start": "2026-05-18 00:00:00",
+        "week_start": "2026-05-25 00:00:00",
         "kbb_h": 1.6,
         "bb_rate": 0.11363636363636363,
         "k_rate": 0.18181818181818182,
@@ -1465,9 +1467,9 @@
             "positive"
           ]
         ],
-        "trend_points": "0.0,31.0 120.0,3.0",
-        "trend_glow": true,
-        "trend_note": "2W"
+        "trend_points": "0.0,31.0 120.0,31.0",
+        "trend_glow": false,
+        "trend_note": "1W"
       },
       {
         "player_name": "Blaine Crim",
@@ -1510,9 +1512,9 @@
             "positive"
           ]
         ],
-        "trend_points": "0.0,31.0 120.0,3.0",
-        "trend_glow": true,
-        "trend_note": "2W"
+        "trend_points": "0.0,31.0 120.0,31.0",
+        "trend_glow": false,
+        "trend_note": "1W"
       },
       {
         "player_name": "Turner Hill",
@@ -1563,7 +1565,7 @@
         "hr": 0.0,
         "iso": 0.1335,
         "org": "Texas Rangers",
-        "week_start": "2026-05-18 00:00:00",
+        "week_start": "2026-05-25 00:00:00",
         "kbb_h": 0.7272727272727273,
         "bb_rate": 0.2619047619047619,
         "k_rate": 0.19047619047619047,
@@ -1604,7 +1606,7 @@
         "hr": 1.0,
         "iso": 0.137,
         "org": "Texas Rangers",
-        "week_start": "2026-05-18 00:00:00",
+        "week_start": "2026-05-25 00:00:00",
         "kbb_h": 0.7,
         "bb_rate": 0.18867924528301888,
         "k_rate": 0.1320754716981132,
@@ -1690,7 +1692,7 @@
         "hr": 1.0,
         "iso": 0.263,
         "org": "Boston Red Sox",
-        "week_start": "2026-05-18 00:00:00",
+        "week_start": "2026-05-25 00:00:00",
         "kbb_h": 1.0,
         "bb_rate": 0.10526315789473684,
         "k_rate": 0.10526315789473684,
@@ -1723,9 +1725,9 @@
             "positive"
           ]
         ],
-        "trend_points": "0.0,21.3 60.0,31.0 120.0,3.0",
+        "trend_points": "0.0,31.0 120.0,3.0",
         "trend_glow": true,
-        "trend_note": "3W"
+        "trend_note": "2W"
       }
     ],
     "recent_arrivals": [

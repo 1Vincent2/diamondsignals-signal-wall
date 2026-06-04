@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 import json
 import math
@@ -2794,42 +2794,8 @@ HTML_TEMPLATE = Template(
 )
 
 
-def fetch_recent_aaa_weekly_signal_base(limit_weeks: int = 4) -> tuple[pd.DataFrame, list[str]]:
-    from supabase import create_client
-    import os
 
-    url = os.environ["SUPABASE_URL"]
-    key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
-
-    sb = create_client(url, key)
-
-    latest_resp = (
-        sb.table("milb_aaa_weekly_signal_base")
-        .select("week_start")
-        .order("week_start", desc=True)
-        .limit(limit_weeks)
-        .execute()
-    )
-
-    rows = latest_resp.data or []
-    week_starts = [row["week_start"] for row in rows if row.get("week_start")]
-    if not week_starts:
-        return pd.DataFrame(), []
-
-    data_resp = (
-        sb.table("milb_aaa_weekly_signal_base")
-        .select("*")
-        .in_("week_start", week_starts)
-        .execute()
-    )
-
-    data = data_resp.data or []
-    if not data:
-        return pd.DataFrame(), week_starts
-
-    return pd.DataFrame(data), week_starts
-
-
+MAX_AAA_WEEKLY_SIGNAL_AGE_DAYS = 28
 
 
 def fetch_recent_aaa_weekly_signal_base(limit_weeks: int = 4) -> tuple[pd.DataFrame, list[str]]:
@@ -2851,14 +2817,32 @@ def fetch_recent_aaa_weekly_signal_base(limit_weeks: int = 4) -> tuple[pd.DataFr
 
     rows = latest_resp.data or []
 
+    now_utc = datetime.now(timezone.utc)
+    max_age_cutoff = now_utc - timedelta(days=MAX_AAA_WEEKLY_SIGNAL_AGE_DAYS)
+
     week_starts: list[str] = []
     seen: set[str] = set()
+
     for row in rows:
         wk = row.get("week_start")
         if not wk or wk in seen:
             continue
+
+        parsed = pd.to_datetime(wk, errors="coerce")
+        if pd.isna(parsed):
+            continue
+
+        if parsed.tzinfo is None:
+            parsed_dt = parsed.to_pydatetime().replace(tzinfo=timezone.utc)
+        else:
+            parsed_dt = parsed.to_pydatetime().astimezone(timezone.utc)
+
+        if parsed_dt < max_age_cutoff:
+            continue
+
         seen.add(wk)
         week_starts.append(wk)
+
         if len(week_starts) >= limit_weeks:
             break
 
@@ -2877,6 +2861,7 @@ def fetch_recent_aaa_weekly_signal_base(limit_weeks: int = 4) -> tuple[pd.DataFr
         return pd.DataFrame(), week_starts
 
     return pd.DataFrame(data), week_starts
+
 
 
 def load_source_frame() -> tuple[pd.DataFrame, list[str], str | None]:
@@ -3338,6 +3323,7 @@ def render_html() -> str:
         "dynamic_recent_mlb_arrivals_feed",
         "depth_radar_source_locked",
         "freshness_status_tracked",
+        "aaa_weekly_window_age_guard",
         "section_count_validation",
         "ui_empty_state_only",
         "no_static_player_seed_fallback",
@@ -3346,6 +3332,7 @@ def render_html() -> str:
         "Promotion Watch is a dynamic prospect movement surface, not a static prospect list.",
         "Placeholder language in the template is limited to empty-state UI messaging.",
         "Freshness, degraded state, section counts, and source_updated_at are published in the status payload.",
+        "AAA weekly 14-day source windows older than 28 days are rejected before ranking.",
         "72 HR, 14 DAY, Recent Arrivals, and Depth Radar sections remain independently counted for QA.",
         "Depth Radar renders verified AA, High-A, and Low-A rows when available; D1 college remains source-locked.",
     ]
