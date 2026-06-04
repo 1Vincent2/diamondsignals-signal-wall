@@ -3404,8 +3404,12 @@ def render_html() -> str:
         fresh_pitchers_live=fresh_pitchers_live.to_dict(orient="records"),
         total_signals=total_signals,
         total_14_signals=total_14_signals,
+        # Preserve legacy names while also supplying the explicit template variables
+        # used by the 72 HR panels.
         hitters=hitters_72.to_dict(orient="records"),
         pitchers=pitchers_72.to_dict(orient="records"),
+        hitters_72=hitters_72.to_dict(orient="records"),
+        pitchers_72=pitchers_72.to_dict(orient="records"),
         hitters_14=hitters_14.to_dict(orient="records"),
         pitchers_14=pitchers_14.to_dict(orient="records"),
         archive_arrivals=archive_arrivals,
