@@ -1795,6 +1795,30 @@
       color: var(--text);
     }
 
+
+/* DESKTOP_ONLY_HEADER_VISUAL_ALIGNMENT_V1
+   Desktop-only header normalization.
+   Scope: report status/topbar row only.
+   Do not touch mobile, Field Guide, player search, or shared nav. */
+@media (min-width: 901px) {
+  .topbar-inner {
+    width: min(1180px, calc(100% - 48px));
+    min-height: 78px;
+    align-items: center;
+  }
+
+  .brand-title {
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    font-weight: 900;
+  }
+
+  .livebox {
+    min-width: 190px;
+    justify-self: end;
+  }
+}
+
   </style>
 </head>
 <body>
