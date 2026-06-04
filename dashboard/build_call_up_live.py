@@ -562,7 +562,7 @@ def build_aaa_hitter_promotion_watch(df: pd.DataFrame, trend_lookup: dict[str, d
             hitters.at[idx, "trend_glow"] = bool(info["trend_glow"])
             hitters.at[idx, "trend_note"] = info.get("trend_label", "Trend")
 
-    return hitters.sort_values(["edge_score", "pa"], ascending=[False, False]).reset_index(drop=True)
+    return hitters.sort_values(["edge_score", "pa", "week_start", "player_id", "player_name"], ascending=[False, False, False, True, True], kind="mergesort").reset_index(drop=True)
 
 
 def build_aaa_pitcher_promotion_watch(df: pd.DataFrame, trend_lookup: dict[str, dict] | None = None) -> pd.DataFrame:
@@ -638,7 +638,7 @@ def build_aaa_pitcher_promotion_watch(df: pd.DataFrame, trend_lookup: dict[str, 
             pitchers.at[idx, "trend_glow"] = bool(info["trend_glow"])
             pitchers.at[idx, "trend_note"] = info.get("trend_label", "Trend")
 
-    return pitchers.sort_values(["edge_score", "bf"], ascending=[False, False]).reset_index(drop=True)
+    return pitchers.sort_values(["edge_score", "bf", "week_start", "player_id", "player_name"], ascending=[False, False, False, True, True], kind="mergesort").reset_index(drop=True)
 
 
 def is_recent_arrival_prospect_relevant(move: dict) -> bool:
@@ -3032,7 +3032,7 @@ def load_fresh_aaa_hitter_refresh() -> pd.DataFrame:
         )
 
     df["why"] = df.apply(_why, axis=1)
-    return df.sort_values(["edge_score", "hr", "iso", "h"], ascending=[False, False, False, False]).reset_index(drop=True)
+    return df.sort_values(["edge_score", "hr", "iso", "h", "resolved_player_id", "player_name"], ascending=[False, False, False, False, True, True], kind="mergesort").reset_index(drop=True)
 
 
 
@@ -3105,7 +3105,7 @@ def load_fresh_aaa_pitcher_refresh() -> pd.DataFrame:
         )
 
     df["why"] = df.apply(_why, axis=1)
-    return df.sort_values(["edge_score", "so", "bb", "h"], ascending=[False, False, True, True]).reset_index(drop=True)
+    return df.sort_values(["edge_score", "so", "bb", "h", "resolved_player_id", "player_name"], ascending=[False, False, True, True, True, True], kind="mergesort").reset_index(drop=True)
 
 def load_depth_radar_rows(limit: int = 24) -> list[dict]:
     path = DIST_DIR / "depth_radar_refresh.json"

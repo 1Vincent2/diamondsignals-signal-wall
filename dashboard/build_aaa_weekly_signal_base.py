@@ -103,54 +103,76 @@ def build_signal_base(df: pd.DataFrame) -> pd.DataFrame:
     hitter_mask = out["pa"].notna()
     pitcher_mask = out["bf"].notna()
 
+    out["edge_score_raw"] = None
     out["edge_score"] = None
     out["score_class"] = "neutral"
 
+    # Score within each week_start + signal family so late-arriving rows do not
+    # re-normalize unrelated weeks. This keeps Promotion Watch weekly windows
+    # deterministic at the source-frame level.
     if hitter_mask.any():
-        hitters = out.loc[hitter_mask].copy()
-        hitters["bb_rate"] = (hitters["bb"] / hitters["pa"]).fillna(0)
-        hitters["k_rate"] = (hitters["so"] / hitters["pa"]).fillna(0)
-        kbb_series = hitters["kbb_h"].replace(0, pd.NA)
-        kbb_fill = kbb_series.dropna().median()
-        if pd.isna(kbb_fill):
-            kbb_fill = 1.0
+        for _week, hitter_idx in out.loc[hitter_mask].groupby("week_start", dropna=False).groups.items():
+            hitters = out.loc[list(hitter_idx)].copy()
+            hitters["bb_rate"] = (hitters["bb"] / hitters["pa"]).fillna(0)
+            hitters["k_rate"] = (hitters["so"] / hitters["pa"]).fillna(0)
+            kbb_series = hitters["kbb_h"].replace(0, pd.NA)
+            kbb_fill = kbb_series.dropna().median()
+            if pd.isna(kbb_fill):
+                kbb_fill = 1.0
 
-        hitters["edge_score_raw"] = (
-            50
-            + 12 * zscore(hitters["iso"].fillna(0))
-            - 10 * zscore(kbb_series.fillna(kbb_fill))
-            + 8 * zscore(hitters["bb_rate"])
-            - 6 * zscore(hitters["k_rate"])
-            + 4 * zscore(hitters["hr"].fillna(0))
-            + 2 * zscore(hitters["pa"].fillna(0))
-        )
-        hitters["edge_score"] = hitters["edge_score_raw"].clip(5, 95).round(1)
-        hitters["score_class"] = hitters["edge_score"].apply(classify_score)
-        out.loc[hitters.index, "edge_score"] = hitters["edge_score"]
-        out.loc[hitters.index, "score_class"] = hitters["score_class"]
+            hitters["edge_score_raw"] = (
+                50
+                + 12 * zscore(hitters["iso"].fillna(0))
+                - 10 * zscore(kbb_series.fillna(kbb_fill))
+                + 8 * zscore(hitters["bb_rate"])
+                - 6 * zscore(hitters["k_rate"])
+                + 4 * zscore(hitters["hr"].fillna(0))
+                + 2 * zscore(hitters["pa"].fillna(0))
+            )
+            hitters["edge_score"] = hitters["edge_score_raw"].clip(5, 95).round(1)
+            hitters["score_class"] = hitters["edge_score"].apply(classify_score)
+
+            out.loc[hitters.index, "bb_rate"] = hitters["bb_rate"]
+            out.loc[hitters.index, "k_rate"] = hitters["k_rate"]
+            out.loc[hitters.index, "edge_score_raw"] = hitters["edge_score_raw"]
+            out.loc[hitters.index, "edge_score"] = hitters["edge_score"]
+            out.loc[hitters.index, "score_class"] = hitters["score_class"]
 
     if pitcher_mask.any():
-        pitchers = out.loc[pitcher_mask].copy()
-        kbb_series = pitchers["kbb_p"].replace(0, pd.NA)
-        kbb_fill = kbb_series.dropna().median()
-        if pd.isna(kbb_fill):
-            kbb_fill = 1.0
+        for _week, pitcher_idx in out.loc[pitcher_mask].groupby("week_start", dropna=False).groups.items():
+            pitchers = out.loc[list(pitcher_idx)].copy()
+            kbb_series = pitchers["kbb_p"].replace(0, pd.NA)
+            kbb_fill = kbb_series.dropna().median()
+            if pd.isna(kbb_fill):
+                kbb_fill = 1.0
 
-        pitchers["k_rate_proxy"] = (pitchers["so_p"] / pitchers["bf"]).fillna(0)
-        pitchers["bb_rate_proxy"] = (pitchers["bb_allowed"] / pitchers["bf"]).fillna(0)
-        pitchers["edge_score_raw"] = (
-            50
-            + 14 * zscore(kbb_series.fillna(kbb_fill))
-            + 8 * zscore(pitchers["k_rate_proxy"])
-            - 7 * zscore(pitchers["bb_rate_proxy"])
-            + 3 * zscore(pitchers["bf"].fillna(0))
-        )
-        pitchers["edge_score"] = pitchers["edge_score_raw"].clip(5, 95).round(1)
-        pitchers["score_class"] = pitchers["edge_score"].apply(classify_score)
-        out.loc[pitchers.index, "edge_score"] = pitchers["edge_score"]
-        out.loc[pitchers.index, "score_class"] = pitchers["score_class"]
+            pitchers["k_rate_proxy"] = (pitchers["so_p"] / pitchers["bf"]).fillna(0)
+            pitchers["bb_rate_proxy"] = (pitchers["bb_allowed"] / pitchers["bf"]).fillna(0)
+            pitchers["edge_score_raw"] = (
+                50
+                + 14 * zscore(kbb_series.fillna(kbb_fill))
+                + 8 * zscore(pitchers["k_rate_proxy"])
+                - 7 * zscore(pitchers["bb_rate_proxy"])
+                + 3 * zscore(pitchers["bf"].fillna(0))
+            )
+            pitchers["edge_score"] = pitchers["edge_score_raw"].clip(5, 95).round(1)
+            pitchers["score_class"] = pitchers["edge_score"].apply(classify_score)
+
+            out.loc[pitchers.index, "k_rate_proxy"] = pitchers["k_rate_proxy"]
+            out.loc[pitchers.index, "bb_rate_proxy"] = pitchers["bb_rate_proxy"]
+            out.loc[pitchers.index, "edge_score_raw"] = pitchers["edge_score_raw"]
+            out.loc[pitchers.index, "edge_score"] = pitchers["edge_score"]
+            out.loc[pitchers.index, "score_class"] = pitchers["score_class"]
 
     out["updated_at"] = datetime.utcnow().isoformat()
+
+    stable_sort_cols = [c for c in ["week_start", "edge_score", "player_id", "player_name"] if c in out.columns]
+    if stable_sort_cols:
+        ascending = []
+        for c in stable_sort_cols:
+            ascending.append(False if c in {"week_start", "edge_score"} else True)
+        out = out.sort_values(stable_sort_cols, ascending=ascending, kind="mergesort").reset_index(drop=True)
+
     return out
 
 
