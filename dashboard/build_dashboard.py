@@ -1562,6 +1562,47 @@ def build_scout_support_metrics(scout: Optional[dict]) -> Optional[dict]:
     return {"profile": "SCOUT_PROFILE", "tiles": tiles[:5]} if tiles else None
 
 
+
+def build_promotion_watch_context(player: Optional[dict]) -> Optional[dict]:
+    """
+    Build a compact, evidence-preserving context block for Promotion Watch candidates.
+
+    This does not fabricate scout metrics. It preserves the active Promotion Watch
+    signal that caused the player to enter the dossier universe, so the scout page
+    can explain why the page exists even before full Statcast/scout_metrics hydrate.
+    """
+    player = player if isinstance(player, dict) else {}
+
+    section = str(player.get("promotion_watch_section") or "").strip()
+    score = player.get("promotion_watch_score")
+    why = str(player.get("promotion_watch_why") or "").strip()
+    source = str(player.get("promotion_watch_source") or "").strip()
+    level = str(player.get("level") or "").strip()
+    status = str(player.get("status") or "").strip()
+
+    if not any([section, score not in (None, ""), why, source, level, status.startswith("PROMOTION_WATCH")]):
+        return None
+
+    section_label = section.replace("_", " ").upper() if section else "PROMOTION WATCH"
+    tiles = [
+        {"label": "SOURCE", "value": section_label},
+        {"label": "SCORE", "value": score if score not in (None, "") else "—"},
+        {"label": "LEVEL", "value": level or "—"},
+        {"label": "FEED", "value": source or "—"},
+    ]
+
+    return {
+        "profile": "PROMOTION_WATCH_CONTEXT",
+        "section": section,
+        "section_label": section_label,
+        "score": score,
+        "why": why,
+        "source": source,
+        "level": level,
+        "tiles": [tile for tile in tiles if tile["value"] != "—"],
+    }
+
+
 def build_support_metrics(ctx: Optional[dict], metrics: Optional[dict], player: Optional[dict] = None) -> dict:
     """Normalize support metrics for all Performance Audit cards."""
     ctx = ctx if isinstance(ctx, dict) else {}
@@ -1652,6 +1693,14 @@ def write_dossier_canon(
         except Exception as exc:
             print(f"[DOSSIER_SUPPLEMENT] waiver supplemental unavailable: {exc}")
 
+    promotion_watch_context_lookup = {
+        str(p.get("player_id") or "").strip(): build_promotion_watch_context(p)
+        for p in supplemental_players
+        if str(p.get("player_id") or "").strip()
+        and str(p.get("status") or "").startswith("PROMOTION_WATCH")
+        and build_promotion_watch_context(p)
+    }
+
     existing_ids = {
         str(p.get("player_id") or "").strip()
         for p in player_rows
@@ -1724,6 +1773,7 @@ def write_dossier_canon(
             "season_context": signal_context.get("season_context"),
             "signals": signal_context.get("signals", []),
             "support_metrics": signal_context.get("support_metrics") or build_scout_support_metrics(scout),
+            "promotion_watch_context": build_promotion_watch_context(player) or promotion_watch_context_lookup.get(player_id),
         }
 
         if scout:
@@ -2614,6 +2664,31 @@ def scout_shell_html() -> str:
         text-overflow: ellipsis;
       }
 
+      .promotion-context-card {
+        display: none;
+        padding: 16px;
+        margin-bottom: 16px;
+        border-color: rgba(182,255,0,0.16);
+        background:
+          radial-gradient(circle at top left, rgba(182,255,0,0.06), transparent 34%),
+          rgba(255,255,255,0.025);
+      }
+
+      .promotion-context-copy {
+        margin: 0;
+        color: var(--soft);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .promotion-context-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+
       /* PERFORMANCE AUDIT SCOUT LAYOUT LOCK */
       @media (min-width: 761px) {
         .metrics-grid {
@@ -2727,6 +2802,15 @@ def scout_shell_html() -> str:
           <div class="support-profile" id="supportProfile">CONTEXT</div>
         </div>
         <div class="support-grid" id="supportMetricsGrid"></div>
+      </section>
+
+      <section class="section-card promotion-context-card" id="promotionWatchContextCard">
+        <div class="support-head">
+          <div class="support-title">Promotion Watch // Current Signal Context</div>
+          <div class="support-profile" id="promotionWatchContextProfile">WATCHLIST</div>
+        </div>
+        <p class="promotion-context-copy" id="promotionWatchContextCopy"></p>
+        <div class="promotion-context-grid" id="promotionWatchContextGrid"></div>
       </section>
 
 
@@ -2866,6 +2950,37 @@ def scout_shell_html() -> str:
         card.style.display = "block";
       }
 
+
+      function renderPromotionWatchContext(player) {
+        const card = document.getElementById("promotionWatchContextCard");
+        const profile = document.getElementById("promotionWatchContextProfile");
+        const copy = document.getElementById("promotionWatchContextCopy");
+        const grid = document.getElementById("promotionWatchContextGrid");
+
+        if (!card || !profile || !copy || !grid) return;
+
+        const ctx = player && player.promotion_watch_context ? player.promotion_watch_context : null;
+        const tiles = ctx && Array.isArray(ctx.tiles) ? ctx.tiles : [];
+
+        if (!ctx) {
+          card.style.display = "none";
+          copy.textContent = "";
+          grid.innerHTML = "";
+          return;
+        }
+
+        profile.textContent = ctx.section_label || ctx.profile || "PROMOTION WATCH";
+        copy.textContent = ctx.why || "This player is currently present in the Promotion Watch surveillance feed.";
+        grid.innerHTML = tiles.map(tile => `
+          <div class="support-tile">
+            <div class="support-label">${escapeHtml(tile.label || "Context")}</div>
+            <div class="support-value">${escapeHtml(tile.value ?? "—")}</div>
+          </div>
+        `).join("");
+
+        card.style.display = "block";
+      }
+
     async function loadScoutPlayer() {
       const pathParts = window.location.pathname.split("/").filter(Boolean);
       const scoutIndex = pathParts.indexOf("scout");
@@ -2930,6 +3045,7 @@ def scout_shell_html() -> str:
         document.getElementById("scoutTrendPill").textContent = player.trend_note || "Trend";
         document.getElementById("scoutConfidencePill").textContent = "CANONICAL";
           renderSupportMetrics(player);
+          renderPromotionWatchContext(player);
 
         if (scoutMetrics) {
           setZone("zone1", scoutMetrics.ballistics || {});
