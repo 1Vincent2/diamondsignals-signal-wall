@@ -1209,6 +1209,131 @@ def write_scout_metrics(df: pd.DataFrame) -> dict:
     print("Wrote dist/scout_metrics.json")
     return payload
 
+
+
+def load_promotion_watch_dossier_players() -> list[dict]:
+    """
+    Local dossier supplement for current Promotion Watch candidates.
+
+    Purpose:
+    - Promotion Watch can surface fresh AAA/AA/A/D1 candidates before they exist
+      in the main MLB Statcast-derived player_index or Supabase supplemental universe.
+    - The Scout Dossier shell should still generate a valid player page for those
+      candidates when Promotion Watch has a resolved MLBAM/player id.
+    - This does not invent metrics. It creates identity + context scaffold records
+      so the dossier can hydrate whatever support/scout metrics are available later.
+    """
+    path = DIST_DIR / "typical-call-up" / "promotion_watch.json"
+    if not path.exists():
+        return []
+
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        print(f"[DOSSIER_SUPPLEMENT] promotion watch unavailable: {exc}")
+        return []
+
+    top = payload.get("top_signals") or {}
+    if not isinstance(top, dict):
+        return []
+
+    sections = [
+        "pitchers_72hr",
+        "hitters_72hr",
+        "pitchers_14day",
+        "hitters_14day",
+        "recent_arrivals",
+        "depth_radar",
+    ]
+
+    supplemental: list[dict] = []
+    seen: set[str] = set()
+
+    for section in sections:
+        rows = top.get(section) or []
+        if not isinstance(rows, list):
+            continue
+
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+
+            pid = safe_int(
+                row.get("resolved_player_id")
+                or row.get("player_id")
+                or row.get("mlbam_id")
+                or row.get("id")
+            )
+            if pid is None:
+                continue
+
+            pid_key = str(pid)
+            if pid_key in seen:
+                continue
+            seen.add(pid_key)
+
+            player_name = (
+                str(row.get("player_name") or row.get("name") or "").strip()
+                or f"Player {pid}"
+            )
+
+            team_value = (
+                str(
+                    row.get("team")
+                    or row.get("team_name")
+                    or row.get("display_team")
+                    or row.get("display_org")
+                    or row.get("org")
+                    or row.get("affiliate")
+                    or ""
+                ).strip()
+            )
+
+            level_value = str(row.get("level") or "").strip()
+            if not level_value:
+                if section == "depth_radar":
+                    level_value = "AA_A_D1_SURVEILLANCE"
+                elif "72hr" in section or "14day" in section:
+                    level_value = "AAA_PROMOTION_WATCH"
+                else:
+                    level_value = "PROMOTION_WATCH"
+
+            position_value = (
+                str(
+                    row.get("position")
+                    or row.get("position_group")
+                    or row.get("player_type")
+                    or row.get("role")
+                    or ""
+                ).strip()
+            )
+
+            supplemental.append(
+                {
+                    "player_id": pid,
+                    "full_name": player_name,
+                    "first_name": "",
+                    "last_name": "",
+                    "team": team_value,
+                    "team_name": team_value,
+                    "level": level_value,
+                    "position": position_value,
+                    "bats": "",
+                    "throws": "",
+                    "age": None,
+                    "status": f"PROMOTION_WATCH_SUPPLEMENTAL_UNIVERSE:{section}",
+                    "headshot_url": build_headshot_url(pid),
+                    "promotion_watch_section": section,
+                    "promotion_watch_score": row.get("edge_score") or row.get("live_score"),
+                    "promotion_watch_why": row.get("why") or "",
+                    "promotion_watch_source": row.get("source_badge") or "",
+                }
+            )
+
+    print(f"[DOSSIER_SUPPLEMENT] promotion watch players loaded: {len(supplemental)}")
+    return supplemental
+
+
 def load_supplemental_milb_dossier_players() -> list[dict]:
     """
     Supplemental identity universe for players not present in MLB statcast/raw dashboard data.
@@ -1494,6 +1619,7 @@ def write_dossier_canon(
         else []
     )
     supplemental_players = load_supplemental_milb_dossier_players()
+    supplemental_players.extend(load_promotion_watch_dossier_players())
 
 
     waiver_path = DIST_DIR / "waiver_wire.json"
