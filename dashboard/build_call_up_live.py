@@ -2466,7 +2466,7 @@ HTML_TEMPLATE = Template(
               data-player-type="{{ row.player_type }}"
               data-player-team="{{ row.to_code }}"
               data-source-tag="ARRIVAL"
-              data-profile-url="{% if row.player_id %}/scout/{{ row.player_id }}/{% else %}#{% endif %}"
+              data-profile-url="{{ row.profile_url }}"
             >
               <div class="audit-left">
                 <div class="audit-trigger movement-trigger">
@@ -3274,6 +3274,41 @@ def render_html() -> str:
 
     depth_radar_rows = load_depth_radar_rows(limit=24)
 
+    existing_scout_ids = {
+        path.parent.name
+        for path in (DIST_DIR / "scout").glob("*/index.html")
+        if path.parent.name.isdigit()
+    }
+
+    def attach_profile_urls(rows):
+        safe_rows = []
+        for row in rows or []:
+            item = dict(row)
+            pid = str(
+                item.get("resolved_player_id")
+                or item.get("player_id")
+                or item.get("mlbam_id")
+                or ""
+            ).strip()
+            item["profile_url"] = f"/scout/{pid}/" if pid and pid in existing_scout_ids else "#"
+            item["profile_available"] = bool(pid and pid in existing_scout_ids)
+            safe_rows.append(item)
+        return safe_rows
+
+    def gate_rendered_scout_links(rendered_html: str) -> str:
+        """Disable any rendered scout links that do not have generated dossier pages."""
+        def replace_match(match: re.Match) -> str:
+            pid = match.group(1)
+            if pid in existing_scout_ids:
+                return match.group(0)
+            return 'data-profile-url="#"'
+
+        return re.sub(
+            r'data-profile-url="/scout/([0-9]+)/"',
+            replace_match,
+            rendered_html,
+        )
+
     sections = {
         "pitchers_72hr": len(pitchers_72),
         "hitters_72hr": len(hitters_72),
@@ -3426,18 +3461,20 @@ def render_html() -> str:
         total_14_signals=total_14_signals,
         # Preserve legacy names while also supplying the explicit template variables
         # used by the 72 HR panels.
-        hitters=hitters_72.to_dict(orient="records"),
-        pitchers=pitchers_72.to_dict(orient="records"),
-        hitters_72=hitters_72.to_dict(orient="records"),
-        pitchers_72=pitchers_72.to_dict(orient="records"),
-        hitters_14=hitters_14.to_dict(orient="records"),
-        pitchers_14=pitchers_14.to_dict(orient="records"),
-        archive_arrivals=archive_arrivals,
-        depth_radar_rows=depth_radar_rows,
+        hitters=attach_profile_urls(hitters_72.to_dict(orient="records")),
+        pitchers=attach_profile_urls(pitchers_72.to_dict(orient="records")),
+        hitters_72=attach_profile_urls(hitters_72.to_dict(orient="records")),
+        pitchers_72=attach_profile_urls(pitchers_72.to_dict(orient="records")),
+        hitters_14=attach_profile_urls(hitters_14.to_dict(orient="records")),
+        pitchers_14=attach_profile_urls(pitchers_14.to_dict(orient="records")),
+        archive_arrivals=attach_profile_urls(archive_arrivals),
+        depth_radar_rows=attach_profile_urls(depth_radar_rows),
         pitchers_14_message=pitchers_14_message,
         hitters_14_message=hitters_14_message,
         arrivals_message=arrivals_message,
     )
+
+    rendered = gate_rendered_scout_links(rendered)
 
     assert_render_health(rendered)
     return rendered
