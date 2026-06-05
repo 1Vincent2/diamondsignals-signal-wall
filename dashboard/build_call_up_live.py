@@ -3388,7 +3388,27 @@ def render_html() -> str:
     if source_is_stale and arrivals_empty:
         arrivals_message = "Recent MLB arrivals feed unavailable or stale. Last source window is older than threshold."
 
-    return HTML_TEMPLATE.render(
+    def assert_render_health(rendered_html: str) -> None:
+        """Fail fast when populated payload sections render as empty UI states."""
+        failures: list[str] = []
+
+        if len(pitchers_72) > 0 and "No 72 HR pitching prospect signals available." in rendered_html:
+            failures.append("72HR pitching payload populated but empty-state placeholder rendered")
+
+        if len(hitters_72) > 0 and "No 72 HR hitting prospect signals available." in rendered_html:
+            failures.append("72HR hitting payload populated but empty-state placeholder rendered")
+
+        if "Depth Radar" in rendered_html or "DEPTH RADAR" in rendered_html:
+            failures.append("legacy Depth Radar language rendered after AAA GEMS rename")
+
+        if "AAA GEMS" not in rendered_html:
+            failures.append("AAA GEMS label missing from rendered HTML")
+
+        if failures:
+            raise RuntimeError("Promotion Watch render-health guard failed: " + "; ".join(failures))
+
+
+    rendered = HTML_TEMPLATE.render(
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
         timezone_label=TIMEZONE_LABEL,
         nav_html=Template(NAV_TEMPLATE).render(active_nav="promotion_watch"),
@@ -3418,6 +3438,9 @@ def render_html() -> str:
         hitters_14_message=hitters_14_message,
         arrivals_message=arrivals_message,
     )
+
+    assert_render_health(rendered)
+    return rendered
 
 
 def write_status_file(status_payload: dict) -> None:
