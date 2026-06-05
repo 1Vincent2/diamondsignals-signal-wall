@@ -21,6 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
 DIST_DIR = REPO_ROOT / "dist"
 HIDDEN_GEMS_DIR = DIST_DIR / "hidden-gems"
+MLB_EXTRACTION_DIR = DIST_DIR / "mlb-extraction"
 HIDDEN_GEMS_JSON = HIDDEN_GEMS_DIR / "mlb_extraction_ledger.json"
 STATUS_DIR = DIST_DIR / "status"
 MLB_EXTRACTION_STATUS_PATH = STATUS_DIR / "mlb-extraction.json"
@@ -1104,7 +1105,7 @@ def render_html() -> str:
         generated_at=generated_at,
         latest_week_start=source_window,
         timezone_label=TIMEZONE_LABEL,
-        nav_html=Template(NAV_TEMPLATE).render(active_nav="hidden_gems"),
+        nav_html=Template(NAV_TEMPLATE).render(active_nav="mlb_extraction"),
         search_html=SEARCH_TEMPLATE,
         footer_html=FOOTER_TEMPLATE,
         shell_styles=SHELL_STYLES_TEMPLATE,
@@ -1114,8 +1115,9 @@ def render_html() -> str:
 
 def main() -> None:
     HIDDEN_GEMS_DIR.mkdir(parents=True, exist_ok=True)
+    MLB_EXTRACTION_DIR.mkdir(parents=True, exist_ok=True)
     html = render_html()
-    output_path = HIDDEN_GEMS_DIR / "index.html"
+    output_path = MLB_EXTRACTION_DIR / "index.html"
     output_path.write_text(html, encoding="utf-8")
     print(f"Wrote {output_path}")
 

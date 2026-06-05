@@ -4,7 +4,7 @@ import urllib.request
 from datetime import datetime
 
 BASE = "https://signals.diamondsignals.ai"
-URL = f"{BASE}/hidden-gems/?v={int(datetime.now().timestamp())}"
+URL = f"{BASE}/mlb-extraction/?v={int(datetime.now().timestamp())}"
 
 html = urllib.request.urlopen(URL, timeout=30).read().decode("utf-8", errors="replace")
 
