@@ -10,3 +10,15 @@
 [[edge_functions]]
   function = "signals-gate"
   path = "/*"
+
+[[redirects]]
+  from = "/hidden-gems/"
+  to = "/mlb-extraction/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/hidden-gems"
+  to = "/mlb-extraction/"
+  status = 301
+  force = true
