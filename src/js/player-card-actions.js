@@ -162,11 +162,23 @@
 
   function syncCardProvisionStates() {
     const cards = Array.from(document.querySelectorAll(CARD_SELECTOR));
+
+    Array.from(document.querySelectorAll(WATCH_BUTTON_SELECTOR)).forEach((button) => {
+      const card = button.closest(CARD_SELECTOR) || button.closest(".asset-card") || button.closest("article") || button.parentElement;
+      if (card && !cards.includes(card)) cards.push(card);
+    });
+
     cards.forEach((card) => {
       const watchButton = card.querySelector(WATCH_BUTTON_SELECTOR);
       if (!watchButton) return;
       const player = getPlayerFromCard(card, watchButton);
-      applyProvisionedState(watchButton, isPlayerProvisioned(player));
+      const provisioned = isPlayerProvisioned(player);
+      applyProvisionedState(watchButton, provisioned);
+
+      card.classList.toggle("is-provisioned", !!provisioned);
+      card.classList.toggle("tracking-active", !!provisioned);
+      card.setAttribute("data-provisioned", provisioned ? "true" : "false");
+      card.setAttribute("data-tracking-state", provisioned ? "active" : "idle");
     });
   }
 
@@ -243,21 +255,35 @@
     syncCardProvisionStates();
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initPlayerCardActions);
-  } else {
-    initPlayerCardActions();
+  function scheduleProvisionSync() {
+    syncProvisionUI();
+    window.setTimeout(syncProvisionUI, 50);
+    window.setTimeout(syncProvisionUI, 250);
+    window.setTimeout(syncProvisionUI, 750);
   }
 
-  window.addEventListener("focus", syncProvisionUI);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      initPlayerCardActions();
+      scheduleProvisionSync();
+    });
+  } else {
+    initPlayerCardActions();
+    scheduleProvisionSync();
+  }
+
+  window.addEventListener("focus", scheduleProvisionSync);
+  window.addEventListener("pageshow", scheduleProvisionSync);
+  window.addEventListener("resize", scheduleProvisionSync);
+  window.addEventListener("orientationchange", scheduleProvisionSync);
 
   document.addEventListener("visibilitychange", function () {
-    if (!document.hidden) syncProvisionUI();
+    if (!document.hidden) scheduleProvisionSync();
   });
 
   window.addEventListener("storage", function (event) {
     if (!event || event.key === STORAGE_KEY || event.key === LEGACY_STORAGE_KEY) {
-      syncProvisionUI();
+      scheduleProvisionSync();
     }
   });
 
