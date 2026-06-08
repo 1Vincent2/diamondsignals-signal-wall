@@ -2497,8 +2497,57 @@ def render_html(payload: dict) -> str:
         fields.metric.textContent = d.supportingMetric || "--";
         fields.action.textContent = d.action || "--";
 
-        fields.provision.href = `https://app.diamondsignals.ai/auth?next=/watchlist&player_id=${{encodeURIComponent(playerId)}}&source=apex-extraction`;
-        fields.dossier.href = `/player/${{encodeURIComponent(playerId)}}/`;
+        fields.provision.href = "/watch-list/";
+        fields.provision.dataset.playerId = playerId;
+        fields.provision.dataset.playerName = playerName;
+        fields.provision.dataset.playerTeam = d.playerTeam || "MLB";
+        fields.provision.dataset.playerType = d.playerRole || "";
+        fields.provision.dataset.profileUrl = `/scout/${{encodeURIComponent(playerId)}}/`;
+        fields.provision.dataset.sourceTag = "apex-extraction";
+        fields.dossier.href = `/scout/${{encodeURIComponent(playerId)}}/`;
+
+        fields.provision.onclick = (event) => {{
+          event.preventDefault();
+
+          const stored = (() => {{
+            try {{
+              const raw = window.localStorage.getItem("diamondsignals_watch_list_v1");
+              const parsed = raw ? JSON.parse(raw) : [];
+              return Array.isArray(parsed) ? parsed : [];
+            }} catch (err) {{
+              return [];
+            }}
+          }})();
+
+          const nextPlayer = {{
+            playerId,
+            playerName,
+            playerType: d.playerRole || "",
+            team: d.playerTeam || "MLB",
+            profileUrl: `/scout/${{encodeURIComponent(playerId)}}/`,
+            sourceTag: "APEX_EXTRACTION",
+            savedAt: new Date().toISOString()
+          }};
+
+          const existingIndex = stored.findIndex((p) => {{
+            if (nextPlayer.playerId && p.playerId) return String(p.playerId) === String(nextPlayer.playerId);
+            return String(p.playerName || "").toLowerCase() === String(nextPlayer.playerName || "").toLowerCase();
+          }});
+
+          if (existingIndex >= 0) {{
+            stored[existingIndex] = {{ ...stored[existingIndex], ...nextPlayer }};
+          }} else {{
+            stored.push(nextPlayer);
+          }}
+
+          try {{
+            window.localStorage.setItem("diamondsignals_watch_list_v1", JSON.stringify(stored));
+          }} catch (err) {{
+            // Continue to Tracking Radar even if localStorage is unavailable.
+          }}
+
+          window.location.href = "/watch-list/";
+        }};
 
         fields.copy.onclick = async () => {{
           const copyText = `${{playerName}} // Apex Score ${{d.apexScore || "--"}} // ${{d.verdict || ""}} // ${{d.supportingMetric || ""}}`;
