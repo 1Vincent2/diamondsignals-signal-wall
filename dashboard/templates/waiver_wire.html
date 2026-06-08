@@ -1651,14 +1651,39 @@ body.waiver-field-guide-open{
 
       <section class="grid" id="waiverAssetGrid">
         {% for asset in assets %}
-        <article class="asset-card" data-search="{{ asset.search_blob }}" data-audit-url="{{ asset.audit_url }}" onclick="openPlayerAudit(this)" tabindex="0" role="button" aria-label="Open performance audit for {{ asset.player_name }}">
+        <article
+          class="asset-card js-player-card"
+          data-search="{{ asset.search_blob }}"
+          data-audit-url="{{ asset.audit_url }}"
+          data-player-id="{{ asset.player_id }}"
+          data-player-name="{{ asset.player_name }}"
+          data-player-team="{{ asset.team }}"
+          data-player-type="{{ asset.position }}"
+          data-profile-url="{{ asset.scout_url or asset.audit_url }}"
+          data-source-tag="WAIVER_WIRE"
+          onclick="openPlayerAudit(this)"
+          tabindex="0"
+          role="button"
+          aria-label="Open performance audit for {{ asset.player_name }}"
+        >
           <div class="asset-top">
             <div>
               <div class="asset-name">{{ asset.player_name }}</div>
               <div class="asset-meta">{{ asset.team }} // {{ asset.position }} // ROSTERED {{ asset.rostered_pct }}% // ID {{ asset.player_id }}</div>
             </div>
 
-            <div class="claim-pill {{ asset.command_class }}">{{ asset.command }}</div>
+            <button
+              type="button"
+              class="claim-pill {{ asset.command_class }} js-add-to-roster"
+              data-player-id="{{ asset.player_id }}"
+              data-player-name="{{ asset.player_name }}"
+              data-player-team="{{ asset.team }}"
+              data-player-type="{{ asset.position }}"
+              data-profile-url="{{ asset.scout_url or asset.audit_url }}"
+              data-source-tag="WAIVER_WIRE"
+              onclick="event.stopPropagation();"
+              aria-label="Initiate tracking for {{ asset.player_name }}"
+            >{{ asset.command }}</button>
           </div>
 
           <div class="ops-strip {{ asset.deployment_state | lower | replace('_', '-') }}">
@@ -1719,7 +1744,15 @@ body.waiver-field-guide-open{
 
         <div class="grid frozen-grid">
           {% for asset in frozen_assets %}
-          <article class="asset-card frozen-card" data-search="{{ asset.search_blob }}" data-audit-url="{{ asset.audit_url }}" onclick="openPlayerAudit(this)" tabindex="0" role="button" aria-label="Open performance audit for {{ asset.player_name }}">
+          <article
+            class="asset-card frozen-card"
+            data-search="{{ asset.search_blob }}"
+            data-audit-url="{{ asset.audit_url }}"
+            onclick="openPlayerAudit(this)"
+            tabindex="0"
+            role="button"
+            aria-label="Open performance audit for {{ asset.player_name }}"
+          >
             <div class="asset-top">
               <div>
                 <div class="asset-name">{{ asset.player_name }}</div>
@@ -1878,6 +1911,7 @@ body.waiver-field-guide-open{
 
     </main>
 
+<script src="/player-card-actions.js"></script>
 <script id="waiver-hardening-script">
 function filterWaiverCards() {
   const input = document.getElementById("waiverPlayerSearch");
