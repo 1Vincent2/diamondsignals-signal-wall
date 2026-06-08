@@ -24,6 +24,7 @@ MODULES = [
     "dashboard.build_market_eligibility",
     "dashboard.build_waiver_candidates",
     "dashboard.build_waiver_wire",
+    "dashboard.build_watch_list",
 ]
 
 def run_module(module_name: str) -> None:
