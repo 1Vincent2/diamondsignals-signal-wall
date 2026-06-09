@@ -488,7 +488,7 @@ def render_signal_card(row: dict) -> str:
 
     return f"""
       <article
-        class="apex-card {heat_class}"
+        class="apex-card js-player-card {heat_class}"
         id="apex-player-{row.get("player_id", "")}"
         data-player-id="{row.get("player_id", "")}"
           data-profile-url="/scout/{row.get("player_id", "")}/"
@@ -560,7 +560,9 @@ def render_signal_card(row: dict) -> str:
           class="provision-btn js-add-to-roster"
           data-player-id="{row.get("player_id", "")}"
           data-player-name="{row.get("name", "")}"
+          data-player-type="{row.get("role", "ASSET")}"
           data-player-team="{row.get("team", "MLB")}"
+          data-profile-url="/scout/{row.get("player_id", "")}/"
           data-source-tag="APEX_EXTRACTION"
         >
           INITIATE TRACKING
