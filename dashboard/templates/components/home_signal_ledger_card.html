@@ -16,7 +16,16 @@
       </div>
 
       <div class="provision-row-desktop">
-        <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-default-label="INITIATE TRACKING"
+          data-player-id="{{ row.resolved_player_id }}"
+          data-player-name="{{ row.player_name }}"
+          data-player-type="{{ player_type }}"
+          data-player-team="MLB"
+          data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
+        >INITIATE TRACKING</button>
       </div>
     </div>
 
@@ -29,7 +38,16 @@
   </div>
 
   <div class="provision-row provision-row-mobile">
-    <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
+    <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-default-label="INITIATE TRACKING"
+          data-player-id="{{ row.resolved_player_id }}"
+          data-player-name="{{ row.player_name }}"
+          data-player-type="{{ player_type }}"
+          data-player-team="MLB"
+          data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
+        >INITIATE TRACKING</button>
   </div>
 
   <div class="sparkline-wrap">

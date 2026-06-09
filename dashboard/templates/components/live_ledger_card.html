@@ -41,6 +41,15 @@
       <div class="conviction-label">LIVE_SCORE</div>
       <div class="conviction-score {{ row.score_class }}">{{ row.live_score_raw }}</div>
     </div>
-    <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
+    <button
+      type="button"
+      class="provision-btn js-add-to-roster"
+      data-default-label="INITIATE TRACKING"
+      data-player-id="{{ row.resolved_player_id }}"
+      data-player-name="{{ row.player_name }}"
+      data-player-type="{{ player_type }}"
+      data-player-team="{{ row.display_team }}"
+      data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
+    >INITIATE TRACKING</button>
   </div>
 </article>
