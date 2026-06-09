@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-import hashlib
 from datetime import datetime, timedelta, timezone
 import json
 import math
@@ -911,11 +910,11 @@ HTML_TEMPLATE = Template(
           {% for row in heat_cards %}
           <article
             class="heat-card js-player-card {{ row.heat_class }}"
-            data-player-id="{{ row.synthetic_player_id }}"
+            data-player-id="{{ row.player_id }}"
             data-player-name="{{ row.player_name }}"
             data-player-type="pitcher"
             data-player-team="{{ row.team }}"
-            data-profile-url="/scout/{{ row.synthetic_player_id }}/"
+            data-profile-url="/scout/{{ row.player_id }}/"
             data-source-tag="IVB_HEAT_MAP"
           >
             <div class="heat-rank">#{{ loop.index }} // {{ row.band_label }}</div>
@@ -945,11 +944,11 @@ HTML_TEMPLATE = Template(
                 type="button"
                 class="heat-provision-btn js-add-to-roster"
                 data-default-label="INITIATE TRACKING"
-                data-player-id="{{ row.synthetic_player_id }}"
+                data-player-id="{{ row.player_id }}"
                 data-player-name="{{ row.player_name }}"
                 data-player-type="pitcher"
                 data-player-team="{{ row.team }}"
-                data-profile-url="/scout/{{ row.synthetic_player_id }}/"
+                data-profile-url="/scout/{{ row.player_id }}/"
                 data-source-tag="IVB_HEAT_MAP"
               >INITIATE TRACKING</button>
             </div>
@@ -1690,6 +1689,7 @@ def lab_rows_to_cards(rows: list[dict]) -> list[dict]:
 
         cards.append(
             {
+                "player_id": row.get("player_id"),
                 "player_name": row.get("player_name", "Unknown Pitcher"),
                 "team": row.get("team", "TEAM"),
                 "ivb_raw": format_plain(ivb_raw, '"'),
@@ -1736,6 +1736,7 @@ def to_cards(grouped: pd.DataFrame, climber_ids: set[int]) -> list[dict]:
 
         rows.append(
             {
+                "player_id": pitcher_id_int,
                 "player_name": row.get("player_name", "Unknown Pitcher"),
                 "team": row.get("team", "TEAM"),
                 "ivb_raw": format_plain(ivb_raw, '"'),
@@ -1870,11 +1871,6 @@ def write_ivb_heat_map() -> None:
 
     latest_lab_rows = fetch_latest_lab_rows(end_date)
     heat_cards = lab_rows_to_cards(latest_lab_rows) if latest_lab_rows else to_cards(grouped, climber_ids)
-
-    for row in heat_cards:
-        key = f"{row.get('player_name', '')}|{row.get('team', '')}".lower()
-        digest = hashlib.sha1(key.encode("utf-8")).hexdigest()
-        row["synthetic_player_id"] = 900000000 + (int(digest[:8], 16) % 999999)
 
     if not climbers:
         climbers = [
