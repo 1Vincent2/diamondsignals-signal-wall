@@ -1661,7 +1661,17 @@ HTML_TEMPLATE = Template(
                 <div class="score-value {{ row.score_class }}">{{ row.disruption_score_label }}</div>
               </div>
               <div class="action-row">
-                <button type="button" class="alert-pill js-add-to-roster">INITIATE TRACKING</button>
+                <button
+                  type="button"
+                  class="alert-pill js-add-to-roster"
+                  data-default-label="INITIATE TRACKING"
+                  data-player-id="{{ row.player_id }}"
+                  data-player-name="{{ row.player_name }}"
+                  data-player-type="pitcher"
+                  data-player-team="{{ row.team }}"
+                  data-profile-url="/scout/{{ row.player_id }}/"
+                  data-source-tag="STUFF_DISRUPTION"
+                >INITIATE TRACKING</button>
               </div>
             </div>
           </div>
