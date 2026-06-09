@@ -910,11 +910,12 @@ HTML_TEMPLATE = Template(
         <div class="heat-grid">
           {% for row in heat_cards %}
           <article
-            class="heat-card {{ row.heat_class }}"
+            class="heat-card js-player-card {{ row.heat_class }}"
             data-player-id="{{ row.synthetic_player_id }}"
             data-player-name="{{ row.player_name }}"
+            data-player-type="pitcher"
             data-player-team="{{ row.team }}"
-            data-player-role="PITCHER"
+            data-profile-url="/scout/{{ row.synthetic_player_id }}/"
             data-source-tag="IVB_HEAT_MAP"
           >
             <div class="heat-rank">#{{ loop.index }} // {{ row.band_label }}</div>
@@ -943,10 +944,12 @@ HTML_TEMPLATE = Template(
               <button
                 type="button"
                 class="heat-provision-btn js-add-to-roster"
+                data-default-label="INITIATE TRACKING"
                 data-player-id="{{ row.synthetic_player_id }}"
                 data-player-name="{{ row.player_name }}"
-                data-player-team="{{ row.team }}"
                 data-player-type="pitcher"
+                data-player-team="{{ row.team }}"
+                data-profile-url="/scout/{{ row.synthetic_player_id }}/"
                 data-source-tag="IVB_HEAT_MAP"
               >INITIATE TRACKING</button>
             </div>
