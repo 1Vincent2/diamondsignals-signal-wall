@@ -36,6 +36,17 @@ MAX_SIGNALS = 60
 
 FASTBALL_TYPES = {"FF", "FA", "SI", "FC"}
 
+KDE_STATUS_MODE = "statcast_kinetic_drift_dynamic_v1"
+KDE_PIPELINE_LAYERS = [
+    "pybaseball_statcast_pitch_level_feed",
+    "fastball_movement_velocity_window",
+    "pitcher_recent_baseline_comparison",
+    "krs_kes_kis_scoring",
+    "snapshot_fallback_available",
+    "tracking_identity_markup",
+    "no_static_player_seed_fallback",
+]
+
 
 def safe_float(value):
     try:
@@ -658,6 +669,8 @@ def write_kde_status(
         "used_fallback": used_fallback,
         "degraded": degraded,
         "threshold_minutes": 1440,
+        "mode": KDE_STATUS_MODE,
+        "pipeline_layers": KDE_PIPELINE_LAYERS,
         "build_started_at": build_started_at.isoformat(),
         "build_finished_at": build_finished_at.isoformat(),
         "source_updated_at": build_finished_at.isoformat(),
