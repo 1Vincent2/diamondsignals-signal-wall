@@ -3413,6 +3413,53 @@ def render_html() -> str:
         },
     }
 
+    # PROMOTION_WATCH_PAYLOAD_CONTRACT_V2
+    # Mirror nested top_signals rows to direct top-level arrays so status,
+    # rendered HTML, JSON consumers, dossier supplements, and audits all read
+    # the same populated contract.
+    promotion_payload_sections = promotion_payload.get("top_signals", {})
+    if not isinstance(promotion_payload_sections, dict):
+        raise RuntimeError("Promotion Watch top_signals payload is not a dict")
+
+    for section_name in [
+        "pitchers_72hr",
+        "hitters_72hr",
+        "pitchers_14day",
+        "hitters_14day",
+        "recent_arrivals",
+        "depth_radar",
+    ]:
+        section_rows = promotion_payload_sections.get(section_name, [])
+        if section_rows is None:
+            section_rows = []
+        if not isinstance(section_rows, list):
+            raise RuntimeError(f"Promotion Watch section {section_name} is not a list")
+        promotion_payload[section_name] = section_rows
+
+    payload_count_failures = []
+    for section_name, expected_count in sections.items():
+        expected_count = int(expected_count or 0)
+        direct_count = len(promotion_payload.get(section_name, []))
+        nested_count = len(promotion_payload_sections.get(section_name, []))
+
+        # Some sections are intentionally export-capped below status count.
+        # But if status says a section is populated, both direct and nested
+        # payload shapes must contain at least one row.
+        if expected_count > 0 and direct_count == 0:
+            payload_count_failures.append(
+                f"{section_name}: status_count={expected_count} direct_export_count={direct_count}"
+            )
+        if expected_count > 0 and nested_count == 0:
+            payload_count_failures.append(
+                f"{section_name}: status_count={expected_count} nested_export_count={nested_count}"
+            )
+
+    if payload_count_failures:
+        raise RuntimeError(
+            "Promotion Watch payload/status contract mismatch: "
+            + "; ".join(payload_count_failures)
+        )
+
     promo_json_path = CALL_UP_DIR / "promotion_watch.json"
     promo_json_path.write_text(json.dumps(promotion_payload, indent=2, default=str), encoding="utf-8")
     print(f"Wrote {promo_json_path}")
