@@ -1902,7 +1902,16 @@
                   <div class="score-label">Extraction Score</div>
                   <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
                 </div>
-                <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
+                <button
+                  type="button"
+                  class="provision-btn js-add-to-roster"
+                  data-player-id="{{ row.resolved_player_id }}"
+                  data-player-name="{{ row.player_name }}"
+                  data-player-type="pitcher"
+                  data-player-team="{{ row.display_team }}"
+                  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
+                  data-source-tag="mlb-extraction-ledger"
+                >INITIATE TRACKING</button>
                 {% if row.resolved_player_id %}
                 <a class="audit-link" href="/scout/{{ row.resolved_player_id }}/">PERFORMANCE AUDIT</a>
                 {% endif %}
@@ -2043,7 +2052,16 @@
                   <div class="score-label">Extraction Score</div>
                   <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
                 </div>
-                <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
+                <button
+                  type="button"
+                  class="provision-btn js-add-to-roster"
+                  data-player-id="{{ row.resolved_player_id }}"
+                  data-player-name="{{ row.player_name }}"
+                  data-player-type="hitter"
+                  data-player-team="{{ row.display_team }}"
+                  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
+                  data-source-tag="mlb-extraction-ledger"
+                >INITIATE TRACKING</button>
                 {% if row.resolved_player_id %}
                 <a class="audit-link" href="/scout/{{ row.resolved_player_id }}/">PERFORMANCE AUDIT</a>
                 {% endif %}
@@ -2246,7 +2264,7 @@
 
         <div class="guide-item">
           <div class="guide-term">Initiate Tracking</div>
-          <div class="guide-def">A staging action. The player should be monitored in the tracking/watchlist workflow before deciding whether to deploy, hold, ignore, or escalate.</div>
+          <div class="guide-def">A staging action. The player should be monitored in the Tracking Radar workflow before deciding whether to deploy, hold, ignore, or escalate.</div>
         </div>
 
         <div class="guide-item">
