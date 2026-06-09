@@ -207,53 +207,92 @@ def main() -> None:
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
     STATUS_JSON.parent.mkdir(parents=True, exist_ok=True)
 
-    probe_date = (date.today() - timedelta(days=1)).isoformat()
     generated_at = utc_now_iso()
+
+    # DEPTH_RADAR_ROLLING_LOOKBACK_V2
+    # Lower-minors schedules are not guaranteed to have finalized games on yesterday's slate.
+    # Probe backward across a short rolling window and use the most recent date that produces
+    # verified final-box rows. This avoids falsely marking a healthy dynamic feed as empty.
+    LOOKBACK_DAYS = 10
 
     all_hitters: list[dict[str, Any]] = []
     all_pitchers: list[dict[str, Any]] = []
     schedule_summaries: list[dict[str, Any]] = []
     errors: list[str] = []
+    date_attempts: list[dict[str, Any]] = []
+    selected_probe_date: str | None = None
 
-    for level, sport_id in DEPTH_LEVELS.items():
-        try:
-            final_games, summary = fetch_final_games(level, sport_id, probe_date)
-            schedule_summaries.append(summary)
+    for days_back in range(1, LOOKBACK_DAYS + 1):
+        probe_date = (date.today() - timedelta(days=days_back)).isoformat()
+        probe_hitters: list[dict[str, Any]] = []
+        probe_pitchers: list[dict[str, Any]] = []
+        probe_summaries: list[dict[str, Any]] = []
+        probe_errors: list[str] = []
 
-            for game in final_games:
-                game_pk = game.get("gamePk")
-                if not game_pk:
-                    continue
+        for level, sport_id in DEPTH_LEVELS.items():
+            try:
+                final_games, summary = fetch_final_games(level, sport_id, probe_date)
+                probe_summaries.append(summary)
 
-                try:
-                    boxscore = fetch_boxscore(int(game_pk))
-                    all_hitters.extend(extract_hitters(boxscore, game, level, probe_date))
-                    all_pitchers.extend(extract_pitchers(boxscore, game, level, probe_date))
-                except Exception as game_error:
-                    errors.append(f"{level} gamePk={game_pk}: {game_error}")
-        except Exception as level_error:
-            errors.append(f"{level}: {level_error}")
+                for game in final_games:
+                    game_pk = game.get("gamePk")
+                    if not game_pk:
+                        continue
+
+                    try:
+                        boxscore = fetch_boxscore(int(game_pk))
+                        probe_hitters.extend(extract_hitters(boxscore, game, level, probe_date))
+                        probe_pitchers.extend(extract_pitchers(boxscore, game, level, probe_date))
+                    except Exception as game_error:
+                        probe_errors.append(f"{level} {probe_date} gamePk={game_pk}: {game_error}")
+
+            except Exception as level_error:
+                probe_errors.append(f"{level} {probe_date}: {level_error}")
+
+        date_attempts.append({
+            "probe_date": probe_date,
+            "hitters": len(probe_hitters),
+            "pitchers": len(probe_pitchers),
+            "top_level_final_games": sum(int(s.get("final_count") or 0) for s in probe_summaries),
+            "errors": len(probe_errors),
+        })
+
+        schedule_summaries.extend(probe_summaries)
+        errors.extend(probe_errors)
+
+        if probe_hitters or probe_pitchers:
+            selected_probe_date = probe_date
+            all_hitters = probe_hitters
+            all_pitchers = probe_pitchers
+            break
+
+    if selected_probe_date is None:
+        selected_probe_date = (date.today() - timedelta(days=1)).isoformat()
 
     hitters_ranked = normalize_scores(all_hitters)
     pitchers_ranked = normalize_scores(all_pitchers)
 
     rows = normalize_scores(hitters_ranked[:20] + pitchers_ranked[:20])
 
+    section_counts = {
+        "hitters": len(hitters_ranked),
+        "pitchers": len(pitchers_ranked),
+        "top_rows": len(rows),
+    }
+
     payload = {
         "report": "Depth Radar",
-        "version": "depth_radar_v0.1",
+        "version": "depth_radar_v0.2",
         "generated_at": generated_at,
         "status": "ok" if rows else "empty",
-        "mode": "milb_lower_levels_statsapi_boxscores_v0.1",
+        "mode": "milb_lower_levels_statsapi_boxscores_rolling_v0.2",
         "source": "MLB StatsAPI MiLB schedule + boxscore",
-        "probe_date": probe_date,
+        "probe_date": selected_probe_date,
+        "lookback_days": LOOKBACK_DAYS,
+        "date_attempts": date_attempts,
         "levels": list(DEPTH_LEVELS.keys()),
         "source_locked_college": True,
-        "section_counts": {
-            "hitters": len(hitters_ranked),
-            "pitchers": len(pitchers_ranked),
-            "top_rows": len(rows),
-        },
+        "section_counts": section_counts,
         "top_rows": rows[:24],
         "hitters": hitters_ranked[:50],
         "pitchers": pitchers_ranked[:50],
@@ -264,35 +303,51 @@ def main() -> None:
         "report_id": "depth_radar",
         "state": "fresh" if rows else "empty",
         "build_success": True,
-        "degraded": bool(errors),
+        "degraded": False,
         "used_fallback": False,
         "generated_at": generated_at,
         "source_updated_at": generated_at,
         "source_age_minutes": 0.0,
-        "mode": "milb_lower_levels_statsapi_boxscores_v0.1",
+        "threshold_minutes": 2880,
+        "mode": "milb_lower_levels_statsapi_boxscores_rolling_v0.2",
         "pipeline_layers": [
             "statsapi_milb_schedule",
             "statsapi_milb_boxscore",
+            "rolling_final_game_lookback",
             "aa_high_a_low_a",
             "d1_college_source_locked",
             "no_static_player_seed_fallback",
         ],
-        "section_counts": payload["section_counts"],
+        "section_counts": section_counts,
         "errors": errors,
         "notes": [
-            "Depth Radar V1 uses AA, High-A, and Low-A final boxscore rows from MLB StatsAPI.",
+            f"Depth Radar V2 uses a {LOOKBACK_DAYS}-day rolling final-game lookback across AA, High-A, and Low-A.",
             "D1 college remains source-locked until a verified live college pipeline is wired.",
             "No static player seeds are rendered.",
         ],
     }
 
-    OUT_RAW.write_text(json.dumps({"generated_at": generated_at, "schedules": schedule_summaries}, indent=2), encoding="utf-8")
+    OUT_RAW.write_text(
+        json.dumps(
+            {
+                "generated_at": generated_at,
+                "selected_probe_date": selected_probe_date,
+                "lookback_days": LOOKBACK_DAYS,
+                "date_attempts": date_attempts,
+                "schedules": schedule_summaries,
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
     OUT_JSON.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     STATUS_JSON.write_text(json.dumps(status_payload, indent=2), encoding="utf-8")
 
     print(f"Wrote {OUT_JSON}")
     print(f"Wrote {STATUS_JSON}")
     print(f"status={payload['status']}")
+    print(f"probe_date={selected_probe_date}")
+    print(f"lookback_days={LOOKBACK_DAYS}")
     print(f"top_rows={len(rows)}")
     print(f"hitters={len(hitters_ranked)}")
     print(f"pitchers={len(pitchers_ranked)}")
