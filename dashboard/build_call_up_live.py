@@ -2507,7 +2507,17 @@ HTML_TEMPLATE = Template(
               <div class="audit-action movement-action">
                 <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
                   <span class="movement-route">FROM {{ row.from_code }} → TO {{ row.to_code }}</span>
-                  <button type="button" class="provision-btn js-add-to-roster">INITIATE TRACKING</button>
+                  <button
+                    type="button"
+                    class="provision-btn js-add-to-roster"
+                    data-default-label="INITIATE TRACKING"
+                    data-player-id="{{ row.player_id }}"
+                    data-player-name="{{ row.player_name }}"
+                    data-player-type="{{ row.player_type }}"
+                    data-player-team="{{ row.to_code }}"
+                    data-profile-url="{{ row.profile_url }}"
+                    data-source-tag="PROMOTION_WATCH"
+                  >INITIATE TRACKING</button>
                 </div>
               </div>
             </article>
