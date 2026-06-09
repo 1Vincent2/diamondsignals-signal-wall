@@ -1801,32 +1801,51 @@ def write_ivb_heat_map_status(
     *,
     build_started_at: str,
     build_finished_at: str,
+    source_updated_at: str,
     heat_cards,
     climbers,
     dead_zone_count,
+    raw_row_count: int,
+    grouped_pitcher_count: int,
+    lab_row_count: int,
+    latest_lab_row_count: int,
+    used_lab_readback: bool,
+    used_direct_grouped_fallback: bool,
 ) -> None:
     STATUS_DIR.mkdir(parents=True, exist_ok=True)
 
     tile_count = int(len(heat_cards)) if heat_cards is not None else 0
     climber_count = int(len(climbers)) if climbers is not None else 0
     dead_zone_count = int(dead_zone_count or 0)
-    degraded = tile_count == 0
+    degraded = tile_count == 0 or raw_row_count == 0 or grouped_pitcher_count == 0
+    used_fallback = bool(used_direct_grouped_fallback or tile_count == 0)
 
     status_payload = build_report_status(
         "ivb_heat_map",
-        build_success=True,
-        threshold_minutes=240,
+        build_success=not degraded,
+        threshold_minutes=2880,
         build_started_at=build_started_at,
         build_finished_at=build_finished_at,
-        source_updated_at=build_finished_at,
+        source_updated_at=source_updated_at,
         section_counts={
             "ivb_tiles": tile_count,
             "ivb_climbers": climber_count,
             "dead_zone": dead_zone_count,
+            "raw_statcast_rows": int(raw_row_count),
+            "grouped_pitchers": int(grouped_pitcher_count),
+            "lab_rows_written": int(lab_row_count),
+            "lab_rows_read": int(latest_lab_row_count),
         },
+        used_fallback=used_fallback,
         degraded=degraded,
         notes=[
-            f"IVB Heat Map built with {tile_count} active tiles, {climber_count} climbers, and {dead_zone_count} dead-zone flags."
+            (
+                f"IVB Heat Map built with {tile_count} active tiles, {climber_count} climbers, "
+                f"{dead_zone_count} dead-zone flags, {raw_row_count} raw Statcast rows, "
+                f"{grouped_pitcher_count} grouped pitchers, {lab_row_count} lab rows written, "
+                f"and {latest_lab_row_count} lab rows read."
+            ),
+            f"IVB source path: {'Supabase lab readback' if used_lab_readback else 'direct grouped Statcast fallback'}.",
         ],
     )
 
@@ -1848,6 +1867,25 @@ def write_ivb_heat_map() -> None:
     raw = fetch_statcast_window(str(start_date), str(end_date))
     grouped, pitches = build_ivb_dataset(raw)
 
+    raw_row_count = int(len(raw)) if raw is not None else 0
+    grouped_pitcher_count = int(len(grouped)) if grouped is not None else 0
+
+    if pitches is not None and not pitches.empty and "game_date" in pitches.columns:
+        latest_game_date = pitches["game_date"].max()
+        if pd.notna(latest_game_date):
+            # Statcast game_date is date-only, not event-time precise.
+            # Treat the latest available game date as end-of-day UTC so freshness
+            # does not falsely degrade a healthy daily feed at midnight.
+            source_updated_at = (
+                latest_game_date.to_pydatetime()
+                .replace(hour=23, minute=59, second=59, microsecond=0, tzinfo=timezone.utc)
+                .isoformat()
+            )
+        else:
+            source_updated_at = build_started_at
+    else:
+        source_updated_at = build_started_at
+
     tracked_pitchers = int(len(grouped))
     dead_zone_count = int(grouped["dead_zone_flag"].fillna(False).sum()) if not grouped.empty else 0
     elite_count = int((grouped["ivb_raw"].fillna(-999) >= 18.0).sum()) if not grouped.empty else 0
@@ -1867,10 +1905,15 @@ def write_ivb_heat_map() -> None:
         exited_dead_zone_ids,
         end_date,
     )
+    lab_row_count = int(len(lab_rows))
     upsert_lab_rows(lab_rows)
 
     latest_lab_rows = fetch_latest_lab_rows(end_date)
-    heat_cards = lab_rows_to_cards(latest_lab_rows) if latest_lab_rows else to_cards(grouped, climber_ids)
+    latest_lab_row_count = int(len(latest_lab_rows))
+    used_lab_readback = latest_lab_row_count > 0
+    used_direct_grouped_fallback = not used_lab_readback
+
+    heat_cards = lab_rows_to_cards(latest_lab_rows) if used_lab_readback else to_cards(grouped, climber_ids)
 
     if not climbers:
         climbers = [
@@ -1914,6 +1957,15 @@ def write_ivb_heat_map() -> None:
 
     payload = {
         "generated_at": datetime.now().isoformat(),
+        "source_window_start": str(start_date),
+        "source_window_end": str(end_date),
+        "source_updated_at": source_updated_at,
+        "raw_row_count": raw_row_count,
+        "grouped_pitcher_count": grouped_pitcher_count,
+        "lab_row_count": lab_row_count,
+        "latest_lab_row_count": latest_lab_row_count,
+        "used_lab_readback": used_lab_readback,
+        "used_direct_grouped_fallback": used_direct_grouped_fallback,
         "field_tilt_pct": field_tilt_pct,
         "tracked_pitchers": tracked_pitchers,
         "dead_zone_count": dead_zone_count,
@@ -1930,9 +1982,16 @@ def write_ivb_heat_map() -> None:
     write_ivb_heat_map_status(
         build_started_at=build_started_at,
         build_finished_at=build_finished_at,
+        source_updated_at=source_updated_at,
         heat_cards=heat_cards,
         climbers=climbers,
         dead_zone_count=dead_zone_count,
+        raw_row_count=raw_row_count,
+        grouped_pitcher_count=grouped_pitcher_count,
+        lab_row_count=lab_row_count,
+        latest_lab_row_count=latest_lab_row_count,
+        used_lab_readback=used_lab_readback,
+        used_direct_grouped_fallback=used_direct_grouped_fallback,
     )
 
 
