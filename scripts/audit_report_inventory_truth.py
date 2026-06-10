@@ -6,6 +6,13 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+
+# Status files that are intentionally not report surfaces.
+# These are system/admin manifests consumed by future admin tooling and should
+# not be forced into dashboard/report_inventory.json as public report entries.
+ALLOWED_NON_REPORT_STATUS_IDS = {
+    "admin_audit_manifest",
+}
 INVENTORY = ROOT / "dashboard/report_inventory.json"
 STATUS_DIR = ROOT / "dist/status"
 
