@@ -176,6 +176,23 @@ def classify(status: dict, payloads: list[dict], builder_text: str) -> tuple[str
         notes.append("verified_market_eligibility_required:true")
         return "LIVE_DYNAMIC_VERIFIED_MARKET", notes
 
+    hardened_velocity_decay_mode = (
+        status.get("mode") == "statcast_velocity_decay_dynamic_v1"
+        and state == "fresh"
+        and build_success is True
+        and used_fallback is not True
+        and not degraded
+        and int(section_counts.get("velocity_decay_cards") or 0) > 0
+        and "pybaseball_statcast_pitch_level_feed" in mode_blob
+        and "fastball_velocity_window" in mode_blob
+        and "recent_baseline_delta_scoring" in mode_blob
+        and "extension_decay_detection" in mode_blob
+        and "perceived_velocity_proxy" in mode_blob
+        and "risk_alert_classification" in mode_blob
+        and "tracking_identity_payloads" in mode_blob
+        and "no_static_player_seed_fallback" in mode_blob
+    )
+
     hardened_mlb_extraction_mode = (
         status.get("mode") == "real_data_v0.1_hardened"
         and state == "fresh"
@@ -186,6 +203,19 @@ def classify(status: dict, payloads: list[dict], builder_text: str) -> tuple[str
         and "canonical_player_universe" in mode_blob
         and "independent_mlb_extraction_scoring" in mode_blob
     )
+
+    if hardened_velocity_decay_mode:
+        notes.append("hardened_velocity_decay_mode:true")
+        notes.append(f"velocity_decay_cards:{int(section_counts.get('velocity_decay_cards') or 0)}")
+        notes.append("pybaseball_statcast_pitch_level_feed:true")
+        notes.append("fastball_velocity_window:true")
+        notes.append("recent_baseline_delta_scoring:true")
+        notes.append("extension_decay_detection:true")
+        notes.append("perceived_velocity_proxy:true")
+        notes.append("risk_alert_classification:true")
+        notes.append("tracking_identity_payloads:true")
+        notes.append("no_static_player_seed_fallback:true")
+        return "LIVE_DYNAMIC_HARDENED", notes
 
     if hardened_mlb_extraction_mode:
         notes.append("hardened_mlb_extraction_mode:true")
