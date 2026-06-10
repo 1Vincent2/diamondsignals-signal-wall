@@ -145,15 +145,22 @@ def classify(status: dict, payloads: list[dict], builder_text: str) -> tuple[str
     )
 
     verified_depth_radar_mode = (
-        status.get("mode") == "milb_lower_levels_statsapi_boxscores_v0.1"
+        status.get("mode") in {
+            "milb_lower_levels_statsapi_boxscores_v0.1",
+            "milb_lower_levels_statsapi_boxscores_rolling_v0.2",
+        }
         and state == "fresh"
         and build_success is True
         and used_fallback is not True
         and not degraded
-        and "statsapi_milb_schedule" in mode_blob
+        and (
+            "statsapi_milb_schedule" in mode_blob
+            or "rolling_final_game_lookback" in mode_blob
+        )
         and "statsapi_milb_boxscore" in mode_blob
         and "aa_high_a_low_a" in mode_blob
         and "no_static_player_seed_fallback" in mode_blob
+        and int(section_counts.get("top_rows") or 0) > 0
     )
 
     if verified_waiver_mode and waiver_asset_count == 0:
@@ -209,7 +216,11 @@ def classify(status: dict, payloads: list[dict], builder_text: str) -> tuple[str
 
     if verified_depth_radar_mode:
         notes.append("verified_depth_radar_mode:true")
-        notes.append("statsapi_milb_schedule:true")
+        if status.get("mode") == "milb_lower_levels_statsapi_boxscores_rolling_v0.2":
+            notes.append("rolling_final_game_lookback:true")
+            notes.append("ui_empty_state_only:true")
+        else:
+            notes.append("statsapi_milb_schedule:true")
         notes.append("statsapi_milb_boxscore:true")
         notes.append("aa_high_a_low_a:true")
         notes.append("no_static_player_seed_fallback:true")
