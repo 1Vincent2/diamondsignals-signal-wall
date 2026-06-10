@@ -49,6 +49,10 @@ echo
 echo "--- build output freshness audit ---"
 python3 scripts/audit_build_output_freshness.py
 
+echo
+echo "--- status contract audit ---"
+python3 scripts/audit_status_contract.py
+
 
 
 echo
