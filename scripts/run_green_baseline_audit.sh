@@ -57,6 +57,10 @@ echo
 echo "--- refinement queue closure audit ---"
 python3 scripts/audit_refinement_queue_closure.py
 
+echo
+echo "--- green baseline audit registry audit ---"
+python3 scripts/audit_green_baseline_registry.py
+
 
 
 echo
