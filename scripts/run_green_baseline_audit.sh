@@ -61,6 +61,14 @@ echo
 echo "--- green baseline audit registry audit ---"
 python3 scripts/audit_green_baseline_registry.py
 
+echo
+echo "--- admin audit manifest builder ---"
+python3 scripts/build_admin_audit_manifest.py
+
+echo
+echo "--- admin audit manifest contract audit ---"
+python3 scripts/audit_admin_audit_manifest.py
+
 
 
 echo
