@@ -991,7 +991,7 @@ def write_mlb_extraction_json(pitchers, hitters, generated_at: str, latest_week_
 
     payload = {
         "report": "MLB Extraction Ledger",
-        "subtitle": "Market Latency / Hidden Gems Surface",
+        "subtitle": "Market Latency / MLB Extraction Ledger",
         "version": "mlb_extraction_ledger_v0.1",
         "generated_at": generated_at,
         "latest_week_start": latest_week_start,

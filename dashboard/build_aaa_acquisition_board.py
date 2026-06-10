@@ -589,7 +589,7 @@ HTML_TEMPLATE = Template(
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DiamondSignals // Hidden Gems</title>
+  <title>DiamondSignals // MLB Extraction Ledger</title>
   <style>
     :root {
       --bg: #080808;
@@ -1676,7 +1676,7 @@ HTML_TEMPLATE = Template(
         <div class="brand-mark"></div>
         <div class="brand-text">
           <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
-          <div class="brand-title">Hidden Gems // Institutional Edge</div>
+          <div class="brand-title">MLB Extraction Ledger // Institutional Edge</div>
         </div>
       </div>
       <div class="livebox">
@@ -1693,9 +1693,9 @@ HTML_TEMPLATE = Template(
     <section class="hero">
       <div class="hero-card">
         <div class="eyebrow">Signal Wall // Edge</div>
-        <h1 class="hero-title">Hidden Gems</h1>
+        <h1 class="hero-title">MLB Extraction Ledger</h1>
         <p class="hero-sub">
-          Hidden Gems isolates latent alpha where Physics Core remains stronger than the visible surface line. This Signal Surface is built to expose Market Gaps before public exposure catches up.
+          MLB Extraction Ledger isolates market-latency opportunities where stronger underlying player signals remain ahead of visible surface results. This Signal Surface is built to expose extraction-grade gaps before public exposure catches up.
         </p>
       </div>
 
@@ -1750,7 +1750,7 @@ HTML_TEMPLATE = Template(
             <div class="player-ident">
               <div class="rankline">{% if loop.index == 1 %}[ PRIMARY EXTRACTION ]{% else %}#{{ loop.index }} Pitcher Extraction{% endif %}</div>
               <h3 class="player-name">{{ row.player_name }}</h3>
-              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %} // {{ row.display_team }}{% endif %} // Pitcher // Hidden Gems</div>
+              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %} // {{ row.display_team }}{% endif %} // Pitcher // MLB Extraction Ledger</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">{{ row.source_badge }}</span>
 <span class="card-meta-badge">{{ row.model_badge }}</span>
@@ -1854,7 +1854,7 @@ HTML_TEMPLATE = Template(
             <div class="player-ident">
               <div class="rankline">{% if loop.index == 1 %}[ PRIMARY EXTRACTION ]{% else %}#{{ loop.index }} Hitter Extraction{% endif %}</div>
               <h3 class="player-name">{{ row.player_name }}</h3>
-              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %} // {{ row.display_team }}{% endif %} // Hitter // Hidden Gems</div>
+              <div class="signal-line">{{ row.display_org }}{% if row.display_team != "—" %} // {{ row.display_team }}{% endif %} // Hitter // MLB Extraction Ledger</div>
               <div class="card-meta-row">
                 <span class="card-meta-badge">{{ row.source_badge }}</span>
 <span class="card-meta-badge">{{ row.model_badge }}</span>
@@ -1938,7 +1938,7 @@ HTML_TEMPLATE = Template(
   <aside id="glossaryDrawer" class="drawer-panel" aria-hidden="true">
     <div class="drawer-head">
       <div class="drawer-title-wrap">
-        <div class="drawer-kicker">Hidden Gems // Field Guide</div>
+        <div class="drawer-kicker">MLB Extraction Ledger // Field Guide</div>
         <h2 class="drawer-title">How To Use This Board</h2>
       </div>
       <button type="button" class="drawer-close" onclick="closeGlossary()">Close</button>
@@ -1969,7 +1969,7 @@ HTML_TEMPLATE = Template(
 
       <div class="guide-item">
         <div class="guide-term">Market Gap</div>
-        <div class="guide-def">The gap between stronger underlying traits and weaker visible outcomes. This is the core Hidden Gems extraction lens.</div>
+        <div class="guide-def">The gap between stronger underlying traits and weaker visible outcomes. This is the core MLB Extraction Ledger lens.</div>
       </div>
 
       <div class="guide-item">

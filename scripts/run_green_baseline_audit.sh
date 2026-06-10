@@ -28,6 +28,10 @@ echo "--- report data-mode hardening inspection ---"
 python3 dashboard/audit_report_data_modes.py
 
 echo
+echo "--- legacy route/name contract audit ---"
+python3 scripts/audit_legacy_route_names.py
+
+echo
 echo "--- mobile header/menu obstruction audit ---"
 python3 scripts/audit_mobile_header_menu_contract.py
 
