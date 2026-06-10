@@ -1,0 +1,3907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Waiver Wire // Open Market</title>
+
+  <style>
+.topnav { border-top: 1px solid rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); }
+.topnav-inner { width: min(1180px, calc(100% - 24px)); margin: 0 auto; display: flex; align-items: center; gap: 10px; overflow-x: auto; white-space: nowrap; padding: 10px 0; scrollbar-width: none; }
+.topnav-inner::-webkit-scrollbar { display: none; }
+.topnav-links { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; }
+.topnav-link { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--soft); padding: 8px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); transition: opacity 0.18s ease, transform 0.18s ease, border-color 0.18s ease, color 0.18s ease; }
+.topnav-link:visited { color: var(--soft); }
+.topnav-link:hover { opacity: 1; transform: translateY(-1px); border-color: rgba(255,255,255,0.12); color: var(--text); }
+.topnav-link.active { color: var(--text); border-color: rgba(182,255,0,0.20); box-shadow: 0 0 8px rgba(182,255,0,0.08); }
+.topnav-link.active:visited { color: var(--text); }
+.topnav-tag { color: var(--lime-hot); }
+
+.search-strip { border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); }
+.search-strip-inner { width: min(1180px, calc(100% - 24px)); margin: 0 auto; padding: 12px 0 10px; display: flex; justify-content: flex-end; }
+.player-search { position: relative; width: min(420px, 100%); }
+.player-search-input { width: 100%; height: 40px; border-radius: 999px; border: 1px solid rgba(182,255,0,0.22); background: rgba(255,255,255,0.07); color: var(--text); padding: 0 16px; font-family: var(--sans); font-size: 14px; outline: none; box-shadow: 0 0 10px rgba(182,255,0,0.05); }
+.player-search-input::placeholder { color: rgba(255,255,255,0.50); }
+.player-search-input:focus { border-color: rgba(182,255,0,0.45); background: rgba(255,255,255,0.09); box-shadow: 0 0 0 3px rgba(182,255,0,0.10), 0 0 12px rgba(182,255,0,0.12); }
+.player-search-results { position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 70; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; background: linear-gradient(180deg, #121212 0%, #080808 100%); box-shadow: 0 14px 34px rgba(0,0,0,0.34); overflow: hidden; }
+.player-search-result { display: grid; grid-template-columns: 180px 1fr; gap: 12px; align-items: center; padding: 0; text-decoration: none; color: var(--text); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02); }
+.player-search-result:visited { color: var(--text); }
+.player-search-result:last-child { border-bottom: 0; }
+.player-search-result:hover, .player-search-result.active { background: rgba(255,255,255,0.05); }
+.player-search-avatar { width: 180px; height: 180px; object-fit: cover; display: block; background: rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.06); }
+.player-search-meta { min-width: 0; padding: 14px 14px 14px 0; }
+.player-search-name { font-size: 16px; font-weight: 800; line-height: 1.1; color: var(--text); text-decoration: none; }
+.player-search-sub { margin-top: 6px; font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.06em; }
+.player-search-empty, .player-search-loading, .player-search-error { padding: 12px 14px; font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.08em; }
+
+.footer { padding: 16px 4px 0; color: var(--muted); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 640px) {
+  .topnav-inner, .search-strip-inner { width: min(100%, calc(100% - 16px)); }
+  .search-strip-inner { justify-content: stretch; }
+  .player-search { width: 100%; }
+  .player-search-input { height: 36px; font-size: 12px; }
+  .player-search-result { grid-template-columns: 120px 1fr; }
+  .player-search-avatar { width: 120px; height: 120px; }
+}
+
+
+/* === DIAMONDSIGNALS STRONGER LIVE PULSE OVERRIDE === */
+@keyframes dsLivePulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.78;
+    box-shadow:
+      0 0 0 0 rgba(204,255,0,0.62),
+      0 0 12px rgba(204,255,0,0.58),
+      0 0 22px rgba(204,255,0,0.30);
+  }
+
+  50% {
+    transform: scale(1.24);
+    opacity: 1;
+    box-shadow:
+      0 0 0 11px rgba(204,255,0,0),
+      0 0 20px rgba(204,255,0,0.86),
+      0 0 34px rgba(204,255,0,0.42);
+  }
+
+  100% {
+    transform: scale(0.9);
+    opacity: 0.78;
+    box-shadow:
+      0 0 0 0 rgba(204,255,0,0),
+      0 0 12px rgba(204,255,0,0.58),
+      0 0 22px rgba(204,255,0,0.30);
+  }
+}
+
+/* Shared report live dots */
+.live-dot,
+.topbar .brand-mark,
+.brand-pulse,
+.brand-dot {
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 14px !important;
+  min-height: 14px !important;
+  border-radius: 999px !important;
+  background: #ccff00 !important;
+  display: inline-block !important;
+  flex: 0 0 auto !important;
+  animation: dsLivePulse 1.15s ease-in-out infinite !important;
+  box-shadow:
+    0 0 0 0 rgba(204,255,0,0.55),
+    0 0 12px rgba(204,255,0,0.55),
+    0 0 22px rgba(204,255,0,0.28) !important;
+}
+
+
+/* GLOBAL LIVE DOT PULSE NORMALIZATION */
+@keyframes dsLivePulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(204,255,0,0.58), 0 0 12px rgba(204,255,0,0.55), 0 0 22px rgba(204,255,0,0.28);
+  }
+  55% {
+    transform: scale(1.18);
+    box-shadow: 0 0 0 11px rgba(204,255,0,0), 0 0 18px rgba(204,255,0,0.75), 0 0 30px rgba(204,255,0,0.36);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(204,255,0,0), 0 0 12px rgba(204,255,0,0.55), 0 0 22px rgba(204,255,0,0.28);
+  }
+}
+
+.live-dot,
+.brand-pulse {
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 14px !important;
+  min-height: 14px !important;
+  border-radius: 999px !important;
+  background: #ccff00 !important;
+  animation: dsLivePulse 1.15s ease-in-out infinite !important;
+  box-shadow: 0 0 0 0 rgba(204,255,0,0.55), 0 0 12px rgba(204,255,0,0.55), 0 0 22px rgba(204,255,0,0.28) !important;
+}
+
+
+/* DS_GLOBAL_MOBILE_RIGHT_DRAWER_NAV */
+.ds-mobile-menu-trigger,
+.ds-mobile-menu-backdrop,
+.ds-mobile-menu-drawer {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .topnav.ds-shell-nav {
+    border-top: 1px solid rgba(182,255,0,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    background:
+      linear-gradient(90deg, rgba(182,255,0,0.055), transparent 44%),
+      rgba(2, 6, 12, 0.74);
+    backdrop-filter: blur(16px);
+  }
+
+  .topnav.ds-shell-nav .topnav-inner {
+    position: relative;
+    z-index: 2000;
+    width: min(100%, calc(100% - 20px));
+    padding: 10px 0;
+    justify-content: space-between;
+    overflow: visible;
+  }
+
+  .topnav.ds-shell-nav .topnav-links {
+    max-width: calc(100% - 92px);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .topnav.ds-shell-nav .topnav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ds-mobile-menu-trigger {
+    position: relative;
+    z-index: 2001;
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 38px;
+    padding: 0 13px;
+    border-radius: 999px;
+    border: 1px solid rgba(182,255,0,0.26);
+    background: rgba(7, 10, 14, 0.88);
+    color: rgba(247,248,250,0.94);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    box-shadow: 0 0 18px rgba(182,255,0,0.08);
+  }
+
+  .ds-mobile-menu-icon {
+    color: var(--lime-hot);
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  .ds-mobile-menu-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1998;
+    background: rgba(0,0,0,0.52);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease;
+  }
+
+  .ds-mobile-menu-drawer {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(86vw, 380px);
+    height: 100dvh;
+    z-index: 1999;
+    transform: translateX(104%);
+    transition: transform 0.26s cubic-bezier(.2,.8,.2,1);
+    border-left: 1px solid rgba(182,255,0,0.16);
+    background:
+      radial-gradient(circle at 20% 0%, rgba(182,255,0,0.12), transparent 34%),
+      linear-gradient(180deg, rgba(15,23,42,0.96), rgba(2,6,12,0.98));
+    box-shadow: -24px 0 70px rgba(0,0,0,0.62);
+  }
+
+  body.ds-mobile-menu-open .ds-mobile-menu-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  body.ds-mobile-menu-open .ds-mobile-menu-drawer {
+    transform: translateX(0);
+  }
+
+  .ds-mobile-menu-shell {
+    height: 100%;
+    padding: max(22px, env(safe-area-inset-top)) 18px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .ds-mobile-menu-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .ds-mobile-menu-kicker {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: rgba(182,255,0,0.78);
+    text-transform: uppercase;
+  }
+
+  .ds-mobile-menu-title {
+    margin: 7px 0 0;
+    font-family: var(--sans);
+    font-size: 30px;
+    line-height: 0.96;
+    letter-spacing: -0.05em;
+    color: #f7f8fa;
+  }
+
+  .ds-mobile-menu-close {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+    color: rgba(247,248,250,0.9);
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .ds-mobile-menu-links {
+    display: grid;
+    gap: 9px;
+    overflow-y: auto;
+    padding-right: 2px;
+  }
+
+  .ds-mobile-menu-link {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    align-items: center;
+    min-height: 48px;
+    padding: 12px 13px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.035);
+    color: rgba(247,248,250,0.88);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .ds-mobile-menu-link:visited {
+    color: rgba(247,248,250,0.88);
+  }
+
+  .ds-mobile-menu-link span {
+    color: rgba(182,255,0,0.82);
+    white-space: nowrap;
+  }
+
+  .ds-mobile-menu-link.active {
+    border-color: rgba(182,255,0,0.26);
+    background: rgba(182,255,0,0.08);
+    box-shadow: inset 3px 0 0 rgba(182,255,0,0.72);
+  }
+
+  .ds-mobile-menu-status {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-family: var(--mono);
+    font-size: 9px;
+    line-height: 1.45;
+    letter-spacing: 0.12em;
+    color: rgba(148,163,184,0.76);
+    text-transform: uppercase;
+  }
+}
+
+
+/* DS_MOBILE_DRAWER_ONLY_NAV_OVERRIDE */
+@media (max-width: 760px) {
+  .topnav.ds-shell-nav .topnav-inner {
+    justify-content: flex-end !important;
+  }
+
+  .topnav.ds-shell-nav .topnav-links {
+    display: none !important;
+  }
+
+  .ds-mobile-menu-trigger {
+    margin-left: auto !important;
+  }
+}
+
+
+/* DS_MOBILE_MENU_PILL_EMPHASIS */
+@media (max-width: 760px) {
+  .ds-mobile-menu-trigger {
+    min-height: 46px !important;
+    padding: 0 18px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(182,255,0,0.58) !important;
+    background:
+      radial-gradient(circle at 18% 50%, rgba(182,255,0,0.16), transparent 42%),
+      rgba(7, 10, 14, 0.94) !important;
+    color: rgba(247,248,250,0.98) !important;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.14em !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.10),
+      0 0 18px rgba(182,255,0,0.22),
+      0 0 34px rgba(182,255,0,0.10),
+      inset 0 1px 0 rgba(255,255,255,0.08) !important;
+  }
+
+  .ds-mobile-menu-trigger:active {
+    transform: scale(0.98);
+    border-color: rgba(182,255,0,0.76) !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.18),
+      0 0 24px rgba(182,255,0,0.28),
+      inset 0 1px 0 rgba(255,255,255,0.10) !important;
+  }
+
+  .ds-mobile-menu-icon {
+    font-size: 15px !important;
+    color: rgba(182,255,0,0.98) !important;
+    text-shadow: 0 0 12px rgba(182,255,0,0.45) !important;
+  }
+}
+
+/* DS_MOBILE_NAV_PERSISTENCE_LOCK_V2
+   Global mobile command menu hard lock for all Signal Wall surfaces. */
+@media screen and (max-width: 760px) {
+  body {
+    padding-top: 58px !important;
+  }
+
+  .topnav.ds-shell-nav {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    z-index: 2147483000 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+  }
+
+  .topnav.ds-shell-nav .topnav-inner {
+    position: relative !important;
+    z-index: 2147483001 !important;
+  }
+
+  .ds-mobile-menu-trigger {
+    position: relative !important;
+    z-index: 2147483002 !important;
+    pointer-events: auto !important;
+    transform: none !important;
+  }
+
+  .ds-mobile-menu-backdrop {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483003 !important;
+  }
+
+  .ds-mobile-menu-drawer {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 2147483004 !important;
+    max-height: 100dvh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  body.ds-mobile-menu-open {
+    overflow: hidden !important;
+  }
+}
+
+/* DS_PRO_DESKTOP_NAV_V2_NAV_ONLY
+   Desktop-only professional command nav.
+   No mobile drawer, no mobile JS, no duplicate logo block. */
+@media screen and (min-width: 761px) {
+  .ds-pro-desktop-nav {
+    position: relative;
+    z-index: 39;
+    display: block;
+    border-top: 1px solid rgba(255,255,255,0.055);
+    border-bottom: 1px solid rgba(255,255,255,0.075);
+    background:
+      radial-gradient(circle at 0% 50%, rgba(182,255,0,0.13), transparent 30%),
+      linear-gradient(90deg, rgba(9,18,7,0.88), rgba(5,9,14,0.94) 46%, rgba(5,7,11,0.98));
+    backdrop-filter: blur(18px);
+  }
+
+  .ds-pro-desktop-nav + .topnav.ds-shell-nav {
+    display: none !important;
+  }
+
+  .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+    min-height: 74px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .ds-pro-desktop-nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 9px;
+    min-width: 0;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  .ds-pro-desktop-nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ds-pro-desktop-nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 36px;
+    padding: 0 13px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.11);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015));
+    color: rgba(226,232,240,0.86);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 9px;
+    line-height: 1;
+    letter-spacing: 0.085em;
+    font-weight: 900;
+    text-transform: uppercase;
+    white-space: nowrap;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.045),
+      0 0 0 1px rgba(255,255,255,0.02);
+    transition:
+      color 0.16s ease,
+      border-color 0.16s ease,
+      background 0.16s ease,
+      box-shadow 0.16s ease,
+      transform 0.16s ease;
+  }
+
+  .ds-pro-desktop-nav-link span {
+    color: rgba(182,255,0,0.92);
+  }
+
+  .ds-pro-desktop-nav-link:hover {
+    color: #f8fafc;
+    border-color: rgba(182,255,0,0.34);
+    background: rgba(182,255,0,0.075);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.06),
+      0 0 18px rgba(182,255,0,0.12);
+    transform: translateY(-1px);
+  }
+
+  .ds-pro-desktop-nav-link.active {
+    color: #f8fafc;
+    border-color: rgba(182,255,0,0.54);
+    background:
+      radial-gradient(circle at 18% 50%, rgba(182,255,0,0.22), transparent 52%),
+      rgba(182,255,0,0.095);
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.10),
+      0 0 24px rgba(182,255,0,0.20),
+      inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+
+  .ds-pro-desktop-nav-link-terminal {
+    border-color: rgba(96,165,250,0.32);
+    background:
+      radial-gradient(circle at 18% 50%, rgba(96,165,250,0.12), transparent 54%),
+      rgba(96,165,250,0.06);
+  }
+
+  .ds-pro-desktop-nav-link-terminal span {
+    color: rgba(125,211,252,0.95);
+  }
+}
+
+@media screen and (min-width: 761px) and (max-width: 1280px) {
+  .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 40px));
+    min-height: 68px;
+  }
+
+  .ds-pro-desktop-nav-links {
+    gap: 7px;
+  }
+
+  .ds-pro-desktop-nav-link {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 8px;
+    letter-spacing: 0.075em;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .ds-pro-desktop-nav {
+    display: none !important;
+  }
+}
+
+
+/* APEX_DESKTOP_TOPBAR_MOCKUP_LOCK_V1
+   Desktop-only Apex canary:
+   - Pulse dot sits left of DIAMOND/SIGNALS, not above it.
+   - DIAMOND white, SIGNALS blue.
+   - Top nav rail remains navigation-only and starts from same left rail.
+   - Mobile drawer/layout untouched. */
+@media screen and (min-width: 761px) {
+  body:has(.hero-title) .topbar {
+    min-height: 112px !important;
+  }
+
+  body:has(.hero-title) .topbar-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    min-height: 112px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 28px !important;
+  }
+
+  body:has(.hero-title) .topbar .brand {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 18px !important;
+    min-width: 0 !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 999px !important;
+    background: #b6ff00 !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.32),
+      0 0 18px rgba(182,255,0,0.82),
+      0 0 38px rgba(182,255,0,0.42) !important;
+    animation: dsApexLivePulse 1.15s ease-in-out infinite !important;
+    margin: 0 !important;
+    flex: 0 0 auto !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+    min-width: 0 !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-kicker {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    gap: 0 !important;
+    font-family: var(--sans) !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.015em !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-kicker .brand-white {
+    color: #f8fafc !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-kicker .brand-blue {
+    color: #4ea3ff !important;
+    text-shadow:
+      0 0 10px rgba(78,163,255,0.24),
+      0 0 22px rgba(78,163,255,0.16) !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-title {
+    font-family: var(--sans) !important;
+    font-size: 18px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.025em !important;
+    font-weight: 800 !important;
+    color: #f8fafc !important;
+    text-transform: none !important;
+  }
+
+  body:has(.hero-title) .topbar .livebox {
+    justify-self: end !important;
+    min-width: 190px !important;
+    text-align: left !important;
+  }
+
+  body:has(.hero-title) .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    justify-content: flex-start !important;
+  }
+
+  body:has(.hero-title) .ds-pro-desktop-nav-links {
+    justify-content: flex-start !important;
+    width: 100% !important;
+  }
+}
+
+/* WAIVER_DESKTOP_APEX_SHELL_PARITY_V1
+   Desktop-only Waiver shell normalization.
+   Use Apex topbar/nav geometry verbatim; suppress old Waiver desktop header strip.
+   Preserve mobile shell/menu/Field Guide behavior. */
+@media screen and (min-width: 761px) {
+  body.waiver-page {
+    padding: 0 !important;
+  }
+
+  body.waiver-page .waiver-apex-parity-topbar {
+    display: block !important;
+  }
+
+  body.waiver-page .topbar-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    min-height: 148px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 28px !important;
+  }
+
+  body.waiver-page .topbar .brand {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+    min-width: 0 !important;
+    transform: none !important;
+  }
+
+  body.waiver-page .topbar .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 999px !important;
+    background: #b6ff00 !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.30),
+      0 0 20px rgba(182,255,0,0.82),
+      0 0 42px rgba(182,255,0,0.38) !important;
+    animation: dsApexLivePulse 1.15s ease-in-out infinite !important;
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+  }
+
+  body.waiver-page .topbar .brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    min-width: 0 !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    gap: 0 !important;
+    font-family: var(--sans, Inter, system-ui, sans-serif) !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.02em !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker .brand-white {
+    color: #f8fafc !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker .brand-blue {
+    color: #4ea3ff !important;
+    text-shadow:
+      0 0 10px rgba(78,163,255,0.25),
+      0 0 22px rgba(78,163,255,0.16) !important;
+  }
+
+  body.waiver-page .topbar .brand-title {
+    font-family: var(--sans, Inter, system-ui, sans-serif) !important;
+    font-size: 18px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.025em !important;
+    font-weight: 850 !important;
+    color: #f8fafc !important;
+    text-transform: none !important;
+  }
+
+  body.waiver-page .topbar .livebox {
+    justify-self: end !important;
+    min-width: 210px !important;
+    text-align: left !important;
+  }
+
+  body.waiver-page .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    transform: none !important;
+  }
+
+  body.waiver-page .ds-pro-desktop-nav-links {
+    justify-content: flex-start !important;
+    transform: none !important;
+  }
+
+  body.waiver-page .topnav.ds-shell-nav {
+    display: none !important;
+  }
+
+  body.waiver-page .waiver-shell-header {
+    display: none !important;
+  }
+
+  body.waiver-page .shell {
+    max-width: 1180px !important;
+    padding-top: 34px !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.waiver-page .waiver-apex-parity-topbar {
+    display: none !important;
+  }
+}
+
+/* WAIVER_DESKTOP_EXACT_APEX_TOPBAR_PARITY_LOCK_V2
+   Desktop-only Waiver top chrome now uses the exact Apex class structure.
+   Keep this scoped to Waiver and do not touch mobile drawer/menu/Field Guide. */
+@media screen and (min-width: 761px) {
+  body.waiver-page .topbar {
+    min-height: 148px !important;
+  }
+
+  body.waiver-page .topbar-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    min-height: 148px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 28px !important;
+  }
+
+  body.waiver-page .topbar .brand {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+    min-width: 0 !important;
+    transform: none !important;
+  }
+
+  body.waiver-page .topbar .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 999px !important;
+    background: #b6ff00 !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.30),
+      0 0 20px rgba(182,255,0,0.82),
+      0 0 42px rgba(182,255,0,0.38) !important;
+    animation: dsApexLivePulse 1.15s ease-in-out infinite !important;
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+  }
+
+  body.waiver-page .topbar .brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    min-width: 0 !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    gap: 0 !important;
+    font-family: var(--sans) !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.02em !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker .brand-white {
+    color: #f8fafc !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker .brand-blue {
+    color: #4ea3ff !important;
+    text-shadow:
+      0 0 10px rgba(78,163,255,0.25),
+      0 0 22px rgba(78,163,255,0.16) !important;
+  }
+
+  body.waiver-page .topbar .brand-title {
+    font-family: var(--sans) !important;
+    font-size: 18px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.025em !important;
+    font-weight: 850 !important;
+    color: #f8fafc !important;
+    text-transform: none !important;
+  }
+
+  body.waiver-page .topbar .livebox {
+    justify-self: end !important;
+    min-width: 210px !important;
+    text-align: left !important;
+  }
+
+  body.waiver-page .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    transform: none !important;
+  }
+
+  body.waiver-page .ds-pro-desktop-nav-links {
+    justify-content: flex-start !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.waiver-page .topbar {
+    display: none !important;
+  }
+}
+
+/* WAIVER_DESKTOP_EXACT_APEX_DOT_PULSE_LOCK_V1
+   Desktop-only Waiver pulse parity:
+   Waiver now uses the exact Apex .topbar/.brand-mark structure.
+   This guarantees the green DIAMONDSIGNALS dot pulses like Apex. */
+@keyframes dsApexLivePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.92;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.30),
+      0 0 20px rgba(182,255,0,0.82),
+      0 0 42px rgba(182,255,0,0.38);
+  }
+
+  50% {
+    transform: scale(1.16);
+    opacity: 1;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.42),
+      0 0 28px rgba(182,255,0,0.95),
+      0 0 58px rgba(182,255,0,0.52);
+  }
+}
+
+@media screen and (min-width: 761px) {
+  body.waiver-page .topbar .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 999px !important;
+    background: #b6ff00 !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.30),
+      0 0 20px rgba(182,255,0,0.82),
+      0 0 42px rgba(182,255,0,0.38) !important;
+    animation-name: dsApexLivePulse !important;
+    animation-duration: 1.15s !important;
+    animation-timing-function: ease-in-out !important;
+    animation-iteration-count: infinite !important;
+    transform-origin: center center !important;
+    will-change: transform, opacity, box-shadow !important;
+  }
+}
+
+/* KDE_DESKTOP_EXACT_APEX_TOPBAR_PARITY_LOCK_V1
+   Desktop-only KDE chrome parity:
+   - Apex-compatible DIAMONDSIGNALS topbar/logotype
+   - shared pro nav rail on desktop
+   - old shell nav suppressed on desktop only
+   - mobile drawer/nav and KDE Field Guide preserved */
+@media screen and (min-width: 761px) {
+  body.kde-page .topbar {
+    display: block !important;
+  }
+
+  body.kde-page .topbar-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    min-height: 148px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 28px !important;
+  }
+
+  body.kde-page .topbar .brand {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+    min-width: 0 !important;
+    transform: none !important;
+  }
+
+  body.kde-page .topbar .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 999px !important;
+    background: #b6ff00 !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.30),
+      0 0 20px rgba(182,255,0,0.82),
+      0 0 42px rgba(182,255,0,0.38) !important;
+    animation: dsApexLivePulse 1.15s ease-in-out infinite !important;
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+    transform-origin: center center !important;
+  }
+
+  body.kde-page .topbar .brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    min-width: 0 !important;
+  }
+
+  body.kde-page .topbar .brand-kicker {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    gap: 0 !important;
+    font-family: var(--sans) !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.02em !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+  }
+
+  body.kde-page .topbar .brand-kicker .brand-white {
+    color: #f8fafc !important;
+  }
+
+  body.kde-page .topbar .brand-kicker .brand-blue {
+    color: #4ea3ff !important;
+    text-shadow:
+      0 0 10px rgba(78,163,255,0.25),
+      0 0 22px rgba(78,163,255,0.16) !important;
+  }
+
+  body.kde-page .topbar .brand-title {
+    font-family: var(--sans) !important;
+    font-size: 18px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.025em !important;
+    font-weight: 850 !important;
+    color: #f8fafc !important;
+    text-transform: none !important;
+  }
+
+  body.kde-page .topbar .livebox {
+    justify-self: end !important;
+    min-width: 210px !important;
+    text-align: left !important;
+  }
+
+  body.kde-page .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    transform: none !important;
+  }
+
+  body.kde-page .ds-pro-desktop-nav-links {
+    justify-content: flex-start !important;
+  }
+
+  body.kde-page .topnav.ds-shell-nav {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.kde-page .topbar {
+    display: none !important;
+  }
+}
+
+
+
+    :root{
+      --bg:#07090c;
+      --panel:#0d1117;
+      --border:rgba(255,255,255,.08);
+      --text:#f3f6fb;
+      --muted:rgba(255,255,255,.58);
+      --dim:rgba(255,255,255,.40);
+      --cyan:#54c7ff;
+      --lime:#9dff6b;
+      --red:#ff6b6b;
+      --amber:#ffbf69;
+      --purple:#9f7aea;
+      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      background:
+        radial-gradient(circle at 16% 4%, rgba(157,255,107,.10), transparent 26%),
+        radial-gradient(circle at 82% 0%, rgba(84,199,255,.09), transparent 26%),
+        var(--bg);
+      color:var(--text);
+      font-family:Inter,system-ui,sans-serif;
+      padding:32px;
+    }
+
+    .shell{
+      max-width:1600px;
+      margin:0 auto;
+    }
+
+    .eyebrow{
+      color:var(--lime);
+      font-size:12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:10px;
+      font-family:var(--mono);
+    }
+
+    h1{
+      margin:18px 0 0;
+      max-width:1060px;
+      color:#f7f8fa;
+      font-size:34px;
+      line-height:1.12;
+      letter-spacing:-0.04em;
+      font-weight:650;
+      text-transform:none;
+    }
+
+    .sub{
+      color:var(--muted);
+      max-width:940px;
+      font-size:18px;
+      line-height:1.6;
+      margin:16px 0 0;
+    }
+
+    .command-strip{
+      margin:18px 0 16px;
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:8px;
+      border:1px solid rgba(163,230,53,.20);
+      border-radius:18px;
+      padding:10px 12px;
+      background:
+        radial-gradient(circle at 6% 0%, rgba(163,230,53,.11), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07), 0 0 28px rgba(163,230,53,.035);
+      font-family:var(--mono);
+      font-size:10px;
+      line-height:1.5;
+      letter-spacing:.105em;
+      color:rgba(229,231,235,.62);
+    }
+
+    .command-strip strong{
+      color:rgba(190,242,100,.96);
+      font-weight:900;
+      letter-spacing:.14em;
+    }
+
+    .market-grid{
+      margin:18px 0 24px;
+      display:grid;
+      grid-template-columns:1.1fr .9fr .9fr;
+      gap:12px;
+    }
+
+    .market-card{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:14px 15px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.015)),
+        rgba(0,0,0,.18);
+    }
+
+    .market-card span{
+      display:block;
+      color:var(--dim);
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .market-card b{
+      display:block;
+      margin-top:7px;
+      color:#f8fafc;
+      font-size:22px;
+      letter-spacing:-.04em;
+      line-height:1.05;
+    }
+
+    .grid{
+      display:grid;
+      gap:16px;
+    }
+
+    .asset-card{
+      border:1px solid rgba(255,255,255,.085);
+      border-radius:22px;
+      padding:18px;
+      background:
+        radial-gradient(circle at 4% 0%, rgba(157,255,107,.075), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.014)),
+        rgba(0,0,0,.20);
+      box-shadow:0 18px 60px rgba(0,0,0,.28);
+    }
+
+    .asset-top{
+      display:flex;
+      justify-content:space-between;
+      gap:18px;
+      align-items:flex-start;
+    }
+
+    .asset-name{
+      font-size:25px;
+      line-height:1.08;
+      letter-spacing:-.045em;
+      font-weight:760;
+      color:#f8fafc;
+    }
+
+    .asset-meta{
+      margin-top:7px;
+      font-family:var(--mono);
+      color:var(--dim);
+      font-size:10px;
+      letter-spacing:.11em;
+      text-transform:uppercase;
+    }
+
+    .claim-pill{
+      flex:0 0 auto;
+      border-radius:999px;
+      padding:9px 12px;
+      border:1px solid rgba(157,255,107,.36);
+      background:rgba(157,255,107,.08);
+      color:rgba(220,255,210,.96);
+      font-family:var(--mono);
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    .claim-pill.monitor{
+      border-color:rgba(84,199,255,.34);
+      background:rgba(84,199,255,.08);
+      color:rgba(220,244,255,.96);
+    }
+
+    .claim-pill.stash{
+      border-color:rgba(255,191,105,.36);
+      background:rgba(255,191,105,.08);
+      color:rgba(255,238,205,.96);
+    }
+
+    .asset-body{
+      margin-top:15px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .readout{
+      border:1px solid rgba(255,255,255,.075);
+      border-radius:16px;
+      padding:12px;
+      background:rgba(0,0,0,.22);
+    }
+
+    .readout span{
+      display:block;
+      font-family:var(--mono);
+      font-size:10px;
+      letter-spacing:.13em;
+      color:var(--lime);
+      text-transform:uppercase;
+      margin-bottom:7px;
+    }
+
+    .readout p{
+      margin:0;
+      color:rgba(229,231,235,.68);
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .metric-grid{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:9px;
+    }
+
+    .metric{
+      border:1px solid rgba(255,255,255,.07);
+      border-radius:14px;
+      padding:10px;
+      background:rgba(255,255,255,.025);
+      min-height:74px;
+    }
+
+    .metric span{
+      display:block;
+      font-family:var(--mono);
+      color:rgba(229,231,235,.40);
+      font-size:9px;
+      letter-spacing:.10em;
+      line-height:1.35;
+      text-transform:uppercase;
+    }
+
+    .metric b{
+      display:block;
+      margin-top:7px;
+      color:#f8fafc;
+      font-size:18px;
+      line-height:1.08;
+      letter-spacing:-.035em;
+    }
+
+    .verdict{
+      margin-top:14px;
+      border-left:2px solid var(--lime);
+      padding-left:12px;
+    }
+
+    .verdict span{
+      display:block;
+      font-family:var(--mono);
+      color:var(--lime);
+      font-size:10px;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .verdict p{
+      margin:6px 0 0;
+      color:rgba(229,231,235,.70);
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .footer-note{
+      margin:24px 0 6px;
+      border-top:1px solid rgba(255,255,255,.10);
+      padding-top:14px;
+      font-family:var(--mono);
+      font-size:9px;
+      line-height:1.5;
+      letter-spacing:.11em;
+      color:rgba(229,231,235,.42);
+      text-transform:uppercase;
+    }
+
+    @media(max-width:900px){
+      body{padding:18px}
+      .market-grid{grid-template-columns:1fr}
+      .asset-top{flex-direction:column}
+      .asset-body{grid-template-columns:1fr}
+      .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+  
+
+/* WAIVER_MOBILE_STICKY_FIELD_GUIDE_PILL_V2
+   Mobile-only fixed utility placement.
+   Field Guide stays accessible while scrolling without competing with the hero. */
+@media(max-width:760px){
+  .waiver-field-guide-trigger{
+    position:fixed !important;
+    right:18px !important;
+    bottom:calc(18px + env(safe-area-inset-bottom)) !important;
+    z-index:1400 !important;
+    margin:0 !important;
+    width:auto !important;
+    min-height:44px !important;
+    padding:0 16px !important;
+    border-radius:999px !important;
+  }
+}
+
+
+/* WAIVER_DESKTOP_FLOATING_FIELD_GUIDE_PILL_V1
+   Desktop-only Apex-style utility placement.
+   Keeps Field Guide out of document flow and aligned near the report shell edge. */
+@media (min-width:901px){
+  .waiver-field-guide-trigger{
+    position:fixed !important;
+    top:96px !important;
+    right:max(24px, calc((100vw - 1280px) / 2 + 24px)) !important;
+    z-index:1200 !important;
+    margin:0 !important;
+    width:auto !important;
+  }
+}
+
+
+
+/* WAIVER_MOBILE_HERO_TITLE_SPLIT_V1
+   Apex-style mobile title hierarchy:
+   primary title + smaller bold window subtitle. */
+@media(max-width:760px){
+  .mobile-waiver-hero h1{
+    font-size:42px !important;
+    line-height:1.05 !important;
+    letter-spacing:-0.055em !important;
+    margin-bottom:10px !important;
+  }
+
+  .mobile-waiver-window-title{
+    margin:0 0 20px !important;
+    color:#f8fafc !important;
+    font-size:18px !important;
+    line-height:1.1 !important;
+    font-weight:900 !important;
+    letter-spacing:-0.02em !important;
+  }
+}
+
+/* WAIVER_MOBILE_TOP_SAFE_AREA_AND_DRAWER_STACK_FIX_V1
+   Mobile-only correction.
+   Prevent the fixed Menu shell from covering the Waiver title area.
+   Keep Field Guide drawer/header/close control above the Menu layer while open. */
+@media(max-width:760px){
+  main{
+    padding-top:calc(52px + env(safe-area-inset-top)) !important;
+  }
+
+  .mobile-waiver-hero,
+  .desktop-waiver-hero{
+    scroll-margin-top:calc(100px + env(safe-area-inset-top)) !important;
+  }
+
+  .eyebrow{
+    display:block !important;
+    margin-top:0 !important;
+    padding-top:0 !important;
+  }
+
+  .waiver-field-guide-overlay{
+    z-index:30000 !important;
+  }
+
+  .waiver-field-guide-drawer{
+    z-index:30001 !important;
+    top:0 !important;
+    right:0 !important;
+    bottom:0 !important;
+    width:100vw !important;
+    max-width:none !important;
+    border-radius:0 !important;
+    transform:translateX(105%) !important;
+  }
+
+  .waiver-field-guide-drawer.open{
+    transform:translateX(0) !important;
+  }
+
+  .waiver-field-guide-head{
+    position:sticky !important;
+    top:0 !important;
+    z-index:3 !important;
+    min-height:118px !important;
+    padding:calc(20px + env(safe-area-inset-top)) 64px 18px 20px !important;
+    background:
+      radial-gradient(circle at 8% 0%, rgba(157,255,107,.16), transparent 34%),
+      linear-gradient(180deg, rgba(18,24,18,.99), rgba(5,8,10,.97)) !important;
+    border-bottom:1px solid rgba(157,255,107,.20) !important;
+  }
+
+  .waiver-field-guide-kicker{
+    display:block !important;
+  }
+
+  .waiver-field-guide-title{
+    display:block !important;
+    margin-top:8px !important;
+    font-size:28px !important;
+    line-height:1.05 !important;
+  }
+
+  .waiver-field-guide-close{
+    position:absolute !important;
+    top:calc(18px + env(safe-area-inset-top)) !important;
+    right:18px !important;
+    z-index:4 !important;
+    display:grid !important;
+    place-items:center !important;
+    width:40px !important;
+    height:40px !important;
+    border-radius:999px !important;
+    border:1px solid rgba(255,255,255,.20) !important;
+    background:rgba(255,255,255,.075) !important;
+    color:#f8fafc !important;
+    font-size:26px !important;
+    line-height:1 !important;
+  }
+
+  .waiver-field-guide-body{
+    height:calc(100% - 118px) !important;
+    padding:18px 20px calc(34px + env(safe-area-inset-bottom)) !important;
+    overflow:auto !important;
+  }
+
+  body.waiver-field-guide-open .ds-mobile-menu-trigger{
+    opacity:0 !important;
+    pointer-events:none !important;
+  }
+}
+
+
+/* WAIVER_MOBILE_FIELD_GUIDE_HEADER_RESTORE_V1
+   Restore visible Field Guide title/header and close X on mobile drawer. */
+@media(max-width:760px){
+  .waiver-field-guide-drawer{
+    display:flex !important;
+    flex-direction:column !important;
+    overflow:hidden !important;
+  }
+
+  .waiver-field-guide-head{
+    flex:0 0 auto !important;
+    display:flex !important;
+    align-items:flex-start !important;
+    justify-content:space-between !important;
+    position:relative !important;
+    min-height:136px !important;
+    padding:calc(34px + env(safe-area-inset-top)) 72px 22px 20px !important;
+    background:
+      radial-gradient(circle at 8% 0%, rgba(157,255,107,.18), transparent 34%),
+      linear-gradient(180deg, rgba(18,24,18,.99), rgba(5,8,10,.98)) !important;
+    border-bottom:1px solid rgba(157,255,107,.24) !important;
+    transform:none !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .waiver-field-guide-head > div{
+    display:block !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .waiver-field-guide-kicker{
+    display:block !important;
+    color:#9dff6b !important;
+    font-family:var(--mono) !important;
+    font-size:10px !important;
+    line-height:1.2 !important;
+    letter-spacing:.16em !important;
+    text-transform:uppercase !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .waiver-field-guide-title{
+    display:block !important;
+    margin:10px 0 0 !important;
+    color:#f8fafc !important;
+    font-size:30px !important;
+    line-height:1.05 !important;
+    letter-spacing:-.045em !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .waiver-field-guide-close{
+    position:absolute !important;
+    top:calc(30px + env(safe-area-inset-top)) !important;
+    right:18px !important;
+    z-index:10 !important;
+    display:grid !important;
+    place-items:center !important;
+    width:42px !important;
+    height:42px !important;
+    border-radius:999px !important;
+    border:1px solid rgba(255,255,255,.24) !important;
+    background:rgba(255,255,255,.09) !important;
+    color:#f8fafc !important;
+    font-size:30px !important;
+    line-height:1 !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .waiver-field-guide-body{
+    flex:1 1 auto !important;
+    height:auto !important;
+    overflow:auto !important;
+    padding:18px 20px calc(36px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+
+/* WAIVER_MOBILE_FIELD_GUIDE_HEADER_FINAL_LOCK_V1
+   Final mobile drawer header lock.
+   Pull header below device/shell collision zone and keep close X visible. */
+@media(max-width:760px){
+  .waiver-field-guide-drawer{
+    display:flex !important;
+    flex-direction:column !important;
+    padding-top:calc(54px + env(safe-area-inset-top)) !important;
+    overflow:hidden !important;
+  }
+
+  .waiver-field-guide-head{
+    position:relative !important;
+    flex:0 0 auto !important;
+    min-height:104px !important;
+    padding:18px 76px 20px 20px !important;
+    transform:none !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    overflow:visible !important;
+    background:
+      radial-gradient(circle at 8% 0%, rgba(157,255,107,.18), transparent 34%),
+      linear-gradient(180deg, rgba(18,24,18,.99), rgba(5,8,10,.98)) !important;
+    border-bottom:1px solid rgba(157,255,107,.24) !important;
+  }
+
+  .waiver-field-guide-kicker{
+    display:block !important;
+    margin:0 0 8px !important;
+    color:#9dff6b !important;
+    font-family:var(--mono) !important;
+    font-size:10px !important;
+    line-height:1.2 !important;
+    letter-spacing:.16em !important;
+    text-transform:uppercase !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .waiver-field-guide-title{
+    display:block !important;
+    margin:0 !important;
+    color:#f8fafc !important;
+    font-size:30px !important;
+    line-height:1.05 !important;
+    letter-spacing:-.045em !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .waiver-field-guide-close{
+    position:absolute !important;
+    top:18px !important;
+    right:18px !important;
+    z-index:20 !important;
+    display:grid !important;
+    place-items:center !important;
+    width:42px !important;
+    height:42px !important;
+    border-radius:999px !important;
+    border:1px solid rgba(255,255,255,.24) !important;
+    background:rgba(255,255,255,.09) !important;
+    color:#f8fafc !important;
+    font-size:30px !important;
+    line-height:1 !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  .waiver-field-guide-body{
+    flex:1 1 auto !important;
+    height:auto !important;
+    overflow:auto !important;
+    padding:18px 20px calc(36px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+
+.waiver-shell-header,
+.waiver-desktop-hero-grid{
+  display:none;
+}
+
+/* WAIVER_DESKTOP_SIGNAL_WALL_HERO_GRID_V1
+   Desktop Signal Wall alignment pass:
+   completed header band, two-column hero, summary card, and desktop title hierarchy. */
+@media(min-width:901px){
+  .waiver-shell-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    margin:0 0 18px;
+    padding:18px 22px;
+    border:1px solid rgba(255,255,255,.08);
+    background:
+      radial-gradient(circle at 4% 50%, rgba(182,255,0,.16), transparent 22%),
+      linear-gradient(90deg, rgba(2,6,23,.94), rgba(2,8,14,.78));
+    box-shadow:inset 0 -1px 0 rgba(182,255,0,.12), 0 18px 60px rgba(0,0,0,.24);
+  }
+
+  .waiver-shell-brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  .waiver-shell-orb{
+    width:18px;
+    height:18px;
+    border-radius:999px;
+    background:#b6ff00;
+    box-shadow:0 0 18px rgba(182,255,0,.82), 0 0 42px rgba(182,255,0,.28);
+  }
+
+  .waiver-shell-brand strong{
+    display:block;
+    color:#f8fafc;
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+  }
+
+  .waiver-shell-brand span{
+    display:block;
+    margin-top:4px;
+    color:rgba(148,163,184,.82);
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+  }
+
+  .waiver-shell-live{
+    text-align:right;
+    color:#b6ff00;
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:900;
+    line-height:1.45;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+  }
+
+  .waiver-shell-live span{
+    display:block;
+    color:rgba(226,232,240,.72);
+    font-weight:700;
+    letter-spacing:.12em;
+  }
+
+  .waiver-desktop-hero-grid{
+    display:grid;
+    grid-template-columns:minmax(0,1.95fr) minmax(330px,.95fr);
+    gap:16px;
+    align-items:stretch;
+    margin:38px 0 22px;
+  }
+
+  .waiver-desktop-hero-copy,
+  .waiver-signal-summary-card{
+    border:1px solid rgba(255,255,255,.095);
+    border-radius:2px;
+    background:
+      radial-gradient(circle at 6% 0%, rgba(157,255,107,.08), transparent 34%),
+      linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.014)),
+      rgba(0,0,0,.24);
+    box-shadow:0 22px 70px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.05);
+  }
+
+  .waiver-desktop-hero-copy{
+    padding:34px 38px 36px;
+  }
+
+  .waiver-desktop-hero-copy .eyebrow{
+    margin:0 0 18px;
+    color:#9dff6b;
+    font-family:var(--mono);
+    font-size:13px;
+    font-weight:900;
+    letter-spacing:.24em;
+    text-transform:uppercase;
+  }
+
+  .desktop-waiver-hero h1{
+    margin:0;
+    color:#f8fafc;
+    font-size:48px;
+    line-height:.98;
+    letter-spacing:-.065em;
+    font-weight:850;
+  }
+
+  .waiver-desktop-subtitle{
+    margin:14px 0 0;
+    color:#f8fafc;
+    font-size:24px;
+    line-height:1.08;
+    letter-spacing:-.035em;
+    font-weight:900;
+  }
+
+  .desktop-waiver-hero .sub{
+    max-width:900px;
+    margin:22px 0 0;
+    color:rgba(229,231,235,.78);
+    font-size:17px;
+    line-height:1.5;
+  }
+
+  .desktop-waiver-hero .risk-disclaimer{
+    margin:22px 0 0;
+    max-width:980px;
+  }
+
+  .waiver-signal-summary-card{
+    position:relative;
+    padding:34px 34px 28px;
+    overflow:visible;
+  }
+
+  .waiver-summary-kicker{
+    color:rgba(148,163,184,.78);
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+  }
+
+  .waiver-summary-mode{
+    margin:8px 0 18px;
+    color:#f8fafc;
+    font-size:32px;
+    line-height:1;
+    letter-spacing:-.045em;
+    font-weight:900;
+    text-transform:uppercase;
+  }
+
+  .waiver-summary-list{
+    display:grid;
+    gap:12px;
+    margin-top:18px;
+  }
+
+  .waiver-summary-item span{
+    display:block;
+    color:rgba(148,163,184,.72);
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+  }
+
+  .waiver-summary-item b{
+    display:block;
+    margin-top:3px;
+    color:#f8fafc;
+    font-size:25px;
+    line-height:1.05;
+    letter-spacing:-.045em;
+  }
+
+  .waiver-summary-footer{
+    margin-top:22px;
+    padding-top:14px;
+    border-top:1px solid rgba(255,255,255,.12);
+    color:#9dff6b;
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+  }
+
+  .waiver-summary-guide{
+    position:absolute !important;
+    right:-42px !important;
+    top:72px !important;
+    z-index:20 !important;
+    margin:0 !important;
+    width:auto !important;
+    min-height:44px !important;
+    padding:0 18px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    white-space:nowrap !important;
+  }
+
+  .waiver-shell-header + .topnav,
+  .waiver-shell-header ~ .topnav{
+    margin-top:0;
+  }
+}
+
+
+/* WAIVER_DESKTOP_SIGNAL_WALL_HERO_REFINEMENT_V2
+   Desktop-only refinement after Signal Wall hero grid install.
+   Adjust title weight/spacing, remove duplicate floating Field Guide, soften WIRE card type,
+   and restore two-column desktop player grid. */
+@media(min-width:901px){
+  .desktop-waiver-hero h1{
+    font-size:48px !important;
+    line-height:1.02 !important;
+    letter-spacing:-0.035em !important;
+    font-weight:760 !important;
+  }
+
+  .waiver-desktop-subtitle{
+    font-size:24px !important;
+    line-height:1.1 !important;
+    letter-spacing:-0.018em !important;
+    font-weight:800 !important;
+  }
+
+  .waiver-summary-mode{
+    font-size:30px !important;
+    line-height:1 !important;
+    letter-spacing:-0.02em !important;
+    font-weight:760 !important;
+  }
+
+  /* Hide the old standalone desktop Field Guide trigger.
+     Keep only the summary-card Field Guide pill on desktop. */
+  main.shell > .waiver-field-guide-trigger:not(.waiver-summary-guide){
+    display:none !important;
+  }
+
+  #waiverAssetGrid.grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    align-items:start !important;
+  }
+
+  .frozen-grid.grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    align-items:start !important;
+  }
+
+  .asset-card{
+    min-width:0 !important;
+  }
+}
+
+
+/* WAIVER_DESKTOP_FIELD_GUIDE_FLOAT_EDGE_FIX_V1
+   Desktop-only: make the Signal Summary Field Guide pill float off the card edge
+   like the Signal Wall reference. */
+@media(min-width:901px){
+  main.shell,
+  .waiver-desktop-hero-grid,
+  .waiver-signal-summary-card{
+    overflow:visible !important;
+  }
+
+  .waiver-signal-summary-card .waiver-summary-guide{
+    position:absolute !important;
+    top:72px !important;
+    right:0 !important;
+    transform:translateX(50%) !important;
+    z-index:50 !important;
+    margin:0 !important;
+    width:auto !important;
+    min-height:44px !important;
+    padding:0 20px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    white-space:nowrap !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,.10),
+      0 0 22px rgba(182,255,0,.24),
+      0 0 44px rgba(182,255,0,.12),
+      inset 0 1px 0 rgba(255,255,255,.08) !important;
+  }
+
+  main.shell > .waiver-field-guide-trigger:not(.waiver-summary-guide){
+    display:none !important;
+  }
+}
+
+
+/* WAIVER_DESKTOP_FIELD_GUIDE_IN_CARD_FINAL_V1
+   Desktop-only final placement.
+   Keep Field Guide inside the Signal Summary card as a stable card action. */
+@media(min-width:901px){
+  .waiver-signal-summary-card{
+    overflow:hidden !important;
+  }
+
+  .waiver-signal-summary-card .waiver-summary-guide{
+    position:absolute !important;
+    right:34px !important;
+    top:86px !important;
+    transform:none !important;
+    z-index:20 !important;
+    margin:0 !important;
+    width:auto !important;
+    min-height:42px !important;
+    padding:0 18px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    white-space:nowrap !important;
+    border-radius:999px !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,.10),
+      0 0 18px rgba(182,255,0,.18),
+      inset 0 1px 0 rgba(255,255,255,.08) !important;
+  }
+
+  main.shell > .waiver-field-guide-trigger:not(.waiver-summary-guide){
+    display:none !important;
+  }
+}
+
+/* WAIVER_FIELD_GUIDE_V1 */
+.waiver-field-guide-trigger{
+  margin:16px 0 18px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid rgba(157,255,107,.34);
+  border-radius:999px;
+  padding:10px 14px;
+  background:rgba(157,255,107,.075);
+  color:rgba(220,255,210,.96);
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  cursor:pointer;
+  box-shadow:0 0 24px rgba(157,255,107,.08);
+}
+
+.waiver-field-guide-trigger:hover{
+  border-color:rgba(157,255,107,.62);
+  background:rgba(157,255,107,.12);
+}
+
+.waiver-field-guide-overlay{
+  position:fixed;
+  inset:0;
+  z-index:9998;
+  background:rgba(0,0,0,.62);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .18s ease;
+}
+
+.waiver-field-guide-overlay.open{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.waiver-field-guide-drawer{
+  position:fixed;
+  top:18px;
+  right:18px;
+  bottom:18px;
+  z-index:9999;
+  width:min(460px, calc(100vw - 36px));
+  border:1px solid rgba(157,255,107,.24);
+  border-radius:26px;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(157,255,107,.12), transparent 34%),
+    linear-gradient(180deg, rgba(18,24,18,.98), rgba(5,8,10,.98));
+  box-shadow:-28px 0 90px rgba(0,0,0,.58), 0 0 42px rgba(157,255,107,.08);
+  transform:translateX(calc(100% + 34px));
+  transition:transform .22s ease;
+  overflow:hidden;
+}
+
+.waiver-field-guide-drawer.open{
+  transform:translateX(0);
+}
+
+.waiver-field-guide-head{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  align-items:flex-start;
+  padding:20px 20px 14px;
+  border-bottom:1px solid rgba(255,255,255,.09);
+}
+
+.waiver-field-guide-kicker{
+  font-family:var(--mono);
+  color:var(--lime);
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+
+.waiver-field-guide-title{
+  margin:7px 0 0;
+  color:#f8fafc;
+  font-size:25px;
+  line-height:1.05;
+  letter-spacing:-.04em;
+}
+
+.waiver-field-guide-close{
+  width:34px;
+  height:34px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.045);
+  color:#f8fafc;
+  cursor:pointer;
+  font-size:20px;
+  line-height:1;
+}
+
+.waiver-field-guide-body{
+  height:calc(100% - 86px);
+  overflow:auto;
+  padding:18px 20px 22px;
+}
+
+.waiver-field-guide-card{
+  border:1px solid rgba(255,255,255,.085);
+  border-radius:18px;
+  padding:14px;
+  background:rgba(255,255,255,.035);
+  margin-bottom:12px;
+}
+
+.waiver-field-guide-label{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:rgba(229,231,235,.70);
+}
+
+.waiver-field-guide-card p,
+.waiver-field-guide-card li{
+  color:rgba(229,231,235,.68);
+  font-size:13px;
+  line-height:1.55;
+}
+
+.waiver-field-guide-card p{
+  margin:8px 0 0;
+}
+
+.waiver-field-guide-card ul{
+  margin:10px 0 0;
+  padding-left:18px;
+}
+
+.waiver-field-guide-card strong{
+  color:#f8fafc;
+}
+
+.guide-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  display:inline-block;
+  box-shadow:0 0 14px currentColor;
+}
+
+.guide-dot.ownership{ color:#9dff6b; background:#9dff6b; }
+.guide-dot.window{ color:#54c7ff; background:#54c7ff; }
+.guide-dot.type{ color:#9f7aea; background:#9f7aea; }
+.guide-dot.defect{ color:#ffbf69; background:#ffbf69; }
+.guide-dot.command{ color:#f8fafc; background:#f8fafc; }
+.guide-dot.risk{ color:#ff6b6b; background:#ff6b6b; }
+
+.metric.metric-ownership-gate{
+  border-color:rgba(157,255,107,.22);
+  background:rgba(157,255,107,.045);
+}
+
+.metric.metric-signal-window{
+  border-color:rgba(84,199,255,.22);
+  background:rgba(84,199,255,.045);
+}
+
+.metric.metric-asset-type{
+  border-color:rgba(159,122,234,.22);
+  background:rgba(159,122,234,.045);
+}
+
+.metric.metric-market-defect{
+  border-color:rgba(255,191,105,.24);
+  background:rgba(255,191,105,.045);
+}
+
+.metric.metric-command{
+  border-color:rgba(248,250,252,.16);
+  background:rgba(248,250,252,.035);
+}
+
+.metric.metric-risk{
+  border-color:rgba(255,107,107,.24);
+  background:rgba(255,107,107,.04);
+}
+
+body.waiver-field-guide-open{
+  overflow:hidden;
+}
+
+@media(max-width:900px){
+    /* WAIVER_MOBILE_MENU_MATCHED_FIELD_GUIDE_V1
+       Match the mobile Field Guide trigger to the global Menu pill behavior.
+       Do not let Field Guide become a full-width primary CTA on mobile. */
+    .waiver-field-guide-trigger{
+      width:auto;
+      min-height:46px;
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      margin:14px 0 16px;
+      padding:0 18px;
+      border-radius:999px;
+      border:1px solid rgba(182,255,0,0.58);
+      background:
+        radial-gradient(circle at 18% 50%, rgba(182,255,0,0.16), transparent 42%),
+        rgba(7,10,14,0.94);
+      color:rgba(247,248,250,0.98);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:0.14em;
+      box-shadow:
+        0 0 0 1px rgba(182,255,0,0.10),
+        0 0 18px rgba(182,255,0,0.22),
+        0 0 34px rgba(182,255,0,0.10),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    .waiver-field-guide-trigger:active{
+      transform:scale(0.98);
+      border-color:rgba(182,255,0,0.76);
+      box-shadow:
+        0 0 0 1px rgba(182,255,0,0.18),
+        0 0 24px rgba(182,255,0,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.10);
+    }
+
+  .waiver-field-guide-drawer{
+    top:0;
+    right:0;
+    bottom:0;
+    width:88vw;
+    max-width:430px;
+    border-radius:24px 0 0 24px;
+  }
+
+  .waiver-field-guide-title{
+    font-size:22px;
+  }
+}
+
+
+.player-lookup-panel{
+  margin: 22px 0 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:14px;
+  border:1px solid rgba(148,163,184,.18);
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(15,23,42,.76),rgba(2,6,23,.9));
+  box-shadow:0 18px 45px rgba(0,0,0,.25);
+}
+.player-lookup-panel span{
+  display:block;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10px;
+  letter-spacing:.16em;
+  color:rgba(157,255,107,.78);
+}
+.player-lookup-panel strong{
+  display:block;
+  margin-top:4px;
+  color:#f8fafc;
+  font-size:14px;
+}
+.player-lookup-panel input{
+  width:min(420px,100%);
+  border:1px solid rgba(56,189,248,.28);
+  border-radius:999px;
+  background:rgba(2,6,23,.78);
+  color:#f8fafc;
+  padding:12px 14px;
+  outline:none;
+}
+.asset-card{
+  cursor:pointer;
+}
+.asset-card.is-hidden-by-search{
+  display:none;
+}
+.ops-strip{
+  margin:14px 0;
+  padding:12px;
+  border-radius:16px;
+  border:1px solid rgba(148,163,184,.16);
+  background:rgba(2,6,23,.58);
+}
+.ops-strip div{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:6px;
+}
+.ops-strip span{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10px;
+  letter-spacing:.14em;
+  color:rgba(148,163,184,.78);
+}
+.ops-strip b{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:11px;
+  letter-spacing:.1em;
+  color:#9dff6b;
+}
+.ops-strip p{
+  margin:8px 0 0;
+  color:rgba(226,232,240,.78);
+  font-size:12px;
+  line-height:1.45;
+}
+.ops-strip.deployment-locked b,
+.ops-strip.eligibility-unverified b{
+  color:#fb7185;
+}
+.ops-strip.surveillance-only b,
+.ops-strip.watchlist-only b{
+  color:#38bdf8;
+}
+.card-action-row{
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid rgba(148,163,184,.14);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10px;
+  letter-spacing:.12em;
+  color:rgba(226,232,240,.68);
+}
+.card-action-row b{
+  color:#9dff6b;
+}
+@media (max-width: 720px){
+
+  /* WAIVER_FIELD_GUIDE_DRAWER_CLOSE_FIX_V1
+     Defensive Apex-style close control lock.
+     Prevent close X from dropping under title or inheriting card/button artifacts. */
+  .waiver-field-guide-head{
+    position:relative;
+    padding-right:64px;
+  }
+
+  .waiver-field-guide-close{
+    position:absolute;
+    top:16px;
+    right:18px;
+    width:34px;
+    height:34px;
+    display:grid;
+    place-items:center;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.045);
+    color:#f8fafc;
+    box-shadow:none;
+    cursor:pointer;
+    font-size:20px;
+    line-height:1;
+  }
+
+  /* WAIVER_FIELD_GUIDE_CLOSED_STATE_LOCK_V1
+     Keep overlay inert while closed and body scroll locked only while drawer is open. */
+  .waiver-field-guide-overlay{
+    pointer-events:none;
+  }
+
+  .waiver-field-guide-overlay.open{
+    pointer-events:auto;
+  }
+
+  body.waiver-field-guide-open{
+    overflow:hidden;
+  }
+
+  .player-lookup-panel{
+    display:block;
+    position:sticky;
+    top:10px;
+    z-index:20;
+  }
+  .player-lookup-panel input{
+    margin-top:12px;
+  }
+  .card-action-row{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+}
+
+.frozen-signal-section{
+  margin-top:34px;
+  padding-top:24px;
+  border-top:1px solid rgba(251,113,133,.22);
+}
+.frozen-head{
+  margin-bottom:16px;
+  padding:16px;
+  border:1px solid rgba(251,113,133,.22);
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(127,29,29,.18),rgba(2,6,23,.84));
+}
+.frozen-head span{
+  display:block;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10px;
+  letter-spacing:.16em;
+  color:#fb7185;
+}
+.frozen-head strong{
+  display:block;
+  margin-top:6px;
+  color:#f8fafc;
+  font-size:18px;
+}
+.frozen-head p{
+  margin:8px 0 0;
+  color:rgba(226,232,240,.72);
+  line-height:1.55;
+}
+.frozen-card{
+  border-color:rgba(251,113,133,.26) !important;
+  background:linear-gradient(180deg,rgba(127,29,29,.14),rgba(2,6,23,.84)) !important;
+}
+
+.status-provenance{
+  margin-top:12px;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid rgba(251,113,133,.22);
+  background:rgba(127,29,29,.12);
+}
+.status-provenance div{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+}
+.status-provenance span{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10px;
+  letter-spacing:.14em;
+  color:rgba(251,113,133,.88);
+}
+.status-provenance b{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:11px;
+  letter-spacing:.08em;
+  color:#fda4af;
+}
+.status-provenance p{
+  margin:8px 0 0;
+  color:rgba(226,232,240,.78);
+  font-size:12px;
+  line-height:1.45;
+}
+
+.risk-disclaimer{
+  max-width:980px;
+  margin:12px 0 18px;
+  color:rgba(226,232,240,.46);
+  font-size:10px;
+  line-height:1.45;
+  letter-spacing:.01em;
+}
+.risk-disclaimer strong{
+  color:rgba(248,250,252,.62);
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:9px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.mobile-waiver-hero{ display:none; }
+
+.mobile-risk-disclosure{
+  margin:12px 0 14px;
+  border:1px solid rgba(148,163,184,.16);
+  border-radius:14px;
+  background:rgba(2,6,23,.52);
+  padding:10px 12px;
+}
+.mobile-risk-disclosure summary{
+  cursor:pointer;
+  list-style:none;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10px;
+  letter-spacing:.08em;
+  color:rgba(226,232,240,.76);
+}
+.mobile-risk-disclosure summary::-webkit-details-marker{ display:none; }
+.mobile-risk-disclosure summary span{
+  display:block;
+  margin-top:4px;
+  color:rgba(157,255,107,.72);
+  font-size:9px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.mobile-risk-disclosure p{
+  margin:10px 0 0;
+  color:rgba(226,232,240,.58);
+  font-size:11px;
+  line-height:1.45;
+}
+
+@media (max-width: 720px){
+  .desktop-waiver-hero{ display:none; }
+  .mobile-waiver-hero{ display:block; }
+  .risk-disclaimer{ display:none; }
+}
+
+.performance-audit-button{
+  appearance:none;
+  border:1px solid rgba(157,255,107,.36);
+  border-radius:999px;
+  background:rgba(157,255,107,.08);
+  color:#9dff6b;
+  padding:8px 11px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10px;
+  letter-spacing:.12em;
+  cursor:pointer;
+}
+.performance-audit-button:hover{
+  border-color:rgba(157,255,107,.62);
+  background:rgba(157,255,107,.14);
+}
+
+
+
+/* WAIVER_HIDE_OLD_LOCAL_HEADER_AFTER_EXACT_APEX_TOPBAR_V1
+   Desktop-only: old Waiver local header is now retired.
+   Exact Apex .topbar owns the report chrome. */
+@media screen and (min-width: 761px) {
+  body.waiver-page .waiver-shell-header {
+    display: none !important;
+  }
+}
+
+</style>
+</head>
+
+<body class="waiver-page">
+
+
+
+  <!-- WAIVER_DESKTOP_EXACT_APEX_TOPBAR_STRUCTURE_V1 -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div class="brand-text">
+          <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
+          <div class="brand-title">Waiver Wire // Open Market</div>
+        </div>
+      </div>
+
+      <div class="livebox">
+        <div class="live-label"><span class="live-dot"></span>LIVE</div>
+        <div class="live-time">2026-06-10T18:09:32Z</div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="ds-pro-desktop-nav" aria-label="DiamondSignals desktop command navigation">
+  <div class="ds-pro-desktop-nav-inner">
+    <div class="ds-pro-desktop-nav-links" aria-label="Signal surfaces">
+      <a class="ds-pro-desktop-nav-link " href="/live/"><span>[ LIVE ]</span> Signal Wall</a>
+      <a class="ds-pro-desktop-nav-link " href="/typical-call-up"><span>[ SCOUT ]</span> Promotion Watch</a>
+      <a class="ds-pro-desktop-nav-link active" href="/waiver-wire/"><span>[ WIRE ]</span> Waiver Wire</a>
+      <a class="ds-pro-desktop-nav-link " href="/mlb-extraction/"><span>[ EDGE ]</span> MLB Extraction</a>
+      <a class="ds-pro-desktop-nav-link " href="/apex-extraction/"><span>[ APEX ]</span> Apex</a>
+      <a class="ds-pro-desktop-nav-link " href="/ivb-heat-map"><span>[ LAB ]</span> IVB</a>
+      <a class="ds-pro-desktop-nav-link " href="/velocity-decay-monitor"><span>[ RISK ]</span> Velocity</a>
+      <a class="ds-pro-desktop-nav-link " href="/stuff-disruption-feed"><span>[ DISRUPT ]</span> Stuff+</a>
+      <a class="ds-pro-desktop-nav-link " href="/admin/kinetic-drift/"><span>[ KDE ]</span> Kinetic</a>
+      <a class="ds-pro-desktop-nav-link " href="/watch-list/"><span>[ STAGE ]</span> Tracking</a>
+      <a class="ds-pro-desktop-nav-link ds-pro-desktop-nav-link-terminal" href="https://app.diamondsignals.ai/auth?next=/terminal"><span>[ TERMINAL ]</span> Roster</a>
+    </div>
+  </div>
+</nav>
+  <div class="topnav ds-shell-nav">
+  <div class="topnav-inner">
+    <div class="topnav-links">
+      <a class="topnav-link " href="/live/"><span class="topnav-tag">[ LIVE ]</span> Signal Wall</a>
+      <a class="topnav-link " href="/typical-call-up"><span class="topnav-tag">[ SCOUT ]</span> Promotion Watch</a>
+      <a class="topnav-link " href="/admin/kinetic-drift/"><span class="topnav-tag">[ KINETIC ]</span> KDE</a>
+      <a class="topnav-link active" href="/waiver-wire/"><span class="topnav-tag">[ WIRE ]</span> Waiver Wire</a>
+      <a class="topnav-link " href="/ivb-heat-map"><span class="topnav-tag">[ LAB ]</span> IVB Heat Map</a>
+      <a class="topnav-link " href="/velocity-decay-monitor"><span class="topnav-tag">[ RISK ]</span> Velocity Decay</a>
+      <a class="topnav-link " href="/stuff-disruption-feed"><span class="topnav-tag">[ DISRUPT ]</span> Stuff+ Disruption</a>
+      <a class="topnav-link " href="/mlb-extraction/"><span class="topnav-tag">[ EDGE ]</span> MLB Extraction Ledger</a>
+      <a class="topnav-link " href="/apex-extraction/"><span class="topnav-tag">[ APEX ]</span> Apex Extraction</a>
+      <a class="topnav-link" href="/watch-list/"><span class="topnav-tag">[ STAGE ]</span> Tracking Radar</a>
+      <a class="topnav-link" href="https://app.diamondsignals.ai/auth?next=/terminal"><span class="topnav-tag">[ TERMINAL ]</span> Roster Terminal</a>
+      <a class="topnav-link" href="https://diamondsignals.ai"><span class="topnav-tag">[ SITE ]</span> Main Site</a>
+    </div>
+
+    <button class="ds-mobile-menu-trigger" type="button" data-ds-mobile-menu-open onclick="window.dsOpenMobileMenu && window.dsOpenMobileMenu()" aria-controls="dsMobileMenu" aria-expanded="false">
+      <span class="ds-mobile-menu-icon">☰</span>
+      <span>Menu</span>
+    </button>
+  </div>
+</div>
+
+<div class="ds-mobile-menu-backdrop" data-ds-mobile-menu-close></div>
+
+<aside class="ds-mobile-menu-drawer" id="dsMobileMenu" aria-hidden="true">
+  <div class="ds-mobile-menu-shell">
+    <div class="ds-mobile-menu-head">
+      <div>
+        <div class="ds-mobile-menu-kicker">DIAMONDSIGNALS // COMMAND NAV</div>
+        <h2 class="ds-mobile-menu-title">Signal Surfaces</h2>
+      </div>
+      <button class="ds-mobile-menu-close" type="button" data-ds-mobile-menu-close onclick="window.dsCloseMobileMenu && window.dsCloseMobileMenu()" aria-label="Close menu">×</button>
+    </div>
+
+    <div class="ds-mobile-menu-links">
+      <a class="ds-mobile-menu-link " href="/live/"><span>[ LIVE ]</span> Signal Wall</a>
+      <a class="ds-mobile-menu-link " href="/typical-call-up"><span>[ SCOUT ]</span> Promotion Watch</a>
+      <a class="ds-mobile-menu-link " href="/admin/kinetic-drift/"><span>[ KINETIC ]</span> Kinetic Drift Engine</a>
+      <a class="ds-mobile-menu-link active" href="/waiver-wire/"><span>[ WIRE ]</span> Waiver Wire</a>
+      <a class="ds-mobile-menu-link " href="/ivb-heat-map"><span>[ LAB ]</span> IVB Heat Map</a>
+      <a class="ds-mobile-menu-link " href="/velocity-decay-monitor"><span>[ RISK ]</span> Velocity Decay</a>
+      <a class="ds-mobile-menu-link " href="/stuff-disruption-feed"><span>[ DISRUPT ]</span> Stuff+ Disruption</a>
+      <a class="ds-mobile-menu-link " href="/mlb-extraction/"><span>[ EDGE ]</span> MLB Extraction Ledger</a>
+      <a class="ds-mobile-menu-link " href="/apex-extraction/"><span>[ APEX ]</span> Apex Extraction</a>
+      <a class="ds-mobile-menu-link" href="/watch-list/"><span>[ STAGE ]</span> Tracking Radar</a>
+      <a class="ds-mobile-menu-link" href="https://app.diamondsignals.ai/auth?next=/terminal"><span>[ TERMINAL ]</span> Roster Terminal</a>
+      <a class="ds-mobile-menu-link" href="https://diamondsignals.ai"><span>[ SITE ]</span> Main Site</a>
+    </div>
+
+    <div class="ds-mobile-menu-status">
+      SYSTEM STATUS: MOBILE COMMAND DRAWER ACTIVE
+    </div>
+  </div>
+</aside>
+
+<script>
+(function(){
+  const body = document.body;
+  const openBtn = document.querySelector("[data-ds-mobile-menu-open]");
+  const closeEls = document.querySelectorAll("[data-ds-mobile-menu-close]");
+  const drawer = document.getElementById("dsMobileMenu");
+
+  function openMenu(){
+    body.classList.add("ds-mobile-menu-open");
+    if (drawer) drawer.setAttribute("aria-hidden", "false");
+    if (openBtn) openBtn.setAttribute("aria-expanded", "true");
+  }
+
+  function closeMenu(){
+    body.classList.remove("ds-mobile-menu-open");
+    if (drawer) drawer.setAttribute("aria-hidden", "true");
+    if (openBtn) openBtn.setAttribute("aria-expanded", "false");
+  }
+
+  window.dsOpenMobileMenu = openMenu;
+  window.dsCloseMobileMenu = closeMenu;
+
+  if (openBtn) openBtn.addEventListener("click", openMenu);
+  closeEls.forEach((el) => el.addEventListener("click", closeMenu));
+
+  document.addEventListener("keydown", function(event){
+    if (event.key === "Escape") closeMenu();
+  });
+})();
+</script>
+
+  <main class="shell">
+      <section class="waiver-shell-header" aria-label="DiamondSignals Waiver Wire header">
+        <div class="waiver-shell-brand">
+          <i class="waiver-shell-orb" aria-hidden="true"></i>
+          <div>
+            <strong>DIAMONDSIGNALS</strong>
+            <span>Signal Wall // Open Market Chassis</span>
+          </div>
+        </div>
+        <div class="waiver-shell-live">
+          ● LIVE
+          <span>2026-06-10T18:09:32Z</span>
+        </div>
+      </section>
+
+      <section class="waiver-desktop-hero-grid">
+        <div class="waiver-desktop-hero-copy">
+          <div class="eyebrow">WAIVER WIRE // OPEN MARKET</div>
+
+          <div class="desktop-waiver-hero">
+            <h1>Unrostered Assets</h1>
+            <div class="waiver-desktop-subtitle">Mispriced Physics. The 72-Hour Window.</div>
+
+            <p class="sub">
+              This surface scans low-rostered assets whose market price hasn’t caught up to elite underlying shifts in movement,
+              command, and bat-path mechanics.
+            </p>
+          </div>
+
+          <p class="risk-disclaimer">
+            <strong>Model Parameters &amp; Edge Limitations:</strong>
+            This surface operates on pure, unadulterated performance physics. It does not ingest fluid qualitative variables like day-to-day injuries,
+            late-scratch medicals, or sudden managerial whims. Because the 72-hour window moves faster than official injury reporting infrastructure,
+            users must cross-reference health status before committing capital. The data shows you who is breaking out; your job is to verify they are on the field.
+          </p>
+        </div>
+
+        <aside class="waiver-signal-summary-card" aria-label="Waiver Wire signal summary">
+          <div class="waiver-summary-kicker">MODE</div>
+          <div class="waiver-summary-mode">WIRE</div>
+
+          <div class="waiver-summary-list">
+            <div class="waiver-summary-item">
+              <span>Candidates</span>
+              <b>8</b>
+            </div>
+            <div class="waiver-summary-item">
+              <span>Window</span>
+              <b>72H</b>
+            </div>
+            <div class="waiver-summary-item">
+              <span>Ownership Gate</span>
+              <b>≤20%</b>
+            </div>
+          </div>
+
+          <div class="waiver-summary-footer">OPEN_MARKET // PHYSICS-FIRST ACTIVE</div>
+
+          <button class="waiver-field-guide-trigger waiver-summary-guide" type="button" onclick="openWaiverFieldGuide()" aria-controls="waiverFieldGuide" aria-expanded="false">
+            FIELD GUIDE
+          </button>
+        </aside>
+      </section>
+
+
+
+      <div class="mobile-waiver-hero">
+        <h1>Unrostered Assets. The 72-Hour Window.</h1>
+        <p class="sub">
+          Scanning low-rostered assets whose market price hasn’t caught up to elite underlying shifts in physics, mechanics, or role optimization.
+        </p>
+
+        <details class="mobile-risk-disclosure">
+          <summary>💡 Model Parameters &amp; Edge Limitations <span>Tap to Expand</span></summary>
+          <p>
+            This surface operates on pure performance physics and moves faster than official injury reporting infrastructure.
+            It does not ingest fluid qualitative variables like day-to-day injuries or late-scratch medicals.
+          </p>
+          <p>
+            The data highlights the mechanical breakout; your job is to verify physical availability before committing capital.
+          </p>
+        </details>
+      </div>
+
+    <div class="command-strip">
+      <strong>72-HOUR OPEN MARKET EXTRACTION</strong>
+      <span>Pitcher-first mid-May claim surface</span>
+      <span>Ownership gate: ≤ 20% rostered</span>
+      <span>Command language: acquire, stash, monitor, avoid</span>
+    </div>
+      <button class="waiver-field-guide-trigger" type="button" onclick="openWaiverFieldGuide()" aria-controls="waiverFieldGuide" aria-expanded="false">
+        FIELD GUIDE
+      </button>
+
+
+
+    <section class="market-grid">
+      <div class="market-card">
+        <span>Primary command</span>
+        <b>Priority Waiver Claim</b>
+      </div>
+      <div class="market-card">
+        <span>Shark window</span>
+        <b>Mid-May</b>
+      </div>
+      <div class="market-card">
+        <span>Market defect</span>
+        <b>Box-score lag</b>
+      </div>
+    </section>
+      
+      
+      
+      
+      
+      
+      <section class="player-lookup-panel" aria-label="Waiver Wire player lookup">
+  <div>
+    <span>PLAYER LOOKUP // MOBILE PARITY</span>
+    <strong>Search active open-market assets</strong>
+  </div>
+  <input
+    id="waiverPlayerSearch"
+    type="search"
+    placeholder="Search player, team, command, status..."
+    oninput="filterWaiverCards()"
+    autocomplete="off"
+  />
+</section>
+
+      <section class="grid" id="waiverAssetGrid">
+        
+        <article
+          class="asset-card js-player-card"
+          data-search="alex lange kansas city royals p watchlist provision signal wall candidate deployment clear active"
+          data-audit-url="/scout/656638/"
+          data-player-id="656638"
+          data-player-name="Alex Lange"
+          data-player-team="Kansas City Royals"
+          data-player-type="P"
+          data-profile-url="/scout/656638/"
+          data-source-tag="WAIVER_WIRE"
+          onclick="openPlayerAudit(this)"
+          tabindex="0"
+          role="button"
+          aria-label="Open performance audit for Alex Lange"
+        >
+          <div class="asset-top">
+            <div>
+              <div class="asset-name">Alex Lange</div>
+              <div class="asset-meta">Kansas City Royals // P // ROSTERED 16% // ID 656638</div>
+            </div>
+
+            <button
+              type="button"
+              class="claim-pill monitor js-add-to-roster"
+              data-player-id="656638"
+              data-player-name="Alex Lange"
+              data-player-team="Kansas City Royals"
+              data-player-type="P"
+              data-profile-url="/scout/656638/"
+              data-source-tag="WAIVER_WIRE"
+              onclick="event.stopPropagation();"
+              aria-label="Initiate tracking for Alex Lange"
+            >WATCHLIST PROVISION</button>
+          </div>
+
+          <div class="ops-strip deployment-clear">
+            <div>
+              <span>OPERATIONAL STATUS</span>
+              <b>DEPLOYMENT CLEAR</b>
+            </div>
+            <div>
+              <span>BODY / ROSTER STATE</span>
+              <b>ACTIVE</b>
+            </div>
+            <p>Candidate file source; verify status before deployment.</p>
+          </div>
+
+          <div class="asset-body">
+            <div class="readout">
+              <span>Surface suppression</span>
+              <p>Dynamic Waiver candidate sourced from SIGNAL WALL.</p>
+            </div>
+
+            <div class="readout">
+              <span>Forensic trigger</span>
+              <p>Fresh upstream signal entered the open-market candidate pool.</p>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            
+            <div class="metric metric-ownership-gate">
+              <span>Ownership Gate</span>
+              <b>≤35%</b>
+            </div>
+            
+            <div class="metric metric-signal-window">
+              <span>Signal Window</span>
+              <b>72H</b>
+            </div>
+            
+            <div class="metric metric-asset-type">
+              <span>Asset Type</span>
+              <b>Arm</b>
+            </div>
+            
+            <div class="metric metric-market-defect">
+              <span>Market Defect</span>
+              <b>Market Lag</b>
+            </div>
+            
+            <div class="metric metric-command">
+              <span>Command</span>
+              <b>Track</b>
+            </div>
+            
+            <div class="metric metric-risk">
+              <span>Risk</span>
+              <b>Med</b>
+            </div>
+            
+            <div class="metric metric-status-source">
+              <span>Status Source</span>
+              <b>CANDIDATE FILE</b>
+            </div>
+            
+          </div>
+
+          <div class="verdict">
+            <span>Market read // SIGNAL WALL CANDIDATE</span>
+            <p>Track until ownership, role, and deployment status confirm actionability.</p>
+          </div>
+
+          <div class="card-action-row">
+            <span>OPEN PERFORMANCE AUDIT</span>
+            <a class="performance-audit-button" href="/scout/656638/" onclick="event.stopPropagation();">
+                PERFORMANCE AUDIT →
+            </a>
+          </div>
+        </article>
+        
+        <article
+          class="asset-card js-player-card"
+          data-search="brent headrick new york yankees p watchlist provision signal wall candidate deployment clear active"
+          data-audit-url="/scout/687396/"
+          data-player-id="687396"
+          data-player-name="Brent Headrick"
+          data-player-team="New York Yankees"
+          data-player-type="P"
+          data-profile-url="/scout/687396/"
+          data-source-tag="WAIVER_WIRE"
+          onclick="openPlayerAudit(this)"
+          tabindex="0"
+          role="button"
+          aria-label="Open performance audit for Brent Headrick"
+        >
+          <div class="asset-top">
+            <div>
+              <div class="asset-name">Brent Headrick</div>
+              <div class="asset-meta">New York Yankees // P // ROSTERED 2% // ID 687396</div>
+            </div>
+
+            <button
+              type="button"
+              class="claim-pill monitor js-add-to-roster"
+              data-player-id="687396"
+              data-player-name="Brent Headrick"
+              data-player-team="New York Yankees"
+              data-player-type="P"
+              data-profile-url="/scout/687396/"
+              data-source-tag="WAIVER_WIRE"
+              onclick="event.stopPropagation();"
+              aria-label="Initiate tracking for Brent Headrick"
+            >WATCHLIST PROVISION</button>
+          </div>
+
+          <div class="ops-strip deployment-clear">
+            <div>
+              <span>OPERATIONAL STATUS</span>
+              <b>DEPLOYMENT CLEAR</b>
+            </div>
+            <div>
+              <span>BODY / ROSTER STATE</span>
+              <b>ACTIVE</b>
+            </div>
+            <p>Candidate file source; verify status before deployment.</p>
+          </div>
+
+          <div class="asset-body">
+            <div class="readout">
+              <span>Surface suppression</span>
+              <p>Dynamic Waiver candidate sourced from SIGNAL WALL.</p>
+            </div>
+
+            <div class="readout">
+              <span>Forensic trigger</span>
+              <p>Fresh upstream signal entered the open-market candidate pool.</p>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            
+            <div class="metric metric-ownership-gate">
+              <span>Ownership Gate</span>
+              <b>≤35%</b>
+            </div>
+            
+            <div class="metric metric-signal-window">
+              <span>Signal Window</span>
+              <b>72H</b>
+            </div>
+            
+            <div class="metric metric-asset-type">
+              <span>Asset Type</span>
+              <b>Arm</b>
+            </div>
+            
+            <div class="metric metric-market-defect">
+              <span>Market Defect</span>
+              <b>Market Lag</b>
+            </div>
+            
+            <div class="metric metric-command">
+              <span>Command</span>
+              <b>Track</b>
+            </div>
+            
+            <div class="metric metric-risk">
+              <span>Risk</span>
+              <b>Med</b>
+            </div>
+            
+            <div class="metric metric-status-source">
+              <span>Status Source</span>
+              <b>CANDIDATE FILE</b>
+            </div>
+            
+          </div>
+
+          <div class="verdict">
+            <span>Market read // SIGNAL WALL CANDIDATE</span>
+            <p>Track until ownership, role, and deployment status confirm actionability.</p>
+          </div>
+
+          <div class="card-action-row">
+            <span>OPEN PERFORMANCE AUDIT</span>
+            <a class="performance-audit-button" href="/scout/687396/" onclick="event.stopPropagation();">
+                PERFORMANCE AUDIT →
+            </a>
+          </div>
+        </article>
+        
+        <article
+          class="asset-card js-player-card"
+          data-search="david hamilton milwaukee brewers ss watchlist provision signal wall candidate deployment clear active"
+          data-audit-url="/scout/666152/"
+          data-player-id="666152"
+          data-player-name="David Hamilton"
+          data-player-team="Milwaukee Brewers"
+          data-player-type="SS"
+          data-profile-url="/scout/666152/"
+          data-source-tag="WAIVER_WIRE"
+          onclick="openPlayerAudit(this)"
+          tabindex="0"
+          role="button"
+          aria-label="Open performance audit for David Hamilton"
+        >
+          <div class="asset-top">
+            <div>
+              <div class="asset-name">David Hamilton</div>
+              <div class="asset-meta">Milwaukee Brewers // SS // ROSTERED 4% // ID 666152</div>
+            </div>
+
+            <button
+              type="button"
+              class="claim-pill monitor js-add-to-roster"
+              data-player-id="666152"
+              data-player-name="David Hamilton"
+              data-player-team="Milwaukee Brewers"
+              data-player-type="SS"
+              data-profile-url="/scout/666152/"
+              data-source-tag="WAIVER_WIRE"
+              onclick="event.stopPropagation();"
+              aria-label="Initiate tracking for David Hamilton"
+            >WATCHLIST PROVISION</button>
+          </div>
+
+          <div class="ops-strip deployment-clear">
+            <div>
+              <span>OPERATIONAL STATUS</span>
+              <b>DEPLOYMENT CLEAR</b>
+            </div>
+            <div>
+              <span>BODY / ROSTER STATE</span>
+              <b>ACTIVE</b>
+            </div>
+            <p>Candidate file source; verify status before deployment.</p>
+          </div>
+
+          <div class="asset-body">
+            <div class="readout">
+              <span>Surface suppression</span>
+              <p>Dynamic Waiver candidate sourced from SIGNAL WALL.</p>
+            </div>
+
+            <div class="readout">
+              <span>Forensic trigger</span>
+              <p>Fresh upstream signal entered the open-market candidate pool.</p>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            
+            <div class="metric metric-ownership-gate">
+              <span>Ownership Gate</span>
+              <b>≤35%</b>
+            </div>
+            
+            <div class="metric metric-signal-window">
+              <span>Signal Window</span>
+              <b>72H</b>
+            </div>
+            
+            <div class="metric metric-asset-type">
+              <span>Asset Type</span>
+              <b>Bat</b>
+            </div>
+            
+            <div class="metric metric-market-defect">
+              <span>Market Defect</span>
+              <b>Market Lag</b>
+            </div>
+            
+            <div class="metric metric-command">
+              <span>Command</span>
+              <b>Track</b>
+            </div>
+            
+            <div class="metric metric-risk">
+              <span>Risk</span>
+              <b>Med</b>
+            </div>
+            
+            <div class="metric metric-status-source">
+              <span>Status Source</span>
+              <b>CANDIDATE FILE</b>
+            </div>
+            
+          </div>
+
+          <div class="verdict">
+            <span>Market read // SIGNAL WALL CANDIDATE</span>
+            <p>Track until ownership, role, and deployment status confirm actionability.</p>
+          </div>
+
+          <div class="card-action-row">
+            <span>OPEN PERFORMANCE AUDIT</span>
+            <a class="performance-audit-button" href="/scout/666152/" onclick="event.stopPropagation();">
+                PERFORMANCE AUDIT →
+            </a>
+          </div>
+        </article>
+        
+        <article
+          class="asset-card js-player-card"
+          data-search="dominic canzone seattle mariners dh watchlist provision signal wall candidate deployment clear active"
+          data-audit-url="/scout/686527/"
+          data-player-id="686527"
+          data-player-name="Dominic Canzone"
+          data-player-team="Seattle Mariners"
+          data-player-type="DH"
+          data-profile-url="/scout/686527/"
+          data-source-tag="WAIVER_WIRE"
+          onclick="openPlayerAudit(this)"
+          tabindex="0"
+          role="button"
+          aria-label="Open performance audit for Dominic Canzone"
+        >
+          <div class="asset-top">
+            <div>
+              <div class="asset-name">Dominic Canzone</div>
+              <div class="asset-meta">Seattle Mariners // DH // ROSTERED 6% // ID 686527</div>
+            </div>
+
+            <button
+              type="button"
+              class="claim-pill monitor js-add-to-roster"
+              data-player-id="686527"
+              data-player-name="Dominic Canzone"
+              data-player-team="Seattle Mariners"
+              data-player-type="DH"
+              data-profile-url="/scout/686527/"
+              data-source-tag="WAIVER_WIRE"
+              onclick="event.stopPropagation();"
+              aria-label="Initiate tracking for Dominic Canzone"
+            >WATCHLIST PROVISION</button>
+          </div>
+
+          <div class="ops-strip deployment-clear">
+            <div>
+              <span>OPERATIONAL STATUS</span>
+              <b>DEPLOYMENT CLEAR</b>
+            </div>
+            <div>
+              <span>BODY / ROSTER STATE</span>
+              <b>ACTIVE</b>
+            </div>
+            <p>Candidate file source; verify status before deployment.</p>
+          </div>
+
+          <div class="asset-body">
+            <div class="readout">
+              <span>Surface suppression</span>
+              <p>Dynamic Waiver candidate sourced from SIGNAL WALL.</p>
+            </div>
+
+            <div class="readout">
+              <span>Forensic trigger</span>
+              <p>Fresh upstream signal entered the open-market candidate pool.</p>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            
+            <div class="metric metric-ownership-gate">
+              <span>Ownership Gate</span>
+              <b>≤35%</b>
+            </div>
+            
+            <div class="metric metric-signal-window">
+              <span>Signal Window</span>
+              <b>72H</b>
+            </div>
+            
+            <div class="metric metric-asset-type">
+              <span>Asset Type</span>
+              <b>Bat</b>
+            </div>
+            
+            <div class="metric metric-market-defect">
+              <span>Market Defect</span>
+              <b>Market Lag</b>
+            </div>
+            
+            <div class="metric metric-command">
+              <span>Command</span>
+              <b>Track</b>
+            </div>
+            
+            <div class="metric metric-risk">
+              <span>Risk</span>
+              <b>Med</b>
+            </div>
+            
+            <div class="metric metric-status-source">
+              <span>Status Source</span>
+              <b>CANDIDATE FILE</b>
+            </div>
+            
+          </div>
+
+          <div class="verdict">
+            <span>Market read // SIGNAL WALL CANDIDATE</span>
+            <p>Track until ownership, role, and deployment status confirm actionability.</p>
+          </div>
+
+          <div class="card-action-row">
+            <span>OPEN PERFORMANCE AUDIT</span>
+            <a class="performance-audit-button" href="/scout/686527/" onclick="event.stopPropagation();">
+                PERFORMANCE AUDIT →
+            </a>
+          </div>
+        </article>
+        
+        <article
+          class="asset-card js-player-card"
+          data-search="kody clemens minnesota twins 1b watchlist provision signal wall candidate deployment clear active"
+          data-audit-url="/scout/665019/"
+          data-player-id="665019"
+          data-player-name="Kody Clemens"
+          data-player-team="Minnesota Twins"
+          data-player-type="1B"
+          data-profile-url="/scout/665019/"
+          data-source-tag="WAIVER_WIRE"
+          onclick="openPlayerAudit(this)"
+          tabindex="0"
+          role="button"
+          aria-label="Open performance audit for Kody Clemens"
+        >
+          <div class="asset-top">
+            <div>
+              <div class="asset-name">Kody Clemens</div>
+              <div class="asset-meta">Minnesota Twins // 1B // ROSTERED 7% // ID 665019</div>
+            </div>
+
+            <button
+              type="button"
+              class="claim-pill monitor js-add-to-roster"
+              data-player-id="665019"
+              data-player-name="Kody Clemens"
+              data-player-team="Minnesota Twins"
+              data-player-type="1B"
+              data-profile-url="/scout/665019/"
+              data-source-tag="WAIVER_WIRE"
+              onclick="event.stopPropagation();"
+              aria-label="Initiate tracking for Kody Clemens"
+            >WATCHLIST PROVISION</button>
+          </div>
+
+          <div class="ops-strip deployment-clear">
+            <div>
+              <span>OPERATIONAL STATUS</span>
+              <b>DEPLOYMENT CLEAR</b>
+            </div>
+            <div>
+              <span>BODY / ROSTER STATE</span>
+              <b>ACTIVE</b>
+            </div>
+            <p>Candidate file source; verify status before deployment.</p>
+          </div>
+
+          <div class="asset-body">
+            <div class="readout">
+              <span>Surface suppression</span>
+              <p>Dynamic Waiver candidate sourced from SIGNAL WALL.</p>
+            </div>
+
+            <div class="readout">
+              <span>Forensic trigger</span>
+              <p>Fresh upstream signal entered the open-market candidate pool.</p>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            
+            <div class="metric metric-ownership-gate">
+              <span>Ownership Gate</span>
+              <b>≤35%</b>
+            </div>
+            
+            <div class="metric metric-signal-window">
+              <span>Signal Window</span>
+              <b>72H</b>
+            </div>
+            
+            <div class="metric metric-asset-type">
+              <span>Asset Type</span>
+              <b>Bat</b>
+            </div>
+            
+            <div class="metric metric-market-defect">
+              <span>Market Defect</span>
+              <b>Market Lag</b>
+            </div>
+            
+            <div class="metric metric-command">
+              <span>Command</span>
+              <b>Track</b>
+            </div>
+            
+            <div class="metric metric-risk">
+              <span>Risk</span>
+              <b>Med</b>
+            </div>
+            
+            <div class="metric metric-status-source">
+              <span>Status Source</span>
+              <b>CANDIDATE FILE</b>
+            </div>
+            
+          </div>
+
+          <div class="verdict">
+            <span>Market read // SIGNAL WALL CANDIDATE</span>
+            <p>Track until ownership, role, and deployment status confirm actionability.</p>
+          </div>
+
+          <div class="card-action-row">
+            <span>OPEN PERFORMANCE AUDIT</span>
+            <a class="performance-audit-button" href="/scout/665019/" onclick="event.stopPropagation();">
+                PERFORMANCE AUDIT →
+            </a>
+          </div>
+        </article>
+        
+        <article
+          class="asset-card js-player-card"
+          data-search="j.t. realmuto philadelphia phillies c watchlist provision mlb extraction candidate deployment clear active"
+          data-audit-url="/scout/592663/"
+          data-player-id="592663"
+          data-player-name="J.T. Realmuto"
+          data-player-team="Philadelphia Phillies"
+          data-player-type="C"
+          data-profile-url="/scout/592663/"
+          data-source-tag="WAIVER_WIRE"
+          onclick="openPlayerAudit(this)"
+          tabindex="0"
+          role="button"
+          aria-label="Open performance audit for J.T. Realmuto"
+        >
+          <div class="asset-top">
+            <div>
+              <div class="asset-name">J.T. Realmuto</div>
+              <div class="asset-meta">Philadelphia Phillies // C // ROSTERED 17% // ID 592663</div>
+            </div>
+
+            <button
+              type="button"
+              class="claim-pill monitor js-add-to-roster"
+              data-player-id="592663"
+              data-player-name="J.T. Realmuto"
+              data-player-team="Philadelphia Phillies"
+              data-player-type="C"
+              data-profile-url="/scout/592663/"
+              data-source-tag="WAIVER_WIRE"
+              onclick="event.stopPropagation();"
+              aria-label="Initiate tracking for J.T. Realmuto"
+            >WATCHLIST PROVISION</button>
+          </div>
+
+          <div class="ops-strip deployment-clear">
+            <div>
+              <span>OPERATIONAL STATUS</span>
+              <b>DEPLOYMENT CLEAR</b>
+            </div>
+            <div>
+              <span>BODY / ROSTER STATE</span>
+              <b>ACTIVE</b>
+            </div>
+            <p>Candidate file source; verify status before deployment.</p>
+          </div>
+
+          <div class="asset-body">
+            <div class="readout">
+              <span>Surface suppression</span>
+              <p>Dynamic Waiver candidate sourced from MLB EXTRACTION.</p>
+            </div>
+
+            <div class="readout">
+              <span>Forensic trigger</span>
+              <p>Fresh upstream signal entered the open-market candidate pool.</p>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            
+            <div class="metric metric-ownership-gate">
+              <span>Ownership Gate</span>
+              <b>≤35%</b>
+            </div>
+            
+            <div class="metric metric-signal-window">
+              <span>Signal Window</span>
+              <b>72H</b>
+            </div>
+            
+            <div class="metric metric-asset-type">
+              <span>Asset Type</span>
+              <b>Bat</b>
+            </div>
+            
+            <div class="metric metric-market-defect">
+              <span>Market Defect</span>
+              <b>Market Lag</b>
+            </div>
+            
+            <div class="metric metric-command">
+              <span>Command</span>
+              <b>Track</b>
+            </div>
+            
+            <div class="metric metric-risk">
+              <span>Risk</span>
+              <b>Med</b>
+            </div>
+            
+            <div class="metric metric-status-source">
+              <span>Status Source</span>
+              <b>CANDIDATE FILE</b>
+            </div>
+            
+          </div>
+
+          <div class="verdict">
+            <span>Market read // MLB EXTRACTION CANDIDATE</span>
+            <p>Track until ownership, role, and deployment status confirm actionability.</p>
+          </div>
+
+          <div class="card-action-row">
+            <span>OPEN PERFORMANCE AUDIT</span>
+            <a class="performance-audit-button" href="/scout/592663/" onclick="event.stopPropagation();">
+                PERFORMANCE AUDIT →
+            </a>
+          </div>
+        </article>
+        
+        <article
+          class="asset-card js-player-card"
+          data-search="ramón laureano san diego padres lf watchlist provision apex extraction candidate deployment clear active"
+          data-audit-url="/scout/657656/"
+          data-player-id="657656"
+          data-player-name="Ramón Laureano"
+          data-player-team="San Diego Padres"
+          data-player-type="LF"
+          data-profile-url="/scout/657656/"
+          data-source-tag="WAIVER_WIRE"
+          onclick="openPlayerAudit(this)"
+          tabindex="0"
+          role="button"
+          aria-label="Open performance audit for Ramón Laureano"
+        >
+          <div class="asset-top">
+            <div>
+              <div class="asset-name">Ramón Laureano</div>
+              <div class="asset-meta">San Diego Padres // LF // ROSTERED 31% // ID 657656</div>
+            </div>
+
+            <button
+              type="button"
+              class="claim-pill monitor js-add-to-roster"
+              data-player-id="657656"
+              data-player-name="Ramón Laureano"
+              data-player-team="San Diego Padres"
+              data-player-type="LF"
+              data-profile-url="/scout/657656/"
+              data-source-tag="WAIVER_WIRE"
+              onclick="event.stopPropagation();"
+              aria-label="Initiate tracking for Ramón Laureano"
+            >WATCHLIST PROVISION</button>
+          </div>
+
+          <div class="ops-strip deployment-clear">
+            <div>
+              <span>OPERATIONAL STATUS</span>
+              <b>DEPLOYMENT CLEAR</b>
+            </div>
+            <div>
+              <span>BODY / ROSTER STATE</span>
+              <b>ACTIVE</b>
+            </div>
+            <p>Candidate file source; verify status before deployment.</p>
+          </div>
+
+          <div class="asset-body">
+            <div class="readout">
+              <span>Surface suppression</span>
+              <p>Dynamic Waiver candidate sourced from APEX EXTRACTION.</p>
+            </div>
+
+            <div class="readout">
+              <span>Forensic trigger</span>
+              <p>Fresh upstream signal entered the open-market candidate pool.</p>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            
+            <div class="metric metric-ownership-gate">
+              <span>Ownership Gate</span>
+              <b>≤35%</b>
+            </div>
+            
+            <div class="metric metric-signal-window">
+              <span>Signal Window</span>
+              <b>72H</b>
+            </div>
+            
+            <div class="metric metric-asset-type">
+              <span>Asset Type</span>
+              <b>Bat</b>
+            </div>
+            
+            <div class="metric metric-market-defect">
+              <span>Market Defect</span>
+              <b>Market Lag</b>
+            </div>
+            
+            <div class="metric metric-command">
+              <span>Command</span>
+              <b>Track</b>
+            </div>
+            
+            <div class="metric metric-risk">
+              <span>Risk</span>
+              <b>Med</b>
+            </div>
+            
+            <div class="metric metric-status-source">
+              <span>Status Source</span>
+              <b>CANDIDATE FILE</b>
+            </div>
+            
+          </div>
+
+          <div class="verdict">
+            <span>Market read // APEX EXTRACTION CANDIDATE</span>
+            <p>APEX EXTRACTION</p>
+          </div>
+
+          <div class="card-action-row">
+            <span>OPEN PERFORMANCE AUDIT</span>
+            <a class="performance-audit-button" href="/scout/657656/" onclick="event.stopPropagation();">
+                PERFORMANCE AUDIT →
+            </a>
+          </div>
+        </article>
+        
+        <article
+          class="asset-card js-player-card"
+          data-search="bradgley rodriguez san diego padres p watchlist provision apex extraction candidate deployment clear active"
+          data-audit-url="/scout/699134/"
+          data-player-id="699134"
+          data-player-name="Bradgley Rodriguez"
+          data-player-team="San Diego Padres"
+          data-player-type="P"
+          data-profile-url="/scout/699134/"
+          data-source-tag="WAIVER_WIRE"
+          onclick="openPlayerAudit(this)"
+          tabindex="0"
+          role="button"
+          aria-label="Open performance audit for Bradgley Rodriguez"
+        >
+          <div class="asset-top">
+            <div>
+              <div class="asset-name">Bradgley Rodriguez</div>
+              <div class="asset-meta">San Diego Padres // P // ROSTERED 1% // ID 699134</div>
+            </div>
+
+            <button
+              type="button"
+              class="claim-pill monitor js-add-to-roster"
+              data-player-id="699134"
+              data-player-name="Bradgley Rodriguez"
+              data-player-team="San Diego Padres"
+              data-player-type="P"
+              data-profile-url="/scout/699134/"
+              data-source-tag="WAIVER_WIRE"
+              onclick="event.stopPropagation();"
+              aria-label="Initiate tracking for Bradgley Rodriguez"
+            >WATCHLIST PROVISION</button>
+          </div>
+
+          <div class="ops-strip deployment-clear">
+            <div>
+              <span>OPERATIONAL STATUS</span>
+              <b>DEPLOYMENT CLEAR</b>
+            </div>
+            <div>
+              <span>BODY / ROSTER STATE</span>
+              <b>ACTIVE</b>
+            </div>
+            <p>Candidate file source; verify status before deployment.</p>
+          </div>
+
+          <div class="asset-body">
+            <div class="readout">
+              <span>Surface suppression</span>
+              <p>Dynamic Waiver candidate sourced from APEX EXTRACTION.</p>
+            </div>
+
+            <div class="readout">
+              <span>Forensic trigger</span>
+              <p>Fresh upstream signal entered the open-market candidate pool.</p>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            
+            <div class="metric metric-ownership-gate">
+              <span>Ownership Gate</span>
+              <b>≤35%</b>
+            </div>
+            
+            <div class="metric metric-signal-window">
+              <span>Signal Window</span>
+              <b>72H</b>
+            </div>
+            
+            <div class="metric metric-asset-type">
+              <span>Asset Type</span>
+              <b>Arm</b>
+            </div>
+            
+            <div class="metric metric-market-defect">
+              <span>Market Defect</span>
+              <b>Market Lag</b>
+            </div>
+            
+            <div class="metric metric-command">
+              <span>Command</span>
+              <b>Track</b>
+            </div>
+            
+            <div class="metric metric-risk">
+              <span>Risk</span>
+              <b>Med</b>
+            </div>
+            
+            <div class="metric metric-status-source">
+              <span>Status Source</span>
+              <b>CANDIDATE FILE</b>
+            </div>
+            
+          </div>
+
+          <div class="verdict">
+            <span>Market read // APEX EXTRACTION CANDIDATE</span>
+            <p>APEX EXTRACTION</p>
+          </div>
+
+          <div class="card-action-row">
+            <span>OPEN PERFORMANCE AUDIT</span>
+            <a class="performance-audit-button" href="/scout/699134/" onclick="event.stopPropagation();">
+                PERFORMANCE AUDIT →
+            </a>
+          </div>
+        </article>
+        
+      </section>
+      
+      
+
+    <div class="footer-note">
+      Generated 2026-06-10T18:09:32Z // Waiver Wire Open Market v1 // Isolated fast builder // Desktop-first QA pass
+    </div>
+  
+  <div class="waiver-field-guide-overlay" id="waiverFieldGuideOverlay" onclick="closeWaiverFieldGuide()"></div>
+
+  <aside class="waiver-field-guide-drawer" id="waiverFieldGuide" aria-hidden="true">
+    <div class="waiver-field-guide-head">
+      <div>
+        <div class="waiver-field-guide-kicker">WAIVER WIRE // FIELD GUIDE</div>
+        <h2 class="waiver-field-guide-title">Open Market Protocol</h2>
+      </div>
+      <button class="waiver-field-guide-close" type="button" onclick="closeWaiverFieldGuide()" aria-label="Close Waiver Wire field guide">×</button>
+    </div>
+
+    <div class="waiver-field-guide-body">
+      
+      <!-- WAIVER_FIELD_GUIDE_COMPLETE_METRIC_LEGEND_V1 -->
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label"><i class="guide-dot ownership"></i> Ownership Gate</div>
+        <p>The roster-availability filter. Lower ownership means the market has not fully absorbed the player yet. The Waiver surface focuses on assets that are still broadly actionable before public demand catches up.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label"><i class="guide-dot window"></i> Signal Window</div>
+        <p>The urgency clock. <strong>72H</strong> means the asset may need action quickly. <strong>96H</strong> allows a little more monitoring. <strong>7D</strong> is a slower stash or surveillance window.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label"><i class="guide-dot type"></i> Asset Type</div>
+        <p>Classifies the player as an <strong>Arm</strong>, <strong>Bat</strong>, or other roster asset type so the operator can balance needs instead of blindly chasing every signal.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label"><i class="guide-dot defect"></i> Market Defect</div>
+        <p>The reason the asset remains mispriced. Examples include <strong>Market Lag</strong>, ERA lag, role fog, command discount, role block, contact discount, call-up lag, or public hesitation around recent volatility.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label"><i class="guide-dot command"></i> Command</div>
+        <p>The roster instruction generated from the signal. <strong>Claim</strong>, <strong>Add</strong>, <strong>Stash</strong>, <strong>Track</strong>, and <strong>Monitor</strong> indicate escalating or reduced action intensity.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label"><i class="guide-dot risk"></i> Risk</div>
+        <p>Exposure sizing. <strong>Low</strong> is cleaner. <strong>Medium</strong> can justify action if the role is clear. <strong>High</strong> means volatility weapon, not blind acquisition.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Primary Command</div>
+        <p>The top-level board instruction for the current Waiver scan. Example: <strong>Priority Waiver Claim</strong> means the surface is finding assets that may justify active claim consideration.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Shark Window</div>
+        <p>The current market-timing window for the board. This is the period where public ownership, role clarity, or box-score recognition may still lag the underlying signal.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Operational Status</div>
+        <p>The deployment-readiness readout. <strong>Deployment Clear</strong> means the card is eligible for active consideration. Locked, frozen, or surveillance states mean the signal exists but action may be blocked.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Body / Roster State</div>
+        <p>The current availability/roster condition used by the surface. <strong>Active</strong> means the player is not blocked by the known status layer. Always cross-check late injury, lineup, and transaction news before acting.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Status Source</div>
+        <p>The provenance of the status readout. <strong>Candidate File</strong> means the player came from the dynamic Waiver candidate intake file / upstream signal candidate pool. It is not a static demo fixture. Treat it as verified candidate sourcing, but still confirm current MLB roster, injury, and role context before deployment.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Surface Suppression</div>
+        <p>The reason the public market may still be discounting the asset. This can include weak box-score optics, low roster percentage, role uncertainty, recent volatility, or delayed market recognition.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Forensic Trigger</div>
+        <p>The underlying reason the asset entered the open-market candidate pool. This may come from Signal Wall, Apex Extraction, movement, command, bat-path, role, or other physics-first signals.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Market Read</div>
+        <p>The final plain-English diagnosis tying the metrics together. It explains why the asset is actionable, trackable, blocked, or only suitable for surveillance.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Watchlist Provision</div>
+        <p>The staging instruction. Use this when the asset deserves tracking or roster-terminal attention, but may not yet justify a direct roster move.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Performance Audit</div>
+        <p>The deeper player-level evidence trail. The audit link should open the player’s underlying signal dossier so the operator can inspect the supporting data before acting.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Frozen Signals</div>
+        <p>Players with signal value but blocked deployment. These remain useful for surveillance, but should not be treated as clean acquisition targets until the operational status clears.</p>
+      </section>
+
+      <section class="waiver-field-guide-card">
+        <div class="waiver-field-guide-label">Surface Strategy</div>
+        <p>Prioritize cards where the market defect is temporary, the signal window is short, and the command is stronger than public ownership implies. The edge is the mismatch between hidden physics and public hesitation.</p>
+      </section>
+
+    </div>
+  </aside>
+
+    </main>
+
+<script src="/player-card-actions.js"></script>
+<script id="waiver-hardening-script">
+function filterWaiverCards() {
+  const input = document.getElementById("waiverPlayerSearch");
+  const q = (input && input.value ? input.value : "").trim().toLowerCase();
+  document.querySelectorAll(".asset-card").forEach(card => {
+    const blob = (card.getAttribute("data-search") || "").toLowerCase();
+    card.classList.toggle("is-hidden-by-search", q && !blob.includes(q));
+  });
+}
+
+function openPlayerAudit(card) {
+  const url = card && card.getAttribute("data-audit-url");
+  if (!url) return;
+  window.location.href = url;
+}
+
+document.addEventListener("keydown", function(event) {
+  const card = event.target && event.target.closest ? event.target.closest(".asset-card") : null;
+  if (!card) return;
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    openPlayerAudit(card);
+  }
+});
+</script>
+
+<script id="waiver-field-guide-script">
+function openWaiverFieldGuide() {
+  const drawer = document.getElementById("waiverFieldGuide");
+  const overlay = document.getElementById("waiverFieldGuideOverlay");
+  const trigger = document.querySelector(".waiver-field-guide-trigger");
+
+  if (drawer) {
+    drawer.classList.add("open");
+    drawer.setAttribute("aria-hidden", "false");
+  }
+
+  if (overlay) overlay.classList.add("open");
+  if (trigger) trigger.setAttribute("aria-expanded", "true");
+  document.body.classList.add("waiver-field-guide-open");
+
+  if (navigator.vibrate) navigator.vibrate(18);
+}
+
+function closeWaiverFieldGuide() {
+  const drawer = document.getElementById("waiverFieldGuide");
+  const overlay = document.getElementById("waiverFieldGuideOverlay");
+  const trigger = document.querySelector(".waiver-field-guide-trigger");
+
+  if (drawer) {
+    drawer.classList.remove("open");
+    drawer.setAttribute("aria-hidden", "true");
+  }
+
+  if (overlay) overlay.classList.remove("open");
+  if (trigger) trigger.setAttribute("aria-expanded", "false");
+  document.body.classList.remove("waiver-field-guide-open");
+}
+
+document.addEventListener("keydown", function(event) {
+  if (event.key === "Escape") closeWaiverFieldGuide();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,4881 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Apex Extraction // DiamondSignals</title>
+  <style>
+    .topnav { border-top: 1px solid rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); }
+.topnav-inner { width: min(1180px, calc(100% - 24px)); margin: 0 auto; display: flex; align-items: center; gap: 10px; overflow-x: auto; white-space: nowrap; padding: 10px 0; scrollbar-width: none; }
+.topnav-inner::-webkit-scrollbar { display: none; }
+.topnav-links { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; }
+.topnav-link { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--soft); padding: 8px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); transition: opacity 0.18s ease, transform 0.18s ease, border-color 0.18s ease, color 0.18s ease; }
+.topnav-link:visited { color: var(--soft); }
+.topnav-link:hover { opacity: 1; transform: translateY(-1px); border-color: rgba(255,255,255,0.12); color: var(--text); }
+.topnav-link.active { color: var(--text); border-color: rgba(182,255,0,0.20); box-shadow: 0 0 8px rgba(182,255,0,0.08); }
+.topnav-link.active:visited { color: var(--text); }
+.topnav-tag { color: var(--lime-hot); }
+
+.search-strip { border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); }
+.search-strip-inner { width: min(1180px, calc(100% - 24px)); margin: 0 auto; padding: 12px 0 10px; display: flex; justify-content: flex-end; }
+.player-search { position: relative; width: min(420px, 100%); }
+.player-search-input { width: 100%; height: 40px; border-radius: 999px; border: 1px solid rgba(182,255,0,0.22); background: rgba(255,255,255,0.07); color: var(--text); padding: 0 16px; font-family: var(--sans); font-size: 14px; outline: none; box-shadow: 0 0 10px rgba(182,255,0,0.05); }
+.player-search-input::placeholder { color: rgba(255,255,255,0.50); }
+.player-search-input:focus { border-color: rgba(182,255,0,0.45); background: rgba(255,255,255,0.09); box-shadow: 0 0 0 3px rgba(182,255,0,0.10), 0 0 12px rgba(182,255,0,0.12); }
+.player-search-results { position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 70; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; background: linear-gradient(180deg, #121212 0%, #080808 100%); box-shadow: 0 14px 34px rgba(0,0,0,0.34); overflow: hidden; }
+.player-search-result { display: grid; grid-template-columns: 180px 1fr; gap: 12px; align-items: center; padding: 0; text-decoration: none; color: var(--text); border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.02); }
+.player-search-result:visited { color: var(--text); }
+.player-search-result:last-child { border-bottom: 0; }
+.player-search-result:hover, .player-search-result.active { background: rgba(255,255,255,0.05); }
+.player-search-avatar { width: 180px; height: 180px; object-fit: cover; display: block; background: rgba(255,255,255,0.03); border-right: 1px solid rgba(255,255,255,0.06); }
+.player-search-meta { min-width: 0; padding: 14px 14px 14px 0; }
+.player-search-name { font-size: 16px; font-weight: 800; line-height: 1.1; color: var(--text); text-decoration: none; }
+.player-search-sub { margin-top: 6px; font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.06em; }
+.player-search-empty, .player-search-loading, .player-search-error { padding: 12px 14px; font-family: var(--mono); font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.08em; }
+
+.footer { padding: 16px 4px 0; color: var(--muted); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 640px) {
+  .topnav-inner, .search-strip-inner { width: min(100%, calc(100% - 16px)); }
+  .search-strip-inner { justify-content: stretch; }
+  .player-search { width: 100%; }
+  .player-search-input { height: 36px; font-size: 12px; }
+  .player-search-result { grid-template-columns: 120px 1fr; }
+  .player-search-avatar { width: 120px; height: 120px; }
+}
+
+
+/* === DIAMONDSIGNALS STRONGER LIVE PULSE OVERRIDE === */
+@keyframes dsLivePulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.78;
+    box-shadow:
+      0 0 0 0 rgba(204,255,0,0.62),
+      0 0 12px rgba(204,255,0,0.58),
+      0 0 22px rgba(204,255,0,0.30);
+  }
+
+  50% {
+    transform: scale(1.24);
+    opacity: 1;
+    box-shadow:
+      0 0 0 11px rgba(204,255,0,0),
+      0 0 20px rgba(204,255,0,0.86),
+      0 0 34px rgba(204,255,0,0.42);
+  }
+
+  100% {
+    transform: scale(0.9);
+    opacity: 0.78;
+    box-shadow:
+      0 0 0 0 rgba(204,255,0,0),
+      0 0 12px rgba(204,255,0,0.58),
+      0 0 22px rgba(204,255,0,0.30);
+  }
+}
+
+/* Shared report live dots */
+.live-dot,
+.topbar .brand-mark,
+.brand-pulse,
+.brand-dot {
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 14px !important;
+  min-height: 14px !important;
+  border-radius: 999px !important;
+  background: #ccff00 !important;
+  display: inline-block !important;
+  flex: 0 0 auto !important;
+  animation: dsLivePulse 1.15s ease-in-out infinite !important;
+  box-shadow:
+    0 0 0 0 rgba(204,255,0,0.55),
+    0 0 12px rgba(204,255,0,0.55),
+    0 0 22px rgba(204,255,0,0.28) !important;
+}
+
+
+/* GLOBAL LIVE DOT PULSE NORMALIZATION */
+@keyframes dsLivePulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(204,255,0,0.58), 0 0 12px rgba(204,255,0,0.55), 0 0 22px rgba(204,255,0,0.28);
+  }
+  55% {
+    transform: scale(1.18);
+    box-shadow: 0 0 0 11px rgba(204,255,0,0), 0 0 18px rgba(204,255,0,0.75), 0 0 30px rgba(204,255,0,0.36);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(204,255,0,0), 0 0 12px rgba(204,255,0,0.55), 0 0 22px rgba(204,255,0,0.28);
+  }
+}
+
+.live-dot,
+.brand-pulse {
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 14px !important;
+  min-height: 14px !important;
+  border-radius: 999px !important;
+  background: #ccff00 !important;
+  animation: dsLivePulse 1.15s ease-in-out infinite !important;
+  box-shadow: 0 0 0 0 rgba(204,255,0,0.55), 0 0 12px rgba(204,255,0,0.55), 0 0 22px rgba(204,255,0,0.28) !important;
+}
+
+
+/* DS_GLOBAL_MOBILE_RIGHT_DRAWER_NAV */
+.ds-mobile-menu-trigger,
+.ds-mobile-menu-backdrop,
+.ds-mobile-menu-drawer {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .topnav.ds-shell-nav {
+    border-top: 1px solid rgba(182,255,0,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    background:
+      linear-gradient(90deg, rgba(182,255,0,0.055), transparent 44%),
+      rgba(2, 6, 12, 0.74);
+    backdrop-filter: blur(16px);
+  }
+
+  .topnav.ds-shell-nav .topnav-inner {
+    position: relative;
+    z-index: 2000;
+    width: min(100%, calc(100% - 20px));
+    padding: 10px 0;
+    justify-content: space-between;
+    overflow: visible;
+  }
+
+  .topnav.ds-shell-nav .topnav-links {
+    max-width: calc(100% - 92px);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .topnav.ds-shell-nav .topnav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ds-mobile-menu-trigger {
+    position: relative;
+    z-index: 2001;
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 38px;
+    padding: 0 13px;
+    border-radius: 999px;
+    border: 1px solid rgba(182,255,0,0.26);
+    background: rgba(7, 10, 14, 0.88);
+    color: rgba(247,248,250,0.94);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    box-shadow: 0 0 18px rgba(182,255,0,0.08);
+  }
+
+  .ds-mobile-menu-icon {
+    color: var(--lime-hot);
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  .ds-mobile-menu-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1998;
+    background: rgba(0,0,0,0.52);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease;
+  }
+
+  .ds-mobile-menu-drawer {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(86vw, 380px);
+    height: 100dvh;
+    z-index: 1999;
+    transform: translateX(104%);
+    transition: transform 0.26s cubic-bezier(.2,.8,.2,1);
+    border-left: 1px solid rgba(182,255,0,0.16);
+    background:
+      radial-gradient(circle at 20% 0%, rgba(182,255,0,0.12), transparent 34%),
+      linear-gradient(180deg, rgba(15,23,42,0.96), rgba(2,6,12,0.98));
+    box-shadow: -24px 0 70px rgba(0,0,0,0.62);
+  }
+
+  body.ds-mobile-menu-open .ds-mobile-menu-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  body.ds-mobile-menu-open .ds-mobile-menu-drawer {
+    transform: translateX(0);
+  }
+
+  .ds-mobile-menu-shell {
+    height: 100%;
+    padding: max(22px, env(safe-area-inset-top)) 18px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .ds-mobile-menu-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .ds-mobile-menu-kicker {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: rgba(182,255,0,0.78);
+    text-transform: uppercase;
+  }
+
+  .ds-mobile-menu-title {
+    margin: 7px 0 0;
+    font-family: var(--sans);
+    font-size: 30px;
+    line-height: 0.96;
+    letter-spacing: -0.05em;
+    color: #f7f8fa;
+  }
+
+  .ds-mobile-menu-close {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+    color: rgba(247,248,250,0.9);
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .ds-mobile-menu-links {
+    display: grid;
+    gap: 9px;
+    overflow-y: auto;
+    padding-right: 2px;
+  }
+
+  .ds-mobile-menu-link {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    align-items: center;
+    min-height: 48px;
+    padding: 12px 13px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.035);
+    color: rgba(247,248,250,0.88);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .ds-mobile-menu-link:visited {
+    color: rgba(247,248,250,0.88);
+  }
+
+  .ds-mobile-menu-link span {
+    color: rgba(182,255,0,0.82);
+    white-space: nowrap;
+  }
+
+  .ds-mobile-menu-link.active {
+    border-color: rgba(182,255,0,0.26);
+    background: rgba(182,255,0,0.08);
+    box-shadow: inset 3px 0 0 rgba(182,255,0,0.72);
+  }
+
+  .ds-mobile-menu-status {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-family: var(--mono);
+    font-size: 9px;
+    line-height: 1.45;
+    letter-spacing: 0.12em;
+    color: rgba(148,163,184,0.76);
+    text-transform: uppercase;
+  }
+}
+
+
+/* DS_MOBILE_DRAWER_ONLY_NAV_OVERRIDE */
+@media (max-width: 760px) {
+  .topnav.ds-shell-nav .topnav-inner {
+    justify-content: flex-end !important;
+  }
+
+  .topnav.ds-shell-nav .topnav-links {
+    display: none !important;
+  }
+
+  .ds-mobile-menu-trigger {
+    margin-left: auto !important;
+  }
+}
+
+
+/* DS_MOBILE_MENU_PILL_EMPHASIS */
+@media (max-width: 760px) {
+  .ds-mobile-menu-trigger {
+    min-height: 46px !important;
+    padding: 0 18px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(182,255,0,0.58) !important;
+    background:
+      radial-gradient(circle at 18% 50%, rgba(182,255,0,0.16), transparent 42%),
+      rgba(7, 10, 14, 0.94) !important;
+    color: rgba(247,248,250,0.98) !important;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.14em !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.10),
+      0 0 18px rgba(182,255,0,0.22),
+      0 0 34px rgba(182,255,0,0.10),
+      inset 0 1px 0 rgba(255,255,255,0.08) !important;
+  }
+
+  .ds-mobile-menu-trigger:active {
+    transform: scale(0.98);
+    border-color: rgba(182,255,0,0.76) !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.18),
+      0 0 24px rgba(182,255,0,0.28),
+      inset 0 1px 0 rgba(255,255,255,0.10) !important;
+  }
+
+  .ds-mobile-menu-icon {
+    font-size: 15px !important;
+    color: rgba(182,255,0,0.98) !important;
+    text-shadow: 0 0 12px rgba(182,255,0,0.45) !important;
+  }
+}
+
+/* DS_MOBILE_NAV_PERSISTENCE_LOCK_V2
+   Global mobile command menu hard lock for all Signal Wall surfaces. */
+@media screen and (max-width: 760px) {
+  body {
+    padding-top: 58px !important;
+  }
+
+  .topnav.ds-shell-nav {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    z-index: 2147483000 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+  }
+
+  .topnav.ds-shell-nav .topnav-inner {
+    position: relative !important;
+    z-index: 2147483001 !important;
+  }
+
+  .ds-mobile-menu-trigger {
+    position: relative !important;
+    z-index: 2147483002 !important;
+    pointer-events: auto !important;
+    transform: none !important;
+  }
+
+  .ds-mobile-menu-backdrop {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483003 !important;
+  }
+
+  .ds-mobile-menu-drawer {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 2147483004 !important;
+    max-height: 100dvh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  body.ds-mobile-menu-open {
+    overflow: hidden !important;
+  }
+}
+
+/* DS_PRO_DESKTOP_NAV_V2_NAV_ONLY
+   Desktop-only professional command nav.
+   No mobile drawer, no mobile JS, no duplicate logo block. */
+@media screen and (min-width: 761px) {
+  .ds-pro-desktop-nav {
+    position: relative;
+    z-index: 39;
+    display: block;
+    border-top: 1px solid rgba(255,255,255,0.055);
+    border-bottom: 1px solid rgba(255,255,255,0.075);
+    background:
+      radial-gradient(circle at 0% 50%, rgba(182,255,0,0.13), transparent 30%),
+      linear-gradient(90deg, rgba(9,18,7,0.88), rgba(5,9,14,0.94) 46%, rgba(5,7,11,0.98));
+    backdrop-filter: blur(18px);
+  }
+
+  .ds-pro-desktop-nav + .topnav.ds-shell-nav {
+    display: none !important;
+  }
+
+  .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+    min-height: 74px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .ds-pro-desktop-nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 9px;
+    min-width: 0;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  .ds-pro-desktop-nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ds-pro-desktop-nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 36px;
+    padding: 0 13px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.11);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015));
+    color: rgba(226,232,240,0.86);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 9px;
+    line-height: 1;
+    letter-spacing: 0.085em;
+    font-weight: 900;
+    text-transform: uppercase;
+    white-space: nowrap;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.045),
+      0 0 0 1px rgba(255,255,255,0.02);
+    transition:
+      color 0.16s ease,
+      border-color 0.16s ease,
+      background 0.16s ease,
+      box-shadow 0.16s ease,
+      transform 0.16s ease;
+  }
+
+  .ds-pro-desktop-nav-link span {
+    color: rgba(182,255,0,0.92);
+  }
+
+  .ds-pro-desktop-nav-link:hover {
+    color: #f8fafc;
+    border-color: rgba(182,255,0,0.34);
+    background: rgba(182,255,0,0.075);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.06),
+      0 0 18px rgba(182,255,0,0.12);
+    transform: translateY(-1px);
+  }
+
+  .ds-pro-desktop-nav-link.active {
+    color: #f8fafc;
+    border-color: rgba(182,255,0,0.54);
+    background:
+      radial-gradient(circle at 18% 50%, rgba(182,255,0,0.22), transparent 52%),
+      rgba(182,255,0,0.095);
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.10),
+      0 0 24px rgba(182,255,0,0.20),
+      inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+
+  .ds-pro-desktop-nav-link-terminal {
+    border-color: rgba(96,165,250,0.32);
+    background:
+      radial-gradient(circle at 18% 50%, rgba(96,165,250,0.12), transparent 54%),
+      rgba(96,165,250,0.06);
+  }
+
+  .ds-pro-desktop-nav-link-terminal span {
+    color: rgba(125,211,252,0.95);
+  }
+}
+
+@media screen and (min-width: 761px) and (max-width: 1280px) {
+  .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 40px));
+    min-height: 68px;
+  }
+
+  .ds-pro-desktop-nav-links {
+    gap: 7px;
+  }
+
+  .ds-pro-desktop-nav-link {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 8px;
+    letter-spacing: 0.075em;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .ds-pro-desktop-nav {
+    display: none !important;
+  }
+}
+
+
+/* APEX_DESKTOP_TOPBAR_MOCKUP_LOCK_V1
+   Desktop-only Apex canary:
+   - Pulse dot sits left of DIAMOND/SIGNALS, not above it.
+   - DIAMOND white, SIGNALS blue.
+   - Top nav rail remains navigation-only and starts from same left rail.
+   - Mobile drawer/layout untouched. */
+@media screen and (min-width: 761px) {
+  body:has(.hero-title) .topbar {
+    min-height: 112px !important;
+  }
+
+  body:has(.hero-title) .topbar-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    min-height: 112px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 28px !important;
+  }
+
+  body:has(.hero-title) .topbar .brand {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 18px !important;
+    min-width: 0 !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 999px !important;
+    background: #b6ff00 !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.32),
+      0 0 18px rgba(182,255,0,0.82),
+      0 0 38px rgba(182,255,0,0.42) !important;
+    animation: dsApexLivePulse 1.15s ease-in-out infinite !important;
+    margin: 0 !important;
+    flex: 0 0 auto !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+    min-width: 0 !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-kicker {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    gap: 0 !important;
+    font-family: var(--sans) !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.015em !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-kicker .brand-white {
+    color: #f8fafc !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-kicker .brand-blue {
+    color: #4ea3ff !important;
+    text-shadow:
+      0 0 10px rgba(78,163,255,0.24),
+      0 0 22px rgba(78,163,255,0.16) !important;
+  }
+
+  body:has(.hero-title) .topbar .brand-title {
+    font-family: var(--sans) !important;
+    font-size: 18px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.025em !important;
+    font-weight: 800 !important;
+    color: #f8fafc !important;
+    text-transform: none !important;
+  }
+
+  body:has(.hero-title) .topbar .livebox {
+    justify-self: end !important;
+    min-width: 190px !important;
+    text-align: left !important;
+  }
+
+  body:has(.hero-title) .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    justify-content: flex-start !important;
+  }
+
+  body:has(.hero-title) .ds-pro-desktop-nav-links {
+    justify-content: flex-start !important;
+    width: 100% !important;
+  }
+}
+
+/* WAIVER_DESKTOP_APEX_SHELL_PARITY_V1
+   Desktop-only Waiver shell normalization.
+   Use Apex topbar/nav geometry verbatim; suppress old Waiver desktop header strip.
+   Preserve mobile shell/menu/Field Guide behavior. */
+@media screen and (min-width: 761px) {
+  body.waiver-page {
+    padding: 0 !important;
+  }
+
+  body.waiver-page .waiver-apex-parity-topbar {
+    display: block !important;
+  }
+
+  body.waiver-page .topbar-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    min-height: 148px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 28px !important;
+  }
+
+  body.waiver-page .topbar .brand {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+    min-width: 0 !important;
+    transform: none !important;
+  }
+
+  body.waiver-page .topbar .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 999px !important;
+    background: #b6ff00 !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.30),
+      0 0 20px rgba(182,255,0,0.82),
+      0 0 42px rgba(182,255,0,0.38) !important;
+    animation: dsApexLivePulse 1.15s ease-in-out infinite !important;
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+  }
+
+  body.waiver-page .topbar .brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    min-width: 0 !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    gap: 0 !important;
+    font-family: var(--sans, Inter, system-ui, sans-serif) !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.02em !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker .brand-white {
+    color: #f8fafc !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker .brand-blue {
+    color: #4ea3ff !important;
+    text-shadow:
+      0 0 10px rgba(78,163,255,0.25),
+      0 0 22px rgba(78,163,255,0.16) !important;
+  }
+
+  body.waiver-page .topbar .brand-title {
+    font-family: var(--sans, Inter, system-ui, sans-serif) !important;
+    font-size: 18px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.025em !important;
+    font-weight: 850 !important;
+    color: #f8fafc !important;
+    text-transform: none !important;
+  }
+
+  body.waiver-page .topbar .livebox {
+    justify-self: end !important;
+    min-width: 210px !important;
+    text-align: left !important;
+  }
+
+  body.waiver-page .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    transform: none !important;
+  }
+
+  body.waiver-page .ds-pro-desktop-nav-links {
+    justify-content: flex-start !important;
+    transform: none !important;
+  }
+
+  body.waiver-page .topnav.ds-shell-nav {
+    display: none !important;
+  }
+
+  body.waiver-page .waiver-shell-header {
+    display: none !important;
+  }
+
+  body.waiver-page .shell {
+    max-width: 1180px !important;
+    padding-top: 34px !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.waiver-page .waiver-apex-parity-topbar {
+    display: none !important;
+  }
+}
+
+/* WAIVER_DESKTOP_EXACT_APEX_TOPBAR_PARITY_LOCK_V2
+   Desktop-only Waiver top chrome now uses the exact Apex class structure.
+   Keep this scoped to Waiver and do not touch mobile drawer/menu/Field Guide. */
+@media screen and (min-width: 761px) {
+  body.waiver-page .topbar {
+    min-height: 148px !important;
+  }
+
+  body.waiver-page .topbar-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    min-height: 148px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 28px !important;
+  }
+
+  body.waiver-page .topbar .brand {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+    min-width: 0 !important;
+    transform: none !important;
+  }
+
+  body.waiver-page .topbar .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 999px !important;
+    background: #b6ff00 !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.30),
+      0 0 20px rgba(182,255,0,0.82),
+      0 0 42px rgba(182,255,0,0.38) !important;
+    animation: dsApexLivePulse 1.15s ease-in-out infinite !important;
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+  }
+
+  body.waiver-page .topbar .brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    min-width: 0 !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    gap: 0 !important;
+    font-family: var(--sans) !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.02em !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker .brand-white {
+    color: #f8fafc !important;
+  }
+
+  body.waiver-page .topbar .brand-kicker .brand-blue {
+    color: #4ea3ff !important;
+    text-shadow:
+      0 0 10px rgba(78,163,255,0.25),
+      0 0 22px rgba(78,163,255,0.16) !important;
+  }
+
+  body.waiver-page .topbar .brand-title {
+    font-family: var(--sans) !important;
+    font-size: 18px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.025em !important;
+    font-weight: 850 !important;
+    color: #f8fafc !important;
+    text-transform: none !important;
+  }
+
+  body.waiver-page .topbar .livebox {
+    justify-self: end !important;
+    min-width: 210px !important;
+    text-align: left !important;
+  }
+
+  body.waiver-page .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    transform: none !important;
+  }
+
+  body.waiver-page .ds-pro-desktop-nav-links {
+    justify-content: flex-start !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.waiver-page .topbar {
+    display: none !important;
+  }
+}
+
+/* WAIVER_DESKTOP_EXACT_APEX_DOT_PULSE_LOCK_V1
+   Desktop-only Waiver pulse parity:
+   Waiver now uses the exact Apex .topbar/.brand-mark structure.
+   This guarantees the green DIAMONDSIGNALS dot pulses like Apex. */
+@keyframes dsApexLivePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.92;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.30),
+      0 0 20px rgba(182,255,0,0.82),
+      0 0 42px rgba(182,255,0,0.38);
+  }
+
+  50% {
+    transform: scale(1.16);
+    opacity: 1;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.42),
+      0 0 28px rgba(182,255,0,0.95),
+      0 0 58px rgba(182,255,0,0.52);
+  }
+}
+
+@media screen and (min-width: 761px) {
+  body.waiver-page .topbar .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 999px !important;
+    background: #b6ff00 !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.30),
+      0 0 20px rgba(182,255,0,0.82),
+      0 0 42px rgba(182,255,0,0.38) !important;
+    animation-name: dsApexLivePulse !important;
+    animation-duration: 1.15s !important;
+    animation-timing-function: ease-in-out !important;
+    animation-iteration-count: infinite !important;
+    transform-origin: center center !important;
+    will-change: transform, opacity, box-shadow !important;
+  }
+}
+
+/* KDE_DESKTOP_EXACT_APEX_TOPBAR_PARITY_LOCK_V1
+   Desktop-only KDE chrome parity:
+   - Apex-compatible DIAMONDSIGNALS topbar/logotype
+   - shared pro nav rail on desktop
+   - old shell nav suppressed on desktop only
+   - mobile drawer/nav and KDE Field Guide preserved */
+@media screen and (min-width: 761px) {
+  body.kde-page .topbar {
+    display: block !important;
+  }
+
+  body.kde-page .topbar-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    min-height: 148px !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 28px !important;
+  }
+
+  body.kde-page .topbar .brand {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 16px !important;
+    min-width: 0 !important;
+    transform: none !important;
+  }
+
+  body.kde-page .topbar .brand-mark {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 999px !important;
+    background: #b6ff00 !important;
+    box-shadow:
+      0 0 0 1px rgba(182,255,0,0.30),
+      0 0 20px rgba(182,255,0,0.82),
+      0 0 42px rgba(182,255,0,0.38) !important;
+    animation: dsApexLivePulse 1.15s ease-in-out infinite !important;
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+    transform-origin: center center !important;
+  }
+
+  body.kde-page .topbar .brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    min-width: 0 !important;
+  }
+
+  body.kde-page .topbar .brand-kicker {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    gap: 0 !important;
+    font-family: var(--sans) !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.02em !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+  }
+
+  body.kde-page .topbar .brand-kicker .brand-white {
+    color: #f8fafc !important;
+  }
+
+  body.kde-page .topbar .brand-kicker .brand-blue {
+    color: #4ea3ff !important;
+    text-shadow:
+      0 0 10px rgba(78,163,255,0.25),
+      0 0 22px rgba(78,163,255,0.16) !important;
+  }
+
+  body.kde-page .topbar .brand-title {
+    font-family: var(--sans) !important;
+    font-size: 18px !important;
+    line-height: 1.12 !important;
+    letter-spacing: -0.025em !important;
+    font-weight: 850 !important;
+    color: #f8fafc !important;
+    text-transform: none !important;
+  }
+
+  body.kde-page .topbar .livebox {
+    justify-self: end !important;
+    min-width: 210px !important;
+    text-align: left !important;
+  }
+
+  body.kde-page .ds-pro-desktop-nav-inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: 0 auto !important;
+    transform: none !important;
+  }
+
+  body.kde-page .ds-pro-desktop-nav-links {
+    justify-content: flex-start !important;
+  }
+
+  body.kde-page .topnav.ds-shell-nav {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.kde-page .topbar {
+    display: none !important;
+  }
+}
+
+
+
+    :root {
+      --bg: #05070a;
+      --panel: #0d1319;
+      --panel2: #111a21;
+      --line: rgba(255, 255, 255, 0.16);
+      --text: #f6fbff;
+      --muted: #81909d;
+      --cyan: #4ea3ff;
+      --emerald: #ccff00;
+      --lime: #ccff00;
+      --lime-hot: #ccff00;
+      --brand-blue: #4ea3ff;
+      --danger: #ff7a1a;
+      --mono: "JetBrains Mono", "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(255, 255, 255, 0.10), transparent 32%),
+        radial-gradient(circle at 88% 12%, rgba(160, 160, 160, 0.10), transparent 34%),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+    }
+
+
+    .topbar {
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(255,255,255,.08), transparent 28%),
+        rgba(5,7,10,.72);
+      backdrop-filter: blur(18px);
+      position: relative;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-mark {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .22em;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+
+    .brand-mark span {
+      color: var(--lime);
+      text-shadow: 0 0 12px rgba(255,255,255,.14);
+    }
+
+    .brand-sub {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .livebox {
+      text-align: right;
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: .10em;
+    }
+
+    .live-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      font-size: 10px;
+      color: var(--text);
+      font-weight: 900;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--lime);
+      box-shadow: 0 0 12px rgba(255,255,255,.18);
+      display: inline-block;
+    }
+
+    .live-time {
+      margin-top: 5px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+
+
+    /* === APEX INSTITUTIONAL TOPBAR OVERRIDE === */
+    @keyframes dsApexLivePulse {
+      0% {
+        transform: scale(0.9);
+        opacity: 0.78;
+        box-shadow:
+          0 0 0 0 rgba(204,255,0,0.55),
+          0 0 10px rgba(204,255,0,0.50),
+          0 0 18px rgba(204,255,0,0.26);
+      }
+
+      50% {
+        transform: scale(1.22);
+        opacity: 1;
+        box-shadow:
+          0 0 0 10px rgba(204,255,0,0),
+          0 0 18px rgba(204,255,0,0.80),
+          0 0 30px rgba(204,255,0,0.38);
+      }
+
+      100% {
+        transform: scale(0.9);
+        opacity: 0.78;
+        box-shadow:
+          0 0 0 0 rgba(204,255,0,0),
+          0 0 10px rgba(204,255,0,0.50),
+          0 0 18px rgba(204,255,0,0.26);
+      }
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 40;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(204,255,0,0.10), transparent 24%),
+        radial-gradient(circle at 50% -10%, rgba(78,163,255,0.12), transparent 28%),
+        rgba(4,6,9,0.94);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar-inner {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      min-height: 86px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand-lockup {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-pulse {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: #ccff00;
+      flex: 0 0 auto;
+      animation: dsApexLivePulse 1.15s ease-in-out infinite;
+    }
+
+    .brand-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      font-family: var(--mono);
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #ffffff;
+      line-height: 1;
+    }
+
+    .brand-mark span {
+      color: #4ea3ff;
+      text-shadow: 0 0 14px rgba(78,163,255,0.22);
+    }
+
+    .brand-sub {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+      color: #f4f7fb;
+      opacity: 0.98;
+    }
+
+    .topbar-center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .topbar .field-guide-pill {
+      position: static;
+      inset: auto;
+      appearance: none;
+      border: 1px solid rgba(204,255,0,0.24);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015));
+      color: #f5f7fb;
+      border-radius: 999px;
+      padding: 15px 26px;
+      min-height: 56px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.04),
+        0 0 0 1px rgba(204,255,0,0.04),
+        0 0 18px rgba(204,255,0,0.06);
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .topbar .field-guide-pill:hover {
+      transform: translateY(-1px);
+      border-color: rgba(204,255,0,0.42);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        0 0 22px rgba(204,255,0,0.14);
+    }
+
+    .field-guide-icon {
+      font-size: 15px;
+      color: #e8edf3;
+      opacity: 0.96;
+    }
+
+    .livebox {
+      justify-self: end;
+      text-align: right;
+    }
+
+    .live-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      color: #ccff00;
+      text-transform: uppercase;
+    }
+
+    .live-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #ccff00;
+      display: inline-block;
+      animation: dsApexLivePulse 1.15s ease-in-out infinite;
+    }
+
+    .live-time {
+      margin-top: 6px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: #9aa5b5;
+      letter-spacing: 0.10em;
+    }
+
+    .topnav {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      background:
+        linear-gradient(90deg, rgba(18,22,28,0.96), rgba(10,12,16,0.96));
+    }
+
+    .topnav-link {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012));
+    }
+
+    .topnav-link.active {
+      color: var(--text);
+      border-color: rgba(204,255,0,0.34);
+      box-shadow:
+        0 0 0 1px rgba(204,255,0,0.07),
+        0 0 18px rgba(204,255,0,0.12);
+    }
+
+    .topnav-tag {
+      color: #ccff00;
+    }
+
+    .search-strip {
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background:
+        linear-gradient(90deg, rgba(20,24,30,0.94), rgba(12,15,19,0.94));
+    }
+
+    .player-search-input {
+      border: 1px solid rgba(204,255,0,0.24);
+      background: rgba(255,255,255,0.07);
+      box-shadow: 0 0 10px rgba(204,255,0,0.06);
+    }
+
+    .player-search-input:focus {
+      border-color: rgba(204,255,0,0.48);
+      background: rgba(255,255,255,0.09);
+      box-shadow:
+        0 0 0 3px rgba(204,255,0,0.10),
+        0 0 14px rgba(204,255,0,0.14);
+    }
+
+    @media (max-width: 900px) {
+      .topbar-inner {
+        grid-template-columns: 1fr;
+        justify-items: start;
+        gap: 14px;
+        padding: 16px 0;
+      }
+
+      .topbar-center {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .livebox {
+        justify-self: start;
+        text-align: left;
+      }
+
+      .topbar .field-guide-pill {
+        min-height: 48px;
+        padding: 12px 18px;
+      }
+    }
+    /* === END APEX INSTITUTIONAL TOPBAR OVERRIDE === */
+
+
+    .app {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .hero-card,
+    .summary-card {
+      background: var(--card-radial);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 24px 24px 22px;
+      min-width: 0;
+    }
+
+    .summary-card {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .summary-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--tiny);
+    }
+
+    .summary-value {
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .status-note {
+      margin-top: 6px;
+      color: #aab3bd;
+      font-size: 15px;
+      line-height: 1.55;
+      font-weight: 700;
+    }
+
+    .eyebrow, .kicker, .proof-label, .action-row span, .score-label {
+      font-family: Menlo, Consolas, "Courier New", monospace;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .eyebrow {
+      color: var(--emerald);
+      font-size: 12px;
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      margin: 0;
+      font-size: clamp(32px, 6vw, 58px);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .hero-sub {
+      margin: 14px 0 0;
+      max-width: 58ch;
+      color: var(--soft);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .status-row {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .status-pill {
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.035);
+      border-radius: 18px;
+      padding: 14px;
+      font-family: Menlo, Consolas, "Courier New", monospace;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      line-height: 1.45;
+    }
+
+    .status-pill strong {
+      display: block;
+      color: var(--text);
+      font-size: 18px;
+      margin-top: 6px;
+    }
+
+    .section-head {
+      margin: 22px 0 12px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .section-kicker {
+      font-family: var(--mono);
+      color: #6ea8ff;
+      font-size: 11px;
+      line-height: 1;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .section-heading {
+      margin: 0;
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .section-title {
+      margin: 20px 0 10px;
+      font-family: Menlo, Consolas, "Courier New", monospace;
+      color: var(--lime);
+      letter-spacing: 2.2px;
+      text-transform: uppercase;
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+
+    .apex-elite {
+      --heat: #ffffff;
+      --heat-glow: rgba(255, 255, 255, .30);
+      --card-accent: rgba(255, 255, 255, .68);
+      --rail-accent: #ffffff;
+    }
+
+    .apex-hot {
+      --heat: #f5c451;
+      --heat-glow: rgba(245, 196, 81, .20);
+      --card-accent: rgba(245, 196, 81, .42);
+      --rail-accent: #f5c451;
+    }
+
+    .apex-warm {
+      --heat: #a87945;
+      --heat-glow: rgba(168, 121, 69, .11);
+      --card-accent: rgba(168, 121, 69, .24);
+      --rail-accent: #a87945;
+    }
+
+    .apex-cool {
+      --heat: #8fa3b8;
+      --heat-glow: rgba(143, 163, 184, .10);
+      --card-accent: rgba(143, 163, 184, .22);
+      --rail-accent: #8fa3b8;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .apex-card {
+      position: relative;
+      border: 1px solid rgba(255,255,255,.10);
+      border-top: 1px solid var(--card-accent, rgba(255,255,255,.22));
+      background: linear-gradient(180deg, rgba(17,20,24,.96), rgba(8,10,13,.98));
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+      scroll-margin-top: 112px;
+    }
+    .apex-card.target-signal-card {
+      border-color: rgba(204,255,0,.72);
+      border-top-color: rgba(204,255,0,.95);
+      box-shadow:
+        0 0 0 1px rgba(204,255,0,.30),
+        0 0 42px rgba(204,255,0,.20),
+        0 0 68px rgba(255,122,26,.16),
+        inset 0 1px 0 rgba(255,255,255,.10);
+      animation: apexTargetPulse 1.25s ease-in-out 0s 7;
+    }
+
+    .apex-card.target-signal-card::before {
+      content: "EXTRACTED FROM EMAIL";
+      position: absolute;
+      right: 16px;
+      top: -13px;
+      z-index: 5;
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(204,255,0,.55);
+      background: rgba(9,12,16,.96);
+      color: #ccff00;
+      font-family: var(--mono);
+      font-size: 9px;
+      line-height: 1;
+      letter-spacing: .16em;
+      font-weight: 900;
+      text-transform: uppercase;
+      box-shadow: 0 0 22px rgba(204,255,0,.24);
+    }
+
+    @keyframes apexTargetPulse {
+      0%, 100% {
+        transform: translateY(0);
+        box-shadow:
+          0 0 0 1px rgba(204,255,0,.28),
+          0 0 30px rgba(204,255,0,.16),
+          inset 0 1px 0 rgba(255,255,255,.08);
+      }
+      50% {
+        transform: translateY(-3px);
+        box-shadow:
+          0 0 0 1px rgba(204,255,0,.72),
+          0 0 54px rgba(204,255,0,.30),
+          0 0 84px rgba(255,122,26,.18),
+          inset 0 1px 0 rgba(255,255,255,.12);
+      }
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .kicker {
+      color: var(--emerald);
+      font-size: 10px;
+      margin-bottom: 6px;
+    }
+
+    h2 {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 27px;
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+      font-weight: 800;
+    }
+
+    .meta {
+      margin-top: 6px;
+      color: var(--muted);
+      font-family: Menlo, Consolas, "Courier New", monospace;
+      font-size: 11px;
+      line-height: 1.25;
+      letter-spacing: 2px;
+    }
+
+    .score-box {
+      text-align: right;
+      min-width: 118px;
+      align-self: flex-start;
+    }
+
+    .score {
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: 50px;
+      line-height: 0.9;
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: -0.055em;
+      color: var(--heat, #ffffff);
+      text-shadow: 0 0 12px var(--heat-glow, rgba(255,255,255,.12));
+      transform: skewX(-7deg);
+      transform-origin: right center;
+    }
+
+    .score-label {
+      margin-bottom: 8px;
+      color: #8f96a1;
+      font-size: 11px;
+      line-height: 13px;
+      letter-spacing: 2.5px;
+      text-align: right;
+    }
+
+    .verdict {
+      margin-top: 18px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-left: 1px solid rgba(255,255,255,.42);
+      background: rgba(255,255,255,.045);
+      border-radius: 16px;
+      padding: 13px 14px;
+      font-family: Menlo, Consolas, "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #f5f5f5;
+      font-weight: 800;
+    }
+
+    .diagnosis-label {
+      margin-top: 16px;
+      margin-bottom: 8px;
+      color: #8f96a1;
+      font-family: Menlo, Consolas, "Courier New", monospace;
+      font-size: 11px;
+      line-height: 13px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .verdict {
+      margin-top: 0;
+      border: 1px solid rgba(255,255,255,.18);
+      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.025));
+      border-radius: 18px;
+      padding: 0;
+      overflow: hidden;
+      font-family: Menlo, Consolas, "Courier New", monospace;
+      text-transform: uppercase;
+      color: #f5f5f5;
+      font-weight: 800;
+    }
+
+    .verdict-text {
+      padding: 13px 16px;
+      font-size: 13px;
+      line-height: 16px;
+      letter-spacing: 2px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+
+    .verdict-rail {
+      height: 44px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,.018);
+    }
+
+    .verdict-rail span {
+      display: block;
+      width: 100%;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,255,255,.04), var(--heat, #ff8c00));
+      box-shadow: 0 0 16px var(--heat-glow, rgba(255,122,26,.14));
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .grid div {
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.035);
+      border-radius: 13px;
+      padding: 10px 12px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+    }
+
+    .grid span {
+      display: block;
+      color: var(--muted);
+      font-family: Menlo, Consolas, "Courier New", monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+    }
+
+    .grid strong {
+      display: block;
+      margin-top: 5px;
+      font-family: var(--sans);
+      font-size: 20px;
+      line-height: 22px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: var(--heat, var(--danger));
+    }
+
+    .proof {
+      margin-top: 16px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 14px;
+    }
+
+    .proof-label {
+      color: #a0a0a0;
+      font-size: 9px;
+      letter-spacing: 2px;
+    }
+
+    .proof p {
+      margin: 6px 0 0;
+      color: #d4dde5;
+      font-size: 12.5px;
+      line-height: 1.42;
+    }
+
+    .market-note {
+      margin-top: 11px;
+      color: #9cabb6;
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+
+    .forensic-strip {
+      margin-top: 11px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .forensic-chip {
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius: 13px;
+      padding: 10px;
+      min-height: 104px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+    }
+
+    .forensic-chip span {
+      display: block;
+      color: #a0a0a0;
+      font-family: Menlo, Consolas, "Courier New", monospace;
+      font-size: 9px;
+      line-height: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .forensic-chip strong {
+      display: block;
+      margin-top: 7px;
+      color: #ffffff;
+      font-family: Menlo, Consolas, "Courier New", monospace;
+      font-size: 11px;
+      line-height: 15px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .forensic-chip em {
+      display: block;
+      margin-top: 7px;
+      color: var(--heat, var(--danger));
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 18px;
+      line-height: 20px;
+      font-style: normal;
+      font-weight: 800;
+      letter-spacing: -0.015em;
+    }
+
+    .forensic-chip p {
+      margin: 8px 0 0;
+      color: #8f9aa6;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .action-row {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 11px;
+    }
+
+    .action-row span {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .action-row strong {
+      color: var(--heat, var(--danger));
+      font-family: Menlo, Consolas, "Courier New", monospace;
+      letter-spacing: 2px;
+    }
+.provision-btn {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,122,26,.28);
+      background: rgba(8,12,18,.66);
+      color: #ffffff;
+      font-family: Menlo, Consolas, "Courier New", monospace;
+      font-size: 10px;
+      line-height: 13px;
+      letter-spacing: 1.7px;
+      text-transform: uppercase;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.045);
+    }
+
+
+
+    .audit-row {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .audit-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(148, 163, 184, 0.86);
+      text-decoration: none;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(2, 6, 23, 0.34);
+      transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+    }
+
+    .audit-link::before {
+      content: "↳";
+      color: rgba(251, 146, 60, 0.78);
+      font-size: 12px;
+      letter-spacing: 0;
+    }
+
+    .audit-link:hover {
+      color: rgba(255, 255, 255, 0.94);
+      border-color: rgba(251, 146, 60, 0.46);
+      background: rgba(251, 146, 60, 0.08);
+    }
+
+    .provision-btn {
+          width: 100% !important;
+          text-align: center !important;
+          font-size: 9px !important;
+          letter-spacing: 0.14em !important;
+        }
+
+        .field-guide-pill {
+          right: 14px !important;
+          bottom: 14px !important;
+          padding: 10px 12px !important;
+          font-size: 9px !important;
+          letter-spacing: 0.14em !important;
+        }
+
+        .field-guide-drawer {
+          width: calc(100vw - 16px) !important;
+          padding: 22px !important;
+        }
+      }
+
+      /* APEX_HIDE_MOBILE_SUMMARY_GRID_V1 */
+      @media screen and (max-width: 760px) {
+        .hero .summary-card {
+          display: none !important;
+        }
+      }
+
+      /* APEX_HIDE_MOBILE_SEARCH_STRIP_V1 */
+      @media screen and (max-width: 760px) {
+        .search-strip {
+          display: none !important;
+        }
+      }
+
+      /* APEX_MOBILE_TYPOGRAPHY_ALIGN_V1 */
+      @media screen and (max-width: 760px) {
+        .hero-title {
+          text-transform: none !important;
+          font-size: 34px !important;
+          line-height: 1.04 !important;
+          letter-spacing: -0.045em !important;
+          font-weight: 650 !important;
+        }
+
+        .section-kicker {
+          font-size: 10px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.14em !important;
+          font-weight: 800 !important;
+        }
+
+        .section-heading {
+          font-size: 24px !important;
+          line-height: 1.02 !important;
+          letter-spacing: -0.035em !important;
+          font-weight: 760 !important;
+          text-transform: uppercase !important;
+        }
+
+        .section-title {
+          font-size: 10px !important;
+          line-height: 1.35 !important;
+          letter-spacing: 0.16em !important;
+          font-weight: 800 !important;
+        }
+
+        .apex-card {
+          border-radius: 22px !important;
+          padding: 14px !important;
+        }
+
+        .kicker {
+          font-size: 9px !important;
+          line-height: 1.2 !important;
+          letter-spacing: 0.16em !important;
+          font-weight: 800 !important;
+        }
+
+        .name {
+          font-size: 27px !important;
+          line-height: 0.98 !important;
+          letter-spacing: -0.045em !important;
+          font-weight: 760 !important;
+        }
+
+        .meta {
+          font-size: 9px !important;
+          line-height: 1.25 !important;
+          letter-spacing: 0.16em !important;
+        }
+
+        .score-label,
+        .diagnosis-label,
+        .proof-label {
+          font-size: 9px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.16em !important;
+          font-weight: 800 !important;
+        }
+
+        .score {
+          font-size: 48px !important;
+          line-height: 0.86 !important;
+          letter-spacing: -0.06em !important;
+          font-weight: 850 !important;
+        }
+
+        .verdict-text {
+          font-size: 10px !important;
+          line-height: 1.35 !important;
+          letter-spacing: 0.14em !important;
+          padding: 10px 12px !important;
+        }
+
+        .grid {
+          grid-template-columns: 1fr !important;
+          gap: 8px !important;
+        }
+
+        .grid div {
+          padding: 9px 10px !important;
+        }
+
+        .grid span {
+          font-size: 9px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.16em !important;
+        }
+
+        .grid strong {
+          font-size: 18px !important;
+          line-height: 20px !important;
+        }
+      }
+        .hero-sub {
+          margin-top: 0.5rem !important;
+        }
+      }
+        .section-heading {
+          font-size: 21px !important;
+          line-height: 1 !important;
+          letter-spacing: -0.03em !important;
+          font-weight: 760 !important;
+        }
+
+        .section-title {
+          font-size: 9px !important;
+          line-height: 1.25 !important;
+          letter-spacing: 0.14em !important;
+        }
+
+        .apex-card {
+          padding: 12px !important;
+          border-radius: 20px !important;
+        }
+
+        .kicker {
+          font-size: 8px !important;
+          line-height: 1.15 !important;
+          letter-spacing: 0.14em !important;
+        }
+
+        .name {
+          font-size: 23px !important;
+          line-height: 0.98 !important;
+          letter-spacing: -0.04em !important;
+          font-weight: 760 !important;
+        }
+
+        .meta {
+          font-size: 10px !important;
+          line-height: 1.2 !important;
+          letter-spacing: 0.13em !important;
+        }
+
+        .score-label,
+        .diagnosis-label,
+        .proof-label {
+          font-size: 8px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.14em !important;
+        }
+
+        .score {
+          font-size: 38px !important;
+          line-height: 0.86 !important;
+          letter-spacing: -0.055em !important;
+        }
+
+        .verdict-text {
+          font-size: 9px !important;
+          line-height: 1.25 !important;
+          letter-spacing: 0.13em !important;
+          padding: 9px 10px !important;
+        }
+
+        .grid div {
+          padding: 8px 9px !important;
+        }
+
+        .grid span {
+          font-size: 8px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.14em !important;
+        }
+
+        .grid strong {
+          font-size: 12px !important;
+          line-height: 18px !important;
+        }
+
+        .proof-copy,
+        .primary-signal,
+        .apex-card p {
+          font-size: 12px !important;
+          line-height: 1.45 !important;
+        }
+      }
+
+      /* APEX_MOBILE_FINAL_CARD_DENSITY_V2 */
+      @media screen and (max-width: 760px) {
+        section.cards {
+          gap: 8px !important;
+        }
+
+        section.cards .apex-card {
+          padding: 12px !important;
+          border-radius: 20px !important;
+        }
+
+        section.cards .apex-card .kicker {
+          font-size: 8px !important;
+          line-height: 1.1 !important;
+          letter-spacing: 0.14em !important;
+          font-weight: 800 !important;
+        }
+
+        section.cards .apex-card .name {
+          font-size: 22px !important;
+          line-height: 0.96 !important;
+          letter-spacing: -0.045em !important;
+          font-weight: 760 !important;
+        }
+
+        section.cards .apex-card .meta {
+          font-size: 10px !important;
+          line-height: 1.2 !important;
+          letter-spacing: 0.12em !important;
+        }
+
+        section.cards .apex-card .score-label,
+        section.cards .apex-card .diagnosis-label,
+        section.cards .apex-card .proof-label {
+          font-size: 8px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.14em !important;
+        }
+
+        section.cards .apex-card .score {
+          font-size: 36px !important;
+          line-height: 0.84 !important;
+          letter-spacing: -0.06em !important;
+          font-weight: 850 !important;
+        }
+
+        section.cards .apex-card .verdict-text {
+          font-size: 8px !important;
+          line-height: 1.2 !important;
+          letter-spacing: 0.12em !important;
+          padding: 8px 9px !important;
+        }
+
+        section.cards .apex-card .grid {
+          grid-template-columns: 1fr !important;
+          gap: 7px !important;
+        }
+
+        section.cards .apex-card .grid div {
+          padding: 8px 9px !important;
+        }
+
+        section.cards .apex-card .grid span {
+          font-size: 8px !important;
+          line-height: 1 !important;
+          letter-spacing: 0.13em !important;
+        }
+
+        section.cards .apex-card .grid strong {
+          font-size: 15px !important;
+          line-height: 17px !important;
+        }
+
+        section.cards .apex-card p,
+        section.cards .apex-card .proof-copy,
+        section.cards .apex-card .primary-signal {
+          font-size: 11px !important;
+          line-height: 1.38 !important;
+        }
+      }
+
+
+
+
+
+
+
+
+
+
+
+
+      /* APEX_MOBILE_GRID_LOCK_V1
+         Mobile-only containment: player cards and card detail metrics must collapse to one column.
+         Does not touch desktop or global shell nav. */
+      @media screen and (max-width: 760px) {
+        html,
+        body {
+          max-width: 100% !important;
+          overflow-x: hidden !important;
+        }
+
+        .app {
+          width: min(100%, calc(100vw - 24px)) !important;
+          max-width: calc(100vw - 24px) !important;
+          overflow-x: hidden !important;
+        }
+
+        .hero {
+          grid-template-columns: 1fr !important;
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+
+        section.cards,
+        .cards {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          overflow-x: hidden !important;
+        }
+
+        section.cards .apex-card,
+        .apex-card {
+          width: 100% !important;
+          max-width: 100% !important;
+          min-width: 0 !important;
+          overflow: hidden !important;
+        }
+
+        section.cards .apex-card .grid,
+        .apex-card .grid,
+        .grid {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          min-width: 0 !important;
+        }
+
+        section.cards .apex-card .forensic-strip,
+        .apex-card .forensic-strip,
+        .forensic-strip {
+          grid-template-columns: 1fr !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          min-width: 0 !important;
+        }
+
+        .grid > *,
+        .forensic-strip > * {
+          min-width: 0 !important;
+          max-width: 100% !important;
+        }
+      }
+
+
+      /* APEX_DESKTOP_FLOATING_FIELD_GUIDE_PILL_V1
+         Desktop-only fix: make standalone Apex Field Guide match Signal Wall floating pill behavior.
+         Mobile intentionally untouched. */
+      @media screen and (min-width: 761px) {
+        .field-guide-pill {
+          position: fixed !important;
+          right: max(24px, calc((100vw - 1180px) / 2 + 24px)) !important;
+          bottom: 24px !important;
+          top: auto !important;
+          left: auto !important;
+          z-index: 2147483002 !important;
+          appearance: none !important;
+          -webkit-appearance: none !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 10px !important;
+          min-height: 46px !important;
+          padding: 0 18px !important;
+          border-radius: 999px !important;
+          border: 1px solid rgba(204,255,0,0.38) !important;
+          background:
+            radial-gradient(circle at 18% 50%, rgba(204,255,0,0.14), transparent 42%),
+            rgba(7,10,14,0.92) !important;
+          color: #ffffff !important;
+          box-shadow:
+            0 0 22px rgba(204,255,0,0.10),
+            inset 0 1px 0 rgba(255,255,255,0.08) !important;
+          backdrop-filter: blur(14px) !important;
+          font-family: var(--mono, "JetBrains Mono", "Roboto Mono", monospace) !important;
+          font-size: 11px !important;
+          font-weight: 900 !important;
+          letter-spacing: 0.16em !important;
+          line-height: 1 !important;
+          text-transform: uppercase !important;
+          cursor: pointer !important;
+          white-space: nowrap !important;
+        }
+
+        .field-guide-pill:hover {
+          transform: translateY(-1px) !important;
+          border-color: rgba(204,255,0,0.58) !important;
+          box-shadow:
+            0 0 28px rgba(204,255,0,0.18),
+            inset 0 1px 0 rgba(255,255,255,0.10) !important;
+        }
+
+        .field-guide-icon {
+          color: #ccff00 !important;
+          font-size: 14px !important;
+          line-height: 1 !important;
+        }
+      }
+
+
+
+
+
+
+      /* APEX_MOBILE_MENU_MATCHED_FIELD_GUIDE_V3
+         Mobile/tablet fix: remove Field Guide from topbar rail and restyle it to match the mobile Menu pill.
+         Desktop Field Guide remains controlled by APEX_DESKTOP_FLOATING_FIELD_GUIDE_PILL_V1. */
+      @media screen and (max-width: 900px) {
+        .topbar-center {
+          display: block !important;
+          width: 0 !important;
+          height: 0 !important;
+          min-height: 0 !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          overflow: visible !important;
+        }
+
+        .topbar .field-guide-pill,
+        .field-guide-pill {
+          position: fixed !important;
+          right: 14px !important;
+          bottom: calc(16px + env(safe-area-inset-bottom)) !important;
+          top: auto !important;
+          left: auto !important;
+          z-index: 2147483002 !important;
+
+          width: auto !important;
+          max-width: calc(100vw - 28px) !important;
+          min-width: 0 !important;
+          min-height: 42px !important;
+          padding: 0 16px !important;
+
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 8px !important;
+
+          border-radius: 999px !important;
+          border: 1px solid rgba(204,255,0,0.58) !important;
+          background:
+            radial-gradient(circle at 24% 50%, rgba(204,255,0,0.24), transparent 38%),
+            linear-gradient(180deg, rgba(8,12,16,0.98), rgba(2,4,7,0.99)) !important;
+          color: #f8fafc !important;
+
+          box-shadow:
+            0 0 0 1px rgba(204,255,0,0.10),
+            0 0 18px rgba(204,255,0,0.24),
+            0 0 34px rgba(204,255,0,0.12),
+            inset 0 1px 0 rgba(255,255,255,0.10) !important;
+
+          backdrop-filter: blur(16px) !important;
+          -webkit-backdrop-filter: blur(16px) !important;
+
+          font-family: var(--mono, "JetBrains Mono", "Roboto Mono", monospace) !important;
+          font-size: 9px !important;
+          font-weight: 900 !important;
+          letter-spacing: 0.14em !important;
+          line-height: 1 !important;
+          text-transform: uppercase !important;
+          white-space: nowrap !important;
+          cursor: pointer !important;
+          transform: none !important;
+        }
+
+        .topbar .field-guide-pill:hover,
+        .field-guide-pill:hover {
+          transform: none !important;
+          border-color: rgba(204,255,0,0.70) !important;
+        }
+
+        .topbar .field-guide-icon,
+        .field-guide-icon {
+          color: #ccff00 !important;
+          font-size: 12px !important;
+          line-height: 1 !important;
+          text-shadow:
+            0 0 12px rgba(204,255,0,0.72),
+            0 0 24px rgba(204,255,0,0.38) !important;
+        }
+
+        .field-guide-drawer {
+          width: min(100vw, 430px) !important;
+          max-width: 100vw !important;
+        }
+      }
+
+
+
+
+      /* APEX_FIELD_GUIDE_DRAWER_CLOSE_FIX_V1
+         Removes inherited white button artifact and pins close control top-right inside drawer. */
+      .field-guide-top {
+        position: relative !important;
+        padding-right: 58px !important;
+      }
+
+      .field-guide-close {
+        position: absolute !important;
+        top: 18px !important;
+        right: 18px !important;
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        min-height: 36px !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        border: 1px solid rgba(255,255,255,0.14) !important;
+        border-radius: 999px !important;
+        background: rgba(255,255,255,0.035) !important;
+        color: rgba(255,255,255,0.90) !important;
+
+        box-shadow: none !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+
+        font-family: Arial, Helvetica, sans-serif !important;
+        font-size: 24px !important;
+        font-weight: 300 !important;
+        line-height: 1 !important;
+        letter-spacing: 0 !important;
+        text-transform: none !important;
+        cursor: pointer !important;
+      }
+
+      .field-guide-close:hover {
+        background: rgba(255,255,255,0.07) !important;
+        border-color: rgba(204,255,0,0.34) !important;
+        color: #ffffff !important;
+      }
+
+      @media screen and (max-width: 900px) {
+        .field-guide-top {
+          padding-right: 54px !important;
+        }
+
+        .field-guide-close {
+          top: 16px !important;
+          right: 16px !important;
+          width: 34px !important;
+          height: 34px !important;
+          min-width: 34px !important;
+          min-height: 34px !important;
+          font-size: 23px !important;
+        }
+      }
+
+
+
+      /* APEX_DESKTOP_TOPBAR_LOCKUP_ALIGN_V2
+         Desktop-only: align Apex logo lockup with nav rail, put green dot left of logo,
+         keep SIGNALS blue, preserve mobile layout and mobile drawer untouched. */
+      @media screen and (min-width: 761px) {
+        .topbar-inner {
+          width: min(1180px, calc(100% - 48px)) !important;
+          margin: 0 auto !important;
+          min-height: 148px !important;
+          display: grid !important;
+          grid-template-columns: minmax(0, 1fr) auto !important;
+          align-items: center !important;
+          gap: 28px !important;
+        }
+
+        .topbar .brand {
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: flex-start !important;
+          gap: 16px !important;
+          min-width: 0 !important;
+          transform: none !important;
+        }
+
+        .topbar .brand-mark {
+          width: 20px !important;
+          height: 20px !important;
+          min-width: 20px !important;
+          min-height: 20px !important;
+          border-radius: 999px !important;
+          background: #b6ff00 !important;
+          box-shadow:
+            0 0 0 1px rgba(182,255,0,0.30),
+            0 0 20px rgba(182,255,0,0.82),
+            0 0 42px rgba(182,255,0,0.38) !important;
+          animation: dsApexLivePulse 1.15s ease-in-out infinite !important;
+          flex: 0 0 auto !important;
+          margin: 0 !important;
+        }
+
+        .topbar .brand-text {
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: flex-start !important;
+          justify-content: center !important;
+          gap: 5px !important;
+          min-width: 0 !important;
+        }
+
+        .topbar .brand-kicker {
+          display: inline-flex !important;
+          align-items: baseline !important;
+          gap: 0 !important;
+          font-family: var(--sans) !important;
+          font-size: 22px !important;
+          line-height: 1 !important;
+          letter-spacing: -0.02em !important;
+          font-weight: 950 !important;
+          text-transform: uppercase !important;
+        }
+
+        .topbar .brand-kicker .brand-white {
+          color: #f8fafc !important;
+        }
+
+        .topbar .brand-kicker .brand-blue {
+          color: #4ea3ff !important;
+          text-shadow:
+            0 0 10px rgba(78,163,255,0.25),
+            0 0 22px rgba(78,163,255,0.16) !important;
+        }
+
+        .topbar .brand-title {
+          font-family: var(--sans) !important;
+          font-size: 18px !important;
+          line-height: 1.12 !important;
+          letter-spacing: -0.025em !important;
+          font-weight: 850 !important;
+          color: #f8fafc !important;
+          text-transform: none !important;
+        }
+
+        .topbar .livebox {
+          justify-self: end !important;
+          min-width: 210px !important;
+          text-align: left !important;
+        }
+
+        .ds-pro-desktop-nav-inner {
+          width: min(1180px, calc(100% - 48px)) !important;
+          margin: 0 auto !important;
+        }
+
+        .ds-pro-desktop-nav-links {
+          justify-content: flex-start !important;
+        }
+      }
+
+      /* APEX_FIELD_GUIDE_CLOSED_STATE_LOCK_V1
+         Drawer/backdrop hidden by default; opens only when body.field-guide-open is present. */
+      .field-guide-backdrop {
+        position: fixed !important;
+        inset: 0 !important;
+        z-index: 2147483003 !important;
+        background: rgba(0,0,0,0.62) !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transition: opacity 180ms ease !important;
+      }
+
+      body.field-guide-open .field-guide-backdrop {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+      }
+
+      .field-guide-drawer {
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        left: auto !important;
+        width: min(92vw, 430px) !important;
+        max-width: 92vw !important;
+        height: 100dvh !important;
+        z-index: 2147483004 !important;
+        transform: translateX(104%) !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        transition: transform 220ms ease !important;
+        background:
+          radial-gradient(circle at 20% 0%, rgba(204,255,0,0.10), transparent 34%),
+          linear-gradient(180deg, rgba(10,13,18,0.98), rgba(3,5,8,0.99)) !important;
+        border-left: 1px solid rgba(204,255,0,0.18) !important;
+        box-shadow: -24px 0 70px rgba(0,0,0,0.62) !important;
+      }
+
+      body.field-guide-open .field-guide-drawer {
+        transform: translateX(0) !important;
+      }
+
+      body.field-guide-open {
+        overflow: hidden !important;
+      }
+
+
+
+
+  </style>
+</head>
+<body>
+  <div class="field-guide-backdrop" data-close-field-guide></div>
+  <aside class="field-guide-drawer" aria-label="Apex Extraction Field Guide">
+    <div class="field-guide-top">
+      <div>
+        <div class="field-guide-kicker">Operator Guide</div>
+        <h2 class="field-guide-title">Apex Extraction</h2>
+      </div>
+      <button class="field-guide-close" type="button" data-close-field-guide aria-label="Close Field Guide">×</button>
+    </div>
+
+    <div class="guide-item">
+      <strong>Apex Score</strong>
+      <p>Weighted extraction score built from Physical, Vision, and Market Latency. It is the top-line conviction score, not a single raw stat.</p>
+    </div>
+    <div class="guide-item">
+      <strong>Physical</strong>
+      <p>Measures underlying force or shape change: exit velocity, contact authority, pitch movement, carry, extension, or comparable physical traits.</p>
+    </div>
+    <div class="guide-item">
+      <strong>Vision</strong>
+      <p>Measures whether the player is converting the physical trait into usable skill: swing plane, zone control, whiff behavior, command, or deception.</p>
+    </div>
+    <div class="guide-item">
+      <strong>Market</strong>
+      <p>Measures the gap between the player’s underlying signal and public recognition. High market latency means the market may still be late.</p>
+    </div>
+    <div class="guide-item">
+      <strong>Heat Fade</strong>
+      <p>Orange is reserved for higher-conviction Apex profiles. As score degrades, cards cool from orange into bronze and steel.</p>
+    </div>
+    <div class="guide-item">
+      <strong>Provision To Watchlist</strong>
+      <p>Stages the player for roster surveillance. This is the action layer between signal discovery and roster execution.</p>
+    </div>
+  </aside>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div class="brand-text">
+          <div class="brand-kicker"><span class="brand-white">DIAMOND</span><span class="brand-blue">SIGNALS</span></div>
+          <div class="brand-title">Apex Extraction // Institutional Edge</div>
+        </div>
+      </div>
+
+      <div class="livebox">
+        <div class="live-label"><span class="live-dot"></span>LIVE</div>
+        <div class="live-time">2026-06-10 06:09 PM</div>
+      </div>
+    </div>
+  </div>
+
+  <button
+    class="field-guide-pill"
+    type="button"
+    data-open-field-guide
+    aria-label="Open Apex Extraction Field Guide"
+  >
+    <span class="field-guide-icon">ⓘ</span>
+    <span>Field Guide</span>
+  </button>
+
+  <nav class="ds-pro-desktop-nav" aria-label="DiamondSignals desktop command navigation">
+  <div class="ds-pro-desktop-nav-inner">
+    <div class="ds-pro-desktop-nav-links" aria-label="Signal surfaces">
+      <a class="ds-pro-desktop-nav-link " href="/live/"><span>[ LIVE ]</span> Signal Wall</a>
+      <a class="ds-pro-desktop-nav-link " href="/typical-call-up"><span>[ SCOUT ]</span> Promotion Watch</a>
+      <a class="ds-pro-desktop-nav-link " href="/waiver-wire/"><span>[ WIRE ]</span> Waiver Wire</a>
+      <a class="ds-pro-desktop-nav-link " href="/mlb-extraction/"><span>[ EDGE ]</span> MLB Extraction</a>
+      <a class="ds-pro-desktop-nav-link active" href="/apex-extraction/"><span>[ APEX ]</span> Apex</a>
+      <a class="ds-pro-desktop-nav-link " href="/ivb-heat-map"><span>[ LAB ]</span> IVB</a>
+      <a class="ds-pro-desktop-nav-link " href="/velocity-decay-monitor"><span>[ RISK ]</span> Velocity</a>
+      <a class="ds-pro-desktop-nav-link " href="/stuff-disruption-feed"><span>[ DISRUPT ]</span> Stuff+</a>
+      <a class="ds-pro-desktop-nav-link " href="/admin/kinetic-drift/"><span>[ KDE ]</span> Kinetic</a>
+      <a class="ds-pro-desktop-nav-link " href="/watch-list/"><span>[ STAGE ]</span> Tracking</a>
+      <a class="ds-pro-desktop-nav-link ds-pro-desktop-nav-link-terminal" href="https://app.diamondsignals.ai/auth?next=/terminal"><span>[ TERMINAL ]</span> Roster</a>
+    </div>
+  </div>
+</nav>
+  <div class="topnav ds-shell-nav">
+  <div class="topnav-inner">
+    <div class="topnav-links">
+      <a class="topnav-link " href="/live/"><span class="topnav-tag">[ LIVE ]</span> Signal Wall</a>
+      <a class="topnav-link " href="/typical-call-up"><span class="topnav-tag">[ SCOUT ]</span> Promotion Watch</a>
+      <a class="topnav-link " href="/admin/kinetic-drift/"><span class="topnav-tag">[ KINETIC ]</span> KDE</a>
+      <a class="topnav-link " href="/waiver-wire/"><span class="topnav-tag">[ WIRE ]</span> Waiver Wire</a>
+      <a class="topnav-link " href="/ivb-heat-map"><span class="topnav-tag">[ LAB ]</span> IVB Heat Map</a>
+      <a class="topnav-link " href="/velocity-decay-monitor"><span class="topnav-tag">[ RISK ]</span> Velocity Decay</a>
+      <a class="topnav-link " href="/stuff-disruption-feed"><span class="topnav-tag">[ DISRUPT ]</span> Stuff+ Disruption</a>
+      <a class="topnav-link " href="/mlb-extraction/"><span class="topnav-tag">[ EDGE ]</span> MLB Extraction Ledger</a>
+      <a class="topnav-link active" href="/apex-extraction/"><span class="topnav-tag">[ APEX ]</span> Apex Extraction</a>
+      <a class="topnav-link" href="/watch-list/"><span class="topnav-tag">[ STAGE ]</span> Tracking Radar</a>
+      <a class="topnav-link" href="https://app.diamondsignals.ai/auth?next=/terminal"><span class="topnav-tag">[ TERMINAL ]</span> Roster Terminal</a>
+      <a class="topnav-link" href="https://diamondsignals.ai"><span class="topnav-tag">[ SITE ]</span> Main Site</a>
+    </div>
+
+    <button class="ds-mobile-menu-trigger" type="button" data-ds-mobile-menu-open onclick="window.dsOpenMobileMenu && window.dsOpenMobileMenu()" aria-controls="dsMobileMenu" aria-expanded="false">
+      <span class="ds-mobile-menu-icon">☰</span>
+      <span>Menu</span>
+    </button>
+  </div>
+</div>
+
+<div class="ds-mobile-menu-backdrop" data-ds-mobile-menu-close></div>
+
+<aside class="ds-mobile-menu-drawer" id="dsMobileMenu" aria-hidden="true">
+  <div class="ds-mobile-menu-shell">
+    <div class="ds-mobile-menu-head">
+      <div>
+        <div class="ds-mobile-menu-kicker">DIAMONDSIGNALS // COMMAND NAV</div>
+        <h2 class="ds-mobile-menu-title">Signal Surfaces</h2>
+      </div>
+      <button class="ds-mobile-menu-close" type="button" data-ds-mobile-menu-close onclick="window.dsCloseMobileMenu && window.dsCloseMobileMenu()" aria-label="Close menu">×</button>
+    </div>
+
+    <div class="ds-mobile-menu-links">
+      <a class="ds-mobile-menu-link " href="/live/"><span>[ LIVE ]</span> Signal Wall</a>
+      <a class="ds-mobile-menu-link " href="/typical-call-up"><span>[ SCOUT ]</span> Promotion Watch</a>
+      <a class="ds-mobile-menu-link " href="/admin/kinetic-drift/"><span>[ KINETIC ]</span> Kinetic Drift Engine</a>
+      <a class="ds-mobile-menu-link " href="/waiver-wire/"><span>[ WIRE ]</span> Waiver Wire</a>
+      <a class="ds-mobile-menu-link " href="/ivb-heat-map"><span>[ LAB ]</span> IVB Heat Map</a>
+      <a class="ds-mobile-menu-link " href="/velocity-decay-monitor"><span>[ RISK ]</span> Velocity Decay</a>
+      <a class="ds-mobile-menu-link " href="/stuff-disruption-feed"><span>[ DISRUPT ]</span> Stuff+ Disruption</a>
+      <a class="ds-mobile-menu-link " href="/mlb-extraction/"><span>[ EDGE ]</span> MLB Extraction Ledger</a>
+      <a class="ds-mobile-menu-link active" href="/apex-extraction/"><span>[ APEX ]</span> Apex Extraction</a>
+      <a class="ds-mobile-menu-link" href="/watch-list/"><span>[ STAGE ]</span> Tracking Radar</a>
+      <a class="ds-mobile-menu-link" href="https://app.diamondsignals.ai/auth?next=/terminal"><span>[ TERMINAL ]</span> Roster Terminal</a>
+      <a class="ds-mobile-menu-link" href="https://diamondsignals.ai"><span>[ SITE ]</span> Main Site</a>
+    </div>
+
+    <div class="ds-mobile-menu-status">
+      SYSTEM STATUS: MOBILE COMMAND DRAWER ACTIVE
+    </div>
+  </div>
+</aside>
+
+<script>
+(function(){
+  const body = document.body;
+  const openBtn = document.querySelector("[data-ds-mobile-menu-open]");
+  const closeEls = document.querySelectorAll("[data-ds-mobile-menu-close]");
+  const drawer = document.getElementById("dsMobileMenu");
+
+  function openMenu(){
+    body.classList.add("ds-mobile-menu-open");
+    if (drawer) drawer.setAttribute("aria-hidden", "false");
+    if (openBtn) openBtn.setAttribute("aria-expanded", "true");
+  }
+
+  function closeMenu(){
+    body.classList.remove("ds-mobile-menu-open");
+    if (drawer) drawer.setAttribute("aria-hidden", "true");
+    if (openBtn) openBtn.setAttribute("aria-expanded", "false");
+  }
+
+  window.dsOpenMobileMenu = openMenu;
+  window.dsCloseMobileMenu = closeMenu;
+
+  if (openBtn) openBtn.addEventListener("click", openMenu);
+  closeEls.forEach((el) => el.addEventListener("click", closeMenu));
+
+  document.addEventListener("keydown", function(event){
+    if (event.key === "Escape") closeMenu();
+  });
+})();
+</script>
+  <div class="search-strip">
+  <div class="search-strip-inner">
+    <div class="player-search" id="playerSearch">
+      <input
+        type="text"
+        id="playerSearchInput"
+        class="player-search-input"
+        placeholder=">_ EXECUTE PLAYER SEARCH..."
+        autocomplete="off"
+        aria-label="Search players"
+      />
+      <div class="player-search-results" id="playerSearchResults" hidden></div>
+    </div>
+  </div>
+</div>
+  <div class="app">
+    <section class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">DIAMONDSIGNALS // SUBSURFACE BREAKOUT LEDGER</div>
+        <h1 class="hero-title">Apex Extraction</h1>
+        <p class="hero-sub">
+          Physical shift first. Vision and discipline confirm it. Market latency makes it actionable.
+          This surface identifies MLB players whose underlying profile is moving before public pricing catches up.
+        </p>
+      </div>
+
+      <aside class="summary-card">
+        <div>
+          <div class="summary-label">Mode</div>
+          <div class="summary-value">APEX</div>
+        </div>
+        <div>
+          <div class="summary-label">Candidates</div>
+          <div class="summary-value">16</div>
+        </div>
+        <div>
+          <div class="summary-label">Apex Bats</div>
+          <div class="summary-value">8</div>
+        </div>
+        <div>
+          <div class="summary-label">Apex Arms</div>
+          <div class="summary-value">8</div>
+        </div>
+        <div class="status-note">Cluster-gated extraction surface. Heat fades as conviction decays.</div>
+      </aside>
+    </section>
+
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">LATENT ALPHA</div>
+        <h2 class="section-heading">HITTER EXTRACTIONS</h2>
+      </div>
+      <div class="section-title">&gt;_ APEX BATS // GENERATED 2026-06-10T18:09:32.192122+00:00</div>
+    </div>
+    <section class="cards">
+      
+      <article
+        class="apex-card js-player-card apex-elite"
+        id="apex-player-693409"
+        data-player-id="693409"
+          data-profile-url="/scout/693409/"
+        data-player-name="CÉSAR PRIETO"
+        data-player-team="Memphis Redbirds"
+        data-player-role="BAT"
+        data-signal-family="APEX BAT"
+        data-apex-score="90.1"
+        data-physical="96.0"
+        data-vision="75.9"
+        data-market="93.0"
+        data-verdict="APEX EXTRACTION"
+        data-action="ADD"
+        data-supporting-metric="Max EV 108.9 mph // xBA 0.277 vs AVG 0.000"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX BAT</div>
+            <h2>CÉSAR PRIETO</h2>
+            <div class="meta">Memphis Redbirds // BAT</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score">90.1</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ APEX EXTRACTION ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span>PHYSICAL</span><strong>96.0</strong></div>
+          <div><span>VISION</span><strong>75.9</strong></div>
+          <div><span>MARKET</span><strong>93.0</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">PRIMARY SIGNAL</div>
+          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.000 against xBA 0.277, a strong +0.277 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 108.9 mph at peak exit velocity. The contact mix was supported by a 8.3% barrel rate and 41.7% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">SUPPORTING METRIC</div>
+          <p>Max EV 108.9 mph // xBA 0.277 vs AVG 0.000</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span>Physics</span>
+          <strong>Dynamic Hard-Hit</strong>
+          <em>108.9 mph</em>
+          <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Vision</span>
+          <strong>LA Consistency</strong>
+          <em>12.1°</em>
+          <p>Shows whether the swing plane is converting force into flight.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Market</span>
+          <strong>High-Stakes Delta</strong>
+          <em>+0.277</em>
+          <p>Identifies the value gap between expected quality and public results.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Surface production may be lagging the underlying contact profile.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>ADD</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/693409/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="693409"
+          data-player-name="CÉSAR PRIETO"
+          data-player-type="BAT"
+          data-player-team="Memphis Redbirds"
+          data-profile-url="/scout/693409/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-hot"
+        id="apex-player-701538"
+        data-player-id="701538"
+          data-profile-url="/scout/701538/"
+        data-player-name="JACKSON MERRILL"
+        data-player-team="San Diego Padres"
+        data-player-role="BAT"
+        data-signal-family="APEX BAT"
+        data-apex-score="89.4"
+        data-physical="95.8"
+        data-vision="84.8"
+        data-market="83.7"
+        data-verdict="APEX EXTRACTION"
+        data-action="ADD"
+        data-supporting-metric="Max EV 109.7 mph // xBA 0.329 vs AVG 0.154"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX BAT</div>
+            <h2>JACKSON MERRILL</h2>
+            <div class="meta">San Diego Padres // BAT</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score">89.4</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ APEX EXTRACTION ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span>PHYSICAL</span><strong>95.8</strong></div>
+          <div><span>VISION</span><strong>84.8</strong></div>
+          <div><span>MARKET</span><strong>83.7</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">PRIMARY SIGNAL</div>
+          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.154 against xBA 0.329, a strong +0.175 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.7 mph at peak exit velocity. The contact mix was supported by a 3.2% barrel rate and 23.4% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">SUPPORTING METRIC</div>
+          <p>Max EV 109.7 mph // xBA 0.329 vs AVG 0.154</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span>Physics</span>
+          <strong>Dynamic Hard-Hit</strong>
+          <em>109.7 mph</em>
+          <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Vision</span>
+          <strong>LA Consistency</strong>
+          <em>Surgical</em>
+          <p>Shows whether the swing plane is converting force into flight.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Market</span>
+          <strong>High-Stakes Delta</strong>
+          <em>+0.175</em>
+          <p>Identifies the value gap between expected quality and public results.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Surface production may be lagging the underlying contact profile.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>ADD</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/701538/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="701538"
+          data-player-name="JACKSON MERRILL"
+          data-player-type="BAT"
+          data-player-team="San Diego Padres"
+          data-profile-url="/scout/701538/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-hot"
+        id="apex-player-592663"
+        data-player-id="592663"
+          data-profile-url="/scout/592663/"
+        data-player-name="J.T. REALMUTO"
+        data-player-team="Philadelphia Phillies"
+        data-player-role="BAT"
+        data-signal-family="APEX BAT"
+        data-apex-score="89.3"
+        data-physical="95.9"
+        data-vision="80.4"
+        data-market="86.7"
+        data-verdict="APEX EXTRACTION"
+        data-action="ADD"
+        data-supporting-metric="Max EV 109.3 mph // xBA 0.369 vs AVG 0.161"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX BAT</div>
+            <h2>J.T. REALMUTO</h2>
+            <div class="meta">Philadelphia Phillies // BAT</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score">89.3</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ APEX EXTRACTION ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span>PHYSICAL</span><strong>95.9</strong></div>
+          <div><span>VISION</span><strong>80.4</strong></div>
+          <div><span>MARKET</span><strong>86.7</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">PRIMARY SIGNAL</div>
+          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.161 against xBA 0.369, a strong +0.208 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.3 mph at peak exit velocity. The contact mix was supported by a 2.6% barrel rate and 28.9% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">SUPPORTING METRIC</div>
+          <p>Max EV 109.3 mph // xBA 0.369 vs AVG 0.161</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span>Physics</span>
+          <strong>Dynamic Hard-Hit</strong>
+          <em>109.3 mph</em>
+          <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Vision</span>
+          <strong>LA Consistency</strong>
+          <em>Surgical</em>
+          <p>Shows whether the swing plane is converting force into flight.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Market</span>
+          <strong>High-Stakes Delta</strong>
+          <em>+0.208</em>
+          <p>Identifies the value gap between expected quality and public results.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Surface production may be lagging the underlying contact profile.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>ADD</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/592663/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="592663"
+          data-player-name="J.T. REALMUTO"
+          data-player-type="BAT"
+          data-player-team="Philadelphia Phillies"
+          data-profile-url="/scout/592663/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-hot"
+        id="apex-player-807727"
+        data-player-id="807727"
+          data-profile-url="/scout/807727/"
+        data-player-name="CHARLES MCADOO"
+        data-player-team="Toronto Blue Jays"
+        data-player-role="BAT"
+        data-signal-family="APEX BAT"
+        data-apex-score="88.8"
+        data-physical="100.0"
+        data-vision="83.1"
+        data-market="76.7"
+        data-verdict="APEX EXTRACTION"
+        data-action="ADD"
+        data-supporting-metric="Max EV 107.7 mph // xBA 0.370 vs AVG 0.273"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX BAT</div>
+            <h2>CHARLES MCADOO</h2>
+            <div class="meta">Toronto Blue Jays // BAT</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score">88.8</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ APEX EXTRACTION ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span>PHYSICAL</span><strong>100.0</strong></div>
+          <div><span>VISION</span><strong>83.1</strong></div>
+          <div><span>MARKET</span><strong>76.7</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">PRIMARY SIGNAL</div>
+          <p>He showed positive separation between results and contact quality this week. AVG came in at 0.273 with xBA at 0.370, a +0.097 edge that supports a constructive buy signal. He still showed legitimate impact ability, reaching 107.7 mph at peak exit velocity. The contact mix was supported by a 7.7% barrel rate and 38.5% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">SUPPORTING METRIC</div>
+          <p>Max EV 107.7 mph // xBA 0.370 vs AVG 0.273</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span>Physics</span>
+          <strong>Dynamic Hard-Hit</strong>
+          <em>107.7 mph</em>
+          <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Vision</span>
+          <strong>LA Consistency</strong>
+          <em>Surgical</em>
+          <p>Shows whether the swing plane is converting force into flight.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Market</span>
+          <strong>High-Stakes Delta</strong>
+          <em>+0.097</em>
+          <p>Identifies the value gap between expected quality and public results.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Surface production may be lagging the underlying contact profile.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>ADD</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/807727/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="807727"
+          data-player-name="CHARLES MCADOO"
+          data-player-type="BAT"
+          data-player-team="Toronto Blue Jays"
+          data-profile-url="/scout/807727/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-hot"
+        id="apex-player-657656"
+        data-player-id="657656"
+          data-profile-url="/scout/657656/"
+        data-player-name="RAMÓN LAUREANO"
+        data-player-team="San Diego Padres"
+        data-player-role="BAT"
+        data-signal-family="APEX BAT"
+        data-apex-score="88.2"
+        data-physical="93.3"
+        data-vision="84.2"
+        data-market="84.0"
+        data-verdict="APEX EXTRACTION"
+        data-action="ADD"
+        data-supporting-metric="Max EV 109.7 mph // xBA 0.338 vs AVG 0.160"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX BAT</div>
+            <h2>RAMÓN LAUREANO</h2>
+            <div class="meta">San Diego Padres // BAT</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score">88.2</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ APEX EXTRACTION ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span>PHYSICAL</span><strong>93.3</strong></div>
+          <div><span>VISION</span><strong>84.2</strong></div>
+          <div><span>MARKET</span><strong>84.0</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">PRIMARY SIGNAL</div>
+          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.160 against xBA 0.338, a strong +0.178 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.7 mph at peak exit velocity. The contact mix was supported by a 1.4% barrel rate and 23.2% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">SUPPORTING METRIC</div>
+          <p>Max EV 109.7 mph // xBA 0.338 vs AVG 0.160</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span>Physics</span>
+          <strong>Dynamic Hard-Hit</strong>
+          <em>109.7 mph</em>
+          <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Vision</span>
+          <strong>LA Consistency</strong>
+          <em>Surgical</em>
+          <p>Shows whether the swing plane is converting force into flight.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Market</span>
+          <strong>High-Stakes Delta</strong>
+          <em>+0.178</em>
+          <p>Identifies the value gap between expected quality and public results.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Surface production may be lagging the underlying contact profile.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>ADD</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/657656/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="657656"
+          data-player-name="RAMÓN LAUREANO"
+          data-player-type="BAT"
+          data-player-team="San Diego Padres"
+          data-profile-url="/scout/657656/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-hot"
+        id="apex-player-699013"
+        data-player-id="699013"
+          data-profile-url="/scout/699013/"
+        data-player-name="ESMERLYN VALDEZ"
+        data-player-team="Indianapolis Indians"
+        data-player-role="BAT"
+        data-signal-family="APEX BAT"
+        data-apex-score="88.0"
+        data-physical="97.3"
+        data-vision="76.9"
+        data-market="83.2"
+        data-verdict="APEX EXTRACTION"
+        data-action="ADD"
+        data-supporting-metric="Max EV 105.5 mph // xBA 0.294 vs AVG 0.125"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX BAT</div>
+            <h2>ESMERLYN VALDEZ</h2>
+            <div class="meta">Indianapolis Indians // BAT</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score">88.0</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ APEX EXTRACTION ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span>PHYSICAL</span><strong>97.3</strong></div>
+          <div><span>VISION</span><strong>76.9</strong></div>
+          <div><span>MARKET</span><strong>83.2</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">PRIMARY SIGNAL</div>
+          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.125 against xBA 0.294, a strong +0.169 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 105.5 mph at peak exit velocity. The contact mix was supported by a 6.7% barrel rate and 53.3% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">SUPPORTING METRIC</div>
+          <p>Max EV 105.5 mph // xBA 0.294 vs AVG 0.125</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span>Physics</span>
+          <strong>Dynamic Hard-Hit</strong>
+          <em>105.5 mph</em>
+          <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Vision</span>
+          <strong>LA Consistency</strong>
+          <em>Surgical</em>
+          <p>Shows whether the swing plane is converting force into flight.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Market</span>
+          <strong>High-Stakes Delta</strong>
+          <em>+0.169</em>
+          <p>Identifies the value gap between expected quality and public results.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Surface production may be lagging the underlying contact profile.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>ADD</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/699013/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="699013"
+          data-player-name="ESMERLYN VALDEZ"
+          data-player-type="BAT"
+          data-player-team="Indianapolis Indians"
+          data-profile-url="/scout/699013/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-hot"
+        id="apex-player-672284"
+        data-player-id="672284"
+          data-profile-url="/scout/672284/"
+        data-player-name="JARRED KELENIC"
+        data-player-team="Round Rock Express"
+        data-player-role="BAT"
+        data-signal-family="APEX BAT"
+        data-apex-score="86.7"
+        data-physical="98.2"
+        data-vision="71.2"
+        data-market="82.4"
+        data-verdict="APEX EXTRACTION"
+        data-action="ADD"
+        data-supporting-metric="Max EV 110.8 mph // xBA 0.471 vs AVG 0.200"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX BAT</div>
+            <h2>JARRED KELENIC</h2>
+            <div class="meta">Round Rock Express // BAT</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score">86.7</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ APEX EXTRACTION ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span>PHYSICAL</span><strong>98.2</strong></div>
+          <div><span>VISION</span><strong>71.2</strong></div>
+          <div><span>MARKET</span><strong>82.4</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">PRIMARY SIGNAL</div>
+          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.200 against xBA 0.471, a strong +0.271 gap that points to better underlying contact than the box score suggests. The top-end damage was real, with a max exit velocity of 110.8 mph, which is premium impact territory. The contact mix was supported by a 9.1% barrel rate and 27.3% hard-hit rate over the recent window. Net assessment: Platinum Buy. The past week looks stronger under the hood than the surface line, with enough impact authority to support a bullish forward read.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">SUPPORTING METRIC</div>
+          <p>Max EV 110.8 mph // xBA 0.471 vs AVG 0.200</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span>Physics</span>
+          <strong>Dynamic Hard-Hit</strong>
+          <em>110.8 mph</em>
+          <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Vision</span>
+          <strong>LA Consistency</strong>
+          <em>13.1°</em>
+          <p>Shows whether the swing plane is converting force into flight.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Market</span>
+          <strong>High-Stakes Delta</strong>
+          <em>+0.271</em>
+          <p>Identifies the value gap between expected quality and public results.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Surface production may be lagging the underlying contact profile.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>ADD</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/672284/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="672284"
+          data-player-name="JARRED KELENIC"
+          data-player-type="BAT"
+          data-player-team="Round Rock Express"
+          data-profile-url="/scout/672284/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-hot"
+        id="apex-player-677588"
+        data-player-id="677588"
+          data-profile-url="/scout/677588/"
+        data-player-name="JOSÉ TENA"
+        data-player-team="Washington Nationals"
+        data-player-role="BAT"
+        data-signal-family="APEX BAT"
+        data-apex-score="86.3"
+        data-physical="100.0"
+        data-vision="70.1"
+        data-market="79.1"
+        data-verdict="APEX EXTRACTION"
+        data-action="ADD"
+        data-supporting-metric="Max EV 114.0 mph // xBA 0.354 vs AVG 0.120"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX BAT</div>
+            <h2>JOSÉ TENA</h2>
+            <div class="meta">Washington Nationals // BAT</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score">86.3</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ APEX EXTRACTION ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span>PHYSICAL</span><strong>100.0</strong></div>
+          <div><span>VISION</span><strong>70.1</strong></div>
+          <div><span>MARKET</span><strong>79.1</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">PRIMARY SIGNAL</div>
+          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.120 against xBA 0.354, a strong +0.234 gap that points to better underlying contact than the box score suggests. The top-end damage was real, with a max exit velocity of 114.0 mph, which is premium impact territory. The contact mix was supported by a 1.8% barrel rate and 31.6% hard-hit rate over the recent window. Net assessment: Platinum Buy. The past week looks stronger under the hood than the surface line, with enough impact authority to support a bullish forward read.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">SUPPORTING METRIC</div>
+          <p>Max EV 114.0 mph // xBA 0.354 vs AVG 0.120</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span>Physics</span>
+          <strong>Dynamic Hard-Hit</strong>
+          <em>114.0 mph</em>
+          <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Vision</span>
+          <strong>LA Consistency</strong>
+          <em>11.2°</em>
+          <p>Shows whether the swing plane is converting force into flight.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Market</span>
+          <strong>High-Stakes Delta</strong>
+          <em>+0.234</em>
+          <p>Identifies the value gap between expected quality and public results.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Surface production may be lagging the underlying contact profile.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>ADD</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/677588/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="677588"
+          data-player-name="JOSÉ TENA"
+          data-player-type="BAT"
+          data-player-team="Washington Nationals"
+          data-profile-url="/scout/677588/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+    </section>
+
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">APEX ARM ARRAY</div>
+        <h2 class="section-heading">PITCHER EXTRACTIONS</h2>
+      </div>
+      <div class="section-title">&gt;_ PITCHING GEOMETRY + DECEPTION ARRAY</div>
+    </div>
+    <section class="cards">
+      
+      <article
+        class="apex-card js-player-card apex-hot"
+        id="apex-player-607192"
+        data-player-id="607192"
+          data-profile-url="/scout/607192/"
+        data-player-name="GLASNOW, TYLER"
+        data-player-team="HOU"
+        data-player-role="SP"
+        data-signal-family="APEX ARM"
+        data-apex-score="88.0"
+        data-physical="100.0"
+        data-vision="71.3"
+        data-market="84"
+        data-verdict="APEX EXTRACTION"
+        data-action="ADD"
+        data-supporting-metric="iVB Delta +2.4" // VAA Delta -0.8°"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX ARM</div>
+            <h2>GLASNOW, TYLER</h2>
+            <div class="meta">HOU // SP</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score">88.0</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ APEX EXTRACTION ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span>PHYSICAL</span><strong>100.0</strong></div>
+          <div><span>VISION</span><strong>71.3</strong></div>
+          <div><span>MARKET</span><strong>84</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">PRIMARY SIGNAL</div>
+          <p>Elite ballistic profile detected. Ride and approach angle are both moving in the right direction, creating a high-end breakout structure.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">SUPPORTING METRIC</div>
+          <p>iVB Delta +2.4" // VAA Delta -0.8°</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span>Geometry</span>
+          <strong>VAA Delta</strong>
+          <em>-0.8°</em>
+          <p>Tracks whether the fastball is entering the zone on a flatter, more damaging plane.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Deception</span>
+          <strong>Movement Deviation</strong>
+          <em>+2.2"</em>
+          <p>Proxy for late movement or seam-driven deception before direct SSW is wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Market</span>
+          <strong>High-Stakes Delta</strong>
+          <em>Public Late</em>
+          <p>Identifies the value gap between physical signal and public attention.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Public results may be lagging the shape-change signal.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>ADD</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/607192/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="607192"
+          data-player-name="GLASNOW, TYLER"
+          data-player-type="SP"
+          data-player-team="HOU"
+          data-profile-url="/scout/607192/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-hot"
+        id="apex-player-678020"
+        data-player-id="678020"
+          data-profile-url="/scout/678020/"
+        data-player-name="HALVORSEN, SETH"
+        data-player-team="PIT"
+        data-player-role="SP"
+        data-signal-family="APEX ARM"
+        data-apex-score="87.1"
+        data-physical="100.0"
+        data-vision="67.7"
+        data-market="84"
+        data-verdict="APEX EXTRACTION"
+        data-action="ADD"
+        data-supporting-metric="iVB Delta +2.2" // VAA Delta -0.5°"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX ARM</div>
+            <h2>HALVORSEN, SETH</h2>
+            <div class="meta">PIT // SP</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score">87.1</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ APEX EXTRACTION ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span>PHYSICAL</span><strong>100.0</strong></div>
+          <div><span>VISION</span><strong>67.7</strong></div>
+          <div><span>MARKET</span><strong>84</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">PRIMARY SIGNAL</div>
+          <p>Elite ballistic profile detected. Ride and approach angle are both moving in the right direction, creating a high-end breakout structure.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">SUPPORTING METRIC</div>
+          <p>iVB Delta +2.2" // VAA Delta -0.5°</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span>Geometry</span>
+          <strong>VAA Delta</strong>
+          <em>-0.5°</em>
+          <p>Tracks whether the fastball is entering the zone on a flatter, more damaging plane.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Deception</span>
+          <strong>Movement Deviation</strong>
+          <em>+2.0"</em>
+          <p>Proxy for late movement or seam-driven deception before direct SSW is wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Market</span>
+          <strong>High-Stakes Delta</strong>
+          <em>Public Late</em>
+          <p>Identifies the value gap between physical signal and public attention.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Public results may be lagging the shape-change signal.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>ADD</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/678020/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="678020"
+          data-player-name="HALVORSEN, SETH"
+          data-player-type="SP"
+          data-player-team="PIT"
+          data-profile-url="/scout/678020/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-hot"
+        id="apex-player-699134"
+        data-player-id="699134"
+          data-profile-url="/scout/699134/"
+        data-player-name="RODRIGUEZ, BRADGLEY"
+        data-player-team="MIL"
+        data-player-role="SP"
+        data-signal-family="APEX ARM"
+        data-apex-score="86.0"
+        data-physical="100.0"
+        data-vision="85.0"
+        data-market="66"
+        data-verdict="APEX EXTRACTION"
+        data-action="WATCH"
+        data-supporting-metric="iVB Delta +5.1" // VAA Delta +0.9°"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX ARM</div>
+            <h2>RODRIGUEZ, BRADGLEY</h2>
+            <div class="meta">MIL // SP</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score">86.0</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ APEX EXTRACTION ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span>PHYSICAL</span><strong>100.0</strong></div>
+          <div><span>VISION</span><strong>85.0</strong></div>
+          <div><span>MARKET</span><strong>66</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">PRIMARY SIGNAL</div>
+          <p>Movement quality appears to be improving through more efficient spin conversion, not just raw effort. Breakout conditions are building.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">SUPPORTING METRIC</div>
+          <p>iVB Delta +5.1" // VAA Delta +0.9°</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span>Geometry</span>
+          <strong>VAA Delta</strong>
+          <em>+0.9°</em>
+          <p>Tracks whether the fastball is entering the zone on a flatter, more damaging plane.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Deception</span>
+          <strong>Movement Deviation</strong>
+          <em>+5.2"</em>
+          <p>Proxy for late movement or seam-driven deception before direct SSW is wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Market</span>
+          <strong>High-Stakes Delta</strong>
+          <em>Public Late</em>
+          <p>Identifies the value gap between physical signal and public attention.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Public results may be lagging the shape-change signal.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>WATCH</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/699134/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="699134"
+          data-player-name="RODRIGUEZ, BRADGLEY"
+          data-player-type="SP"
+          data-player-team="MIL"
+          data-profile-url="/scout/699134/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-warm"
+        id="apex-player-608372"
+        data-player-id="608372"
+          data-profile-url="/scout/608372/"
+        data-player-name="SUGANO, TOMOYUKI"
+        data-player-team="PHI"
+        data-player-role="SP"
+        data-signal-family="APEX ARM"
+        data-apex-score="82.2"
+        data-physical="100.0"
+        data-vision="69.8"
+        data-market="66"
+        data-verdict="APEX EXTRACTION"
+        data-action="WATCH"
+        data-supporting-metric="iVB Delta +3.1" // VAA Delta +0.1°"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX ARM</div>
+            <h2>SUGANO, TOMOYUKI</h2>
+            <div class="meta">PHI // SP</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score">82.2</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ APEX EXTRACTION ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span>PHYSICAL</span><strong>100.0</strong></div>
+          <div><span>VISION</span><strong>69.8</strong></div>
+          <div><span>MARKET</span><strong>66</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">PRIMARY SIGNAL</div>
+          <p>Movement quality appears to be improving through more efficient spin conversion, not just raw effort. Breakout conditions are building.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">SUPPORTING METRIC</div>
+          <p>iVB Delta +3.1" // VAA Delta +0.1°</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span>Geometry</span>
+          <strong>VAA Delta</strong>
+          <em>+0.1°</em>
+          <p>Tracks whether the fastball is entering the zone on a flatter, more damaging plane.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Deception</span>
+          <strong>Movement Deviation</strong>
+          <em>+6.7"</em>
+          <p>Proxy for late movement or seam-driven deception before direct SSW is wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Market</span>
+          <strong>High-Stakes Delta</strong>
+          <em>Public Late</em>
+          <p>Identifies the value gap between physical signal and public attention.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Public results may be lagging the shape-change signal.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>WATCH</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/608372/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="608372"
+          data-player-name="SUGANO, TOMOYUKI"
+          data-player-type="SP"
+          data-player-team="PHI"
+          data-profile-url="/scout/608372/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-warm"
+        id="apex-player-666277"
+        data-player-id="666277"
+          data-profile-url="/scout/666277/"
+        data-player-name="SORIANO, GEORGE"
+        data-player-team="STL"
+        data-player-role="SP"
+        data-signal-family="APEX ARM"
+        data-apex-score="81.2"
+        data-physical="100.0"
+        data-vision="75.4"
+        data-market="58"
+        data-verdict="SUBSURFACE BREAKOUT"
+        data-action="WATCH"
+        data-supporting-metric="iVB Delta +3.5" // VAA Delta +0.8°"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX ARM</div>
+            <h2>SORIANO, GEORGE</h2>
+            <div class="meta">STL // SP</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score">81.2</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ SUBSURFACE BREAKOUT ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span>PHYSICAL</span><strong>100.0</strong></div>
+          <div><span>VISION</span><strong>75.4</strong></div>
+          <div><span>MARKET</span><strong>58</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">PRIMARY SIGNAL</div>
+          <p>Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">SUPPORTING METRIC</div>
+          <p>iVB Delta +3.5" // VAA Delta +0.8°</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span>Geometry</span>
+          <strong>VAA Delta</strong>
+          <em>+0.8°</em>
+          <p>Tracks whether the fastball is entering the zone on a flatter, more damaging plane.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Deception</span>
+          <strong>Movement Deviation</strong>
+          <em>+4.6"</em>
+          <p>Proxy for late movement or seam-driven deception before direct SSW is wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Market</span>
+          <strong>High-Stakes Delta</strong>
+          <em>Public Late</em>
+          <p>Identifies the value gap between physical signal and public attention.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Public results may be lagging the shape-change signal.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>WATCH</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/666277/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="666277"
+          data-player-name="SORIANO, GEORGE"
+          data-player-type="SP"
+          data-player-team="STL"
+          data-profile-url="/scout/666277/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-warm"
+        id="apex-player-623437"
+        data-player-id="623437"
+          data-profile-url="/scout/623437/"
+        data-player-name="TOPA, JUSTIN"
+        data-player-team="MIN"
+        data-player-role="SP"
+        data-signal-family="APEX ARM"
+        data-apex-score="81.0"
+        data-physical="100.0"
+        data-vision="74.4"
+        data-market="58"
+        data-verdict="SUBSURFACE BREAKOUT"
+        data-action="WATCH"
+        data-supporting-metric="iVB Delta +3.4" // VAA Delta +0.7°"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX ARM</div>
+            <h2>TOPA, JUSTIN</h2>
+            <div class="meta">MIN // SP</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score">81.0</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ SUBSURFACE BREAKOUT ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span>PHYSICAL</span><strong>100.0</strong></div>
+          <div><span>VISION</span><strong>74.4</strong></div>
+          <div><span>MARKET</span><strong>58</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">PRIMARY SIGNAL</div>
+          <p>Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">SUPPORTING METRIC</div>
+          <p>iVB Delta +3.4" // VAA Delta +0.7°</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span>Geometry</span>
+          <strong>VAA Delta</strong>
+          <em>+0.7°</em>
+          <p>Tracks whether the fastball is entering the zone on a flatter, more damaging plane.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Deception</span>
+          <strong>Movement Deviation</strong>
+          <em>+3.4"</em>
+          <p>Proxy for late movement or seam-driven deception before direct SSW is wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Market</span>
+          <strong>High-Stakes Delta</strong>
+          <em>Public Late</em>
+          <p>Identifies the value gap between physical signal and public attention.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Public results may be lagging the shape-change signal.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>WATCH</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/623437/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="623437"
+          data-player-name="TOPA, JUSTIN"
+          data-player-type="SP"
+          data-player-team="MIN"
+          data-profile-url="/scout/623437/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-warm"
+        id="apex-player-815083"
+        data-player-id="815083"
+          data-profile-url="/scout/815083/"
+        data-player-name="FARRIS, MITCH"
+        data-player-team="TOR"
+        data-player-role="SP"
+        data-signal-family="APEX ARM"
+        data-apex-score="80.9"
+        data-physical="100.0"
+        data-vision="73.9"
+        data-market="58"
+        data-verdict="SUBSURFACE BREAKOUT"
+        data-action="WATCH"
+        data-supporting-metric="iVB Delta +3.0" // VAA Delta +0.7°"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX ARM</div>
+            <h2>FARRIS, MITCH</h2>
+            <div class="meta">TOR // SP</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score">80.9</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ SUBSURFACE BREAKOUT ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span>PHYSICAL</span><strong>100.0</strong></div>
+          <div><span>VISION</span><strong>73.9</strong></div>
+          <div><span>MARKET</span><strong>58</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">PRIMARY SIGNAL</div>
+          <p>Shape profile is moving, but not yet in a fully qualified disruption tier. Keep this arm on the radar for another appearance.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">SUPPORTING METRIC</div>
+          <p>iVB Delta +3.0" // VAA Delta +0.7°</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span>Geometry</span>
+          <strong>VAA Delta</strong>
+          <em>+0.7°</em>
+          <p>Tracks whether the fastball is entering the zone on a flatter, more damaging plane.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Deception</span>
+          <strong>Movement Deviation</strong>
+          <em>+3.0"</em>
+          <p>Proxy for late movement or seam-driven deception before direct SSW is wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Market</span>
+          <strong>High-Stakes Delta</strong>
+          <em>Public Late</em>
+          <p>Identifies the value gap between physical signal and public attention.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Public results may be lagging the shape-change signal.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>WATCH</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/815083/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="815083"
+          data-player-name="FARRIS, MITCH"
+          data-player-type="SP"
+          data-player-team="TOR"
+          data-profile-url="/scout/815083/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-warm"
+        id="apex-player-662253"
+        data-player-id="662253"
+          data-profile-url="/scout/662253/"
+        data-player-name="MUÑOZ, ANDRÉS"
+        data-player-team="HOU"
+        data-player-role="SP"
+        data-signal-family="APEX ARM"
+        data-apex-score="79.7"
+        data-physical="100.0"
+        data-vision="69.1"
+        data-market="58"
+        data-verdict="SUBSURFACE BREAKOUT"
+        data-action="WATCH"
+        data-supporting-metric="iVB Delta +3.6" // VAA Delta +0.1°"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX ARM</div>
+            <h2>MUÑOZ, ANDRÉS</h2>
+            <div class="meta">HOU // SP</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score">79.7</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ SUBSURFACE BREAKOUT ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span>PHYSICAL</span><strong>100.0</strong></div>
+          <div><span>VISION</span><strong>69.1</strong></div>
+          <div><span>MARKET</span><strong>58</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">PRIMARY SIGNAL</div>
+          <p>Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label">SUPPORTING METRIC</div>
+          <p>iVB Delta +3.6" // VAA Delta +0.1°</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span>Geometry</span>
+          <strong>VAA Delta</strong>
+          <em>+0.1°</em>
+          <p>Tracks whether the fastball is entering the zone on a flatter, more damaging plane.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Deception</span>
+          <strong>Movement Deviation</strong>
+          <em>+5.7"</em>
+          <p>Proxy for late movement or seam-driven deception before direct SSW is wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span>Market</span>
+          <strong>High-Stakes Delta</strong>
+          <em>Public Late</em>
+          <p>Identifies the value gap between physical signal and public attention.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Public results may be lagging the shape-change signal.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>WATCH</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/662253/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="662253"
+          data-player-name="MUÑOZ, ANDRÉS"
+          data-player-type="SP"
+          data-player-team="HOU"
+          data-profile-url="/scout/662253/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+    </section>
+  </div>
+
+
+
+  <script src="/player-search.js"></script>
+  <script src="/player-card-actions.js"></script>
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const targetPlayerId = (params.get("player") || "").trim();
+      const targetPlayerName = (params.get("player_name") || params.get("name") || "").trim().toUpperCase();
+
+      if (!targetPlayerId && !targetPlayerName) return;
+
+      function normalize(value) {
+        return String(value || "")
+          .trim()
+          .toUpperCase()
+          .replace(/\s+/g, " ");
+      }
+
+      function findTargetCard() {
+        const cards = Array.from(document.querySelectorAll(".apex-card"));
+
+        if (targetPlayerId) {
+          const byId = cards.find((card) => String(card.dataset.playerId || "").trim() === targetPlayerId);
+          if (byId) return byId;
+        }
+
+        if (targetPlayerName) {
+          const wanted = normalize(targetPlayerName);
+          const exact = cards.find((card) => normalize(card.dataset.playerName) === wanted);
+          if (exact) return exact;
+
+          return cards.find((card) => normalize(card.dataset.playerName).includes(wanted) || wanted.includes(normalize(card.dataset.playerName)));
+        }
+
+        return null;
+      }
+
+      function activateTarget() {
+        const card = findTargetCard();
+        if (!card) return;
+
+        card.classList.remove("target-signal-card");
+        void card.offsetWidth;
+        card.classList.add("target-signal-card");
+
+        setTimeout(() => {
+          card.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
+        }, 300);
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", activateTarget);
+      } else {
+        activateTarget();
+      }
+    })();
+  </script>
+
+
+  <script>
+    (function () {
+      const openBtn = document.querySelector("[data-open-field-guide]");
+      const closeEls = document.querySelectorAll("[data-close-field-guide]");
+
+      if (!openBtn) return;
+
+      openBtn.addEventListener("click", () => {
+        document.body.classList.add("field-guide-open");
+      });
+
+      closeEls.forEach((el) => {
+        el.addEventListener("click", () => {
+          document.body.classList.remove("field-guide-open");
+        });
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          document.body.classList.remove("field-guide-open");
+        }
+      });
+    })();
+  </script>
+
+
+  <script>
+    (function () {
+      const cards = Array.from(document.querySelectorAll(".js-player-action-card"));
+      const closeEls = document.querySelectorAll("[data-close-player-action]");
+
+      const fields = {
+        meta: document.getElementById("paMeta"),
+        name: document.getElementById("paName"),
+        score: document.getElementById("paScore"),
+        physical: document.getElementById("paPhysical"),
+        vision: document.getElementById("paVision"),
+        market: document.getElementById("paMarket"),
+        verdict: document.getElementById("paVerdict"),
+        metric: document.getElementById("paMetric"),
+        action: document.getElementById("paAction"),
+        provision: document.getElementById("paProvision"),
+        dossier: document.getElementById("paDossier"),
+        copy: document.getElementById("paCopy")
+      };
+
+      function openDrawer(card) {
+        const d = card.dataset;
+        const playerId = d.playerId || "";
+        const playerName = d.playerName || "PLAYER";
+
+        fields.meta.textContent = `${d.playerTeam || "MLB"} // ${d.playerRole || "ASSET"} // ${d.signalFamily || "APEX"}`;
+        fields.name.textContent = playerName;
+        fields.score.textContent = d.apexScore || "--";
+        fields.physical.textContent = d.physical || "--";
+        fields.vision.textContent = d.vision || "--";
+        fields.market.textContent = d.market || "--";
+        fields.verdict.textContent = d.verdict || "--";
+        fields.metric.textContent = d.supportingMetric || "--";
+        fields.action.textContent = d.action || "--";
+
+        fields.provision.href = "/watch-list/";
+        fields.provision.dataset.playerId = playerId;
+        fields.provision.dataset.playerName = playerName;
+        fields.provision.dataset.playerTeam = d.playerTeam || "MLB";
+        fields.provision.dataset.playerType = d.playerRole || "";
+        fields.provision.dataset.profileUrl = `/scout/${encodeURIComponent(playerId)}/`;
+        fields.provision.dataset.sourceTag = "apex-extraction";
+        fields.dossier.href = `/scout/${encodeURIComponent(playerId)}/`;
+
+        fields.provision.onclick = (event) => {
+          event.preventDefault();
+
+          const stored = (() => {
+            try {
+              const raw = window.localStorage.getItem("diamondsignals_watch_list_v1");
+              const parsed = raw ? JSON.parse(raw) : [];
+              return Array.isArray(parsed) ? parsed : [];
+            } catch (err) {
+              return [];
+            }
+          })();
+
+          const nextPlayer = {
+            playerId,
+            playerName,
+            playerType: d.playerRole || "",
+            team: d.playerTeam || "MLB",
+            profileUrl: `/scout/${encodeURIComponent(playerId)}/`,
+            sourceTag: "APEX_EXTRACTION",
+            savedAt: new Date().toISOString()
+          };
+
+          const existingIndex = stored.findIndex((p) => {
+            if (nextPlayer.playerId && p.playerId) return String(p.playerId) === String(nextPlayer.playerId);
+            return String(p.playerName || "").toLowerCase() === String(nextPlayer.playerName || "").toLowerCase();
+          });
+
+          if (existingIndex >= 0) {
+            stored[existingIndex] = { ...stored[existingIndex], ...nextPlayer };
+          } else {
+            stored.push(nextPlayer);
+          }
+
+          try {
+            window.localStorage.setItem("diamondsignals_watch_list_v1", JSON.stringify(stored));
+          } catch (err) {
+            // Continue to Tracking Radar even if localStorage is unavailable.
+          }
+
+          window.location.href = "/watch-list/";
+        };
+
+        fields.copy.onclick = async () => {
+          const copyText = `${playerName} // Apex Score ${d.apexScore || "--"} // ${d.verdict || ""} // ${d.supportingMetric || ""}`;
+          try {
+            await navigator.clipboard.writeText(copyText);
+            fields.copy.textContent = "COPIED";
+            setTimeout(() => fields.copy.textContent = "COPY SIGNAL", 1100);
+          } catch (err) {
+            fields.copy.textContent = "COPY FAILED";
+            setTimeout(() => fields.copy.textContent = "COPY SIGNAL", 1100);
+          }
+        };
+
+        document.body.classList.add("player-action-open");
+      }
+
+      cards.forEach((card) => {
+        card.addEventListener("click", (event) => {
+          if (event.target.closest("a, button")) return;
+          openDrawer(card);
+        });
+      });
+
+      closeEls.forEach((el) => {
+        el.addEventListener("click", () => document.body.classList.remove("player-action-open"));
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          document.body.classList.remove("player-action-open");
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>

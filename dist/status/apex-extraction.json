@@ -1,13 +1,13 @@
 {
-  "report_id": "apex_extraction",
+  "report_id": "apex-extraction",
   "state": "fresh",
   "build_success": true,
   "used_fallback": false,
   "degraded": false,
   "threshold_minutes": 1440,
-  "build_started_at": "2026-05-20T11:23:37.204679+00:00",
-  "build_finished_at": "2026-05-20T11:23:37.222606+00:00",
-  "source_updated_at": "2026-05-20T11:23:37.216774+00:00",
+  "build_started_at": "2026-06-10T18:09:32.180085+00:00",
+  "build_finished_at": "2026-06-10T18:09:32.199480+00:00",
+  "source_updated_at": "2026-06-10T18:09:32.192122+00:00",
   "source_age_minutes": 0.0,
   "section_counts": {
     "total_candidates": 16,
@@ -20,7 +20,7 @@
     "Performance Audit links are generated from canonical player_id values.",
     "Apex uses the shared Performance Audit evidence layer while preserving separate Apex selection/scoring logic."
   ],
-  "generated_at": "2026-05-20T11:23:37.222637+00:00",
+  "generated_at": "2026-06-10T18:09:32.199505+00:00",
   "mode": "real_data_v0.2_hardened",
   "surface": "Apex Extraction",
   "hardening_notes": [
