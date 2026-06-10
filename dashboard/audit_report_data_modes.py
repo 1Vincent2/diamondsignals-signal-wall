@@ -176,6 +176,27 @@ def classify(status: dict, payloads: list[dict], builder_text: str) -> tuple[str
         notes.append("verified_market_eligibility_required:true")
         return "LIVE_DYNAMIC_VERIFIED_MARKET", notes
 
+    hardened_ivb_heat_map_mode = (
+        status.get("mode") == "statcast_supabase_ivb_heat_map_dynamic_v1"
+        and state == "fresh"
+        and build_success is True
+        and used_fallback is not True
+        and not degraded
+        and int(section_counts.get("ivb_tiles") or 0) > 0
+        and int(section_counts.get("raw_statcast_rows") or 0) > 0
+        and int(section_counts.get("grouped_pitchers") or 0) > 0
+        and int(section_counts.get("lab_rows_written") or 0) > 0
+        and int(section_counts.get("lab_rows_read") or 0) > 0
+        and "pybaseball_statcast_pitch_level_feed" in mode_blob
+        and "fastball_ivb_window" in mode_blob
+        and "velocity_bucket_ivb_baseline" in mode_blob
+        and "ivb_vs_avg_scoring" in mode_blob
+        and "dead_zone_detection" in mode_blob
+        and "supabase_lab_write_readback" in mode_blob
+        and "tracking_identity_payloads" in mode_blob
+        and "no_static_player_seed_fallback" in mode_blob
+    )
+
     hardened_velocity_decay_mode = (
         status.get("mode") == "statcast_velocity_decay_dynamic_v1"
         and state == "fresh"
@@ -203,6 +224,23 @@ def classify(status: dict, payloads: list[dict], builder_text: str) -> tuple[str
         and "canonical_player_universe" in mode_blob
         and "independent_mlb_extraction_scoring" in mode_blob
     )
+
+    if hardened_ivb_heat_map_mode:
+        notes.append("hardened_ivb_heat_map_mode:true")
+        notes.append(f"ivb_tiles:{int(section_counts.get('ivb_tiles') or 0)}")
+        notes.append(f"raw_statcast_rows:{int(section_counts.get('raw_statcast_rows') or 0)}")
+        notes.append(f"grouped_pitchers:{int(section_counts.get('grouped_pitchers') or 0)}")
+        notes.append(f"lab_rows_written:{int(section_counts.get('lab_rows_written') or 0)}")
+        notes.append(f"lab_rows_read:{int(section_counts.get('lab_rows_read') or 0)}")
+        notes.append("pybaseball_statcast_pitch_level_feed:true")
+        notes.append("fastball_ivb_window:true")
+        notes.append("velocity_bucket_ivb_baseline:true")
+        notes.append("ivb_vs_avg_scoring:true")
+        notes.append("dead_zone_detection:true")
+        notes.append("supabase_lab_write_readback:true")
+        notes.append("tracking_identity_payloads:true")
+        notes.append("no_static_player_seed_fallback:true")
+        return "LIVE_DYNAMIC_HARDENED", notes
 
     if hardened_velocity_decay_mode:
         notes.append("hardened_velocity_decay_mode:true")

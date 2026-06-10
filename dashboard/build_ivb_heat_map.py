@@ -33,6 +33,18 @@ MIN_FASTBALL_COUNT = 8
 CLIMBER_THRESHOLD = 1.0
 IVB_LAB_TABLE = "ivb_lab_daily"
 
+IVB_HEAT_MAP_STATUS_MODE = "statcast_supabase_ivb_heat_map_dynamic_v1"
+IVB_HEAT_MAP_PIPELINE_LAYERS = [
+    "pybaseball_statcast_pitch_level_feed",
+    "fastball_ivb_window",
+    "velocity_bucket_ivb_baseline",
+    "ivb_vs_avg_scoring",
+    "dead_zone_detection",
+    "supabase_lab_write_readback",
+    "tracking_identity_payloads",
+    "no_static_player_seed_fallback",
+]
+
 
 HTML_TEMPLATE = Template(
     r"""<!doctype html>
@@ -1848,6 +1860,9 @@ def write_ivb_heat_map_status(
             f"IVB source path: {'Supabase lab readback' if used_lab_readback else 'direct grouped Statcast fallback'}.",
         ],
     )
+
+    status_payload["mode"] = IVB_HEAT_MAP_STATUS_MODE
+    status_payload["pipeline_layers"] = IVB_HEAT_MAP_PIPELINE_LAYERS
 
     IVB_HEAT_MAP_STATUS_PATH.write_text(
         json.dumps(status_payload, indent=2),
