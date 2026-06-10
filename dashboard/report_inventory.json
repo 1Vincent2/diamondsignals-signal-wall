@@ -14,7 +14,8 @@
       "source_dependencies": [
         "statcast",
         "player_lookup"
-      ]
+      ],
+      "surface_class": "public_surface"
     },
     {
       "report_id": "promotion_watch",
@@ -36,72 +37,9 @@
         "milb_raw_weekly",
         "aaa_transactions",
         "recent_mlb_arrivals"
-      ]
-    },
-    {
-      "report_id": "velocity_decay",
-      "builder_script": "dashboard/build_velocity_decay.py",
-      "output_html": "dist/velocity-decay-monitor/index.html",
-      "output_json": "dist/velocity_decay_monitor.json",
-      "status_output": "dist/status/velocity-decay.json",
-      "fallback_artifact": "dist/_snapshots/velocity-decay/index.html",
-      "freshness_threshold_minutes": 240,
-      "required_sections": [
-        "risk_cards"
       ],
-      "source_dependencies": [
-        "statcast",
-        "pitcher_trends"
-      ]
-    },
-    {
-      "report_id": "stuff_disruption",
-      "builder_script": "dashboard/build_stuff_disruption.py",
-      "output_html": "dist/stuff-disruption-feed/index.html",
-      "output_json": "dist/stuff_disruption_feed.json",
-      "status_output": "dist/status/stuff-disruption.json",
-      "fallback_artifact": "dist/_snapshots/stuff-disruption/index.html",
-      "freshness_threshold_minutes": 240,
-      "required_sections": [
-        "apex_candidates"
-      ],
-      "source_dependencies": [
-        "statcast",
-        "pitch_shape_trends"
-      ]
-    },
-    {
-      "report_id": "mlb_extraction",
-      "builder_script": "dashboard/build_mlb_extraction.py",
-      "output_html": "dist/hidden-gems/index.html",
-      "output_json": "dist/hidden_gems.json",
-      "status_output": "dist/status/mlb-extraction.json",
-      "fallback_artifact": "dist/_snapshots/mlb-extraction/index.html",
-      "freshness_threshold_minutes": 240,
-      "required_sections": [
-        "pitcher_extractions",
-        "hitter_extractions"
-      ],
-      "source_dependencies": [
-        "mlb_weekly_signal_base",
-        "market_attention_inputs"
-      ]
-    },
-    {
-      "report_id": "ivb_heat_map",
-      "builder_script": "dashboard/build_ivb_heat_map.py",
-      "output_html": "dist/ivb-heat-map/index.html",
-      "output_json": "dist/ivb_heat_map.json",
-      "status_output": "dist/status/ivb-heat-map.json",
-      "fallback_artifact": "dist/_snapshots/ivb-heat-map/index.html",
-      "freshness_threshold_minutes": 240,
-      "required_sections": [
-        "ivb_tiles"
-      ],
-      "source_dependencies": [
-        "statcast",
-        "pitcher_lookup"
-      ]
+      "surface_class": "public_surface",
+      "route_note": "Primary public route shell for Promotion Watch; also hosts embedded Depth Radar output/state."
     },
     {
       "report_id": "depth_radar",
@@ -123,7 +61,136 @@
         "high_a",
         "low_a",
         "d1_college_source_locked"
-      ]
+      ],
+      "surface_class": "embedded_surface",
+      "route_note": "Embedded/companion lower-level radar surface sharing the Promotion Watch route shell."
+    },
+    {
+      "report_id": "waiver_wire",
+      "surface_class": "public_surface",
+      "builder_script": "dashboard/build_waiver_wire.py",
+      "output_html": "dist/waiver-wire/index.html",
+      "output_json": "dist/waiver_wire.json",
+      "status_output": "dist/status/waiver-wire.json",
+      "fallback_artifact": "dist/_snapshots/waiver-wire/index.html",
+      "freshness_threshold_minutes": 240,
+      "required_sections": [
+        "candidates"
+      ],
+      "source_dependencies": [
+        "market_eligibility",
+        "waiver_candidates",
+        "mlb_extraction_ledger"
+      ],
+      "route_note": "Public Open Market / Waiver Wire surface. Candidate list must remain feed-driven and verified-market eligible."
+    },
+    {
+      "report_id": "velocity_decay",
+      "builder_script": "dashboard/build_velocity_decay.py",
+      "output_html": "dist/velocity-decay-monitor/index.html",
+      "output_json": "dist/velocity_decay_monitor.json",
+      "status_output": "dist/status/velocity-decay.json",
+      "fallback_artifact": "dist/_snapshots/velocity-decay/index.html",
+      "freshness_threshold_minutes": 240,
+      "required_sections": [
+        "risk_cards"
+      ],
+      "source_dependencies": [
+        "statcast",
+        "pitcher_trends"
+      ],
+      "surface_class": "public_surface"
+    },
+    {
+      "report_id": "stuff_disruption",
+      "builder_script": "dashboard/build_stuff_disruption.py",
+      "output_html": "dist/stuff-disruption-feed/index.html",
+      "output_json": "dist/stuff_disruption_feed.json",
+      "status_output": "dist/status/stuff-disruption.json",
+      "fallback_artifact": "dist/_snapshots/stuff-disruption/index.html",
+      "freshness_threshold_minutes": 240,
+      "required_sections": [
+        "apex_candidates"
+      ],
+      "source_dependencies": [
+        "statcast",
+        "pitch_shape_trends"
+      ],
+      "surface_class": "public_surface"
+    },
+    {
+      "report_id": "mlb_extraction",
+      "builder_script": "dashboard/build_mlb_extraction.py",
+      "output_html": "dist/hidden-gems/index.html",
+      "output_json": "dist/hidden-gems/mlb_extraction_ledger.json",
+      "status_output": "dist/status/mlb-extraction.json",
+      "fallback_artifact": "dist/_snapshots/mlb-extraction/index.html",
+      "freshness_threshold_minutes": 240,
+      "required_sections": [
+        "pitcher_extractions",
+        "hitter_extractions"
+      ],
+      "source_dependencies": [
+        "mlb_weekly_signal_base",
+        "market_attention_inputs"
+      ],
+      "surface_class": "compatibility_surface",
+      "route_note": "User-facing MLB Extraction surface currently preserves compatibility output under dist/hidden-gems while public naming is MLB Extraction Ledger."
+    },
+    {
+      "report_id": "apex_extraction",
+      "surface_class": "public_surface",
+      "builder_script": "dashboard/build_apex_extraction.py",
+      "output_html": "dist/apex-extraction/index.html",
+      "output_json": "dist/apex-extraction/apex_extraction.json",
+      "status_output": "dist/status/apex-extraction.json",
+      "fallback_artifact": "dist/_snapshots/apex-extraction/index.html",
+      "freshness_threshold_minutes": 1440,
+      "required_sections": [
+        "cards"
+      ],
+      "source_dependencies": [
+        "statcast",
+        "real_data",
+        "player_identity"
+      ],
+      "route_note": "Public Apex Extraction surface. This is the mobile-hardening model report and must preserve Field Guide and tracking behavior."
+    },
+    {
+      "report_id": "ivb_heat_map",
+      "builder_script": "dashboard/build_ivb_heat_map.py",
+      "output_html": "dist/ivb-heat-map/index.html",
+      "output_json": "dist/ivb_heat_map.json",
+      "status_output": "dist/status/ivb-heat-map.json",
+      "fallback_artifact": "dist/_snapshots/ivb-heat-map/index.html",
+      "freshness_threshold_minutes": 240,
+      "required_sections": [
+        "ivb_tiles"
+      ],
+      "source_dependencies": [
+        "statcast",
+        "pitcher_lookup"
+      ],
+      "surface_class": "public_surface"
+    },
+    {
+      "report_id": "kinetic_drift",
+      "surface_class": "admin_internal",
+      "builder_script": "dashboard/build_kinetic_drift.py",
+      "output_html": "dist/admin/kinetic-drift/index.html",
+      "output_json": "dist/admin/kinetic_drift_signals.json",
+      "status_output": "dist/status/kinetic-drift.json",
+      "fallback_artifact": "dist/_snapshots/kinetic-drift/kinetic_drift_signals.json",
+      "freshness_threshold_minutes": 1440,
+      "required_sections": [
+        "kinetic_drift_signals"
+      ],
+      "source_dependencies": [
+        "statcast",
+        "supabase",
+        "player_identity"
+      ],
+      "route_note": "Admin/internal diagnostic surface. Included in inventory because it has a production status contract and green-baseline audit coverage."
     }
   ]
 }

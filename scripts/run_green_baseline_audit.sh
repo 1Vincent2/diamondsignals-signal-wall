@@ -33,6 +33,10 @@ python3 scripts/audit_legacy_route_names.py
 echo
 echo "--- stale artifact containment audit ---"
 python3 scripts/audit_stale_artifact_containment.py
+echo
+echo "--- report inventory truth audit ---"
+python3 scripts/audit_report_inventory_truth.py
+
 
 
 echo
