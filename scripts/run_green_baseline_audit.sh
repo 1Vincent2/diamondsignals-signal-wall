@@ -53,6 +53,10 @@ echo
 echo "--- status contract audit ---"
 python3 scripts/audit_status_contract.py
 
+echo
+echo "--- refinement queue closure audit ---"
+python3 scripts/audit_refinement_queue_closure.py
+
 
 
 echo
