@@ -37,6 +37,10 @@ echo
 echo "--- report inventory truth audit ---"
 python3 scripts/audit_report_inventory_truth.py
 
+echo
+echo "--- build entrypoint coverage audit ---"
+python3 scripts/audit_build_entrypoint_coverage.py
+
 
 
 echo
