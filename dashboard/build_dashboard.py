@@ -2294,7 +2294,73 @@ HTML_TEMPLATE = Template(
 
 
 
-  </style>
+  
+      .signal-audit-access-strip {
+        margin: 22px auto 24px;
+        padding: 14px 18px;
+        max-width: 1280px;
+        border: 1px solid rgba(182, 255, 0, 0.34);
+        border-radius: 18px;
+        background:
+          linear-gradient(135deg, rgba(182, 255, 0, 0.11), rgba(0, 229, 255, 0.05)),
+          rgba(8, 14, 18, 0.82);
+        box-shadow:
+          0 0 28px rgba(182, 255, 0, 0.10),
+          inset 0 0 0 1px rgba(255,255,255,0.035);
+        display: flex;
+        align-items: center;
+        gap: 13px;
+      }
+
+      .signal-audit-access-strip .audit-dot {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: #b6ff00;
+        box-shadow: 0 0 18px rgba(182, 255, 0, 0.95);
+        flex: 0 0 auto;
+      }
+
+      .signal-audit-access-strip .audit-copy {
+        display: grid;
+        gap: 3px;
+      }
+
+      .signal-audit-access-strip .audit-title {
+        color: #b6ff00;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .signal-audit-access-strip .audit-subtitle {
+        color: rgba(255,255,255,0.78);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      @media (max-width: 760px) {
+        .signal-audit-access-strip {
+          margin: 14px 12px 18px;
+          padding: 12px 13px;
+          border-radius: 15px;
+          align-items: flex-start;
+        }
+
+        .signal-audit-access-strip .audit-title {
+          font-size: 10px;
+          letter-spacing: 0.14em;
+        }
+
+        .signal-audit-access-strip .audit-subtitle {
+          font-size: 12px;
+          line-height: 1.35;
+        }
+      }
+
+    </style>
 </head>
 <body>
   <div class="topbar">
@@ -2381,6 +2447,15 @@ HTML_TEMPLATE = Template(
         </div>
       </div>
     </section>
+
+
+    <div class="signal-audit-access-strip" role="note" aria-label="Signal Wall audit access instruction">
+      <span class="audit-dot" aria-hidden="true"></span>
+      <div class="audit-copy">
+        <div class="audit-title">AUDIT LAYER ACTIVE</div>
+        <div class="audit-subtitle">Click any player card to inspect the full performance audit.</div>
+      </div>
+    </div>
 
     <section class="board">
       <div class="section pitching-section">
