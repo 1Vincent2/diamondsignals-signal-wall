@@ -361,6 +361,7 @@ HTML = r'''
 
     .hero-audit-label {
       color: var(--lime-hot) !important;
+      -webkit-text-fill-color: var(--lime-hot) !important;
       font-family: inherit !important;
       font-size: inherit !important;
       line-height: inherit !important;
