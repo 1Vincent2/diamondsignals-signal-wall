@@ -361,8 +361,6 @@ HTML = r'''
     .hero-audit-label {
       color: var(--lime-hot);
       font-weight: 900;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
       margin-right: 7px;
       font-family: var(--mono);
       font-size: 11px;
@@ -2430,7 +2428,7 @@ body.field-guide-open .field-guide-drawer {
           Live pitcher and hitter movement board built from the MLB Extraction Ledger chassis. Edge Score, SEAGER, BABIP, BB%, K%, BB/K, K/BB, and season-context command data remain preserved.
         </p>
           <p class="hero-copy hero-audit-copy">
-            <span class="hero-audit-label">AUDIT LAYER ACTIVE</span>
+            <span class="hero-audit-label">Active Audit Layer:</span>
             Click any player card to inspect the full performance audit.
           </p>
       </div>
