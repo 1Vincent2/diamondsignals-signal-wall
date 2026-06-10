@@ -71,7 +71,7 @@ def main() -> None:
 
     inventory_ids = set(by_id)
 
-    missing_from_inventory = sorted(status_ids - inventory_ids)
+    missing_from_inventory = sorted((status_ids - inventory_ids) - ALLOWED_NON_REPORT_STATUS_IDS)
     missing_status_for_inventory = sorted(
         rid for rid in inventory_ids - status_ids
         if by_id[rid].get("surface_class") != "stale_no_deploy"
