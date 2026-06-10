@@ -30,6 +30,10 @@ python3 dashboard/audit_report_data_modes.py
 echo
 echo "--- legacy route/name contract audit ---"
 python3 scripts/audit_legacy_route_names.py
+echo
+echo "--- stale artifact containment audit ---"
+python3 scripts/audit_stale_artifact_containment.py
+
 
 echo
 echo "--- mobile header/menu obstruction audit ---"
