@@ -45,6 +45,10 @@ echo
 echo "--- build entrypoint coverage audit ---"
 python3 scripts/audit_build_entrypoint_coverage.py
 
+echo
+echo "--- build output freshness audit ---"
+python3 scripts/audit_build_output_freshness.py
+
 
 
 echo
