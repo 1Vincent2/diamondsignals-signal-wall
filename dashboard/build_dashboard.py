@@ -1878,6 +1878,21 @@ HTML_TEMPLATE = Template(
     .eyebrow { font-size: 10px; line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); font-weight: 800; margin-bottom: 10px; }
     .hero-title { margin: 0 0 10px; font-size: clamp(34px, 4.8vw, 56px); line-height: 0.96; letter-spacing: -0.04em; font-weight: 900; text-transform: uppercase; color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-shadow: 0 0 10px rgba(255,255,255,0.03); }
     .hero-copy { margin: 0; max-width: 760px; color: var(--soft); font-size: 14px; }
+    .hero-audit-copy {
+      margin-top: 12px;
+      color: rgba(255,255,255,0.82);
+      font-weight: 700;
+    }
+    .hero-audit-label {
+      display: inline-block;
+      margin-right: 8px;
+      color: var(--lime-hot);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
     .meta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .meta-card { padding: 14px; }
     .meta-label, .metric-label, .sparkline-label, .section-kicker, .score-label, .rankline, .status-badge { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 800; }
@@ -1973,16 +1988,12 @@ HTML_TEMPLATE = Template(
       }
 
       .app > .board {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 18px;
         margin-top: 0;
         min-width: 0;
-      }
-
-      .app > .board:nth-of-type(2) {
-        grid-column: 1;
-      }
-
-      .app > .board:nth-of-type(3) {
-        grid-column: 2;
       }
 
       .app > .board .player-card {
@@ -2390,7 +2401,6 @@ HTML_TEMPLATE = Template(
     <div class="glossary-body">
       <section class="glossary-section">
         <h3 class="glossary-section-title">I. Global System Metrics</h3>
-        <div class="glossary-item"><span class="glossary-term">Slate Heat</span><div class="glossary-definition">A model-driven index of total opportunity across the day's schedule.</div></div>
         <div class="glossary-item"><span class="glossary-term">System Status</span><div class="glossary-definition">Confirms the live state of the Statcast-driven pipeline.</div></div>
         <div class="glossary-item"><span class="glossary-term">Edge Score</span><div class="glossary-definition">A 0 to 100 ranking summarizing signal strength versus baseline.</div></div>
       </section>
@@ -2415,7 +2425,11 @@ HTML_TEMPLATE = Template(
         <div class="hero-card">
           <div class="eyebrow">Executive Terminal</div>
           <h1 class="hero-title">Today’s Signal Wall</h1>
-          <p class="hero-copy">A live, mobile-first DiamondSignals board built for fast scan readability.</p>
+          <p class="hero-copy">Live pitcher and hitter movement board built from the MLB Extraction Ledger chassis. Edge Score, SEAGER, BABIP, BB%, K%, BB/K, K/BB, and season-context command data remain preserved.</p>
+          <p class="hero-copy hero-audit-copy">
+            <span class="hero-audit-label">AUDIT LAYER ACTIVE</span>
+            Click any player card to inspect the full performance audit.
+          </p>
         </div>
 
         <div class="meta-grid">
@@ -2436,14 +2450,6 @@ HTML_TEMPLATE = Template(
       </div>
     </section>
 
-
-    <div class="signal-audit-access-strip" role="note" aria-label="Signal Wall audit access instruction">
-      <span class="audit-dot" aria-hidden="true"></span>
-      <div class="audit-copy">
-        <div class="audit-title">AUDIT LAYER ACTIVE</div>
-        <div class="audit-subtitle">Click any player card to inspect the full performance audit.</div>
-      </div>
-    </div>
 
     <section class="board">
       <div class="section pitching-section">
@@ -2536,16 +2542,10 @@ HTML_TEMPLATE = Template(
 
 
 def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
-    combined = pd.concat([pitchers, hitters], ignore_index=True)
-    slate_heat = 0
-    if not combined.empty and "edge_score" in combined.columns:
-        slate_heat = int(round(combined["edge_score"].head(10).mean()))
-
     return HTML_TEMPLATE.render(
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
         threshold=f"{ALERT_THRESHOLD:.0f}+",
         timezone_label=TIMEZONE_LABEL,
-        slate_heat=slate_heat,
         nav_html=Template(NAV_TEMPLATE).render(active_nav="signal_wall"),
         search_html=SEARCH_TEMPLATE,
         footer_html=FOOTER_TEMPLATE,
