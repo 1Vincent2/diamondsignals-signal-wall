@@ -5,14 +5,14 @@
   "used_fallback": false,
   "degraded": false,
   "threshold_minutes": 180,
-  "build_started_at": "2026-06-10T19:25:22.324079+00:00",
-  "build_finished_at": "2026-06-10T19:25:28.268930+00:00",
-  "source_updated_at": "2026-06-10T19:25:28.268930+00:00",
+  "build_started_at": "2026-06-10T19:44:34.358670+00:00",
+  "build_finished_at": "2026-06-10T19:44:40.347370+00:00",
+  "source_updated_at": "2026-06-10T19:44:40.347370+00:00",
   "source_age_minutes": 0.0,
   "section_counts": {
     "top_signals": 20
   },
   "errors": [],
   "notes": [],
-  "generated_at": "2026-06-10T19:25:28.268947+00:00"
+  "generated_at": "2026-06-10T19:44:40.347388+00:00"
 }

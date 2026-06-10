@@ -1883,11 +1883,6 @@ HTML_TEMPLATE = Template(
     .meta-label, .metric-label, .sparkline-label, .section-kicker, .score-label, .rankline, .status-badge { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 800; }
     .meta-label { margin-bottom: 6px; }
     .meta-value { font-family: var(--mono); font-size: 13px; color: var(--text); font-variant-numeric: tabular-nums; }
-    .slate-heat-card { padding: 14px; }
-    .slate-heat-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
-    .slate-heat-bar { height: 8px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.04); overflow: hidden; }
-    .slate-heat-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, rgba(214,164,58,0.55) 0%, #b7f000 100%); box-shadow: 0 0 10px rgba(183,240,0,0.18); }
-    .slate-heat-value { font-family: var(--mono); font-size: 13px; color: var(--text); font-variant-numeric: tabular-nums; }
     .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 16px 14px; border-bottom: 1px solid rgba(255,255,255,0.05); background: linear-gradient(180deg, rgba(214,164,58,0.06), rgba(255,255,255,0.01)); }
     .section-title { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.02em; text-transform: uppercase; }
     .section-badge { font-family: var(--mono); font-size: 11px; color: #d7dbe6; border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; padding: 7px 10px; background: rgba(255,255,255,0.04); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02); }
@@ -2438,13 +2433,6 @@ HTML_TEMPLATE = Template(
           </div>
         </div>
 
-        <div class="meta-card slate-heat-card">
-          <div class="meta-label">Slate Heat</div>
-          <div class="slate-heat-row">
-            <div class="slate-heat-bar"><div class="slate-heat-fill" style="width: {{ slate_heat }}%;"></div></div>
-            <div class="slate-heat-value">{{ slate_heat }}</div>
-          </div>
-        </div>
       </div>
     </section>
 
