@@ -31,6 +31,18 @@ MAX_CARDS = 12
 
 FASTBALL_TYPES = {"FF", "FA", "SI", "FC"}
 
+VELOCITY_DECAY_STATUS_MODE = "statcast_velocity_decay_dynamic_v1"
+VELOCITY_DECAY_PIPELINE_LAYERS = [
+    "pybaseball_statcast_pitch_level_feed",
+    "fastball_velocity_window",
+    "recent_baseline_delta_scoring",
+    "extension_decay_detection",
+    "perceived_velocity_proxy",
+    "risk_alert_classification",
+    "tracking_identity_payloads",
+    "no_static_player_seed_fallback",
+]
+
 
 def safe_float(value) -> float | None:
     try:
@@ -1471,6 +1483,8 @@ def write_velocity_decay_status(
         ],
     )
 
+    status_payload["mode"] = VELOCITY_DECAY_STATUS_MODE
+    status_payload["pipeline_layers"] = VELOCITY_DECAY_PIPELINE_LAYERS
     status_payload["risk_counts"] = risk_counts
     status_payload["alert_counts"] = alert_counts
 
