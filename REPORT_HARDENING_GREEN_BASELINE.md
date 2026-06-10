@@ -40,3 +40,4 @@ python3 scripts/test_kinetic_drift_contract.py
 python3 scripts/test_velocity_decay_contract.py
 python3 dashboard/audit_report_data_modes.py
 python3 scripts/test_tracking_actions.py
+```
