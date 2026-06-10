@@ -34,6 +34,10 @@ echo
 echo "--- stale artifact containment audit ---"
 python3 scripts/audit_stale_artifact_containment.py
 echo
+echo "--- fallback snapshot seeder ---"
+python3 scripts/seed_fallback_snapshots.py
+
+echo
 echo "--- report inventory truth audit ---"
 python3 scripts/audit_report_inventory_truth.py
 
