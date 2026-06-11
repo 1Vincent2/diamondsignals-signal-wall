@@ -2305,6 +2305,590 @@ HTML_TEMPLATE = Template(
         }
       }
 
+      @media screen and (min-width: 981px) {
+
+        /* AAA_DESKTOP_RAIL_LOCK_V6_SPECIFICITY_OVERRIDE */
+        body .app,
+        body:has(.hero-title) .app {
+          width: min(1180px, calc(100% - 48px)) !important;
+          max-width: 1180px !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+        }
+
+        body .app > section.hero,
+        body:has(.hero-title) .app > section.hero {
+          width: 100% !important;
+          max-width: 1180px !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+          display: grid !important;
+          grid-template-columns: minmax(0, 1.42fr) minmax(330px, 0.78fr) !important;
+          gap: 14px !important;
+          box-sizing: border-box !important;
+        }
+
+        body .app > section.section-card,
+        body:has(.hero-title) .app > section.section-card {
+          width: 100% !important;
+          max-width: 1180px !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+          box-sizing: border-box !important;
+        }
+
+
+        /* AAA_DESKTOP_FINAL_HERO_CONTROL_POLISH_V6 */
+        .hero-card,
+        .summary-card {
+          min-height: 138px !important;
+        }
+
+        .hero-card {
+          padding: 20px 24px 18px !important;
+        }
+
+        .summary-card {
+          padding: 20px 24px 18px !important;
+        }
+
+        .hero-title {
+          font-size: clamp(42px, 3.75vw, 60px) !important;
+          line-height: 0.96 !important;
+          letter-spacing: -0.06em !important;
+        }
+
+        .hero-sub {
+          max-width: 600px !important;
+          margin-top: 10px !important;
+          font-size: 13px !important;
+          line-height: 1.38 !important;
+        }
+
+        .hero-card .tabs-aaa {
+          margin-top: 18px !important;
+          gap: 10px !important;
+        }
+
+        .hero-card .tabs-aaa .tab {
+          min-height: 38px !important;
+          padding: 0 19px !important;
+          font-size: 11px !important;
+          letter-spacing: 0.145em !important;
+        }
+
+        .summary-card {
+          align-content: start !important;
+          gap: 10px !important;
+        }
+
+        .summary-label {
+          margin-bottom: 5px !important;
+        }
+
+        .summary-value {
+          font-size: 27px !important;
+          line-height: 0.94 !important;
+        }
+
+        .aaa-audit-layer-strip {
+          min-height: 52px !important;
+          padding: 0 15px !important;
+          background:
+            linear-gradient(90deg, rgba(59,130,246,0.11), rgba(59,130,246,0.025)),
+            rgba(5,8,14,0.82) !important;
+        }
+
+        .aaa-audit-layer-strip strong {
+          font-size: 16px !important;
+        }
+
+        .aaa-audit-layer-strip span {
+          font-size: 12px !important;
+        }
+
+        .aaa-status-chip {
+          min-height: 56px !important;
+          padding: 9px 11px !important;
+        }
+
+        .aaa-status-chip-label {
+          font-size: 9px !important;
+          letter-spacing: 0.15em !important;
+        }
+
+        .aaa-status-chip-value {
+          font-size: 12px !important;
+          line-height: 1.15 !important;
+        }
+
+        .aaa-live-feed-status {
+          min-height: 54px !important;
+          padding: 9px 12px !important;
+          font-size: 12px !important;
+          line-height: 1.32 !important;
+        }
+
+        .aaa-live-feed-status-label {
+          font-size: 9px !important;
+          letter-spacing: 0.15em !important;
+          margin-bottom: 5px !important;
+        }
+
+        .section-title {
+          font-size: 18px !important;
+          line-height: 1.08 !important;
+        }
+
+        /* AAA_DESKTOP_RAIL_LOCK_CLEAN_V5_NAV_MATCH */
+        .app {
+          width: min(1180px, calc(100% - 48px)) !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+          padding-top: 28px !important;
+        }
+
+        .hero,
+        .section-card {
+          width: 100% !important;
+          max-width: 1180px !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+          box-sizing: border-box !important;
+        }
+
+        .hero {
+          display: grid !important;
+          grid-template-columns: minmax(0, 1.42fr) minmax(330px, 0.78fr) !important;
+          gap: 14px !important;
+          align-items: stretch !important;
+          margin-bottom: 16px !important;
+        }
+
+        .hero-card,
+        .summary-card {
+          min-height: 154px !important;
+          border-radius: 18px !important;
+        }
+
+        .hero-card {
+          padding: 22px 26px 20px !important;
+          overflow: hidden !important;
+        }
+
+        .summary-card {
+          padding: 22px 26px 20px !important;
+        }
+
+        .hero-title {
+          font-size: clamp(46px, 4.15vw, 66px) !important;
+          line-height: 0.94 !important;
+          letter-spacing: -0.065em !important;
+          margin: 0 !important;
+          text-transform: none !important;
+        }
+
+        .hero-sub {
+          max-width: 620px !important;
+          margin-top: 14px !important;
+          font-size: 13px !important;
+          line-height: 1.45 !important;
+        }
+
+        .hero-card .tabs-aaa {
+          margin-top: 24px !important;
+          display: flex !important;
+          align-items: center !important;
+          gap: 10px !important;
+          flex-wrap: wrap !important;
+        }
+
+        .hero-card .tabs-aaa .tab {
+          min-height: 40px !important;
+          padding: 0 20px !important;
+          border-radius: 999px !important;
+          font-size: 12px !important;
+          letter-spacing: 0.15em !important;
+        }
+
+        .summary-value {
+          font-size: 28px !important;
+          line-height: 0.92 !important;
+        }
+
+        .summary-label {
+          margin-bottom: 7px !important;
+        }
+
+        .section-card {
+          padding: 14px !important;
+          border-radius: 22px !important;
+          overflow: hidden !important;
+        }
+
+        .board-controls.aaa-board-controls {
+          display: grid !important;
+          grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr) !important;
+          gap: 14px !important;
+          align-items: start !important;
+          width: 100% !important;
+          box-sizing: border-box !important;
+          margin-bottom: 16px !important;
+        }
+
+        .aaa-audit-layer-strip {
+          min-height: 56px !important;
+          display: flex !important;
+          align-items: center !important;
+          gap: 10px !important;
+          padding: 0 16px !important;
+          border-radius: 14px !important;
+          border: 1px solid rgba(59,130,246,0.32) !important;
+          background:
+            linear-gradient(90deg, rgba(59,130,246,0.16), rgba(59,130,246,0.04)),
+            rgba(5,8,14,0.82) !important;
+          box-shadow: inset 0 1px 0 rgba(255,255,255,0.06) !important;
+          min-width: 0 !important;
+        }
+
+        .aaa-audit-layer-strip strong {
+          color: #60a5fa !important;
+          font-size: 18px !important;
+          line-height: 1 !important;
+          letter-spacing: -0.03em !important;
+          white-space: nowrap !important;
+        }
+
+        .aaa-audit-layer-strip span {
+          color: rgba(248,250,252,0.78) !important;
+          font-size: 13px !important;
+          line-height: 1.35 !important;
+          min-width: 0 !important;
+        }
+
+        .aaa-control-deck {
+          display: grid !important;
+          gap: 9px !important;
+          min-width: 0 !important;
+        }
+
+        .aaa-control-top {
+          display: grid !important;
+          grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+          gap: 9px !important;
+          width: 100% !important;
+        }
+
+        .aaa-control-deck .system-pulse-bar {
+          display: none !important;
+        }
+
+        .aaa-status-chip {
+          min-height: 58px !important;
+          border: 1px solid rgba(255,255,255,0.08) !important;
+          border-radius: 12px !important;
+          padding: 10px 12px !important;
+          background: rgba(255,255,255,0.025) !important;
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: center !important;
+          min-width: 0 !important;
+          overflow: visible !important;
+        }
+
+        .aaa-status-chip-label {
+          font-size: 10px !important;
+          letter-spacing: .16em !important;
+          text-transform: uppercase !important;
+          color: #7c7c84 !important;
+          line-height: 1 !important;
+          white-space: nowrap !important;
+        }
+
+        .aaa-status-chip-value {
+          margin-top: 6px !important;
+          font-size: 12px !important;
+          font-weight: 700 !important;
+          color: #f0f0f0 !important;
+          white-space: normal !important;
+          overflow: visible !important;
+          text-overflow: clip !important;
+          line-height: 1.18 !important;
+        }
+
+        .aaa-live-feed-status {
+          width: 100% !important;
+          min-height: 58px !important;
+          box-sizing: border-box !important;
+          border: 1px solid rgba(59,130,246,0.24) !important;
+          border-radius: 13px !important;
+          padding: 10px 13px !important;
+          background: rgba(59,130,246,0.08) !important;
+          color: #f0f0f0 !important;
+          font-size: 12px !important;
+          line-height: 1.35 !important;
+          overflow: visible !important;
+        }
+
+        .aaa-live-feed-status-label {
+          font-size: 10px !important;
+          letter-spacing: .16em !important;
+          text-transform: uppercase !important;
+          color: #93c5fd !important;
+          margin-bottom: 5px !important;
+          line-height: 1 !important;
+        }
+
+        .aaa-live-feed-status strong {
+          white-space: nowrap !important;
+        }
+
+        #tab-72h .signal-grid,
+        #tab-14d .pw-14d-two-column-band,
+        #tab-14d > .signal-grid,
+        #tab-aaa-gems .grid {
+          display: grid !important;
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          gap: 14px !important;
+          align-items: start !important;
+        }
+
+        #tab-72h .signal-grid > .section,
+        #tab-14d .pw-14d-two-column-band > .section,
+        #tab-14d > .signal-grid > .section,
+        #tab-aaa-gems .grid > .player-card,
+        #tab-aaa-gems .grid > .section {
+          min-width: 0 !important;
+          width: 100% !important;
+          margin: 0 !important;
+        }
+
+        #tab-72h .section,
+        #tab-14d .section,
+        #tab-aaa-gems .section {
+          min-width: 0 !important;
+          overflow: hidden !important;
+          border-radius: 20px !important;
+          padding: 16px !important;
+        }
+
+        #tab-72h .cards,
+        #tab-14d .cards,
+        #tab-aaa-gems .cards {
+          gap: 12px !important;
+        }
+
+        #tab-72h .player-audit-row,
+        #tab-14d .player-audit-row,
+        #tab-aaa-gems .player-audit-row {
+          grid-template-columns: 1fr !important;
+          row-gap: 14px !important;
+          min-width: 0 !important;
+          overflow: hidden !important;
+          padding: 15px !important;
+          border-radius: 14px !important;
+        }
+
+        #tab-72h .audit-right,
+        #tab-14d .audit-right,
+        #tab-aaa-gems .audit-right,
+        #tab-72h .movement-right,
+        #tab-14d .movement-right,
+        #tab-aaa-gems .movement-right {
+          text-align: left !important;
+          align-items: flex-start !important;
+        }
+
+        #tab-72h .audit-action,
+        #tab-14d .audit-action,
+        #tab-aaa-gems .audit-action {
+          justify-content: flex-end !important;
+          justify-self: end !important;
+        }
+
+        #tab-72h .movement-action,
+        #tab-14d .movement-action,
+        #tab-aaa-gems .movement-action {
+          justify-content: flex-start !important;
+        }
+
+        #tab-72h .movement-action > div,
+        #tab-14d .movement-action > div,
+        #tab-aaa-gems .movement-action > div {
+          align-items: flex-start !important;
+        }
+
+        #tab-72h .forensic-grid,
+        #tab-14d .forensic-grid,
+        #tab-aaa-gems .forensic-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        }
+      }
+      @media screen and (min-width: 981px) {
+        /* AAA_FINAL_DESKTOP_POLISH_V1_SPACING_STATUS */
+
+        /* Tighten the vertical stack without changing the rail model */
+        .app {
+          padding-top: 24px !important;
+        }
+
+        .hero {
+          margin-bottom: 12px !important;
+        }
+
+        .hero-card,
+        .summary-card {
+          min-height: 142px !important;
+        }
+
+        .hero-card {
+          padding: 20px 26px 18px !important;
+        }
+
+        .summary-card {
+          padding: 20px 26px 18px !important;
+          align-content: start !important;
+        }
+
+        .eyebrow {
+          margin-bottom: 10px !important;
+        }
+
+        .hero-title {
+          font-size: clamp(44px, 4.0vw, 64px) !important;
+          line-height: 0.94 !important;
+          letter-spacing: -0.066em !important;
+        }
+
+        .hero-sub {
+          margin-top: 12px !important;
+          font-size: 13px !important;
+          line-height: 1.42 !important;
+          max-width: 610px !important;
+        }
+
+        .hero-card .tabs-aaa {
+          margin-top: 20px !important;
+          gap: 10px !important;
+        }
+
+        .hero-card .tabs-aaa .tab {
+          min-height: 38px !important;
+          padding: 0 19px !important;
+          font-size: 11px !important;
+          letter-spacing: 0.15em !important;
+        }
+
+        .summary-card {
+          gap: 9px !important;
+        }
+
+        .summary-label {
+          margin-bottom: 5px !important;
+        }
+
+        .summary-value {
+          font-size: 27px !important;
+          line-height: 0.92 !important;
+        }
+
+        .pw-field-guide-trigger {
+          top: 232px !important;
+        }
+
+        /* Tighten control deck and reduce visual competition */
+        .section-card {
+          padding: 13px !important;
+        }
+
+        .board-controls.aaa-board-controls {
+          margin-bottom: 14px !important;
+          gap: 13px !important;
+        }
+
+        .aaa-audit-layer-strip {
+          min-height: 52px !important;
+          padding: 0 15px !important;
+        }
+
+        .aaa-audit-layer-strip strong {
+          font-size: 17px !important;
+        }
+
+        .aaa-audit-layer-strip span {
+          font-size: 12px !important;
+        }
+
+        .aaa-control-deck {
+          gap: 8px !important;
+        }
+
+        .aaa-control-top {
+          gap: 8px !important;
+        }
+
+        .aaa-status-chip {
+          min-height: 54px !important;
+          padding: 9px 11px !important;
+          background: rgba(255,255,255,0.022) !important;
+        }
+
+        .aaa-status-chip-label {
+          font-size: 9px !important;
+          letter-spacing: .15em !important;
+        }
+
+        .aaa-status-chip-value {
+          margin-top: 5px !important;
+          font-size: 12px !important;
+          line-height: 1.14 !important;
+        }
+
+        .aaa-live-feed-status {
+          min-height: 54px !important;
+          padding: 9px 12px !important;
+          background:
+            linear-gradient(90deg, rgba(59,130,246,0.105), rgba(59,130,246,0.045)),
+            rgba(5,8,14,0.72) !important;
+          border-color: rgba(59,130,246,0.20) !important;
+          font-size: 12px !important;
+          line-height: 1.32 !important;
+        }
+
+        .aaa-live-feed-status-label {
+          font-size: 9px !important;
+          margin-bottom: 5px !important;
+        }
+
+        /* Slightly denser section/card stack */
+        #tab-72h .signal-grid,
+        #tab-14d .pw-14d-two-column-band,
+        #tab-14d > .signal-grid,
+        #tab-aaa-gems .grid {
+          gap: 13px !important;
+        }
+
+        #tab-72h .section,
+        #tab-14d .section,
+        #tab-aaa-gems .section {
+          padding: 15px !important;
+          border-radius: 18px !important;
+        }
+
+        #tab-72h .cards,
+        #tab-14d .cards,
+        #tab-aaa-gems .cards {
+          gap: 11px !important;
+        }
+
+        #tab-72h .player-audit-row,
+        #tab-14d .player-audit-row,
+        #tab-aaa-gems .player-audit-row {
+          padding: 14px !important;
+        }
+      }
+
+
 
   </style>
 </head>
@@ -2339,6 +2923,12 @@ HTML_TEMPLATE = Template(
         <p class="hero-sub">
           Real AAA signal intelligence with 72 HR urgency, 14 DAY movement context, stronger player cards, and live transaction-layer arrivals.
         </p>
+
+        <div class="tabs tabs-aaa" role="tablist" aria-label="Promotion watch windows">
+          <button type="button" class="tab" id="tab-btn-72h" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
+          <button type="button" class="tab active" id="tab-btn-14d" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
+          <button type="button" class="tab" id="tab-btn-aaa-gems" onclick="switchPromotionTab('tab-aaa-gems', this)">AAA GEMS</button>
+        </div>
       </div>
 
       <div class="summary-card">
@@ -2358,36 +2948,41 @@ HTML_TEMPLATE = Template(
     </section>
 
     <section class="section-card">
-      <div class="board-controls">
-        <button type="button" class="guide-btn" onclick="openTerminalGuide()">How to Use This Terminal</button>
-
-
-        <section class="system-pulse-bar">
-          <div class="system-pulse-left">
-            <span class="system-pulse-dot"></span>
-            <span class="system-pulse-label">LIVE_ENGINE_PULSE</span>
-          </div>
-          <div class="system-pulse-proof">8,421,902 TOTAL OPERATIONS VERIFIED</div>
-        </section>
-
-        <div class="tabs tabs-aaa" role="tablist" aria-label="Promotion watch windows">
-          <button type="button" class="tab" id="tab-btn-72h" onclick="switchPromotionTab('tab-72h', this)">72 HR</button>
-          <button type="button" class="tab active" id="tab-btn-14d" onclick="switchPromotionTab('tab-14d', this)">14 DAY</button>
-          <button type="button" class="tab" id="tab-btn-aaa-gems" onclick="switchPromotionTab('tab-aaa-gems', this)">AAA GEMS</button>
+      <div class="board-controls aaa-board-controls">
+        <div class="aaa-audit-layer-strip">
+          <strong>Active Audit Layer</strong>
+          <span>Click any player card to inspect the full performance audit.</span>
         </div>
 
-        <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px;">
-          <div style="border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px; background:rgba(255,255,255,0.02);">
-            <div style="font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#7c7c84;">Page Build</div>
-            <div style="margin-top:4px; font-size:13px; color:#f0f0f0;">{{ page_build_label }}</div>
+        <div class="aaa-control-deck">
+          <div class="aaa-control-top">
+            <section class="system-pulse-bar">
+              <div class="system-pulse-left">
+                <span class="system-pulse-dot"></span>
+                <span class="system-pulse-label">LIVE_ENGINE_PULSE</span>
+              </div>
+              <div class="system-pulse-proof">8,421,902 TOTAL OPERATIONS VERIFIED</div>
+            </section>
+
+            <div class="aaa-status-chip">
+              <div class="aaa-status-chip-label">Page Build</div>
+              <div class="aaa-status-chip-value">{{ page_build_label }}</div>
+            </div>
+
+            <div class="aaa-status-chip">
+              <div class="aaa-status-chip-label">Live AAA Box Feed</div>
+              <div class="aaa-status-chip-value">Final AAA Slate</div>
+            </div>
+
+            <div class="aaa-status-chip">
+              <div class="aaa-status-chip-label">Movement Feed</div>
+              <div class="aaa-status-chip-value">{{ movement_window_label }}</div>
+            </div>
           </div>
-          <div style="border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px; background:rgba(255,255,255,0.02);">
-            <div style="font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#7c7c84;">Live AAA Box Feed</div>
-            <div style="margin-top:4px; font-size:13px; color:#f0f0f0;">{{ live_feed_label }}</div>
-          </div>
-          <div style="border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px 12px; background:rgba(255,255,255,0.02);">
-            <div style="font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#7c7c84;">Movement Feed</div>
-            <div style="margin-top:4px; font-size:13px; color:#f0f0f0;">{{ movement_window_label }}</div>
+
+          <div class="aaa-live-feed-status">
+            <div class="aaa-live-feed-status-label">Live Feed Status</div>
+            Fresh AAA hitter board active from <strong>{{ live_feed_label }}</strong>. Movement Layer remains the confirmation feed.
           </div>
         </div>
       </div>
@@ -2455,12 +3050,7 @@ HTML_TEMPLATE = Template(
       </div>
 
       <div id="tab-14d" class="tab-panel">
-        <div style="margin: 0 0 16px 0; border: 1px solid rgba(59,130,246,0.22); border-radius: 14px; padding: 12px 14px; background: rgba(59,130,246,0.08);">
-          <div style="font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: #93c5fd;">Live Feed Status</div>
-          <div style="margin-top: 6px; font-size: 13px; line-height: 1.5; color: #f0f0f0;">
-            Fresh AAA hitter board active from <strong>{{ live_feed_label }}</strong>. Movement Layer remains the confirmation feed.
-          </div>
-        </div>
+        <div class="pw-14d-two-column-band">
         {% if fresh_hitters_live %}
         <div class="section" style="margin-bottom: 16px;">
           <div class="section-head">
@@ -2510,6 +3100,7 @@ HTML_TEMPLATE = Template(
           </div>
         </div>
         {% endif %}
+        </div>
 
         <section class="signal-grid">
           {# 14 DAY pitching block temporarily suppressed while AAA signal source is stale. #}
