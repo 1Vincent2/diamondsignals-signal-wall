@@ -1954,32 +1954,48 @@ HTML_TEMPLATE = Template(
 
     {{ shell_styles | safe }}
 
-    /* PROMOTION_WATCH_FIELD_GUIDE_V1 */
+    /* PROMOTION_WATCH_FIELD_GUIDE_V2_STICKY_REFINEMENT */
     .pw-field-guide-trigger {
       position: fixed;
-      right: 22px;
-      bottom: 22px;
+      top: 232px;
+      right: max(24px, calc((100vw - 1440px) / 2 + 92px));
       z-index: 2147482500;
       display: inline-flex;
       align-items: center;
-      gap: 9px;
-      min-height: 42px;
-      padding: 0 14px;
+      justify-content: center;
+      gap: 10px;
+      min-height: 44px;
+      padding: 0 16px;
       border-radius: 999px;
-      border: 1px solid rgba(96, 165, 250, 0.28);
+      border: 1px solid rgba(182,255,0,0.24);
       background:
-        radial-gradient(circle at 20% 0%, rgba(96,165,250,0.18), transparent 34%),
-        rgba(5, 8, 14, 0.94);
+        radial-gradient(circle at 18% 0%, rgba(182,255,0,0.16), transparent 34%),
+        linear-gradient(180deg, rgba(15,18,10,0.96) 0%, rgba(5,7,5,0.96) 100%);
       color: #f8fafc;
       font-family: var(--mono);
       font-size: 10px;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      box-shadow: 0 14px 32px rgba(0,0,0,0.38), 0 0 22px rgba(96,165,250,0.10);
+      box-shadow:
+        0 16px 38px rgba(0,0,0,0.42),
+        0 0 22px rgba(182,255,0,0.10);
       cursor: pointer;
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
+      transition:
+        transform 0.16s ease,
+        border-color 0.16s ease,
+        box-shadow 0.16s ease,
+        background 0.16s ease;
+    }
+
+    .pw-field-guide-trigger:hover {
+      transform: translateY(-1px);
+      border-color: rgba(182,255,0,0.42);
+      box-shadow:
+        0 18px 42px rgba(0,0,0,0.48),
+        0 0 26px rgba(182,255,0,0.16);
     }
 
     .pw-field-guide-trigger::before {
@@ -1987,8 +2003,8 @@ HTML_TEMPLATE = Template(
       width: 7px;
       height: 7px;
       border-radius: 999px;
-      background: #60a5fa;
-      box-shadow: 0 0 12px rgba(96,165,250,0.7);
+      background: var(--lime-hot);
+      box-shadow: 0 0 12px rgba(182,255,0,0.72);
     }
 
     .pw-field-guide-overlay {
@@ -2134,6 +2150,7 @@ HTML_TEMPLATE = Template(
 
     @media screen and (max-width: 760px) {
       .pw-field-guide-trigger {
+        top: auto;
         right: 12px;
         bottom: 14px;
         min-height: 38px;
