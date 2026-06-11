@@ -2161,12 +2161,74 @@ HTML_TEMPLATE = Template(
 
     {{ ledger_styles | safe }}
 
+    @media screen and (min-width: 761px) {
+      /* AAA_HEADER_SEARCH_RELOCATION_V6_DESKTOP_ONLY */
+      .topbar {
+        min-height: 132px;
+      }
+
+      .topbar-inner {
+        position: relative;
+        min-height: 132px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 28px;
+        padding: 0;
+      }
+
+      .brand {
+        flex: 1 1 auto;
+        min-width: 420px;
+        align-self: center;
+      }
+
+      .aaa-header-search-slot {
+        position: absolute;
+        right: 305px;
+        top: 34px;
+        width: min(400px, 28vw);
+      }
+
+      .aaa-header-search-slot .search-strip {
+        padding: 0 !important;
+        margin: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+      }
+
+      .aaa-header-search-slot .search-strip-inner {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        justify-content: flex-end !important;
+      }
+
+      .aaa-header-search-slot .player-search {
+        width: 100% !important;
+      }
+
+      .aaa-header-search-slot .player-search-input {
+        height: 42px;
+        border-radius: 999px;
+        font-size: 13px;
+      }
+
+      .livebox {
+        position: absolute;
+        right: 34px;
+        top: 39px;
+        min-width: 165px;
+        margin: 0;
+        text-align: left;
+      }
+    }
+
     @media (max-width: 980px) {
       .hero { grid-template-columns: 1fr; }
       .signal-grid,
       .arrival-grid { grid-template-columns: 1fr; }
     }
-
     @media (max-width: 640px) {
       .topbar-inner,
       .app,
@@ -2201,10 +2263,9 @@ HTML_TEMPLATE = Template(
       }
     }
 
-      /* PROMOTION_WATCH_HIDE_SIGNAL_SUMMARY_V1 */
-      .hero-summary,
+      /* PROMOTION_WATCH_RESTORE_SIGNAL_SUMMARY_V1 */
       .summary-card {
-        display: none !important;
+        display: grid !important;
       }
 
       /* PROMOTION_WATCH_HERO_TITLE_EDITORIAL_V1 */
@@ -2239,6 +2300,9 @@ HTML_TEMPLATE = Template(
           <div class="brand-title">Promotion Watch // Institutional Ledger Preview</div>
         </div>
       </div>
+      <div class="aaa-header-search-slot">
+        {{ search_html | safe }}
+      </div>
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
         <div class="live-time">{{ generated_at }}</div>
@@ -2247,7 +2311,6 @@ HTML_TEMPLATE = Template(
   </div>
 
   {{ nav_html | safe }}
-  {{ search_html | safe }}
 
   <div class="app">
     <section class="hero">
