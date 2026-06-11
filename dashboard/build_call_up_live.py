@@ -24,6 +24,7 @@ CALL_UP_DIR = DIST_DIR / "typical-call-up"
 TEMPLATES_DIR = BASE_DIR / "templates"
 
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
+NAV_V2_TEMPLATE = (TEMPLATES_DIR / "shell_nav_v2.html").read_text(encoding="utf-8")
 SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
 FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
 SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
@@ -2310,6 +2311,7 @@ HTML_TEMPLATE = Template(
     </div>
   </div>
 
+  {{ nav_v2_html | safe }}
   {{ nav_html | safe }}
 
   <div class="app">
@@ -3567,6 +3569,7 @@ def render_html() -> str:
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
         timezone_label=TIMEZONE_LABEL,
         nav_html=Template(NAV_TEMPLATE).render(active_nav="promotion_watch"),
+        nav_v2_html=Template(NAV_V2_TEMPLATE).render(active_nav="promotion_watch"),
         search_html=SEARCH_TEMPLATE,
         footer_html=FOOTER_TEMPLATE,
         shell_styles=SHELL_STYLES_TEMPLATE,
