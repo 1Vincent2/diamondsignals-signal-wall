@@ -551,7 +551,7 @@ HTML_TEMPLATE = Template(
         }
 
         .hero-copy {
-          font-size: 13px !important;
+          font-size: 12px !important;
           line-height: 1.48 !important;
           color: rgba(226,232,240,0.72) !important;
           margin: 0 !important;
@@ -563,7 +563,7 @@ HTML_TEMPLATE = Template(
 
         .main-grid {
           grid-template-columns: 1fr !important;
-          gap: 14px !important;
+          gap: 12px !important;
         }
 
         .section-card,
@@ -836,15 +836,15 @@ HTML_TEMPLATE = Template(
   body .section-actions .field-guide-trigger {
     position: fixed !important;
     left: auto !important;
-    right: max(18px, env(safe-area-inset-right)) !important;
+    right: max(24px, env(safe-area-inset-right)) !important;
     bottom: max(18px, env(safe-area-inset-bottom)) !important;
     z-index: 420 !important;
 
-    width: min(320px, calc(100vw - 40px)) !important;
+    width: min(232px, calc(100vw - 118px)) !important;
     min-height: 58px !important;
     height: 58px !important;
     margin: 0 !important;
-    padding: 0 24px !important;
+    padding: 0 18px !important;
 
     display: inline-flex !important;
     align-items: center !important;
@@ -865,7 +865,7 @@ HTML_TEMPLATE = Template(
     font-family: var(--mono) !important;
     font-size: 13px !important;
     font-weight: 900 !important;
-    letter-spacing: 0.18em !important;
+    letter-spacing: 0.16em !important;
     line-height: 1 !important;
     text-transform: uppercase !important;
 
@@ -882,8 +882,8 @@ HTML_TEMPLATE = Template(
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 34px !important;
-    height: 34px !important;
+    width: 32px !important;
+    height: 32px !important;
     border-radius: 999px !important;
     border: 1px solid rgba(182,255,0,0.58) !important;
     color: var(--lime-hot) !important;
