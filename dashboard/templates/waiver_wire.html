@@ -1540,6 +1540,30 @@ body.waiver-field-guide-open{
   }
 }
 
+
+/* WAIVER_FIELD_GUIDE_FIXED_FINAL_V2
+   Final desktop override:
+   Field Guide stays fixed while scrolling.
+   LIVE/topbar shell is not touched.
+*/
+@media screen and (min-width: 981px) {
+  body.waiver-page .waiver-signal-summary-card .waiver-summary-guide,
+  body.waiver-page button.waiver-field-guide-trigger.waiver-summary-guide {
+    position: fixed !important;
+    top: 436px !important;
+    right: max(32px, calc((100vw - 1180px) / 2 + 38px)) !important;
+    z-index: 140 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  body.waiver-field-guide-open .waiver-signal-summary-card .waiver-summary-guide,
+  body.waiver-field-guide-open button.waiver-field-guide-trigger.waiver-summary-guide {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
 </style>
 </head>
 
