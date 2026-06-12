@@ -20,9 +20,9 @@ for term in [
     "IVB_HEAT_MAP_MOBILE_FIELD_GUIDE_BOTTOM_PILL_V1",
     "@media screen and (max-width: 980px)",
     "bottom: max(18px, env(safe-area-inset-bottom)) !important;",
-    "right: max(24px, env(safe-area-inset-right)) !important;",
+    "right: max(28px, env(safe-area-inset-right)) !important;",
     "z-index: 420 !important;",
-    "width: min(232px, calc(100vw - 118px)) !important;",
+    "width: min(206px, calc(100vw - 150px)) !important;",
     "body .field-guide-trigger::before",
     'content: "I" !important;',
     "padding-bottom: calc(92px + env(safe-area-inset-bottom)) !important;",
@@ -32,6 +32,20 @@ for term in [
 
 require("IVB modal behavior missing", "openFieldGuide()" in rendered and "closeFieldGuide()" in rendered and "fieldGuideModal" in rendered)
 require("IVB Field Guide button missing", 'class="field-guide-trigger"' in rendered and "Field Guide" in rendered)
+
+require("Expected exactly one IVB mobile close X in source", source.count('class="field-guide-close"') == 1)
+require("Expected exactly one IVB mobile close X in rendered page", rendered.count('class="field-guide-close"') == 1)
+
+for term in [
+    "IVB_HEAT_MAP_MOBILE_FIELD_GUIDE_CLOSE_X_V1",
+    "field-guide-close",
+    'aria-label="Close Field Guide"',
+    'onclick="closeFieldGuide()"',
+    "top: calc(92px + env(safe-area-inset-top)) !important;",
+    "z-index: 930 !important;",
+]:
+    require(f"Missing IVB mobile close-X source term: {term}", term in source)
+    require(f"Missing IVB mobile close-X rendered term: {term}", term in rendered)
 require("Shared mobile menu contract missing", "ds-mobile-menu-trigger" in rendered and "ds-mobile-menu-drawer" in rendered)
 require("Tracking contract missing", "/player-card-actions.js" in rendered and "js-add-to-roster" in rendered and "IVB_HEAT_MAP" in rendered)
 

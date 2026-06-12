@@ -537,7 +537,7 @@ HTML_TEMPLATE = Template(
         .eyebrow {
           font-size: 9px !important;
           line-height: 1 !important;
-          letter-spacing: 0.16em !important;
+          letter-spacing: 0.14em !important;
           margin-bottom: 10px !important;
         }
 
@@ -563,7 +563,7 @@ HTML_TEMPLATE = Template(
 
         .main-grid {
           grid-template-columns: 1fr !important;
-          gap: 12px !important;
+          gap: 10px !important;
         }
 
         .section-card,
@@ -836,15 +836,15 @@ HTML_TEMPLATE = Template(
   body .section-actions .field-guide-trigger {
     position: fixed !important;
     left: auto !important;
-    right: max(24px, env(safe-area-inset-right)) !important;
+    right: max(28px, env(safe-area-inset-right)) !important;
     bottom: max(18px, env(safe-area-inset-bottom)) !important;
     z-index: 420 !important;
 
-    width: min(232px, calc(100vw - 118px)) !important;
+    width: min(206px, calc(100vw - 150px)) !important;
     min-height: 58px !important;
     height: 58px !important;
     margin: 0 !important;
-    padding: 0 18px !important;
+    padding: 0 16px !important;
 
     display: inline-flex !important;
     align-items: center !important;
@@ -912,6 +912,57 @@ HTML_TEMPLATE = Template(
 
   .field-guide-modal {
     z-index: 901 !important;
+  }
+}
+
+
+
+/* IVB_HEAT_MAP_MOBILE_FIELD_GUIDE_CLOSE_X_V1
+   IVB-only mobile Field Guide escape hatch:
+   - narrows bottom Field Guide pill
+   - guarantees visible close control inside the mobile modal
+   - preserves shared mobile menu, tracking, and desktop Field Guide placement
+*/
+@media screen and (max-width: 980px) {
+  .field-guide-close,
+  button.field-guide-close {
+    position: fixed !important;
+    top: calc(92px + env(safe-area-inset-top)) !important;
+    right: max(22px, env(safe-area-inset-right)) !important;
+    z-index: 930 !important;
+
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    border-radius: 999px !important;
+    border: 1px solid rgba(255,255,255,0.14) !important;
+    background: rgba(10,10,12,0.92) !important;
+    color: rgba(255,255,255,0.78) !important;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.04),
+      0 14px 34px rgba(0,0,0,0.48) !important;
+
+    font-family: var(--mono) !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    text-align: center !important;
+
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
+  }
+
+  .field-guide-modal.open .field-guide-close,
+  .field-guide-overlay.open ~ .field-guide-modal .field-guide-close {
+    display: inline-flex !important;
   }
 }
 
@@ -1107,12 +1158,12 @@ HTML_TEMPLATE = Template(
   <div id="fieldGuideOverlay" class="field-guide-overlay" onclick="closeFieldGuide()"></div>
 
   <div id="fieldGuideModal" class="field-guide-modal" aria-hidden="true">
+    <button class="field-guide-close" type="button" onclick="closeFieldGuide()" aria-label="Close Field Guide">×</button>
     <div class="field-guide-head">
       <div>
         <div class="field-guide-kicker">Tactical Field Guide</div>
         <h2 class="field-guide-title">How to Read the Heat</h2>
       </div>
-      <button class="field-guide-close" type="button" onclick="closeFieldGuide()" aria-label="Close field guide">×</button>
     </div>
 
         <div class="field-guide-body">
