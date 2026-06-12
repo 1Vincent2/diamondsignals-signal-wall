@@ -108,7 +108,11 @@ def add_player_context_metrics(df: pd.DataFrame, kind: str) -> pd.DataFrame:
 
 TEMPLATES_DIR = BASE_DIR / "templates"
 
-NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
+# MLB_EXTRACTION_SHARED_NAV_PATH_V1
+# Desktop uses the compact shared pro nav.
+# Mobile/menu drawer keeps the legacy shell nav contract intact.
+DESKTOP_NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav_v2.html").read_text(encoding="utf-8")
+MOBILE_NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
 SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
 FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
 SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
@@ -1101,11 +1105,15 @@ def render_html() -> str:
         source_window=source_window,
     )
 
+    compact_desktop_nav_html = Template(DESKTOP_NAV_TEMPLATE).render(active_nav="mlb_extraction")
+    mobile_shell_nav_html = Template(MOBILE_NAV_TEMPLATE).render(active_nav="mlb_extraction")
+    nav_html = compact_desktop_nav_html + "\n" + mobile_shell_nav_html
+
     return HTML_TEMPLATE.render(
         generated_at=generated_at,
         latest_week_start=source_window,
         timezone_label=TIMEZONE_LABEL,
-        nav_html=Template(NAV_TEMPLATE).render(active_nav="mlb_extraction"),
+        nav_html=nav_html,
         search_html=SEARCH_TEMPLATE,
         footer_html=FOOTER_TEMPLATE,
         shell_styles=SHELL_STYLES_TEMPLATE,
