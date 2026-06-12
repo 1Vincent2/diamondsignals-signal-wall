@@ -1503,6 +1503,43 @@ body.waiver-field-guide-open{
   }
 }
 
+
+/* WAIVER_UI_HARDENING_V1_LIVE_GUIDE_WINDOW
+   Fixes:
+   - topbar LIVE dot spacing
+   - desktop Field Guide remains sticky/fixed while scrolling
+   - stale Shark Window copy removed from template
+   Scope: Waiver desktop only. Mobile menu/drawer behavior untouched.
+*/
+@media screen and (min-width: 981px) {
+  body.waiver-page .topbar .live-label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  body.waiver-page .topbar .live-dot {
+    margin-right: 0 !important;
+    flex: 0 0 auto !important;
+  }
+
+  body.waiver-page .waiver-summary-guide {
+    position: fixed !important;
+    top: 436px !important;
+    right: max(32px, calc((100vw - 1180px) / 2 + 38px)) !important;
+    z-index: 120 !important;
+  }
+
+  body.waiver-field-guide-open .waiver-summary-guide {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  main.shell > .waiver-field-guide-trigger:not(.waiver-summary-guide) {
+    display: none !important;
+  }
+}
+
 </style>
 </head>
 
@@ -1617,7 +1654,7 @@ body.waiver-field-guide-open{
 
     <div class="command-strip">
       <strong>72-HOUR OPEN MARKET EXTRACTION</strong>
-      <span>Pitcher-first mid-May claim surface</span>
+      <span>Pitcher-first rolling 72-hour claim surface</span>
       <span>Ownership gate: ≤ 20% rostered</span>
       <span>Command language: acquire, stash, monitor, avoid</span>
     </div>
@@ -1634,7 +1671,7 @@ body.waiver-field-guide-open{
       </div>
       <div class="market-card">
         <span>Shark window</span>
-        <b>Mid-May</b>
+        <b>Rolling 72H</b>
       </div>
       <div class="market-card">
         <span>Market defect</span>
