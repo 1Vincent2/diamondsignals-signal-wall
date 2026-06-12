@@ -812,6 +812,110 @@ HTML_TEMPLATE = Template(
 }
 
 
+
+/* IVB_HEAT_MAP_MOBILE_FIELD_GUIDE_BOTTOM_PILL_V1
+   IVB-only mobile Field Guide correction:
+   - removes Field Guide from the section-header flow on mobile
+   - pins it as a bottom sticky/fixed pill
+   - preserves IVB modal behavior, shared mobile menu, tracking, and desktop placement
+*/
+@media screen and (max-width: 980px) {
+  body .section-actions {
+    display: block !important;
+  }
+
+  body .section-actions .section-badge {
+    display: block !important;
+    width: 100% !important;
+    margin-top: 12px !important;
+    text-align: center !important;
+  }
+
+  body .field-guide-trigger,
+  body button.field-guide-trigger,
+  body .section-actions .field-guide-trigger {
+    position: fixed !important;
+    left: auto !important;
+    right: max(18px, env(safe-area-inset-right)) !important;
+    bottom: max(18px, env(safe-area-inset-bottom)) !important;
+    z-index: 420 !important;
+
+    width: min(320px, calc(100vw - 40px)) !important;
+    min-height: 58px !important;
+    height: 58px !important;
+    margin: 0 !important;
+    padding: 0 24px !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 14px !important;
+
+    border-radius: 999px !important;
+    border: 1px solid rgba(182,255,0,0.42) !important;
+    background:
+      radial-gradient(circle at 16% 50%, rgba(182,255,0,0.14), transparent 34%),
+      rgba(7,10,10,0.92) !important;
+    color: rgba(255,255,255,0.94) !important;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.04),
+      0 18px 44px rgba(0,0,0,0.58),
+      0 0 28px rgba(182,255,0,0.18) !important;
+
+    font-family: var(--mono) !important;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.18em !important;
+    line-height: 1 !important;
+    text-transform: uppercase !important;
+
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  body .field-guide-trigger::before,
+  body button.field-guide-trigger::before,
+  body .section-actions .field-guide-trigger::before {
+    content: "I" !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(182,255,0,0.58) !important;
+    color: var(--lime-hot) !important;
+    font-family: var(--serif) !important;
+    font-size: 22px !important;
+    font-style: italic !important;
+    font-weight: 800 !important;
+    letter-spacing: 0 !important;
+    box-shadow: inset 0 0 18px rgba(182,255,0,0.08) !important;
+  }
+
+  body .field-guide-trigger:hover,
+  body button.field-guide-trigger:hover,
+  body .section-actions .field-guide-trigger:hover {
+    border-color: rgba(182,255,0,0.68) !important;
+    color: #ffffff !important;
+  }
+
+  body {
+    padding-bottom: calc(92px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .field-guide-overlay {
+    z-index: 900 !important;
+  }
+
+  .field-guide-modal {
+    z-index: 901 !important;
+  }
+}
+
+
 /* IVB_HEAT_MAP_DESKTOP_UI_POLISH_V1
    Final desktop-only visual polish:
    - strengthens hero/metric hierarchy
