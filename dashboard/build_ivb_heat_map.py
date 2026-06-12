@@ -785,6 +785,33 @@ HTML_TEMPLATE = Template(
 }
 
 
+/* IVB_HEAT_MAP_FIELD_GUIDE_DESKTOP_PILL_V1
+   Desktop-only Field Guide visibility repair.
+   Keeps the existing IVB modal/openFieldGuide behavior intact.
+   Mobile Field Guide/menu behavior intentionally untouched.
+*/
+@media screen and (min-width: 981px) {
+  body .field-guide-trigger,
+  body button.field-guide-trigger,
+  body .section-actions .field-guide-trigger {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: fixed !important;
+    top: 336px !important;
+    right: max(34px, calc((100vw - 1180px) / 2 + 42px)) !important;
+    bottom: auto !important;
+    left: auto !important;
+    z-index: 180 !important;
+    margin: 0 !important;
+    transform: none !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+}
+
+
   </style>
 </head>
 <body>
