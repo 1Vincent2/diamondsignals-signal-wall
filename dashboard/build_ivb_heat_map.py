@@ -812,6 +812,172 @@ HTML_TEMPLATE = Template(
 }
 
 
+/* IVB_HEAT_MAP_DESKTOP_UI_POLISH_V1
+   Final desktop-only visual polish:
+   - strengthens hero/metric hierarchy
+   - aligns board header with hardened report family
+   - improves Field Guide pill intentionality
+   Mobile layout, mobile menu, Field Guide modal behavior, and tracking remain untouched.
+*/
+@media screen and (min-width: 981px) {
+  .app {
+    padding-top: 26px !important;
+  }
+
+  .hero-card {
+    padding: 34px 36px 32px !important;
+    border-color: rgba(255,255,255,0.09) !important;
+    background:
+      radial-gradient(circle at 14% 0%, rgba(182,255,0,0.08), transparent 34%),
+      radial-gradient(circle at 92% 12%, rgba(106,166,255,0.10), transparent 30%),
+      linear-gradient(145deg, rgba(18,18,18,0.96), rgba(5,5,5,0.98)) !important;
+  }
+
+  .hero-card .eyebrow {
+    color: var(--lime-hot) !important;
+    letter-spacing: 0.22em !important;
+    font-weight: 900 !important;
+  }
+
+  .hero-title {
+    max-width: 760px !important;
+    letter-spacing: -0.055em !important;
+  }
+
+  .hero-copy {
+    max-width: 780px !important;
+    font-size: 18px !important;
+    line-height: 1.5 !important;
+    color: rgba(226,232,240,0.78) !important;
+  }
+
+  .top-metrics {
+    gap: 14px !important;
+    margin-top: 16px !important;
+  }
+
+  .metric-card {
+    min-height: 154px !important;
+    padding: 22px 22px 20px !important;
+    border-color: rgba(255,255,255,0.08) !important;
+    background:
+      radial-gradient(circle at top left, rgba(106,166,255,0.07), transparent 34%),
+      linear-gradient(145deg, rgba(18,18,18,0.94), rgba(8,8,8,0.98)) !important;
+  }
+
+  .metric-label {
+    color: rgba(226,232,240,0.58) !important;
+    letter-spacing: 0.18em !important;
+  }
+
+  .metric-value {
+    font-size: 42px !important;
+    line-height: 0.95 !important;
+    letter-spacing: -0.05em !important;
+  }
+
+  .metric-note {
+    color: rgba(226,232,240,0.62) !important;
+    line-height: 1.4 !important;
+  }
+
+  .section-card {
+    border-color: rgba(255,255,255,0.08) !important;
+  }
+
+  .section-head {
+    padding-bottom: 18px !important;
+    margin-bottom: 18px !important;
+    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+  }
+
+  .section-kicker {
+    color: var(--lime-hot) !important;
+    letter-spacing: 0.2em !important;
+    font-weight: 900 !important;
+  }
+
+  .section-title {
+    letter-spacing: -0.04em !important;
+  }
+
+  .section-badge {
+    border-color: rgba(182,255,0,0.28) !important;
+    color: rgba(226,232,240,0.84) !important;
+    background: rgba(182,255,0,0.06) !important;
+  }
+
+  body .field-guide-trigger,
+  body button.field-guide-trigger,
+  body .section-actions .field-guide-trigger {
+    min-width: 132px !important;
+    height: 38px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(182,255,0,0.42) !important;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(182,255,0,0.22), transparent 42%),
+      rgba(8,8,8,0.88) !important;
+    color: var(--lime-hot) !important;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.04),
+      0 14px 34px rgba(0,0,0,0.42),
+      0 0 22px rgba(182,255,0,0.10) !important;
+    font-family: var(--mono) !important;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+  }
+
+  body .field-guide-trigger:hover,
+  body button.field-guide-trigger:hover {
+    border-color: rgba(182,255,0,0.68) !important;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.06),
+      0 16px 38px rgba(0,0,0,0.48),
+      0 0 28px rgba(182,255,0,0.18) !important;
+  }
+
+  .heat-grid {
+    gap: 14px !important;
+  }
+
+  .heat-card {
+    border-color: rgba(255,255,255,0.08) !important;
+  }
+
+  .heat-card {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .heat-action-row {
+    margin-top: auto !important;
+    padding-top: 18px !important;
+  }
+
+  .heat-provision-btn {
+    width: 100% !important;
+    background: rgba(2,6,23,0.18) !important;
+    border: 1px solid rgba(255,255,255,0.22) !important;
+    color: rgba(255,255,255,0.92) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.05),
+      0 0 16px rgba(255,255,255,0.04) !important;
+  }
+
+  .heat-provision-btn:hover {
+    background: rgba(2,6,23,0.34) !important;
+    border-color: rgba(255,255,255,0.38) !important;
+    color: #ffffff !important;
+    transform: none !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.08),
+      0 0 20px rgba(255,255,255,0.08) !important;
+  }
+}
+
+
   </style>
 </head>
 <body>
@@ -994,20 +1160,6 @@ HTML_TEMPLATE = Template(
               {% endif %}
             </div>
 
-            <div class="heat-action-row">
-              <button
-                type="button"
-                class="heat-provision-btn js-add-to-roster"
-                data-default-label="INITIATE TRACKING"
-                data-player-id="{{ row.player_id }}"
-                data-player-name="{{ row.player_name }}"
-                data-player-type="pitcher"
-                data-player-team="{{ row.team }}"
-                data-profile-url="/scout/{{ row.player_id }}/"
-                data-source-tag="IVB_HEAT_MAP"
-              >INITIATE TRACKING</button>
-            </div>
-
             <div class="heat-values">
               <div class="heat-value-box">
                 <div class="heat-value-label">IVB Raw</div>
@@ -1035,6 +1187,20 @@ HTML_TEMPLATE = Template(
             <div class="heat-risk">{{ row.contact_risk }}</div>
             {% endif %}
             <div class="heat-brief">{{ row.brief }}</div>
+
+            <div class="heat-action-row">
+              <button
+                type="button"
+                class="heat-provision-btn js-add-to-roster"
+                data-default-label="INITIATE TRACKING"
+                data-player-id="{{ row.player_id }}"
+                data-player-name="{{ row.player_name }}"
+                data-player-type="pitcher"
+                data-player-team="{{ row.team }}"
+                data-profile-url="/scout/{{ row.player_id }}/"
+                data-source-tag="IVB_HEAT_MAP"
+              >INITIATE TRACKING</button>
+            </div>
           </article>
           {% endfor %}
         </div>
