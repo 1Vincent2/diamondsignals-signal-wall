@@ -885,26 +885,8 @@ HTML_TEMPLATE = Template(
       </div>
 
       <div class="field-guide-note">
-        VAA remains a pending upstream layer in this version. That is why VAA currently displays as <strong>--</strong> on the cards. This will be upgraded later through upstream metric refinement and can cleanly live in a future Supabase-backed LAB table or view.
-      </div>
-    </div>
-
-      <div class="field-guide-card">
-        <h3 class="field-guide-term dead">The Dead Zone</h3>
-        <p class="field-guide-copy">
-          Fastballs with 12"–15" IVB. This flatter shape sits directly in the swing path, creating a barrel-friendly entry profile. The result: louder contact, more home-run danger, and contact-risk traps.
-        </p>
-      </div>
-
-      <div class="field-guide-card">
-        <h3 class="field-guide-term whiff">Whiff Prob</h3>
-        <p class="field-guide-copy">
-          A proprietary DiamondSignals translation layer combining IVB rise and eventually VAA flatness. It converts pitch-shape data into a direct swing-and-miss expectation, independent of pure velocity.
-        </p>
-      </div>
-
-      <div class="field-guide-note">
-        VAA remains a pending upstream layer in this version. That is why VAA currently displays as <strong>--</strong> on the cards. This will be upgraded later through upstream metric refinement and can cleanly live in a future Supabase-backed LAB table or view.
+        <strong>IVB_HEAT_MAP_FIELD_GUIDE_CLEANUP_V1:</strong>
+        VAA is reserved for the next upstream pitch-plane layer. Current IVB scoring remains live, dynamic, and driven by fastball movement, velocity-bucket comparison, dead-zone detection, and Supabase lab readback.
       </div>
     </div>
   </div>
@@ -1031,7 +1013,7 @@ HTML_TEMPLATE = Template(
         </div>
 
         <div class="lab-note">
-          Version 1 uses fastball IVB from current Statcast movement inputs. VAA is scaffolded until the dedicated calculation layer is added upstream.
+          Version 1 uses live fastball IVB from current Statcast movement inputs. VAA is reserved for the next upstream pitch-plane layer; current scoring remains driven by IVB raw carry, velocity-bucket advantage, dead-zone status, and movement-shift context.
         </div>
       </article>
       <aside class="leader-card">

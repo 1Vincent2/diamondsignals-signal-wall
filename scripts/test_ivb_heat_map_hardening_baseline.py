@@ -41,8 +41,9 @@ for term in [
 ]:
     require(f"Missing IVB Field Guide term: {term}", term in rendered)
 
-# Guard old scaffold language so we consciously remove/replace it later, not accidentally.
-require("Expected current scaffold copy not found; inspect before hardening", "VAA is scaffolded" in rendered or "VAA is scaffolded" in source)
+# Guard that VAA language is intentional and no longer uses old scaffold wording.
+require("Old VAA scaffold language should be removed", "VAA is scaffolded" not in rendered and "VAA is scaffolded" not in source)
+require("Updated VAA reserved-layer language missing", "VAA is reserved for the next upstream pitch-plane layer" in rendered or "VAA is reserved for the next upstream pitch-plane layer" in source)
 
 if failures:
     print("IVB Heat Map hardening baseline audit failed:")
