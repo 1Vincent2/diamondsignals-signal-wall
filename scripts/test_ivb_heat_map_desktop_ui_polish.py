@@ -67,6 +67,14 @@ require("Missing card-bottom tracking row spacing", "margin-top: auto !important
 require("Missing card flex-column placement guard", "flex-direction: column !important;" in source)
 require("Rendered IVB tracking button missing", "heat-provision-btn js-add-to-roster" in rendered)
 
+values_pos = source.find('<div class="heat-values">')
+brief_pos = source.find('<div class="heat-brief">{{ row.brief }}</div>')
+action_pos = source.find('<div class="heat-action-row">')
+
+require("Could not locate heat-values / heat-brief / heat-action-row source order anchors", values_pos >= 0 and brief_pos >= 0 and action_pos >= 0)
+require("Tracking pill appears before heat values", values_pos < action_pos)
+require("Tracking pill appears before heat brief", brief_pos < action_pos)
+
 if failures:
     print("IVB desktop UI polish audit failed:")
     for item in failures:
