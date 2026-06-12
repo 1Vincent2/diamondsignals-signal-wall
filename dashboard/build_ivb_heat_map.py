@@ -22,7 +22,11 @@ STATUS_DIR = DIST_DIR / "status"
 IVB_HEAT_MAP_STATUS_PATH = STATUS_DIR / "ivb-heat-map.json"
 TEMPLATES_DIR = BASE_DIR / "templates"
 
-NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
+# IVB_HEAT_MAP_SHARED_NAV_PATH_V1
+# Desktop uses the compact shared pro nav.
+# Mobile/menu drawer keeps the legacy shell nav contract intact.
+DESKTOP_NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav_v2.html").read_text(encoding="utf-8")
+MOBILE_NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
 SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
 FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
 SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
@@ -1952,7 +1956,11 @@ def write_ivb_heat_map() -> None:
 
     html = HTML_TEMPLATE.render(
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
-        nav_html=Template(NAV_TEMPLATE).render(active_nav="ivb_heat_map"),
+        nav_html=(
+            Template(DESKTOP_NAV_TEMPLATE).render(active_nav="ivb_heat_map")
+            + "\n"
+            + Template(MOBILE_NAV_TEMPLATE).render(active_nav="ivb_heat_map")
+        ),
         search_html=SEARCH_TEMPLATE,
         footer_html=FOOTER_TEMPLATE,
         shell_styles=SHELL_STYLES_TEMPLATE,
