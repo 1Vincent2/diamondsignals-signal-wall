@@ -1795,7 +1795,47 @@
       color: var(--text);
     }
 
-  </style>
+  
+/* MLB_EXTRACTION_DESKTOP_REFINEMENT_V1_AUDIT_LINE_STICKY_GUIDE
+   Desktop-only refinement:
+   - Active Audit Layer sits as the final paragraph inside the title card.
+   - Summary-card Field Guide stays visible while scrolling on desktop.
+   - Mobile Field Guide drawer/menu contract intentionally untouched.
+*/
+.mlb-active-audit-line {
+  display: none !important;
+}
+
+@media screen and (min-width: 981px) {
+  .mlb-active-audit-line {
+    display: block !important;
+    margin-top: 18px !important;
+    padding-top: 18px !important;
+    border-top: 1px solid rgba(255,255,255,0.08) !important;
+    font-family: var(--sans) !important;
+    font-size: 17px !important;
+    line-height: 1.4 !important;
+    color: rgba(226,232,240,0.76) !important;
+  }
+
+  .mlb-active-audit-line strong {
+    color: var(--lime-hot) !important;
+    font-weight: 900 !important;
+  }
+
+  body .field-guide-btn.mlb-extraction-summary-guide,
+  body button.field-guide-btn.mlb-extraction-summary-guide,
+  body .summary-card .mlb-extraction-summary-guide {
+    position: fixed !important;
+    top: 336px !important;
+    right: max(34px, calc((100vw - 1180px) / 2 + 42px)) !important;
+    z-index: 140 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+}
+
+</style>
 </head>
 <body>
   <div class="topbar">
@@ -1824,6 +1864,9 @@
         <h1 class="hero-title">MLB Extraction Ledger</h1>
         <p class="hero-sub">
           MLB Extraction Ledger isolates active big-league profiles where Physics Core remains stronger than the visible surface line. This Signal Surface is built to expose Market Gaps before broader market recognition corrects. Market-attention feed remains offline in this version.
+        </p>
+        <p class="mlb-active-audit-line">
+          <strong>Active Audit Layer:</strong> Click any player card to inspect the full performance audit.
         </p>
       </div>
 
