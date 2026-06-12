@@ -758,6 +758,33 @@ HTML_TEMPLATE = Template(
       }
 
 
+/* IVB_HEAT_MAP_TITLE_AUDIT_LINE_V1
+   Desktop-only title-section audit line.
+   Mobile layout, mobile menu, and Field Guide modal behavior intentionally untouched.
+*/
+.ivb-active-audit-line {
+  display: none !important;
+}
+
+@media screen and (min-width: 981px) {
+  .ivb-active-audit-line {
+    display: block !important;
+    margin-top: 18px !important;
+    padding-top: 18px !important;
+    border-top: 1px solid rgba(255,255,255,0.08) !important;
+    font-family: var(--sans) !important;
+    font-size: 17px !important;
+    line-height: 1.4 !important;
+    color: rgba(226,232,240,0.76) !important;
+  }
+
+  .ivb-active-audit-line strong {
+    color: var(--lime-hot) !important;
+    font-weight: 900 !important;
+  }
+}
+
+
   </style>
 </head>
 <body>
@@ -888,6 +915,9 @@ HTML_TEMPLATE = Template(
       <h1 class="hero-title">IVB Heat Map</h1>
       <p class="hero-copy">
         The X-Ray layer for fastball carry. This board tracks raw induced vertical break, shape relative to velocity norms, and the dead-zone risk profile where ride flattens into damage.
+      </p>
+      <p class="ivb-active-audit-line">
+        <strong>Active Audit Layer:</strong> Click any player card to inspect the full performance audit.
       </p>
     </section>
 
