@@ -2252,7 +2252,49 @@ def render_html(payload: dict) -> str:
 
 
 
-  </style>
+  
+/* APEX_DESKTOP_REFINEMENT_V1_AUDIT_LINE_STICKY_GUIDE
+   Desktop-only refinement:
+   - Active Audit Layer sits as the final paragraph inside the title card.
+   - Field Guide is pinned near the top/right desktop command area, not bottom-right.
+   - Mobile Field Guide/menu behavior is intentionally untouched.
+*/
+.apex-active-audit-line {{
+  display: none !important;
+}}
+
+@media screen and (min-width: 981px) {{
+  .apex-active-audit-line {{
+    display: block !important;
+    margin-top: 18px !important;
+    padding-top: 18px !important;
+    border-top: 1px solid rgba(255,255,255,0.08) !important;
+    font-family: var(--sans) !important;
+    font-size: 17px !important;
+    line-height: 1.4 !important;
+    color: rgba(226,232,240,0.76) !important;
+  }}
+
+  .apex-active-audit-line strong {{
+    color: var(--lime-hot) !important;
+    font-weight: 900 !important;
+  }}
+
+  body .field-guide-btn,
+  body button.field-guide-btn,
+  body .summary-card .field-guide-btn {{
+    position: fixed !important;
+    top: 336px !important;
+    right: max(34px, calc((100vw - 1180px) / 2 + 42px)) !important;
+    bottom: auto !important;
+    left: auto !important;
+    z-index: 140 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }}
+}}
+
+</style>
 </head>
 <body>
   <div class="field-guide-backdrop" data-close-field-guide></div>
@@ -2328,6 +2370,9 @@ def render_html(payload: dict) -> str:
         <p class="hero-sub">
           Physical shift first. Vision and discipline confirm it. Market latency makes it actionable.
           This surface identifies MLB players whose underlying profile is moving before public pricing catches up.
+        </p>
+        <p class="apex-active-audit-line">
+          <strong>Active Audit Layer:</strong> Click any player card to inspect the full performance audit.
         </p>
       </div>
 
