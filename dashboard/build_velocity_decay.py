@@ -19,7 +19,10 @@ STATUS_DIR = DIST_DIR / "status"
 VELOCITY_DECAY_STATUS_PATH = STATUS_DIR / "velocity-decay.json"
 TEMPLATES_DIR = BASE_DIR / "templates"
 
-NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
+# VELOCITY_DECAY_SHARED_NAV_PATH_V1
+# Desktop uses compact pro nav; mobile keeps the existing shell menu contract.
+DESKTOP_NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav_v2.html").read_text(encoding="utf-8")
+MOBILE_NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
 SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
 FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
 SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
@@ -1510,7 +1513,11 @@ def write_velocity_decay_monitor() -> None:
     cards = format_velocity_decay_cards(rows)
 
     html = HTML_TEMPLATE.render(
-        nav_html=Template(NAV_TEMPLATE).render(active_nav="velocity_decay_monitor"),
+        nav_html=(
+            Template(DESKTOP_NAV_TEMPLATE).render(active_nav="velocity_decay_monitor")
+            + "\n"
+            + Template(MOBILE_NAV_TEMPLATE).render(active_nav="velocity_decay_monitor")
+        ),
         search_html=SEARCH_TEMPLATE,
         footer_html=FOOTER_TEMPLATE,
         shell_styles=SHELL_STYLES_TEMPLATE,
