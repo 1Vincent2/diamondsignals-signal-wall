@@ -1482,12 +1482,19 @@ HTML_TEMPLATE = Template(
               <div class="diagnosis-banner {{ row.alert_class }}">{{ row.primary_alert }}</div>
             </div>
 
-            <div class="sparkline-wrap">
+            <div
+              class="sparkline-wrap"
+              data-trend-source="recent_fastball_velocity"
+              data-trend-window="recent_appearances"
+              data-trend-values="{{ row.trend_values|join(',') }}"
+              data-velo-delta="{{ row.velo_delta_label }}"
+            >
               <div class="sparkline-head">
-                <div class="sparkline-label">Velocity Trend</div>
-                <div class="sparkline-note">Last 5 starts</div>
+                <div class="sparkline-label">Recent FB Velo</div>
+                <div class="sparkline-note">Last 5 appearances</div>
               </div>
-              <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" aria-hidden="true">
+              <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" role="img" aria-label="{{ row.player_name }} recent fastball velocity trend">
+                <title>{{ row.player_name }} recent fastball velocity trend. Velo delta {{ row.velo_delta_label }}.</title>
                 <polyline class="sparkline-path {{ row.sparkline_class }}" points="{{ row.trend_points }}" />
               </svg>
             </div>
