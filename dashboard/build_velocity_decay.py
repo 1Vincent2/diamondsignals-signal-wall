@@ -1721,6 +1721,7 @@ def write_velocity_decay_monitor() -> None:
         footer_html=FOOTER_TEMPLATE,
         shell_styles=SHELL_STYLES_TEMPLATE,
         cards=cards,
+        generated_at=datetime.now().strftime("%b %d, %Y %I:%M %p"),
     )
 
     (RISK_DIR / "index.html").write_text(html, encoding="utf-8")

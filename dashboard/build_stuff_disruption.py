@@ -1806,6 +1806,7 @@ def write_stuff_disruption_feed() -> None:
         footer_html=FOOTER_TEMPLATE,
         shell_styles=SHELL_STYLES_TEMPLATE,
         cards=cards,
+        generated_at=datetime.now().strftime("%b %d, %Y %I:%M %p"),
     )
 
     (APEX_DIR / "index.html").write_text(html, encoding="utf-8")
