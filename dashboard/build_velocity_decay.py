@@ -371,6 +371,40 @@ def build_velocity_decay_rows(appearances: pd.DataFrame) -> list[dict]:
     return rows[:MAX_CARDS]
 
 
+
+def classify_sparkline_semantic_class(
+    velo_delta: float | None,
+    extension_delta: float | None,
+    perceived_velo_delta: float | None,
+    decay_slope: float | None,
+    primary_alert: str,
+    risk_tier: str,
+) -> str:
+    """Map Velocity Decay model state to a semantic sparkline color class."""
+    vd = velo_delta if velo_delta is not None else 0.0
+    ed = extension_delta if extension_delta is not None else 0.0
+    pvd = perceived_velo_delta if perceived_velo_delta is not None else 0.0
+    ds = decay_slope if decay_slope is not None else 0.0
+    alert = (primary_alert or "").upper()
+    tier = (risk_tier or "").upper()
+
+    if "DECEPTIVE" in alert:
+        return "velocity-sparkline-deceptive"
+
+    if vd <= -2.5 or ds <= -0.45 or "CLIFF" in alert or "EXTREME" in tier:
+        return "velocity-sparkline-cliff"
+
+    if vd <= -1.5 or ds <= -0.25 or "DECAY" in alert or "HIGH" in tier:
+        return "velocity-sparkline-decay"
+
+    if vd <= -0.8 or ds < 0.0 or ed <= -0.10 or pvd <= -0.8 or "EARLY" in alert or "TREND" in alert:
+        return "velocity-sparkline-watch"
+
+    if vd >= 0.5 and ds >= 0.05:
+        return "velocity-sparkline-rebound"
+
+    return "velocity-sparkline-stable"
+
 def format_velocity_decay_cards(rows: list[dict]) -> list[dict]:
     cards = []
 
@@ -431,6 +465,14 @@ def format_velocity_decay_cards(rows: list[dict]) -> list[dict]:
                 "score_class": score_class,
                 "alert_class": alert_class,
                 "sparkline_class": sparkline_class,
+            "sparkline_semantic_class": classify_sparkline_semantic_class(
+                velo_delta,
+                extension_delta,
+                (locals().get("perceived_velo_delta") or locals().get("perceived_delta") or locals().get("perceived_velocity_delta") or 0.0),
+                decay_slope,
+                primary_alert,
+                risk_tier,
+            ),
                 "velo_delta_class": velo_delta_class,
                 "extension_delta_class": extension_delta_class,
                 "velo_delta_label": format_signed(velo_delta, " mph"),
@@ -1030,6 +1072,44 @@ HTML_TEMPLATE = Template(
 
 
 
+
+
+/* VELOCITY_DECAY_SPARKLINE_SEMANTIC_COLOR_V1
+   Semantic sparkline color system:
+   - line color is driven by model state, not decoration
+   - rebound/stable/watch/decay/cliff/deceptive states map to explicit classes
+   - preserves existing sparkline geometry and card metrics
+*/
+.sparkline-path.velocity-sparkline-rebound {
+  stroke: rgba(182,255,0,0.98) !important;
+  filter: drop-shadow(0 0 10px rgba(182,255,0,0.26)) !important;
+}
+
+.sparkline-path.velocity-sparkline-stable {
+  stroke: rgba(125,255,211,0.96) !important;
+  filter: drop-shadow(0 0 10px rgba(125,255,211,0.18)) !important;
+}
+
+.sparkline-path.velocity-sparkline-watch {
+  stroke: rgba(250,204,21,0.98) !important;
+  filter: drop-shadow(0 0 10px rgba(250,204,21,0.20)) !important;
+}
+
+.sparkline-path.velocity-sparkline-decay {
+  stroke: rgba(249,115,22,0.98) !important;
+  filter: drop-shadow(0 0 10px rgba(249,115,22,0.24)) !important;
+}
+
+.sparkline-path.velocity-sparkline-cliff {
+  stroke: rgba(255,61,81,0.98) !important;
+  filter: drop-shadow(0 0 12px rgba(255,61,81,0.34)) !important;
+}
+
+.sparkline-path.velocity-sparkline-deceptive {
+  stroke: rgba(56,189,248,0.98) !important;
+  filter: drop-shadow(0 0 10px rgba(56,189,248,0.26)) !important;
+}
+
 /* VELOCITY_DECAY_DESKTOP_STICKY_GUIDE_TWO_COLUMN_V1
    Desktop-only refinement:
    - makes Field Guide persist as a sticky/floating command pill
@@ -1488,6 +1568,8 @@ HTML_TEMPLATE = Template(
               data-trend-window="recent_appearances"
               data-trend-values="{{ row.trend_values|join(',') }}"
               data-velo-delta="{{ row.velo_delta_label }}"
+              data-sparkline-color-source="velocity_decay_model_state"
+              data-sparkline-color-class="{{ row.sparkline_semantic_class }}"
             >
               <div class="sparkline-head">
                 <div class="sparkline-label">Recent FB Velo</div>
@@ -1495,7 +1577,7 @@ HTML_TEMPLATE = Template(
               </div>
               <svg class="sparkline" viewBox="0 0 100 34" preserveAspectRatio="none" role="img" aria-label="{{ row.player_name }} recent fastball velocity trend">
                 <title>{{ row.player_name }} recent fastball velocity trend. Velo delta {{ row.velo_delta_label }}.</title>
-                <polyline class="sparkline-path {{ row.sparkline_class }}" points="{{ row.trend_points }}" />
+                <polyline class="sparkline-path {{ row.sparkline_class }} {{ row.sparkline_semantic_class }}" points="{{ row.trend_points }}" />
               </svg>
             </div>
 
