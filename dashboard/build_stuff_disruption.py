@@ -911,6 +911,106 @@ HTML_TEMPLATE = Template(
     }
     .why { font-size: 12px; line-height: 1.65; color: var(--soft); margin-top: 6px; }
 
+    /* STUFF_DISRUPTION_DESKTOP_FINISH_V1
+       Desktop-only refinement:
+       - sticky/floating Field Guide command pill
+       - two-column analytical card grid on desktop
+       - wider Field Guide reading drawer
+       - mobile menu, mobile drawer, mobile Field Guide behavior untouched
+    */
+    @media screen and (min-width: 981px) {
+      body .app {
+        position: relative !important;
+      }
+
+      body .hero-card {
+        position: relative !important;
+        padding-right: clamp(190px, 17vw, 260px) !important;
+      }
+
+      body .hero-card .info-trigger,
+      body .info-trigger,
+      body button.info-trigger {
+        position: fixed !important;
+        top: 118px !important;
+        right: max(26px, calc((100vw - 1180px) / 2 + 18px)) !important;
+        z-index: 420 !important;
+
+        min-width: 178px !important;
+        height: 46px !important;
+        padding: 0 22px !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        border-radius: 999px !important;
+        border: 1px solid rgba(34,211,238,0.42) !important;
+        background:
+          radial-gradient(circle at 18% 50%, rgba(34,211,238,0.16), transparent 36%),
+          rgba(7,10,10,0.92) !important;
+        color: rgba(255,255,255,0.94) !important;
+        box-shadow:
+          0 0 0 1px rgba(255,255,255,0.04),
+          0 16px 34px rgba(0,0,0,0.50),
+          0 0 24px rgba(34,211,238,0.14) !important;
+
+        font-family: var(--mono) !important;
+        font-size: 11px !important;
+        font-weight: 900 !important;
+        letter-spacing: 0.16em !important;
+        line-height: 1 !important;
+        text-transform: uppercase !important;
+
+        transform: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+      }
+
+      body .info-trigger:hover,
+      body button.info-trigger:hover {
+        border-color: rgba(34,211,238,0.70) !important;
+        color: #ffffff !important;
+      }
+
+      body .cards {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 18px !important;
+        align-items: stretch !important;
+      }
+
+      body .player-card {
+        height: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+      }
+
+      body .analysis-stack {
+        flex: 1 1 auto !important;
+      }
+
+      body .why {
+        margin-top: auto !important;
+      }
+
+      body .guide-drawer {
+        width: min(860px, calc(100vw - 64px)) !important;
+      }
+
+      body .guide-body {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 14px !important;
+      }
+
+      body .guide-section:first-child {
+        grid-column: 1 / -1 !important;
+      }
+    }
+
+
 
     .topbar {
       position: sticky;
