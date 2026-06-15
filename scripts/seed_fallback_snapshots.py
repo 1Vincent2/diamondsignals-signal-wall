@@ -26,6 +26,7 @@ def main() -> None:
         raise SystemExit("FAIL: report inventory has no reports")
 
     seeded = []
+    refreshed = []
     existing = []
     skipped = []
     problems = []
@@ -41,10 +42,6 @@ def main() -> None:
             continue
 
         fallback_path = ROOT / fallback
-
-        if fallback_path.exists():
-            existing.append((report_id, rel(fallback_path)))
-            continue
 
         source = None
 
@@ -75,6 +72,18 @@ def main() -> None:
             continue
 
         fallback_path.parent.mkdir(parents=True, exist_ok=True)
+
+        if fallback_path.exists():
+            source_mtime = source.stat().st_mtime
+            fallback_mtime = fallback_path.stat().st_mtime
+            drift_seconds = abs(source_mtime - fallback_mtime)
+            if drift_seconds > 300:
+                shutil.copy2(source, fallback_path)
+                refreshed.append((report_id, rel(source), rel(fallback_path)))
+            else:
+                existing.append((report_id, rel(fallback_path)))
+            continue
+
         shutil.copy2(source, fallback_path)
         seeded.append((report_id, rel(source), rel(fallback_path)))
 
@@ -82,7 +91,11 @@ def main() -> None:
     for report_id, source, fallback in seeded:
         print(f"SEEDED: {report_id}: {source} -> {fallback}")
 
-    print("\n--- already present ---")
+    print("\n--- refreshed fallback snapshots ---")
+    for report_id, source, fallback in refreshed:
+        print(f"REFRESHED: {report_id}: {source} -> {fallback}")
+
+    print("\n--- already current ---")
     for report_id, fallback in existing:
         print(f"OK: {report_id}: {fallback}")
 
@@ -93,7 +106,8 @@ def main() -> None:
     print("\n--- summary ---")
     print(f"reports_checked: {len(reports)}")
     print(f"seeded_count: {len(seeded)}")
-    print(f"existing_count: {len(existing)}")
+    print(f"refreshed_count: {len(refreshed)}")
+    print(f"existing_current_count: {len(existing)}")
     print(f"skipped_count: {len(skipped)}")
     print(f"fallback_snapshot_seed_issues: {len(problems)}")
 

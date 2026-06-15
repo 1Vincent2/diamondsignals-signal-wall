@@ -12,8 +12,25 @@ echo "--- IVB Heat Map contract ---"
 python3 scripts/test_ivb_heat_map_contract.py
 
 echo
+echo "--- Promotion Watch live rebuild ---"
+python3 -m dashboard.build_call_up_live
+
+echo
+echo "--- Dashboard / dossier rebuild for Promotion Watch context ---"
+python3 -m dashboard.build_dashboard
+
+echo
 echo "--- Promotion Watch payload contract ---"
 python3 scripts/test_promotion_watch_payload_contract.py
+
+echo
+echo "--- Promotion Watch integrity audit ---"
+python3 dashboard/audit_promotion_watch_integrity.py
+
+echo
+echo "--- AAA UI hardening audit ---"
+python3 scripts/test_aaa_ui_hardening.py
+
 
 echo
 echo "--- Kinetic Drift contract ---"
