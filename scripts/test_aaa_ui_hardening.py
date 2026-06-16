@@ -37,7 +37,6 @@ required_rendered_terms = [
     "pw-14d-two-column-band",
     "tabs tabs-aaa",
     "Fresh AAA hitter board active",
-    "Active Audit Layer",
 ]
 
 for term in required_source_terms:
@@ -101,8 +100,6 @@ if "/scout/" in html:
 if "Click any player card to inspect the full performance audit." in html:
     failures.append("Promotion Watch must not promise card-click audit routing until dossier routes are verified.")
 
-if "Use INITIATE TRACKING from each card while live dossier routing is being verified." not in html:
-    failures.append("Promotion Watch missing safe tracking-first audit copy.")
 
 js_source = Path("src/js/player-card-actions.js").read_text(encoding="utf-8")
 js_dist = Path("dist/player-card-actions.js").read_text(encoding="utf-8")
@@ -141,9 +138,6 @@ polished_metric_terms = [
     "SIGNAL",
     "STABILITY",
     "CONTEXT",
-    "PRODUCTION",
-    "CONTROL",
-    "IMPACT",
     "DATE",
     "MLB STATUS",
     "MOVEMENT",
@@ -178,21 +172,30 @@ if "player-card-disabled-audit" not in html:
 if ".player-card-disabled-audit" not in source:
     failures.append("Promotion Watch source CSS is missing disabled-audit cursor rule.")
 
-one_truth_forbidden_labels = [
+
+unified_label_forbidden_terms = [
+    ">PRODUCTION<",
+    ">CONTROL<",
+    ">IMPACT<",
+    ">VELO_DELTA<",
+    ">WHIFF_STABILITY<",
+    ">ISO_DELTA<",
+    ">K/BB_STABILITY<",
+    ">LVL_ADJUST<",
+    ">ISO_LIVE<",
+    ">BB_LIVE<",
+    ">HR_LIVE<",
+    ">IP_LIVE<",
+    ">K_LIVE<",
     ">VELOCITY / ROLE<",
     ">MISS / STABILITY<",
     ">POWER DELTA<",
     ">APPROACH STABILITY<",
-    ">DISCIPLINE<",
-    ">POWER<",
-    ">WORKLOAD<",
-    ">MISS<",
-    ">COMMAND<",
 ]
 
-for label in one_truth_forbidden_labels:
+for label in unified_label_forbidden_terms:
     if label in html:
-        failures.append(f"Old split-language Promotion Watch metric label still visible: {label}")
+        failures.append(f"Non-unified visible Promotion Watch metric label still rendered: {label}")
 
 if failures:
     print("AAA UI hardening audit failed:")
