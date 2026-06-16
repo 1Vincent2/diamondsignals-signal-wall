@@ -137,6 +137,51 @@ for term in production_glossary_terms:
     if term not in html:
         failures.append(f"Missing Promotion Watch Field Guide glossary/rendered term: {term}")
 
+polished_metric_terms = [
+    "VELOCITY / ROLE",
+    "MISS / STABILITY",
+    "POWER DELTA",
+    "APPROACH STABILITY",
+    "IMPACT",
+    "DISCIPLINE",
+    "POWER",
+    "WORKLOAD",
+    "MISS",
+    "COMMAND",
+    "DATE",
+    "MLB STATUS",
+    "MOVEMENT",
+]
+
+for term in polished_metric_terms:
+    if term not in html:
+        failures.append(f"Missing polished Promotion Watch metric label: {term}")
+
+raw_visible_metric_labels = [
+    ">VELO_DELTA<",
+    ">WHIFF_STABILITY<",
+    ">ISO_DELTA<",
+    ">K/BB_STABILITY<",
+    ">ISO_LIVE<",
+    ">BB_LIVE<",
+    ">HR_LIVE<",
+    ">IP_LIVE<",
+    ">K_LIVE<",
+    ">TX_DATE<",
+    ">MLB_STATUS<",
+    ">TX_TYPE<",
+]
+
+for label in raw_visible_metric_labels:
+    if label in html:
+        failures.append(f"Raw Promotion Watch metric label still visible in card UI: {label}")
+
+if "player-card-disabled-audit" not in html:
+    failures.append("Promotion Watch cards are missing disabled-audit cursor class while dossier routing is held back.")
+
+if ".player-card-disabled-audit" not in source:
+    failures.append("Promotion Watch source CSS is missing disabled-audit cursor rule.")
+
 if failures:
     print("AAA UI hardening audit failed:")
     for failure in failures:

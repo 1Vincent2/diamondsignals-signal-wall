@@ -1,5 +1,5 @@
 <article
-  class="player-card player-audit-row js-player-card {% if row.edge_score >= 15 %}elite-edge{% elif row.edge_score >= 12 %}high-edge{% endif %}"
+  class="player-card player-audit-row player-card-disabled-audit js-player-card {% if row.edge_score >= 15 %}elite-edge{% elif row.edge_score >= 12 %}high-edge{% endif %}"
   data-player-id="{{ row.resolved_player_id }}"
   data-player-name="{{ row.player_name }}"
   data-player-type="{{ player_type }}"

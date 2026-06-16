@@ -1248,6 +1248,25 @@ HTML_TEMPLATE = Template(
       transform: translateY(-1px);
     }
 
+
+    /* Disabled audit routing contract:
+       player cards are not clickable while dossier routing is held back.
+       Keep pointer affordance only on real actions such as tracking buttons. */
+    .player-card-disabled-audit {
+      cursor: default;
+    }
+
+    .player-card-disabled-audit:hover {
+      cursor: default;
+    }
+
+    .player-card-disabled-audit .track-action,
+    .player-card-disabled-audit .tracking-button,
+    .player-card-disabled-audit button,
+    .player-card-disabled-audit a {
+      cursor: pointer;
+    }
+
     .player-card.high-edge {
       box-shadow: 0 0 0 1px rgba(182,255,0,0.10), 0 0 18px rgba(182,255,0,0.06);
     }
@@ -3009,9 +3028,9 @@ HTML_TEMPLATE = Template(
                 row=row,
                 player_type="pitcher",
                 context_label="72 HR WINDOW",
-                metric_1_label="VELO_DELTA",
-                metric_2_label="WHIFF_STABILITY",
-                metric_3_label="LVL_ADJUST"
+                metric_1_label="VELOCITY / ROLE",
+                metric_2_label="MISS / STABILITY",
+                metric_3_label="CONTEXT"
               ) | safe }}
               {% endfor %}
             </div>
@@ -3036,9 +3055,9 @@ HTML_TEMPLATE = Template(
                 row=row,
                 player_type="hitter",
                 context_label="72 HR WINDOW",
-                metric_1_label="ISO_DELTA",
-                metric_2_label="K/BB_STABILITY",
-                metric_3_label="LVL_ADJUST"
+                metric_1_label="POWER DELTA",
+                metric_2_label="APPROACH STABILITY",
+                metric_3_label="CONTEXT"
               ) | safe }}
               {% endfor %}
             </div>
@@ -3067,9 +3086,9 @@ HTML_TEMPLATE = Template(
               row=row,
               player_type="hitter",
               context_label="FINAL GAME WINDOW",
-              metric_1_label="ISO_LIVE",
-              metric_2_label="BB_LIVE",
-              metric_3_label="HR_LIVE"
+              metric_1_label="IMPACT",
+              metric_2_label="DISCIPLINE",
+              metric_3_label="POWER"
             ) | safe }}
             {% endfor %}
           </div>
@@ -3092,9 +3111,9 @@ HTML_TEMPLATE = Template(
               row=row,
               player_type="pitcher",
               context_label="FINAL AAA SLATE",
-              metric_1_label="IP_LIVE",
-              metric_2_label="K_LIVE",
-              metric_3_label="BB_LIVE"
+              metric_1_label="WORKLOAD",
+              metric_2_label="MISS",
+              metric_3_label="COMMAND"
             ) | safe }}
             {% endfor %}
           </div>
@@ -3157,7 +3176,7 @@ HTML_TEMPLATE = Template(
               <div class="audit-center">
                 <div class="forensic-grid">
                   <div class="forensic-cell">
-                    <div class="forensic-label">TX_DATE</div>
+                    <div class="forensic-label">DATE</div>
                     <div class="forensic-value">{{ row.date }}</div>
                   </div>
                   <div class="forensic-cell">
@@ -3165,7 +3184,7 @@ HTML_TEMPLATE = Template(
                     <div class="forensic-value">{{ row.meta_line }}</div>
                   </div>
                   <div class="forensic-cell">
-                    <div class="forensic-label">MLB_STATUS</div>
+                    <div class="forensic-label">MLB STATUS</div>
                     <div class="forensic-value">{{ row.debut_label }}</div>
                   </div>
                 </div>
@@ -3173,7 +3192,7 @@ HTML_TEMPLATE = Template(
               </div>
 
               <div class="audit-right movement-right">
-                <div class="conviction-label">TX_TYPE</div>
+                <div class="conviction-label">MOVEMENT</div>
                 <div class="movement-flag">{{ row.transaction_label }}</div>
               </div>
 
@@ -3358,20 +3377,20 @@ HTML_TEMPLATE = Template(
         </p>
         <ul class="pw-guide-list">
           <li><strong>LIVE_SCORE:</strong> the card ranking score inside the active board.</li>
-          <li><strong>VELO_DELTA:</strong> short-window pitching surge / workload-readiness indicator on 72 HR pitching cards.</li>
-          <li><strong>WHIFF_STABILITY:</strong> pitching bat-missing and contact-control stability read.</li>
-          <li><strong>ISO_DELTA:</strong> short-window hitting power / impact acceleration read.</li>
-          <li><strong>K/BB_STABILITY:</strong> hitter approach stability, balancing strikeout pressure against walk discipline.</li>
+          <li><strong>VELOCITY / ROLE:</strong> polished display label for VELO_DELTA, a short-window pitching surge / workload-readiness indicator on 72 HR pitching cards.</li>
+          <li><strong>MISS / STABILITY:</strong> polished display label for WHIFF_STABILITY, a pitching bat-missing and contact-control stability read.</li>
+          <li><strong>POWER DELTA:</strong> polished display label for ISO_DELTA, a short-window hitting power / impact acceleration read.</li>
+          <li><strong>APPROACH STABILITY:</strong> polished display label for K/BB_STABILITY, balancing strikeout pressure against walk discipline.</li>
           <li><strong>LVL_ADJUST:</strong> context adjustment for level, role, roster path, or promotion timing.</li>
-          <li><strong>ISO_LIVE:</strong> isolated-power signal from the latest final AAA slate.</li>
-          <li><strong>BB_LIVE:</strong> walks from the latest final AAA slate.</li>
-          <li><strong>HR_LIVE:</strong> home runs from the latest final AAA slate.</li>
-          <li><strong>IP_LIVE:</strong> innings pitched from the latest final AAA slate.</li>
-          <li><strong>K_LIVE:</strong> strikeouts from the latest final AAA slate.</li>
-          <li><strong>TX_DATE:</strong> transaction or movement event date.</li>
+          <li><strong>IMPACT:</strong> polished display label for ISO_LIVE, isolated-power signal from the latest final AAA slate.</li>
+          <li><strong>DISCIPLINE / COMMAND:</strong> polished display label for BB_LIVE. On hitter cards it reflects walk discipline; on pitcher cards it reflects command.</li>
+          <li><strong>POWER:</strong> polished display label for HR_LIVE, home runs from the latest final AAA slate.</li>
+          <li><strong>WORKLOAD:</strong> polished display label for IP_LIVE, innings pitched from the latest final AAA slate.</li>
+          <li><strong>MISS:</strong> polished display label for K_LIVE, strikeouts from the latest final AAA slate.</li>
+          <li><strong>DATE:</strong> polished display label for TX_DATE, transaction or movement event date.</li>
           <li><strong>CONTEXT:</strong> roster movement context such as recall, assignment, arrival, or organizational path.</li>
-          <li><strong>MLB_STATUS:</strong> MLB arrival, recall, debut, or active-roster context.</li>
-          <li><strong>TX_TYPE:</strong> transaction type attached to the movement signal.</li>
+          <li><strong>MLB STATUS:</strong> polished display label for MLB_STATUS, MLB arrival, recall, debut, or active-roster context.</li>
+          <li><strong>MOVEMENT:</strong> polished display label for TX_TYPE, transaction type attached to the movement signal.</li>
           <li><strong>DEPTH_v0.1:</strong> lower-minors surveillance model/version tag used by AAA GEMS.</li>
         </ul>
       </section>
