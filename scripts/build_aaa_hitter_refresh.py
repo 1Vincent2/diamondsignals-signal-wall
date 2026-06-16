@@ -31,6 +31,30 @@ def fetch_yesterday_final_games(probe_date: str) -> list[dict]:
         if ((g.get("status", {}) or {}).get("detailedState")) == "Final"
     ]
 
+LOOKBACK_DAYS = 7
+
+def fetch_latest_final_games() -> tuple[str, list[dict], list[dict]]:
+    attempts = []
+    for days_back in range(1, LOOKBACK_DAYS + 1):
+        probe_date = (date.today() - timedelta(days=days_back)).isoformat()
+        try:
+            final_games = fetch_yesterday_final_games(probe_date)
+            attempts.append({
+                "probe_date": probe_date,
+                "final_game_count": len(final_games),
+                "error": None,
+            })
+            if final_games:
+                return probe_date, final_games, attempts
+        except Exception as e:
+            attempts.append({
+                "probe_date": probe_date,
+                "final_game_count": 0,
+                "error": str(e),
+            })
+    return (date.today() - timedelta(days=1)).isoformat(), [], attempts
+
+
 def extract_pitchers_from_boxscore(game: dict, probe_date: str) -> list[dict]:
     game_pk = game["gamePk"]
     resp = requests.get(
@@ -145,15 +169,15 @@ def extract_hitters_from_boxscore(game: dict) -> list[dict]:
 def main() -> None:
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
 
-    probe_date = (date.today() - timedelta(days=1)).isoformat()
     status = "mlb_statsapi_aaa_boxscores_failed"
     error = None
     players = []
     pitcher_rows = []
     final_game_count = 0
+    probe_attempts = []
 
     try:
-        final_games = fetch_yesterday_final_games(probe_date)
+        probe_date, final_games, probe_attempts = fetch_latest_final_games()
         final_game_count = len(final_games)
 
         for game in final_games:
@@ -181,6 +205,8 @@ def main() -> None:
         "source": "MLB StatsAPI AAA Final Boxscores",
         "probe_date": probe_date,
         "final_game_count": final_game_count,
+        "lookback_days": LOOKBACK_DAYS,
+        "probe_attempts": probe_attempts,
         "player_count": len(players),
         "top_20": players[:20],
         "error": error,
@@ -204,6 +230,8 @@ def main() -> None:
         "source": "MLB StatsAPI AAA Final Boxscores",
         "probe_date": probe_date,
         "final_game_count": final_game_count,
+        "lookback_days": LOOKBACK_DAYS,
+        "probe_attempts": probe_attempts,
         "player_count": len(pitcher_rows),
         "top_20": pitcher_rows[:20],
         "error": error,
