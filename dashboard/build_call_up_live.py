@@ -2908,8 +2908,101 @@ HTML_TEMPLATE = Template(
       }
 
 
+      /* AAA Promotion Watch unified tab width alignment */
+      @media (min-width: 1180px) {
+        /*
+          Correct tab ids:
+          72 HR   = #tab-72h
+          14 DAY  = #tab-14d
+          AAA GEMS = #tab-aaa-gems
+        */
+        #tab-72h,
+        #tab-14d,
+        #tab-aaa-gems {
+          width: min(100%, calc(100vw - 160px));
+          max-width: 1240px;
+          margin-left: auto;
+          margin-right: auto;
+          box-sizing: border-box;
+        }
 
-  </style>
+        #tab-72h > .signal-grid,
+        #tab-aaa-gems > .grid {
+          width: 100%;
+          max-width: 100%;
+          margin: 0;
+          padding: 0;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          gap: 22px;
+          box-sizing: border-box;
+        }
+
+        #tab-14d > .pw-14d-three-column-band {
+          width: 100%;
+          max-width: 100%;
+          margin: 0 !important;
+          padding: 0 !important;
+          display: grid !important;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+          gap: 22px !important;
+          box-sizing: border-box;
+        }
+
+        #tab-14d .movement-layer-visible-rail {
+          grid-column: 1 / -1;
+          margin-bottom: 18px !important;
+        }
+
+        #tab-72h .section,
+        #tab-14d .section,
+        #tab-aaa-gems .section,
+        #tab-72h .audit-card,
+        #tab-14d .audit-card,
+        #tab-aaa-gems .audit-card {
+          min-width: 0;
+          max-width: 100%;
+          overflow: hidden;
+        }
+
+        #tab-72h .forensic-grid,
+        #tab-14d .forensic-grid,
+        #tab-aaa-gems .forensic-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 8px;
+        }
+
+        #tab-72h .forensic-value,
+        #tab-14d .forensic-value,
+        #tab-aaa-gems .forensic-value {
+          white-space: normal;
+          overflow-wrap: anywhere;
+          line-height: 1.15;
+        }
+      }
+
+      @media (max-width: 1179px) {
+        #tab-72h,
+        #tab-14d,
+        #tab-aaa-gems {
+          width: min(100%, calc(100vw - 32px));
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        #tab-72h > .signal-grid,
+        #tab-14d > .pw-14d-three-column-band,
+        #tab-aaa-gems > .grid {
+          grid-template-columns: 1fr !important;
+          gap: 16px !important;
+        }
+
+        #tab-14d .movement-layer-visible-rail {
+          grid-column: 1 / -1;
+        }
+      }
+
+</style>
 </head>
 <body>
   <div class="topbar">
