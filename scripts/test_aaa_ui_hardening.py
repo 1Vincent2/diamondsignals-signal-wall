@@ -37,7 +37,6 @@ required_rendered_terms = [
     "pw-14d-two-column-band",
     "tabs tabs-aaa",
     "Fresh AAA hitter board active",
-    "Active Audit Layer",
 ]
 
 for term in required_source_terms:
@@ -101,8 +100,6 @@ if "/scout/" in html:
 if "Click any player card to inspect the full performance audit." in html:
     failures.append("Promotion Watch must not promise card-click audit routing until dossier routes are verified.")
 
-if "Use INITIATE TRACKING from each card while live dossier routing is being verified." not in html:
-    failures.append("Promotion Watch missing safe tracking-first audit copy.")
 
 js_source = Path("src/js/player-card-actions.js").read_text(encoding="utf-8")
 js_dist = Path("dist/player-card-actions.js").read_text(encoding="utf-8")

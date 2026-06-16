@@ -2949,30 +2949,6 @@ HTML_TEMPLATE = Template(
           <button type="button" class="tab" id="tab-btn-aaa-gems" onclick="switchPromotionTab('tab-aaa-gems', this)">AAA GEMS</button>
         </div>
       </div>
-
-      <div class="summary-card">
-        <div>
-          <div class="summary-label">Window</div>
-          <div class="summary-value" id="summary-window">14 DAY</div>
-        </div>
-        <div>
-          <div class="summary-label">Mode</div>
-          <div class="summary-value" id="summary-mode">SCOUT</div>
-        </div>
-        <div>
-          <div class="summary-label">Signals</div>
-          <div class="summary-value" id="summary-signals">{{ total_14_signals }}</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-card">
-      <div class="board-controls aaa-board-controls">
-        <div class="aaa-audit-layer-strip">
-          <strong>Active Audit Layer</strong>
-          <span>Use INITIATE TRACKING from each card while live dossier routing is being verified.</span>
-        </div>
-
         <div class="aaa-control-deck">
           <div class="aaa-control-top">
             <section class="system-pulse-bar">

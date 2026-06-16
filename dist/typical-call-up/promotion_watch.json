@@ -2,11 +2,11 @@
   "report": "Promotion Watch",
   "subtitle": "AAA Movement Zone / Call-Up Surveillance",
   "version": "promotion_watch_v0.1",
-  "generated_at": "2026-06-16 03:38 PM",
+  "generated_at": "2026-06-16 03:46 PM",
   "timezone": "America/New_York",
   "status": "fresh",
   "mode": "dynamic_promotion_watch_v0.1_hardened",
-  "source_updated_at": "2026-06-16T19:37:53.389321+00:00",
+  "source_updated_at": "2026-06-16T19:46:10.415383+00:00",
   "pipeline_layers": [
     "dynamic_aaa_movement_feed",
     "dynamic_recent_mlb_arrivals_feed",
