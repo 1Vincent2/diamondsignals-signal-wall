@@ -2951,7 +2951,7 @@ HTML_TEMPLATE = Template(
       <div class="board-controls aaa-board-controls">
         <div class="aaa-audit-layer-strip">
           <strong>Active Audit Layer</strong>
-          <span>Click any player card to inspect the full performance audit.</span>
+          <span>Use INITIATE TRACKING from each card while live dossier routing is being verified.</span>
         </div>
 
         <div class="aaa-control-deck">
@@ -3139,7 +3139,7 @@ HTML_TEMPLATE = Template(
               data-player-type="{{ row.player_type }}"
               data-player-team="{{ row.to_code }}"
               data-source-tag="ARRIVAL"
-              data-profile-url="{{ row.profile_url }}"
+              data-profile-url="#"
             >
               <div class="audit-left">
                 <div class="audit-trigger movement-trigger">
@@ -3188,7 +3188,7 @@ HTML_TEMPLATE = Template(
                     data-player-name="{{ row.player_name }}"
                     data-player-type="{{ row.player_type }}"
                     data-player-team="{{ row.to_code }}"
-                    data-profile-url="{{ row.profile_url }}"
+                    data-profile-url="#"
                     data-source-tag="PROMOTION_WATCH"
                   >INITIATE TRACKING</button>
                 </div>
