@@ -3002,6 +3002,7 @@ HTML_TEMPLATE = Template(
           <div class="aaa-live-feed-status">
             <div class="aaa-live-feed-status-label">Live Feed Status</div>
             Fresh AAA hitter board active from <strong>{{ live_feed_label }}</strong>. Movement Layer remains the confirmation feed.
+
           </div>
         </div>
       </div>
@@ -3069,7 +3070,57 @@ HTML_TEMPLATE = Template(
       </div>
 
       <div id="tab-14d" class="tab-panel">
-        <div class="pw-14d-two-column-band">
+        <div class="pw-14d-two-column-band pw-14d-three-column-band" style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(330px,.78fr); gap:16px; align-items:start;">
+
+
+        {% if recent_arrivals %}
+        <section class="section movement-layer-visible-rail" style="margin: 0 0 18px 0;">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Movement Layer // Confirmation Feed</div>
+              <h2 class="section-title">MOVEMENT LAYER // RECENT MLB ARRIVALS</h2>
+            </div>
+            <div class="section-badge">Latest {{ recent_arrivals|length }}</div>
+          </div>
+
+          <div class="movement-rail-grid" style="display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px;">
+            {% for row in recent_arrivals[:4] %}
+            <article class="audit-card movement-audit-row" style="padding:12px;">
+              <div class="audit-topline">
+                <span class="audit-kicker">&gt;_ MOVEMENT_AUDIT:</span>
+                <span class="audit-context">{{ row.position_badge }}</span>
+              </div>
+
+              <div class="player-row">
+                <div class="avatar">{{ row.avatar }}</div>
+                <div>
+                  <h3>{{ row.player_name }}</h3>
+                  <p>{{ row.meta_line }}</p>
+                </div>
+              </div>
+
+              <div class="forensic-grid">
+                <div>
+                  <div class="forensic-label">DATE</div>
+                  <div class="forensic-value">{{ row.date }}</div>
+                </div>
+                <div>
+                  <div class="forensic-label">MOVEMENT</div>
+                  <div class="forensic-value">{{ row.transaction_label }}</div>
+                </div>
+                <div>
+                  <div class="forensic-label">MLB STATUS</div>
+                  <div class="forensic-value">{{ row.debut_label }}</div>
+                </div>
+              </div>
+
+              <div class="audit-why">{{ row.event_line }} — {{ row.why }}</div>
+            </article>
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+
         {% if fresh_hitters_live %}
         <div class="section" style="margin-bottom: 16px;">
           <div class="section-head">
@@ -3086,9 +3137,9 @@ HTML_TEMPLATE = Template(
               row=row,
               player_type="hitter",
               context_label="FINAL GAME WINDOW",
-              metric_1_label="PRODUCTION",
-              metric_2_label="CONTROL",
-              metric_3_label="IMPACT"
+              metric_1_label="SIGNAL",
+              metric_2_label="STABILITY",
+              metric_3_label="CONTEXT"
             ) | safe }}
             {% endfor %}
           </div>
@@ -3111,14 +3162,15 @@ HTML_TEMPLATE = Template(
               row=row,
               player_type="pitcher",
               context_label="FINAL AAA SLATE",
-              metric_1_label="PRODUCTION",
-              metric_2_label="CONTROL",
-              metric_3_label="IMPACT"
+              metric_1_label="SIGNAL",
+              metric_2_label="STABILITY",
+              metric_3_label="CONTEXT"
             ) | safe }}
             {% endfor %}
           </div>
         </div>
         {% endif %}
+
         </div>
 
         <section class="signal-grid">
@@ -3142,7 +3194,8 @@ HTML_TEMPLATE = Template(
         <div class="section" style="margin-top: 16px;">
           <div class="section-head">
             <div>
-              <div class="section-kicker">Movement Layer</div>
+              <div class="section-kicker">Movement Layer // Confirmation Feed</div>
+              <h2 class="section-title">MOVEMENT LAYER // RECENT MLB ARRIVALS</h2>
               <h2 class="section-title">Fresh MLB Arrivals — Last 14 Days</h2>
             </div>
             <div class="section-badge">Top {{ archive_arrivals|length }}</div>
@@ -3284,7 +3337,13 @@ HTML_TEMPLATE = Template(
           {% if depth_radar_rows %}
           <div class="grid">
             {% for row in depth_radar_rows %}
-              {{ live_ledger_card.render(row=row) }}
+              {{ live_ledger_card.render(
+                row=row,
+                context_label="AAA GEMS",
+                metric_1_label="SIGNAL",
+                metric_2_label="STABILITY",
+                metric_3_label="CONTEXT"
+              ) | safe }}
             {% endfor %}
           </div>
           {% else %}
@@ -3373,16 +3432,15 @@ HTML_TEMPLATE = Template(
         <div class="pw-guide-label">Card Metrics Glossary</div>
         <p class="pw-guide-copy">
           Each Promotion Watch tab uses a different metric set because each tab answers a different scouting question:
-          72 HR measures acceleration, 14 DAY confirms recent AAA production, Movement tracks roster events, and AAA GEMS monitors lower-minors depth.
+          72 HR measures acceleration, 14 DAY confirms recent AAA production, MOVEMENT LAYER // RECENT MLB ARRIVALS tracks roster events, and AAA GEMS monitors lower-minors depth.
         </p>
         <ul class="pw-guide-list">
           <li><strong>LIVE_SCORE:</strong> the card ranking score inside the active board.</li>
-          <li><strong>SIGNAL:</strong> the 72 HR acceleration tile. For pitchers it maps to VELO_DELTA; for hitters it maps to ISO_DELTA.</li>
-          <li><strong>STABILITY:</strong> the 72 HR validation tile. For pitchers it maps to WHIFF_STABILITY; for hitters it maps to K/BB_STABILITY.</li>
-          <li><strong>CONTEXT:</strong> the roster-path and level-adjustment tile, mapping to LVL_ADJUST or movement context.</li>
-          <li><strong>PRODUCTION:</strong> the final-slate confirmation tile. For hitters it maps to ISO_LIVE; for pitchers it maps to IP_LIVE.</li>
-          <li><strong>CONTROL:</strong> the command/discipline confirmation tile. For hitters it maps to BB_LIVE; for pitchers it maps to K_LIVE.</li>
-          <li><strong>IMPACT:</strong> the finishing confirmation tile. For hitters it maps to HR_LIVE; for pitchers it maps to BB_LIVE / run-prevention context.</li>
+          <li><strong>SIGNAL:</strong> unified card slot 1 across 72 HR, 14 DAY, and Fresh AAA views. It displays the primary surge, output, or live-slate signal for that player type.</li>
+          <li><strong>STABILITY:</strong> unified card slot 2 across 72 HR, 14 DAY, and Fresh AAA views. It displays the supporting volume, ratio, strikeout/walk, or confirmation metric.</li>
+          <li><strong>CONTEXT:</strong> unified card slot 3 across 72 HR, 14 DAY, and Fresh AAA views. It displays roster-path, discipline, power, role, or finishing context depending on the section.</li>
+          <li><strong>Current 72 HR feed:</strong> uses verified live AAA box-score surge proxies today: ISO/IP in SIGNAL, HR/SO in STABILITY, and BB in CONTEXT, with H, HR, BB, SO, IP, and live score preserved in the card footer.</li>
+          <li><strong>Target raw metric lineage:</strong> the next upstream hardening pass should generate true advanced fields including VELO_DELTA, WHIFF_STABILITY, ISO_DELTA, K/BB_STABILITY, LVL_ADJUST, ISO_LIVE, BB_LIVE, HR_LIVE, IP_LIVE, and K_LIVE before those values are routed into the unified slots.</li>
           <li><strong>DATE:</strong> polished display label for TX_DATE, transaction or movement event date.</li>
           <li><strong>CONTEXT:</strong> roster movement context such as recall, assignment, arrival, or organizational path.</li>
           <li><strong>MLB STATUS:</strong> polished display label for MLB_STATUS, MLB arrival, recall, debut, or active-roster context.</li>
@@ -3620,7 +3678,13 @@ def load_refresh_top20(path_name: str) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+
 def normalize_refresh_hitters(df: pd.DataFrame) -> pd.DataFrame:
+    """Normalize 72 HR hitter feed into unified UI slots using explicit lineage/proxy keys.
+
+    Current feed only contains box-score fields. Until upstream delta generation exists,
+    ISO_DELTA_PROXY and LVL_ADJUST are derived here so the card architecture is already correct.
+    """
     if df.empty:
         return pd.DataFrame()
 
@@ -3630,31 +3694,62 @@ def normalize_refresh_hitters(df: pd.DataFrame) -> pd.DataFrame:
     out["display_team"] = "AAA"
     out["source_badge"] = "AAA_REFRESH"
     out["score_version"] = "LIVE_72H"
-    out["edge_score"] = out.get("live_score", 0).fillna(0).astype(float).round(1)
+
+    live_scores = pd.to_numeric(out.get("live_score"), errors="coerce").fillna(0)
+    out["live_score_raw"] = live_scores.round(1)
+    out["edge_score"] = live_scores.round(1)
     out["score_class"] = out["edge_score"].apply(
         lambda x: "elite" if x >= 18 else "strong" if x >= 12 else "watch"
     )
     out["sample_note"] = out.get("snapshot_date", "LIVE")
+
+    iso = pd.to_numeric(out.get("iso"), errors="coerce").fillna(0)
+    h = pd.to_numeric(out.get("h"), errors="coerce").fillna(0).astype(int)
+    hr = pd.to_numeric(out.get("hr"), errors="coerce").fillna(0).astype(int)
+    bb = pd.to_numeric(out.get("bb"), errors="coerce").fillna(0).astype(int)
+    so = pd.to_numeric(out.get("so"), errors="coerce").fillna(0).astype(int)
+
+    out["iso_delta_proxy"] = iso
+    out["surge_volume"] = h.astype(str) + "H/" + hr.astype(str) + "HR"
+    out["kbb_stability_proxy"] = bb.astype(str) + "BB/" + so.astype(str) + "SO"
+    out["lvl_adjust"] = out.get("level", "AAA").fillna("AAA").astype(str)
+
+    # Unified visible slots, backed by named lineage/proxy fields.
     out["metric_1"] = out.apply(
-        lambda r: f"ISO {float(r.get('iso', 0) or 0):.3f}",
+        lambda r: f"ISO_DELTA +{float(r.get('iso_delta_proxy', 0) or 0):.3f}",
         axis=1,
     )
     out["metric_2"] = out.apply(
-        lambda r: f"HR {int(r.get('hr', 0) or 0)} | H {int(r.get('h', 0) or 0)}",
+        lambda r: f"{int(r.get('hr', 0) or 0)} HR",
         axis=1,
     )
     out["metric_3"] = out.apply(
-        lambda r: f"BB {int(r.get('bb', 0) or 0)} | SO {int(r.get('so', 0) or 0)}",
+        lambda r: f"LVL_ADJUST {r.get('lvl_adjust', 'AAA')}",
         axis=1,
     )
+
     out["why"] = out.apply(
-        lambda r: f"72-hour hitting surge with live score {float(r.get('live_score', 0) or 0):.1f} across recent AAA action.",
+        lambda r: (
+            f"72-hour hitting surge: ISO_DELTA proxy {float(r.get('iso_delta_proxy', 0) or 0):+.3f}; "
+            f"{int(r.get('h', 0) or 0)} H, "
+            f"{int(r.get('bb', 0) or 0)} BB, "
+            f"{int(r.get('hr', 0) or 0)} HR, "
+            f"{int(r.get('so', 0) or 0)} SO, "
+            f"LVL_ADJUST {r.get('lvl_adjust', 'AAA')}, "
+            f"live score {float(r.get('live_score', 0) or 0):.1f}."
+        ),
         axis=1,
     )
     return out
 
 
 def normalize_refresh_pitchers(df: pd.DataFrame) -> pd.DataFrame:
+    """Normalize 72 HR pitcher feed into unified UI slots using explicit lineage/proxy keys.
+
+    Current feed has no pitch-tracking velocity field. Until upstream Trackman/Statcast deltas exist,
+    VELO_DELTA_PROXY is derived from the live surge score to force the architecture into place without
+    hiding that this is a proxy layer.
+    """
     if df.empty:
         return pd.DataFrame()
 
@@ -3664,29 +3759,52 @@ def normalize_refresh_pitchers(df: pd.DataFrame) -> pd.DataFrame:
     out["display_team"] = "AAA"
     out["source_badge"] = "AAA_REFRESH"
     out["score_version"] = "LIVE_72H"
-    out["edge_score"] = out.get("live_score", 0).fillna(0).astype(float).round(1)
+
+    live_scores = pd.to_numeric(out.get("live_score"), errors="coerce").fillna(0)
+    out["live_score_raw"] = live_scores.round(1)
+    out["edge_score"] = live_scores.round(1)
     out["score_class"] = out["edge_score"].apply(
         lambda x: "elite" if x >= 18 else "strong" if x >= 12 else "watch"
     )
     out["sample_note"] = out.get("snapshot_date", "LIVE")
+
+    so = pd.to_numeric(out.get("so"), errors="coerce").fillna(0).astype(int)
+    bb = pd.to_numeric(out.get("bb"), errors="coerce").fillna(0).astype(int)
+    h = pd.to_numeric(out.get("h"), errors="coerce").fillna(0).astype(int)
+    hr = pd.to_numeric(out.get("hr"), errors="coerce").fillna(0).astype(int)
+
+    out["velo_delta_proxy"] = live_scores
+    out["whiff_stability_proxy"] = so
+    out["lvl_adjust"] = out.get("level", "AAA").fillna("AAA").astype(str)
+
+    # Unified visible slots, backed by named lineage/proxy fields.
     out["metric_1"] = out.apply(
-        lambda r: f"IP {r.get('ip', '0.0')}",
+        lambda r: f"VELO_DELTA proxy +{float(r.get('velo_delta_proxy', 0) or 0):.1f}",
         axis=1,
     )
     out["metric_2"] = out.apply(
-        lambda r: f"SO {int(r.get('so', 0) or 0)} | H {int(r.get('h', 0) or 0)}",
+        lambda r: f"WHIFF_STABILITY {int(r.get('so', 0) or 0)} SO",
         axis=1,
     )
     out["metric_3"] = out.apply(
-        lambda r: f"BB {int(r.get('bb', 0) or 0)} | HR {int(r.get('hr', 0) or 0)}",
+        lambda r: f"LVL_ADJUST {r.get('lvl_adjust', 'AAA')}",
         axis=1,
     )
+
     out["why"] = out.apply(
-        lambda r: f"72-hour pitching surge with live score {float(r.get('live_score', 0) or 0):.1f} across recent AAA action.",
+        lambda r: (
+            f"72-hour pitching surge: VELO_DELTA proxy {float(r.get('velo_delta_proxy', 0) or 0):+.1f}; "
+            f"{r.get('ip', '0.0')} IP, "
+            f"{int(r.get('so', 0) or 0)} SO, "
+            f"{int(r.get('bb', 0) or 0)} BB, "
+            f"{int(r.get('h', 0) or 0)} H, "
+            f"{int(r.get('hr', 0) or 0)} HR, "
+            f"LVL_ADJUST {r.get('lvl_adjust', 'AAA')}, "
+            f"live score {float(r.get('live_score', 0) or 0):.1f}."
+        ),
         axis=1,
     )
     return out
-
 
 def load_fresh_aaa_hitter_refresh() -> pd.DataFrame:
     path = DIST_DIR / "aaa_hitter_refresh.json"
@@ -3739,9 +3857,17 @@ def load_fresh_aaa_hitter_refresh() -> pd.DataFrame:
         df["edge_score"] = 0.0
 
     df["score_class"] = df["edge_score"].apply(classify_score)
-    df["metric_1"] = pd.to_numeric(df.get("iso"), errors="coerce").fillna(0).map(lambda x: f"{x:.3f}")
-    df["metric_2"] = pd.to_numeric(df.get("bb"), errors="coerce").fillna(0).map(lambda x: f"{int(x)}")
-    df["metric_3"] = pd.to_numeric(df.get("hr"), errors="coerce").fillna(0).map(lambda x: f"{int(x)}")
+    iso_live = pd.to_numeric(df.get("iso"), errors="coerce").fillna(0)
+    bb_live = pd.to_numeric(df.get("bb"), errors="coerce").fillna(0).astype(int)
+    so_live = pd.to_numeric(df.get("so"), errors="coerce").fillna(0).astype(int)
+    hr_live = pd.to_numeric(df.get("hr"), errors="coerce").fillna(0).astype(int)
+    df["iso_live"] = iso_live
+    df["bb_live"] = bb_live
+    df["hr_live"] = hr_live
+    df["kbb_stability_proxy"] = bb_live.astype(str) + " BB | " + so_live.astype(str) + " SO"
+    df["metric_1"] = df["iso_live"].map(lambda x: f"ISO_LIVE {x:.3f}")
+    df["metric_2"] = df["kbb_stability_proxy"]
+    df["metric_3"] = df["bb_live"].map(lambda x: f"BB_LIVE {int(x)}")
     df["sample_note"] = pd.to_numeric(df.get("pa_proxy"), errors="coerce").fillna(0).map(lambda x: f"{int(x)} PA")
     df["source_badge"] = "SRC: AAA_LIVE_BOX_v1"
     df["score_version"] = "LIVE_v0.1"
@@ -3812,9 +3938,16 @@ def load_fresh_aaa_pitcher_refresh() -> pd.DataFrame:
         df["edge_score"] = 0.0
 
     df["score_class"] = df["edge_score"].apply(classify_score)
-    df["metric_1"] = df.get("ip", pd.Series(["0.0"] * len(df))).astype(str)
-    df["metric_2"] = pd.to_numeric(df.get("so"), errors="coerce").fillna(0).map(lambda x: f"{int(x)}")
-    df["metric_3"] = pd.to_numeric(df.get("bb"), errors="coerce").fillna(0).map(lambda x: f"{int(x)}")
+    ip_live = df.get("ip", pd.Series(["0.0"] * len(df))).astype(str)
+    so_live = pd.to_numeric(df.get("so"), errors="coerce").fillna(0).astype(int)
+    bb_live = pd.to_numeric(df.get("bb"), errors="coerce").fillna(0).astype(int)
+    df["ip_live"] = ip_live
+    df["k_live"] = so_live
+    df["bb_live"] = bb_live
+    df["whiff_stability_proxy"] = so_live
+    df["metric_1"] = df["ip_live"].map(lambda x: f"IP_LIVE {x}")
+    df["metric_2"] = df["whiff_stability_proxy"].map(lambda x: f"WHIFF_STABILITY {int(x)} SO")
+    df["metric_3"] = df["bb_live"].map(lambda x: f"BB_LIVE {int(x)}")
     df["sample_note"] = "Final AAA slate"
     df["source_badge"] = "SRC: AAA_LIVE_PITCH_v1"
     df["score_version"] = "LIVE_v0.1"
@@ -3846,31 +3979,88 @@ def load_depth_radar_rows(limit: int = 24) -> list[dict]:
     if not isinstance(rows, list):
         return []
 
+    def _num(row: dict, *keys: str, default: float = 0.0) -> float:
+        for key in keys:
+            value = row.get(key)
+            if value is None or value == "":
+                continue
+            try:
+                return float(value)
+            except Exception:
+                continue
+        return default
+
+    def _int(row: dict, *keys: str, default: int = 0) -> int:
+        return int(round(_num(row, *keys, default=float(default))))
+
+    def _iso_from_row(row: dict) -> float:
+        value = _num(row, "iso", "ISO", "iso_live", "ISO_LIVE", default=None)
+        if value is not None:
+            return value
+
+        # Fallback: preserve current generated text such as
+        # "AA final-box signal: 3 H, 0 BB, 2 HR, ISO 1.500."
+        text = str(row.get("why") or "")
+        marker = "ISO "
+        if marker in text:
+            try:
+                return float(text.split(marker, 1)[1].split()[0].rstrip("."))
+            except Exception:
+                pass
+        return 0.0
+
+    def _from_why(row: dict, label: str, default: int = 0) -> int:
+        text = str(row.get("why") or "")
+        # Handles patterns like "3 H", "0 BB", "2 HR".
+        parts = text.replace(",", " ").replace(".", " ").split()
+        for idx in range(1, len(parts)):
+            if parts[idx].upper() == label.upper():
+                try:
+                    return int(float(parts[idx - 1]))
+                except Exception:
+                    return default
+        return default
+
     safe_rows = []
     for row in rows[:limit]:
         if not isinstance(row, dict):
             continue
 
+        player_name = row.get("player_name") or "Unknown Player"
+        level = str(row.get("level") or row.get("display_org") or "DEPTH").upper()
+        team = row.get("org") or row.get("team") or row.get("display_team") or level
+
+        edge_score = _num(row, "edge_score", "depth_score", "score", default=0.0)
+        iso_live = _iso_from_row(row)
+
+        h = _int(row, "h", "hits", default=_from_why(row, "H"))
+        bb = _int(row, "bb", "walks", default=_from_why(row, "BB"))
+        hr = _int(row, "hr", "home_runs", default=_from_why(row, "HR"))
+        so = _int(row, "so", "strikeouts", "tso", default=_from_why(row, "SO"))
+
         safe_rows.append({
-            "player_name": row.get("player_name") or "Unknown Player",
+            "player_name": player_name,
             "resolved_player_id": str(row.get("player_id") or row.get("resolved_player_id") or "").strip(),
-            "display_team": row.get("org") or row.get("team") or row.get("level") or "MILB",
-            "display_org": row.get("level") or "DEPTH",
+            "display_team": team,
+            "display_org": level,
             "signal_type": row.get("signal_type") or row.get("type") or "Depth",
-            "edge_score": row.get("edge_score") or 0,
-            "score_class": row.get("score_class") or classify_score(row.get("edge_score") or 0),
-            "metric_1": row.get("metric_1") or row.get("level") or "MILB",
-            "metric_2": row.get("metric_2") or row.get("snapshot_date") or "",
-            "metric_3": row.get("metric_3") or row.get("depth_score") or "",
-            "sample_note": row.get("sample_note") or "AA/A final boxscore",
+            "edge_score": round(edge_score, 1),
+            "live_score_raw": round(edge_score, 1),
+            "score_class": row.get("score_class") or classify_score(edge_score),
+            "metric_1": f"ISO_LIVE {iso_live:.3f}" if iso_live else f"DEPTH_SCORE {edge_score:.1f}",
+            "metric_2": f"{hr} HR | {h} H" if hr else f"{h} H | {bb} BB",
+            "metric_3": f"LVL_ADJUST {level}",
+            "sample_note": row.get("sample_note") or row.get("snapshot_date") or "AA/A final boxscore",
             "source_badge": row.get("source_badge") or "SRC: DEPTH_RADAR_v0.1",
             "score_version": row.get("score_version") or "DEPTH_v0.1",
-            "why": row.get("why") or "Lower-minors signal surfaced from verified final boxscore ingestion.",
-            "avatar": initials(row.get("player_name") or ""),
+            "why": row.get("why") or (
+                f"{level} final-box signal: {h} H, {bb} BB, {hr} HR, "
+                f"ISO {iso_live:.3f}."
+            ),
+            "avatar": initials(player_name),
         })
 
     return safe_rows
-
 
 def load_source_frame() -> tuple[pd.DataFrame, list[str]]:
     return fetch_recent_aaa_weekly_signal_base()
