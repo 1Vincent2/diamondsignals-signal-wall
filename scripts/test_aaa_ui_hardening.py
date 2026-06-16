@@ -138,16 +138,12 @@ for term in production_glossary_terms:
         failures.append(f"Missing Promotion Watch Field Guide glossary/rendered term: {term}")
 
 polished_metric_terms = [
-    "VELOCITY / ROLE",
-    "MISS / STABILITY",
-    "POWER DELTA",
-    "APPROACH STABILITY",
+    "SIGNAL",
+    "STABILITY",
+    "CONTEXT",
+    "PRODUCTION",
+    "CONTROL",
     "IMPACT",
-    "DISCIPLINE",
-    "POWER",
-    "WORKLOAD",
-    "MISS",
-    "COMMAND",
     "DATE",
     "MLB STATUS",
     "MOVEMENT",
@@ -181,6 +177,22 @@ if "player-card-disabled-audit" not in html:
 
 if ".player-card-disabled-audit" not in source:
     failures.append("Promotion Watch source CSS is missing disabled-audit cursor rule.")
+
+one_truth_forbidden_labels = [
+    ">VELOCITY / ROLE<",
+    ">MISS / STABILITY<",
+    ">POWER DELTA<",
+    ">APPROACH STABILITY<",
+    ">DISCIPLINE<",
+    ">POWER<",
+    ">WORKLOAD<",
+    ">MISS<",
+    ">COMMAND<",
+]
+
+for label in one_truth_forbidden_labels:
+    if label in html:
+        failures.append(f"Old split-language Promotion Watch metric label still visible: {label}")
 
 if failures:
     print("AAA UI hardening audit failed:")

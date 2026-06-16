@@ -3028,8 +3028,8 @@ HTML_TEMPLATE = Template(
                 row=row,
                 player_type="pitcher",
                 context_label="72 HR WINDOW",
-                metric_1_label="VELOCITY / ROLE",
-                metric_2_label="MISS / STABILITY",
+                metric_1_label="SIGNAL",
+                metric_2_label="STABILITY",
                 metric_3_label="CONTEXT"
               ) | safe }}
               {% endfor %}
@@ -3055,8 +3055,8 @@ HTML_TEMPLATE = Template(
                 row=row,
                 player_type="hitter",
                 context_label="72 HR WINDOW",
-                metric_1_label="POWER DELTA",
-                metric_2_label="APPROACH STABILITY",
+                metric_1_label="SIGNAL",
+                metric_2_label="STABILITY",
                 metric_3_label="CONTEXT"
               ) | safe }}
               {% endfor %}
@@ -3086,9 +3086,9 @@ HTML_TEMPLATE = Template(
               row=row,
               player_type="hitter",
               context_label="FINAL GAME WINDOW",
-              metric_1_label="IMPACT",
-              metric_2_label="DISCIPLINE",
-              metric_3_label="POWER"
+              metric_1_label="PRODUCTION",
+              metric_2_label="CONTROL",
+              metric_3_label="IMPACT"
             ) | safe }}
             {% endfor %}
           </div>
@@ -3111,9 +3111,9 @@ HTML_TEMPLATE = Template(
               row=row,
               player_type="pitcher",
               context_label="FINAL AAA SLATE",
-              metric_1_label="WORKLOAD",
-              metric_2_label="MISS",
-              metric_3_label="COMMAND"
+              metric_1_label="PRODUCTION",
+              metric_2_label="CONTROL",
+              metric_3_label="IMPACT"
             ) | safe }}
             {% endfor %}
           </div>
@@ -3377,16 +3377,12 @@ HTML_TEMPLATE = Template(
         </p>
         <ul class="pw-guide-list">
           <li><strong>LIVE_SCORE:</strong> the card ranking score inside the active board.</li>
-          <li><strong>VELOCITY / ROLE:</strong> polished display label for VELO_DELTA, a short-window pitching surge / workload-readiness indicator on 72 HR pitching cards.</li>
-          <li><strong>MISS / STABILITY:</strong> polished display label for WHIFF_STABILITY, a pitching bat-missing and contact-control stability read.</li>
-          <li><strong>POWER DELTA:</strong> polished display label for ISO_DELTA, a short-window hitting power / impact acceleration read.</li>
-          <li><strong>APPROACH STABILITY:</strong> polished display label for K/BB_STABILITY, balancing strikeout pressure against walk discipline.</li>
-          <li><strong>LVL_ADJUST:</strong> context adjustment for level, role, roster path, or promotion timing.</li>
-          <li><strong>IMPACT:</strong> polished display label for ISO_LIVE, isolated-power signal from the latest final AAA slate.</li>
-          <li><strong>DISCIPLINE / COMMAND:</strong> polished display label for BB_LIVE. On hitter cards it reflects walk discipline; on pitcher cards it reflects command.</li>
-          <li><strong>POWER:</strong> polished display label for HR_LIVE, home runs from the latest final AAA slate.</li>
-          <li><strong>WORKLOAD:</strong> polished display label for IP_LIVE, innings pitched from the latest final AAA slate.</li>
-          <li><strong>MISS:</strong> polished display label for K_LIVE, strikeouts from the latest final AAA slate.</li>
+          <li><strong>SIGNAL:</strong> the 72 HR acceleration tile. For pitchers it maps to VELO_DELTA; for hitters it maps to ISO_DELTA.</li>
+          <li><strong>STABILITY:</strong> the 72 HR validation tile. For pitchers it maps to WHIFF_STABILITY; for hitters it maps to K/BB_STABILITY.</li>
+          <li><strong>CONTEXT:</strong> the roster-path and level-adjustment tile, mapping to LVL_ADJUST or movement context.</li>
+          <li><strong>PRODUCTION:</strong> the final-slate confirmation tile. For hitters it maps to ISO_LIVE; for pitchers it maps to IP_LIVE.</li>
+          <li><strong>CONTROL:</strong> the command/discipline confirmation tile. For hitters it maps to BB_LIVE; for pitchers it maps to K_LIVE.</li>
+          <li><strong>IMPACT:</strong> the finishing confirmation tile. For hitters it maps to HR_LIVE; for pitchers it maps to BB_LIVE / run-prevention context.</li>
           <li><strong>DATE:</strong> polished display label for TX_DATE, transaction or movement event date.</li>
           <li><strong>CONTEXT:</strong> roster movement context such as recall, assignment, arrival, or organizational path.</li>
           <li><strong>MLB STATUS:</strong> polished display label for MLB_STATUS, MLB arrival, recall, debut, or active-roster context.</li>
