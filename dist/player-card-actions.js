@@ -138,11 +138,8 @@
   }
 
   function openProfileFromCard(card) {
-    const profileUrl = (card.getAttribute("data-profile-url") || "").trim();
-    if (!profileUrl || profileUrl === "#") {
-      showToast("Player dossier is not available for this card yet");
-      return;
-    }
+    const profileUrl = card.getAttribute("data-profile-url");
+    if (!profileUrl) return;
     window.location.href = profileUrl;
   }
 

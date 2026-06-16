@@ -2951,7 +2951,7 @@ HTML_TEMPLATE = Template(
       <div class="board-controls aaa-board-controls">
         <div class="aaa-audit-layer-strip">
           <strong>Active Audit Layer</strong>
-          <span>Open a player card or use OPEN DOSSIER to inspect the available performance report.</span>
+          <span>Click any player card to inspect the full performance audit.</span>
         </div>
 
         <div class="aaa-control-deck">
@@ -3009,9 +3009,9 @@ HTML_TEMPLATE = Template(
                 row=row,
                 player_type="pitcher",
                 context_label="72 HR WINDOW",
-                metric_1_label="SKILL_SIGNAL",
-                metric_2_label="APPROACH_COMMAND",
-                metric_3_label="CONTEXT_ADJUST"
+                metric_1_label="VELO_DELTA",
+                metric_2_label="WHIFF_STABILITY",
+                metric_3_label="LVL_ADJUST"
               ) | safe }}
               {% endfor %}
             </div>
@@ -3036,9 +3036,9 @@ HTML_TEMPLATE = Template(
                 row=row,
                 player_type="hitter",
                 context_label="72 HR WINDOW",
-                metric_1_label="SKILL_SIGNAL",
-                metric_2_label="APPROACH_COMMAND",
-                metric_3_label="CONTEXT_ADJUST"
+                metric_1_label="ISO_DELTA",
+                metric_2_label="K/BB_STABILITY",
+                metric_3_label="LVL_ADJUST"
               ) | safe }}
               {% endfor %}
             </div>
@@ -3067,9 +3067,9 @@ HTML_TEMPLATE = Template(
               row=row,
               player_type="hitter",
               context_label="FINAL GAME WINDOW",
-              metric_1_label="SKILL_SIGNAL",
-              metric_2_label="APPROACH_COMMAND",
-              metric_3_label="CONTEXT_ADJUST"
+              metric_1_label="ISO_LIVE",
+              metric_2_label="BB_LIVE",
+              metric_3_label="HR_LIVE"
             ) | safe }}
             {% endfor %}
           </div>
@@ -3092,9 +3092,9 @@ HTML_TEMPLATE = Template(
               row=row,
               player_type="pitcher",
               context_label="FINAL AAA SLATE",
-              metric_1_label="SKILL_SIGNAL",
-              metric_2_label="APPROACH_COMMAND",
-              metric_3_label="CONTEXT_ADJUST"
+              metric_1_label="IP_LIVE",
+              metric_2_label="K_LIVE",
+              metric_3_label="BB_LIVE"
             ) | safe }}
             {% endfor %}
           </div>
@@ -3109,13 +3109,14 @@ HTML_TEMPLATE = Template(
             <div class="section-head">
               <div>
                 <div class="section-kicker">Signal Layer</div>
-                <h2 class="section-title">Rolling AAA Signal Layer — Rebuild Guardrail</h2>
+                <h2 class="section-title">Live AAA Signal Engine — In Refresh</h2>
               </div>
-              <div class="section-badge">Legacy Snapshot Retired</div>
+              <div class="section-badge">Stale Snapshot Hidden</div>
             </div>
 
             <div class="placeholder">
-              The stale legacy AAA snapshot has been retired from the visible board. Fresh final-slate cards and the Movement Layer remain active while the rolling delta-based signal layer is rebuilt from current inputs.
+              The legacy AAA hitting snapshot has been temporarily hidden because it is not current enough for live surveillance use.
+              The fresh Movement Layer below remains active while the rolling delta-based signal engine is rebuilt.
             </div>
           </div>
 
@@ -3156,15 +3157,15 @@ HTML_TEMPLATE = Template(
               <div class="audit-center">
                 <div class="forensic-grid">
                   <div class="forensic-cell">
-                    <div class="forensic-label">SKILL_SIGNAL</div>
+                    <div class="forensic-label">TX_DATE</div>
                     <div class="forensic-value">{{ row.date }}</div>
                   </div>
                   <div class="forensic-cell">
-                    <div class="forensic-label">APPROACH_COMMAND</div>
+                    <div class="forensic-label">CONTEXT</div>
                     <div class="forensic-value">{{ row.meta_line }}</div>
                   </div>
                   <div class="forensic-cell">
-                    <div class="forensic-label">CONTEXT_ADJUST</div>
+                    <div class="forensic-label">MLB_STATUS</div>
                     <div class="forensic-value">{{ row.debut_label }}</div>
                   </div>
                 </div>
@@ -3172,7 +3173,7 @@ HTML_TEMPLATE = Template(
               </div>
 
               <div class="audit-right movement-right">
-                <div class="conviction-label">AUDIT_SCORE</div>
+                <div class="conviction-label">TX_TYPE</div>
                 <div class="movement-flag">{{ row.transaction_label }}</div>
               </div>
 
@@ -3201,7 +3202,57 @@ HTML_TEMPLATE = Template(
         </div>
       </div>
       {% endif %}
-<div id="tab-aaa-gems" class="tab-panel" style="display:none;">
+
+      <div id="terminalGuideOverlay" class="drawer-overlay" onclick="closeTerminalGuide()"></div>
+
+      <aside id="terminalGuideDrawer" class="drawer-panel" aria-hidden="true">
+        <div class="drawer-head">
+          <div class="drawer-title-wrap">
+            <div class="drawer-kicker">Promotion Watch // Field Guide</div>
+            <h2 class="drawer-title">How to Use This Terminal</h2>
+          </div>
+          <button type="button" class="drawer-close" onclick="closeTerminalGuide()">Close</button>
+        </div>
+
+        <div class="guide-list">
+          <div class="guide-item">
+            <div class="guide-term">72 HR</div>
+            <div class="guide-def">This view prioritizes near-term promotion pressure, fast-rising signal quality, and immediate opportunity changes.</div>
+          </div>
+
+          <div class="guide-item">
+            <div class="guide-term">14 DAY</div>
+            <div class="guide-def">This view gives the broader scout window: stronger recent signal context plus recalls, debuts, call-ups, and arrivals.</div>
+          </div>
+
+          <div class="guide-item">
+            <div class="guide-term">Edge Score</div>
+            <div class="guide-def">A ranking score used to surface the strongest current promotion-watch candidates inside each board.</div>
+          </div>
+
+          <div class="guide-item">
+            <div class="guide-term">Signal Layer</div>
+            <div class="guide-def">Players ranked by recent underlying signal quality, not just public-facing box-score reputation or surface stats.</div>
+          </div>
+
+          <div class="guide-item">
+            <div class="guide-term">Movement Layer</div>
+            <div class="guide-def">Recent arrivals, recalls, debuts, and movement events that matter for prospect timing, roster opportunity, and market reaction.</div>
+          </div>
+
+          <div class="guide-item">
+            <div class="guide-term">Team Labels</div>
+            <div class="guide-def">This terminal emphasizes minor-league affiliate context first, with the MLB parent organization used as secondary context.</div>
+          </div>
+
+          <div class="guide-item">
+            <div class="guide-term">Why This Page Exists</div>
+            <div class="guide-def">Promotion Watch is designed to identify actionable player movement before the broader market fully adjusts to role, timing, and talent signals.</div>
+          </div>
+        </div>
+      </aside>
+
+      <div id="tab-aaa-gems" class="tab-panel" style="display:none;">
         <div class="section">
           <div class="section-head">
             <div>
@@ -3214,14 +3265,7 @@ HTML_TEMPLATE = Template(
           {% if depth_radar_rows %}
           <div class="grid">
             {% for row in depth_radar_rows %}
-              {{ live_ledger_card.render(
-                row=row,
-                player_type="prospect",
-                context_label="AAA GEMS WATCH",
-                metric_1_label="SKILL_SIGNAL",
-                metric_2_label="APPROACH_COMMAND",
-                metric_3_label="CONTEXT_ADJUST"
-              ) | safe }}
+              {{ live_ledger_card.render(row=row) }}
             {% endfor %}
           </div>
           {% else %}
@@ -3306,21 +3350,6 @@ HTML_TEMPLATE = Template(
       </section>
 
       <section class="pw-guide-card">
-        <div class="pw-guide-label">Card Metrics Glossary</div>
-        <p class="pw-guide-copy">
-          Every Promotion Watch card now uses the same visible metric language across 72 HR, 14 DAY, and AAA GEMS so the page reads as one system.
-        </p>
-        <ul class="pw-guide-list">
-          <li><strong>SKILL_SIGNAL:</strong> the primary skill indicator behind the card, such as power, bat-missing, velocity, or production pressure.</li>
-          <li><strong>APPROACH_COMMAND:</strong> the plate-discipline or strike-zone command read supporting the profile.</li>
-          <li><strong>CONTEXT_ADJUST:</strong> the level, role, roster, or timing adjustment needed to interpret the signal correctly.</li>
-          <li><strong>AUDIT_SCORE:</strong> the card-level strength score used to rank the player inside the active board.</li>
-          <li><strong>OPEN DOSSIER:</strong> opens the available player report when a valid scout page exists.</li>
-          <li><strong>INITIATE TRACKING:</strong> adds the player to the local Tracking Radar / Watch List workflow.</li>
-        </ul>
-      </section>
-
-      <section class="pw-guide-card">
         <div class="pw-guide-label">Movement Layer</div>
         <p class="pw-guide-copy">
           Recent MLB arrivals are the confirmation feed. They show whether the system is detecting players close enough to the transaction layer to matter for roster action.
@@ -3348,6 +3377,26 @@ HTML_TEMPLATE = Template(
   <script src="/player-search.js"></script>
   <script src="/player-card-actions.js"></script>
   <script>
+    function openTerminalGuide() {
+      const overlay = document.getElementById("terminalGuideOverlay");
+      const drawer = document.getElementById("terminalGuideDrawer");
+      if (overlay) overlay.classList.add("open");
+      if (drawer) {
+        drawer.classList.add("open");
+        drawer.setAttribute("aria-hidden", "false");
+      }
+    }
+
+    function closeTerminalGuide() {
+      const overlay = document.getElementById("terminalGuideOverlay");
+      const drawer = document.getElementById("terminalGuideDrawer");
+      if (overlay) overlay.classList.remove("open");
+      if (drawer) {
+        drawer.classList.remove("open");
+        drawer.setAttribute("aria-hidden", "true");
+      }
+    }
+
     function switchPromotionTab(panelId, buttonEl) {
       document.querySelectorAll("#tab-72h, #tab-14d, #tab-aaa-gems").forEach((panel) => {
         panel.style.display = "none";
