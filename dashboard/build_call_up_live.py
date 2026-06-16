@@ -3349,6 +3349,33 @@ HTML_TEMPLATE = Template(
         </ul>
       </section>
 
+
+      <section class="pw-guide-card">
+        <div class="pw-guide-label">Card Metrics Glossary</div>
+        <p class="pw-guide-copy">
+          Each Promotion Watch tab uses a different metric set because each tab answers a different scouting question:
+          72 HR measures acceleration, 14 DAY confirms recent AAA production, Movement tracks roster events, and AAA GEMS monitors lower-minors depth.
+        </p>
+        <ul class="pw-guide-list">
+          <li><strong>LIVE_SCORE:</strong> the card ranking score inside the active board.</li>
+          <li><strong>VELO_DELTA:</strong> short-window pitching surge / workload-readiness indicator on 72 HR pitching cards.</li>
+          <li><strong>WHIFF_STABILITY:</strong> pitching bat-missing and contact-control stability read.</li>
+          <li><strong>ISO_DELTA:</strong> short-window hitting power / impact acceleration read.</li>
+          <li><strong>K/BB_STABILITY:</strong> hitter approach stability, balancing strikeout pressure against walk discipline.</li>
+          <li><strong>LVL_ADJUST:</strong> context adjustment for level, role, roster path, or promotion timing.</li>
+          <li><strong>ISO_LIVE:</strong> isolated-power signal from the latest final AAA slate.</li>
+          <li><strong>BB_LIVE:</strong> walks from the latest final AAA slate.</li>
+          <li><strong>HR_LIVE:</strong> home runs from the latest final AAA slate.</li>
+          <li><strong>IP_LIVE:</strong> innings pitched from the latest final AAA slate.</li>
+          <li><strong>K_LIVE:</strong> strikeouts from the latest final AAA slate.</li>
+          <li><strong>TX_DATE:</strong> transaction or movement event date.</li>
+          <li><strong>CONTEXT:</strong> roster movement context such as recall, assignment, arrival, or organizational path.</li>
+          <li><strong>MLB_STATUS:</strong> MLB arrival, recall, debut, or active-roster context.</li>
+          <li><strong>TX_TYPE:</strong> transaction type attached to the movement signal.</li>
+          <li><strong>DEPTH_v0.1:</strong> lower-minors surveillance model/version tag used by AAA GEMS.</li>
+        </ul>
+      </section>
+
       <section class="pw-guide-card">
         <div class="pw-guide-label">Movement Layer</div>
         <p class="pw-guide-copy">
@@ -3992,14 +4019,29 @@ def render_html() -> str:
             rendered_html,
         )
 
-    sections = {
-        "pitchers_72hr": len(pitchers_72),
-        "hitters_72hr": len(hitters_72),
-        "pitchers_14day": len(pitchers_14),
-        "hitters_14day": len(hitters_14),
-        "recent_arrivals": len(archive_arrivals),
-        "depth_radar": len(depth_radar_rows),
+    # Production contract:
+    # section_counts must describe the final exported/rendered card arrays,
+    # not the larger upstream candidate pools. This keeps status JSON,
+    # payload JSON, and rendered HTML aligned after display caps are applied.
+    def export_records(records, limit: int) -> list:
+        """Return the exact final card rows exported/rendered for Promotion Watch."""
+        if isinstance(records, list):
+            return records[:limit]
+        try:
+            return list(records)[:limit]
+        except TypeError:
+            return []
+
+    exported_sections = {
+        "pitchers_72hr": export_records(pitchers_72, 12),
+        "hitters_72hr": export_records(hitters_72, 12),
+        "pitchers_14day": export_records(pitchers_14, 12),
+        "hitters_14day": export_records(hitters_14, 12),
+        "recent_arrivals": export_records(archive_arrivals, 16),
+        "depth_radar": export_records(depth_radar_rows, 24),
     }
+
+    sections = {key: len(value) if isinstance(value, list) else 0 for key, value in exported_sections.items()}
 
     validation = build_validation_report(
         "promotion_watch",
@@ -4076,14 +4118,7 @@ def render_html() -> str:
         "pipeline_layers": status_payload.get("pipeline_layers"),
         "hardening_notes": status_payload.get("hardening_notes"),
         "section_counts": sections,
-        "top_signals": {
-            "pitchers_72hr": safe_records(pitchers_72, 12),
-            "hitters_72hr": safe_records(hitters_72, 12),
-            "pitchers_14day": safe_records(pitchers_14, 12),
-            "hitters_14day": safe_records(hitters_14, 12),
-            "recent_arrivals": archive_arrivals[:16] if isinstance(archive_arrivals, list) else safe_records(archive_arrivals, 16),
-            "depth_radar": depth_radar_rows,
-        },
+        "top_signals": exported_sections,
     }
 
     # PROMOTION_WATCH_PAYLOAD_CONTRACT_V2

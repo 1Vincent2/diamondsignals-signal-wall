@@ -75,6 +75,17 @@ def main() -> None:
         if status_count > 0 and nested_count == 0:
             failures.append(f"{key}: status populated but nested top_signals export is empty")
 
+        if status_count != direct_count:
+            failures.append(
+                f"{key}: status section_count {status_count} != direct payload rows {direct_count}"
+            )
+
+        if status_count != nested_count:
+            failures.append(
+                f"{key}: status section_count {status_count} != nested top_signals rows {nested_count}"
+            )
+
+
         placeholder = PLACEHOLDER_BY_SECTION.get(key)
         if status_count > 0 and placeholder and placeholder in html:
             failures.append(f"{key}: populated status but empty-state placeholder rendered")

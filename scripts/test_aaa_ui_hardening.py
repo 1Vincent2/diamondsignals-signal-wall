@@ -113,6 +113,30 @@ if 'profileUrl === "#"' not in js_source:
 if js_source != js_dist:
     failures.append("dist/player-card-actions.js is not in sync with src/js/player-card-actions.js.")
 
+production_glossary_terms = [
+    "Card Metrics Glossary",
+    "LIVE_SCORE",
+    "VELO_DELTA",
+    "WHIFF_STABILITY",
+    "ISO_DELTA",
+    "K/BB_STABILITY",
+    "LVL_ADJUST",
+    "ISO_LIVE",
+    "BB_LIVE",
+    "HR_LIVE",
+    "IP_LIVE",
+    "K_LIVE",
+    "TX_DATE",
+    "CONTEXT",
+    "MLB_STATUS",
+    "TX_TYPE",
+    "DEPTH_v0.1",
+]
+
+for term in production_glossary_terms:
+    if term not in html:
+        failures.append(f"Missing Promotion Watch Field Guide glossary/rendered term: {term}")
+
 if failures:
     print("AAA UI hardening audit failed:")
     for failure in failures:
