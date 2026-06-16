@@ -1,5 +1,7 @@
 <article
   class="player-card player-audit-row js-player-card {% if row.edge_score >= 15 %}elite-edge{% elif row.edge_score >= 12 %}high-edge{% endif %}"
+  aria-label="Open player dossier for {{ row.player_name }}"
+  title="Open player dossier for {{ row.player_name }}"
   data-player-id="{{ row.resolved_player_id }}"
   data-player-name="{{ row.player_name }}"
   data-player-type="{{ player_type }}"
@@ -38,9 +40,15 @@
 
   <div class="audit-right audit-action-compact">
     <div class="audit-score-meta">
-      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-label">AUDIT_SCORE</div>
       <div class="conviction-score {{ row.score_class }}">{{ row.live_score_raw }}</div>
     </div>
+    <a
+      class="provision-btn audit-dossier-link"
+      href="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
+      onclick="event.stopPropagation(); if (this.getAttribute('href') === '#') event.preventDefault();"
+      aria-label="Open player dossier for {{ row.player_name }}"
+    >OPEN DOSSIER</a>
     <button
       type="button"
       class="provision-btn js-add-to-roster"
