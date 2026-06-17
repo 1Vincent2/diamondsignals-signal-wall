@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import shutil
+from html import escape
 import math
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -10,6 +11,8 @@ from pathlib import Path
 import pandas as pd
 from pybaseball import cache, statcast
 from jinja2 import Template
+
+from dashboard.lib.metric_display import metric_title
 
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
@@ -37,6 +40,12 @@ MAX_SIGNALS = 60
 FASTBALL_TYPES = {"FF", "FA", "SI", "FC"}
 
 KDE_STATUS_MODE = "statcast_kinetic_drift_dynamic_v1"
+
+def metric_tooltip_attr(label) -> str:
+    tip = metric_title(label)
+    escaped = escape(tip, quote=True)
+    return f'data-tooltip="{escaped}" aria-label="{escaped}"'
+
 KDE_PIPELINE_LAYERS = [
     "pybaseball_statcast_pitch_level_feed",
     "fastball_movement_velocity_window",
@@ -46,6 +55,21 @@ KDE_PIPELINE_LAYERS = [
     "tracking_identity_markup",
     "no_static_player_seed_fallback",
 ]
+
+
+
+def json_safe_value(value):
+    if value is None:
+        return "———"
+    if isinstance(value, float):
+        if math.isnan(value) or math.isinf(value):
+            return "———"
+        return value
+    if isinstance(value, dict):
+        return {k: json_safe_value(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [json_safe_value(v) for v in value]
+    return value
 
 
 def safe_float(value):
@@ -631,13 +655,15 @@ def write_json(signals: list[dict], start_date: str, end_date: str) -> None:
         },
         "signals": signals,
     }
+    payload = json_safe_value(payload)
     OUT_PATH.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     print(f"Wrote {len(signals)} kinetic drift signals -> {OUT_PATH}")
 
     HTML_DIR.mkdir(parents=True, exist_ok=True)
     template = Template(TEMPLATE_PATH.read_text(encoding="utf-8"))
     HTML_PATH.write_text(
-        template.render(
+        template.render(metric_tooltip_attr=metric_tooltip_attr,
+                
             signals=signals,
             payload=payload,
             generated_at=payload.get("generated_at", ""),

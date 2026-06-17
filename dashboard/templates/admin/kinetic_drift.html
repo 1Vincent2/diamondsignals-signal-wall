@@ -8,6 +8,73 @@
   <style>
 {{ shell_styles | safe }}
 
+/* DIAMONDSIGNALS_INSTANT_METRIC_TOOLTIP_V1
+   Replaces inconsistent browser-native title hover with fast, report-consistent CSS tooltips.
+   Desktop hover/focus only. Mobile layout/menu behavior intentionally untouched.
+*/
+@media screen and (min-width: 981px) {
+  [data-tooltip] {
+    position: relative;
+    cursor: help;
+  }
+
+  [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    transform: translateX(-50%) translateY(2px);
+    z-index: 9999;
+    width: max-content;
+    max-width: 280px;
+    padding: 9px 11px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(6,10,18,0.96);
+    color: rgba(255,255,255,0.94);
+    box-shadow:
+      0 12px 28px rgba(0,0,0,0.42),
+      0 0 0 1px rgba(255,255,255,0.04);
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 800;
+    white-space: normal;
+    text-align: left;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease, transform 70ms ease;
+  }
+
+  [data-tooltip]::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 4px);
+    transform: translateX(-50%);
+    z-index: 10000;
+    border: 6px solid transparent;
+    border-top-color: rgba(6,10,18,0.96);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease;
+  }
+
+  [data-tooltip]:hover::after,
+  [data-tooltip]:focus-visible::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  [data-tooltip]:hover::before,
+  [data-tooltip]:focus-visible::before {
+    opacity: 1;
+  }
+}
+
+
 /* KDE_FIELD_GUIDE_V1
    Moves the top-of-page KDE methodology/glossary into a desktop + mobile field guide drawer. */
 .kde-field-guide-trigger{
@@ -2279,22 +2346,22 @@ body.kde-field-guide-open{
         <div class="metrics">
 
           <div class="metric metric-risk {% if row.kinetic_risk_score >= 80 %}score-critical{% elif row.kinetic_risk_score >= 60 %}score-high{% elif row.kinetic_risk_score >= 35 %}score-watch{% else %}score-low{% endif %}">
-            <div class="k">KINETIC RISK</div>
+            <div class="k" {{ metric_tooltip_attr("KINETIC RISK") | safe }}>KINETIC RISK</div>
             <div class="v">{{ row.kinetic_risk_score }}</div>
           </div>
 
           <div class="metric metric-emergence {% if row.kinetic_emergence_score >= 80 %}score-positive-elite{% elif row.kinetic_emergence_score >= 60 %}score-positive{% elif row.kinetic_emergence_score >= 35 %}score-watch{% else %}score-low{% endif %}">
-            <div class="k">EMERGENCE</div>
+            <div class="k" {{ metric_tooltip_attr("EMERGENCE") | safe }}>EMERGENCE</div>
             <div class="v">{{ row.kinetic_emergence_score }}</div>
           </div>
 
           <div class="metric metric-instability {% if row.kinetic_instability_score >= 80 %}score-critical{% elif row.kinetic_instability_score >= 60 %}score-instability-high{% elif row.kinetic_instability_score >= 35 %}score-instability-watch{% else %}score-low{% endif %}">
-            <div class="k">INSTABILITY</div>
+            <div class="k" {{ metric_tooltip_attr("INSTABILITY") | safe }}>INSTABILITY</div>
             <div class="v">{{ row.kinetic_instability_score }}</div>
           </div>
 
           <div class="metric metric-confidence {% if row.confidence_score >= 80 %}score-confidence-high{% elif row.confidence_score >= 60 %}score-confidence-mid{% elif row.confidence_score >= 35 %}score-watch{% else %}score-confidence-low{% endif %}">
-            <div class="k">CONFIDENCE</div>
+            <div class="k" {{ metric_tooltip_attr("CONFIDENCE") | safe }}>CONFIDENCE</div>
             <div class="v">{{ row.confidence_score }}</div>
           </div>
 
@@ -2440,21 +2507,21 @@ body.kde-field-guide-open{
 
       <div class="kde-field-guide-body">
         <section class="kde-field-guide-card is-proprietary">
-          <div class="kde-field-guide-label">Proprietary Research Surface</div>
+          <div class="kde-field-guide-label" {{ metric_tooltip_attr("Proprietary Research Surface") | safe }}>Proprietary Research Surface</div>
           <p class="kde-field-guide-copy">
             DiamondSignals Kinetic Drift Engine © KDE // experimental inferred-movement intelligence.
           </p>
         </section>
 
         <section class="kde-field-guide-card">
-          <div class="kde-field-guide-label">Method Note</div>
+          <div class="kde-field-guide-label" {{ metric_tooltip_attr("Method Note") | safe }}>Method Note</div>
           <p class="kde-field-guide-copy">
             KDE does not claim direct Hawkeye/TrackMan ownership. It infers kinetic drift from available pitch-tracking variables, including velocity, induced vertical break, extension, release coordinates, and appearance-to-appearance movement deltas.
           </p>
         </section>
 
         <section class="kde-field-guide-card">
-          <div class="kde-field-guide-label">Waveform Color System</div>
+          <div class="kde-field-guide-label" {{ metric_tooltip_attr("Waveform Color System") | safe }}>Waveform Color System</div>
           <p class="kde-field-guide-copy">
             Color shows the dominant kinetic diagnosis. Shape shows whether the recent trace is accelerating, cooling, or holding.
           </p>
@@ -2466,14 +2533,14 @@ body.kde-field-guide-open{
         </section>
 
         <section class="kde-field-guide-card">
-          <div class="kde-field-guide-label">Reading The Trace</div>
+          <div class="kde-field-guide-label" {{ metric_tooltip_attr("Reading The Trace") | safe }}>Reading The Trace</div>
           <p class="kde-field-guide-copy">
             Color and shape are two different signals. A rising line means drift is intensifying. A falling line means a prior drift event is cooling. A level line means the signal is holding, not necessarily safe.
           </p>
         </section>
 
         <section class="kde-field-guide-card">
-          <div class="kde-field-guide-label">Metric Glossary</div>
+          <div class="kde-field-guide-label" {{ metric_tooltip_attr("Metric Glossary") | safe }}>Metric Glossary</div>
           <ul class="kde-field-guide-list">
             <li><strong>KDE Score:</strong> Composite drift read across risk, emergence, instability, and confidence.</li>
             <li><strong>KRS:</strong> Kinetic Risk Score. Breakdown/fatigue risk signal.</li>
@@ -2485,7 +2552,7 @@ body.kde-field-guide-open{
         </section>
 
         <section class="kde-field-guide-card">
-          <div class="kde-field-guide-label">Metric Color System</div>
+          <div class="kde-field-guide-label" {{ metric_tooltip_attr("Metric Color System") | safe }}>Metric Color System</div>
           <ul class="kde-field-guide-list">
             <li><strong>Kinetic Risk:</strong> <span class="kde-guide-tone red">red</span> indicates elevated decay / fatigue risk; <span class="kde-guide-tone muted">muted</span> indicates lower immediate risk.</li>
             <li><strong>Emergence:</strong> <span class="kde-guide-tone lime">lime</span> indicates active breakout, power, or stuff-gain pressure.</li>
@@ -2497,7 +2564,7 @@ body.kde-field-guide-open{
         </section>
 
         <section class="kde-field-guide-card">
-          <div class="kde-field-guide-label">Operator Rule</div>
+          <div class="kde-field-guide-label" {{ metric_tooltip_attr("Operator Rule") | safe }}>Operator Rule</div>
           <p class="kde-field-guide-copy">
             KDE is a surveillance layer, not a box-score recap. Use it to detect kinetic change before the market fully reprices the player.
           </p>
