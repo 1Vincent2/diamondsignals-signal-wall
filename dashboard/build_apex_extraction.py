@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import json
+from html import escape
 from pathlib import Path
 try:
+    from dashboard.lib.metric_display import metric_title
     from dashboard.lib.report_status import build_report_status, utc_now_iso
 except ModuleNotFoundError:
     import sys
     sys.path.append(str(Path(__file__).resolve().parents[1]))
+    from dashboard.lib.metric_display import metric_title
     from dashboard.lib.report_status import build_report_status, utc_now_iso
 from datetime import datetime, timezone
 
@@ -467,6 +470,12 @@ def apex_heat_class(score: float) -> str:
     return "apex-cool"
 
 
+def metric_tooltip_attr(label: str) -> str:
+    tip = metric_title(label)
+    escaped = escape(tip, quote=True)
+    return f'data-tooltip="{escaped}" aria-label="{escaped}"'
+
+
 def render_signal_card(row: dict) -> str:
     score = row.get("apex_score", 0)
     heat_class = apex_heat_class(score)
@@ -477,8 +486,8 @@ def render_signal_card(row: dict) -> str:
     forensic_html = "\n".join(
         f"""
         <div class="forensic-chip">
-          <span>{metric.get("category", "")}</span>
-          <strong>{metric.get("label", "")}</strong>
+          <span {metric_tooltip_attr(metric.get("category", ""))}>{metric.get("category", "")}</span>
+          <strong {metric_tooltip_attr(metric.get("label", ""))}>{metric.get("label", "")}</strong>
           <em>{metric.get("value", "")}</em>
           <p>{metric.get("purpose", "")}</p>
         </div>
@@ -511,7 +520,7 @@ def render_signal_card(row: dict) -> str:
             <div class="meta">{row.get("team", "MLB")} // {row.get("role", "ASSET")}</div>
           </div>
           <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score-label" {metric_tooltip_attr("Apex Score")}>EXTRACTION SCORE</div>
             <div class="score">{score}</div>
           </div>
         </div>
@@ -525,18 +534,18 @@ def render_signal_card(row: dict) -> str:
         </div>
 
         <div class="grid">
-          <div><span>PHYSICAL</span><strong>{row.get("physical_shift_score", 0)}</strong></div>
-          <div><span>VISION</span><strong>{row.get("vision_delta_score", 0)}</strong></div>
-          <div><span>MARKET</span><strong>{row.get("market_latency_score", 0)}</strong></div>
+          <div><span {metric_tooltip_attr("Physical")}>PHYSICAL</span><strong>{row.get("physical_shift_score", 0)}</strong></div>
+          <div><span {metric_tooltip_attr("Vision")}>VISION</span><strong>{row.get("vision_delta_score", 0)}</strong></div>
+          <div><span {metric_tooltip_attr("Market")}>MARKET</span><strong>{row.get("market_latency_score", 0)}</strong></div>
         </div>
 
         <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
+          <div class="proof-label" {metric_tooltip_attr("Primary Signal")}>PRIMARY SIGNAL</div>
           <p>{row.get("primary_signal", "")}</p>
         </div>
 
         <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
+          <div class="proof-label" {metric_tooltip_attr("Supporting Metric")}>SUPPORTING METRIC</div>
           <p>{row.get("supporting_metric", "")}</p>
         </div>
 
@@ -2294,6 +2303,72 @@ def render_html(payload: dict) -> str:
   }}
 }}
 
+
+/* DIAMONDSIGNALS_INSTANT_METRIC_TOOLTIP_V1
+   Replaces inconsistent browser-native title hover with fast, report-consistent CSS tooltips.
+   Desktop hover/focus only. Mobile layout/menu behavior intentionally untouched.
+*/
+@media screen and (min-width: 981px) {{
+  [data-tooltip] {{
+    position: relative;
+    cursor: help;
+  }}
+
+  [data-tooltip]::after {{
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    transform: translateX(-50%) translateY(2px);
+    z-index: 9999;
+    width: max-content;
+    max-width: 280px;
+    padding: 9px 11px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(6,10,18,0.96);
+    color: rgba(255,255,255,0.94);
+    box-shadow:
+      0 12px 28px rgba(0,0,0,0.42),
+      0 0 0 1px rgba(255,255,255,0.04);
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 800;
+    white-space: normal;
+    text-align: left;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease, transform 70ms ease;
+  }}
+
+  [data-tooltip]::before {{
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 4px);
+    transform: translateX(-50%);
+    z-index: 10000;
+    border: 6px solid transparent;
+    border-top-color: rgba(6,10,18,0.96);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease;
+  }}
+
+  [data-tooltip]:hover::after,
+  [data-tooltip]:focus-visible::after {{
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }}
+
+  [data-tooltip]:hover::before,
+  [data-tooltip]:focus-visible::before {{
+    opacity: 1;
+  }}
+}}
 </style>
 </head>
 <body>
@@ -2675,7 +2750,7 @@ def write_apex_extraction_status(payload: dict, *, build_started_at: str, build_
     notes.append("Apex uses the shared Performance Audit evidence layer while preserving separate Apex selection/scoring logic.")
 
     status_payload = build_report_status(
-        "apex-extraction",
+        "apex_extraction",
         build_success=(len(errors) == 0),
         threshold_minutes=1440,
         build_started_at=build_started_at,
