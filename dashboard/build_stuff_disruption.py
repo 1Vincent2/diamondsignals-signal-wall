@@ -11,6 +11,7 @@ from jinja2 import Template
 from pybaseball import statcast
 
 from dashboard.lib.report_status import build_report_status
+from dashboard.lib.metric_display import metric_title, safe_metric_value
 
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
@@ -441,11 +442,16 @@ def format_apex_cards(rows: list[dict]) -> list[dict]:
                 "movement_class": movement_class,
                 "spin_class": spin_class,
                 "card_class": card_class,
-                "disruption_score_label": "--" if disruption_score is None else f"{disruption_score:.1f}",
-                "ivb_delta_label": format_signed(ivb_delta, '"'),
-                "vaa_delta_label": format_signed(vaa_delta, "°"),
-                "movement_delta_label": format_signed(movement_delta, '"'),
-                "active_spin_delta_label": format_signed(active_spin_delta, "%"),
+                "disruption_score_label": safe_metric_value("--" if disruption_score is None else f"{disruption_score:.1f}"),
+                "disruption_score_title": metric_title("Disruption Score"),
+                "ivb_delta_label": safe_metric_value(format_signed(ivb_delta, '"')),
+                "ivb_delta_title": metric_title("IVB Delta"),
+                "vaa_delta_label": safe_metric_value(format_signed(vaa_delta, "°")),
+                "vaa_delta_title": metric_title("VAA Delta"),
+                "movement_delta_label": safe_metric_value(format_signed(movement_delta, '"')),
+                "movement_delta_title": metric_title("Move Delta"),
+                "active_spin_delta_label": safe_metric_value(format_signed(active_spin_delta, "%")),
+                "active_spin_delta_title": metric_title("Active Spin"),
                 "sample_note": f'{len(row.get("trend_values") or [])} start trend',
                 "trend_points": values_to_polyline(row.get("trend_values") or []),
             }
@@ -1757,7 +1763,7 @@ HTML_TEMPLATE = Template(
 
             <div class="scorebox">
               <div>
-                <div class="score-label">Disruption Score</div>
+                <div class="score-label" title="{{ row.disruption_score_title }}" aria-label="{{ row.disruption_score_title }}">Disruption Score</div>
                 <div class="score-value {{ row.score_class }}">{{ row.disruption_score_label }}</div>
               </div>
               <div class="action-row">
@@ -1794,19 +1800,19 @@ HTML_TEMPLATE = Template(
 
           <div class="metric-grid">
             <div class="metric {{ row.ivb_class }}">
-              <div class="metric-label">IVB Delta</div>
+              <div class="metric-label" title="{{ row.ivb_delta_title }}" aria-label="{{ row.ivb_delta_title }}">IVB Delta</div>
               <div class="metric-value">{{ row.ivb_delta_label }}</div>
             </div>
             <div class="metric {{ row.vaa_class }}">
-              <div class="metric-label">VAA Delta</div>
+              <div class="metric-label" title="{{ row.vaa_delta_title }}" aria-label="{{ row.vaa_delta_title }}">VAA Delta</div>
               <div class="metric-value">{{ row.vaa_delta_label }}</div>
             </div>
             <div class="metric {{ row.movement_class }}">
-              <div class="metric-label">Move Delta</div>
+              <div class="metric-label" title="{{ row.movement_delta_title }}" aria-label="{{ row.movement_delta_title }}">Move Delta</div>
               <div class="metric-value">{{ row.movement_delta_label }}</div>
             </div>
             <div class="metric {{ row.spin_class }}">
-              <div class="metric-label">Active Spin</div>
+              <div class="metric-label" title="{{ row.active_spin_delta_title }}" aria-label="{{ row.active_spin_delta_title }}">Active Spin</div>
               <div class="metric-value">{{ row.active_spin_delta_label }}</div>
             </div>
           </div>
