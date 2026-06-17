@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 import json
+from html import escape
 import math
 import re
 
@@ -10,6 +11,7 @@ import pandas as pd
 from jinja2 import Template
 
 from dashboard.lib.publish_safe import write_temp_output, promote_output_if_valid, save_snapshot
+from dashboard.lib.metric_display import metric_title
 from dashboard.lib.report_status import build_report_status, utc_now_iso
 from dashboard.lib.report_validation import (
     build_validation_report,
@@ -857,6 +859,13 @@ def load_arrivals_windows(live_limit: int = 8, archive_limit: int = 16) -> tuple
         return formatted
 
     return format_arrivals(live_arrivals, live_limit), format_arrivals(archive_arrivals, archive_limit)
+
+
+
+def metric_tooltip_attr(label) -> str:
+    tip = metric_title(label)
+    escaped = escape(tip, quote=True)
+    return f'data-tooltip="{escaped}" aria-label="{escaped}"'
 
 
 HTML_TEMPLATE = Template(
@@ -3002,6 +3011,73 @@ HTML_TEMPLATE = Template(
         }
       }
 
+
+/* DIAMONDSIGNALS_INSTANT_METRIC_TOOLTIP_V1
+   Replaces inconsistent browser-native title hover with fast, report-consistent CSS tooltips.
+   Desktop hover/focus only. Mobile layout/menu behavior intentionally untouched.
+*/
+@media screen and (min-width: 981px) {
+  [data-tooltip] {
+    position: relative;
+    cursor: help;
+  }
+
+  [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    transform: translateX(-50%) translateY(2px);
+    z-index: 9999;
+    width: max-content;
+    max-width: 280px;
+    padding: 9px 11px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(6,10,18,0.96);
+    color: rgba(255,255,255,0.94);
+    box-shadow:
+      0 12px 28px rgba(0,0,0,0.42),
+      0 0 0 1px rgba(255,255,255,0.04);
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 800;
+    white-space: normal;
+    text-align: left;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease, transform 70ms ease;
+  }
+
+  [data-tooltip]::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 4px);
+    transform: translateX(-50%);
+    z-index: 10000;
+    border: 6px solid transparent;
+    border-top-color: rgba(6,10,18,0.96);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease;
+  }
+
+  [data-tooltip]:hover::after,
+  [data-tooltip]:focus-visible::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  [data-tooltip]:hover::before,
+  [data-tooltip]:focus-visible::before {
+    opacity: 1;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -3085,7 +3161,7 @@ HTML_TEMPLATE = Template(
           <div class="section section-v3-ledger-full">
             <div class="section-head">
               <div>
-                <div class="section-kicker">Signal Layer</div>
+                <div class="section-kicker" {{ metric_tooltip_attr("Signal Layer") | safe }}>Signal Layer</div>
                 <h2 class="section-title">Pitching Prospect Signals — 72 HR</h2>
               </div>
               <div class="section-badge">Top {{ pitchers_72|length }}</div>
@@ -3112,7 +3188,7 @@ HTML_TEMPLATE = Template(
           <div class="section section-v3-ledger-full">
             <div class="section-head">
               <div>
-                <div class="section-kicker">Signal Layer</div>
+                <div class="section-kicker" {{ metric_tooltip_attr("Signal Layer") | safe }}>Signal Layer</div>
                 <h2 class="section-title">Hitting Prospect Signals — 72 HR</h2>
               </div>
               <div class="section-badge">Top {{ hitters_72|length }}</div>
@@ -3146,7 +3222,7 @@ HTML_TEMPLATE = Template(
         <section class="section movement-layer-visible-rail" style="margin: 0 0 18px 0;">
           <div class="section-head">
             <div>
-              <div class="section-kicker">Movement Layer // Confirmation Feed</div>
+              <div class="section-kicker" {{ metric_tooltip_attr("Movement Layer // Confirmation Feed") | safe }}>Movement Layer // Confirmation Feed</div>
               <h2 class="section-title">MOVEMENT LAYER // RECENT MLB ARRIVALS</h2>
             </div>
             <div class="section-badge">Latest {{ recent_arrivals|length }}</div>
@@ -3194,7 +3270,7 @@ HTML_TEMPLATE = Template(
         <div class="section" style="margin-bottom: 16px;">
           <div class="section-head">
             <div>
-              <div class="section-kicker">Live Signal Layer</div>
+              <div class="section-kicker" {{ metric_tooltip_attr("Live Signal Layer") | safe }}>Live Signal Layer</div>
               <h2 class="section-title">Fresh AAA Hitters — Last Final AAA Slate</h2>
             </div>
             <div class="section-badge">Top {{ fresh_hitters_live|length }}</div>
@@ -3219,7 +3295,7 @@ HTML_TEMPLATE = Template(
         <div class="section" style="margin-bottom: 16px;">
           <div class="section-head">
             <div>
-              <div class="section-kicker">Live Signal Layer</div>
+              <div class="section-kicker" {{ metric_tooltip_attr("Live Signal Layer") | safe }}>Live Signal Layer</div>
               <h2 class="section-title">Fresh AAA Pitchers — Last Final AAA Slate</h2>
             </div>
             <div class="section-badge">Top {{ fresh_pitchers_live|length }}</div>
@@ -3248,7 +3324,7 @@ HTML_TEMPLATE = Template(
           <div class="section">
             <div class="section-head">
               <div>
-                <div class="section-kicker">Signal Layer</div>
+                <div class="section-kicker" {{ metric_tooltip_attr("Signal Layer") | safe }}>Signal Layer</div>
                 <h2 class="section-title">Live AAA Signal Engine — In Refresh</h2>
               </div>
               <div class="section-badge">Stale Snapshot Hidden</div>
@@ -3263,7 +3339,7 @@ HTML_TEMPLATE = Template(
         <div class="section" style="margin-top: 16px;">
           <div class="section-head">
             <div>
-              <div class="section-kicker">Movement Layer // Confirmation Feed</div>
+              <div class="section-kicker" {{ metric_tooltip_attr("Movement Layer // Confirmation Feed") | safe }}>Movement Layer // Confirmation Feed</div>
               <h2 class="section-title">MOVEMENT LAYER // RECENT MLB ARRIVALS</h2>
               <h2 class="section-title">Fresh MLB Arrivals — Last 14 Days</h2>
             </div>
@@ -3289,9 +3365,9 @@ HTML_TEMPLATE = Template(
                 </div>
                 <div class="audit-context">FROM {{ row.from_code }} // TO {{ row.to_code }} // {{ row.event_line }}</div>
                 <div class="audit-submeta">
-                  <span class="audit-chip">RECENT_ARRIVAL</span>
-                  <span class="audit-chip">{{ row.transaction_label }}</span>
-                  <span class="audit-chip">{{ row.position_badge }}</span>
+                  <span class="audit-chip" {{ metric_tooltip_attr("RECENT_ARRIVAL") | safe }}>RECENT_ARRIVAL</span>
+                  <span class="audit-chip" {{ metric_tooltip_attr(row.transaction_label) | safe }}>{{ row.transaction_label }}</span>
+                  <span class="audit-chip" {{ metric_tooltip_attr(row.position_badge) | safe }}>{{ row.position_badge }}</span>
                 </div>
               </div>
 
@@ -3357,37 +3433,37 @@ HTML_TEMPLATE = Template(
 
         <div class="guide-list">
           <div class="guide-item">
-            <div class="guide-term">72 HR</div>
+            <div class="guide-term" {{ metric_tooltip_attr("72 HR") | safe }}>72 HR</div>
             <div class="guide-def">This view prioritizes near-term promotion pressure, fast-rising signal quality, and immediate opportunity changes.</div>
           </div>
 
           <div class="guide-item">
-            <div class="guide-term">14 DAY</div>
+            <div class="guide-term" {{ metric_tooltip_attr("14 DAY") | safe }}>14 DAY</div>
             <div class="guide-def">This view gives the broader scout window: stronger recent signal context plus recalls, debuts, call-ups, and arrivals.</div>
           </div>
 
           <div class="guide-item">
-            <div class="guide-term">Edge Score</div>
+            <div class="guide-term" {{ metric_tooltip_attr("Edge Score") | safe }}>Edge Score</div>
             <div class="guide-def">A ranking score used to surface the strongest current promotion-watch candidates inside each board.</div>
           </div>
 
           <div class="guide-item">
-            <div class="guide-term">Signal Layer</div>
+            <div class="guide-term" {{ metric_tooltip_attr("Signal Layer") | safe }}>Signal Layer</div>
             <div class="guide-def">Players ranked by recent underlying signal quality, not just public-facing box-score reputation or surface stats.</div>
           </div>
 
           <div class="guide-item">
-            <div class="guide-term">Movement Layer</div>
+            <div class="guide-term" {{ metric_tooltip_attr("Movement Layer") | safe }}>Movement Layer</div>
             <div class="guide-def">Recent arrivals, recalls, debuts, and movement events that matter for prospect timing, roster opportunity, and market reaction.</div>
           </div>
 
           <div class="guide-item">
-            <div class="guide-term">Team Labels</div>
+            <div class="guide-term" {{ metric_tooltip_attr("Team Labels") | safe }}>Team Labels</div>
             <div class="guide-def">This terminal emphasizes minor-league affiliate context first, with the MLB parent organization used as secondary context.</div>
           </div>
 
           <div class="guide-item">
-            <div class="guide-term">Why This Page Exists</div>
+            <div class="guide-term" {{ metric_tooltip_attr("Why This Page Exists") | safe }}>Why This Page Exists</div>
             <div class="guide-def">Promotion Watch is designed to identify actionable player movement before the broader market fully adjusts to role, timing, and talent signals.</div>
           </div>
         </div>
@@ -3397,7 +3473,7 @@ HTML_TEMPLATE = Template(
         <div class="section">
           <div class="section-head">
             <div>
-              <div class="section-kicker">AAA GEMS</div>
+              <div class="section-kicker" {{ metric_tooltip_attr("AAA GEMS") | safe }}>AAA GEMS</div>
               <h2 class="section-title">AAA GEMS — Lower-Minors Surveillance</h2>
             </div>
             <div class="section-badge">Top {{ depth_radar_rows|length }}</div>
@@ -3442,14 +3518,14 @@ HTML_TEMPLATE = Template(
 
     <div class="pw-field-guide-body">
       <section class="pw-guide-card">
-        <div class="pw-guide-label">Surface Objective</div>
+        <div class="pw-guide-label" {{ metric_tooltip_attr("Surface Objective") | safe }}>Surface Objective</div>
         <p class="pw-guide-copy">
           Promotion Watch isolates Triple-A assets moving toward MLB relevance before the public market fully prices the call-up window. The page is split between fresh final-slate AAA production, 14-day movement, and recent MLB arrival confirmation.
         </p>
       </section>
 
       <section class="pw-guide-card">
-        <div class="pw-guide-label">72 HR Board</div>
+        <div class="pw-guide-label" {{ metric_tooltip_attr("72 HR Board") | safe }}>72 HR Board</div>
         <p class="pw-guide-copy">
           The 72 HR board is the live acceleration layer. It prioritizes players flashing recent production, roster pressure, and near-term call-up plausibility.
         </p>
@@ -3461,7 +3537,7 @@ HTML_TEMPLATE = Template(
       </section>
 
       <section class="pw-guide-card">
-        <div class="pw-guide-label">14 DAY Board</div>
+        <div class="pw-guide-label" {{ metric_tooltip_attr("14 DAY Board") | safe }}>14 DAY Board</div>
         <p class="pw-guide-copy">
           The 14 DAY board acts as the steadier scouting window. It reduces one-game noise and highlights players whose production has held across a broader movement sample.
         </p>
@@ -3473,7 +3549,7 @@ HTML_TEMPLATE = Template(
       </section>
 
       <section class="pw-guide-card">
-        <div class="pw-guide-label">Fresh AAA Hitters</div>
+        <div class="pw-guide-label" {{ metric_tooltip_attr("Fresh AAA Hitters") | safe }}>Fresh AAA Hitters</div>
         <p class="pw-guide-copy">
           The hitter ledger reads the latest AAA final slate for offensive pressure. Core signals include power events, run production, plate discipline, and short-window production spikes.
         </p>
@@ -3485,7 +3561,7 @@ HTML_TEMPLATE = Template(
       </section>
 
       <section class="pw-guide-card">
-        <div class="pw-guide-label">Fresh AAA Pitchers</div>
+        <div class="pw-guide-label" {{ metric_tooltip_attr("Fresh AAA Pitchers") | safe }}>Fresh AAA Pitchers</div>
         <p class="pw-guide-copy">
           The pitcher ledger reads the latest AAA final slate for command, bat-missing, and role-readiness signals. It is designed to spot arms forcing MLB consideration.
         </p>
@@ -3498,7 +3574,7 @@ HTML_TEMPLATE = Template(
 
 
       <section class="pw-guide-card">
-        <div class="pw-guide-label">Card Metrics Glossary</div>
+        <div class="pw-guide-label" {{ metric_tooltip_attr("Card Metrics Glossary") | safe }}>Card Metrics Glossary</div>
         <p class="pw-guide-copy">
           Each Promotion Watch tab uses a different metric set because each tab answers a different scouting question:
           72 HR measures acceleration, 14 DAY confirms recent AAA production, MOVEMENT LAYER // RECENT MLB ARRIVALS tracks roster events, and AAA GEMS monitors lower-minors depth.
@@ -3519,7 +3595,7 @@ HTML_TEMPLATE = Template(
       </section>
 
       <section class="pw-guide-card">
-        <div class="pw-guide-label">Movement Layer</div>
+        <div class="pw-guide-label" {{ metric_tooltip_attr("Movement Layer") | safe }}>Movement Layer</div>
         <p class="pw-guide-copy">
           Recent MLB arrivals are the confirmation feed. They show whether the system is detecting players close enough to the transaction layer to matter for roster action.
         </p>
@@ -3531,7 +3607,7 @@ HTML_TEMPLATE = Template(
       </section>
 
       <section class="pw-guide-card">
-        <div class="pw-guide-label">Operator Rule</div>
+        <div class="pw-guide-label" {{ metric_tooltip_attr("Operator Rule") | safe }}>Operator Rule</div>
         <p class="pw-guide-copy">
           Treat Promotion Watch as an early-extraction surface. The mission is not to wait for the fantasy market to react. The mission is to detect acceleration, verify the path, and initiate tracking before the roster window closes.
         </p>
@@ -4212,6 +4288,13 @@ def fetch_fresh_hitter_signal_candidates_debug() -> pd.DataFrame:
 
     return out.head(10).reset_index(drop=True)
 
+
+try:
+    LIVE_LEDGER_CARD.globals["metric_tooltip_attr"] = metric_tooltip_attr
+except Exception:
+    pass
+
+
 def render_html() -> str:
     build_started_at = utc_now_iso()
     source_frame_result = load_source_frame()
@@ -4483,6 +4566,7 @@ def render_html() -> str:
 
 
     rendered = HTML_TEMPLATE.render(
+        metric_tooltip_attr=metric_tooltip_attr,
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
         timezone_label=TIMEZONE_LABEL,
         nav_html=Template(NAV_TEMPLATE).render(active_nav="promotion_watch"),

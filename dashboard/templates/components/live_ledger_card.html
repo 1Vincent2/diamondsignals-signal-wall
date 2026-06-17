@@ -21,15 +21,15 @@
   <div class="audit-center">
     <div class="forensic-grid">
       <div class="forensic-cell">
-        <div class="forensic-label">{{ metric_1_label }}</div>
+        <div class="forensic-label" {{ metric_tooltip_attr(metric_1_label) | safe }}>{{ metric_1_label }}</div>
         <div class="forensic-value">{{ row.metric_1 }}</div>
       </div>
       <div class="forensic-cell">
-        <div class="forensic-label">{{ metric_2_label }}</div>
+        <div class="forensic-label" {{ metric_tooltip_attr(metric_2_label) | safe }}>{{ metric_2_label }}</div>
         <div class="forensic-value">{{ row.metric_2 }}</div>
       </div>
       <div class="forensic-cell">
-        <div class="forensic-label">{{ metric_3_label }}</div>
+        <div class="forensic-label" {{ metric_tooltip_attr(metric_3_label) | safe }}>{{ metric_3_label }}</div>
         <div class="forensic-value">{{ row.metric_3 }}</div>
       </div>
     </div>
@@ -38,7 +38,7 @@
 
   <div class="audit-right audit-action-compact">
     <div class="audit-score-meta">
-      <div class="conviction-label">LIVE_SCORE</div>
+      <div class="conviction-label" {{ metric_tooltip_attr("LIVE_SCORE") | safe }}>LIVE_SCORE</div>
       <div class="conviction-score {{ row.score_class }}">{{ row.live_score_raw }}</div>
     </div>
     <button
