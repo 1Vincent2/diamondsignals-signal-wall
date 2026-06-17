@@ -1134,7 +1134,74 @@ HTML_TEMPLATE = Template(
 }
 
 
-  </style>
+  
+/* DIAMONDSIGNALS_INSTANT_METRIC_TOOLTIP_V1
+   Replaces inconsistent browser-native title hover with fast, report-consistent CSS tooltips.
+   Desktop hover/focus only. Mobile layout/menu behavior intentionally untouched.
+*/
+@media screen and (min-width: 981px) {
+  [data-tooltip] {
+    position: relative;
+    cursor: help;
+  }
+
+  [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    transform: translateX(-50%) translateY(2px);
+    z-index: 9999;
+    width: max-content;
+    max-width: 280px;
+    padding: 9px 11px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(6,10,18,0.96);
+    color: rgba(255,255,255,0.94);
+    box-shadow:
+      0 12px 28px rgba(0,0,0,0.42),
+      0 0 0 1px rgba(255,255,255,0.04);
+    font-family: var(--sans);
+    font-size: 11px;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 700;
+    white-space: normal;
+    text-align: left;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease, transform 70ms ease;
+  }
+
+  [data-tooltip]::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 4px);
+    transform: translateX(-50%);
+    z-index: 10000;
+    border: 6px solid transparent;
+    border-top-color: rgba(6,10,18,0.96);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease;
+  }
+
+  [data-tooltip]:hover::after,
+  [data-tooltip]:focus-visible::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  [data-tooltip]:hover::before,
+  [data-tooltip]:focus-visible::before {
+    opacity: 1;
+  }
+}
+
+</style>
 </head>
 <body>
   <div class="topbar">
@@ -1254,17 +1321,17 @@ HTML_TEMPLATE = Template(
 
     <section class="top-metrics">
       <article class="metric-card">
-        <div class="metric-label" title="{{ field_tilt_title }}" aria-label="{{ field_tilt_title }}">Field Tilt</div>
+        <div class="metric-label" data-tooltip="{{ field_tilt_title }}" aria-label="{{ field_tilt_title }}">Field Tilt</div>
         <div class="metric-value">{{ field_tilt_pct }}%</div>
         <div class="metric-note">Share of tracked arms in the current window carrying elite 18"+ IVB.</div>
       </article>
       <article class="metric-card">
-        <div class="metric-label" title="{{ tracked_arms_title }}" aria-label="{{ tracked_arms_title }}">Tracked Arms</div>
+        <div class="metric-label" data-tooltip="{{ tracked_arms_title }}" aria-label="{{ tracked_arms_title }}">Tracked Arms</div>
         <div class="metric-value">{{ tracked_pitchers }}</div>
         <div class="metric-note">Pitchers meeting the fastball sample threshold in the last {{ lookback_days }} days.</div>
       </article>
       <article class="metric-card">
-        <div class="metric-label" title="{{ dead_zone_count_title }}" aria-label="{{ dead_zone_count_title }}">Dead Zone Count</div>
+        <div class="metric-label" data-tooltip="{{ dead_zone_count_title }}" aria-label="{{ dead_zone_count_title }}">Dead Zone Count</div>
         <div class="metric-value">{{ dead_zone_count }}</div>
         <div class="metric-note">Pitchers sitting in the 12"–15" carry band, where contact quality risk rises.</div>
       </article>
@@ -1318,23 +1385,23 @@ HTML_TEMPLATE = Template(
 
             <div class="heat-values">
               <div class="heat-value-box">
-                <div class="heat-value-label" title="{{ row.ivb_raw_title }}" aria-label="{{ row.ivb_raw_title }}">IVB Raw</div>
+                <div class="heat-value-label" data-tooltip="{{ row.ivb_raw_title }}" aria-label="{{ row.ivb_raw_title }}">IVB Raw</div>
                 <div class="heat-value">{{ row.ivb_raw }}</div>
               </div>
               <div class="heat-value-box">
-                <div class="heat-value-label" title="{{ row.ivb_vs_avg_title }}" aria-label="{{ row.ivb_vs_avg_title }}">IVB vs Avg</div>
+                <div class="heat-value-label" data-tooltip="{{ row.ivb_vs_avg_title }}" aria-label="{{ row.ivb_vs_avg_title }}">IVB vs Avg</div>
                 <div class="heat-value">{{ row.ivb_vs_avg }}</div>
               </div>
               <div class="heat-value-box">
-                <div class="heat-value-label" title="{{ row.vaa_title }}" aria-label="{{ row.vaa_title }}">VAA</div>
+                <div class="heat-value-label" data-tooltip="{{ row.vaa_title }}" aria-label="{{ row.vaa_title }}">VAA</div>
                 <div class="heat-value">{{ row.vaa }}</div>
               </div>
               <div class="heat-value-box">
-                <div class="heat-value-label" title="{{ row.whiff_probability_title }}" aria-label="{{ row.whiff_probability_title }}">Whiff Prob</div>
+                <div class="heat-value-label" data-tooltip="{{ row.whiff_probability_title }}" aria-label="{{ row.whiff_probability_title }}">Whiff Prob</div>
                 <div class="heat-value">{{ row.whiff_probability }}</div>
               </div>
               <div class="heat-value-box">
-                <div class="heat-value-label" title="{{ row.dead_zone_title }}" aria-label="{{ row.dead_zone_title }}">Dead Zone</div>
+                <div class="heat-value-label" data-tooltip="{{ row.dead_zone_title }}" aria-label="{{ row.dead_zone_title }}">Dead Zone</div>
                 <div class="heat-value">{{ row.dead_zone_label }}</div>
               </div>
             </div>

@@ -1647,7 +1647,74 @@ HTML_TEMPLATE = Template(
 
 
 
-  </style>
+  
+/* DIAMONDSIGNALS_INSTANT_METRIC_TOOLTIP_V1
+   Replaces inconsistent browser-native title hover with fast, report-consistent CSS tooltips.
+   Desktop hover/focus only. Mobile layout/menu behavior intentionally untouched.
+*/
+@media screen and (min-width: 981px) {
+  [data-tooltip] {
+    position: relative;
+    cursor: help;
+  }
+
+  [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    transform: translateX(-50%) translateY(2px);
+    z-index: 9999;
+    width: max-content;
+    max-width: 280px;
+    padding: 9px 11px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(6,10,18,0.96);
+    color: rgba(255,255,255,0.94);
+    box-shadow:
+      0 12px 28px rgba(0,0,0,0.42),
+      0 0 0 1px rgba(255,255,255,0.04);
+    font-family: var(--sans);
+    font-size: 11px;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 700;
+    white-space: normal;
+    text-align: left;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease, transform 70ms ease;
+  }
+
+  [data-tooltip]::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 4px);
+    transform: translateX(-50%);
+    z-index: 10000;
+    border: 6px solid transparent;
+    border-top-color: rgba(6,10,18,0.96);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease;
+  }
+
+  [data-tooltip]:hover::after,
+  [data-tooltip]:focus-visible::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  [data-tooltip]:hover::before,
+  [data-tooltip]:focus-visible::before {
+    opacity: 1;
+  }
+}
+
+</style>
 </head>
 <body>
   <div class="topbar">
@@ -1763,7 +1830,7 @@ HTML_TEMPLATE = Template(
 
             <div class="scorebox">
               <div>
-                <div class="score-label" title="{{ row.disruption_score_title }}" aria-label="{{ row.disruption_score_title }}">Disruption Score</div>
+                <div class="score-label" data-tooltip="{{ row.disruption_score_title }}" aria-label="{{ row.disruption_score_title }}">Disruption Score</div>
                 <div class="score-value {{ row.score_class }}">{{ row.disruption_score_label }}</div>
               </div>
               <div class="action-row">
@@ -1800,19 +1867,19 @@ HTML_TEMPLATE = Template(
 
           <div class="metric-grid">
             <div class="metric {{ row.ivb_class }}">
-              <div class="metric-label" title="{{ row.ivb_delta_title }}" aria-label="{{ row.ivb_delta_title }}">IVB Delta</div>
+              <div class="metric-label" data-tooltip="{{ row.ivb_delta_title }}" aria-label="{{ row.ivb_delta_title }}">IVB Delta</div>
               <div class="metric-value">{{ row.ivb_delta_label }}</div>
             </div>
             <div class="metric {{ row.vaa_class }}">
-              <div class="metric-label" title="{{ row.vaa_delta_title }}" aria-label="{{ row.vaa_delta_title }}">VAA Delta</div>
+              <div class="metric-label" data-tooltip="{{ row.vaa_delta_title }}" aria-label="{{ row.vaa_delta_title }}">VAA Delta</div>
               <div class="metric-value">{{ row.vaa_delta_label }}</div>
             </div>
             <div class="metric {{ row.movement_class }}">
-              <div class="metric-label" title="{{ row.movement_delta_title }}" aria-label="{{ row.movement_delta_title }}">Move Delta</div>
+              <div class="metric-label" data-tooltip="{{ row.movement_delta_title }}" aria-label="{{ row.movement_delta_title }}">Move Delta</div>
               <div class="metric-value">{{ row.movement_delta_label }}</div>
             </div>
             <div class="metric {{ row.spin_class }}">
-              <div class="metric-label" title="{{ row.active_spin_delta_title }}" aria-label="{{ row.active_spin_delta_title }}">Active Spin</div>
+              <div class="metric-label" data-tooltip="{{ row.active_spin_delta_title }}" aria-label="{{ row.active_spin_delta_title }}">Active Spin</div>
               <div class="metric-value">{{ row.active_spin_delta_label }}</div>
             </div>
           </div>
