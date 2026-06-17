@@ -12,19 +12,24 @@ REQUIRED_STATUS_KEYS = {
     "report_id",
     "state",
     "build_success",
-    "generated_at",
-    "source_age_minutes",
-    "threshold_minutes",
     "used_fallback",
+    "degraded",
+    "threshold_minutes",
+    "build_started_at",
+    "build_finished_at",
+    "source_updated_at",
+    "source_age_minutes",
+    "section_counts",
     "errors",
+    "notes",
+    "generated_at",
 }
 
 VALID_STATES = {
     "fresh",
     "stale",
-    "empty",
-    "error",
     "degraded",
+    "failed",
 }
 
 def rel(path: Path) -> str:
@@ -104,19 +109,18 @@ def main() -> None:
         if state not in VALID_STATES:
             problems.append(f"{report_id}: invalid state value: {state}")
 
-        build_success = status_payload.get("build_success")
-        print(f"build_success: {build_success}")
-        if not isinstance(build_success, bool):
-            problems.append(
-                f"{report_id}: build_success must be boolean, got {type(build_success).__name__}"
-            )
-
-        generated_at = status_payload.get("generated_at")
-        print(f"generated_at: {generated_at}")
-        if not parse_datetime(generated_at):
-            problems.append(
-                f"{report_id}: generated_at is missing or not ISO-parseable: {generated_at}"
-            )
+        for timestamp_key in [
+            "build_started_at",
+            "build_finished_at",
+            "source_updated_at",
+            "generated_at",
+        ]:
+            value = status_payload.get(timestamp_key)
+            print(f"{timestamp_key}: {value}")
+            if not parse_datetime(value):
+                problems.append(
+                    f"{report_id}: {timestamp_key} is missing or not ISO-parseable: {value}"
+                )
 
         for numeric_key in ["source_age_minutes", "threshold_minutes"]:
             value = status_payload.get(numeric_key)
@@ -126,17 +130,30 @@ def main() -> None:
                     f"{report_id}: {numeric_key} must be numeric, got {type(value).__name__}"
                 )
 
-        used_fallback = status_payload.get("used_fallback")
-        print(f"used_fallback: {used_fallback}")
-        if not isinstance(used_fallback, bool):
-            problems.append(
-                f"{report_id}: used_fallback must be boolean, got {type(used_fallback).__name__}"
-            )
+        for bool_key in ["build_success", "used_fallback", "degraded"]:
+            value = status_payload.get(bool_key)
+            print(f"{bool_key}: {value}")
+            if not isinstance(value, bool):
+                problems.append(
+                    f"{report_id}: {bool_key} must be boolean, got {type(value).__name__}"
+                )
+
+        section_counts = status_payload.get("section_counts")
+        print(f"section_counts_keys: {sorted(section_counts.keys()) if isinstance(section_counts, dict) else 'INVALID'}")
+        if not isinstance(section_counts, dict):
+            problems.append(f"{report_id}: section_counts must be an object")
+        elif not section_counts:
+            problems.append(f"{report_id}: section_counts must not be empty")
 
         errors = status_payload.get("errors")
         print(f"errors_count: {len(errors) if isinstance(errors, list) else 'INVALID'}")
         if not isinstance(errors, list):
             problems.append(f"{report_id}: errors must be a list")
+
+        notes = status_payload.get("notes")
+        print(f"notes_count: {len(notes) if isinstance(notes, list) else 'INVALID'}")
+        if not isinstance(notes, list):
+            problems.append(f"{report_id}: notes must be a list")
 
         optional_keys = sorted(set(status_payload.keys()) - REQUIRED_STATUS_KEYS)
         print(f"optional_keys: {optional_keys}")

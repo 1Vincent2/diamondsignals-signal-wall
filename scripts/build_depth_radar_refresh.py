@@ -299,10 +299,15 @@ def main() -> None:
         "errors": errors,
     }
 
+    build_started_at = generated_at
+    build_finished_at = utc_now_iso()
+
     status_payload = {
         "report_id": "depth_radar",
-        "state": "fresh" if rows else "empty",
+        "state": "fresh" if rows else "degraded",
         "build_success": True,
+        "build_started_at": build_started_at,
+        "build_finished_at": build_finished_at,
         "degraded": False,
         "used_fallback": False,
         "generated_at": generated_at,
