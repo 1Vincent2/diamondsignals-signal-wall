@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 import re
 import json
+from html import escape
 import os
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Optional
 
 from dashboard.lib.publish_safe import write_temp_output, promote_output_if_valid, save_snapshot
+from dashboard.lib.metric_display import metric_title
 from dashboard.lib.report_status import build_report_status, utc_now_iso
 from dashboard.lib.report_validation import build_validation_report, validate_min_rows
 
@@ -30,6 +32,18 @@ SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding=
 LEDGER_STYLES_TEMPLATE = (TEMPLATES_DIR / "ledger_styles.css").read_text(encoding="utf-8")
 HOME_SIGNAL_LEDGER_CARD_TEMPLATE = (TEMPLATES_DIR / "components" / "home_signal_ledger_card.html").read_text(encoding="utf-8")
 HOME_SIGNAL_LEDGER_CARD = Template(HOME_SIGNAL_LEDGER_CARD_TEMPLATE)
+
+def metric_tooltip_attr(label) -> str:
+    tip = metric_title(label)
+    escaped = escape(tip, quote=True)
+    return f'data-tooltip="{escaped}" aria-label="{escaped}"'
+
+
+try:
+    HOME_SIGNAL_LEDGER_CARD.globals["metric_tooltip_attr"] = metric_tooltip_attr
+except Exception:
+    pass
+
 SIGNALS_FRONT_DOOR_TEMPLATE = (TEMPLATES_DIR / "signals_front_door.html").read_text(encoding="utf-8")
 
 ALERT_THRESHOLD = float(os.getenv("ALERT_THRESHOLD", "65"))
@@ -1815,6 +1829,72 @@ HTML_TEMPLATE = Template(
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>DiamondSignals — Signal Wall</title>
   <style>
+/* DIAMONDSIGNALS_INSTANT_METRIC_TOOLTIP_V1
+   Fast desktop-only metric tooltips for Signal Wall.
+   Mobile layout/menu behavior intentionally untouched.
+*/
+@media screen and (min-width: 981px) {
+  [data-tooltip] {
+    position: relative;
+    cursor: help;
+  }
+
+  [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    transform: translateX(-50%) translateY(2px);
+    z-index: 9999;
+    width: max-content;
+    max-width: 280px;
+    padding: 9px 11px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(6,10,18,0.96);
+    color: rgba(255,255,255,0.94);
+    box-shadow:
+      0 12px 28px rgba(0,0,0,0.42),
+      0 0 0 1px rgba(255,255,255,0.04);
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 800;
+    white-space: normal;
+    text-align: left;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease, transform 70ms ease;
+  }
+
+  [data-tooltip]::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 4px);
+    transform: translateX(-50%);
+    z-index: 10000;
+    border: 6px solid transparent;
+    border-top-color: rgba(6,10,18,0.96);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease;
+  }
+
+  [data-tooltip]:hover::after,
+  [data-tooltip]:focus-visible::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  [data-tooltip]:hover::before,
+  [data-tooltip]:focus-visible::before {
+    opacity: 1;
+  }
+}
+
     :root {
       --bg: #080808;
       --card-radial: radial-gradient(circle at top left, #1a1a1a 0%, #080808 100%);
@@ -2402,7 +2482,7 @@ HTML_TEMPLATE = Template(
       <section class="glossary-section">
         <h3 class="glossary-section-title">I. Global System Metrics</h3>
         <div class="glossary-item"><span class="glossary-term">System Status</span><div class="glossary-definition">Confirms the live state of the Statcast-driven pipeline.</div></div>
-        <div class="glossary-item"><span class="glossary-term">Edge Score</span><div class="glossary-definition">A 0 to 100 ranking summarizing signal strength versus baseline.</div></div>
+        <div class="glossary-item"><span class="glossary-term" {{ metric_tooltip_attr("Edge Score") | safe }}>Edge Score</span><div class="glossary-definition">A 0 to 100 ranking summarizing signal strength versus baseline.</div></div>
       </section>
       <section class="glossary-section">
         <h3 class="glossary-section-title">II. Pitching Signal Terms</h3>
@@ -2543,6 +2623,7 @@ HTML_TEMPLATE = Template(
 
 def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
     return HTML_TEMPLATE.render(
+        metric_tooltip_attr=metric_tooltip_attr,
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
         threshold=f"{ALERT_THRESHOLD:.0f}+",
         timezone_label=TIMEZONE_LABEL,
