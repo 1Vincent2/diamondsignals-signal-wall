@@ -12,6 +12,7 @@ from pybaseball import statcast
 from supabase import create_client
 
 from dashboard.lib.report_status import build_report_status
+from dashboard.lib.metric_display import metric_title, safe_metric_value
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -1253,17 +1254,17 @@ HTML_TEMPLATE = Template(
 
     <section class="top-metrics">
       <article class="metric-card">
-        <div class="metric-label">Field Tilt</div>
+        <div class="metric-label" title="{{ field_tilt_title }}" aria-label="{{ field_tilt_title }}">Field Tilt</div>
         <div class="metric-value">{{ field_tilt_pct }}%</div>
         <div class="metric-note">Share of tracked arms in the current window carrying elite 18"+ IVB.</div>
       </article>
       <article class="metric-card">
-        <div class="metric-label">Tracked Arms</div>
+        <div class="metric-label" title="{{ tracked_arms_title }}" aria-label="{{ tracked_arms_title }}">Tracked Arms</div>
         <div class="metric-value">{{ tracked_pitchers }}</div>
         <div class="metric-note">Pitchers meeting the fastball sample threshold in the last {{ lookback_days }} days.</div>
       </article>
       <article class="metric-card">
-        <div class="metric-label">Dead Zone Count</div>
+        <div class="metric-label" title="{{ dead_zone_count_title }}" aria-label="{{ dead_zone_count_title }}">Dead Zone Count</div>
         <div class="metric-value">{{ dead_zone_count }}</div>
         <div class="metric-note">Pitchers sitting in the 12"–15" carry band, where contact quality risk rises.</div>
       </article>
@@ -1317,23 +1318,23 @@ HTML_TEMPLATE = Template(
 
             <div class="heat-values">
               <div class="heat-value-box">
-                <div class="heat-value-label">IVB Raw</div>
+                <div class="heat-value-label" title="{{ row.ivb_raw_title }}" aria-label="{{ row.ivb_raw_title }}">IVB Raw</div>
                 <div class="heat-value">{{ row.ivb_raw }}</div>
               </div>
               <div class="heat-value-box">
-                <div class="heat-value-label">IVB vs Avg</div>
+                <div class="heat-value-label" title="{{ row.ivb_vs_avg_title }}" aria-label="{{ row.ivb_vs_avg_title }}">IVB vs Avg</div>
                 <div class="heat-value">{{ row.ivb_vs_avg }}</div>
               </div>
               <div class="heat-value-box">
-                <div class="heat-value-label">VAA</div>
+                <div class="heat-value-label" title="{{ row.vaa_title }}" aria-label="{{ row.vaa_title }}">VAA</div>
                 <div class="heat-value">{{ row.vaa }}</div>
               </div>
               <div class="heat-value-box">
-                <div class="heat-value-label">Whiff Prob</div>
+                <div class="heat-value-label" title="{{ row.whiff_probability_title }}" aria-label="{{ row.whiff_probability_title }}">Whiff Prob</div>
                 <div class="heat-value">{{ row.whiff_probability }}</div>
               </div>
               <div class="heat-value-box">
-                <div class="heat-value-label">Dead Zone</div>
+                <div class="heat-value-label" title="{{ row.dead_zone_title }}" aria-label="{{ row.dead_zone_title }}">Dead Zone</div>
                 <div class="heat-value">{{ row.dead_zone_label }}</div>
               </div>
             </div>
@@ -2068,11 +2069,16 @@ def lab_rows_to_cards(rows: list[dict]) -> list[dict]:
                 "player_id": row.get("player_id"),
                 "player_name": row.get("player_name", "Unknown Pitcher"),
                 "team": row.get("team", "TEAM"),
-                "ivb_raw": format_plain(ivb_raw, '"'),
-                "ivb_vs_avg": format_signed(ivb_vs_avg, '"'),
-                "vaa": "--" if vaa is None else format_plain(vaa, "°"),
-                "dead_zone_label": "COLD" if bool(row.get("dead_zone_flag")) else "CLEAR",
-                "whiff_probability": row.get("whiff_probability") or "LOW",
+                "ivb_raw": safe_metric_value(format_plain(ivb_raw, '"')),
+                "ivb_raw_title": metric_title("IVB Raw"),
+                "ivb_vs_avg": safe_metric_value(format_signed(ivb_vs_avg, '"')),
+                "ivb_vs_avg_title": metric_title("IVB vs Avg"),
+                "vaa": safe_metric_value("--" if vaa is None else format_plain(vaa, "°")),
+                "vaa_title": metric_title("VAA"),
+                "dead_zone_label": safe_metric_value("COLD" if bool(row.get("dead_zone_flag")) else "CLEAR"),
+                "dead_zone_title": metric_title("Dead Zone"),
+                "whiff_probability": safe_metric_value(row.get("whiff_probability") or "LOW"),
+                "whiff_probability_title": metric_title("Whiff Prob"),
                 "climber_flag": bool(row.get("climber_flag")),
                 "contact_risk": "BARREL MAGNET // CONTACT RISK" if bool(row.get("contact_risk_flag")) else "",
                 "heat_class": heat_class(ivb_raw),
@@ -2115,11 +2121,16 @@ def to_cards(grouped: pd.DataFrame, climber_ids: set[int]) -> list[dict]:
                 "player_id": pitcher_id_int,
                 "player_name": row.get("player_name", "Unknown Pitcher"),
                 "team": row.get("team", "TEAM"),
-                "ivb_raw": format_plain(ivb_raw, '"'),
-                "ivb_vs_avg": format_signed(ivb_delta, '"'),
-                "vaa": "--" if vaa is None else format_plain(vaa, "°"),
-                "dead_zone_label": "COLD" if bool(row.get("dead_zone_flag")) else "CLEAR",
-                "whiff_probability": whiff_probability_label(ivb_raw, vaa, ivb_delta),
+                "ivb_raw": safe_metric_value(format_plain(ivb_raw, '"')),
+                "ivb_raw_title": metric_title("IVB Raw"),
+                "ivb_vs_avg": safe_metric_value(format_signed(ivb_delta, '"')),
+                "ivb_vs_avg_title": metric_title("IVB vs Avg"),
+                "vaa": safe_metric_value("--" if vaa is None else format_plain(vaa, "°")),
+                "vaa_title": metric_title("VAA"),
+                "dead_zone_label": safe_metric_value("COLD" if bool(row.get("dead_zone_flag")) else "CLEAR"),
+                "dead_zone_title": metric_title("Dead Zone"),
+                "whiff_probability": safe_metric_value(whiff_probability_label(ivb_raw, vaa, ivb_delta)),
+                "whiff_probability_title": metric_title("Whiff Prob"),
                 "climber_flag": pitcher_id_int in climber_ids if pitcher_id_int is not None else False,
                 "contact_risk": contact_risk_label(ivb_raw),
                 "heat_class": heat_class(ivb_raw),
@@ -2325,8 +2336,11 @@ def write_ivb_heat_map() -> None:
         footer_html=FOOTER_TEMPLATE,
         shell_styles=SHELL_STYLES_TEMPLATE,
         field_tilt_pct=field_tilt_pct,
+        field_tilt_title=metric_title("Field Tilt"),
         tracked_pitchers=tracked_pitchers,
+        tracked_arms_title=metric_title("Tracked Arms"),
         dead_zone_count=dead_zone_count,
+        dead_zone_count_title=metric_title("Dead Zone Count"),
         heat_cards=heat_cards,
         climbers=climbers,
         fallers=fallers,

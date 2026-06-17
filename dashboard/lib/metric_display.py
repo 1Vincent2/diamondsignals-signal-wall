@@ -38,6 +38,9 @@ METRIC_DEFINITIONS: dict[str, str] = {
     "IVB_RAW": "Raw fastball induced vertical break in inches.",
     "IVB_VS_AVG": "Fastball IVB compared with the expected value for the same velocity bucket.",
     "DEAD_ZONE_COUNT": "Count of arms in the flatter 12 to 15 inch carry band where contact risk rises.",
+    "DEAD_ZONE": "Whether the fastball carry profile sits in the 12–15 inch contact-risk band.",
+    "VAA": "Estimated vertical approach angle for the fastball shape window.",
+    "TRACKED_ARMS": "Pitchers meeting the fastball sample threshold in the current IVB window.",
     "WHIFF_PROB": "Translation layer estimating bat-missing expectation from pitch-shape inputs.",
 
     "RISK_SCORE": "Composite risk score for decay, fatigue, or mechanical-drift exposure.",
