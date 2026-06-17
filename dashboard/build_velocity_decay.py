@@ -10,6 +10,7 @@ from jinja2 import Template
 from pybaseball import statcast
 
 from dashboard.lib.report_status import build_report_status
+from dashboard.lib.metric_display import metric_title, safe_metric_value
 
 BASE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = BASE_DIR.parent
@@ -461,7 +462,8 @@ def format_velocity_decay_cards(rows: list[dict]) -> list[dict]:
         cards.append(
             {
                 **row,
-                "risk_score_label": "--" if risk_score is None else f"{risk_score:.1f}",
+                "risk_score_label": safe_metric_value("--" if risk_score is None else f"{risk_score:.1f}"),
+                "risk_score_title": metric_title("Risk Score"),
                 "score_class": score_class,
                 "alert_class": alert_class,
                 "sparkline_class": sparkline_class,
@@ -475,10 +477,14 @@ def format_velocity_decay_cards(rows: list[dict]) -> list[dict]:
             ),
                 "velo_delta_class": velo_delta_class,
                 "extension_delta_class": extension_delta_class,
-                "velo_delta_label": format_signed(velo_delta, " mph"),
-                "extension_delta_label": format_signed(extension_delta, " ft"),
-                "perceived_delta_label": format_signed(perceived_delta, " mph"),
-                "decay_slope_label": format_decay_slope_label(decay_slope),
+                "velo_delta_label": safe_metric_value(format_signed(velo_delta, " mph")),
+                "velo_delta_title": metric_title("Velo Delta"),
+                "extension_delta_label": safe_metric_value(format_signed(extension_delta, " ft")),
+                "extension_delta_title": metric_title("Ext Delta"),
+                "perceived_delta_label": safe_metric_value(format_signed(perceived_delta, " mph")),
+                "perceived_delta_title": metric_title("Perceived Delta"),
+                "decay_slope_label": safe_metric_value(format_decay_slope_label(decay_slope)),
+                "decay_slope_title": metric_title("Decay Slope"),
                 "trend_points": values_to_polyline(row.get("trend_values") or []),
                 "sample_note": f'{len(row.get("trend_values") or [])} start trend',
             }
@@ -1537,7 +1543,7 @@ HTML_TEMPLATE = Template(
 
             <div class="scorebox">
               <div>
-                <div class="score-label">Risk Score</div>
+                <div class="score-label" title="{{ row.risk_score_title }}" aria-label="{{ row.risk_score_title }}">Risk Score</div>
                 <div class="score-value {{ row.score_class }}">{{ row.risk_score_label }}</div>
               </div>
               <div class="action-row">
@@ -1583,19 +1589,19 @@ HTML_TEMPLATE = Template(
 
             <div class="metric-grid">
             <div class="metric {{ row.velo_delta_class }}">
-              <div class="metric-label">Velo Delta</div>
+              <div class="metric-label" title="{{ row.velo_delta_title }}" aria-label="{{ row.velo_delta_title }}">Velo Delta</div>
               <div class="metric-value">{{ row.velo_delta_label }}</div>
             </div>
             <div class="metric {{ row.extension_delta_class }}">
-              <div class="metric-label">Ext Delta</div>
+              <div class="metric-label" title="{{ row.extension_delta_title }}" aria-label="{{ row.extension_delta_title }}">Ext Delta</div>
               <div class="metric-value">{{ row.extension_delta_label }}</div>
             </div>
             <div class="metric">
-              <div class="metric-label">Perceived Delta</div>
+              <div class="metric-label" title="{{ row.perceived_delta_title }}" aria-label="{{ row.perceived_delta_title }}">Perceived Delta</div>
               <div class="metric-value">{{ row.perceived_delta_label }}</div>
             </div>
             <div class="metric">
-              <div class="metric-label">Decay Slope</div>
+              <div class="metric-label" title="{{ row.decay_slope_title }}" aria-label="{{ row.decay_slope_title }}">Decay Slope</div>
               <div class="metric-value">{{ row.decay_slope_label }}</div>
             </div>
           </div>
