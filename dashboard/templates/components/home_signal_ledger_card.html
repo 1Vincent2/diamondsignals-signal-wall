@@ -98,13 +98,13 @@
         {% if is_command %}
         <div class="season-context-tile"><span>K%</span><strong>{{ ctx.k_pct or "—" }}</strong></div>
         <div class="season-context-tile"><span>BB%</span><strong>{{ ctx.bb_pct or "—" }}</strong></div>
-        <div class="season-context-tile"><span>K/BB</span><strong>{{ ctx.k_bb_ratio or "—" }}</strong></div>
-        <div class="season-context-tile"><span>BABIP</span><strong>{{ ctx.babip or "N/A" }}</strong></div>
+        <div class="season-context-tile"><span {{ metric_tooltip_attr("K/BB") | safe }}>K/BB</span><strong>{{ ctx.k_bb_ratio or "—" }}</strong></div>
+        <div class="season-context-tile"><span {{ metric_tooltip_attr("BABIP") | safe }}>BABIP</span><strong>{{ ctx.babip or "N/A" }}</strong></div>
         {% else %}
         <div class="season-context-tile"><span>BB%</span><strong>{{ ctx.bb_pct or "—" }}</strong></div>
-        <div class="season-context-tile"><span>BB/K</span><strong>{{ ctx.bb_k_ratio or "—" }}</strong></div>
-        <div class="season-context-tile"><span>SEAGER</span><strong>{{ row.seager_score if row.seager_score is not none else "—" }}</strong></div>
-        <div class="season-context-tile"><span>BABIP</span><strong>{{ ctx.babip or "N/A" }}</strong></div>
+        <div class="season-context-tile"><span {{ metric_tooltip_attr("BB/K") | safe }}>BB/K</span><strong>{{ ctx.bb_k_ratio or "—" }}</strong></div>
+        <div class="season-context-tile"><span {{ metric_tooltip_attr("SEAGER") | safe }}>SEAGER</span><strong>{{ row.seager_score if row.seager_score is not none else "—" }}</strong></div>
+        <div class="season-context-tile"><span {{ metric_tooltip_attr("BABIP") | safe }}>BABIP</span><strong>{{ ctx.babip or "N/A" }}</strong></div>
         {% endif %}
       </div>
     </div>
