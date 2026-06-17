@@ -1835,6 +1835,73 @@
   }
 }
 
+
+/* DIAMONDSIGNALS_INSTANT_METRIC_TOOLTIP_V1
+   Replaces inconsistent browser-native title hover with fast, report-consistent CSS tooltips.
+   Desktop hover/focus only. Mobile layout/menu behavior intentionally untouched.
+*/
+@media screen and (min-width: 981px) {
+  [data-tooltip] {
+    position: relative;
+    cursor: help;
+  }
+
+  [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    transform: translateX(-50%) translateY(2px);
+    z-index: 9999;
+    width: max-content;
+    max-width: 280px;
+    padding: 9px 11px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(6,10,18,0.96);
+    color: rgba(255,255,255,0.94);
+    box-shadow:
+      0 12px 28px rgba(0,0,0,0.42),
+      0 0 0 1px rgba(255,255,255,0.04);
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 800;
+    white-space: normal;
+    text-align: left;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease, transform 70ms ease;
+  }
+
+  [data-tooltip]::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 4px);
+    transform: translateX(-50%);
+    z-index: 10000;
+    border: 6px solid transparent;
+    border-top-color: rgba(6,10,18,0.96);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease;
+  }
+
+  [data-tooltip]:hover::after,
+  [data-tooltip]:focus-visible::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  [data-tooltip]:hover::before,
+  [data-tooltip]:focus-visible::before {
+    opacity: 1;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1942,7 +2009,7 @@
             <div class="scorebox">
               <div class="score-head">
                 <div class="score-readout">
-                  <div class="score-label">Extraction Score</div>
+                  <div class="score-label" data-tooltip="{{ metric_title('Extraction Score') }}" aria-label="{{ metric_title('Extraction Score') }}">Extraction Score</div>
                   <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
                 </div>
                 <button
@@ -1992,7 +2059,7 @@
           <div class="metric-grid metric-grid-tight">
             <div class="metric">
               <div class="metric-head">
-                <div class="metric-label">{{ row.metric_1_label }}</div>
+                <div class="metric-label" data-tooltip="{{ metric_title(row.metric_1_label) }}" aria-label="{{ metric_title(row.metric_1_label) }}">{{ row.metric_1_label }}</div>
                 <span class="info-chip">i
                   <span class="tooltip-bubble">Trait measures the strength of the underlying skill profile, such as carry, bat-miss support, or velocity quality.</span>
                 </span>
@@ -2002,7 +2069,7 @@
 
             <div class="metric">
               <div class="metric-head">
-                <div class="metric-label">{{ row.metric_2_label }}</div>
+                <div class="metric-label" data-tooltip="{{ metric_title(row.metric_2_label) }}" aria-label="{{ metric_title(row.metric_2_label) }}">{{ row.metric_2_label }}</div>
                 <span class="info-chip">i
                   <span class="tooltip-bubble">Divergence measures how far visible results still lag the underlying skill profile.</span>
                 </span>
@@ -2012,7 +2079,7 @@
 
             <div class="metric">
               <div class="metric-head">
-                <div class="metric-label">{{ row.metric_3_label }}</div>
+                <div class="metric-label" data-tooltip="{{ metric_title(row.metric_3_label) }}" aria-label="{{ metric_title(row.metric_3_label) }}">{{ row.metric_3_label }}</div>
                 <span class="info-chip">i
                   <span class="tooltip-bubble">Market estimates how overlooked the profile still appears to be relative to the underlying quality.</span>
                 </span>
@@ -2023,19 +2090,19 @@
               {% if row.context_metric_1_label %}
               <div class="context-metrics">
                 <div class="context-metric">
-                  <div class="context-label">{{ row.context_metric_1_label }}</div>
+                  <div class="context-label" data-tooltip="{{ metric_title(row.context_metric_1_label) }}" aria-label="{{ metric_title(row.context_metric_1_label) }}">{{ row.context_metric_1_label }}</div>
                   <div class="context-value">{{ row.context_metric_1 }}</div>
                 </div>
                 <div class="context-metric">
-                  <div class="context-label">{{ row.context_metric_2_label }}</div>
+                  <div class="context-label" data-tooltip="{{ metric_title(row.context_metric_2_label) }}" aria-label="{{ metric_title(row.context_metric_2_label) }}">{{ row.context_metric_2_label }}</div>
                   <div class="context-value">{{ row.context_metric_2 }}</div>
                 </div>
                 <div class="context-metric">
-                  <div class="context-label">{{ row.context_metric_3_label }}</div>
+                  <div class="context-label" data-tooltip="{{ metric_title(row.context_metric_3_label) }}" aria-label="{{ metric_title(row.context_metric_3_label) }}">{{ row.context_metric_3_label }}</div>
                   <div class="context-value">{{ row.context_metric_3 }}</div>
                 </div>
                 <div class="context-metric">
-                  <div class="context-label">{{ row.context_metric_4_label }}</div>
+                  <div class="context-label" data-tooltip="{{ metric_title(row.context_metric_4_label) }}" aria-label="{{ metric_title(row.context_metric_4_label) }}">{{ row.context_metric_4_label }}</div>
                   <div class="context-value">{{ row.context_metric_4 }}</div>
                 </div>
               </div>
@@ -2092,7 +2159,7 @@
             <div class="scorebox">
               <div class="score-head">
                 <div class="score-readout">
-                  <div class="score-label">Extraction Score</div>
+                  <div class="score-label" data-tooltip="{{ metric_title('Extraction Score') }}" aria-label="{{ metric_title('Extraction Score') }}">Extraction Score</div>
                   <div class="score-value {{ row.score_class }}">{{ row.hidden_gems_score }}</div>
                 </div>
                 <button
@@ -2142,7 +2209,7 @@
           <div class="metric-grid metric-grid-tight">
             <div class="metric">
               <div class="metric-head">
-                <div class="metric-label">{{ row.metric_1_label }}</div>
+                <div class="metric-label" data-tooltip="{{ metric_title(row.metric_1_label) }}" aria-label="{{ metric_title(row.metric_1_label) }}">{{ row.metric_1_label }}</div>
                 <span class="info-chip">i
                   <span class="tooltip-bubble">Trait measures the strength of the underlying hitting quality, such as impact, power shape, or damage support.</span>
                 </span>
@@ -2152,7 +2219,7 @@
 
             <div class="metric">
               <div class="metric-head">
-                <div class="metric-label">{{ row.metric_2_label }}</div>
+                <div class="metric-label" data-tooltip="{{ metric_title(row.metric_2_label) }}" aria-label="{{ metric_title(row.metric_2_label) }}">{{ row.metric_2_label }}</div>
                 <span class="info-chip">i
                   <span class="tooltip-bubble">Divergence measures how far the public-facing production still lags the deeper offensive profile.</span>
                 </span>
@@ -2162,7 +2229,7 @@
 
             <div class="metric">
               <div class="metric-head">
-                <div class="metric-label">{{ row.metric_3_label }}</div>
+                <div class="metric-label" data-tooltip="{{ metric_title(row.metric_3_label) }}" aria-label="{{ metric_title(row.metric_3_label) }}">{{ row.metric_3_label }}</div>
                 <span class="info-chip">i
                   <span class="tooltip-bubble">Market estimates how overlooked or underpriced the player still appears relative to the underlying bat.</span>
                 </span>
@@ -2173,19 +2240,19 @@
               {% if row.context_metric_1_label %}
               <div class="context-metrics">
                 <div class="context-metric">
-                  <div class="context-label">{{ row.context_metric_1_label }}</div>
+                  <div class="context-label" data-tooltip="{{ metric_title(row.context_metric_1_label) }}" aria-label="{{ metric_title(row.context_metric_1_label) }}">{{ row.context_metric_1_label }}</div>
                   <div class="context-value">{{ row.context_metric_1 }}</div>
                 </div>
                 <div class="context-metric">
-                  <div class="context-label">{{ row.context_metric_2_label }}</div>
+                  <div class="context-label" data-tooltip="{{ metric_title(row.context_metric_2_label) }}" aria-label="{{ metric_title(row.context_metric_2_label) }}">{{ row.context_metric_2_label }}</div>
                   <div class="context-value">{{ row.context_metric_2 }}</div>
                 </div>
                 <div class="context-metric">
-                  <div class="context-label">{{ row.context_metric_3_label }}</div>
+                  <div class="context-label" data-tooltip="{{ metric_title(row.context_metric_3_label) }}" aria-label="{{ metric_title(row.context_metric_3_label) }}">{{ row.context_metric_3_label }}</div>
                   <div class="context-value">{{ row.context_metric_3 }}</div>
                 </div>
                 <div class="context-metric">
-                  <div class="context-label">{{ row.context_metric_4_label }}</div>
+                  <div class="context-label" data-tooltip="{{ metric_title(row.context_metric_4_label) }}" aria-label="{{ metric_title(row.context_metric_4_label) }}">{{ row.context_metric_4_label }}</div>
                   <div class="context-value">{{ row.context_metric_4 }}</div>
                 </div>
               </div>

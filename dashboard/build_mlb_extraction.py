@@ -9,6 +9,7 @@ import re
 import pandas as pd
 from jinja2 import Template
 
+from dashboard.lib.metric_display import metric_title
 from dashboard.lib.report_status import build_report_status
 from dashboard.lib.player_identity import (
     load_canonical_player_universe,
@@ -1110,6 +1111,7 @@ def render_html() -> str:
     nav_html = compact_desktop_nav_html + "\n" + mobile_shell_nav_html
 
     return HTML_TEMPLATE.render(
+        metric_title=metric_title,
         generated_at=generated_at,
         latest_week_start=source_window,
         timezone_label=TIMEZONE_LABEL,
