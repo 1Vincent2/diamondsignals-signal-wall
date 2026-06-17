@@ -10,6 +10,7 @@ from jinja2 import Environment, FileSystemLoader, Template
 try:
     from dashboard.lib.report_status import build_report_status
     from dashboard.lib.player_operational_status import apply_operational_status
+    from dashboard.lib.metric_display import metric_title
     from dashboard.lib.player_identity import (
         load_canonical_player_universe,
         build_name_lookup,
@@ -20,6 +21,7 @@ except ModuleNotFoundError:
     sys.path.append(str(Path(__file__).resolve().parents[1]))
     from dashboard.lib.report_status import build_report_status
     from dashboard.lib.player_operational_status import apply_operational_status
+    from dashboard.lib.metric_display import metric_title
     from dashboard.lib.player_identity import (
         load_canonical_player_universe,
         build_name_lookup,
@@ -442,6 +444,7 @@ def render() -> None:
     ]
 
     template_env = Environment(loader=FileSystemLoader(str(TEMPLATE_PATH.parent)))
+    template_env.globals["metric_title"] = metric_title
     template = template_env.get_template(TEMPLATE_PATH.name)
     shell_nav = Template(SHELL_NAV_PATH.read_text(encoding="utf-8")).render(active_nav="waiver_wire")
     shell_nav_v2 = Template(SHELL_NAV_V2_PATH.read_text(encoding="utf-8")).render(active_nav="waiver_wire")

@@ -13,6 +13,13 @@ METRIC_DEFINITIONS: dict[str, str] = {
     "LIVE_SCORE": "Card ranking score inside the active report board.",
     "EDGE_SCORE": "A 0 to 100 signal-strength score versus baseline.",
     "SIGNAL": "Primary movement or opportunity signal for the player.",
+    "STATUS_SOURCE": "Source rail that produced or verified the player status.",
+    "RISK": "Risk readout attached to the waiver recommendation.",
+    "COMMAND": "Plain-English deployment instruction for the current waiver asset.",
+    "MARKET_DEFECT": "The market inefficiency or public-pricing gap creating the waiver opportunity.",
+    "ASSET_TYPE": "Player asset classification used by the Waiver Wire surface.",
+    "SIGNAL_WINDOW": "Time window or source window behind the current waiver signal.",
+    "OWNERSHIP_GATE": "Roster-availability gate showing whether the player is still broadly actionable in the market.",
     "STABILITY": "Short-horizon confidence and repeatability context.",
     "CONTEXT": "Roster, level, opportunity, or market context supporting the signal.",
 
