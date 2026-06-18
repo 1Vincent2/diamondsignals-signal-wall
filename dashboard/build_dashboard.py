@@ -2866,6 +2866,19 @@ def scout_shell_html() -> str:
 
 
       /* PERFORMANCE AUDIT SCOUT LAYOUT LOCK */
+      /* DIAMONDSIGNALS_SCOUT_AUDIT_POLISH_V1 */
+      .scout-page .hero-card {
+        overflow: hidden;
+      }
+      .scout-page .hero-title,
+      .scout-page .hero-copy {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+      }
+      .scout-page .hero-copy {
+        line-height: 1.55;
+      }
+
       /* SCOUT_AUDIT_ARTIFACT_CLEANUP_V1
          Disable decorative pseudo-border masks on Performance Audit cards.
          These masks can render as visible rectangular artifacts over audit panels. */
@@ -2954,7 +2967,7 @@ def scout_shell_html() -> str:
       <div class="eyebrow">Scout Terminal</div>
       <h1 class="hero-title">Performance Audit</h1>
       <p class="hero-copy">
-        DiamondSignals scout shell v2. This page hydrates dossiers from the canonical dossier JSON payload.
+        Canonical performance dossier built from DiamondSignals live extraction, season context, and player audit layers.
       </p>
     </section>
 
