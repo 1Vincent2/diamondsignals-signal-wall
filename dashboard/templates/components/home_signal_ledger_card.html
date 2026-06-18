@@ -4,7 +4,7 @@
   data-player-name="{{ row.player_name }}"
   data-player-type="{{ player_type }}"
   data-player-team="MLB"
-  data-profile-url="#"
+  data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
 >
   <div class="player-top">
     <div class="player-head">
@@ -24,7 +24,7 @@
           data-player-name="{{ row.player_name }}"
           data-player-type="{{ player_type }}"
           data-player-team="MLB"
-          data-profile-url="#"
+          data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
         >INITIATE TRACKING</button>
       </div>
     </div>
@@ -46,7 +46,7 @@
           data-player-name="{{ row.player_name }}"
           data-player-type="{{ player_type }}"
           data-player-team="MLB"
-          data-profile-url="#"
+          data-profile-url="{% if row.resolved_player_id %}/scout/{{ row.resolved_player_id }}/{% else %}#{% endif %}"
         >INITIATE TRACKING</button>
   </div>
 
