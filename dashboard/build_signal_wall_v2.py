@@ -227,6 +227,42 @@ HTML = r'''
     {{ shell_styles | safe }}
 
     /* DIAMONDSIGNALS_INSTANT_METRIC_TOOLTIP_V1 */
+    /* DIAMONDSIGNALS_VISIBLE_TOOLTIP_BEHAVIOR_V1 */
+    body.signal-wall-v2-typography-lock [data-tooltip] {
+      position: relative;
+      cursor: help;
+    }
+
+    body.signal-wall-v2-typography-lock [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 10px);
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: 280px;
+      padding: 9px 11px;
+      border: 1px solid rgba(182, 255, 0, 0.35);
+      border-radius: 10px;
+      background: rgba(5, 7, 11, 0.96);
+      color: rgba(248, 250, 252, 0.96);
+      font-size: 10px;
+      line-height: 1.35;
+      white-space: normal;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 100;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      transition: opacity 140ms ease, transform 140ms ease;
+    }
+
+    body.signal-wall-v2-typography-lock [data-tooltip]:hover::after,
+    body.signal-wall-v2-typography-lock [data-tooltip]:focus-visible::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-2px);
+    }
+
+
     /* V2 keeps shell_nav.html for the frozen mobile menu, but suppresses its retired desktop nav. */
     body.signal-wall-v2-typography-lock .topnav.ds-shell-nav .topnav-inner {
       display: none !important;
