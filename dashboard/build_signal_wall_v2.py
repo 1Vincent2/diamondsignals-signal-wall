@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import html
 import requests
 from datetime import datetime
 from pathlib import Path
@@ -34,6 +35,26 @@ def avatar(name: str) -> str:
 
 def safe(v, fallback="—"):
     return fallback if v is None or v == "" else v
+
+
+METRIC_TOOLTIP_COPY = {
+    "EDGE SCORE": "Edge Score: Composite signal strength score from the Signal Wall extraction layer.",
+    "K/BB": "K/BB: Strikeout-to-walk ratio.",
+    "BB/K": "BB/K: Walk-to-strikeout ratio.",
+    "BABIP": "BABIP: Batting average on balls in play.",
+    "SEAGER": "SEAGER: Hitter quality signal used by the extraction layer.",
+    "BB%": "BB%: Walk rate.",
+    "K%": "K%: Strikeout rate.",
+}
+
+
+def metric_tooltip_attr(label) -> str:
+    key = str(label or "").strip().upper()
+    copy = METRIC_TOOLTIP_COPY.get(key, "")
+    if not copy:
+        return ""
+    escaped = html.escape(copy, quote=True)
+    return f'data-tooltip="{escaped}" aria-label="{escaped}"'
 
 
 
@@ -86,18 +107,31 @@ def resolve_player_id_by_name(name: str) -> str:
 
     return ""
 
+def normalize_signal_wall_player_name(value) -> str:
+    text = " ".join(str(value or "").strip().split())
+    if not text:
+        return ""
+    if "," in text:
+        last, first = [part.strip() for part in text.split(",", 1)]
+        if first and last:
+            text = f"{first} {last}"
+    return text
+
 def stable_player_id(row, player_type, name):
-    for key in ["resolved_player_id", "player_id", "mlbam_id", "batter", "pitcher", "id", "synthetic_player_id"]:
+    # V2 must route by displayed identity before trusting raw numeric fields.
+    normalized_name = normalize_signal_wall_player_name(name)
+    resolved = resolve_player_id_by_name(normalized_name)
+    if resolved:
+        return resolved
+
+    # Last resort only. Raw numeric fields may be foreign IDs from the upstream table.
+    for key in ["resolved_player_id", "player_id", "mlbam_id", "batter", "pitcher", "id"]:
         value = row.get(key)
         if value not in (None, ""):
             try:
                 return str(int(float(str(value).strip())))
             except Exception:
                 return str(value).strip()
-
-    resolved = resolve_player_id_by_name(name)
-    if resolved:
-        return resolved
 
     slug = "".join(ch.lower() if ch.isalnum() else "-" for ch in str(name or "unknown"))
     slug = "-".join(part for part in slug.split("-") if part)
@@ -191,6 +225,12 @@ HTML = r'''
   <title>DiamondSignals // Signal Wall</title>
   <style>
     {{ shell_styles | safe }}
+
+    /* DIAMONDSIGNALS_INSTANT_METRIC_TOOLTIP_V1 */
+    /* V2 keeps shell_nav.html for the frozen mobile menu, but suppresses its retired desktop nav. */
+    body.signal-wall-v2-typography-lock .topnav.ds-shell-nav .topnav-inner {
+      display: none !important;
+    }
 
     :root {
       --bg: #05070b;
@@ -2610,7 +2650,7 @@ CARD = r'''
     <div class="season-context-grid">
       {% for label, value in row.context_tiles %}
       <div class="season-context-tile">
-        <span>{{ label }}</span>
+        <span {{ metric_tooltip_attr(label) | safe }}>{{ label }}</span>
         <strong>{{ value }}</strong>
       </div>
       {% endfor %}
@@ -2644,7 +2684,7 @@ def render_html() -> str:
     card_template = Template(CARD)
 
     def card(row):
-        return card_template.render(row=row)
+        return card_template.render(row=row, metric_tooltip_attr=metric_tooltip_attr)
 
     return Template(HTML).render(
         generated_at=payload.get("generated_at") or datetime.now().isoformat(),
@@ -2676,6 +2716,9 @@ def validate_rendered_html(html: str, pitchers_count: int, hitters_count: int) -
         'data-field-guide-open',
         'topnav ds-shell-nav',
         'ds-mobile-menu-trigger',
+        'ds-pro-desktop-nav',
+        'DIAMONDSIGNALS_INSTANT_METRIC_TOOLTIP_V1',
+        'data-tooltip=',
         'signalWallLiveDotPulse',
     ]
 
