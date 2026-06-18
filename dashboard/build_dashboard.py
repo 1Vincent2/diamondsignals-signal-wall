@@ -2866,6 +2866,17 @@ def scout_shell_html() -> str:
 
 
       /* PERFORMANCE AUDIT SCOUT LAYOUT LOCK */
+      /* SCOUT_AUDIT_ARTIFACT_CLEANUP_V1
+         Disable decorative pseudo-border masks on Performance Audit cards.
+         These masks can render as visible rectangular artifacts over audit panels. */
+      .hero-card::before,
+      .section-card::before,
+      .metric-card::before,
+      .briefing-card::before {
+        content: none;
+        display: none;
+      }
+
       @media (min-width: 761px) {
         .metrics-grid {
           display: grid !important;
