@@ -2866,6 +2866,37 @@ def scout_shell_html() -> str:
 
 
       /* PERFORMANCE AUDIT SCOUT LAYOUT LOCK */
+      /* DIAMONDSIGNALS_SCOUT_AUDIT_DESKTOP_CANVAS_POLISH_V1
+         Desktop-only: widen the audit canvas and reduce excessive black dead space
+         without touching mobile behavior. */
+      @media (min-width: 1000px) {
+        .scout-page {
+          width: min(1360px, calc(100vw - 64px));
+          max-width: none;
+          margin-left: auto;
+          margin-right: auto;
+          padding-bottom: 28px;
+        }
+
+        .scout-page .hero-card,
+        .scout-page .section-card,
+        .scout-page .metric-card,
+        .scout-page .briefing-card {
+          box-shadow: 0 18px 54px rgba(0,0,0,0.28);
+        }
+
+        .scout-page .dashboard-grid,
+        .scout-page .audit-grid,
+        .scout-page .metric-grid,
+        .scout-page .metrics-grid {
+          width: 100%;
+        }
+
+        .scout-page .briefing-card {
+          margin-bottom: 0;
+        }
+      }
+
       /* DIAMONDSIGNALS_SCOUT_AUDIT_POLISH_V1 */
       .scout-page .hero-card {
         overflow: hidden;
