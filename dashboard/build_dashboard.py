@@ -103,13 +103,45 @@ def backfill_resolved_player_ids(df: pd.DataFrame) -> pd.DataFrame:
 
     out["resolved_player_id"] = out["player_id"]
 
-    missing_mask = out["resolved_player_id"].eq("")
+    def resolve_signal_wall_player_name(value) -> str:
+        text = "" if pd.isna(value) else str(value).strip()
+        if not text:
+            return ""
+
+        # Statcast player_name values often arrive as "Last, First".
+        # MLB Stats API lookup is much more reliable as "First Last".
+        if "," in text:
+            last, first = [part.strip() for part in text.split(",", 1)]
+            if first and last:
+                text = f"{first} {last}"
+
+        return str(resolve_player_id_by_name(text) or "").strip()
+
+    # Signal Wall cards must route to the player's dossier page, not merely the
+    # first numeric field present on a Statcast-derived signal row. Some pitcher
+    # rows can carry a generic/wrong player_id value that resolves to another
+    # player, creating /scout/<id>/ links that are either 404s or wrong dossiers.
+    # Prefer normalized player_name resolution when player_name is available.
+    if "player_name" in out.columns:
+        name_resolved = (
+            out["player_name"]
+            .fillna("")
+            .astype(str)
+            .map(resolve_signal_wall_player_name)
+            .fillna("")
+            .astype(str)
+            .str.strip()
+        )
+        has_name_resolved = name_resolved.ne("")
+        out.loc[has_name_resolved, "resolved_player_id"] = name_resolved.loc[has_name_resolved]
+
+    missing_mask = out["resolved_player_id"].fillna("").astype(str).str.strip().eq("")
     if missing_mask.any() and "player_name" in out.columns:
         out.loc[missing_mask, "resolved_player_id"] = (
             out.loc[missing_mask, "player_name"]
             .fillna("")
             .astype(str)
-            .map(resolve_player_id_by_name)
+            .map(resolve_signal_wall_player_name)
         )
 
     out["resolved_player_id"] = out["resolved_player_id"].fillna("").astype(str).str.strip()
