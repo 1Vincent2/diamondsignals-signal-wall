@@ -30,6 +30,39 @@ function isUuid(value) {
   );
 }
 
+function mustEnv(name) {
+  const value = String(process.env[name] || "").trim();
+  if (!value) throw new Error(`Missing env var: ${name}`);
+  return value;
+}
+
+async function updateAuditJob(jobId, patch) {
+  const supabaseUrl = mustEnv("SUPABASE_URL").replace(/\/+$/, "");
+  const supabaseKey = mustEnv("SUPABASE_SERVICE_ROLE_KEY");
+
+  const response = await fetch(`${supabaseUrl}/rest/v1/admin_audit_jobs?id=eq.${encodeURIComponent(jobId)}`, {
+    method: "PATCH",
+    headers: {
+      apikey: supabaseKey,
+      authorization: `Bearer ${supabaseKey}`,
+      "content-type": "application/json",
+      prefer: "return=representation",
+    },
+    body: JSON.stringify({
+      ...patch,
+      updated_at: new Date().toISOString(),
+    }),
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(`Supabase audit job update failed: HTTP ${response.status} ${JSON.stringify(data)}`);
+  }
+
+  return data;
+}
+
 export default async (req) => {
   try {
     const url = new URL(req.url);
@@ -49,12 +82,38 @@ export default async (req) => {
       return json({ ok: false, error: "Invalid or missing job_id" }, 400);
     }
 
-    const origin = `${url.protocol}//${url.host}`;
-    const workerUrl = `${origin}/.netlify/functions/admin-audit-worker-background?token=${encodeURIComponent(
-      String(process.env.ADMIN_RUN_TOKEN || "").trim()
-    )}`;
+    const buildHook =
+      String(process.env.NETLIFY_GREEN_BASELINE_AUDIT_BUILD_HOOK_URL || "").trim() ||
+      String(process.env.NETLIFY_BUILD_HOOK_URL || "").trim();
 
-    const workerResponse = await fetch(workerUrl, {
+    if (!buildHook) {
+      await updateAuditJob(jobId, {
+        status: "failed",
+        completed_at: new Date().toISOString(),
+        message: "Green baseline audit runner could not start because the Netlify build hook is not configured.",
+        error: "Missing NETLIFY_GREEN_BASELINE_AUDIT_BUILD_HOOK_URL or NETLIFY_BUILD_HOOK_URL.",
+      });
+
+      return json({
+        ok: false,
+        job_id: jobId,
+        error: "Missing NETLIFY_GREEN_BASELINE_AUDIT_BUILD_HOOK_URL or NETLIFY_BUILD_HOOK_URL.",
+      }, 500);
+    }
+
+    await updateAuditJob(jobId, {
+      status: "queued",
+      message: "Green baseline audit accepted. Netlify build hook is being triggered.",
+      result_payload: {
+        runner: {
+          surface: "signals_netlify_function_to_build_hook",
+          action: "green_baseline",
+          accepted_at: new Date().toISOString(),
+        },
+      },
+    });
+
+    const buildResponse = await fetch(buildHook, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -62,21 +121,46 @@ export default async (req) => {
       body: JSON.stringify({
         job_id: jobId,
         action: "green_baseline",
+        source: "admin_audit_runner",
         requested_at: new Date().toISOString(),
       }),
     });
 
+    const buildBody = await buildResponse.text().catch(() => "");
+
+    if (!buildResponse.ok) {
+      await updateAuditJob(jobId, {
+        status: "failed",
+        completed_at: new Date().toISOString(),
+        message: "Failed to trigger Netlify build hook for green baseline audit.",
+        error: `Build hook HTTP ${buildResponse.status}: ${buildBody.slice(0, 500)}`,
+      });
+    } else {
+      await updateAuditJob(jobId, {
+        status: "queued",
+        message: "Green baseline audit build hook accepted. Waiting for Netlify build runtime.",
+        result_payload: {
+          runner: {
+            surface: "signals_netlify_function_to_build_hook",
+            action: "green_baseline",
+            build_hook_status: buildResponse.status,
+            accepted_at: new Date().toISOString(),
+          },
+        },
+      });
+    }
+
     return json(
       {
-        ok: workerResponse.ok,
-        accepted: workerResponse.ok,
+        ok: buildResponse.ok,
+        accepted: buildResponse.ok,
         job_id: jobId,
-        worker_status: workerResponse.status,
-        message: workerResponse.ok
-          ? "Green baseline background audit runner accepted the job."
-          : "Background audit runner did not accept the job.",
+        build_hook_status: buildResponse.status,
+        message: buildResponse.ok
+          ? "Green baseline audit build hook accepted the job."
+          : "Green baseline audit build hook failed to accept the job.",
       },
-      workerResponse.ok ? 200 : 500
+      buildResponse.ok ? 200 : 500
     );
   } catch (error) {
     return json({ ok: false, error: String(error?.message || error) }, 500);
