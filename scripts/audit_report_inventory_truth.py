@@ -102,6 +102,8 @@ def main() -> None:
             path = ROOT / value
             if path.exists():
                 print(f"OK: {key}: {value}")
+            elif key == "output_html" and surface_class == "compatibility_surface":
+                print(f"INFO: optional compatibility output_html not present: {value}")
             else:
                 problems.append(f"{rid} {key} does not exist: {value}")
 
