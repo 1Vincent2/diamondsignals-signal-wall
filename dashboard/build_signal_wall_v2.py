@@ -264,8 +264,13 @@ HTML = r'''
 
 
     /* V2 keeps shell_nav.html for the frozen mobile menu, but suppresses its retired desktop nav. */
-    body.signal-wall-v2-typography-lock .topnav.ds-shell-nav .topnav-inner {
-      display: none !important;
+    /* DIAMONDSIGNALS_SIGNAL_WALL_MOBILE_MENU_RESTORE_V1
+       Keep legacy shell nav available on mobile so the sticky menu pill remains usable.
+       Suppress only the old desktop shell nav; modern V2 desktop nav remains active. */
+    @media (min-width: 761px) {
+      body.signal-wall-v2-typography-lock .topnav.ds-shell-nav .topnav-inner {
+        display: none !important;
+      }
     }
 
     :root {
