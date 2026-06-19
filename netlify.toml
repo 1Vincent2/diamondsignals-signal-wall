@@ -4,6 +4,11 @@
   edge_functions = "netlify/request-gates"
 
 [functions]
+  included_files = [
+    "scripts/**",
+    "dashboard/**",
+    "dist/status/**"
+  ]
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
