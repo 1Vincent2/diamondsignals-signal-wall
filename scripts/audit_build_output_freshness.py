@@ -57,6 +57,9 @@ def main() -> None:
                 continue
 
             if not path.exists():
+                if label == "output_html" and report.get("surface_class") == "compatibility_surface":
+                    print(f"INFO: optional compatibility output_html not present: {rel(path)}")
+                    continue
                 problems.append(f"{report_id}: {label} missing: {rel(path)}")
                 print(f"FAIL: {label}: {rel(path)} missing")
                 continue
