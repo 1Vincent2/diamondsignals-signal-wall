@@ -98,8 +98,8 @@ def main():
         if value is not True:
             problems.append(f"admin readiness flag must be true: {key}")
 
-    if admin.get("admin_ui_implemented") is not False:
-        problems.append("admin_ui_implemented must remain false until UI tier is actually built")
+    if admin.get("admin_ui_implemented") is not True:
+        problems.append("admin_ui_implemented must be true now that the Admin System manifest panel is built")
 
     print("\n--- summary ---")
     print(f"admin_audit_manifest_issues: {len(problems)}")

@@ -117,7 +117,7 @@ def main():
             "green_baseline_button_ready": True,
             "audit_registry_ready": True,
             "status_manifest_ready": True,
-            "admin_ui_implemented": False,
+            "admin_ui_implemented": True,
             "safe_to_begin_admin_ui_integration_next": True,
         },
     }
