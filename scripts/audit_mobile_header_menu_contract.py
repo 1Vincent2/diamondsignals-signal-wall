@@ -21,6 +21,10 @@ ROUTE_FILES = [
     DIST / "admin/kinetic-drift/index.html",
 ]
 
+OPTIONAL_COMPATIBILITY_ROUTE_FILES = {
+    DIST / "hidden-gems/index.html",
+}
+
 MOBILE_BREAKPOINT_PATTERNS = [
     r"@media\s*\([^)]*max-width\s*:\s*768px",
     r"@media\s*\([^)]*max-width\s*:\s*760px",
@@ -148,7 +152,10 @@ def main() -> None:
     checked = 0
     for path in ROUTE_FILES:
         if not path.exists():
-            # Do not fail absent optional admin/legacy route unless it is in main report set.
+            if path in OPTIONAL_COMPATIBILITY_ROUTE_FILES:
+                print(f"SKIP: optional compatibility route not present: {route_label(path)}")
+                continue
+
             all_problems.append(f"{route_label(path)}: missing expected route")
             continue
 
