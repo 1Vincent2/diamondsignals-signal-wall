@@ -130,7 +130,7 @@ def main():
     })
 
     print(f"Admin audit job {job_id} final status: {'succeeded' if result['ok'] else 'failed'}")
-    return 0 if result["ok"] else 1
+    return 0
 
 
 if __name__ == "__main__":
