@@ -1,5 +1,5 @@
 [build]
-  command = "python3 scripts/run_admin_green_baseline_from_build.py; python3 dashboard/build_all.py"
+  command = "python3 scripts/run_admin_green_baseline_from_build.py; python3 dashboard/build_all.py && python3 scripts/write_netlify_headers.py"
   publish = "dist"
   edge_functions = "netlify/request-gates"
 
