@@ -27,3 +27,33 @@
   to = "/mlb-extraction/"
   status = 301
   force = true
+
+# Admin Console truth JSON CORS
+[[headers]]
+  for = "/dossier_canon.json"
+  [headers.values]
+    Access-Control-Allow-Origin = "https://app.diamondsignals.ai"
+    Access-Control-Allow-Methods = "GET, HEAD, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"
+
+[[headers]]
+  for = "/scout_metrics.json"
+  [headers.values]
+    Access-Control-Allow-Origin = "https://app.diamondsignals.ai"
+    Access-Control-Allow-Methods = "GET, HEAD, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"
+
+[[headers]]
+  for = "/player_index.json"
+  [headers.values]
+    Access-Control-Allow-Origin = "https://app.diamondsignals.ai"
+    Access-Control-Allow-Methods = "GET, HEAD, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"
+
+[[headers]]
+  for = "/admin/player_signal_index.json"
+  [headers.values]
+    Access-Control-Allow-Origin = "https://app.diamondsignals.ai"
+    Access-Control-Allow-Methods = "GET, HEAD, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"
+
