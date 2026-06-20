@@ -2674,7 +2674,7 @@ def render_html(payload: dict) -> str:
           if (nextPlayer.team) params.set("player_team", nextPlayer.team);
           params.set("signal_source", nextPlayer.sourceTag || "APEX_EXTRACTION");
 
-          const nextPath = `/watchlist?${params.toString()}`;
+          const nextPath = `/watchlist?${{params.toString()}}`;
           const authUrl = new URL("https://app.diamondsignals.ai/auth");
           authUrl.searchParams.set("next", nextPath);
           window.location.href = authUrl.toString();
