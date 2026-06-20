@@ -1076,6 +1076,53 @@
 
 
 
+    /* DIAMONDSIGNALS_INSTANT_METRIC_TOOLTIP_V1 */
+    /* DIAMONDSIGNALS_VISIBLE_TOOLTIP_BEHAVIOR_V1 */
+    body.signal-wall-v2-typography-lock [data-tooltip] {
+      position: relative;
+      cursor: help;
+    }
+
+    body.signal-wall-v2-typography-lock [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 10px);
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: 280px;
+      padding: 9px 11px;
+      border: 1px solid rgba(182, 255, 0, 0.35);
+      border-radius: 10px;
+      background: rgba(5, 7, 11, 0.96);
+      color: rgba(248, 250, 252, 0.96);
+      font-size: 10px;
+      line-height: 1.35;
+      white-space: normal;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 100;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+      transition: opacity 140ms ease, transform 140ms ease;
+    }
+
+    body.signal-wall-v2-typography-lock [data-tooltip]:hover::after,
+    body.signal-wall-v2-typography-lock [data-tooltip]:focus-visible::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-2px);
+    }
+
+
+    /* V2 keeps shell_nav.html for the frozen mobile menu, but suppresses its retired desktop nav. */
+    /* DIAMONDSIGNALS_SIGNAL_WALL_MOBILE_MENU_RESTORE_V1
+       Keep legacy shell nav available on mobile so the sticky menu pill remains usable.
+       Suppress only the old desktop shell nav; modern V2 desktop nav remains active. */
+    @media (min-width: 761px) {
+      body.signal-wall-v2-typography-lock .topnav.ds-shell-nav .topnav-inner {
+        display: none !important;
+      }
+    }
+
     :root {
       --bg: #05070b;
       --panel: rgba(8, 13, 20, 0.94);
@@ -3180,6 +3227,56 @@ body.field-guide-open .field-guide-drawer {
 }
 
 </style>
+
+<!-- ACCESS_GATE_GUARD_V1 -->
+<script>
+(function () {
+  var protectedHost = "signals.diamondsignals.ai";
+  var gatePath = "/";
+  var path = window.location.pathname || "/";
+
+  var isGatePage = path === "/" || path === "/index.html";
+
+  /*
+    PUBLIC_PROMO_PATHS
+    Temporary marketing allowlist for X / Reddit traffic.
+    These pages remain public while the rest of the Signal Wall system stays gated.
+  */
+  var publicPromoPaths = [
+    "/live/",
+    "/admin/kinetic-drift/",
+    "/waiver-wire/"
+  ];
+
+  var isPublicPromoPath = publicPromoPaths.some(function(publicPath) {
+    return path === publicPath || path.indexOf(publicPath) === 0;
+  });
+
+  var isLocal =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1" ||
+    window.location.hostname === "";
+
+  if (isLocal || isGatePage || isPublicPromoPath) return;
+
+  function readCookie(name) {
+    return document.cookie
+      .split(";")
+      .map(function (part) { return part.trim(); })
+      .filter(function (part) { return part.indexOf(name + "=") === 0; })
+      .map(function (part) { return decodeURIComponent(part.slice(name.length + 1)); })[0] || "";
+  }
+
+  var hasAccess =
+    readCookie("ds_founding_access") === "1" ||
+    readCookie("ds_captured") === "1";
+
+  if (!hasAccess) {
+    var next = encodeURIComponent(path + (window.location.search || ""));
+    window.location.replace("https://" + protectedHost + gatePath + "?next=" + next);
+  }
+})();
+</script>
 </head>
 
 <body class="signal-wall-v2-typography-lock">
@@ -3194,7 +3291,7 @@ body.field-guide-open .field-guide-drawer {
       </div>
       <div class="livebox">
         <div class="live-label">● LIVE</div>
-        <div class="live-time">2026-06-10T16:35:23.041960</div>
+        <div class="live-time">2026-06-20T11:07:02.966406</div>
       </div>
     </div>
   </div>
@@ -3211,7 +3308,7 @@ body.field-guide-open .field-guide-drawer {
       <a class="ds-pro-desktop-nav-link " href="/velocity-decay-monitor"><span>[ RISK ]</span> Velocity</a>
       <a class="ds-pro-desktop-nav-link " href="/stuff-disruption-feed"><span>[ DISRUPT ]</span> Stuff+</a>
       <a class="ds-pro-desktop-nav-link " href="/admin/kinetic-drift/"><span>[ KDE ]</span> Kinetic</a>
-      <a class="ds-pro-desktop-nav-link " href="/watch-list/"><span>[ STAGE ]</span> Tracking</a>
+      <a class="ds-pro-desktop-nav-link " href="https://app.diamondsignals.ai/auth?next=/watchlist"><span>[ STAGE ]</span> Tracking</a>
       <a class="ds-pro-desktop-nav-link ds-pro-desktop-nav-link-terminal" href="https://app.diamondsignals.ai/auth?next=/terminal"><span>[ TERMINAL ]</span> Roster</a>
     </div>
   </div>
@@ -3228,7 +3325,7 @@ body.field-guide-open .field-guide-drawer {
       <a class="topnav-link " href="/stuff-disruption-feed"><span class="topnav-tag">[ DISRUPT ]</span> Stuff+ Disruption</a>
       <a class="topnav-link " href="/mlb-extraction/"><span class="topnav-tag">[ EDGE ]</span> MLB Extraction Ledger</a>
       <a class="topnav-link " href="/apex-extraction/"><span class="topnav-tag">[ APEX ]</span> Apex Extraction</a>
-      <a class="topnav-link" href="/watch-list/"><span class="topnav-tag">[ STAGE ]</span> Tracking Radar</a>
+      <a class="topnav-link" href="https://app.diamondsignals.ai/auth?next=/watchlist"><span class="topnav-tag">[ STAGE ]</span> Tracking Radar</a>
       <a class="topnav-link" href="https://app.diamondsignals.ai/auth?next=/terminal"><span class="topnav-tag">[ TERMINAL ]</span> Roster Terminal</a>
       <a class="topnav-link" href="https://diamondsignals.ai"><span class="topnav-tag">[ SITE ]</span> Main Site</a>
     </div>
@@ -3262,7 +3359,7 @@ body.field-guide-open .field-guide-drawer {
       <a class="ds-mobile-menu-link " href="/stuff-disruption-feed"><span>[ DISRUPT ]</span> Stuff+ Disruption</a>
       <a class="ds-mobile-menu-link " href="/mlb-extraction/"><span>[ EDGE ]</span> MLB Extraction Ledger</a>
       <a class="ds-mobile-menu-link " href="/apex-extraction/"><span>[ APEX ]</span> Apex Extraction</a>
-      <a class="ds-mobile-menu-link" href="/watch-list/"><span>[ STAGE ]</span> Tracking Radar</a>
+      <a class="ds-mobile-menu-link" href="https://app.diamondsignals.ai/auth?next=/watchlist"><span>[ STAGE ]</span> Tracking Radar</a>
       <a class="ds-mobile-menu-link" href="https://app.diamondsignals.ai/auth?next=/terminal"><span>[ TERMINAL ]</span> Roster Terminal</a>
       <a class="ds-mobile-menu-link" href="https://diamondsignals.ai"><span>[ SITE ]</span> Main Site</a>
     </div>
@@ -3462,18 +3559,18 @@ body.field-guide-open .field-guide-drawer {
           
 <article
   class="player-card js-player-card pitcher-card"
-  data-player-id="664238"
-  data-player-name="Cease, Dylan"
+  data-player-id="837227"
+  data-player-name="Imai, Tatsuya"
   data-player-type="pitcher"
   data-player-team="MLB"
-  data-profile-url="/scout/664238/"
+  data-profile-url="/scout/837227/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">CD</div>
+      <div class="avatar">IT</div>
       <div class="player-ident">
         <div class="rankline">[ PRIMARY SIGNAL ]</div>
-        <h3 class="player-name">Cease, Dylan</h3>
+        <h3 class="player-name">Imai, Tatsuya</h3>
         <div class="signal-line">PITCHER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -3482,7 +3579,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-hot">75.0</div>
+          <div class="score-value score-hot">78.0</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -3494,7 +3591,7 @@ body.field-guide-open .field-guide-drawer {
     <div class="diagnosis-banner">
       <span>Whiff Lift</span>
       <span class="diagnosis-sep">//</span>
-      <span>LIVE ARM SIGNAL</span>
+      <span>Velo Jump</span>
       <span class="diagnosis-sep">//</span>
       <span>WATCHLIST</span>
     </div>
@@ -3519,15 +3616,15 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Miss Engine</div>
-      <div class="metric-value value-edge">24.7</div>
+      <div class="metric-value value-edge">20.2</div>
     </div>
     <div class="metric">
       <div class="metric-label">Velocity Fuel</div>
-      <div class="metric-value value-edge">97.2</div>
+      <div class="metric-value value-edge">96.2</div>
     </div>
     <div class="metric">
       <div class="metric-label">Release Deception</div>
-      <div class="metric-value value-edge">6.3 ft</div>
+      <div class="metric-value value-edge">6.0 ft</div>
     </div>
   </div>
 
@@ -3539,46 +3636,46 @@ body.field-guide-open .field-guide-drawer {
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>40.2%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>27.6%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>9.8%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>10.2%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K/BB</span>
-        <strong>4.11</strong>
+        <span data-tooltip="K/BB: Strikeout-to-walk ratio." aria-label="K/BB: Strikeout-to-walk ratio.">K/BB</span>
+        <strong>2.70</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.244</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.281</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 24.7% (+0.1 pts vs baseline), FB velo 97.2 mph (-0.4).</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 20.2% (+0.1 pts vs baseline), FB velo 96.2 mph (+1.5).</div>
 </article>
           
           
 <article
   class="player-card js-player-card pitcher-card"
-  data-player-id="808963"
-  data-player-name="Sasaki, Roki"
+  data-player-id="687075"
+  data-player-name="Sproat, Brandon"
   data-player-type="pitcher"
   data-player-team="MLB"
-  data-profile-url="/scout/808963/"
+  data-profile-url="/scout/687075/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">SR</div>
+      <div class="avatar">SB</div>
       <div class="player-ident">
         <div class="rankline">#2 PITCHER SIGNAL</div>
-        <h3 class="player-name">Sasaki, Roki</h3>
+        <h3 class="player-name">Sproat, Brandon</h3>
         <div class="signal-line">PITCHER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -3587,7 +3684,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-hot">74.2</div>
+          <div class="score-value score-hot">73.1</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -3597,9 +3694,9 @@ body.field-guide-open .field-guide-drawer {
   <div class="diagnosis-wrap">
     <div class="diagnosis-label">Diagnosis</div>
     <div class="diagnosis-banner">
-      <span>Velo Jump</span>
+      <span>Whiff Lift</span>
       <span class="diagnosis-sep">//</span>
-      <span>LIVE ARM SIGNAL</span>
+      <span>Velo Jump</span>
       <span class="diagnosis-sep">//</span>
       <span>WATCHLIST</span>
     </div>
@@ -3624,15 +3721,15 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Miss Engine</div>
-      <div class="metric-value value-edge">17.3</div>
+      <div class="metric-value value-edge">20.0</div>
     </div>
     <div class="metric">
       <div class="metric-label">Velocity Fuel</div>
-      <div class="metric-value value-edge">98.3</div>
+      <div class="metric-value value-edge">95.6</div>
     </div>
     <div class="metric">
       <div class="metric-label">Release Deception</div>
-      <div class="metric-value value-edge">7.2 ft</div>
+      <div class="metric-value value-edge">6.3 ft</div>
     </div>
   </div>
 
@@ -3644,46 +3741,46 @@ body.field-guide-open .field-guide-drawer {
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>32.2%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>21.6%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>5.6%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>8.8%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K/BB</span>
-        <strong>5.80</strong>
+        <span data-tooltip="K/BB: Strikeout-to-walk ratio." aria-label="K/BB: Strikeout-to-walk ratio.">K/BB</span>
+        <strong>2.44</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.218</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.297</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 17.3% (+0.0 pts vs baseline), FB velo 98.3 mph (+0.9).</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 20.0% (+0.1 pts vs baseline), FB velo 95.6 mph (+1.0).</div>
 </article>
           
           
 <article
   class="player-card js-player-card pitcher-card"
-  data-player-id="621035"
-  data-player-name="Taylor, Grant"
+  data-player-id="694819"
+  data-player-name="Misiorowski, Jacob"
   data-player-type="pitcher"
   data-player-team="MLB"
-  data-profile-url="/scout/621035/"
+  data-profile-url="/scout/694819/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">TG</div>
+      <div class="avatar">MJ</div>
       <div class="player-ident">
         <div class="rankline">#3 PITCHER SIGNAL</div>
-        <h3 class="player-name">Taylor, Grant</h3>
+        <h3 class="player-name">Misiorowski, Jacob</h3>
         <div class="signal-line">PITCHER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -3692,7 +3789,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-hot">73.2</div>
+          <div class="score-value score-hot">72.1</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -3702,7 +3799,7 @@ body.field-guide-open .field-guide-drawer {
   <div class="diagnosis-wrap">
     <div class="diagnosis-label">Diagnosis</div>
     <div class="diagnosis-banner">
-      <span>Whiff Lift</span>
+      <span>Trend Confirming</span>
       <span class="diagnosis-sep">//</span>
       <span>LIVE ARM SIGNAL</span>
       <span class="diagnosis-sep">//</span>
@@ -3729,66 +3826,66 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Miss Engine</div>
-      <div class="metric-value value-edge">21.7</div>
+      <div class="metric-value value-edge">17.6</div>
     </div>
     <div class="metric">
       <div class="metric-label">Velocity Fuel</div>
-      <div class="metric-value value-edge">98.2</div>
+      <div class="metric-value value-edge">100.5</div>
     </div>
     <div class="metric">
       <div class="metric-label">Release Deception</div>
-      <div class="metric-value value-edge">7.1 ft</div>
+      <div class="metric-value value-edge">7.6 ft</div>
     </div>
   </div>
 
   <div class="season-context-strip">
     <div class="season-context-head">
-      <span>[ COMMAND_PROFILE // SEASON ]</span>
+      <span>[ COMMAND_PROFILE // 2026 ]</span>
       <span>MLB_SEASON_CONTEXT</span>
     </div>
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>40.4%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>39.1%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>2.1%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>6.5%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K/BB</span>
-        <strong>19.00</strong>
+        <span data-tooltip="K/BB: Strikeout-to-walk ratio." aria-label="K/BB: Strikeout-to-walk ratio.">K/BB</span>
+        <strong>6.00</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.192</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.238</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 21.7% (+0.1 pts vs baseline), FB velo 98.2 mph (-0.1).</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 17.6% (+0.0 pts vs baseline), FB velo 100.5 mph (+0.0).</div>
 </article>
           
           
 <article
   class="player-card js-player-card pitcher-card"
-  data-player-id="641857"
-  data-player-name="Zeferjahn, Ryan"
+  data-player-id="693645"
+  data-player-name="Schlittler, Cam"
   data-player-type="pitcher"
   data-player-team="MLB"
-  data-profile-url="/scout/641857/"
+  data-profile-url="/scout/693645/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">ZR</div>
+      <div class="avatar">SC</div>
       <div class="player-ident">
         <div class="rankline">#4 PITCHER SIGNAL</div>
-        <h3 class="player-name">Zeferjahn, Ryan</h3>
+        <h3 class="player-name">Schlittler, Cam</h3>
         <div class="signal-line">PITCHER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -3797,7 +3894,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-hot">70.5</div>
+          <div class="score-value score-hot">71.8</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -3834,66 +3931,66 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Miss Engine</div>
-      <div class="metric-value value-edge">12.0</div>
+      <div class="metric-value value-edge">11.7</div>
     </div>
     <div class="metric">
       <div class="metric-label">Velocity Fuel</div>
-      <div class="metric-value value-edge">98.0</div>
+      <div class="metric-value value-edge">97.4</div>
     </div>
     <div class="metric">
       <div class="metric-label">Release Deception</div>
-      <div class="metric-value value-edge">6.7 ft</div>
+      <div class="metric-value value-edge">6.8 ft</div>
     </div>
   </div>
 
   <div class="season-context-strip">
     <div class="season-context-head">
-      <span>[ COMMAND_PROFILE // 2026 ]</span>
+      <span>[ COMMAND_PROFILE // SEASON ]</span>
       <span>MLB_SEASON_CONTEXT</span>
     </div>
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>31.9%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>29.3%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>12.1%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>4.3%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K/BB</span>
-        <strong>2.64</strong>
+        <span data-tooltip="K/BB: Strikeout-to-walk ratio." aria-label="K/BB: Strikeout-to-walk ratio.">K/BB</span>
+        <strong>6.80</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.255</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.278</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 12.0% (+0.1 pts vs baseline), FB velo 98.0 mph (+1.6).</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 11.7% (+0.0 pts vs baseline), FB velo 97.4 mph (+1.2).</div>
 </article>
           
           
 <article
   class="player-card js-player-card pitcher-card"
-  data-player-id="596142"
-  data-player-name="Sánchez, Cristopher"
+  data-player-id="808963"
+  data-player-name="Sasaki, Roki"
   data-player-type="pitcher"
   data-player-team="MLB"
-  data-profile-url="/scout/596142/"
+  data-profile-url="/scout/808963/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">SC</div>
+      <div class="avatar">SR</div>
       <div class="player-ident">
         <div class="rankline">#5 PITCHER SIGNAL</div>
-        <h3 class="player-name">Sánchez, Cristopher</h3>
+        <h3 class="player-name">Sasaki, Roki</h3>
         <div class="signal-line">PITCHER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -3902,7 +3999,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-warm">69.2</div>
+          <div class="score-value score-hot">71.3</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -3912,7 +4009,7 @@ body.field-guide-open .field-guide-drawer {
   <div class="diagnosis-wrap">
     <div class="diagnosis-label">Diagnosis</div>
     <div class="diagnosis-banner">
-      <span>Trend Confirming</span>
+      <span>Whiff Lift</span>
       <span class="diagnosis-sep">//</span>
       <span>LIVE ARM SIGNAL</span>
       <span class="diagnosis-sep">//</span>
@@ -3939,66 +4036,66 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Miss Engine</div>
-      <div class="metric-value value-edge">16.8</div>
+      <div class="metric-value value-edge">17.8</div>
     </div>
     <div class="metric">
       <div class="metric-label">Velocity Fuel</div>
-      <div class="metric-value value-edge">95.8</div>
+      <div class="metric-value value-edge">98.7</div>
     </div>
     <div class="metric">
       <div class="metric-label">Release Deception</div>
-      <div class="metric-value value-edge">6.9 ft</div>
+      <div class="metric-value value-edge">7.1 ft</div>
     </div>
   </div>
 
   <div class="season-context-strip">
     <div class="season-context-head">
-      <span>[ COMMAND_PROFILE // SEASON ]</span>
+      <span>[ COMMAND_PROFILE // 2026 ]</span>
       <span>MLB_SEASON_CONTEXT</span>
     </div>
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>33.1%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>24.1%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>2.9%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>8.6%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K/BB</span>
-        <strong>11.50</strong>
+        <span data-tooltip="K/BB: Strikeout-to-walk ratio." aria-label="K/BB: Strikeout-to-walk ratio.">K/BB</span>
+        <strong>2.80</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.261</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.281</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 16.8% (+0.0 pts vs baseline), FB velo 95.8 mph (+0.4).</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 17.8% (+0.0 pts vs baseline), FB velo 98.7 mph (+0.6).</div>
 </article>
           
           
 <article
   class="player-card js-player-card pitcher-card"
-  data-player-id="665487"
-  data-player-name="Cruz, Fernando"
+  data-player-id="687562"
+  data-player-name="Bennett, Jake"
   data-player-type="pitcher"
   data-player-team="MLB"
-  data-profile-url="/scout/665487/"
+  data-profile-url="/scout/687562/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">CF</div>
+      <div class="avatar">BJ</div>
       <div class="player-ident">
         <div class="rankline">#6 PITCHER SIGNAL</div>
-        <h3 class="player-name">Cruz, Fernando</h3>
+        <h3 class="player-name">Bennett, Jake</h3>
         <div class="signal-line">PITCHER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -4007,7 +4104,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-warm">68.5</div>
+          <div class="score-value score-hot">70.7</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -4019,7 +4116,7 @@ body.field-guide-open .field-guide-drawer {
     <div class="diagnosis-banner">
       <span>Whiff Lift</span>
       <span class="diagnosis-sep">//</span>
-      <span>LIVE ARM SIGNAL</span>
+      <span>Velo Jump</span>
       <span class="diagnosis-sep">//</span>
       <span>WATCHLIST</span>
     </div>
@@ -4044,66 +4141,66 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Miss Engine</div>
-      <div class="metric-value value-edge">20.3</div>
+      <div class="metric-value value-edge">19.0</div>
     </div>
     <div class="metric">
       <div class="metric-label">Velocity Fuel</div>
-      <div class="metric-value value-edge">93.8</div>
+      <div class="metric-value value-edge">93.5</div>
     </div>
     <div class="metric">
       <div class="metric-label">Release Deception</div>
-      <div class="metric-value value-edge">6.9 ft</div>
+      <div class="metric-value value-edge">7.0 ft</div>
     </div>
   </div>
 
   <div class="season-context-strip">
     <div class="season-context-head">
-      <span>[ COMMAND_PROFILE // 2026 ]</span>
+      <span>[ COMMAND_PROFILE // SEASON ]</span>
       <span>MLB_SEASON_CONTEXT</span>
     </div>
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>32.4%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>20.9%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>14.9%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>2.3%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K/BB</span>
-        <strong>2.18</strong>
+        <span data-tooltip="K/BB: Strikeout-to-walk ratio." aria-label="K/BB: Strikeout-to-walk ratio.">K/BB</span>
+        <strong>9.00</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.314</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.323</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 20.3% (+0.0 pts vs baseline), FB velo 93.8 mph (+0.6).</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 19.0% (+0.1 pts vs baseline), FB velo 93.5 mph (+1.2).</div>
 </article>
           
           
 <article
   class="player-card js-player-card pitcher-card"
-  data-player-id="684007"
-  data-player-name="Imanaga, Shota"
+  data-player-id="669302"
+  data-player-name="Gilbert, Logan"
   data-player-type="pitcher"
   data-player-team="MLB"
-  data-profile-url="/scout/684007/"
+  data-profile-url="/scout/669302/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">IS</div>
+      <div class="avatar">GL</div>
       <div class="player-ident">
         <div class="rankline">#7 PITCHER SIGNAL</div>
-        <h3 class="player-name">Imanaga, Shota</h3>
+        <h3 class="player-name">Gilbert, Logan</h3>
         <div class="signal-line">PITCHER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -4112,7 +4209,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-warm">67.9</div>
+          <div class="score-value score-hot">70.0</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -4149,15 +4246,15 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Miss Engine</div>
-      <div class="metric-value value-edge">20.2</div>
+      <div class="metric-value value-edge">18.1</div>
     </div>
     <div class="metric">
       <div class="metric-label">Velocity Fuel</div>
-      <div class="metric-value value-edge">92.0</div>
+      <div class="metric-value value-edge">95.7</div>
     </div>
     <div class="metric">
       <div class="metric-label">Release Deception</div>
-      <div class="metric-value value-edge">6.3 ft</div>
+      <div class="metric-value value-edge">7.5 ft</div>
     </div>
   </div>
 
@@ -4169,46 +4266,46 @@ body.field-guide-open .field-guide-drawer {
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>17.4%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>30.9%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>5.0%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>6.4%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K/BB</span>
-        <strong>3.50</strong>
+        <span data-tooltip="K/BB: Strikeout-to-walk ratio." aria-label="K/BB: Strikeout-to-walk ratio.">K/BB</span>
+        <strong>4.83</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.244</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.218</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 20.2% (+0.1 pts vs baseline), FB velo 92.0 mph (+0.6).</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 18.1% (+0.0 pts vs baseline), FB velo 95.7 mph (+0.5).</div>
 </article>
           
           
 <article
   class="player-card js-player-card pitcher-card"
-  data-player-id="669022"
-  data-player-name="Gore, Mackenzie"
+  data-player-id="696149"
+  data-player-name="Chandler, Bubba"
   data-player-type="pitcher"
   data-player-team="MLB"
-  data-profile-url="/scout/669022/"
+  data-profile-url="/scout/696149/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">GM</div>
+      <div class="avatar">CB</div>
       <div class="player-ident">
         <div class="rankline">#8 PITCHER SIGNAL</div>
-        <h3 class="player-name">Gore, Mackenzie</h3>
+        <h3 class="player-name">Chandler, Bubba</h3>
         <div class="signal-line">PITCHER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -4217,7 +4314,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-warm">67.5</div>
+          <div class="score-value score-warm">69.1</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -4229,7 +4326,7 @@ body.field-guide-open .field-guide-drawer {
     <div class="diagnosis-banner">
       <span>Velo Jump</span>
       <span class="diagnosis-sep">//</span>
-      <span>Extension Gain</span>
+      <span>LIVE ARM SIGNAL</span>
       <span class="diagnosis-sep">//</span>
       <span>WATCHLIST</span>
     </div>
@@ -4254,15 +4351,15 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Miss Engine</div>
-      <div class="metric-value value-edge">12.0</div>
+      <div class="metric-value value-edge">13.3</div>
     </div>
     <div class="metric">
       <div class="metric-label">Velocity Fuel</div>
-      <div class="metric-value value-edge">95.5</div>
+      <div class="metric-value value-edge">98.7</div>
     </div>
     <div class="metric">
       <div class="metric-label">Release Deception</div>
-      <div class="metric-value value-edge">7.1 ft</div>
+      <div class="metric-value value-edge">6.6 ft</div>
     </div>
   </div>
 
@@ -4274,46 +4371,46 @@ body.field-guide-open .field-guide-drawer {
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>21.5%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>19.1%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>10.1%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>7.8%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K/BB</span>
-        <strong>2.12</strong>
+        <span data-tooltip="K/BB: Strikeout-to-walk ratio." aria-label="K/BB: Strikeout-to-walk ratio.">K/BB</span>
+        <strong>2.44</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.321</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.278</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 12.0% (+0.0 pts vs baseline), FB velo 95.5 mph (+1.4).</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 13.3% (+0.0 pts vs baseline), FB velo 98.7 mph (+0.9).</div>
 </article>
           
           
 <article
   class="player-card js-player-card pitcher-card"
-  data-player-id="553993"
-  data-player-name="Suárez, Albert"
+  data-player-id="682243"
+  data-player-name="Miller, Bryce"
   data-player-type="pitcher"
   data-player-team="MLB"
-  data-profile-url="/scout/553993/"
+  data-profile-url="/scout/682243/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">SA</div>
+      <div class="avatar">MB</div>
       <div class="player-ident">
         <div class="rankline">#9 PITCHER SIGNAL</div>
-        <h3 class="player-name">Suárez, Albert</h3>
+        <h3 class="player-name">Miller, Bryce</h3>
         <div class="signal-line">PITCHER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -4322,7 +4419,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-warm">65.9</div>
+          <div class="score-value score-warm">68.5</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -4334,7 +4431,7 @@ body.field-guide-open .field-guide-drawer {
     <div class="diagnosis-banner">
       <span>Whiff Lift</span>
       <span class="diagnosis-sep">//</span>
-      <span>Velo Jump</span>
+      <span>Extension Gain</span>
       <span class="diagnosis-sep">//</span>
       <span>WATCHLIST</span>
     </div>
@@ -4359,66 +4456,66 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Miss Engine</div>
-      <div class="metric-value value-edge">14.9</div>
+      <div class="metric-value value-edge">19.7</div>
     </div>
     <div class="metric">
       <div class="metric-label">Velocity Fuel</div>
-      <div class="metric-value value-edge">91.6</div>
+      <div class="metric-value value-edge">95.9</div>
     </div>
     <div class="metric">
       <div class="metric-label">Release Deception</div>
-      <div class="metric-value value-edge">6.6 ft</div>
+      <div class="metric-value value-edge">6.4 ft</div>
     </div>
   </div>
 
   <div class="season-context-strip">
     <div class="season-context-head">
-      <span>[ COMMAND_PROFILE // 2026 ]</span>
+      <span>[ COMMAND_PROFILE // SEASON ]</span>
       <span>MLB_SEASON_CONTEXT</span>
     </div>
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>13.6%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>34.0%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>13.6%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>3.1%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K/BB</span>
-        <strong>1.00</strong>
+        <span data-tooltip="K/BB: Strikeout-to-walk ratio." aria-label="K/BB: Strikeout-to-walk ratio.">K/BB</span>
+        <strong>11.00</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.178</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.175</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 14.9% (+0.1 pts vs baseline), FB velo 91.6 mph (+0.9).</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 19.7% (+0.1 pts vs baseline), FB velo 95.9 mph (+0.5).</div>
 </article>
           
           
 <article
   class="player-card js-player-card pitcher-card"
-  data-player-id="665828"
-  data-player-name="Cabrera, Edward"
+  data-player-id="694973"
+  data-player-name="Skenes, Paul"
   data-player-type="pitcher"
   data-player-team="MLB"
-  data-profile-url="/scout/665828/"
+  data-profile-url="/scout/694973/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">CE</div>
+      <div class="avatar">SP</div>
       <div class="player-ident">
         <div class="rankline">#10 PITCHER SIGNAL</div>
-        <h3 class="player-name">Cabrera, Edward</h3>
+        <h3 class="player-name">Skenes, Paul</h3>
         <div class="signal-line">PITCHER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -4427,7 +4524,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-warm">65.2</div>
+          <div class="score-value score-warm">68.3</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -4437,9 +4534,9 @@ body.field-guide-open .field-guide-drawer {
   <div class="diagnosis-wrap">
     <div class="diagnosis-label">Diagnosis</div>
     <div class="diagnosis-banner">
-      <span>Velo Jump</span>
+      <span>Whiff Lift</span>
       <span class="diagnosis-sep">//</span>
-      <span>Extension Gain</span>
+      <span>LIVE ARM SIGNAL</span>
       <span class="diagnosis-sep">//</span>
       <span>WATCHLIST</span>
     </div>
@@ -4464,49 +4561,49 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Miss Engine</div>
-      <div class="metric-value value-edge">12.5</div>
+      <div class="metric-value value-edge">19.2</div>
     </div>
     <div class="metric">
       <div class="metric-label">Velocity Fuel</div>
-      <div class="metric-value value-edge">97.1</div>
+      <div class="metric-value value-edge">96.8</div>
     </div>
     <div class="metric">
       <div class="metric-label">Release Deception</div>
-      <div class="metric-value value-edge">6.6 ft</div>
+      <div class="metric-value value-edge">6.8 ft</div>
     </div>
   </div>
 
   <div class="season-context-strip">
     <div class="season-context-head">
-      <span>[ COMMAND_PROFILE // 2026 ]</span>
+      <span>[ COMMAND_PROFILE // SEASON ]</span>
       <span>MLB_SEASON_CONTEXT</span>
     </div>
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>22.4%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>30.5%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>7.8%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>6.8%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K/BB</span>
-        <strong>2.87</strong>
+        <span data-tooltip="K/BB: Strikeout-to-walk ratio." aria-label="K/BB: Strikeout-to-walk ratio.">K/BB</span>
+        <strong>4.50</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.312</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.366</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 12.5% (+0.0 pts vs baseline), FB velo 97.1 mph (+1.1).</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Whiff rate 19.2% (+0.1 pts vs baseline), FB velo 96.8 mph (-0.1).</div>
 </article>
           
         </div>
@@ -4526,18 +4623,18 @@ body.field-guide-open .field-guide-drawer {
           
 <article
   class="player-card js-player-card hitter-card"
-  data-player-id="596142"
-  data-player-name="Gary Sánchez"
+  data-player-id="690993"
+  data-player-name="Colt Keith"
   data-player-type="hitter"
   data-player-team="MLB"
-  data-profile-url="/scout/596142/"
+  data-profile-url="/scout/690993/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">GS</div>
+      <div class="avatar">CK</div>
       <div class="player-ident">
         <div class="rankline">[ PRIMARY SIGNAL ]</div>
-        <h3 class="player-name">Gary Sánchez</h3>
+        <h3 class="player-name">Colt Keith</h3>
         <div class="signal-line">HITTER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -4546,7 +4643,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-hot">77.4</div>
+          <div class="score-value score-hot">90.4</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -4583,15 +4680,15 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Blast Path</div>
-      <div class="metric-value value-edge">88.2</div>
+      <div class="metric-value value-edge">91.2</div>
     </div>
     <div class="metric">
       <div class="metric-label">Blast Rate</div>
-      <div class="metric-value value-edge">8.3</div>
+      <div class="metric-value value-edge">15.4</div>
     </div>
     <div class="metric">
       <div class="metric-label">Apex Damage</div>
-      <div class="metric-value value-edge">106.8</div>
+      <div class="metric-value value-edge">108.8</div>
     </div>
   </div>
 
@@ -4603,51 +4700,51 @@ body.field-guide-open .field-guide-drawer {
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>14.3%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>4.8%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>14.3%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>14.5%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB/K</span>
-        <strong>1.00</strong>
+        <span data-tooltip="BB/K: Walk-to-strikeout ratio." aria-label="BB/K: Walk-to-strikeout ratio.">BB/K</span>
+        <strong>0.33</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>SEAGER</span>
-        <strong>39.5</strong>
+        <span data-tooltip="SEAGER: Hitter quality signal used by the extraction layer." aria-label="SEAGER: Hitter quality signal used by the extraction layer.">SEAGER</span>
+        <strong>44.8</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.222</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.205</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 88.2 mph (+11.7 vs baseline), barrel-like rate 8.3%.</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 91.2 mph (+8.1 vs baseline), barrel-like rate 15.4%.</div>
 </article>
           
           
 <article
   class="player-card js-player-card hitter-card"
-  data-player-id="680574"
-  data-player-name="Matt Mclain"
+  data-player-id="668804"
+  data-player-name="Bryan Reynolds"
   data-player-type="hitter"
   data-player-team="MLB"
-  data-profile-url="/scout/680574/"
+  data-profile-url="/scout/668804/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">MM</div>
+      <div class="avatar">BR</div>
       <div class="player-ident">
         <div class="rankline">#2 HITTER SIGNAL</div>
-        <h3 class="player-name">Matt Mclain</h3>
+        <h3 class="player-name">Bryan Reynolds</h3>
         <div class="signal-line">HITTER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -4656,7 +4753,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-hot">75.4</div>
+          <div class="score-value score-hot">82.5</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -4668,7 +4765,7 @@ body.field-guide-open .field-guide-drawer {
     <div class="diagnosis-banner">
       <span>EV Burst</span>
       <span class="diagnosis-sep">//</span>
-      <span>Barrel Jump</span>
+      <span>Impact EV</span>
       <span class="diagnosis-sep">//</span>
       <span>SEAGER CHECK</span>
     </div>
@@ -4693,15 +4790,15 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Blast Path</div>
-      <div class="metric-value value-edge">87.9</div>
+      <div class="metric-value value-edge">93.1</div>
     </div>
     <div class="metric">
       <div class="metric-label">Blast Rate</div>
-      <div class="metric-value value-edge">11.8</div>
+      <div class="metric-value value-edge">7.1</div>
     </div>
     <div class="metric">
       <div class="metric-label">Apex Damage</div>
-      <div class="metric-value value-edge">107.0</div>
+      <div class="metric-value value-edge">110.1</div>
     </div>
   </div>
 
@@ -4713,51 +4810,51 @@ body.field-guide-open .field-guide-drawer {
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>11.7%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>14.0%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>24.7%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>17.8%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB/K</span>
-        <strong>0.47</strong>
+        <span data-tooltip="BB/K: Walk-to-strikeout ratio." aria-label="BB/K: Walk-to-strikeout ratio.">BB/K</span>
+        <strong>0.79</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>SEAGER</span>
-        <strong>31.8</strong>
+        <span data-tooltip="SEAGER: Hitter quality signal used by the extraction layer." aria-label="SEAGER: Hitter quality signal used by the extraction layer.">SEAGER</span>
+        <strong>46.3</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.227</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.415</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 87.9 mph (+5.5 vs baseline), barrel-like rate 11.8%.</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 93.1 mph (+7.1 vs baseline), barrel-like rate 7.1%.</div>
 </article>
           
           
 <article
   class="player-card js-player-card hitter-card"
-  data-player-id="666211"
-  data-player-name="Taylor Trammell"
+  data-player-id="641933"
+  data-player-name="Tyler O'neill"
   data-player-type="hitter"
   data-player-team="MLB"
-  data-profile-url="/scout/666211/"
+  data-profile-url="/scout/641933/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">TT</div>
+      <div class="avatar">TO</div>
       <div class="player-ident">
         <div class="rankline">#3 HITTER SIGNAL</div>
-        <h3 class="player-name">Taylor Trammell</h3>
+        <h3 class="player-name">Tyler O'neill</h3>
         <div class="signal-line">HITTER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -4766,7 +4863,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-hot">75.3</div>
+          <div class="score-value score-hot">80.1</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -4803,15 +4900,15 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Blast Path</div>
-      <div class="metric-value value-edge">92.5</div>
+      <div class="metric-value value-edge">89.6</div>
     </div>
     <div class="metric">
       <div class="metric-label">Blast Rate</div>
-      <div class="metric-value value-edge">0.0</div>
+      <div class="metric-value value-edge">8.3</div>
     </div>
     <div class="metric">
       <div class="metric-label">Apex Damage</div>
-      <div class="metric-value value-edge">109.1</div>
+      <div class="metric-value value-edge">110.0</div>
     </div>
   </div>
 
@@ -4823,51 +4920,51 @@ body.field-guide-open .field-guide-drawer {
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>2.4%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>4.7%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>40.5%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>37.2%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB/K</span>
-        <strong>0.06</strong>
+        <span data-tooltip="BB/K: Walk-to-strikeout ratio." aria-label="BB/K: Walk-to-strikeout ratio.">BB/K</span>
+        <strong>0.12</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>SEAGER</span>
-        <strong>29.5</strong>
+        <span data-tooltip="SEAGER: Hitter quality signal used by the extraction layer." aria-label="SEAGER: Hitter quality signal used by the extraction layer.">SEAGER</span>
+        <strong>32.4</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.409</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.400</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 92.5 mph (+15.3 vs baseline), barrel-like rate 0.0%.</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 89.6 mph (+9.6 vs baseline), barrel-like rate 8.3%.</div>
 </article>
           
           
 <article
   class="player-card js-player-card hitter-card"
-  data-player-id="608369"
-  data-player-name="Corey Seager"
+  data-player-id="605170"
+  data-player-name="Víctor Caratini"
   data-player-type="hitter"
   data-player-team="MLB"
-  data-profile-url="/scout/608369/"
+  data-profile-url="/scout/605170/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">CS</div>
+      <div class="avatar">VC</div>
       <div class="player-ident">
         <div class="rankline">#4 HITTER SIGNAL</div>
-        <h3 class="player-name">Corey Seager</h3>
+        <h3 class="player-name">Víctor Caratini</h3>
         <div class="signal-line">HITTER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -4876,7 +4973,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-hot">73.4</div>
+          <div class="score-value score-hot">77.8</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -4913,15 +5010,15 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Blast Path</div>
-      <div class="metric-value value-edge">86.3</div>
+      <div class="metric-value value-edge">86.4</div>
     </div>
     <div class="metric">
       <div class="metric-label">Blast Rate</div>
-      <div class="metric-value value-edge">9.1</div>
+      <div class="metric-value value-edge">14.3</div>
     </div>
     <div class="metric">
       <div class="metric-label">Apex Damage</div>
-      <div class="metric-value value-edge">105.1</div>
+      <div class="metric-value value-edge">106.1</div>
     </div>
   </div>
 
@@ -4933,51 +5030,51 @@ body.field-guide-open .field-guide-drawer {
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>0.0%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>11.6%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>31.2%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>17.4%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB/K</span>
-        <strong>0.00</strong>
+        <span data-tooltip="BB/K: Walk-to-strikeout ratio." aria-label="BB/K: Walk-to-strikeout ratio.">BB/K</span>
+        <strong>0.67</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>SEAGER</span>
-        <strong>43.9</strong>
+        <span data-tooltip="SEAGER: Hitter quality signal used by the extraction layer." aria-label="SEAGER: Hitter quality signal used by the extraction layer.">SEAGER</span>
+        <strong>34.0</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.200</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.311</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 86.3 mph (+9.9 vs baseline), barrel-like rate 9.1%.</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 86.4 mph (+2.2 vs baseline), barrel-like rate 14.3%.</div>
 </article>
           
           
 <article
   class="player-card js-player-card hitter-card"
-  data-player-id="695578"
-  data-player-name="James Wood"
+  data-player-id="668952"
+  data-player-name="Ryan Kreidler"
   data-player-type="hitter"
   data-player-team="MLB"
-  data-profile-url="/scout/695578/"
+  data-profile-url="/scout/668952/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">JW</div>
+      <div class="avatar">RK</div>
       <div class="player-ident">
         <div class="rankline">#5 HITTER SIGNAL</div>
-        <h3 class="player-name">James Wood</h3>
+        <h3 class="player-name">Ryan Kreidler</h3>
         <div class="signal-line">HITTER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -4986,7 +5083,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-hot">73.4</div>
+          <div class="score-value score-hot">76.1</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -4998,7 +5095,7 @@ body.field-guide-open .field-guide-drawer {
     <div class="diagnosis-banner">
       <span>EV Burst</span>
       <span class="diagnosis-sep">//</span>
-      <span>Impact EV</span>
+      <span>Barrel Jump</span>
       <span class="diagnosis-sep">//</span>
       <span>SEAGER CHECK</span>
     </div>
@@ -5023,15 +5120,15 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Blast Path</div>
-      <div class="metric-value value-edge">88.3</div>
+      <div class="metric-value value-edge">82.6</div>
     </div>
     <div class="metric">
       <div class="metric-label">Blast Rate</div>
-      <div class="metric-value value-edge">10.0</div>
+      <div class="metric-value value-edge">15.4</div>
     </div>
     <div class="metric">
       <div class="metric-label">Apex Damage</div>
-      <div class="metric-value value-edge">114.3</div>
+      <div class="metric-value value-edge">107.8</div>
     </div>
   </div>
 
@@ -5043,51 +5140,51 @@ body.field-guide-open .field-guide-drawer {
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>16.0%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>9.3%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>27.7%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>18.6%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB/K</span>
-        <strong>0.58</strong>
+        <span data-tooltip="BB/K: Walk-to-strikeout ratio." aria-label="BB/K: Walk-to-strikeout ratio.">BB/K</span>
+        <strong>0.50</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>SEAGER</span>
-        <strong>37.5</strong>
+        <span data-tooltip="SEAGER: Hitter quality signal used by the extraction layer." aria-label="SEAGER: Hitter quality signal used by the extraction layer.">SEAGER</span>
+        <strong>52.9</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.426</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.207</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 88.3 mph (+2.1 vs baseline), barrel-like rate 10.0%.</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 82.6 mph (+2.2 vs baseline), barrel-like rate 15.4%.</div>
 </article>
           
           
 <article
   class="player-card js-player-card hitter-card"
-  data-player-id="621566"
-  data-player-name="Matt Olson"
+  data-player-id="691406"
+  data-player-name="Junior Caminero"
   data-player-type="hitter"
   data-player-team="MLB"
-  data-profile-url="/scout/621566/"
+  data-profile-url="/scout/691406/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">MO</div>
+      <div class="avatar">JC</div>
       <div class="player-ident">
         <div class="rankline">#6 HITTER SIGNAL</div>
-        <h3 class="player-name">Matt Olson</h3>
+        <h3 class="player-name">Junior Caminero</h3>
         <div class="signal-line">HITTER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -5096,7 +5193,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-hot">72.4</div>
+          <div class="score-value score-hot">74.2</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -5133,71 +5230,71 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Blast Path</div>
-      <div class="metric-value value-edge">89.9</div>
+      <div class="metric-value value-edge">94.3</div>
     </div>
     <div class="metric">
       <div class="metric-label">Blast Rate</div>
-      <div class="metric-value value-edge">5.4</div>
+      <div class="metric-value value-edge">0.0</div>
     </div>
     <div class="metric">
       <div class="metric-label">Apex Damage</div>
-      <div class="metric-value value-edge">112.3</div>
+      <div class="metric-value value-edge">113.7</div>
     </div>
   </div>
 
   <div class="season-context-strip">
     <div class="season-context-head">
-      <span>[ PLATE_DISCIPLINE // SEASON ]</span>
+      <span>[ PLATE_DISCIPLINE // 2026 ]</span>
       <span>MLB_SEASON_CONTEXT</span>
     </div>
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>6.5%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>13.3%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>21.3%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>17.5%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB/K</span>
-        <strong>0.30</strong>
+        <span data-tooltip="BB/K: Walk-to-strikeout ratio." aria-label="BB/K: Walk-to-strikeout ratio.">BB/K</span>
+        <strong>0.76</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>SEAGER</span>
-        <strong>40.3</strong>
+        <span data-tooltip="SEAGER: Hitter quality signal used by the extraction layer." aria-label="SEAGER: Hitter quality signal used by the extraction layer.">SEAGER</span>
+        <strong>31.3</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.250</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.296</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 89.9 mph (+2.7 vs baseline), barrel-like rate 5.4%.</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 94.3 mph (+7.0 vs baseline), barrel-like rate 0.0%.</div>
 </article>
           
           
 <article
   class="player-card js-player-card hitter-card"
-  data-player-id="691718"
-  data-player-name="Pete Crow-armstrong"
+  data-player-id="691023"
+  data-player-name="Jordan Walker"
   data-player-type="hitter"
   data-player-team="MLB"
-  data-profile-url="/scout/691718/"
+  data-profile-url="/scout/691023/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">PC</div>
+      <div class="avatar">JW</div>
       <div class="player-ident">
         <div class="rankline">#7 HITTER SIGNAL</div>
-        <h3 class="player-name">Pete Crow-armstrong</h3>
+        <h3 class="player-name">Jordan Walker</h3>
         <div class="signal-line">HITTER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -5206,7 +5303,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-hot">71.6</div>
+          <div class="score-value score-hot">72.1</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -5216,9 +5313,9 @@ body.field-guide-open .field-guide-drawer {
   <div class="diagnosis-wrap">
     <div class="diagnosis-label">Diagnosis</div>
     <div class="diagnosis-banner">
-      <span>EV Burst</span>
-      <span class="diagnosis-sep">//</span>
       <span>Impact EV</span>
+      <span class="diagnosis-sep">//</span>
+      <span>CONTACT SIGNAL</span>
       <span class="diagnosis-sep">//</span>
       <span>SEAGER CHECK</span>
     </div>
@@ -5243,71 +5340,71 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Blast Path</div>
-      <div class="metric-value value-edge">88.8</div>
+      <div class="metric-value value-edge">87.4</div>
     </div>
     <div class="metric">
       <div class="metric-label">Blast Rate</div>
-      <div class="metric-value value-edge">7.1</div>
+      <div class="metric-value value-edge">5.7</div>
     </div>
     <div class="metric">
       <div class="metric-label">Apex Damage</div>
-      <div class="metric-value value-edge">110.1</div>
+      <div class="metric-value value-edge">116.6</div>
     </div>
   </div>
 
   <div class="season-context-strip">
     <div class="season-context-head">
-      <span>[ PLATE_DISCIPLINE // 2026 ]</span>
+      <span>[ PLATE_DISCIPLINE // SEASON ]</span>
       <span>MLB_SEASON_CONTEXT</span>
     </div>
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>7.5%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>2.8%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>25.9%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>22.9%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB/K</span>
-        <strong>0.29</strong>
+        <span data-tooltip="BB/K: Walk-to-strikeout ratio." aria-label="BB/K: Walk-to-strikeout ratio.">BB/K</span>
+        <strong>0.12</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>SEAGER</span>
-        <strong>31.2</strong>
+        <span data-tooltip="SEAGER: Hitter quality signal used by the extraction layer." aria-label="SEAGER: Hitter quality signal used by the extraction layer.">SEAGER</span>
+        <strong>29.2</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.306</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.342</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 88.8 mph (+4.1 vs baseline), barrel-like rate 7.1%.</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 87.4 mph (+0.4 vs baseline), barrel-like rate 5.7%.</div>
 </article>
           
           
 <article
   class="player-card js-player-card hitter-card"
-  data-player-id="813841"
-  data-player-name="Jonah Cox"
+  data-player-id="687263"
+  data-player-name="Zach Neto"
   data-player-type="hitter"
   data-player-team="MLB"
-  data-profile-url="/scout/813841/"
+  data-profile-url="/scout/687263/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">JC</div>
+      <div class="avatar">ZN</div>
       <div class="player-ident">
         <div class="rankline">#8 HITTER SIGNAL</div>
-        <h3 class="player-name">Jonah Cox</h3>
+        <h3 class="player-name">Zach Neto</h3>
         <div class="signal-line">HITTER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -5316,7 +5413,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-hot">70.3</div>
+          <div class="score-value score-hot">71.4</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -5353,15 +5450,15 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Blast Path</div>
-      <div class="metric-value value-edge">81.1</div>
+      <div class="metric-value value-edge">84.2</div>
     </div>
     <div class="metric">
       <div class="metric-label">Blast Rate</div>
-      <div class="metric-value value-edge">14.3</div>
+      <div class="metric-value value-edge">9.4</div>
     </div>
     <div class="metric">
       <div class="metric-label">Apex Damage</div>
-      <div class="metric-value value-edge">104.7</div>
+      <div class="metric-value value-edge">108.0</div>
     </div>
   </div>
 
@@ -5373,51 +5470,51 @@ body.field-guide-open .field-guide-drawer {
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>0.0%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>9.0%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>38.5%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>36.0%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB/K</span>
-        <strong>0.00</strong>
+        <span data-tooltip="BB/K: Walk-to-strikeout ratio." aria-label="BB/K: Walk-to-strikeout ratio.">BB/K</span>
+        <strong>0.25</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>SEAGER</span>
-        <strong>35.9</strong>
+        <span data-tooltip="SEAGER: Hitter quality signal used by the extraction layer." aria-label="SEAGER: Hitter quality signal used by the extraction layer.">SEAGER</span>
+        <strong>27.6</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.667</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.319</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 81.1 mph (+6.6 vs baseline), barrel-like rate 14.3%.</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 84.2 mph (+2.0 vs baseline), barrel-like rate 9.4%.</div>
 </article>
           
           
 <article
   class="player-card js-player-card hitter-card"
-  data-player-id="592663"
-  data-player-name="J. T. Realmuto"
+  data-player-id="643217"
+  data-player-name="Andrew Benintendi"
   data-player-type="hitter"
   data-player-team="MLB"
-  data-profile-url="/scout/592663/"
+  data-profile-url="/scout/643217/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">JR</div>
+      <div class="avatar">AB</div>
       <div class="player-ident">
         <div class="rankline">#9 HITTER SIGNAL</div>
-        <h3 class="player-name">J. T. Realmuto</h3>
+        <h3 class="player-name">Andrew Benintendi</h3>
         <div class="signal-line">HITTER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -5426,7 +5523,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-warm">69.3</div>
+          <div class="score-value score-warm">69.9</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -5438,7 +5535,7 @@ body.field-guide-open .field-guide-drawer {
     <div class="diagnosis-banner">
       <span>EV Burst</span>
       <span class="diagnosis-sep">//</span>
-      <span>Barrel Jump</span>
+      <span>CONTACT SIGNAL</span>
       <span class="diagnosis-sep">//</span>
       <span>SEAGER CHECK</span>
     </div>
@@ -5463,15 +5560,15 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Blast Path</div>
-      <div class="metric-value value-edge">87.2</div>
+      <div class="metric-value value-edge">91.7</div>
     </div>
     <div class="metric">
       <div class="metric-label">Blast Rate</div>
-      <div class="metric-value value-edge">9.5</div>
+      <div class="metric-value value-edge">6.7</div>
     </div>
     <div class="metric">
       <div class="metric-label">Apex Damage</div>
-      <div class="metric-value value-edge">106.1</div>
+      <div class="metric-value value-edge">100.2</div>
     </div>
   </div>
 
@@ -5483,51 +5580,51 @@ body.field-guide-open .field-guide-drawer {
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>11.1%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>11.6%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>25.0%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>23.2%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB/K</span>
-        <strong>0.44</strong>
+        <span data-tooltip="BB/K: Walk-to-strikeout ratio." aria-label="BB/K: Walk-to-strikeout ratio.">BB/K</span>
+        <strong>0.50</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>SEAGER</span>
-        <strong>34.4</strong>
+        <span data-tooltip="SEAGER: Hitter quality signal used by the extraction layer." aria-label="SEAGER: Hitter quality signal used by the extraction layer.">SEAGER</span>
+        <strong>47.6</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.195</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.231</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 87.2 mph (+2.5 vs baseline), barrel-like rate 9.5%.</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 91.7 mph (+9.7 vs baseline), barrel-like rate 6.7%.</div>
 </article>
           
           
 <article
   class="player-card js-player-card hitter-card"
-  data-player-id="687515"
-  data-player-name="Colby Thomas"
+  data-player-id="673962"
+  data-player-name="Josh Jung"
   data-player-type="hitter"
   data-player-team="MLB"
-  data-profile-url="/scout/687515/"
+  data-profile-url="/scout/673962/"
 >
   <div class="player-top">
     <div class="player-head">
-      <div class="avatar">CT</div>
+      <div class="avatar">JJ</div>
       <div class="player-ident">
         <div class="rankline">#10 HITTER SIGNAL</div>
-        <h3 class="player-name">Colby Thomas</h3>
+        <h3 class="player-name">Josh Jung</h3>
         <div class="signal-line">HITTER // Live Edge Signal // LIVE WINDOW</div>
       </div>
     </div>
@@ -5536,7 +5633,7 @@ body.field-guide-open .field-guide-drawer {
       <div class="score-head">
         <div class="score-meta">
           <div class="score-label">Edge Score</div>
-          <div class="score-value score-warm">69.1</div>
+          <div class="score-value score-warm">69.7</div>
         </div>
         <button type="button" class="provision-btn js-add-to-roster" data-default-label="INITIATE TRACKING">INITIATE TRACKING</button>
       </div>
@@ -5548,7 +5645,7 @@ body.field-guide-open .field-guide-drawer {
     <div class="diagnosis-banner">
       <span>EV Burst</span>
       <span class="diagnosis-sep">//</span>
-      <span>Impact EV</span>
+      <span>CONTACT SIGNAL</span>
       <span class="diagnosis-sep">//</span>
       <span>SEAGER CHECK</span>
     </div>
@@ -5573,15 +5670,15 @@ body.field-guide-open .field-guide-drawer {
   <div class="metric-grid">
     <div class="metric">
       <div class="metric-label">Blast Path</div>
-      <div class="metric-value value-edge">88.6</div>
+      <div class="metric-value value-edge">88.8</div>
     </div>
     <div class="metric">
       <div class="metric-label">Blast Rate</div>
-      <div class="metric-value value-edge">6.2</div>
+      <div class="metric-value value-edge">3.2</div>
     </div>
     <div class="metric">
       <div class="metric-label">Apex Damage</div>
-      <div class="metric-value value-edge">108.7</div>
+      <div class="metric-value value-edge">105.5</div>
     </div>
   </div>
 
@@ -5593,34 +5690,34 @@ body.field-guide-open .field-guide-drawer {
     <div class="season-context-grid">
       
       <div class="season-context-tile">
-        <span>BB%</span>
-        <strong>6.2%</strong>
+        <span data-tooltip="BB%: Walk rate." aria-label="BB%: Walk rate.">BB%</span>
+        <strong>7.9%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>K%</span>
-        <strong>28.1%</strong>
+        <span data-tooltip="K%: Strikeout rate." aria-label="K%: Strikeout rate.">K%</span>
+        <strong>17.8%</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BB/K</span>
-        <strong>0.22</strong>
+        <span data-tooltip="BB/K: Walk-to-strikeout ratio." aria-label="BB/K: Walk-to-strikeout ratio.">BB/K</span>
+        <strong>0.44</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>SEAGER</span>
-        <strong>41.2</strong>
+        <span data-tooltip="SEAGER: Hitter quality signal used by the extraction layer." aria-label="SEAGER: Hitter quality signal used by the extraction layer.">SEAGER</span>
+        <strong>38.8</strong>
       </div>
       
       <div class="season-context-tile">
-        <span>BABIP</span>
-        <strong>.300</strong>
+        <span data-tooltip="BABIP: Batting average on balls in play." aria-label="BABIP: Batting average on balls in play.">BABIP</span>
+        <strong>.343</strong>
       </div>
       
     </div>
   </div>
 
-  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 88.6 mph (+4.7 vs baseline), barrel-like rate 6.2%.</div>
+  <div class="why-full"><strong>Signal Thesis:</strong> Avg EV 88.8 mph (+7.9 vs baseline), barrel-like rate 3.2%.</div>
 </article>
           
         </div>

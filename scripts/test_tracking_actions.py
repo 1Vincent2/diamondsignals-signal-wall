@@ -119,6 +119,10 @@ def audit_surface(path):
             print(f"FAIL: {rel} contains forbidden route/pattern: {pattern}")
             failures += 1
 
+    if rel.as_posix() != "dist/watch-list/index.html" and 'href="/watch-list/"' in html:
+        print(f"FAIL: {rel} contains legacy Signal Wall watch-list nav link")
+        failures += 1
+
     if failures == 0:
         if has_cards or has_buttons:
             ok(f"{rel} tracking markup is wired")

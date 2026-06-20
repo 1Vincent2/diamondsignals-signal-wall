@@ -296,7 +296,7 @@ def _build_asset(
     if resolved_player_id:
         scout_url = f"/scout/{resolved_player_id}/"
 
-    watchlist_url = "/watch-list/"
+    watchlist_url = "https://app.diamondsignals.ai/auth?next=/watchlist"
 
     return {
         "player_name": player_name,

@@ -16,6 +16,20 @@
   function = "signals-gate"
   path = "/*"
 
+
+# Retired legacy Signal Wall watch-list. Canonical Tracking Radar lives in the authenticated app.
+[[redirects]]
+  from = "/watch-list/"
+  to = "https://app.diamondsignals.ai/auth?next=/watchlist"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/watch-list"
+  to = "https://app.diamondsignals.ai/auth?next=/watchlist"
+  status = 302
+  force = true
+
 [[redirects]]
   from = "/hidden-gems/"
   to = "/mlb-extraction/"
