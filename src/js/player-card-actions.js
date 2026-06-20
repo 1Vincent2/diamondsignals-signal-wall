@@ -3,6 +3,8 @@
   const WATCH_BUTTON_SELECTOR = ".js-add-to-roster";
   const STORAGE_KEY = "diamondsignals_watch_list_v1";
   const LEGACY_STORAGE_KEY = "diamondsignals_roster_v1";
+  const APP_AUTH_URL = "https://app.diamondsignals.ai/auth";
+  const APP_WATCHLIST_PATH = "/watchlist";
 
   function readStorage(key) {
     try {
@@ -162,6 +164,28 @@
     };
   }
 
+  function buildAppTrackingUrl(player) {
+    const playerId = String(player.playerId || "").trim();
+    const params = new URLSearchParams();
+
+    params.set("add_player_id", playerId);
+
+    if (player.playerName) {
+      params.set("player_name", player.playerName);
+    }
+
+    if (player.team) {
+      params.set("player_team", player.team);
+    }
+
+    params.set("signal_source", player.sourceTag || "Signal Wall");
+
+    const nextPath = `${APP_WATCHLIST_PATH}?${params.toString()}`;
+    const authUrl = new URL(APP_AUTH_URL);
+    authUrl.searchParams.set("next", nextPath);
+    return authUrl.toString();
+  }
+
   function syncCardProvisionStates() {
     const cards = Array.from(document.querySelectorAll(CARD_SELECTOR));
 
@@ -232,10 +256,10 @@
 
         upsertWatchListPlayer(player);
         applyProvisionedState(watchButton, true);
-        showToast(`${player.playerName || "Player"} added to Tracking Radar`);
+        showToast(`${player.playerName || "Player"} queued for Passport Tracking`);
 
         window.setTimeout(() => {
-          window.location.href = "/watch-list/";
+          window.location.href = buildAppTrackingUrl(player);
         }, 450);
       });
     }

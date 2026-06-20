@@ -21,19 +21,23 @@ SURFACE_PATHS = [
 ]
 
 FORBIDDEN_ROUTE_PATTERNS = [
-    "app.diamondsignals.ai/watchlist",
-    "app.diamondsignals.ai/auth?next=/watchlist",
-    "/watchlist",
-    "add_player_id",
-    "player_id=.*source=",
+    'window.location.href = "/watch-list/"',
 ]
 
 REQUIRED_JS_PATTERNS = [
     'const STORAGE_KEY = "diamondsignals_watch_list_v1"',
+    'const APP_AUTH_URL = "https://app.diamondsignals.ai/auth"',
+    'const APP_WATCHLIST_PATH = "/watchlist"',
     "function upsertWatchListPlayer(player)",
+    "function buildAppTrackingUrl(player)",
     "function syncCardProvisionStates()",
     "function scheduleProvisionSync()",
-    'window.location.href = "/watch-list/"',
+    'params.set("add_player_id", playerId)',
+    'params.set("player_name", player.playerName)',
+    'params.set("player_team", player.team)',
+    'params.set("signal_source", player.sourceTag || "Signal Wall")',
+    'authUrl.searchParams.set("next", nextPath)',
+    'window.location.href = buildAppTrackingUrl(player)',
     'window.addEventListener("pageshow", scheduleProvisionSync)',
     'window.addEventListener("resize", scheduleProvisionSync)',
     'window.addEventListener("orientationchange", scheduleProvisionSync)',

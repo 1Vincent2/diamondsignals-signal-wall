@@ -2619,7 +2619,7 @@ def render_html(payload: dict) -> str:
         fields.metric.textContent = d.supportingMetric || "--";
         fields.action.textContent = d.action || "--";
 
-        fields.provision.href = "/watch-list/";
+        fields.provision.href = "https://app.diamondsignals.ai/auth?next=/watchlist";
         fields.provision.dataset.playerId = playerId;
         fields.provision.dataset.playerName = playerName;
         fields.provision.dataset.playerTeam = d.playerTeam || "MLB";
@@ -2668,7 +2668,16 @@ def render_html(payload: dict) -> str:
             // Continue to Tracking Radar even if localStorage is unavailable.
           }}
 
-          window.location.href = "/watch-list/";
+          const params = new URLSearchParams();
+          params.set("add_player_id", playerId);
+          if (playerName) params.set("player_name", playerName);
+          if (nextPlayer.team) params.set("player_team", nextPlayer.team);
+          params.set("signal_source", nextPlayer.sourceTag || "APEX_EXTRACTION");
+
+          const nextPath = `/watchlist?${params.toString()}`;
+          const authUrl = new URL("https://app.diamondsignals.ai/auth");
+          authUrl.searchParams.set("next", nextPath);
+          window.location.href = authUrl.toString();
         }};
 
         fields.copy.onclick = async () => {{
