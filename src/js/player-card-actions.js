@@ -16,33 +16,23 @@
     }
   }
 
-  function getWatchList() {
-    const current = readStorage(STORAGE_KEY);
-    if (current.length) return current;
-
-    const legacy = readStorage(LEGACY_STORAGE_KEY);
-    if (!legacy.length) return [];
-
-    const migrated = legacy.map((p) => ({
-      playerId: p.playerId || "",
-      playerName: p.playerName || "",
-      playerType: p.playerType || "",
-      team: p.team || "",
-      profileUrl: p.profileUrl || "",
-      sourceTag: p.sourceTag || "FOLLOW",
-      savedAt: p.savedAt || new Date().toISOString(),
-    }));
-
-    setWatchList(migrated);
-    return migrated;
-  }
-
-  function setWatchList(watchList) {
+  function retireLegacyWatchListStorage() {
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(watchList));
+      window.localStorage.removeItem(STORAGE_KEY);
+      window.localStorage.removeItem(LEGACY_STORAGE_KEY);
     } catch {
       // no-op
     }
+  }
+
+  function getWatchList() {
+    retireLegacyWatchListStorage();
+    return [];
+  }
+
+  function setWatchList(_watchList) {
+    retireLegacyWatchListStorage();
+    return [];
   }
 
   function inferSourceTag(card, player) {
@@ -58,29 +48,14 @@
     return "FOLLOW";
   }
 
-  function upsertWatchListPlayer(player) {
-    const watchList = getWatchList();
-    const existingIndex = watchList.findIndex((p) => {
-      if (player.playerId && p.playerId) return String(p.playerId) === String(player.playerId);
-      return String(p.playerName || "").toLowerCase() === String(player.playerName || "").toLowerCase();
-    });
-
-    if (existingIndex >= 0) {
-      watchList[existingIndex] = { ...watchList[existingIndex], ...player, savedAt: new Date().toISOString() };
-    } else {
-      watchList.push({ ...player, savedAt: new Date().toISOString() });
-    }
-
-    setWatchList(watchList);
-    return watchList;
+  function upsertWatchListPlayer(_player) {
+    retireLegacyWatchListStorage();
+    return [];
   }
 
-  function isPlayerProvisioned(player) {
-    const watchList = getWatchList();
-    return watchList.some((p) => {
-      if (player.playerId && p.playerId) return String(p.playerId) === String(player.playerId);
-      return String(p.playerName || "").toLowerCase() === String(player.playerName || "").toLowerCase();
-    });
+  function isPlayerProvisioned(_player) {
+    retireLegacyWatchListStorage();
+    return false;
   }
 
   function getDefaultProvisionLabel(button) {
@@ -254,8 +229,9 @@
           return;
         }
 
-        upsertWatchListPlayer(player);
-        applyProvisionedState(watchButton, true);
+        retireLegacyWatchListStorage();
+        watchButton.disabled = true;
+        watchButton.textContent = "OPENING PASSPORT";
         showToast(`${player.playerName || "Player"} queued for Passport Tracking`);
 
         window.setTimeout(() => {
@@ -266,6 +242,8 @@
   }
 
   function initPlayerCardActions() {
+    retireLegacyWatchListStorage();
+
     const cards = Array.from(document.querySelectorAll(CARD_SELECTOR));
 
     Array.from(document.querySelectorAll(WATCH_BUTTON_SELECTOR)).forEach((button) => {

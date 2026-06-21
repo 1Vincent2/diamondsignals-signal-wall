@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,15 +19,26 @@ SURFACE_PATHS = [
     DIST / "ivb-heat-map" / "index.html",
 ]
 
-FORBIDDEN_ROUTE_PATTERNS = [
+RETIRED_WATCH_LIST_PAGE = "dist/watch-list/index.html"
+
+FORBIDDEN_EXACT_PATTERNS = [
     'window.location.href = "/watch-list/"',
+]
+
+FORBIDDEN_ACTIVE_SURFACE_PATTERNS = [
+    "upsertWatchListPlayer(player);",
+    "window.localStorage.setItem(STORAGE_KEY",
+    'href="/watch-list/"',
 ]
 
 REQUIRED_JS_PATTERNS = [
     'const STORAGE_KEY = "diamondsignals_watch_list_v1"',
+    'const LEGACY_STORAGE_KEY = "diamondsignals_roster_v1"',
     'const APP_AUTH_URL = "https://app.diamondsignals.ai/auth"',
     'const APP_WATCHLIST_PATH = "/watchlist"',
-    "function upsertWatchListPlayer(player)",
+    "function retireLegacyWatchListStorage()",
+    "localStorage.removeItem(STORAGE_KEY)",
+    "localStorage.removeItem(LEGACY_STORAGE_KEY)",
     "function buildAppTrackingUrl(player)",
     "function syncCardProvisionStates()",
     "function scheduleProvisionSync()",
@@ -37,6 +47,7 @@ REQUIRED_JS_PATTERNS = [
     'params.set("player_team", player.team)',
     'params.set("signal_source", player.sourceTag || "Signal Wall")',
     'authUrl.searchParams.set("next", nextPath)',
+    'watchButton.textContent = "OPENING PASSPORT"',
     'window.location.href = buildAppTrackingUrl(player)',
     'window.addEventListener("pageshow", scheduleProvisionSync)',
     'window.addEventListener("resize", scheduleProvisionSync)',
@@ -59,16 +70,16 @@ def read(path):
 
 def audit_shared_js():
     js = read(JS_PATH)
-
     failures = 0
+
     for pattern in REQUIRED_JS_PATTERNS:
         if pattern not in js:
             print(f"FAIL: shared JS missing required pattern: {pattern}")
             failures += 1
 
-    for pattern in FORBIDDEN_ROUTE_PATTERNS:
-        if re.search(pattern, js):
-            print(f"FAIL: shared JS contains forbidden route/pattern: {pattern}")
+    for pattern in FORBIDDEN_EXACT_PATTERNS + FORBIDDEN_ACTIVE_SURFACE_PATTERNS:
+        if pattern in js:
+            print(f"FAIL: shared JS contains retired/forbidden pattern: {pattern}")
             failures += 1
 
     if failures == 0:
@@ -78,8 +89,7 @@ def audit_shared_js():
 
 def audit_surface(path):
     html = read(path)
-    rel = path.relative_to(ROOT)
-
+    rel = path.relative_to(ROOT).as_posix()
     failures = 0
 
     has_cards = "js-player-card" in html
@@ -105,23 +115,23 @@ def audit_surface(path):
         if button_count > card_count * 2:
             print(f"FAIL: {rel} suspicious button/card ratio: {button_count} buttons vs {card_count} cards")
             failures += 1
-
         if player_id_count < button_count:
             print(f"FAIL: {rel} has fewer data-player-id attrs than tracking buttons")
             failures += 1
-
         if profile_url_count < card_count:
             print(f"FAIL: {rel} has fewer data-profile-url attrs than tracking cards")
             failures += 1
 
-    for pattern in FORBIDDEN_ROUTE_PATTERNS:
-        if re.search(pattern, html):
-            print(f"FAIL: {rel} contains forbidden route/pattern: {pattern}")
+    for pattern in FORBIDDEN_EXACT_PATTERNS:
+        if pattern in html:
+            print(f"FAIL: {rel} contains forbidden exact redirect: {pattern}")
             failures += 1
 
-    if rel.as_posix() != "dist/watch-list/index.html" and 'href="/watch-list/"' in html:
-        print(f"FAIL: {rel} contains legacy Signal Wall watch-list nav link")
-        failures += 1
+    if rel != RETIRED_WATCH_LIST_PAGE:
+        for pattern in FORBIDDEN_ACTIVE_SURFACE_PATTERNS:
+            if pattern in html:
+                print(f"FAIL: {rel} contains retired active-surface tracking pattern: {pattern}")
+                failures += 1
 
     if failures == 0:
         if has_cards or has_buttons:
@@ -140,10 +150,11 @@ def main():
     failures += audit_shared_js()
 
     for path in SURFACE_PATHS:
-        if path.exists():
-            failures += audit_surface(path)
-        else:
-            print(f"WARN: skipped missing route: {path.relative_to(ROOT)}")
+        if not path.exists():
+            print(f"FAIL: missing surface: {path}")
+            failures += 1
+            continue
+        failures += audit_surface(path)
 
     if failures:
         print(f"\nTracking regression audit failed with {failures} issue(s).")
