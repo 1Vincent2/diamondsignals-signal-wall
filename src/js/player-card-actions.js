@@ -5,16 +5,7 @@
   const LEGACY_STORAGE_KEY = "diamondsignals_roster_v1";
   const APP_AUTH_URL = "https://app.diamondsignals.ai/auth";
   const APP_WATCHLIST_PATH = "/watchlist";
-
-  function readStorage(key) {
-    try {
-      const raw = window.localStorage.getItem(key);
-      const parsed = raw ? JSON.parse(raw) : [];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  }
+  const APP_WATCHLIST_STATUS_URL = "https://app.diamondsignals.ai/api/watchlist/status";
 
   function retireLegacyWatchListStorage() {
     try {
@@ -30,9 +21,8 @@
     return [];
   }
 
-  function setWatchList(_watchList) {
+  function setWatchList() {
     retireLegacyWatchListStorage();
-    return [];
   }
 
   function inferSourceTag(card, player) {
@@ -48,16 +38,6 @@
     return "FOLLOW";
   }
 
-  function upsertWatchListPlayer(_player) {
-    retireLegacyWatchListStorage();
-    return [];
-  }
-
-  function isPlayerProvisioned(_player) {
-    retireLegacyWatchListStorage();
-    return false;
-  }
-
   function getDefaultProvisionLabel(button) {
     const explicit = (button?.getAttribute("data-default-label") || "").trim();
     return explicit || "INITIATE TRACKING";
@@ -70,6 +50,23 @@
     button.classList.toggle("is-provisioned", !!isProvisioned);
     button.setAttribute("aria-pressed", isProvisioned ? "true" : "false");
     button.disabled = !!isProvisioned;
+  }
+
+  function applyPendingState(button) {
+    if (!button) return;
+    button.textContent = "OPENING PASSPORT";
+    button.setAttribute("data-provisioned", "pending");
+    button.setAttribute("aria-pressed", "true");
+    button.disabled = true;
+    button.classList.add("is-provisioned");
+  }
+
+  function applyCardTrackingState(card, isProvisioned) {
+    if (!card) return;
+    card.classList.toggle("is-provisioned", !!isProvisioned);
+    card.classList.toggle("tracking-active", !!isProvisioned);
+    card.setAttribute("data-provisioned", isProvisioned ? "true" : "false");
+    card.setAttribute("data-tracking-state", isProvisioned ? "active" : "idle");
   }
 
   function ensureToast() {
@@ -161,7 +158,52 @@
     return authUrl.toString();
   }
 
-  function syncCardProvisionStates() {
+  async function fetchAppWatchlistStatus(player) {
+    const playerId = String(player.playerId || "").trim();
+    if (!playerId) return null;
+
+    try {
+      const url = new URL(APP_WATCHLIST_STATUS_URL);
+      url.searchParams.set("player_id", playerId);
+
+      const response = await fetch(url.toString(), {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Accept": "application/json",
+        },
+      });
+
+      if (!response.ok) return null;
+
+      const payload = await response.json();
+
+      if (typeof payload.tracked === "boolean") return payload.tracked;
+      if (typeof payload.in_watchlist === "boolean") return payload.in_watchlist;
+      if (typeof payload.exists === "boolean") return payload.exists;
+
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  async function resolveProvisionedState(player) {
+    const appStatus = await fetchAppWatchlistStatus(player);
+    return typeof appStatus === "boolean" ? appStatus : false;
+  }
+
+  async function refreshCardTrackingState(card, watchButton) {
+    if (!card || !watchButton) return;
+    const player = getPlayerFromCard(card, watchButton);
+    const provisioned = await resolveProvisionedState(player);
+    applyProvisionedState(watchButton, provisioned);
+    applyCardTrackingState(card, provisioned);
+  }
+
+  async function syncCardProvisionStates() {
+    retireLegacyWatchListStorage();
+
     const cards = Array.from(document.querySelectorAll(CARD_SELECTOR));
 
     Array.from(document.querySelectorAll(WATCH_BUTTON_SELECTOR)).forEach((button) => {
@@ -169,18 +211,11 @@
       if (card && !cards.includes(card)) cards.push(card);
     });
 
-    cards.forEach((card) => {
+    await Promise.all(cards.map(async (card) => {
       const watchButton = card.querySelector(WATCH_BUTTON_SELECTOR);
       if (!watchButton) return;
-      const player = getPlayerFromCard(card, watchButton);
-      const provisioned = isPlayerProvisioned(player);
-      applyProvisionedState(watchButton, provisioned);
-
-      card.classList.toggle("is-provisioned", !!provisioned);
-      card.classList.toggle("tracking-active", !!provisioned);
-      card.setAttribute("data-provisioned", provisioned ? "true" : "false");
-      card.setAttribute("data-tracking-state", provisioned ? "active" : "idle");
-    });
+      await refreshCardTrackingState(card, watchButton);
+    }));
   }
 
   function bindCard(card) {
@@ -210,8 +245,9 @@
 
     const watchButton = card.querySelector(WATCH_BUTTON_SELECTOR);
     if (watchButton) {
-      const initialPlayer = getPlayerFromCard(card, watchButton);
-      applyProvisionedState(watchButton, isPlayerProvisioned(initialPlayer));
+      applyProvisionedState(watchButton, false);
+      applyCardTrackingState(card, false);
+      refreshCardTrackingState(card, watchButton);
 
       watchButton.addEventListener("click", function (event) {
         event.preventDefault();
@@ -230,9 +266,9 @@
         }
 
         retireLegacyWatchListStorage();
-        watchButton.disabled = true;
-        watchButton.textContent = "OPENING PASSPORT";
-        showToast(`${player.playerName || "Player"} queued for Passport Tracking`);
+        applyPendingState(watchButton);
+        applyCardTrackingState(card, true);
+        showToast(`${player.playerName || "Player"} opening Passport Watchlist`);
 
         window.setTimeout(() => {
           window.location.href = buildAppTrackingUrl(player);
@@ -285,15 +321,16 @@
     if (!document.hidden) scheduleProvisionSync();
   });
 
-  window.addEventListener("storage", function (event) {
-    if (!event || event.key === STORAGE_KEY || event.key === LEGACY_STORAGE_KEY) {
-      scheduleProvisionSync();
-    }
+  window.addEventListener("storage", function () {
+    retireLegacyWatchListStorage();
+    scheduleProvisionSync();
   });
 
   window.DiamondSignalsTrackingRadar = {
     getWatchList,
     setWatchList,
     syncProvisionUI,
+    fetchAppWatchlistStatus,
+    resolveProvisionedState,
   };
 })();
