@@ -5,6 +5,9 @@
   const LEGACY_STORAGE_KEY = "diamondsignals_roster_v1";
   const APP_AUTH_URL = "https://app.diamondsignals.ai/auth";
   const APP_WATCHLIST_PATH = "/watchlist";
+  const APP_WATCHLIST_STATUS_URL = "https://app.diamondsignals.ai/api/watchlist/status";
+  const appWatchlistStatusCache = new Map();
+  const appWatchlistStatusPending = new Set();
 
   function readStorage(key) {
     try {
@@ -65,11 +68,75 @@
 
   function applyProvisionedState(button, isProvisioned) {
     if (!button) return;
+
+    if (button.getAttribute("data-opening-passport") === "true") {
+      return;
+    }
+
     button.textContent = isProvisioned ? "TRACKING ACTIVE" : getDefaultProvisionLabel(button);
     button.setAttribute("data-provisioned", isProvisioned ? "true" : "false");
     button.classList.toggle("is-provisioned", !!isProvisioned);
     button.setAttribute("aria-pressed", isProvisioned ? "true" : "false");
     button.disabled = !!isProvisioned;
+  }
+
+  function getPlayerStatusKey(player) {
+    const playerId = String(player?.playerId || "").trim();
+    return playerId || "";
+  }
+
+  function applyCardProvisionState(card, button, isProvisioned) {
+    applyProvisionedState(button, isProvisioned);
+
+    card.classList.toggle("is-provisioned", !!isProvisioned);
+    card.classList.toggle("tracking-active", !!isProvisioned);
+    card.setAttribute("data-provisioned", isProvisioned ? "true" : "false");
+    card.setAttribute("data-tracking-state", isProvisioned ? "active" : "idle");
+  }
+
+  function fetchAppWatchlistStatus(player) {
+    const playerId = getPlayerStatusKey(player);
+    if (!playerId || appWatchlistStatusPending.has(playerId)) return;
+
+    appWatchlistStatusPending.add(playerId);
+
+    const url = new URL(APP_WATCHLIST_STATUS_URL);
+    url.searchParams.set("player_id", playerId);
+
+    fetch(url.toString(), {
+      method: "GET",
+      credentials: "include",
+      cache: "no-store",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) return null;
+        return response.json();
+      })
+      .then((payload) => {
+        if (!payload || payload.ok !== true) return;
+
+        const isTracked = Boolean(payload.tracked || payload.in_watchlist || payload.exists);
+        appWatchlistStatusCache.set(playerId, isTracked);
+
+        Array.from(document.querySelectorAll(WATCH_BUTTON_SELECTOR)).forEach((button) => {
+          const card = button.closest(CARD_SELECTOR) || button.closest(".asset-card") || button.closest("article") || button.parentElement;
+          if (!card) return;
+
+          const cardPlayer = getPlayerFromCard(card, button);
+          if (getPlayerStatusKey(cardPlayer) !== playerId) return;
+
+          applyCardProvisionState(card, button, isTracked);
+        });
+      })
+      .catch(() => {
+        // If the app session is unavailable or the request fails, leave the Signal Wall button in its safe default state.
+      })
+      .finally(() => {
+        appWatchlistStatusPending.delete(playerId);
+      });
   }
 
   function ensureToast() {
@@ -172,14 +239,13 @@
     cards.forEach((card) => {
       const watchButton = card.querySelector(WATCH_BUTTON_SELECTOR);
       if (!watchButton) return;
-      const player = getPlayerFromCard(card, watchButton);
-      const provisioned = isPlayerProvisioned(player);
-      applyProvisionedState(watchButton, provisioned);
 
-      card.classList.toggle("is-provisioned", !!provisioned);
-      card.classList.toggle("tracking-active", !!provisioned);
-      card.setAttribute("data-provisioned", provisioned ? "true" : "false");
-      card.setAttribute("data-tracking-state", provisioned ? "active" : "idle");
+      const player = getPlayerFromCard(card, watchButton);
+      const playerStatusKey = getPlayerStatusKey(player);
+      const cachedProvisioned = playerStatusKey ? appWatchlistStatusCache.get(playerStatusKey) === true : false;
+
+      applyCardProvisionState(card, watchButton, cachedProvisioned);
+      fetchAppWatchlistStatus(player);
     });
   }
 
@@ -230,6 +296,7 @@
         }
 
         retireLegacyWatchListStorage();
+        watchButton.setAttribute("data-opening-passport", "true");
         watchButton.disabled = true;
         watchButton.textContent = "OPENING PASSPORT";
         showToast(`${player.playerName || "Player"} queued for Passport Tracking`);
