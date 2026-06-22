@@ -248,15 +248,31 @@ def main():
         rid for rid, item in inventory.items()
         if any(pattern.lower() in json.dumps(item).lower() for pattern in PLAYER_SCOUT_PATTERNS)
     ]
-    print(f"player_scout_inventory_hits: {active_inventory_hits}")
 
-    if hits and not active_inventory_hits:
-        print(
-            "WARN: Player Scout / Dossiers references exist but are not declared as an active inventory surface."
+    supporting_route_declarations = []
+    for rid, item in inventory.items():
+        routes = item.get("supporting_routes", [])
+        if not isinstance(routes, list):
+            continue
+        for route in routes:
+            if not isinstance(route, dict):
+                continue
+            route_text = json.dumps(route).lower()
+            if "/scout/<player_id>/" in route_text or "player scout" in route_text or "dossiers" in route_text:
+                supporting_route_declarations.append(
+                    f"{rid}:{route.get('route_pattern', 'UNKNOWN_ROUTE')}"
+                )
+
+    print(f"player_scout_inventory_hits: {active_inventory_hits}")
+    print(f"player_scout_supporting_route_declarations: {supporting_route_declarations}")
+
+    if hits and not supporting_route_declarations:
+        problems.append(
+            "Player Scout / Dossiers references exist but /scout/<player_id>/ is not declared as an intentional supporting route layer."
         )
-        print(
-            "WARN: This is acceptable only if intentionally classified as archived/non-active."
-        )
+        print("FAIL: missing supporting route declaration for /scout/<player_id>/")
+    elif supporting_route_declarations:
+        print("OK: /scout/<player_id>/ is declared as an intentional supporting route layer")
 
     print("\n--- summary ---")
     print(f"closure_reports_checked: {len(REQUIRED_CLOSURE)}")

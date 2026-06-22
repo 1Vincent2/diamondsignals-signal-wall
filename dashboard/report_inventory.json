@@ -15,7 +15,20 @@
         "statcast",
         "player_lookup"
       ],
-      "surface_class": "public_surface"
+      "surface_class": "public_surface",
+      "supporting_routes": [
+        {
+          "route_name": "Player Scout / Dossiers",
+          "route_pattern": "/scout/<player_id>/",
+          "surface_class": "supporting_internal_route",
+          "builder_script": "dashboard/build_dashboard.py",
+          "index_output": "dist/scout/index.html",
+          "output_html_pattern": "dist/scout/<player_id>/index.html",
+          "source_json": "dist/dossier_canon.json",
+          "route_note": "Intentional supporting player-dossier route layer generated from canonical dossier data. This is not a standalone public report surface and therefore does not require its own status contract entry."
+        }
+      ],
+      "route_note": "Signal Wall also emits the supporting /scout/<player_id>/ Player Scout / Dossiers route layer from dist/dossier_canon.json; that layer is intentionally supporting/internal rather than a separate report surface."
     },
     {
       "report_id": "promotion_watch",
