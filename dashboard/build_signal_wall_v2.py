@@ -117,6 +117,34 @@ def normalize_signal_wall_player_name(value) -> str:
             text = f"{first} {last}"
     return text
 
+
+_DOSSIER_PLAYER_IDS_CACHE = None
+
+def load_dossier_player_ids() -> set[str]:
+    global _DOSSIER_PLAYER_IDS_CACHE
+    if _DOSSIER_PLAYER_IDS_CACHE is not None:
+        return _DOSSIER_PLAYER_IDS_CACHE
+
+    path = Path("dist/dossier_canon.json")
+    ids: set[str] = set()
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        players = payload.get("players", {}) if isinstance(payload, dict) else {}
+        ids = {str(pid).strip() for pid in players.keys() if str(pid).strip()}
+    except Exception:
+        ids = set()
+
+    _DOSSIER_PLAYER_IDS_CACHE = ids
+    return ids
+
+
+def dossier_backed_player_id(value) -> str:
+    pid = "" if value is None else str(value).strip()
+    if not pid or pid.lower() == "nan":
+        return ""
+    return pid if pid in load_dossier_player_ids() else ""
+
+
 def stable_player_id(row, player_type, name):
     # V2 must route by displayed identity before trusting raw numeric fields.
     normalized_name = normalize_signal_wall_player_name(name)
@@ -212,7 +240,7 @@ def normalize_rows(rows, player_type):
             "why": safe(r.get("why"), "Signal thesis pending."),
             "sample_note": safe(r.get("sample_note"), "LIVE WINDOW"),
             "trend_points": safe(r.get("trend_points"), "0,26 20,22 40,24 60,15 80,18 100,10 120,8"),
-            "resolved_player_id": stable_player_id(r, player_type, name),
+            "resolved_player_id": dossier_backed_player_id(stable_player_id(r, player_type, name)),
         })
     return out
 

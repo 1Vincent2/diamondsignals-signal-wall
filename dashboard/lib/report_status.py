@@ -64,6 +64,9 @@ def build_report_status(
     degraded: bool = False,
     errors: Optional[list[str]] = None,
     notes: Optional[list[str]] = None,
+    mode: Optional[str] = None,
+    pipeline_layers: Optional[list[str]] = None,
+    hardening_notes: Optional[list[str]] = None,
 ) -> Dict[str, Any]:
     source_age_minutes = age_minutes_from_now(source_updated_at)
     stale = False
@@ -77,7 +80,7 @@ def build_report_status(
         degraded=degraded,
     )
 
-    return {
+    status: Dict[str, Any] = {
         "report_id": report_id,
         "state": state,
         "build_success": build_success,
@@ -93,3 +96,12 @@ def build_report_status(
         "notes": notes or [],
         "generated_at": utc_now_iso(),
     }
+
+    if mode is not None:
+        status["mode"] = mode
+    if pipeline_layers is not None:
+        status["pipeline_layers"] = pipeline_layers
+    if hardening_notes is not None:
+        status["hardening_notes"] = hardening_notes
+
+    return status

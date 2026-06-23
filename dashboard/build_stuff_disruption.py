@@ -19,6 +19,20 @@ DIST_DIR = REPO_ROOT / "dist"
 APEX_DIR = DIST_DIR / "stuff-disruption-feed"
 STATUS_DIR = DIST_DIR / "status"
 STUFF_DISRUPTION_STATUS_PATH = STATUS_DIR / "stuff-disruption.json"
+
+STUFF_DISRUPTION_MODE = "statcast_stuff_disruption_dynamic_v1_hardened"
+STUFF_DISRUPTION_PIPELINE_LAYERS = [
+    "statcast",
+    "pybaseball",
+    "pitch_shape_trends",
+    "canonical_player_id_routes",
+]
+STUFF_DISRUPTION_HARDENING_NOTES = [
+    "hardened_stuff_disruption_mode:true",
+    "dynamic_terms:pybaseball",
+    "dynamic_terms:real_data",
+    "dynamic_terms:statcast",
+]
 TEMPLATES_DIR = BASE_DIR / "templates"
 
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
@@ -1935,6 +1949,9 @@ def write_stuff_disruption_status(
 
     status_payload = build_report_status(
         "stuff_disruption",
+        mode=STUFF_DISRUPTION_MODE,
+        pipeline_layers=STUFF_DISRUPTION_PIPELINE_LAYERS,
+        hardening_notes=STUFF_DISRUPTION_HARDENING_NOTES,
         build_success=True,
         threshold_minutes=240,
         build_started_at=build_started_at,

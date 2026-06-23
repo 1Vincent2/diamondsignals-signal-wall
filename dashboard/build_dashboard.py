@@ -58,6 +58,20 @@ END_DATE = TODAY
 RECENT_DAYS = 7
 BASELINE_DAYS = 28
 
+SIGNAL_WALL_MODE = "statcast_signal_wall_dynamic_v1_hardened"
+SIGNAL_WALL_PIPELINE_LAYERS = [
+    "statcast",
+    "player_lookup",
+    "canonical_dossier",
+    "scout_supporting_route",
+]
+SIGNAL_WALL_HARDENING_NOTES = [
+    "hardened_signal_wall_mode:true",
+    "dynamic_terms:statcast",
+    "dynamic_terms:real_data",
+    "canonical_player_id_routes:true",
+]
+
 _ID_RESOLUTION_CACHE: dict[str, str] = {}
 
 
@@ -3341,6 +3355,10 @@ def write_scout_pages(dossier_payload: dict) -> None:
 
 def write_status_file(status_payload: dict) -> None:
     STATUS_DIR.mkdir(parents=True, exist_ok=True)
+    if status_payload.get("report_id") == "signal_wall":
+        status_payload["mode"] = SIGNAL_WALL_MODE
+        status_payload["pipeline_layers"] = SIGNAL_WALL_PIPELINE_LAYERS
+        status_payload["hardening_notes"] = SIGNAL_WALL_HARDENING_NOTES
     SIGNAL_WALL_STATUS_PATH.write_text(
         json.dumps(status_payload, indent=2),
         encoding="utf-8",

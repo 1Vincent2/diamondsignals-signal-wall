@@ -7,6 +7,17 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 REQUIRED_CLOSURE = {
+    "signal_wall": {
+        "status": "dist/status/signal-wall.json",
+        "required_mode": "statcast_signal_wall_dynamic_v1_hardened",
+        "allowed_classes": {"LIVE_DYNAMIC_HARDENED"},
+        "required_notes": [
+            "hardened_signal_wall_mode:true",
+            "dynamic_terms:statcast",
+            "dynamic_terms:real_data",
+            "canonical_player_id_routes:true",
+        ],
+    },
     "promotion_watch": {
         "status": "dist/status/promotion-watch.json",
         "required_mode": "dynamic_promotion_watch_v0.1_hardened",
@@ -44,9 +55,10 @@ REQUIRED_CLOSURE = {
     },
     "stuff_disruption": {
         "status": "dist/status/stuff-disruption.json",
-        "required_mode": None,
+        "required_mode": "statcast_stuff_disruption_dynamic_v1_hardened",
         "allowed_classes": {"LIVE_DYNAMIC_HARDENED"},
         "required_notes": [
+            "hardened_stuff_disruption_mode:true",
             "dynamic_terms:pybaseball",
             "dynamic_terms:real_data",
             "dynamic_terms:statcast",
@@ -89,6 +101,12 @@ def read_json(path):
 
 
 DERIVED_CLOSURE_NOTES = {
+    "signal_wall": [
+        "hardened_signal_wall_mode:true",
+        "dynamic_terms:statcast",
+        "dynamic_terms:real_data",
+        "canonical_player_id_routes:true",
+    ],
     "promotion_watch": [
         "hardened_promotion_watch_mode:true",
         "no_static_player_seed_fallback:true",
@@ -105,6 +123,7 @@ DERIVED_CLOSURE_NOTES = {
         "no_static_player_seed_fallback:true",
     ],
     "stuff_disruption": [
+        "hardened_stuff_disruption_mode:true",
         "dynamic_terms:pybaseball",
         "dynamic_terms:real_data",
         "dynamic_terms:statcast",
