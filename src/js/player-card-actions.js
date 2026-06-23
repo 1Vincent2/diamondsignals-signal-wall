@@ -69,11 +69,7 @@
   function applyProvisionedState(button, isProvisioned) {
     if (!button) return;
 
-    if (button.getAttribute("data-opening-passport") === "true") {
-      return;
-    }
-
-    button.textContent = isProvisioned ? "TRACKING ACTIVE" : getDefaultProvisionLabel(button);
+    button.textContent = isProvisioned ? "ASSET TRACKED" : getDefaultProvisionLabel(button);
     button.setAttribute("data-provisioned", isProvisioned ? "true" : "false");
     button.classList.toggle("is-provisioned", !!isProvisioned);
     button.setAttribute("aria-pressed", isProvisioned ? "true" : "false");
@@ -296,14 +292,14 @@
         }
 
         retireLegacyWatchListStorage();
-        watchButton.setAttribute("data-opening-passport", "true");
         watchButton.disabled = true;
-        watchButton.textContent = "OPENING PASSPORT";
-        showToast(`${player.playerName || "Player"} queued for Passport Tracking`);
+        watchButton.textContent = "ADDING TO TRACKING";
+        showToast(`${player.playerName || "Player"} tracking request sent to Tracking Radar`);
 
         window.setTimeout(() => {
+          watchButton.textContent = "TRACKING REQUEST SENT";
           window.location.href = buildAppTrackingUrl(player);
-        }, 450);
+        }, 150);
       });
     }
   }
