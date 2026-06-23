@@ -58,6 +58,9 @@ echo
 echo "--- report inventory truth audit ---"
 python3 scripts/audit_report_inventory_truth.py
 
+echo "--- scout dossier route integrity audit ---"
+python3 scripts/audit_scout_dossier_route_integrity.py
+
 echo
 echo "--- build entrypoint coverage audit ---"
 python3 scripts/audit_build_entrypoint_coverage.py

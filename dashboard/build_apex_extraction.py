@@ -61,6 +61,34 @@ def player_index_by_id() -> dict:
     return {str(row.get("player_id")): row for row in data.get("players", []) if row.get("player_id")}
 
 
+
+_DOSSIER_PLAYER_IDS_CACHE = None
+
+def load_dossier_player_ids() -> set[str]:
+    global _DOSSIER_PLAYER_IDS_CACHE
+    if _DOSSIER_PLAYER_IDS_CACHE is not None:
+        return _DOSSIER_PLAYER_IDS_CACHE
+
+    path = Path("dist/dossier_canon.json")
+    ids: set[str] = set()
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        players = payload.get("players", {}) if isinstance(payload, dict) else {}
+        ids = {str(pid).strip() for pid in players.keys() if str(pid).strip()}
+    except Exception:
+        ids = set()
+
+    _DOSSIER_PLAYER_IDS_CACHE = ids
+    return ids
+
+
+def scout_profile_url(player_id) -> str:
+    pid = "" if player_id is None else str(player_id).strip()
+    if not pid:
+        return "#"
+    return f"/scout/{pid}/" if pid in load_dossier_player_ids() else "#"
+
+
 def display_name_from_index(player_id: str, fallback: str = "UNKNOWN") -> str:
     idx = player_index_by_id()
     row = idx.get(str(player_id), {})
@@ -500,7 +528,7 @@ def render_signal_card(row: dict) -> str:
         class="apex-card js-player-card {heat_class}"
         id="apex-player-{row.get("player_id", "")}"
         data-player-id="{row.get("player_id", "")}"
-          data-profile-url="/scout/{row.get("player_id", "")}/"
+          data-profile-url="{scout_profile_url(row.get("player_id", ""))}"
         data-player-name="{row.get("name", "")}"
         data-player-team="{row.get("team", "MLB")}"
         data-player-role="{row.get("role", "ASSET")}"
@@ -560,7 +588,7 @@ def render_signal_card(row: dict) -> str:
           <strong>{action}</strong>
         </div>
           <div class="audit-row">
-            <a class="audit-link" href="/scout/{row.get("player_id", "")}/">PERFORMANCE AUDIT</a>
+            <a class="audit-link" href="{scout_profile_url(row.get("player_id", ""))}">PERFORMANCE AUDIT</a>
           </div>
 
 
@@ -571,7 +599,7 @@ def render_signal_card(row: dict) -> str:
           data-player-name="{row.get("name", "")}"
           data-player-type="{row.get("role", "ASSET")}"
           data-player-team="{row.get("team", "MLB")}"
-          data-profile-url="/scout/{row.get("player_id", "")}/"
+          data-profile-url="{scout_profile_url(row.get("player_id", ""))}"
           data-source-tag="APEX_EXTRACTION"
         >
           INITIATE TRACKING
