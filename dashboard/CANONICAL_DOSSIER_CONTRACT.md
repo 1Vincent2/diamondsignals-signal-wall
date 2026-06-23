@@ -88,3 +88,16 @@ Audit interpretation:
 ## Long-Term Implementation
 After validating the contract in production, migrate the proven canonical fields
 into a native Supabase table if needed.
+
+## Item 8 — canonical identity lock
+
+Signal Wall, Scout Dossiers, Watch List, and Tracking Radar must all use the
+same canonical player_id contract.
+
+- Signal surfaces may launch tracking only with canonical numeric player_id.
+- `/scout/<player_id>/` routes are valid only when that player_id exists in
+  `dist/dossier_canon.json` and the generated dossier page exists.
+- App Watchlist and Tracking Radar persistence must key player state by
+  user identity plus player_id, never by display name alone.
+- Future visual rebuilds may change layout, styling, or card copy, but must
+  not replace canonical player_id routing with name-only or stale route logic.

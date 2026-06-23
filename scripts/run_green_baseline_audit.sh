@@ -60,6 +60,8 @@ python3 scripts/audit_report_inventory_truth.py
 
 echo "--- scout dossier route integrity audit ---"
 python3 scripts/audit_scout_dossier_route_integrity.py
+echo "--- canonical player identity contract audit ---"
+python3 scripts/audit_canonical_player_identity_contract.py
 
 echo
 echo "--- build entrypoint coverage audit ---"
