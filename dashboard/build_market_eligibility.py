@@ -326,8 +326,8 @@ def build_market_eligibility() -> dict:
             "expires_in": token_payload.get("expires_in"),
             "token_type": token_payload.get("token_type"),
         },
-        "provider_auth_configured": False,
-        "provider_auth_note": "Yahoo Fantasy API authentication was not fully configured for this refresh. Private credential names are intentionally not exposed in deployed output.",
+        "provider_auth_configured": True,
+        "provider_auth_note": "Yahoo Fantasy API authentication was configured for this refresh. Private credential names are intentionally not exposed in deployed output.",
     }
 
 
