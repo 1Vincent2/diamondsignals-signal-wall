@@ -97,6 +97,8 @@ python3 scripts/audit_admin_audit_manifest.py
 echo
 echo "--- mobile header/menu obstruction audit ---"
 python3 scripts/audit_mobile_header_menu_contract.py
+echo "--- desktop/mobile deferred contract audit ---"
+python3 scripts/audit_desktop_mobile_deferred_contract.py
 
 echo
 echo "--- tracking regression audit ---"
