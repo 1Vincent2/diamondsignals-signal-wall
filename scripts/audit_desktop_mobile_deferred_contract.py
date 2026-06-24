@@ -21,12 +21,16 @@ def require_exists(rel: str, label: str) -> None:
     if not (ROOT / rel).exists():
         issues.append(f"{label} missing required file: {rel}")
 
-require_includes("MOBILE_DEFERRED_UNTIL_ITEM21.md", "mobile deferred policy", [
+require_includes("MOBILE_DEFERRED_UNTIL_ITEM21.md", "mobile deferred and report bottling policy", [
     "Mobile redesign is intentionally deferred until after Item 21.",
+    "The core report surfaces are bottled.",
+    "report builders, report data contracts, status payloads, tracking identity markup",
     "Desktop-only report-surface refinements must remain scoped",
     "Broad mobile layout changes are not allowed during Items 12–21",
     "protected by a mobile-specific audit",
-    "After Item 21 is complete",
+    "After Item 21 is complete, the planned mobile redesign can begin only as a separate tracked phase",
+    "mobile redesign should be additive or isolated where possible",
+    "should not rewrite core report generation, data contracts, desktop report surfaces, status payloads, or tracking identity behavior",
 ])
 
 require_includes("scripts/run_green_baseline_audit.sh", "green baseline mobile/deferred coverage", [
