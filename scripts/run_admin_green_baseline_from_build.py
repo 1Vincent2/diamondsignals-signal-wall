@@ -2,11 +2,14 @@
 import json
 import os
 import subprocess
+from pathlib import Path
 import sys
 import time
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
+
+ROOT = Path(__file__).resolve().parents[1]
 
 MAX_LOG_CHARS = 120000
 

@@ -49,6 +49,12 @@ require(
 )
 
 require(
+    "wrapper must define ROOT before using cwd=ROOT",
+    "ROOT = Path(__file__).resolve().parents[1]" in wrapper
+    and "cwd=ROOT" in wrapper
+)
+
+require(
     "admin job wrapper must still report started state when job id exists",
     "Green baseline audit started in Netlify build runtime." in wrapper,
 )
