@@ -116,6 +116,7 @@ python3 scripts/audit_strict_environment_preflight.py
 echo
 echo "--- tracking regression audit ---"
 python3 scripts/test_tracking_actions.py
+python3 scripts/audit_tracking_write_idempotency_contract.py
 
 echo
 echo "--- GREEN BASELINE AUDIT PASSED ---"

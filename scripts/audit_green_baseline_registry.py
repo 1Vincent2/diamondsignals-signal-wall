@@ -21,6 +21,7 @@ REQUIRED_TIER4_AUDITS = {
 EXPECTED_GUARDRAILS = {
     "scripts/audit_mobile_header_menu_contract.py",
     "scripts/test_tracking_actions.py",
+    "scripts/audit_tracking_write_idempotency_contract.py",
 }
 
 EXTRACT_PATTERNS = [
