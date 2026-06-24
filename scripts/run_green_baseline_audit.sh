@@ -90,6 +90,7 @@ echo
 echo "--- Netlify green baseline deploy gate audit ---"
 python3 scripts/audit_netlify_green_baseline_gate.py
 python3 scripts/audit_admin_build_runtime_job_contract.py
+python3 scripts/audit_admin_readiness_truth.py
 
 echo
 echo "--- admin audit manifest builder ---"
