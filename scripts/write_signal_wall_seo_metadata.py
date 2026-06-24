@@ -41,12 +41,6 @@ PAGES = {
         "description": "MLB Extraction connects Statcast-backed player indicators, canonical identity routing, and signal-led scouting context.",
         "type": "CollectionPage",
     },
-    "hidden-gems/index.html": {
-        "path": "/hidden-gems/",
-        "title": "DiamondSignals // Hidden Gems",
-        "description": "Hidden Gems highlights emerging baseball player signals before broader market recognition.",
-        "type": "CollectionPage",
-    },
     "typical-call-up/index.html": {
         "path": "/typical-call-up/",
         "title": "DiamondSignals // Promotion Watch",

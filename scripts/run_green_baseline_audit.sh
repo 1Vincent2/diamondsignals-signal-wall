@@ -66,6 +66,10 @@ python3 scripts/audit_scout_dossier_route_integrity.py
 echo "--- canonical player identity contract audit ---"
 python3 scripts/audit_canonical_player_identity_contract.py
 python3 scripts/audit_crawl_index_boundaries.py
+echo "--- SEO metadata writer ---"
+python3 scripts/write_signal_wall_seo_metadata.py
+python3 scripts/write_crawl_index_boundaries.py
+
 python3 scripts/audit_signal_wall_all_domain_seo_contract.py
 
 echo

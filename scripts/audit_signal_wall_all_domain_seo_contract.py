@@ -17,7 +17,6 @@ PUBLIC_PAGES = {
     "waiver-wire/index.html": "/waiver-wire/",
     "apex-extraction/index.html": "/apex-extraction/",
     "mlb-extraction/index.html": "/mlb-extraction/",
-    "hidden-gems/index.html": "/hidden-gems/",
     "typical-call-up/index.html": "/typical-call-up/",
     "velocity-decay-monitor/index.html": "/velocity-decay-monitor/",
     "stuff-disruption-feed/index.html": "/stuff-disruption-feed/",
