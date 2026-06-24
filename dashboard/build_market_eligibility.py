@@ -272,7 +272,8 @@ def build_empty_payload(reason: str) -> dict:
             "No manual/exported/pre-seeded Waiver eligibility data is used.",
             "Waiver players render only after verified platform/API rostered percentage data is ingested.",
         ],
-        "required_env": REQUIRED_ENV,
+        "provider_auth_configured": False,
+        "provider_auth_note": "Yahoo Fantasy API authentication was not fully configured for this refresh. Private credential names are intentionally not exposed in deployed output.",
     }
 
 
@@ -325,7 +326,8 @@ def build_market_eligibility() -> dict:
             "expires_in": token_payload.get("expires_in"),
             "token_type": token_payload.get("token_type"),
         },
-        "required_env": REQUIRED_ENV,
+        "provider_auth_configured": False,
+        "provider_auth_note": "Yahoo Fantasy API authentication was not fully configured for this refresh. Private credential names are intentionally not exposed in deployed output.",
     }
 
 
