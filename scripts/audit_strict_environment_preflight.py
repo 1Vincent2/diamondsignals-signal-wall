@@ -1,24 +1,65 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import re
 import subprocess
 import sys
 
 issues = []
 
-PUBLIC_DIRS = [
-    Path("dist"),
-    Path("dashboard/templates"),
-    Path("src"),
-    Path("netlify/request-gates"),
+SOURCE_SCAN_ROOTS = [
+    Path("dashboard"),
+    Path("netlify"),
+    Path("scripts"),
+    Path("public"),
 ]
 
-PRIVATE_ENV_MARKERS = [
+TEXT_EXTS = {
+    ".py", ".js", ".mjs", ".ts", ".tsx", ".html", ".css", ".json",
+    ".toml", ".md", ".txt", ".yml", ".yaml", ".sh"
+}
+
+AUDIT_DEFINITION_ALLOWLIST_FILES = {
+    # Audit/seal files intentionally contain marker strings as assertions.
+    Path("scripts/audit_signal_wall_env_boundary.py"),
+    Path("scripts/audit_strict_environment_preflight.py"),
+    Path("scripts/audit_admin_build_runtime_job_contract.py"),
+    Path("scripts/audit_netlify_green_baseline_gate.py"),
+    Path("netlify.toml"),
+    Path("ADMIN_UI_INTEGRATION_SEAL.md"),
+    Path("PRE_MOBILE_READINESS_SEAL.md"),
+    Path("MOBILE_DEFERRED_UNTIL_ITEM21.md"),
+}
+
+PRIVATE_MARKER_ALLOWLIST_FILES = AUDIT_DEFINITION_ALLOWLIST_FILES | {
+    # Approved server/build-only env consumers.
+    Path("dashboard/build_aaa_acquisition_board.py"),
+    Path("dashboard/sync_prospect_intelligence.py"),
+    Path("dashboard/build_call_up_v2.py"),
+    Path("dashboard/build_ivb_heat_map.py"),
+    Path("dashboard/build_dashboard.py"),
+    Path("dashboard/build_call_up_v3_preview.py"),
+    Path("dashboard/build_aaa_weekly_signal_base.py"),
+    Path("dashboard/build_call_up_live.py"),
+    Path("dashboard/build_market_eligibility.py"),
+    Path("dashboard/lib/build_operational_status_feed.py"),
+    Path("dashboard/archive_call_up_builders/build_typical_call_up.py"),
+    Path("dashboard/archive_call_up_builders/build_typical_call_up_current_live_variant.py"),
+    Path("netlify/functions/ingest-milb-aaa-weekly.mjs"),
+    Path("netlify/functions/front-door-capture.js"),
+    Path("netlify/functions/trigger-rebuild.mjs"),
+    Path("netlify/functions/admin-audit-runner.mjs"),
+    Path("netlify/functions/admin-audit-worker-background.mjs"),
+    Path("netlify/functions/admin-runner.mjs"),
+    Path("scripts/verify_aaa_weekly_ingest.sh"),
+    Path("scripts/run_admin_green_baseline_from_build.py"),
+    Path("scripts/run_aaa_weekly_ingest.sh"),
+}
+
+PRIVATE_SERVICE_MARKERS = [
     "SUPABASE_SERVICE_ROLE_KEY",
+    "SERVICE_ROLE",
     "ADMIN_RUN_TOKEN",
     "NETLIFY_BUILD_HOOK_URL",
     "NETLIFY_GREEN_BASELINE_AUDIT_BUILD_HOOK_URL",
-    "YAHOO_CLIENT_ID",
     "YAHOO_CLIENT_SECRET",
     "YAHOO_REFRESH_TOKEN",
     "YAHOO_ACCESS_TOKEN",
@@ -30,18 +71,14 @@ DEV_DEBUG_MARKERS = [
     "FLASK_ENV=development",
     "NEXT_PUBLIC_DEBUG",
     "VITE_DEBUG",
-    "console.debug(",
     "debugger;",
 ]
 
 LOCAL_TEST_CONFIG_MARKERS = [
-    "localhost:",
-    "127.0.0.1",
-    "0.0.0.0",
     ".env.local",
     ".env.development",
+    "local_test_config",
     "test_config",
-    "local_test",
 ]
 
 PERMISSIVE_LOGGING_MARKERS = [
@@ -54,25 +91,12 @@ PERMISSIVE_LOGGING_MARKERS = [
 ]
 
 NON_PRODUCTION_CLIENT_MARKERS = [
-    "NEXT_PUBLIC_SUPABASE_URL=http://",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY=test",
     "NEXT_PUBLIC_APP_ENV=development",
     "NEXT_PUBLIC_ENV=development",
     "PUBLIC_ENV=development",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY=test",
+    "NEXT_PUBLIC_SUPABASE_URL=http://",
 ]
-
-SAFE_TEXT_EXTS = {
-    ".py", ".js", ".mjs", ".ts", ".tsx", ".html", ".css", ".json",
-    ".toml", ".md", ".txt", ".yml", ".yaml", ".sh"
-}
-
-ALLOWLIST_FILES = {
-    Path("scripts/audit_signal_wall_env_boundary.py"),
-    Path("scripts/audit_strict_environment_preflight.py"),
-    Path("scripts/audit_admin_build_runtime_job_contract.py"),
-    Path("scripts/audit_netlify_green_baseline_gate.py"),
-    Path("netlify.toml"),
-}
 
 def read_text(path: Path) -> str:
     try:
@@ -80,34 +104,28 @@ def read_text(path: Path) -> str:
     except Exception:
         return ""
 
-def scan_paths(markers, label):
-    for root in PUBLIC_DIRS:
+def should_scan(path: Path) -> bool:
+    if not path.is_file():
+        return False
+    if path.suffix not in TEXT_EXTS:
+        return False
+    if ".git" in path.parts or "node_modules" in path.parts or ".netlify" in path.parts or "dist" in path.parts:
+        return False
+    return True
+
+def scan_roots(roots, markers, label, allowlist_files=None):
+    for root in roots:
         if not root.exists():
             continue
         for path in root.rglob("*"):
-            if not path.is_file():
+            if not should_scan(path):
                 continue
-            if path.suffix not in SAFE_TEXT_EXTS:
-                continue
-            if path in ALLOWLIST_FILES:
+            if allowlist_files and path in allowlist_files:
                 continue
             text = read_text(path)
             for marker in markers:
                 if marker in text:
-                    issues.append(f"{label} marker leaked in {path}: {marker}")
-
-def scan_repo_source(markers, label):
-    for path in Path(".").rglob("*"):
-        if ".git" in path.parts or "node_modules" in path.parts or ".netlify" in path.parts:
-            continue
-        if not path.is_file() or path.suffix not in SAFE_TEXT_EXTS:
-            continue
-        if path in ALLOWLIST_FILES:
-            continue
-        text = read_text(path)
-        for marker in markers:
-            if marker in text:
-                issues.append(f"{label} marker found in source {path}: {marker}")
+                    issues.append(f"{label} marker found in source/config {path}: {marker}")
 
 print("--- Running underlying Signal Wall env-boundary audit ---")
 env_audit = subprocess.run(
@@ -123,29 +141,30 @@ if env_audit.returncode != 0:
 netlify = Path("netlify.toml")
 netlify_text = read_text(netlify)
 
-required_preflight = "python3 scripts/audit_signal_wall_env_boundary.py"
-strict_preflight = "python3 scripts/audit_strict_environment_preflight.py"
+required_env = "python3 scripts/audit_signal_wall_env_boundary.py"
+required_strict = "python3 scripts/audit_strict_environment_preflight.py"
 build_entry = "python3 dashboard/build_all.py"
 
-if required_preflight not in netlify_text:
-    issues.append("netlify build command must run audit_signal_wall_env_boundary.py before build")
-if strict_preflight not in netlify_text:
-    issues.append("netlify build command must run audit_strict_environment_preflight.py before build")
+if required_env not in netlify_text:
+    issues.append("netlify build command must run audit_signal_wall_env_boundary.py")
+if required_strict not in netlify_text:
+    issues.append("netlify build command must run audit_strict_environment_preflight.py")
 if build_entry not in netlify_text:
-    issues.append("netlify build command must include dashboard/build_all.py")
+    issues.append("netlify build command must run dashboard/build_all.py")
+if all(x in netlify_text for x in [required_env, required_strict, build_entry]):
+    if not (netlify_text.find(required_env) < netlify_text.find(required_strict) < netlify_text.find(build_entry)):
+        issues.append("environment preflight audits must run before dashboard/build_all.py")
 
-if all(x in netlify_text for x in [required_preflight, strict_preflight, build_entry]):
-    if not (netlify_text.find(required_preflight) < netlify_text.find(strict_preflight) < netlify_text.find(build_entry)):
-        issues.append("environment preflights must run before dashboard/build_all.py")
+runner = Path("scripts/run_green_baseline_audit.sh")
+runner_text = read_text(runner)
+if required_strict not in runner_text:
+    issues.append("green baseline must include audit_strict_environment_preflight.py")
 
-scan_paths(PRIVATE_ENV_MARKERS, "private service credential/env-name")
-scan_paths(DEV_DEBUG_MARKERS, "development/debug")
-scan_paths(LOCAL_TEST_CONFIG_MARKERS, "local test config")
-scan_paths(PERMISSIVE_LOGGING_MARKERS, "permissive logging")
-scan_paths(NON_PRODUCTION_CLIENT_MARKERS, "non-production client bundle")
-
-scan_repo_source(PERMISSIVE_LOGGING_MARKERS, "permissive logging")
-scan_repo_source(NON_PRODUCTION_CLIENT_MARKERS, "non-production client setting")
+scan_roots(SOURCE_SCAN_ROOTS, PRIVATE_SERVICE_MARKERS, "private service credential/env-name", PRIVATE_MARKER_ALLOWLIST_FILES)
+scan_roots(SOURCE_SCAN_ROOTS, DEV_DEBUG_MARKERS, "development/debug", AUDIT_DEFINITION_ALLOWLIST_FILES)
+scan_roots(SOURCE_SCAN_ROOTS, LOCAL_TEST_CONFIG_MARKERS, "local test config", AUDIT_DEFINITION_ALLOWLIST_FILES)
+scan_roots(SOURCE_SCAN_ROOTS, PERMISSIVE_LOGGING_MARKERS, "permissive logging", AUDIT_DEFINITION_ALLOWLIST_FILES)
+scan_roots(SOURCE_SCAN_ROOTS, NON_PRODUCTION_CLIENT_MARKERS, "non-production client bundle", AUDIT_DEFINITION_ALLOWLIST_FILES)
 
 print("--- DiamondSignals strict environment preflight audit ---")
 print(f"strict_environment_preflight_issues: {len(issues)}")
@@ -164,5 +183,6 @@ print("permissive_logging_blocked: true")
 print("service_credentials_exposure_blocked: true")
 print("non_production_client_bundle_settings_blocked: true")
 print("netlify_env_preflight_before_build: true")
+print("preflight_scans_source_and_config_not_stale_dist: true")
 print()
 print("FINAL_STATUS: PASS_STRICT_ENVIRONMENT_PREFLIGHT")

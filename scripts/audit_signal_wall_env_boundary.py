@@ -29,6 +29,7 @@ allowed_private_script_paths = [
     "scripts/run_admin_green_baseline_from_build.py",
     "scripts/verify_aaa_weekly_ingest.sh",
     "scripts/audit_signal_wall_env_boundary.py",
+    "scripts/audit_strict_environment_preflight.py",
 ]
 
 def run(cmd):
