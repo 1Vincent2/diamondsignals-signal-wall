@@ -431,6 +431,85 @@ svg.ledger-sparkline {
   }
 }
 
+/* SIGNAL_WALL_MOBILE_EXPANDABLE_CARD_V1
+   Mobile-only Signal/Logic split. Desktop card layout remains visible and unchanged. */
+.mobile-signal-detail {
+  display: block;
+}
+
+.mobile-signal-toggle {
+  display: none;
+}
+
+.mobile-signal-detail:not([open]) > .mobile-signal-tray {
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .mobile-signal-detail {
+    display: block;
+    margin-top: 2px;
+  }
+
+  .mobile-signal-toggle {
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 44px;
+    margin: 0 0 10px;
+    padding: 0 12px;
+    border: 1px solid rgba(96,165,250,0.18);
+    border-radius: 12px;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(96,165,250,0.08), transparent 60%),
+      rgba(15, 23, 42, 0.32);
+    color: rgba(226,232,240,0.94);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    line-height: 1;
+    text-transform: uppercase;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-signal-toggle::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-signal-toggle-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.035);
+    color: var(--hg-lime);
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  .mobile-signal-detail[open] .mobile-signal-toggle-icon {
+    transform: rotate(45deg);
+  }
+
+  .mobile-signal-detail:not([open]) > .mobile-signal-tray {
+    display: none;
+  }
+
+  .mobile-signal-tray {
+    padding-top: 2px;
+  }
+}
+
 /* Compact Signal Wall cards when the page is in two-column desktop mode */
 @media (min-width: 1100px) {
   .app > .board .player-card {
