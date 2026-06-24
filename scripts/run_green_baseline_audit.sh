@@ -51,6 +51,9 @@ echo
 echo "--- stale artifact containment audit ---"
 python3 scripts/audit_stale_artifact_containment.py
 echo
+echo "--- stale live-v2 artifact audit ---"
+python3 scripts/audit_no_stale_live_v2_artifact.py
+echo
 echo "--- fallback snapshot seeder ---"
 python3 scripts/seed_fallback_snapshots.py
 
