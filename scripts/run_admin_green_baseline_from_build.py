@@ -71,6 +71,7 @@ def supabase_patch(job_id, patch):
 
 
 def run_audit():
+    started_at_ms = time.time()
     cmd = ["bash", "scripts/run_green_baseline_audit.sh"]
     proc = subprocess.Popen(
         cmd,
@@ -97,6 +98,7 @@ def run_audit():
     return {
         "ok": exit_code == 0,
         "exit_code": exit_code,
+        "duration_ms": int((time.time() - started_at_ms) * 1000),
         "stdout": tail(output),
         "stderr": "",
     }
