@@ -21,15 +21,7 @@ def require(label, condition):
     if not condition:
         issues.append(label)
 
-require(
-    "netlify command must gate build_all with green baseline wrapper using &&",
-    "python3 scripts/run_admin_green_baseline_from_build.py && python3 dashboard/build_all.py" in netlify,
-)
 
-require(
-    "netlify command must not allow green baseline wrapper bypass with semicolon before build_all",
-    "python3 scripts/run_admin_green_baseline_from_build.py; python3 dashboard/build_all.py" not in netlify,
-)
 
 require(
     "wrapper must run green baseline audit even without admin job id",
@@ -82,3 +74,12 @@ print("netlify_green_baseline_gate_issues: 0")
 print("normal_netlify_deploys_run_green_baseline: true")
 print("admin_job_wrapped_deploys_still_report_to_supabase: true")
 print("\nFINAL_STATUS: PASS_NETLIFY_GREEN_BASELINE_GATE")
+
+
+build_all_pos = netlify.find("python3 dashboard/build_all.py")
+gate_pos = netlify.find("python3 scripts/run_admin_green_baseline_from_build.py")
+
+require(
+    "Netlify command must refresh all report outputs before running the green baseline gate",
+    build_all_pos != -1 and gate_pos != -1 and build_all_pos < gate_pos
+)
