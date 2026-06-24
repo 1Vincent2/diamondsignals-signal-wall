@@ -1,5 +1,5 @@
 [build]
-  command = "python3 dashboard/build_all.py && python3 scripts/run_admin_green_baseline_from_build.py && python3 scripts/build_admin_audit_manifest.py && python3 scripts/audit_admin_audit_manifest.py && python3 scripts/write_netlify_headers.py && python3 scripts/write_crawl_index_boundaries.py"
+  command = "python3 scripts/audit_signal_wall_env_boundary.py && python3 scripts/audit_strict_environment_preflight.py && python3 dashboard/build_all.py && python3 scripts/run_admin_green_baseline_from_build.py && python3 scripts/build_admin_audit_manifest.py && python3 scripts/audit_admin_audit_manifest.py && python3 scripts/write_netlify_headers.py && python3 scripts/write_crawl_index_boundaries.py"
   publish = "dist"
   edge_functions = "netlify/request-gates"
 
