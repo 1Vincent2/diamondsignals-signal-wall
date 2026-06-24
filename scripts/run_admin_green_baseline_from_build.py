@@ -90,8 +90,13 @@ def main():
     job_id = find_job_id()
 
     if not job_id:
-        print("No ADMIN_AUDIT_JOB_ID or INCOMING_HOOK_BODY job_id found; skipping admin audit job wrapper.")
-        return 0
+        print("No ADMIN_AUDIT_JOB_ID or INCOMING_HOOK_BODY job_id found; running green baseline audit without admin job wrapper.")
+        result = run_audit()
+        if result["ok"]:
+            print("Green baseline audit passed in Netlify build runtime without admin job wrapper.")
+            return 0
+        print(f"Green baseline audit failed in Netlify build runtime without admin job wrapper: exit_code={result['exit_code']}")
+        return result["exit_code"]
 
     print(f"Admin audit job detected: {job_id}")
 
