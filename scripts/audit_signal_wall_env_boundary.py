@@ -30,6 +30,7 @@ allowed_private_script_paths = [
     "scripts/verify_aaa_weekly_ingest.sh",
     "scripts/audit_signal_wall_env_boundary.py",
     "scripts/audit_strict_environment_preflight.py",
+    "scripts/audit_supabase_pooling_contract.py",
 ]
 
 def run(cmd):

@@ -21,6 +21,7 @@ AUDIT_DEFINITION_ALLOWLIST_FILES = {
     # Audit/seal files intentionally contain marker strings as assertions.
     Path("scripts/audit_signal_wall_env_boundary.py"),
     Path("scripts/audit_strict_environment_preflight.py"),
+    Path("scripts/audit_supabase_pooling_contract.py"),
     Path("scripts/audit_admin_build_runtime_job_contract.py"),
     Path("scripts/audit_netlify_green_baseline_gate.py"),
     Path("netlify.toml"),

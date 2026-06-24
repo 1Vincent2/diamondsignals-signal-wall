@@ -110,6 +110,7 @@ python3 scripts/audit_mobile_header_menu_contract.py
 echo "--- desktop/mobile deferred contract audit ---"
 python3 scripts/audit_desktop_mobile_deferred_contract.py
 python3 scripts/audit_pre_mobile_readiness_seal.py
+python3 scripts/audit_supabase_pooling_contract.py
 python3 scripts/audit_strict_environment_preflight.py
 
 echo
