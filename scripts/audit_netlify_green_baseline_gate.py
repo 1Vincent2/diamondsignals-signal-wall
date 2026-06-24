@@ -42,6 +42,13 @@ require(
 )
 
 require(
+    "wrapper must stream green baseline output live instead of hiding failing audit output",
+    "subprocess.Popen" in wrapper
+    and "print(line, end=\"\", flush=True)" in wrapper
+    and "stderr=subprocess.STDOUT" in wrapper
+)
+
+require(
     "admin job wrapper must still report started state when job id exists",
     "Green baseline audit started in Netlify build runtime." in wrapper,
 )
