@@ -15,6 +15,7 @@ REQUIRED_TIER4_AUDITS = {
     "scripts/audit_status_contract.py",
     "scripts/audit_canonical_player_identity_contract.py",
     "scripts/audit_crawl_index_boundaries.py",
+    "scripts/audit_signal_wall_all_domain_seo_contract.py",
     "scripts/audit_refinement_queue_closure.py",
 }
 
