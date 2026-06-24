@@ -2734,7 +2734,115 @@
 
 
 
-  </style>
+  
+/* APEX_DESKTOP_REFINEMENT_V1_AUDIT_LINE_STICKY_GUIDE
+   Desktop-only refinement:
+   - Active Audit Layer sits as the final paragraph inside the title card.
+   - Field Guide is pinned near the top/right desktop command area, not bottom-right.
+   - Mobile Field Guide/menu behavior is intentionally untouched.
+*/
+.apex-active-audit-line {
+  display: none !important;
+}
+
+@media screen and (min-width: 981px) {
+  .apex-active-audit-line {
+    display: block !important;
+    margin-top: 18px !important;
+    padding-top: 18px !important;
+    border-top: 1px solid rgba(255,255,255,0.08) !important;
+    font-family: var(--sans) !important;
+    font-size: 17px !important;
+    line-height: 1.4 !important;
+    color: rgba(226,232,240,0.76) !important;
+  }
+
+  .apex-active-audit-line strong {
+    color: var(--lime-hot) !important;
+    font-weight: 900 !important;
+  }
+
+  body .field-guide-btn,
+  body button.field-guide-btn,
+  body .summary-card .field-guide-btn {
+    position: fixed !important;
+    top: 336px !important;
+    right: max(34px, calc((100vw - 1180px) / 2 + 42px)) !important;
+    bottom: auto !important;
+    left: auto !important;
+    z-index: 140 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+}
+
+
+/* DIAMONDSIGNALS_INSTANT_METRIC_TOOLTIP_V1
+   Replaces inconsistent browser-native title hover with fast, report-consistent CSS tooltips.
+   Desktop hover/focus only. Mobile layout/menu behavior intentionally untouched.
+*/
+@media screen and (min-width: 981px) {
+  [data-tooltip] {
+    position: relative;
+    cursor: help;
+  }
+
+  [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    transform: translateX(-50%) translateY(2px);
+    z-index: 9999;
+    width: max-content;
+    max-width: 280px;
+    padding: 9px 11px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(6,10,18,0.96);
+    color: rgba(255,255,255,0.94);
+    box-shadow:
+      0 12px 28px rgba(0,0,0,0.42),
+      0 0 0 1px rgba(255,255,255,0.04);
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 800;
+    white-space: normal;
+    text-align: left;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease, transform 70ms ease;
+  }
+
+  [data-tooltip]::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 4px);
+    transform: translateX(-50%);
+    z-index: 10000;
+    border: 6px solid transparent;
+    border-top-color: rgba(6,10,18,0.96);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease;
+  }
+
+  [data-tooltip]:hover::after,
+  [data-tooltip]:focus-visible::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  [data-tooltip]:hover::before,
+  [data-tooltip]:focus-visible::before {
+    opacity: 1;
+  }
+}
+</style>
 </head>
 <body>
   <div class="field-guide-backdrop" data-close-field-guide></div>
@@ -2784,7 +2892,7 @@
 
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">2026-06-10 06:09 PM</div>
+        <div class="live-time">2026-06-23 12:09 PM</div>
       </div>
     </div>
   </div>
@@ -2811,7 +2919,7 @@
       <a class="ds-pro-desktop-nav-link " href="/velocity-decay-monitor"><span>[ RISK ]</span> Velocity</a>
       <a class="ds-pro-desktop-nav-link " href="/stuff-disruption-feed"><span>[ DISRUPT ]</span> Stuff+</a>
       <a class="ds-pro-desktop-nav-link " href="/admin/kinetic-drift/"><span>[ KDE ]</span> Kinetic</a>
-      <a class="ds-pro-desktop-nav-link " href="/watch-list/"><span>[ STAGE ]</span> Tracking</a>
+      <a class="ds-pro-desktop-nav-link " href="https://app.diamondsignals.ai/auth?next=/watchlist"><span>[ STAGE ]</span> Tracking</a>
       <a class="ds-pro-desktop-nav-link ds-pro-desktop-nav-link-terminal" href="https://app.diamondsignals.ai/auth?next=/terminal"><span>[ TERMINAL ]</span> Roster</a>
     </div>
   </div>
@@ -2828,7 +2936,7 @@
       <a class="topnav-link " href="/stuff-disruption-feed"><span class="topnav-tag">[ DISRUPT ]</span> Stuff+ Disruption</a>
       <a class="topnav-link " href="/mlb-extraction/"><span class="topnav-tag">[ EDGE ]</span> MLB Extraction Ledger</a>
       <a class="topnav-link active" href="/apex-extraction/"><span class="topnav-tag">[ APEX ]</span> Apex Extraction</a>
-      <a class="topnav-link" href="/watch-list/"><span class="topnav-tag">[ STAGE ]</span> Tracking Radar</a>
+      <a class="topnav-link" href="https://app.diamondsignals.ai/auth?next=/watchlist"><span class="topnav-tag">[ STAGE ]</span> Tracking Radar</a>
       <a class="topnav-link" href="https://app.diamondsignals.ai/auth?next=/terminal"><span class="topnav-tag">[ TERMINAL ]</span> Roster Terminal</a>
       <a class="topnav-link" href="https://diamondsignals.ai"><span class="topnav-tag">[ SITE ]</span> Main Site</a>
     </div>
@@ -2862,7 +2970,7 @@
       <a class="ds-mobile-menu-link " href="/stuff-disruption-feed"><span>[ DISRUPT ]</span> Stuff+ Disruption</a>
       <a class="ds-mobile-menu-link " href="/mlb-extraction/"><span>[ EDGE ]</span> MLB Extraction Ledger</a>
       <a class="ds-mobile-menu-link active" href="/apex-extraction/"><span>[ APEX ]</span> Apex Extraction</a>
-      <a class="ds-mobile-menu-link" href="/watch-list/"><span>[ STAGE ]</span> Tracking Radar</a>
+      <a class="ds-mobile-menu-link" href="https://app.diamondsignals.ai/auth?next=/watchlist"><span>[ STAGE ]</span> Tracking Radar</a>
       <a class="ds-mobile-menu-link" href="https://app.diamondsignals.ai/auth?next=/terminal"><span>[ TERMINAL ]</span> Roster Terminal</a>
       <a class="ds-mobile-menu-link" href="https://diamondsignals.ai"><span>[ SITE ]</span> Main Site</a>
     </div>
@@ -2927,6 +3035,9 @@
           Physical shift first. Vision and discipline confirm it. Market latency makes it actionable.
           This surface identifies MLB players whose underlying profile is moving before public pricing catches up.
         </p>
+        <p class="apex-active-audit-line">
+          <strong>Active Audit Layer:</strong> Click any player card to inspect the full performance audit.
+        </p>
       </div>
 
       <aside class="summary-card">
@@ -2955,36 +3066,36 @@
         <div class="section-kicker">LATENT ALPHA</div>
         <h2 class="section-heading">HITTER EXTRACTIONS</h2>
       </div>
-      <div class="section-title">&gt;_ APEX BATS // GENERATED 2026-06-10T18:09:32.192122+00:00</div>
+      <div class="section-title">&gt;_ APEX BATS // GENERATED 2026-06-23T12:09:46.467663+00:00</div>
     </div>
     <section class="cards">
       
       <article
         class="apex-card js-player-card apex-elite"
-        id="apex-player-693409"
-        data-player-id="693409"
-          data-profile-url="/scout/693409/"
-        data-player-name="CÉSAR PRIETO"
-        data-player-team="Memphis Redbirds"
+        id="apex-player-694376"
+        data-player-id="694376"
+          data-profile-url="/scout/694376/"
+        data-player-name="SHAY WHITCOMB"
+        data-player-team="Sugar Land Space Cowboys"
         data-player-role="BAT"
         data-signal-family="APEX BAT"
-        data-apex-score="90.1"
-        data-physical="96.0"
-        data-vision="75.9"
-        data-market="93.0"
+        data-apex-score="92.1"
+        data-physical="100.0"
+        data-vision="86.3"
+        data-market="85.2"
         data-verdict="APEX EXTRACTION"
         data-action="ADD"
-        data-supporting-metric="Max EV 108.9 mph // xBA 0.277 vs AVG 0.000"
+        data-supporting-metric="Max EV 104.9 mph // xBA 0.358 vs AVG 0.167"
       >
         <div class="card-top">
           <div>
             <div class="kicker">APEX BAT</div>
-            <h2>CÉSAR PRIETO</h2>
-            <div class="meta">Memphis Redbirds // BAT</div>
+            <h2>SHAY WHITCOMB</h2>
+            <div class="meta">Sugar Land Space Cowboys // BAT</div>
           </div>
           <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
-            <div class="score">90.1</div>
+            <div class="score-label" data-tooltip="Apex Score: Composite breakout score for the Apex Extraction surface." aria-label="Apex Score: Composite breakout score for the Apex Extraction surface.">EXTRACTION SCORE</div>
+            <div class="score">92.1</div>
           </div>
         </div>
 
@@ -2997,43 +3108,43 @@
         </div>
 
         <div class="grid">
-          <div><span>PHYSICAL</span><strong>96.0</strong></div>
-          <div><span>VISION</span><strong>75.9</strong></div>
-          <div><span>MARKET</span><strong>93.0</strong></div>
+          <div><span data-tooltip="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal." aria-label="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal.">PHYSICAL</span><strong>100.0</strong></div>
+          <div><span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">VISION</span><strong>86.3</strong></div>
+          <div><span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">MARKET</span><strong>85.2</strong></div>
         </div>
 
         <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
-          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.000 against xBA 0.277, a strong +0.277 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 108.9 mph at peak exit velocity. The contact mix was supported by a 8.3% barrel rate and 41.7% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
+          <div class="proof-label" data-tooltip="Primary Signal: Plain-English lead signal that triggered the Apex card." aria-label="Primary Signal: Plain-English lead signal that triggered the Apex card.">PRIMARY SIGNAL</div>
+          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.167 against xBA 0.358, a strong +0.191 gap that points to better underlying contact than the box score suggests. The max exit velocity checked in at 104.9 mph, which was more solid than explosive. The contact mix was supported by a 14.3% barrel rate and 42.9% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
         </div>
 
         <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
-          <p>Max EV 108.9 mph // xBA 0.277 vs AVG 0.000</p>
+          <div class="proof-label" data-tooltip="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis." aria-label="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis.">SUPPORTING METRIC</div>
+          <p>Max EV 104.9 mph // xBA 0.358 vs AVG 0.167</p>
         </div>
 
         <div class="forensic-strip">
           
         <div class="forensic-chip">
-          <span>Physics</span>
-          <strong>Dynamic Hard-Hit</strong>
-          <em>108.9 mph</em>
+          <span data-tooltip="Physics: Physics metric used by this report." aria-label="Physics: Physics metric used by this report.">Physics</span>
+          <strong data-tooltip="Dynamic Hard-Hit: Contact-authority proxy for flight-optimized damage." aria-label="Dynamic Hard-Hit: Contact-authority proxy for flight-optimized damage.">Dynamic Hard-Hit</strong>
+          <em>104.9 mph</em>
           <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Vision</span>
-          <strong>LA Consistency</strong>
-          <em>12.1°</em>
+          <span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">Vision</span>
+          <strong data-tooltip="LA Consistency: Launch-angle consistency showing whether force is converting into flight." aria-label="LA Consistency: Launch-angle consistency showing whether force is converting into flight.">LA Consistency</strong>
+          <em>Surgical</em>
           <p>Shows whether the swing plane is converting force into flight.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Market</span>
-          <strong>High-Stakes Delta</strong>
-          <em>+0.277</em>
+          <span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">Market</span>
+          <strong data-tooltip="High-Stakes Delta: High-leverage change signal used by the Apex layer." aria-label="High-Stakes Delta: High-leverage change signal used by the Apex layer.">High-Stakes Delta</strong>
+          <em>+0.191</em>
           <p>Identifies the value gap between expected quality and public results.</p>
         </div>
         
@@ -3046,18 +3157,124 @@
           <strong>ADD</strong>
         </div>
           <div class="audit-row">
-            <a class="audit-link" href="/scout/693409/">PERFORMANCE AUDIT</a>
+            <a class="audit-link" href="/scout/694376/">PERFORMANCE AUDIT</a>
           </div>
 
 
         <button
           type="button"
           class="provision-btn js-add-to-roster"
-          data-player-id="693409"
-          data-player-name="CÉSAR PRIETO"
+          data-player-id="694376"
+          data-player-name="SHAY WHITCOMB"
           data-player-type="BAT"
-          data-player-team="Memphis Redbirds"
-          data-profile-url="/scout/693409/"
+          data-player-team="Sugar Land Space Cowboys"
+          data-profile-url="/scout/694376/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-elite"
+        id="apex-player-699013"
+        data-player-id="699013"
+          data-profile-url="/scout/699013/"
+        data-player-name="ESMERLYN VALDEZ"
+        data-player-team="Pittsburgh Pirates"
+        data-player-role="BAT"
+        data-signal-family="APEX BAT"
+        data-apex-score="90.2"
+        data-physical="100.0"
+        data-vision="80.3"
+        data-market="83.7"
+        data-verdict="APEX EXTRACTION"
+        data-action="ADD"
+        data-supporting-metric="Max EV 110.7 mph // xBA 0.391 vs AVG 0.105"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX BAT</div>
+            <h2>ESMERLYN VALDEZ</h2>
+            <div class="meta">Pittsburgh Pirates // BAT</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label" data-tooltip="Apex Score: Composite breakout score for the Apex Extraction surface." aria-label="Apex Score: Composite breakout score for the Apex Extraction surface.">EXTRACTION SCORE</div>
+            <div class="score">90.2</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ APEX EXTRACTION ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span data-tooltip="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal." aria-label="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal.">PHYSICAL</span><strong>100.0</strong></div>
+          <div><span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">VISION</span><strong>80.3</strong></div>
+          <div><span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">MARKET</span><strong>83.7</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label" data-tooltip="Primary Signal: Plain-English lead signal that triggered the Apex card." aria-label="Primary Signal: Plain-English lead signal that triggered the Apex card.">PRIMARY SIGNAL</div>
+          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.105 against xBA 0.391, a strong +0.286 gap that points to better underlying contact than the box score suggests. The top-end damage was real, with a max exit velocity of 110.7 mph, which is premium impact territory. The contact mix was supported by a 8.7% barrel rate and 34.8% hard-hit rate over the recent window. Net assessment: Platinum Buy. The past week looks stronger under the hood than the surface line, with enough impact authority to support a bullish forward read.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label" data-tooltip="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis." aria-label="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis.">SUPPORTING METRIC</div>
+          <p>Max EV 110.7 mph // xBA 0.391 vs AVG 0.105</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span data-tooltip="Physics: Physics metric used by this report." aria-label="Physics: Physics metric used by this report.">Physics</span>
+          <strong data-tooltip="Dynamic Hard-Hit: Contact-authority proxy for flight-optimized damage." aria-label="Dynamic Hard-Hit: Contact-authority proxy for flight-optimized damage.">Dynamic Hard-Hit</strong>
+          <em>110.7 mph</em>
+          <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">Vision</span>
+          <strong data-tooltip="LA Consistency: Launch-angle consistency showing whether force is converting into flight." aria-label="LA Consistency: Launch-angle consistency showing whether force is converting into flight.">LA Consistency</strong>
+          <em>Surgical</em>
+          <p>Shows whether the swing plane is converting force into flight.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">Market</span>
+          <strong data-tooltip="High-Stakes Delta: High-leverage change signal used by the Apex layer." aria-label="High-Stakes Delta: High-leverage change signal used by the Apex layer.">High-Stakes Delta</strong>
+          <em>+0.286</em>
+          <p>Identifies the value gap between expected quality and public results.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Surface production may be lagging the underlying contact profile.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>ADD</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/699013/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="699013"
+          data-player-name="ESMERLYN VALDEZ"
+          data-player-type="BAT"
+          data-player-team="Pittsburgh Pirates"
+          data-profile-url="/scout/699013/"
           data-source-tag="APEX_EXTRACTION"
         >
           INITIATE TRACKING
@@ -3067,30 +3284,30 @@
 
       <article
         class="apex-card js-player-card apex-hot"
-        id="apex-player-701538"
-        data-player-id="701538"
-          data-profile-url="/scout/701538/"
-        data-player-name="JACKSON MERRILL"
-        data-player-team="San Diego Padres"
+        id="apex-player-701807"
+        data-player-id="701807"
+          data-profile-url="/scout/701807/"
+        data-player-name="CARSON BENGE"
+        data-player-team="New York Mets"
         data-player-role="BAT"
         data-signal-family="APEX BAT"
-        data-apex-score="89.4"
-        data-physical="95.8"
-        data-vision="84.8"
-        data-market="83.7"
+        data-apex-score="89.5"
+        data-physical="98.0"
+        data-vision="85.4"
+        data-market="80.3"
         data-verdict="APEX EXTRACTION"
         data-action="ADD"
-        data-supporting-metric="Max EV 109.7 mph // xBA 0.329 vs AVG 0.154"
+        data-supporting-metric="Max EV 109.8 mph // xBA 0.416 vs AVG 0.280"
       >
         <div class="card-top">
           <div>
             <div class="kicker">APEX BAT</div>
-            <h2>JACKSON MERRILL</h2>
-            <div class="meta">San Diego Padres // BAT</div>
+            <h2>CARSON BENGE</h2>
+            <div class="meta">New York Mets // BAT</div>
           </div>
           <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
-            <div class="score">89.4</div>
+            <div class="score-label" data-tooltip="Apex Score: Composite breakout score for the Apex Extraction surface." aria-label="Apex Score: Composite breakout score for the Apex Extraction surface.">EXTRACTION SCORE</div>
+            <div class="score">89.5</div>
           </div>
         </div>
 
@@ -3103,43 +3320,43 @@
         </div>
 
         <div class="grid">
-          <div><span>PHYSICAL</span><strong>95.8</strong></div>
-          <div><span>VISION</span><strong>84.8</strong></div>
-          <div><span>MARKET</span><strong>83.7</strong></div>
+          <div><span data-tooltip="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal." aria-label="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal.">PHYSICAL</span><strong>98.0</strong></div>
+          <div><span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">VISION</span><strong>85.4</strong></div>
+          <div><span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">MARKET</span><strong>80.3</strong></div>
         </div>
 
         <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
-          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.154 against xBA 0.329, a strong +0.175 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.7 mph at peak exit velocity. The contact mix was supported by a 3.2% barrel rate and 23.4% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
+          <div class="proof-label" data-tooltip="Primary Signal: Plain-English lead signal that triggered the Apex card." aria-label="Primary Signal: Plain-English lead signal that triggered the Apex card.">PRIMARY SIGNAL</div>
+          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.280 against xBA 0.416, a strong +0.137 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.8 mph at peak exit velocity. The contact mix was supported by a 3.3% barrel rate and 27.0% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
         </div>
 
         <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
-          <p>Max EV 109.7 mph // xBA 0.329 vs AVG 0.154</p>
+          <div class="proof-label" data-tooltip="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis." aria-label="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis.">SUPPORTING METRIC</div>
+          <p>Max EV 109.8 mph // xBA 0.416 vs AVG 0.280</p>
         </div>
 
         <div class="forensic-strip">
           
         <div class="forensic-chip">
-          <span>Physics</span>
-          <strong>Dynamic Hard-Hit</strong>
-          <em>109.7 mph</em>
+          <span data-tooltip="Physics: Physics metric used by this report." aria-label="Physics: Physics metric used by this report.">Physics</span>
+          <strong data-tooltip="Dynamic Hard-Hit: Contact-authority proxy for flight-optimized damage." aria-label="Dynamic Hard-Hit: Contact-authority proxy for flight-optimized damage.">Dynamic Hard-Hit</strong>
+          <em>109.8 mph</em>
           <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Vision</span>
-          <strong>LA Consistency</strong>
+          <span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">Vision</span>
+          <strong data-tooltip="LA Consistency: Launch-angle consistency showing whether force is converting into flight." aria-label="LA Consistency: Launch-angle consistency showing whether force is converting into flight.">LA Consistency</strong>
           <em>Surgical</em>
           <p>Shows whether the swing plane is converting force into flight.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Market</span>
-          <strong>High-Stakes Delta</strong>
-          <em>+0.175</em>
+          <span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">Market</span>
+          <strong data-tooltip="High-Stakes Delta: High-leverage change signal used by the Apex layer." aria-label="High-Stakes Delta: High-leverage change signal used by the Apex layer.">High-Stakes Delta</strong>
+          <em>+0.137</em>
           <p>Identifies the value gap between expected quality and public results.</p>
         </div>
         
@@ -3152,18 +3369,124 @@
           <strong>ADD</strong>
         </div>
           <div class="audit-row">
-            <a class="audit-link" href="/scout/701538/">PERFORMANCE AUDIT</a>
+            <a class="audit-link" href="/scout/701807/">PERFORMANCE AUDIT</a>
           </div>
 
 
         <button
           type="button"
           class="provision-btn js-add-to-roster"
-          data-player-id="701538"
-          data-player-name="JACKSON MERRILL"
+          data-player-id="701807"
+          data-player-name="CARSON BENGE"
           data-player-type="BAT"
-          data-player-team="San Diego Padres"
-          data-profile-url="/scout/701538/"
+          data-player-team="New York Mets"
+          data-profile-url="/scout/701807/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-hot"
+        id="apex-player-641933"
+        data-player-id="641933"
+          data-profile-url="/scout/641933/"
+        data-player-name="TYLER O'NEILL"
+        data-player-team="Baltimore Orioles"
+        data-player-role="BAT"
+        data-signal-family="APEX BAT"
+        data-apex-score="88.5"
+        data-physical="100.0"
+        data-vision="80.1"
+        data-market="78.1"
+        data-verdict="APEX EXTRACTION"
+        data-action="ADD"
+        data-supporting-metric="Max EV 110.0 mph // xBA 0.375 vs AVG 0.263"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX BAT</div>
+            <h2>TYLER O'NEILL</h2>
+            <div class="meta">Baltimore Orioles // BAT</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label" data-tooltip="Apex Score: Composite breakout score for the Apex Extraction surface." aria-label="Apex Score: Composite breakout score for the Apex Extraction surface.">EXTRACTION SCORE</div>
+            <div class="score">88.5</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ APEX EXTRACTION ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span data-tooltip="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal." aria-label="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal.">PHYSICAL</span><strong>100.0</strong></div>
+          <div><span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">VISION</span><strong>80.1</strong></div>
+          <div><span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">MARKET</span><strong>78.1</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label" data-tooltip="Primary Signal: Plain-English lead signal that triggered the Apex card." aria-label="Primary Signal: Plain-English lead signal that triggered the Apex card.">PRIMARY SIGNAL</div>
+          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.263 against xBA 0.375, a strong +0.112 gap that points to better underlying contact than the box score suggests. The top-end damage was real, with a max exit velocity of 110.0 mph, which is premium impact territory. The contact mix was supported by a 4.1% barrel rate and 32.7% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label" data-tooltip="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis." aria-label="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis.">SUPPORTING METRIC</div>
+          <p>Max EV 110.0 mph // xBA 0.375 vs AVG 0.263</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span data-tooltip="Physics: Physics metric used by this report." aria-label="Physics: Physics metric used by this report.">Physics</span>
+          <strong data-tooltip="Dynamic Hard-Hit: Contact-authority proxy for flight-optimized damage." aria-label="Dynamic Hard-Hit: Contact-authority proxy for flight-optimized damage.">Dynamic Hard-Hit</strong>
+          <em>110.0 mph</em>
+          <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">Vision</span>
+          <strong data-tooltip="LA Consistency: Launch-angle consistency showing whether force is converting into flight." aria-label="LA Consistency: Launch-angle consistency showing whether force is converting into flight.">LA Consistency</strong>
+          <em>Surgical</em>
+          <p>Shows whether the swing plane is converting force into flight.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">Market</span>
+          <strong data-tooltip="High-Stakes Delta: High-leverage change signal used by the Apex layer." aria-label="High-Stakes Delta: High-leverage change signal used by the Apex layer.">High-Stakes Delta</strong>
+          <em>+0.112</em>
+          <p>Identifies the value gap between expected quality and public results.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Surface production may be lagging the underlying contact profile.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>ADD</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/641933/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="641933"
+          data-player-name="TYLER O'NEILL"
+          data-player-type="BAT"
+          data-player-team="Baltimore Orioles"
+          data-profile-url="/scout/641933/"
           data-source-tag="APEX_EXTRACTION"
         >
           INITIATE TRACKING
@@ -3180,13 +3503,13 @@
         data-player-team="Philadelphia Phillies"
         data-player-role="BAT"
         data-signal-family="APEX BAT"
-        data-apex-score="89.3"
-        data-physical="95.9"
-        data-vision="80.4"
-        data-market="86.7"
+        data-apex-score="88.3"
+        data-physical="93.1"
+        data-vision="82.9"
+        data-market="85.7"
         data-verdict="APEX EXTRACTION"
         data-action="ADD"
-        data-supporting-metric="Max EV 109.3 mph // xBA 0.369 vs AVG 0.161"
+        data-supporting-metric="Max EV 109.3 mph // xBA 0.377 vs AVG 0.180"
       >
         <div class="card-top">
           <div>
@@ -3195,8 +3518,8 @@
             <div class="meta">Philadelphia Phillies // BAT</div>
           </div>
           <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
-            <div class="score">89.3</div>
+            <div class="score-label" data-tooltip="Apex Score: Composite breakout score for the Apex Extraction surface." aria-label="Apex Score: Composite breakout score for the Apex Extraction surface.">EXTRACTION SCORE</div>
+            <div class="score">88.3</div>
           </div>
         </div>
 
@@ -3209,43 +3532,43 @@
         </div>
 
         <div class="grid">
-          <div><span>PHYSICAL</span><strong>95.9</strong></div>
-          <div><span>VISION</span><strong>80.4</strong></div>
-          <div><span>MARKET</span><strong>86.7</strong></div>
+          <div><span data-tooltip="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal." aria-label="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal.">PHYSICAL</span><strong>93.1</strong></div>
+          <div><span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">VISION</span><strong>82.9</strong></div>
+          <div><span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">MARKET</span><strong>85.7</strong></div>
         </div>
 
         <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
-          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.161 against xBA 0.369, a strong +0.208 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.3 mph at peak exit velocity. The contact mix was supported by a 2.6% barrel rate and 28.9% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
+          <div class="proof-label" data-tooltip="Primary Signal: Plain-English lead signal that triggered the Apex card." aria-label="Primary Signal: Plain-English lead signal that triggered the Apex card.">PRIMARY SIGNAL</div>
+          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.180 against xBA 0.377, a strong +0.196 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.3 mph at peak exit velocity. The contact mix was supported by a 3.3% barrel rate and 20.7% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
         </div>
 
         <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
-          <p>Max EV 109.3 mph // xBA 0.369 vs AVG 0.161</p>
+          <div class="proof-label" data-tooltip="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis." aria-label="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis.">SUPPORTING METRIC</div>
+          <p>Max EV 109.3 mph // xBA 0.377 vs AVG 0.180</p>
         </div>
 
         <div class="forensic-strip">
           
         <div class="forensic-chip">
-          <span>Physics</span>
-          <strong>Dynamic Hard-Hit</strong>
+          <span data-tooltip="Physics: Physics metric used by this report." aria-label="Physics: Physics metric used by this report.">Physics</span>
+          <strong data-tooltip="Dynamic Hard-Hit: Contact-authority proxy for flight-optimized damage." aria-label="Dynamic Hard-Hit: Contact-authority proxy for flight-optimized damage.">Dynamic Hard-Hit</strong>
           <em>109.3 mph</em>
           <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Vision</span>
-          <strong>LA Consistency</strong>
+          <span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">Vision</span>
+          <strong data-tooltip="LA Consistency: Launch-angle consistency showing whether force is converting into flight." aria-label="LA Consistency: Launch-angle consistency showing whether force is converting into flight.">LA Consistency</strong>
           <em>Surgical</em>
           <p>Shows whether the swing plane is converting force into flight.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Market</span>
-          <strong>High-Stakes Delta</strong>
-          <em>+0.208</em>
+          <span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">Market</span>
+          <strong data-tooltip="High-Stakes Delta: High-leverage change signal used by the Apex layer." aria-label="High-Stakes Delta: High-leverage change signal used by the Apex layer.">High-Stakes Delta</strong>
+          <em>+0.196</em>
           <p>Identifies the value gap between expected quality and public results.</p>
         </div>
         
@@ -3279,30 +3602,136 @@
 
       <article
         class="apex-card js-player-card apex-hot"
-        id="apex-player-807727"
-        data-player-id="807727"
-          data-profile-url="/scout/807727/"
-        data-player-name="CHARLES MCADOO"
-        data-player-team="Toronto Blue Jays"
+        id="apex-player-666969"
+        data-player-id="666969"
+          data-profile-url="/scout/666969/"
+        data-player-name="ADOLIS GARCÍA"
+        data-player-team="Philadelphia Phillies"
         data-player-role="BAT"
         data-signal-family="APEX BAT"
-        data-apex-score="88.8"
+        data-apex-score="87.9"
+        data-physical="93.1"
+        data-vision="80.8"
+        data-market="86.0"
+        data-verdict="APEX EXTRACTION"
+        data-action="ADD"
+        data-supporting-metric="Max EV 109.0 mph // xBA 0.352 vs AVG 0.152"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX BAT</div>
+            <h2>ADOLIS GARCÍA</h2>
+            <div class="meta">Philadelphia Phillies // BAT</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label" data-tooltip="Apex Score: Composite breakout score for the Apex Extraction surface." aria-label="Apex Score: Composite breakout score for the Apex Extraction surface.">EXTRACTION SCORE</div>
+            <div class="score">87.9</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ APEX EXTRACTION ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span data-tooltip="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal." aria-label="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal.">PHYSICAL</span><strong>93.1</strong></div>
+          <div><span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">VISION</span><strong>80.8</strong></div>
+          <div><span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">MARKET</span><strong>86.0</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label" data-tooltip="Primary Signal: Plain-English lead signal that triggered the Apex card." aria-label="Primary Signal: Plain-English lead signal that triggered the Apex card.">PRIMARY SIGNAL</div>
+          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.152 against xBA 0.352, a strong +0.200 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.0 mph at peak exit velocity. The contact mix was supported by a 1.9% barrel rate and 27.8% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label" data-tooltip="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis." aria-label="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis.">SUPPORTING METRIC</div>
+          <p>Max EV 109.0 mph // xBA 0.352 vs AVG 0.152</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span data-tooltip="Physics: Physics metric used by this report." aria-label="Physics: Physics metric used by this report.">Physics</span>
+          <strong data-tooltip="Dynamic Hard-Hit: Contact-authority proxy for flight-optimized damage." aria-label="Dynamic Hard-Hit: Contact-authority proxy for flight-optimized damage.">Dynamic Hard-Hit</strong>
+          <em>109.0 mph</em>
+          <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">Vision</span>
+          <strong data-tooltip="LA Consistency: Launch-angle consistency showing whether force is converting into flight." aria-label="LA Consistency: Launch-angle consistency showing whether force is converting into flight.">LA Consistency</strong>
+          <em>Surgical</em>
+          <p>Shows whether the swing plane is converting force into flight.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">Market</span>
+          <strong data-tooltip="High-Stakes Delta: High-leverage change signal used by the Apex layer." aria-label="High-Stakes Delta: High-leverage change signal used by the Apex layer.">High-Stakes Delta</strong>
+          <em>+0.200</em>
+          <p>Identifies the value gap between expected quality and public results.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Surface production may be lagging the underlying contact profile.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>ADD</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/666969/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="666969"
+          data-player-name="ADOLIS GARCÍA"
+          data-player-type="BAT"
+          data-player-team="Philadelphia Phillies"
+          data-profile-url="/scout/666969/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-hot"
+        id="apex-player-665856"
+        data-player-id="665856"
+          data-profile-url="/scout/665856/"
+        data-player-name="JAIR CAMARGO"
+        data-player-team="Gwinnett Stripers"
+        data-player-role="BAT"
+        data-signal-family="APEX BAT"
+        data-apex-score="87.3"
         data-physical="100.0"
-        data-vision="83.1"
-        data-market="76.7"
+        data-vision="72.0"
+        data-market="80.9"
         data-verdict="APEX EXTRACTION"
         data-action="ADD"
-        data-supporting-metric="Max EV 107.7 mph // xBA 0.370 vs AVG 0.273"
+        data-supporting-metric="Max EV 108.1 mph // xBA 0.643 vs AVG 0.500"
       >
         <div class="card-top">
           <div>
             <div class="kicker">APEX BAT</div>
-            <h2>CHARLES MCADOO</h2>
-            <div class="meta">Toronto Blue Jays // BAT</div>
+            <h2>JAIR CAMARGO</h2>
+            <div class="meta">Gwinnett Stripers // BAT</div>
           </div>
           <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
-            <div class="score">88.8</div>
+            <div class="score-label" data-tooltip="Apex Score: Composite breakout score for the Apex Extraction surface." aria-label="Apex Score: Composite breakout score for the Apex Extraction surface.">EXTRACTION SCORE</div>
+            <div class="score">87.3</div>
           </div>
         </div>
 
@@ -3315,43 +3744,149 @@
         </div>
 
         <div class="grid">
-          <div><span>PHYSICAL</span><strong>100.0</strong></div>
-          <div><span>VISION</span><strong>83.1</strong></div>
-          <div><span>MARKET</span><strong>76.7</strong></div>
+          <div><span data-tooltip="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal." aria-label="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal.">PHYSICAL</span><strong>100.0</strong></div>
+          <div><span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">VISION</span><strong>72.0</strong></div>
+          <div><span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">MARKET</span><strong>80.9</strong></div>
         </div>
 
         <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
-          <p>He showed positive separation between results and contact quality this week. AVG came in at 0.273 with xBA at 0.370, a +0.097 edge that supports a constructive buy signal. He still showed legitimate impact ability, reaching 107.7 mph at peak exit velocity. The contact mix was supported by a 7.7% barrel rate and 38.5% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
+          <div class="proof-label" data-tooltip="Primary Signal: Plain-English lead signal that triggered the Apex card." aria-label="Primary Signal: Plain-English lead signal that triggered the Apex card.">PRIMARY SIGNAL</div>
+          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.500 against xBA 0.643, a strong +0.143 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 108.1 mph at peak exit velocity. The contact mix was supported by a 0.0% barrel rate and 100.0% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
         </div>
 
         <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
-          <p>Max EV 107.7 mph // xBA 0.370 vs AVG 0.273</p>
+          <div class="proof-label" data-tooltip="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis." aria-label="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis.">SUPPORTING METRIC</div>
+          <p>Max EV 108.1 mph // xBA 0.643 vs AVG 0.500</p>
         </div>
 
         <div class="forensic-strip">
           
         <div class="forensic-chip">
-          <span>Physics</span>
-          <strong>Dynamic Hard-Hit</strong>
-          <em>107.7 mph</em>
+          <span data-tooltip="Physics: Physics metric used by this report." aria-label="Physics: Physics metric used by this report.">Physics</span>
+          <strong data-tooltip="Dynamic Hard-Hit: Contact-authority proxy for flight-optimized damage." aria-label="Dynamic Hard-Hit: Contact-authority proxy for flight-optimized damage.">Dynamic Hard-Hit</strong>
+          <em>108.1 mph</em>
           <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Vision</span>
-          <strong>LA Consistency</strong>
+          <span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">Vision</span>
+          <strong data-tooltip="LA Consistency: Launch-angle consistency showing whether force is converting into flight." aria-label="LA Consistency: Launch-angle consistency showing whether force is converting into flight.">LA Consistency</strong>
+          <em>-1.5°</em>
+          <p>Shows whether the swing plane is converting force into flight.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">Market</span>
+          <strong data-tooltip="High-Stakes Delta: High-leverage change signal used by the Apex layer." aria-label="High-Stakes Delta: High-leverage change signal used by the Apex layer.">High-Stakes Delta</strong>
+          <em>+0.143</em>
+          <p>Identifies the value gap between expected quality and public results.</p>
+        </div>
+        
+        </div>
+
+        <div class="market-note">Surface production may be lagging the underlying contact profile.</div>
+
+        <div class="action-row">
+          <span>COMMAND</span>
+          <strong>ADD</strong>
+        </div>
+          <div class="audit-row">
+            <a class="audit-link" href="/scout/665856/">PERFORMANCE AUDIT</a>
+          </div>
+
+
+        <button
+          type="button"
+          class="provision-btn js-add-to-roster"
+          data-player-id="665856"
+          data-player-name="JAIR CAMARGO"
+          data-player-type="BAT"
+          data-player-team="Gwinnett Stripers"
+          data-profile-url="/scout/665856/"
+          data-source-tag="APEX_EXTRACTION"
+        >
+          INITIATE TRACKING
+        </button>
+      </article>
+    
+
+      <article
+        class="apex-card js-player-card apex-hot"
+        id="apex-player-681546"
+        data-player-id="681546"
+          data-profile-url="/scout/681546/"
+        data-player-name="JAMES OUTMAN"
+        data-player-team="Detroit Tigers"
+        data-player-role="BAT"
+        data-signal-family="APEX BAT"
+        data-apex-score="87.0"
+        data-physical="92.7"
+        data-vision="72.4"
+        data-market="90.5"
+        data-verdict="APEX EXTRACTION"
+        data-action="ADD"
+        data-supporting-metric="Max EV 107.5 mph // xBA 0.375 vs AVG 0.125"
+      >
+        <div class="card-top">
+          <div>
+            <div class="kicker">APEX BAT</div>
+            <h2>JAMES OUTMAN</h2>
+            <div class="meta">Detroit Tigers // BAT</div>
+          </div>
+          <div class="score-box">
+            <div class="score-label" data-tooltip="Apex Score: Composite breakout score for the Apex Extraction surface." aria-label="Apex Score: Composite breakout score for the Apex Extraction surface.">EXTRACTION SCORE</div>
+            <div class="score">87.0</div>
+          </div>
+        </div>
+
+        <div class="diagnosis-label">DIAGNOSIS</div>
+        <div class="verdict">
+          <div class="verdict-text">[ APEX EXTRACTION ]</div>
+          <div class="verdict-rail">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div><span data-tooltip="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal." aria-label="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal.">PHYSICAL</span><strong>92.7</strong></div>
+          <div><span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">VISION</span><strong>72.4</strong></div>
+          <div><span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">MARKET</span><strong>90.5</strong></div>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label" data-tooltip="Primary Signal: Plain-English lead signal that triggered the Apex card." aria-label="Primary Signal: Plain-English lead signal that triggered the Apex card.">PRIMARY SIGNAL</div>
+          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.125 against xBA 0.375, a strong +0.250 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 107.5 mph at peak exit velocity. The contact mix was supported by a 4.5% barrel rate and 31.8% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
+        </div>
+
+        <div class="proof">
+          <div class="proof-label" data-tooltip="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis." aria-label="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis.">SUPPORTING METRIC</div>
+          <p>Max EV 107.5 mph // xBA 0.375 vs AVG 0.125</p>
+        </div>
+
+        <div class="forensic-strip">
+          
+        <div class="forensic-chip">
+          <span data-tooltip="Physics: Physics metric used by this report." aria-label="Physics: Physics metric used by this report.">Physics</span>
+          <strong data-tooltip="Dynamic Hard-Hit: Contact-authority proxy for flight-optimized damage." aria-label="Dynamic Hard-Hit: Contact-authority proxy for flight-optimized damage.">Dynamic Hard-Hit</strong>
+          <em>107.5 mph</em>
+          <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
+        </div>
+        
+
+        <div class="forensic-chip">
+          <span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">Vision</span>
+          <strong data-tooltip="LA Consistency: Launch-angle consistency showing whether force is converting into flight." aria-label="LA Consistency: Launch-angle consistency showing whether force is converting into flight.">LA Consistency</strong>
           <em>Surgical</em>
           <p>Shows whether the swing plane is converting force into flight.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Market</span>
-          <strong>High-Stakes Delta</strong>
-          <em>+0.097</em>
+          <span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">Market</span>
+          <strong data-tooltip="High-Stakes Delta: High-leverage change signal used by the Apex layer." aria-label="High-Stakes Delta: High-leverage change signal used by the Apex layer.">High-Stakes Delta</strong>
+          <em>+0.250</em>
           <p>Identifies the value gap between expected quality and public results.</p>
         </div>
         
@@ -3364,442 +3899,18 @@
           <strong>ADD</strong>
         </div>
           <div class="audit-row">
-            <a class="audit-link" href="/scout/807727/">PERFORMANCE AUDIT</a>
+            <a class="audit-link" href="/scout/681546/">PERFORMANCE AUDIT</a>
           </div>
 
 
         <button
           type="button"
           class="provision-btn js-add-to-roster"
-          data-player-id="807727"
-          data-player-name="CHARLES MCADOO"
+          data-player-id="681546"
+          data-player-name="JAMES OUTMAN"
           data-player-type="BAT"
-          data-player-team="Toronto Blue Jays"
-          data-profile-url="/scout/807727/"
-          data-source-tag="APEX_EXTRACTION"
-        >
-          INITIATE TRACKING
-        </button>
-      </article>
-    
-
-      <article
-        class="apex-card js-player-card apex-hot"
-        id="apex-player-657656"
-        data-player-id="657656"
-          data-profile-url="/scout/657656/"
-        data-player-name="RAMÓN LAUREANO"
-        data-player-team="San Diego Padres"
-        data-player-role="BAT"
-        data-signal-family="APEX BAT"
-        data-apex-score="88.2"
-        data-physical="93.3"
-        data-vision="84.2"
-        data-market="84.0"
-        data-verdict="APEX EXTRACTION"
-        data-action="ADD"
-        data-supporting-metric="Max EV 109.7 mph // xBA 0.338 vs AVG 0.160"
-      >
-        <div class="card-top">
-          <div>
-            <div class="kicker">APEX BAT</div>
-            <h2>RAMÓN LAUREANO</h2>
-            <div class="meta">San Diego Padres // BAT</div>
-          </div>
-          <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
-            <div class="score">88.2</div>
-          </div>
-        </div>
-
-        <div class="diagnosis-label">DIAGNOSIS</div>
-        <div class="verdict">
-          <div class="verdict-text">[ APEX EXTRACTION ]</div>
-          <div class="verdict-rail">
-            <span></span>
-          </div>
-        </div>
-
-        <div class="grid">
-          <div><span>PHYSICAL</span><strong>93.3</strong></div>
-          <div><span>VISION</span><strong>84.2</strong></div>
-          <div><span>MARKET</span><strong>84.0</strong></div>
-        </div>
-
-        <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
-          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.160 against xBA 0.338, a strong +0.178 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 109.7 mph at peak exit velocity. The contact mix was supported by a 1.4% barrel rate and 23.2% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
-        </div>
-
-        <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
-          <p>Max EV 109.7 mph // xBA 0.338 vs AVG 0.160</p>
-        </div>
-
-        <div class="forensic-strip">
-          
-        <div class="forensic-chip">
-          <span>Physics</span>
-          <strong>Dynamic Hard-Hit</strong>
-          <em>109.7 mph</em>
-          <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
-        </div>
-        
-
-        <div class="forensic-chip">
-          <span>Vision</span>
-          <strong>LA Consistency</strong>
-          <em>Surgical</em>
-          <p>Shows whether the swing plane is converting force into flight.</p>
-        </div>
-        
-
-        <div class="forensic-chip">
-          <span>Market</span>
-          <strong>High-Stakes Delta</strong>
-          <em>+0.178</em>
-          <p>Identifies the value gap between expected quality and public results.</p>
-        </div>
-        
-        </div>
-
-        <div class="market-note">Surface production may be lagging the underlying contact profile.</div>
-
-        <div class="action-row">
-          <span>COMMAND</span>
-          <strong>ADD</strong>
-        </div>
-          <div class="audit-row">
-            <a class="audit-link" href="/scout/657656/">PERFORMANCE AUDIT</a>
-          </div>
-
-
-        <button
-          type="button"
-          class="provision-btn js-add-to-roster"
-          data-player-id="657656"
-          data-player-name="RAMÓN LAUREANO"
-          data-player-type="BAT"
-          data-player-team="San Diego Padres"
-          data-profile-url="/scout/657656/"
-          data-source-tag="APEX_EXTRACTION"
-        >
-          INITIATE TRACKING
-        </button>
-      </article>
-    
-
-      <article
-        class="apex-card js-player-card apex-hot"
-        id="apex-player-699013"
-        data-player-id="699013"
-          data-profile-url="/scout/699013/"
-        data-player-name="ESMERLYN VALDEZ"
-        data-player-team="Indianapolis Indians"
-        data-player-role="BAT"
-        data-signal-family="APEX BAT"
-        data-apex-score="88.0"
-        data-physical="97.3"
-        data-vision="76.9"
-        data-market="83.2"
-        data-verdict="APEX EXTRACTION"
-        data-action="ADD"
-        data-supporting-metric="Max EV 105.5 mph // xBA 0.294 vs AVG 0.125"
-      >
-        <div class="card-top">
-          <div>
-            <div class="kicker">APEX BAT</div>
-            <h2>ESMERLYN VALDEZ</h2>
-            <div class="meta">Indianapolis Indians // BAT</div>
-          </div>
-          <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
-            <div class="score">88.0</div>
-          </div>
-        </div>
-
-        <div class="diagnosis-label">DIAGNOSIS</div>
-        <div class="verdict">
-          <div class="verdict-text">[ APEX EXTRACTION ]</div>
-          <div class="verdict-rail">
-            <span></span>
-          </div>
-        </div>
-
-        <div class="grid">
-          <div><span>PHYSICAL</span><strong>97.3</strong></div>
-          <div><span>VISION</span><strong>76.9</strong></div>
-          <div><span>MARKET</span><strong>83.2</strong></div>
-        </div>
-
-        <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
-          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.125 against xBA 0.294, a strong +0.169 gap that points to better underlying contact than the box score suggests. He still showed legitimate impact ability, reaching 105.5 mph at peak exit velocity. The contact mix was supported by a 6.7% barrel rate and 53.3% hard-hit rate over the recent window. Net assessment: Gold Buy. The recent profile supports a positive read, even if it was not a full top-tier explosion across every category.</p>
-        </div>
-
-        <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
-          <p>Max EV 105.5 mph // xBA 0.294 vs AVG 0.125</p>
-        </div>
-
-        <div class="forensic-strip">
-          
-        <div class="forensic-chip">
-          <span>Physics</span>
-          <strong>Dynamic Hard-Hit</strong>
-          <em>105.5 mph</em>
-          <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
-        </div>
-        
-
-        <div class="forensic-chip">
-          <span>Vision</span>
-          <strong>LA Consistency</strong>
-          <em>Surgical</em>
-          <p>Shows whether the swing plane is converting force into flight.</p>
-        </div>
-        
-
-        <div class="forensic-chip">
-          <span>Market</span>
-          <strong>High-Stakes Delta</strong>
-          <em>+0.169</em>
-          <p>Identifies the value gap between expected quality and public results.</p>
-        </div>
-        
-        </div>
-
-        <div class="market-note">Surface production may be lagging the underlying contact profile.</div>
-
-        <div class="action-row">
-          <span>COMMAND</span>
-          <strong>ADD</strong>
-        </div>
-          <div class="audit-row">
-            <a class="audit-link" href="/scout/699013/">PERFORMANCE AUDIT</a>
-          </div>
-
-
-        <button
-          type="button"
-          class="provision-btn js-add-to-roster"
-          data-player-id="699013"
-          data-player-name="ESMERLYN VALDEZ"
-          data-player-type="BAT"
-          data-player-team="Indianapolis Indians"
-          data-profile-url="/scout/699013/"
-          data-source-tag="APEX_EXTRACTION"
-        >
-          INITIATE TRACKING
-        </button>
-      </article>
-    
-
-      <article
-        class="apex-card js-player-card apex-hot"
-        id="apex-player-672284"
-        data-player-id="672284"
-          data-profile-url="/scout/672284/"
-        data-player-name="JARRED KELENIC"
-        data-player-team="Round Rock Express"
-        data-player-role="BAT"
-        data-signal-family="APEX BAT"
-        data-apex-score="86.7"
-        data-physical="98.2"
-        data-vision="71.2"
-        data-market="82.4"
-        data-verdict="APEX EXTRACTION"
-        data-action="ADD"
-        data-supporting-metric="Max EV 110.8 mph // xBA 0.471 vs AVG 0.200"
-      >
-        <div class="card-top">
-          <div>
-            <div class="kicker">APEX BAT</div>
-            <h2>JARRED KELENIC</h2>
-            <div class="meta">Round Rock Express // BAT</div>
-          </div>
-          <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
-            <div class="score">86.7</div>
-          </div>
-        </div>
-
-        <div class="diagnosis-label">DIAGNOSIS</div>
-        <div class="verdict">
-          <div class="verdict-text">[ APEX EXTRACTION ]</div>
-          <div class="verdict-rail">
-            <span></span>
-          </div>
-        </div>
-
-        <div class="grid">
-          <div><span>PHYSICAL</span><strong>98.2</strong></div>
-          <div><span>VISION</span><strong>71.2</strong></div>
-          <div><span>MARKET</span><strong>82.4</strong></div>
-        </div>
-
-        <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
-          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.200 against xBA 0.471, a strong +0.271 gap that points to better underlying contact than the box score suggests. The top-end damage was real, with a max exit velocity of 110.8 mph, which is premium impact territory. The contact mix was supported by a 9.1% barrel rate and 27.3% hard-hit rate over the recent window. Net assessment: Platinum Buy. The past week looks stronger under the hood than the surface line, with enough impact authority to support a bullish forward read.</p>
-        </div>
-
-        <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
-          <p>Max EV 110.8 mph // xBA 0.471 vs AVG 0.200</p>
-        </div>
-
-        <div class="forensic-strip">
-          
-        <div class="forensic-chip">
-          <span>Physics</span>
-          <strong>Dynamic Hard-Hit</strong>
-          <em>110.8 mph</em>
-          <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
-        </div>
-        
-
-        <div class="forensic-chip">
-          <span>Vision</span>
-          <strong>LA Consistency</strong>
-          <em>13.1°</em>
-          <p>Shows whether the swing plane is converting force into flight.</p>
-        </div>
-        
-
-        <div class="forensic-chip">
-          <span>Market</span>
-          <strong>High-Stakes Delta</strong>
-          <em>+0.271</em>
-          <p>Identifies the value gap between expected quality and public results.</p>
-        </div>
-        
-        </div>
-
-        <div class="market-note">Surface production may be lagging the underlying contact profile.</div>
-
-        <div class="action-row">
-          <span>COMMAND</span>
-          <strong>ADD</strong>
-        </div>
-          <div class="audit-row">
-            <a class="audit-link" href="/scout/672284/">PERFORMANCE AUDIT</a>
-          </div>
-
-
-        <button
-          type="button"
-          class="provision-btn js-add-to-roster"
-          data-player-id="672284"
-          data-player-name="JARRED KELENIC"
-          data-player-type="BAT"
-          data-player-team="Round Rock Express"
-          data-profile-url="/scout/672284/"
-          data-source-tag="APEX_EXTRACTION"
-        >
-          INITIATE TRACKING
-        </button>
-      </article>
-    
-
-      <article
-        class="apex-card js-player-card apex-hot"
-        id="apex-player-677588"
-        data-player-id="677588"
-          data-profile-url="/scout/677588/"
-        data-player-name="JOSÉ TENA"
-        data-player-team="Washington Nationals"
-        data-player-role="BAT"
-        data-signal-family="APEX BAT"
-        data-apex-score="86.3"
-        data-physical="100.0"
-        data-vision="70.1"
-        data-market="79.1"
-        data-verdict="APEX EXTRACTION"
-        data-action="ADD"
-        data-supporting-metric="Max EV 114.0 mph // xBA 0.354 vs AVG 0.120"
-      >
-        <div class="card-top">
-          <div>
-            <div class="kicker">APEX BAT</div>
-            <h2>JOSÉ TENA</h2>
-            <div class="meta">Washington Nationals // BAT</div>
-          </div>
-          <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
-            <div class="score">86.3</div>
-          </div>
-        </div>
-
-        <div class="diagnosis-label">DIAGNOSIS</div>
-        <div class="verdict">
-          <div class="verdict-text">[ APEX EXTRACTION ]</div>
-          <div class="verdict-rail">
-            <span></span>
-          </div>
-        </div>
-
-        <div class="grid">
-          <div><span>PHYSICAL</span><strong>100.0</strong></div>
-          <div><span>VISION</span><strong>70.1</strong></div>
-          <div><span>MARKET</span><strong>79.1</strong></div>
-        </div>
-
-        <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
-          <p>He materially outperformed his surface AVG quality this week. The profile shows AVG 0.120 against xBA 0.354, a strong +0.234 gap that points to better underlying contact than the box score suggests. The top-end damage was real, with a max exit velocity of 114.0 mph, which is premium impact territory. The contact mix was supported by a 1.8% barrel rate and 31.6% hard-hit rate over the recent window. Net assessment: Platinum Buy. The past week looks stronger under the hood than the surface line, with enough impact authority to support a bullish forward read.</p>
-        </div>
-
-        <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
-          <p>Max EV 114.0 mph // xBA 0.354 vs AVG 0.120</p>
-        </div>
-
-        <div class="forensic-strip">
-          
-        <div class="forensic-chip">
-          <span>Physics</span>
-          <strong>Dynamic Hard-Hit</strong>
-          <em>114.0 mph</em>
-          <p>Proxy for flight-optimized damage while true DHH is being wired.</p>
-        </div>
-        
-
-        <div class="forensic-chip">
-          <span>Vision</span>
-          <strong>LA Consistency</strong>
-          <em>11.2°</em>
-          <p>Shows whether the swing plane is converting force into flight.</p>
-        </div>
-        
-
-        <div class="forensic-chip">
-          <span>Market</span>
-          <strong>High-Stakes Delta</strong>
-          <em>+0.234</em>
-          <p>Identifies the value gap between expected quality and public results.</p>
-        </div>
-        
-        </div>
-
-        <div class="market-note">Surface production may be lagging the underlying contact profile.</div>
-
-        <div class="action-row">
-          <span>COMMAND</span>
-          <strong>ADD</strong>
-        </div>
-          <div class="audit-row">
-            <a class="audit-link" href="/scout/677588/">PERFORMANCE AUDIT</a>
-          </div>
-
-
-        <button
-          type="button"
-          class="provision-btn js-add-to-roster"
-          data-player-id="677588"
-          data-player-name="JOSÉ TENA"
-          data-player-type="BAT"
-          data-player-team="Washington Nationals"
-          data-profile-url="/scout/677588/"
+          data-player-team="Detroit Tigers"
+          data-profile-url="/scout/681546/"
           data-source-tag="APEX_EXTRACTION"
         >
           INITIATE TRACKING
@@ -3821,7 +3932,7 @@
         class="apex-card js-player-card apex-hot"
         id="apex-player-607192"
         data-player-id="607192"
-          data-profile-url="/scout/607192/"
+          data-profile-url="#"
         data-player-name="GLASNOW, TYLER"
         data-player-team="HOU"
         data-player-role="SP"
@@ -3841,7 +3952,7 @@
             <div class="meta">HOU // SP</div>
           </div>
           <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score-label" data-tooltip="Apex Score: Composite breakout score for the Apex Extraction surface." aria-label="Apex Score: Composite breakout score for the Apex Extraction surface.">EXTRACTION SCORE</div>
             <div class="score">88.0</div>
           </div>
         </div>
@@ -3855,42 +3966,42 @@
         </div>
 
         <div class="grid">
-          <div><span>PHYSICAL</span><strong>100.0</strong></div>
-          <div><span>VISION</span><strong>71.3</strong></div>
-          <div><span>MARKET</span><strong>84</strong></div>
+          <div><span data-tooltip="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal." aria-label="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal.">PHYSICAL</span><strong>100.0</strong></div>
+          <div><span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">VISION</span><strong>71.3</strong></div>
+          <div><span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">MARKET</span><strong>84</strong></div>
         </div>
 
         <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
+          <div class="proof-label" data-tooltip="Primary Signal: Plain-English lead signal that triggered the Apex card." aria-label="Primary Signal: Plain-English lead signal that triggered the Apex card.">PRIMARY SIGNAL</div>
           <p>Elite ballistic profile detected. Ride and approach angle are both moving in the right direction, creating a high-end breakout structure.</p>
         </div>
 
         <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
+          <div class="proof-label" data-tooltip="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis." aria-label="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis.">SUPPORTING METRIC</div>
           <p>iVB Delta +2.4" // VAA Delta -0.8°</p>
         </div>
 
         <div class="forensic-strip">
           
         <div class="forensic-chip">
-          <span>Geometry</span>
-          <strong>VAA Delta</strong>
+          <span data-tooltip="Geometry: Pitch-plane or movement-shape evidence supporting the Apex read." aria-label="Geometry: Pitch-plane or movement-shape evidence supporting the Apex read.">Geometry</span>
+          <strong data-tooltip="VAA Delta: Change in vertical approach angle versus recent baseline." aria-label="VAA Delta: Change in vertical approach angle versus recent baseline.">VAA Delta</strong>
           <em>-0.8°</em>
           <p>Tracks whether the fastball is entering the zone on a flatter, more damaging plane.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Deception</span>
-          <strong>Movement Deviation</strong>
+          <span data-tooltip="Deception: Movement, release, or perception evidence that may hide the true pitch quality." aria-label="Deception: Movement, release, or perception evidence that may hide the true pitch quality.">Deception</span>
+          <strong data-tooltip="Movement Deviation: Observed movement change or deviation supporting the Apex arm signal." aria-label="Movement Deviation: Observed movement change or deviation supporting the Apex arm signal.">Movement Deviation</strong>
           <em>+2.2"</em>
           <p>Proxy for late movement or seam-driven deception before direct SSW is wired.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Market</span>
-          <strong>High-Stakes Delta</strong>
+          <span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">Market</span>
+          <strong data-tooltip="High-Stakes Delta: High-leverage change signal used by the Apex layer." aria-label="High-Stakes Delta: High-leverage change signal used by the Apex layer.">High-Stakes Delta</strong>
           <em>Public Late</em>
           <p>Identifies the value gap between physical signal and public attention.</p>
         </div>
@@ -3904,7 +4015,7 @@
           <strong>ADD</strong>
         </div>
           <div class="audit-row">
-            <a class="audit-link" href="/scout/607192/">PERFORMANCE AUDIT</a>
+            <a class="audit-link" href="#">PERFORMANCE AUDIT</a>
           </div>
 
 
@@ -3915,7 +4026,7 @@
           data-player-name="GLASNOW, TYLER"
           data-player-type="SP"
           data-player-team="HOU"
-          data-profile-url="/scout/607192/"
+          data-profile-url="#"
           data-source-tag="APEX_EXTRACTION"
         >
           INITIATE TRACKING
@@ -3947,7 +4058,7 @@
             <div class="meta">PIT // SP</div>
           </div>
           <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score-label" data-tooltip="Apex Score: Composite breakout score for the Apex Extraction surface." aria-label="Apex Score: Composite breakout score for the Apex Extraction surface.">EXTRACTION SCORE</div>
             <div class="score">87.1</div>
           </div>
         </div>
@@ -3961,42 +4072,42 @@
         </div>
 
         <div class="grid">
-          <div><span>PHYSICAL</span><strong>100.0</strong></div>
-          <div><span>VISION</span><strong>67.7</strong></div>
-          <div><span>MARKET</span><strong>84</strong></div>
+          <div><span data-tooltip="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal." aria-label="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal.">PHYSICAL</span><strong>100.0</strong></div>
+          <div><span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">VISION</span><strong>67.7</strong></div>
+          <div><span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">MARKET</span><strong>84</strong></div>
         </div>
 
         <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
+          <div class="proof-label" data-tooltip="Primary Signal: Plain-English lead signal that triggered the Apex card." aria-label="Primary Signal: Plain-English lead signal that triggered the Apex card.">PRIMARY SIGNAL</div>
           <p>Elite ballistic profile detected. Ride and approach angle are both moving in the right direction, creating a high-end breakout structure.</p>
         </div>
 
         <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
+          <div class="proof-label" data-tooltip="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis." aria-label="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis.">SUPPORTING METRIC</div>
           <p>iVB Delta +2.2" // VAA Delta -0.5°</p>
         </div>
 
         <div class="forensic-strip">
           
         <div class="forensic-chip">
-          <span>Geometry</span>
-          <strong>VAA Delta</strong>
+          <span data-tooltip="Geometry: Pitch-plane or movement-shape evidence supporting the Apex read." aria-label="Geometry: Pitch-plane or movement-shape evidence supporting the Apex read.">Geometry</span>
+          <strong data-tooltip="VAA Delta: Change in vertical approach angle versus recent baseline." aria-label="VAA Delta: Change in vertical approach angle versus recent baseline.">VAA Delta</strong>
           <em>-0.5°</em>
           <p>Tracks whether the fastball is entering the zone on a flatter, more damaging plane.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Deception</span>
-          <strong>Movement Deviation</strong>
+          <span data-tooltip="Deception: Movement, release, or perception evidence that may hide the true pitch quality." aria-label="Deception: Movement, release, or perception evidence that may hide the true pitch quality.">Deception</span>
+          <strong data-tooltip="Movement Deviation: Observed movement change or deviation supporting the Apex arm signal." aria-label="Movement Deviation: Observed movement change or deviation supporting the Apex arm signal.">Movement Deviation</strong>
           <em>+2.0"</em>
           <p>Proxy for late movement or seam-driven deception before direct SSW is wired.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Market</span>
-          <strong>High-Stakes Delta</strong>
+          <span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">Market</span>
+          <strong data-tooltip="High-Stakes Delta: High-leverage change signal used by the Apex layer." aria-label="High-Stakes Delta: High-leverage change signal used by the Apex layer.">High-Stakes Delta</strong>
           <em>Public Late</em>
           <p>Identifies the value gap between physical signal and public attention.</p>
         </div>
@@ -4053,7 +4164,7 @@
             <div class="meta">MIL // SP</div>
           </div>
           <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score-label" data-tooltip="Apex Score: Composite breakout score for the Apex Extraction surface." aria-label="Apex Score: Composite breakout score for the Apex Extraction surface.">EXTRACTION SCORE</div>
             <div class="score">86.0</div>
           </div>
         </div>
@@ -4067,42 +4178,42 @@
         </div>
 
         <div class="grid">
-          <div><span>PHYSICAL</span><strong>100.0</strong></div>
-          <div><span>VISION</span><strong>85.0</strong></div>
-          <div><span>MARKET</span><strong>66</strong></div>
+          <div><span data-tooltip="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal." aria-label="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal.">PHYSICAL</span><strong>100.0</strong></div>
+          <div><span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">VISION</span><strong>85.0</strong></div>
+          <div><span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">MARKET</span><strong>66</strong></div>
         </div>
 
         <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
+          <div class="proof-label" data-tooltip="Primary Signal: Plain-English lead signal that triggered the Apex card." aria-label="Primary Signal: Plain-English lead signal that triggered the Apex card.">PRIMARY SIGNAL</div>
           <p>Movement quality appears to be improving through more efficient spin conversion, not just raw effort. Breakout conditions are building.</p>
         </div>
 
         <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
+          <div class="proof-label" data-tooltip="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis." aria-label="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis.">SUPPORTING METRIC</div>
           <p>iVB Delta +5.1" // VAA Delta +0.9°</p>
         </div>
 
         <div class="forensic-strip">
           
         <div class="forensic-chip">
-          <span>Geometry</span>
-          <strong>VAA Delta</strong>
+          <span data-tooltip="Geometry: Pitch-plane or movement-shape evidence supporting the Apex read." aria-label="Geometry: Pitch-plane or movement-shape evidence supporting the Apex read.">Geometry</span>
+          <strong data-tooltip="VAA Delta: Change in vertical approach angle versus recent baseline." aria-label="VAA Delta: Change in vertical approach angle versus recent baseline.">VAA Delta</strong>
           <em>+0.9°</em>
           <p>Tracks whether the fastball is entering the zone on a flatter, more damaging plane.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Deception</span>
-          <strong>Movement Deviation</strong>
+          <span data-tooltip="Deception: Movement, release, or perception evidence that may hide the true pitch quality." aria-label="Deception: Movement, release, or perception evidence that may hide the true pitch quality.">Deception</span>
+          <strong data-tooltip="Movement Deviation: Observed movement change or deviation supporting the Apex arm signal." aria-label="Movement Deviation: Observed movement change or deviation supporting the Apex arm signal.">Movement Deviation</strong>
           <em>+5.2"</em>
           <p>Proxy for late movement or seam-driven deception before direct SSW is wired.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Market</span>
-          <strong>High-Stakes Delta</strong>
+          <span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">Market</span>
+          <strong data-tooltip="High-Stakes Delta: High-leverage change signal used by the Apex layer." aria-label="High-Stakes Delta: High-leverage change signal used by the Apex layer.">High-Stakes Delta</strong>
           <em>Public Late</em>
           <p>Identifies the value gap between physical signal and public attention.</p>
         </div>
@@ -4159,7 +4270,7 @@
             <div class="meta">PHI // SP</div>
           </div>
           <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score-label" data-tooltip="Apex Score: Composite breakout score for the Apex Extraction surface." aria-label="Apex Score: Composite breakout score for the Apex Extraction surface.">EXTRACTION SCORE</div>
             <div class="score">82.2</div>
           </div>
         </div>
@@ -4173,42 +4284,42 @@
         </div>
 
         <div class="grid">
-          <div><span>PHYSICAL</span><strong>100.0</strong></div>
-          <div><span>VISION</span><strong>69.8</strong></div>
-          <div><span>MARKET</span><strong>66</strong></div>
+          <div><span data-tooltip="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal." aria-label="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal.">PHYSICAL</span><strong>100.0</strong></div>
+          <div><span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">VISION</span><strong>69.8</strong></div>
+          <div><span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">MARKET</span><strong>66</strong></div>
         </div>
 
         <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
+          <div class="proof-label" data-tooltip="Primary Signal: Plain-English lead signal that triggered the Apex card." aria-label="Primary Signal: Plain-English lead signal that triggered the Apex card.">PRIMARY SIGNAL</div>
           <p>Movement quality appears to be improving through more efficient spin conversion, not just raw effort. Breakout conditions are building.</p>
         </div>
 
         <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
+          <div class="proof-label" data-tooltip="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis." aria-label="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis.">SUPPORTING METRIC</div>
           <p>iVB Delta +3.1" // VAA Delta +0.1°</p>
         </div>
 
         <div class="forensic-strip">
           
         <div class="forensic-chip">
-          <span>Geometry</span>
-          <strong>VAA Delta</strong>
+          <span data-tooltip="Geometry: Pitch-plane or movement-shape evidence supporting the Apex read." aria-label="Geometry: Pitch-plane or movement-shape evidence supporting the Apex read.">Geometry</span>
+          <strong data-tooltip="VAA Delta: Change in vertical approach angle versus recent baseline." aria-label="VAA Delta: Change in vertical approach angle versus recent baseline.">VAA Delta</strong>
           <em>+0.1°</em>
           <p>Tracks whether the fastball is entering the zone on a flatter, more damaging plane.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Deception</span>
-          <strong>Movement Deviation</strong>
+          <span data-tooltip="Deception: Movement, release, or perception evidence that may hide the true pitch quality." aria-label="Deception: Movement, release, or perception evidence that may hide the true pitch quality.">Deception</span>
+          <strong data-tooltip="Movement Deviation: Observed movement change or deviation supporting the Apex arm signal." aria-label="Movement Deviation: Observed movement change or deviation supporting the Apex arm signal.">Movement Deviation</strong>
           <em>+6.7"</em>
           <p>Proxy for late movement or seam-driven deception before direct SSW is wired.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Market</span>
-          <strong>High-Stakes Delta</strong>
+          <span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">Market</span>
+          <strong data-tooltip="High-Stakes Delta: High-leverage change signal used by the Apex layer." aria-label="High-Stakes Delta: High-leverage change signal used by the Apex layer.">High-Stakes Delta</strong>
           <em>Public Late</em>
           <p>Identifies the value gap between physical signal and public attention.</p>
         </div>
@@ -4265,7 +4376,7 @@
             <div class="meta">STL // SP</div>
           </div>
           <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score-label" data-tooltip="Apex Score: Composite breakout score for the Apex Extraction surface." aria-label="Apex Score: Composite breakout score for the Apex Extraction surface.">EXTRACTION SCORE</div>
             <div class="score">81.2</div>
           </div>
         </div>
@@ -4279,42 +4390,42 @@
         </div>
 
         <div class="grid">
-          <div><span>PHYSICAL</span><strong>100.0</strong></div>
-          <div><span>VISION</span><strong>75.4</strong></div>
-          <div><span>MARKET</span><strong>58</strong></div>
+          <div><span data-tooltip="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal." aria-label="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal.">PHYSICAL</span><strong>100.0</strong></div>
+          <div><span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">VISION</span><strong>75.4</strong></div>
+          <div><span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">MARKET</span><strong>58</strong></div>
         </div>
 
         <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
+          <div class="proof-label" data-tooltip="Primary Signal: Plain-English lead signal that triggered the Apex card." aria-label="Primary Signal: Plain-English lead signal that triggered the Apex card.">PRIMARY SIGNAL</div>
           <p>Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.</p>
         </div>
 
         <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
+          <div class="proof-label" data-tooltip="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis." aria-label="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis.">SUPPORTING METRIC</div>
           <p>iVB Delta +3.5" // VAA Delta +0.8°</p>
         </div>
 
         <div class="forensic-strip">
           
         <div class="forensic-chip">
-          <span>Geometry</span>
-          <strong>VAA Delta</strong>
+          <span data-tooltip="Geometry: Pitch-plane or movement-shape evidence supporting the Apex read." aria-label="Geometry: Pitch-plane or movement-shape evidence supporting the Apex read.">Geometry</span>
+          <strong data-tooltip="VAA Delta: Change in vertical approach angle versus recent baseline." aria-label="VAA Delta: Change in vertical approach angle versus recent baseline.">VAA Delta</strong>
           <em>+0.8°</em>
           <p>Tracks whether the fastball is entering the zone on a flatter, more damaging plane.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Deception</span>
-          <strong>Movement Deviation</strong>
+          <span data-tooltip="Deception: Movement, release, or perception evidence that may hide the true pitch quality." aria-label="Deception: Movement, release, or perception evidence that may hide the true pitch quality.">Deception</span>
+          <strong data-tooltip="Movement Deviation: Observed movement change or deviation supporting the Apex arm signal." aria-label="Movement Deviation: Observed movement change or deviation supporting the Apex arm signal.">Movement Deviation</strong>
           <em>+4.6"</em>
           <p>Proxy for late movement or seam-driven deception before direct SSW is wired.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Market</span>
-          <strong>High-Stakes Delta</strong>
+          <span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">Market</span>
+          <strong data-tooltip="High-Stakes Delta: High-leverage change signal used by the Apex layer." aria-label="High-Stakes Delta: High-leverage change signal used by the Apex layer.">High-Stakes Delta</strong>
           <em>Public Late</em>
           <p>Identifies the value gap between physical signal and public attention.</p>
         </div>
@@ -4351,7 +4462,7 @@
         class="apex-card js-player-card apex-warm"
         id="apex-player-623437"
         data-player-id="623437"
-          data-profile-url="/scout/623437/"
+          data-profile-url="#"
         data-player-name="TOPA, JUSTIN"
         data-player-team="MIN"
         data-player-role="SP"
@@ -4371,7 +4482,7 @@
             <div class="meta">MIN // SP</div>
           </div>
           <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score-label" data-tooltip="Apex Score: Composite breakout score for the Apex Extraction surface." aria-label="Apex Score: Composite breakout score for the Apex Extraction surface.">EXTRACTION SCORE</div>
             <div class="score">81.0</div>
           </div>
         </div>
@@ -4385,42 +4496,42 @@
         </div>
 
         <div class="grid">
-          <div><span>PHYSICAL</span><strong>100.0</strong></div>
-          <div><span>VISION</span><strong>74.4</strong></div>
-          <div><span>MARKET</span><strong>58</strong></div>
+          <div><span data-tooltip="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal." aria-label="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal.">PHYSICAL</span><strong>100.0</strong></div>
+          <div><span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">VISION</span><strong>74.4</strong></div>
+          <div><span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">MARKET</span><strong>58</strong></div>
         </div>
 
         <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
+          <div class="proof-label" data-tooltip="Primary Signal: Plain-English lead signal that triggered the Apex card." aria-label="Primary Signal: Plain-English lead signal that triggered the Apex card.">PRIMARY SIGNAL</div>
           <p>Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.</p>
         </div>
 
         <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
+          <div class="proof-label" data-tooltip="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis." aria-label="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis.">SUPPORTING METRIC</div>
           <p>iVB Delta +3.4" // VAA Delta +0.7°</p>
         </div>
 
         <div class="forensic-strip">
           
         <div class="forensic-chip">
-          <span>Geometry</span>
-          <strong>VAA Delta</strong>
+          <span data-tooltip="Geometry: Pitch-plane or movement-shape evidence supporting the Apex read." aria-label="Geometry: Pitch-plane or movement-shape evidence supporting the Apex read.">Geometry</span>
+          <strong data-tooltip="VAA Delta: Change in vertical approach angle versus recent baseline." aria-label="VAA Delta: Change in vertical approach angle versus recent baseline.">VAA Delta</strong>
           <em>+0.7°</em>
           <p>Tracks whether the fastball is entering the zone on a flatter, more damaging plane.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Deception</span>
-          <strong>Movement Deviation</strong>
+          <span data-tooltip="Deception: Movement, release, or perception evidence that may hide the true pitch quality." aria-label="Deception: Movement, release, or perception evidence that may hide the true pitch quality.">Deception</span>
+          <strong data-tooltip="Movement Deviation: Observed movement change or deviation supporting the Apex arm signal." aria-label="Movement Deviation: Observed movement change or deviation supporting the Apex arm signal.">Movement Deviation</strong>
           <em>+3.4"</em>
           <p>Proxy for late movement or seam-driven deception before direct SSW is wired.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Market</span>
-          <strong>High-Stakes Delta</strong>
+          <span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">Market</span>
+          <strong data-tooltip="High-Stakes Delta: High-leverage change signal used by the Apex layer." aria-label="High-Stakes Delta: High-leverage change signal used by the Apex layer.">High-Stakes Delta</strong>
           <em>Public Late</em>
           <p>Identifies the value gap between physical signal and public attention.</p>
         </div>
@@ -4434,7 +4545,7 @@
           <strong>WATCH</strong>
         </div>
           <div class="audit-row">
-            <a class="audit-link" href="/scout/623437/">PERFORMANCE AUDIT</a>
+            <a class="audit-link" href="#">PERFORMANCE AUDIT</a>
           </div>
 
 
@@ -4445,7 +4556,7 @@
           data-player-name="TOPA, JUSTIN"
           data-player-type="SP"
           data-player-team="MIN"
-          data-profile-url="/scout/623437/"
+          data-profile-url="#"
           data-source-tag="APEX_EXTRACTION"
         >
           INITIATE TRACKING
@@ -4477,7 +4588,7 @@
             <div class="meta">TOR // SP</div>
           </div>
           <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score-label" data-tooltip="Apex Score: Composite breakout score for the Apex Extraction surface." aria-label="Apex Score: Composite breakout score for the Apex Extraction surface.">EXTRACTION SCORE</div>
             <div class="score">80.9</div>
           </div>
         </div>
@@ -4491,42 +4602,42 @@
         </div>
 
         <div class="grid">
-          <div><span>PHYSICAL</span><strong>100.0</strong></div>
-          <div><span>VISION</span><strong>73.9</strong></div>
-          <div><span>MARKET</span><strong>58</strong></div>
+          <div><span data-tooltip="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal." aria-label="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal.">PHYSICAL</span><strong>100.0</strong></div>
+          <div><span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">VISION</span><strong>73.9</strong></div>
+          <div><span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">MARKET</span><strong>58</strong></div>
         </div>
 
         <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
+          <div class="proof-label" data-tooltip="Primary Signal: Plain-English lead signal that triggered the Apex card." aria-label="Primary Signal: Plain-English lead signal that triggered the Apex card.">PRIMARY SIGNAL</div>
           <p>Shape profile is moving, but not yet in a fully qualified disruption tier. Keep this arm on the radar for another appearance.</p>
         </div>
 
         <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
+          <div class="proof-label" data-tooltip="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis." aria-label="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis.">SUPPORTING METRIC</div>
           <p>iVB Delta +3.0" // VAA Delta +0.7°</p>
         </div>
 
         <div class="forensic-strip">
           
         <div class="forensic-chip">
-          <span>Geometry</span>
-          <strong>VAA Delta</strong>
+          <span data-tooltip="Geometry: Pitch-plane or movement-shape evidence supporting the Apex read." aria-label="Geometry: Pitch-plane or movement-shape evidence supporting the Apex read.">Geometry</span>
+          <strong data-tooltip="VAA Delta: Change in vertical approach angle versus recent baseline." aria-label="VAA Delta: Change in vertical approach angle versus recent baseline.">VAA Delta</strong>
           <em>+0.7°</em>
           <p>Tracks whether the fastball is entering the zone on a flatter, more damaging plane.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Deception</span>
-          <strong>Movement Deviation</strong>
+          <span data-tooltip="Deception: Movement, release, or perception evidence that may hide the true pitch quality." aria-label="Deception: Movement, release, or perception evidence that may hide the true pitch quality.">Deception</span>
+          <strong data-tooltip="Movement Deviation: Observed movement change or deviation supporting the Apex arm signal." aria-label="Movement Deviation: Observed movement change or deviation supporting the Apex arm signal.">Movement Deviation</strong>
           <em>+3.0"</em>
           <p>Proxy for late movement or seam-driven deception before direct SSW is wired.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Market</span>
-          <strong>High-Stakes Delta</strong>
+          <span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">Market</span>
+          <strong data-tooltip="High-Stakes Delta: High-leverage change signal used by the Apex layer." aria-label="High-Stakes Delta: High-leverage change signal used by the Apex layer.">High-Stakes Delta</strong>
           <em>Public Late</em>
           <p>Identifies the value gap between physical signal and public attention.</p>
         </div>
@@ -4583,7 +4694,7 @@
             <div class="meta">HOU // SP</div>
           </div>
           <div class="score-box">
-            <div class="score-label">EXTRACTION SCORE</div>
+            <div class="score-label" data-tooltip="Apex Score: Composite breakout score for the Apex Extraction surface." aria-label="Apex Score: Composite breakout score for the Apex Extraction surface.">EXTRACTION SCORE</div>
             <div class="score">79.7</div>
           </div>
         </div>
@@ -4597,42 +4708,42 @@
         </div>
 
         <div class="grid">
-          <div><span>PHYSICAL</span><strong>100.0</strong></div>
-          <div><span>VISION</span><strong>69.1</strong></div>
-          <div><span>MARKET</span><strong>58</strong></div>
+          <div><span data-tooltip="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal." aria-label="Physical: Underlying force, pitch-shape, movement, carry, extension, or contact-authority signal.">PHYSICAL</span><strong>100.0</strong></div>
+          <div><span data-tooltip="Vision: Conversion layer showing whether the physical trait is becoming usable skill." aria-label="Vision: Conversion layer showing whether the physical trait is becoming usable skill.">VISION</span><strong>69.1</strong></div>
+          <div><span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">MARKET</span><strong>58</strong></div>
         </div>
 
         <div class="proof">
-          <div class="proof-label">PRIMARY SIGNAL</div>
+          <div class="proof-label" data-tooltip="Primary Signal: Plain-English lead signal that triggered the Apex card." aria-label="Primary Signal: Plain-English lead signal that triggered the Apex card.">PRIMARY SIGNAL</div>
           <p>Horizontal movement profile is jumping versus prior baseline. This shape change can quickly alter whiff behavior and contact quality.</p>
         </div>
 
         <div class="proof">
-          <div class="proof-label">SUPPORTING METRIC</div>
+          <div class="proof-label" data-tooltip="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis." aria-label="Supporting Metric: Secondary metric or metric pair supporting the Apex diagnosis.">SUPPORTING METRIC</div>
           <p>iVB Delta +3.6" // VAA Delta +0.1°</p>
         </div>
 
         <div class="forensic-strip">
           
         <div class="forensic-chip">
-          <span>Geometry</span>
-          <strong>VAA Delta</strong>
+          <span data-tooltip="Geometry: Pitch-plane or movement-shape evidence supporting the Apex read." aria-label="Geometry: Pitch-plane or movement-shape evidence supporting the Apex read.">Geometry</span>
+          <strong data-tooltip="VAA Delta: Change in vertical approach angle versus recent baseline." aria-label="VAA Delta: Change in vertical approach angle versus recent baseline.">VAA Delta</strong>
           <em>+0.1°</em>
           <p>Tracks whether the fastball is entering the zone on a flatter, more damaging plane.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Deception</span>
-          <strong>Movement Deviation</strong>
+          <span data-tooltip="Deception: Movement, release, or perception evidence that may hide the true pitch quality." aria-label="Deception: Movement, release, or perception evidence that may hide the true pitch quality.">Deception</span>
+          <strong data-tooltip="Movement Deviation: Observed movement change or deviation supporting the Apex arm signal." aria-label="Movement Deviation: Observed movement change or deviation supporting the Apex arm signal.">Movement Deviation</strong>
           <em>+5.7"</em>
           <p>Proxy for late movement or seam-driven deception before direct SSW is wired.</p>
         </div>
         
 
         <div class="forensic-chip">
-          <span>Market</span>
-          <strong>High-Stakes Delta</strong>
+          <span data-tooltip="Market: Latency gap between the underlying Apex signal and public recognition." aria-label="Market: Latency gap between the underlying Apex signal and public recognition.">Market</span>
+          <strong data-tooltip="High-Stakes Delta: High-leverage change signal used by the Apex layer." aria-label="High-Stakes Delta: High-leverage change signal used by the Apex layer.">High-Stakes Delta</strong>
           <em>Public Late</em>
           <p>Identifies the value gap between physical signal and public attention.</p>
         </div>
@@ -4791,7 +4902,7 @@
         fields.metric.textContent = d.supportingMetric || "--";
         fields.action.textContent = d.action || "--";
 
-        fields.provision.href = "/watch-list/";
+        fields.provision.href = "https://app.diamondsignals.ai/auth?next=/watchlist";
         fields.provision.dataset.playerId = playerId;
         fields.provision.dataset.playerName = playerName;
         fields.provision.dataset.playerTeam = d.playerTeam || "MLB";
@@ -4840,7 +4951,16 @@
             // Continue to Tracking Radar even if localStorage is unavailable.
           }
 
-          window.location.href = "/watch-list/";
+          const params = new URLSearchParams();
+          params.set("add_player_id", playerId);
+          if (playerName) params.set("player_name", playerName);
+          if (nextPlayer.team) params.set("player_team", nextPlayer.team);
+          params.set("signal_source", nextPlayer.sourceTag || "APEX_EXTRACTION");
+
+          const nextPath = `/watchlist?${params.toString()}`;
+          const authUrl = new URL("https://app.diamondsignals.ai/auth");
+          authUrl.searchParams.set("next", nextPath);
+          window.location.href = authUrl.toString();
         };
 
         fields.copy.onclick = async () => {

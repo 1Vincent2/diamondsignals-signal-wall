@@ -2571,6 +2571,134 @@ body.waiver-field-guide-open{
   }
 }
 
+
+/* WAIVER_UI_HARDENING_V1_LIVE_GUIDE_WINDOW
+   Fixes:
+   - topbar LIVE dot spacing
+   - desktop Field Guide remains sticky/fixed while scrolling
+   - stale Shark Window copy removed from template
+   Scope: Waiver desktop only. Mobile menu/drawer behavior untouched.
+*/
+@media screen and (min-width: 981px) {
+  body.waiver-page .topbar .live-label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  body.waiver-page .topbar .live-dot {
+    margin-right: 0 !important;
+    flex: 0 0 auto !important;
+  }
+
+  body.waiver-page .waiver-summary-guide {
+    position: fixed !important;
+    top: 436px !important;
+    right: max(32px, calc((100vw - 1180px) / 2 + 38px)) !important;
+    z-index: 120 !important;
+  }
+
+  body.waiver-field-guide-open .waiver-summary-guide {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  main.shell > .waiver-field-guide-trigger:not(.waiver-summary-guide) {
+    display: none !important;
+  }
+}
+
+
+/* WAIVER_FIELD_GUIDE_FIXED_FINAL_V2
+   Final desktop override:
+   Field Guide stays fixed while scrolling.
+   LIVE/topbar shell is not touched.
+*/
+@media screen and (min-width: 981px) {
+  body.waiver-page .waiver-signal-summary-card .waiver-summary-guide,
+  body.waiver-page button.waiver-field-guide-trigger.waiver-summary-guide {
+    position: fixed !important;
+    top: 436px !important;
+    right: max(32px, calc((100vw - 1180px) / 2 + 38px)) !important;
+    z-index: 140 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  body.waiver-field-guide-open .waiver-signal-summary-card .waiver-summary-guide,
+  body.waiver-field-guide-open button.waiver-field-guide-trigger.waiver-summary-guide {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
+
+/* DIAMONDSIGNALS_INSTANT_METRIC_TOOLTIP_V1
+   Replaces inconsistent browser-native title hover with fast, report-consistent CSS tooltips.
+   Desktop hover/focus only. Mobile layout/menu behavior intentionally untouched.
+*/
+@media screen and (min-width: 981px) {
+  [data-tooltip] {
+    position: relative;
+    cursor: help;
+  }
+
+  [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    transform: translateX(-50%) translateY(2px);
+    z-index: 9999;
+    width: max-content;
+    max-width: 280px;
+    padding: 9px 11px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(6,10,18,0.96);
+    color: rgba(255,255,255,0.94);
+    box-shadow:
+      0 12px 28px rgba(0,0,0,0.42),
+      0 0 0 1px rgba(255,255,255,0.04);
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 800;
+    white-space: normal;
+    text-align: left;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease, transform 70ms ease;
+  }
+
+  [data-tooltip]::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 4px);
+    transform: translateX(-50%);
+    z-index: 10000;
+    border: 6px solid transparent;
+    border-top-color: rgba(6,10,18,0.96);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 70ms ease;
+  }
+
+  [data-tooltip]:hover::after,
+  [data-tooltip]:focus-visible::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  [data-tooltip]:hover::before,
+  [data-tooltip]:focus-visible::before {
+    opacity: 1;
+  }
+}
+
 </style>
 </head>
 
@@ -2591,7 +2719,7 @@ body.waiver-field-guide-open{
 
       <div class="livebox">
         <div class="live-label"><span class="live-dot"></span>LIVE</div>
-        <div class="live-time">2026-06-10T18:09:32Z</div>
+        <div class="live-time">2026-06-23T12:10:09Z</div>
       </div>
     </div>
   </div>
@@ -2608,7 +2736,7 @@ body.waiver-field-guide-open{
       <a class="ds-pro-desktop-nav-link " href="/velocity-decay-monitor"><span>[ RISK ]</span> Velocity</a>
       <a class="ds-pro-desktop-nav-link " href="/stuff-disruption-feed"><span>[ DISRUPT ]</span> Stuff+</a>
       <a class="ds-pro-desktop-nav-link " href="/admin/kinetic-drift/"><span>[ KDE ]</span> Kinetic</a>
-      <a class="ds-pro-desktop-nav-link " href="/watch-list/"><span>[ STAGE ]</span> Tracking</a>
+      <a class="ds-pro-desktop-nav-link " href="https://app.diamondsignals.ai/auth?next=/watchlist"><span>[ STAGE ]</span> Tracking</a>
       <a class="ds-pro-desktop-nav-link ds-pro-desktop-nav-link-terminal" href="https://app.diamondsignals.ai/auth?next=/terminal"><span>[ TERMINAL ]</span> Roster</a>
     </div>
   </div>
@@ -2625,7 +2753,7 @@ body.waiver-field-guide-open{
       <a class="topnav-link " href="/stuff-disruption-feed"><span class="topnav-tag">[ DISRUPT ]</span> Stuff+ Disruption</a>
       <a class="topnav-link " href="/mlb-extraction/"><span class="topnav-tag">[ EDGE ]</span> MLB Extraction Ledger</a>
       <a class="topnav-link " href="/apex-extraction/"><span class="topnav-tag">[ APEX ]</span> Apex Extraction</a>
-      <a class="topnav-link" href="/watch-list/"><span class="topnav-tag">[ STAGE ]</span> Tracking Radar</a>
+      <a class="topnav-link" href="https://app.diamondsignals.ai/auth?next=/watchlist"><span class="topnav-tag">[ STAGE ]</span> Tracking Radar</a>
       <a class="topnav-link" href="https://app.diamondsignals.ai/auth?next=/terminal"><span class="topnav-tag">[ TERMINAL ]</span> Roster Terminal</a>
       <a class="topnav-link" href="https://diamondsignals.ai"><span class="topnav-tag">[ SITE ]</span> Main Site</a>
     </div>
@@ -2659,7 +2787,7 @@ body.waiver-field-guide-open{
       <a class="ds-mobile-menu-link " href="/stuff-disruption-feed"><span>[ DISRUPT ]</span> Stuff+ Disruption</a>
       <a class="ds-mobile-menu-link " href="/mlb-extraction/"><span>[ EDGE ]</span> MLB Extraction Ledger</a>
       <a class="ds-mobile-menu-link " href="/apex-extraction/"><span>[ APEX ]</span> Apex Extraction</a>
-      <a class="ds-mobile-menu-link" href="/watch-list/"><span>[ STAGE ]</span> Tracking Radar</a>
+      <a class="ds-mobile-menu-link" href="https://app.diamondsignals.ai/auth?next=/watchlist"><span>[ STAGE ]</span> Tracking Radar</a>
       <a class="ds-mobile-menu-link" href="https://app.diamondsignals.ai/auth?next=/terminal"><span>[ TERMINAL ]</span> Roster Terminal</a>
       <a class="ds-mobile-menu-link" href="https://diamondsignals.ai"><span>[ SITE ]</span> Main Site</a>
     </div>
@@ -2712,7 +2840,7 @@ body.waiver-field-guide-open{
         </div>
         <div class="waiver-shell-live">
           ● LIVE
-          <span>2026-06-10T18:09:32Z</span>
+          <span>2026-06-23T12:10:09Z</span>
         </div>
       </section>
 
@@ -2745,7 +2873,7 @@ body.waiver-field-guide-open{
           <div class="waiver-summary-list">
             <div class="waiver-summary-item">
               <span>Candidates</span>
-              <b>8</b>
+              <b>10</b>
             </div>
             <div class="waiver-summary-item">
               <span>Window</span>
@@ -2787,7 +2915,7 @@ body.waiver-field-guide-open{
 
     <div class="command-strip">
       <strong>72-HOUR OPEN MARKET EXTRACTION</strong>
-      <span>Pitcher-first mid-May claim surface</span>
+      <span>Pitcher-first rolling 72-hour claim surface</span>
       <span>Ownership gate: ≤ 20% rostered</span>
       <span>Command language: acquire, stash, monitor, avoid</span>
     </div>
@@ -2804,7 +2932,7 @@ body.waiver-field-guide-open{
       </div>
       <div class="market-card">
         <span>Shark window</span>
-        <b>Mid-May</b>
+        <b>Rolling 72H</b>
       </div>
       <div class="market-card">
         <span>Market defect</span>
@@ -2835,49 +2963,49 @@ body.waiver-field-guide-open{
         
         <article
           class="asset-card js-player-card"
-          data-search="alex lange kansas city royals p watchlist provision signal wall candidate deployment clear active"
-          data-audit-url="/scout/656638/"
-          data-player-id="656638"
-          data-player-name="Alex Lange"
-          data-player-team="Kansas City Royals"
+          data-search="tatsuya imai houston astros p watchlist provision signal wall candidate watchlist only watchlist_only_transaction"
+          data-audit-url="/scout/837227/"
+          data-player-id="837227"
+          data-player-name="Tatsuya Imai"
+          data-player-team="Houston Astros"
           data-player-type="P"
-          data-profile-url="/scout/656638/"
+          data-profile-url="/scout/837227/"
           data-source-tag="WAIVER_WIRE"
           onclick="openPlayerAudit(this)"
           tabindex="0"
           role="button"
-          aria-label="Open performance audit for Alex Lange"
+          aria-label="Open performance audit for Tatsuya Imai"
         >
           <div class="asset-top">
             <div>
-              <div class="asset-name">Alex Lange</div>
-              <div class="asset-meta">Kansas City Royals // P // ROSTERED 16% // ID 656638</div>
+              <div class="asset-name">Tatsuya Imai</div>
+              <div class="asset-meta">Houston Astros // P // ROSTERED 35% // ID 837227</div>
             </div>
 
             <button
               type="button"
               class="claim-pill monitor js-add-to-roster"
-              data-player-id="656638"
-              data-player-name="Alex Lange"
-              data-player-team="Kansas City Royals"
+              data-player-id="837227"
+              data-player-name="Tatsuya Imai"
+              data-player-team="Houston Astros"
               data-player-type="P"
-              data-profile-url="/scout/656638/"
+              data-profile-url="/scout/837227/"
               data-source-tag="WAIVER_WIRE"
               onclick="event.stopPropagation();"
-              aria-label="Initiate tracking for Alex Lange"
+              aria-label="Initiate tracking for Tatsuya Imai"
             >WATCHLIST PROVISION</button>
           </div>
 
-          <div class="ops-strip deployment-clear">
+          <div class="ops-strip watchlist-only">
             <div>
               <span>OPERATIONAL STATUS</span>
-              <b>DEPLOYMENT CLEAR</b>
+              <b>WATCHLIST ONLY</b>
             </div>
             <div>
               <span>BODY / ROSTER STATE</span>
-              <b>ACTIVE</b>
+              <b>WATCHLIST_ONLY_TRANSACTION</b>
             </div>
-            <p>Candidate file source; verify status before deployment.</p>
+            <p>Houston Astros sent RHP Tatsuya Imai on a rehab assignment to Corpus Christi Hooks. Assigned ASG</p>
           </div>
 
           <div class="asset-body">
@@ -2895,38 +3023,38 @@ body.waiver-field-guide-open{
           <div class="metric-grid">
             
             <div class="metric metric-ownership-gate">
-              <span>Ownership Gate</span>
+              <span data-tooltip="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market." aria-label="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market.">Ownership Gate</span>
               <b>≤35%</b>
             </div>
             
             <div class="metric metric-signal-window">
-              <span>Signal Window</span>
+              <span data-tooltip="Signal Window: Time window or source window behind the current waiver signal." aria-label="Signal Window: Time window or source window behind the current waiver signal.">Signal Window</span>
               <b>72H</b>
             </div>
             
             <div class="metric metric-asset-type">
-              <span>Asset Type</span>
+              <span data-tooltip="Asset Type: Player asset classification used by the Waiver Wire surface." aria-label="Asset Type: Player asset classification used by the Waiver Wire surface.">Asset Type</span>
               <b>Arm</b>
             </div>
             
             <div class="metric metric-market-defect">
-              <span>Market Defect</span>
+              <span data-tooltip="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity." aria-label="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity.">Market Defect</span>
               <b>Market Lag</b>
             </div>
             
             <div class="metric metric-command">
-              <span>Command</span>
+              <span data-tooltip="Command: Plain-English deployment instruction for the current waiver asset." aria-label="Command: Plain-English deployment instruction for the current waiver asset.">Command</span>
               <b>Track</b>
             </div>
             
             <div class="metric metric-risk">
-              <span>Risk</span>
+              <span data-tooltip="Risk: Risk readout attached to the waiver recommendation." aria-label="Risk: Risk readout attached to the waiver recommendation.">Risk</span>
               <b>Med</b>
             </div>
             
             <div class="metric metric-status-source">
-              <span>Status Source</span>
-              <b>CANDIDATE FILE</b>
+              <span data-tooltip="Status Source: Source rail that produced or verified the player status." aria-label="Status Source: Source rail that produced or verified the player status.">Status Source</span>
+              <b>MLB TRANSACTION STATUS</b>
             </div>
             
           </div>
@@ -2937,8 +3065,8 @@ body.waiver-field-guide-open{
           </div>
 
           <div class="card-action-row">
-            <span>OPEN PERFORMANCE AUDIT</span>
-            <a class="performance-audit-button" href="/scout/656638/" onclick="event.stopPropagation();">
+            <span>TRACK ONLY</span>
+            <a class="performance-audit-button" href="/scout/837227/" onclick="event.stopPropagation();">
                 PERFORMANCE AUDIT →
             </a>
           </div>
@@ -2946,36 +3074,36 @@ body.waiver-field-guide-open{
         
         <article
           class="asset-card js-player-card"
-          data-search="brent headrick new york yankees p watchlist provision signal wall candidate deployment clear active"
-          data-audit-url="/scout/687396/"
-          data-player-id="687396"
-          data-player-name="Brent Headrick"
-          data-player-team="New York Yankees"
+          data-search="sean burke chicago white sox p watchlist provision signal wall candidate deployment clear active"
+          data-audit-url="/scout/680732/"
+          data-player-id="680732"
+          data-player-name="Sean Burke"
+          data-player-team="Chicago White Sox"
           data-player-type="P"
-          data-profile-url="/scout/687396/"
+          data-profile-url="/scout/680732/"
           data-source-tag="WAIVER_WIRE"
           onclick="openPlayerAudit(this)"
           tabindex="0"
           role="button"
-          aria-label="Open performance audit for Brent Headrick"
+          aria-label="Open performance audit for Sean Burke"
         >
           <div class="asset-top">
             <div>
-              <div class="asset-name">Brent Headrick</div>
-              <div class="asset-meta">New York Yankees // P // ROSTERED 2% // ID 687396</div>
+              <div class="asset-name">Sean Burke</div>
+              <div class="asset-meta">Chicago White Sox // P // ROSTERED 25% // ID 680732</div>
             </div>
 
             <button
               type="button"
               class="claim-pill monitor js-add-to-roster"
-              data-player-id="687396"
-              data-player-name="Brent Headrick"
-              data-player-team="New York Yankees"
+              data-player-id="680732"
+              data-player-name="Sean Burke"
+              data-player-team="Chicago White Sox"
               data-player-type="P"
-              data-profile-url="/scout/687396/"
+              data-profile-url="/scout/680732/"
               data-source-tag="WAIVER_WIRE"
               onclick="event.stopPropagation();"
-              aria-label="Initiate tracking for Brent Headrick"
+              aria-label="Initiate tracking for Sean Burke"
             >WATCHLIST PROVISION</button>
           </div>
 
@@ -3006,37 +3134,37 @@ body.waiver-field-guide-open{
           <div class="metric-grid">
             
             <div class="metric metric-ownership-gate">
-              <span>Ownership Gate</span>
+              <span data-tooltip="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market." aria-label="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market.">Ownership Gate</span>
               <b>≤35%</b>
             </div>
             
             <div class="metric metric-signal-window">
-              <span>Signal Window</span>
+              <span data-tooltip="Signal Window: Time window or source window behind the current waiver signal." aria-label="Signal Window: Time window or source window behind the current waiver signal.">Signal Window</span>
               <b>72H</b>
             </div>
             
             <div class="metric metric-asset-type">
-              <span>Asset Type</span>
+              <span data-tooltip="Asset Type: Player asset classification used by the Waiver Wire surface." aria-label="Asset Type: Player asset classification used by the Waiver Wire surface.">Asset Type</span>
               <b>Arm</b>
             </div>
             
             <div class="metric metric-market-defect">
-              <span>Market Defect</span>
+              <span data-tooltip="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity." aria-label="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity.">Market Defect</span>
               <b>Market Lag</b>
             </div>
             
             <div class="metric metric-command">
-              <span>Command</span>
+              <span data-tooltip="Command: Plain-English deployment instruction for the current waiver asset." aria-label="Command: Plain-English deployment instruction for the current waiver asset.">Command</span>
               <b>Track</b>
             </div>
             
             <div class="metric metric-risk">
-              <span>Risk</span>
+              <span data-tooltip="Risk: Risk readout attached to the waiver recommendation." aria-label="Risk: Risk readout attached to the waiver recommendation.">Risk</span>
               <b>Med</b>
             </div>
             
             <div class="metric metric-status-source">
-              <span>Status Source</span>
+              <span data-tooltip="Status Source: Source rail that produced or verified the player status." aria-label="Status Source: Source rail that produced or verified the player status.">Status Source</span>
               <b>CANDIDATE FILE</b>
             </div>
             
@@ -3049,7 +3177,7 @@ body.waiver-field-guide-open{
 
           <div class="card-action-row">
             <span>OPEN PERFORMANCE AUDIT</span>
-            <a class="performance-audit-button" href="/scout/687396/" onclick="event.stopPropagation();">
+            <a class="performance-audit-button" href="/scout/680732/" onclick="event.stopPropagation();">
                 PERFORMANCE AUDIT →
             </a>
           </div>
@@ -3057,36 +3185,36 @@ body.waiver-field-guide-open{
         
         <article
           class="asset-card js-player-card"
-          data-search="david hamilton milwaukee brewers ss watchlist provision signal wall candidate deployment clear active"
-          data-audit-url="/scout/666152/"
-          data-player-id="666152"
-          data-player-name="David Hamilton"
-          data-player-team="Milwaukee Brewers"
-          data-player-type="SS"
-          data-profile-url="/scout/666152/"
+          data-search="joey cantillo cleveland guardians p watchlist provision signal wall candidate deployment clear active"
+          data-audit-url="/scout/676282/"
+          data-player-id="676282"
+          data-player-name="Joey Cantillo"
+          data-player-team="Cleveland Guardians"
+          data-player-type="P"
+          data-profile-url="/scout/676282/"
           data-source-tag="WAIVER_WIRE"
           onclick="openPlayerAudit(this)"
           tabindex="0"
           role="button"
-          aria-label="Open performance audit for David Hamilton"
+          aria-label="Open performance audit for Joey Cantillo"
         >
           <div class="asset-top">
             <div>
-              <div class="asset-name">David Hamilton</div>
-              <div class="asset-meta">Milwaukee Brewers // SS // ROSTERED 4% // ID 666152</div>
+              <div class="asset-name">Joey Cantillo</div>
+              <div class="asset-meta">Cleveland Guardians // P // ROSTERED 27% // ID 676282</div>
             </div>
 
             <button
               type="button"
               class="claim-pill monitor js-add-to-roster"
-              data-player-id="666152"
-              data-player-name="David Hamilton"
-              data-player-team="Milwaukee Brewers"
-              data-player-type="SS"
-              data-profile-url="/scout/666152/"
+              data-player-id="676282"
+              data-player-name="Joey Cantillo"
+              data-player-team="Cleveland Guardians"
+              data-player-type="P"
+              data-profile-url="/scout/676282/"
               data-source-tag="WAIVER_WIRE"
               onclick="event.stopPropagation();"
-              aria-label="Initiate tracking for David Hamilton"
+              aria-label="Initiate tracking for Joey Cantillo"
             >WATCHLIST PROVISION</button>
           </div>
 
@@ -3117,37 +3245,37 @@ body.waiver-field-guide-open{
           <div class="metric-grid">
             
             <div class="metric metric-ownership-gate">
-              <span>Ownership Gate</span>
+              <span data-tooltip="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market." aria-label="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market.">Ownership Gate</span>
               <b>≤35%</b>
             </div>
             
             <div class="metric metric-signal-window">
-              <span>Signal Window</span>
+              <span data-tooltip="Signal Window: Time window or source window behind the current waiver signal." aria-label="Signal Window: Time window or source window behind the current waiver signal.">Signal Window</span>
               <b>72H</b>
             </div>
             
             <div class="metric metric-asset-type">
-              <span>Asset Type</span>
-              <b>Bat</b>
+              <span data-tooltip="Asset Type: Player asset classification used by the Waiver Wire surface." aria-label="Asset Type: Player asset classification used by the Waiver Wire surface.">Asset Type</span>
+              <b>Arm</b>
             </div>
             
             <div class="metric metric-market-defect">
-              <span>Market Defect</span>
+              <span data-tooltip="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity." aria-label="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity.">Market Defect</span>
               <b>Market Lag</b>
             </div>
             
             <div class="metric metric-command">
-              <span>Command</span>
+              <span data-tooltip="Command: Plain-English deployment instruction for the current waiver asset." aria-label="Command: Plain-English deployment instruction for the current waiver asset.">Command</span>
               <b>Track</b>
             </div>
             
             <div class="metric metric-risk">
-              <span>Risk</span>
+              <span data-tooltip="Risk: Risk readout attached to the waiver recommendation." aria-label="Risk: Risk readout attached to the waiver recommendation.">Risk</span>
               <b>Med</b>
             </div>
             
             <div class="metric metric-status-source">
-              <span>Status Source</span>
+              <span data-tooltip="Status Source: Source rail that produced or verified the player status." aria-label="Status Source: Source rail that produced or verified the player status.">Status Source</span>
               <b>CANDIDATE FILE</b>
             </div>
             
@@ -3160,7 +3288,7 @@ body.waiver-field-guide-open{
 
           <div class="card-action-row">
             <span>OPEN PERFORMANCE AUDIT</span>
-            <a class="performance-audit-button" href="/scout/666152/" onclick="event.stopPropagation();">
+            <a class="performance-audit-button" href="/scout/676282/" onclick="event.stopPropagation();">
                 PERFORMANCE AUDIT →
             </a>
           </div>
@@ -3168,36 +3296,36 @@ body.waiver-field-guide-open{
         
         <article
           class="asset-card js-player-card"
-          data-search="dominic canzone seattle mariners dh watchlist provision signal wall candidate deployment clear active"
-          data-audit-url="/scout/686527/"
-          data-player-id="686527"
-          data-player-name="Dominic Canzone"
-          data-player-team="Seattle Mariners"
+          data-search="andrew benintendi chicago white sox dh watchlist provision signal wall candidate deployment clear active"
+          data-audit-url="/scout/643217/"
+          data-player-id="643217"
+          data-player-name="Andrew Benintendi"
+          data-player-team="Chicago White Sox"
           data-player-type="DH"
-          data-profile-url="/scout/686527/"
+          data-profile-url="/scout/643217/"
           data-source-tag="WAIVER_WIRE"
           onclick="openPlayerAudit(this)"
           tabindex="0"
           role="button"
-          aria-label="Open performance audit for Dominic Canzone"
+          aria-label="Open performance audit for Andrew Benintendi"
         >
           <div class="asset-top">
             <div>
-              <div class="asset-name">Dominic Canzone</div>
-              <div class="asset-meta">Seattle Mariners // DH // ROSTERED 6% // ID 686527</div>
+              <div class="asset-name">Andrew Benintendi</div>
+              <div class="asset-meta">Chicago White Sox // DH // ROSTERED 3% // ID 643217</div>
             </div>
 
             <button
               type="button"
               class="claim-pill monitor js-add-to-roster"
-              data-player-id="686527"
-              data-player-name="Dominic Canzone"
-              data-player-team="Seattle Mariners"
+              data-player-id="643217"
+              data-player-name="Andrew Benintendi"
+              data-player-team="Chicago White Sox"
               data-player-type="DH"
-              data-profile-url="/scout/686527/"
+              data-profile-url="/scout/643217/"
               data-source-tag="WAIVER_WIRE"
               onclick="event.stopPropagation();"
-              aria-label="Initiate tracking for Dominic Canzone"
+              aria-label="Initiate tracking for Andrew Benintendi"
             >WATCHLIST PROVISION</button>
           </div>
 
@@ -3228,37 +3356,37 @@ body.waiver-field-guide-open{
           <div class="metric-grid">
             
             <div class="metric metric-ownership-gate">
-              <span>Ownership Gate</span>
+              <span data-tooltip="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market." aria-label="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market.">Ownership Gate</span>
               <b>≤35%</b>
             </div>
             
             <div class="metric metric-signal-window">
-              <span>Signal Window</span>
+              <span data-tooltip="Signal Window: Time window or source window behind the current waiver signal." aria-label="Signal Window: Time window or source window behind the current waiver signal.">Signal Window</span>
               <b>72H</b>
             </div>
             
             <div class="metric metric-asset-type">
-              <span>Asset Type</span>
+              <span data-tooltip="Asset Type: Player asset classification used by the Waiver Wire surface." aria-label="Asset Type: Player asset classification used by the Waiver Wire surface.">Asset Type</span>
               <b>Bat</b>
             </div>
             
             <div class="metric metric-market-defect">
-              <span>Market Defect</span>
+              <span data-tooltip="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity." aria-label="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity.">Market Defect</span>
               <b>Market Lag</b>
             </div>
             
             <div class="metric metric-command">
-              <span>Command</span>
+              <span data-tooltip="Command: Plain-English deployment instruction for the current waiver asset." aria-label="Command: Plain-English deployment instruction for the current waiver asset.">Command</span>
               <b>Track</b>
             </div>
             
             <div class="metric metric-risk">
-              <span>Risk</span>
+              <span data-tooltip="Risk: Risk readout attached to the waiver recommendation." aria-label="Risk: Risk readout attached to the waiver recommendation.">Risk</span>
               <b>Med</b>
             </div>
             
             <div class="metric metric-status-source">
-              <span>Status Source</span>
+              <span data-tooltip="Status Source: Source rail that produced or verified the player status." aria-label="Status Source: Source rail that produced or verified the player status.">Status Source</span>
               <b>CANDIDATE FILE</b>
             </div>
             
@@ -3271,7 +3399,7 @@ body.waiver-field-guide-open{
 
           <div class="card-action-row">
             <span>OPEN PERFORMANCE AUDIT</span>
-            <a class="performance-audit-button" href="/scout/686527/" onclick="event.stopPropagation();">
+            <a class="performance-audit-button" href="/scout/643217/" onclick="event.stopPropagation();">
                 PERFORMANCE AUDIT →
             </a>
           </div>
@@ -3279,36 +3407,36 @@ body.waiver-field-guide-open{
         
         <article
           class="asset-card js-player-card"
-          data-search="kody clemens minnesota twins 1b watchlist provision signal wall candidate deployment clear active"
-          data-audit-url="/scout/665019/"
-          data-player-id="665019"
-          data-player-name="Kody Clemens"
-          data-player-team="Minnesota Twins"
-          data-player-type="1B"
-          data-profile-url="/scout/665019/"
+          data-search="tyler stephenson cincinnati reds c watchlist provision signal wall candidate deployment clear active"
+          data-audit-url="/scout/663886/"
+          data-player-id="663886"
+          data-player-name="Tyler Stephenson"
+          data-player-team="Cincinnati Reds"
+          data-player-type="C"
+          data-profile-url="/scout/663886/"
           data-source-tag="WAIVER_WIRE"
           onclick="openPlayerAudit(this)"
           tabindex="0"
           role="button"
-          aria-label="Open performance audit for Kody Clemens"
+          aria-label="Open performance audit for Tyler Stephenson"
         >
           <div class="asset-top">
             <div>
-              <div class="asset-name">Kody Clemens</div>
-              <div class="asset-meta">Minnesota Twins // 1B // ROSTERED 7% // ID 665019</div>
+              <div class="asset-name">Tyler Stephenson</div>
+              <div class="asset-meta">Cincinnati Reds // C // ROSTERED 5% // ID 663886</div>
             </div>
 
             <button
               type="button"
               class="claim-pill monitor js-add-to-roster"
-              data-player-id="665019"
-              data-player-name="Kody Clemens"
-              data-player-team="Minnesota Twins"
-              data-player-type="1B"
-              data-profile-url="/scout/665019/"
+              data-player-id="663886"
+              data-player-name="Tyler Stephenson"
+              data-player-team="Cincinnati Reds"
+              data-player-type="C"
+              data-profile-url="/scout/663886/"
               data-source-tag="WAIVER_WIRE"
               onclick="event.stopPropagation();"
-              aria-label="Initiate tracking for Kody Clemens"
+              aria-label="Initiate tracking for Tyler Stephenson"
             >WATCHLIST PROVISION</button>
           </div>
 
@@ -3339,37 +3467,37 @@ body.waiver-field-guide-open{
           <div class="metric-grid">
             
             <div class="metric metric-ownership-gate">
-              <span>Ownership Gate</span>
+              <span data-tooltip="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market." aria-label="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market.">Ownership Gate</span>
               <b>≤35%</b>
             </div>
             
             <div class="metric metric-signal-window">
-              <span>Signal Window</span>
+              <span data-tooltip="Signal Window: Time window or source window behind the current waiver signal." aria-label="Signal Window: Time window or source window behind the current waiver signal.">Signal Window</span>
               <b>72H</b>
             </div>
             
             <div class="metric metric-asset-type">
-              <span>Asset Type</span>
+              <span data-tooltip="Asset Type: Player asset classification used by the Waiver Wire surface." aria-label="Asset Type: Player asset classification used by the Waiver Wire surface.">Asset Type</span>
               <b>Bat</b>
             </div>
             
             <div class="metric metric-market-defect">
-              <span>Market Defect</span>
+              <span data-tooltip="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity." aria-label="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity.">Market Defect</span>
               <b>Market Lag</b>
             </div>
             
             <div class="metric metric-command">
-              <span>Command</span>
+              <span data-tooltip="Command: Plain-English deployment instruction for the current waiver asset." aria-label="Command: Plain-English deployment instruction for the current waiver asset.">Command</span>
               <b>Track</b>
             </div>
             
             <div class="metric metric-risk">
-              <span>Risk</span>
+              <span data-tooltip="Risk: Risk readout attached to the waiver recommendation." aria-label="Risk: Risk readout attached to the waiver recommendation.">Risk</span>
               <b>Med</b>
             </div>
             
             <div class="metric metric-status-source">
-              <span>Status Source</span>
+              <span data-tooltip="Status Source: Source rail that produced or verified the player status." aria-label="Status Source: Source rail that produced or verified the player status.">Status Source</span>
               <b>CANDIDATE FILE</b>
             </div>
             
@@ -3382,7 +3510,7 @@ body.waiver-field-guide-open{
 
           <div class="card-action-row">
             <span>OPEN PERFORMANCE AUDIT</span>
-            <a class="performance-audit-button" href="/scout/665019/" onclick="event.stopPropagation();">
+            <a class="performance-audit-button" href="/scout/663886/" onclick="event.stopPropagation();">
                 PERFORMANCE AUDIT →
             </a>
           </div>
@@ -3390,7 +3518,7 @@ body.waiver-field-guide-open{
         
         <article
           class="asset-card js-player-card"
-          data-search="j.t. realmuto philadelphia phillies c watchlist provision mlb extraction candidate deployment clear active"
+          data-search="j.t. realmuto philadelphia phillies c watchlist provision apex extraction candidate deployment clear active"
           data-audit-url="/scout/592663/"
           data-player-id="592663"
           data-player-name="J.T. Realmuto"
@@ -3438,7 +3566,7 @@ body.waiver-field-guide-open{
           <div class="asset-body">
             <div class="readout">
               <span>Surface suppression</span>
-              <p>Dynamic Waiver candidate sourced from MLB EXTRACTION.</p>
+              <p>Dynamic Waiver candidate sourced from APEX EXTRACTION.</p>
             </div>
 
             <div class="readout">
@@ -3450,45 +3578,45 @@ body.waiver-field-guide-open{
           <div class="metric-grid">
             
             <div class="metric metric-ownership-gate">
-              <span>Ownership Gate</span>
+              <span data-tooltip="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market." aria-label="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market.">Ownership Gate</span>
               <b>≤35%</b>
             </div>
             
             <div class="metric metric-signal-window">
-              <span>Signal Window</span>
+              <span data-tooltip="Signal Window: Time window or source window behind the current waiver signal." aria-label="Signal Window: Time window or source window behind the current waiver signal.">Signal Window</span>
               <b>72H</b>
             </div>
             
             <div class="metric metric-asset-type">
-              <span>Asset Type</span>
+              <span data-tooltip="Asset Type: Player asset classification used by the Waiver Wire surface." aria-label="Asset Type: Player asset classification used by the Waiver Wire surface.">Asset Type</span>
               <b>Bat</b>
             </div>
             
             <div class="metric metric-market-defect">
-              <span>Market Defect</span>
+              <span data-tooltip="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity." aria-label="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity.">Market Defect</span>
               <b>Market Lag</b>
             </div>
             
             <div class="metric metric-command">
-              <span>Command</span>
+              <span data-tooltip="Command: Plain-English deployment instruction for the current waiver asset." aria-label="Command: Plain-English deployment instruction for the current waiver asset.">Command</span>
               <b>Track</b>
             </div>
             
             <div class="metric metric-risk">
-              <span>Risk</span>
+              <span data-tooltip="Risk: Risk readout attached to the waiver recommendation." aria-label="Risk: Risk readout attached to the waiver recommendation.">Risk</span>
               <b>Med</b>
             </div>
             
             <div class="metric metric-status-source">
-              <span>Status Source</span>
+              <span data-tooltip="Status Source: Source rail that produced or verified the player status." aria-label="Status Source: Source rail that produced or verified the player status.">Status Source</span>
               <b>CANDIDATE FILE</b>
             </div>
             
           </div>
 
           <div class="verdict">
-            <span>Market read // MLB EXTRACTION CANDIDATE</span>
-            <p>Track until ownership, role, and deployment status confirm actionability.</p>
+            <span>Market read // APEX EXTRACTION CANDIDATE</span>
+            <p>APEX EXTRACTION</p>
           </div>
 
           <div class="card-action-row">
@@ -3501,36 +3629,36 @@ body.waiver-field-guide-open{
         
         <article
           class="asset-card js-player-card"
-          data-search="ramón laureano san diego padres lf watchlist provision apex extraction candidate deployment clear active"
-          data-audit-url="/scout/657656/"
-          data-player-id="657656"
-          data-player-name="Ramón Laureano"
-          data-player-team="San Diego Padres"
-          data-player-type="LF"
-          data-profile-url="/scout/657656/"
+          data-search="adolis garcía philadelphia phillies rf watchlist provision apex extraction candidate deployment clear active"
+          data-audit-url="/scout/666969/"
+          data-player-id="666969"
+          data-player-name="Adolis García"
+          data-player-team="Philadelphia Phillies"
+          data-player-type="RF"
+          data-profile-url="/scout/666969/"
           data-source-tag="WAIVER_WIRE"
           onclick="openPlayerAudit(this)"
           tabindex="0"
           role="button"
-          aria-label="Open performance audit for Ramón Laureano"
+          aria-label="Open performance audit for Adolis García"
         >
           <div class="asset-top">
             <div>
-              <div class="asset-name">Ramón Laureano</div>
-              <div class="asset-meta">San Diego Padres // LF // ROSTERED 31% // ID 657656</div>
+              <div class="asset-name">Adolis García</div>
+              <div class="asset-meta">Philadelphia Phillies // RF // ROSTERED 15% // ID 666969</div>
             </div>
 
             <button
               type="button"
               class="claim-pill monitor js-add-to-roster"
-              data-player-id="657656"
-              data-player-name="Ramón Laureano"
-              data-player-team="San Diego Padres"
-              data-player-type="LF"
-              data-profile-url="/scout/657656/"
+              data-player-id="666969"
+              data-player-name="Adolis García"
+              data-player-team="Philadelphia Phillies"
+              data-player-type="RF"
+              data-profile-url="/scout/666969/"
               data-source-tag="WAIVER_WIRE"
               onclick="event.stopPropagation();"
-              aria-label="Initiate tracking for Ramón Laureano"
+              aria-label="Initiate tracking for Adolis García"
             >WATCHLIST PROVISION</button>
           </div>
 
@@ -3561,37 +3689,37 @@ body.waiver-field-guide-open{
           <div class="metric-grid">
             
             <div class="metric metric-ownership-gate">
-              <span>Ownership Gate</span>
+              <span data-tooltip="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market." aria-label="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market.">Ownership Gate</span>
               <b>≤35%</b>
             </div>
             
             <div class="metric metric-signal-window">
-              <span>Signal Window</span>
+              <span data-tooltip="Signal Window: Time window or source window behind the current waiver signal." aria-label="Signal Window: Time window or source window behind the current waiver signal.">Signal Window</span>
               <b>72H</b>
             </div>
             
             <div class="metric metric-asset-type">
-              <span>Asset Type</span>
+              <span data-tooltip="Asset Type: Player asset classification used by the Waiver Wire surface." aria-label="Asset Type: Player asset classification used by the Waiver Wire surface.">Asset Type</span>
               <b>Bat</b>
             </div>
             
             <div class="metric metric-market-defect">
-              <span>Market Defect</span>
+              <span data-tooltip="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity." aria-label="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity.">Market Defect</span>
               <b>Market Lag</b>
             </div>
             
             <div class="metric metric-command">
-              <span>Command</span>
+              <span data-tooltip="Command: Plain-English deployment instruction for the current waiver asset." aria-label="Command: Plain-English deployment instruction for the current waiver asset.">Command</span>
               <b>Track</b>
             </div>
             
             <div class="metric metric-risk">
-              <span>Risk</span>
+              <span data-tooltip="Risk: Risk readout attached to the waiver recommendation." aria-label="Risk: Risk readout attached to the waiver recommendation.">Risk</span>
               <b>Med</b>
             </div>
             
             <div class="metric metric-status-source">
-              <span>Status Source</span>
+              <span data-tooltip="Status Source: Source rail that produced or verified the player status." aria-label="Status Source: Source rail that produced or verified the player status.">Status Source</span>
               <b>CANDIDATE FILE</b>
             </div>
             
@@ -3604,7 +3732,7 @@ body.waiver-field-guide-open{
 
           <div class="card-action-row">
             <span>OPEN PERFORMANCE AUDIT</span>
-            <a class="performance-audit-button" href="/scout/657656/" onclick="event.stopPropagation();">
+            <a class="performance-audit-button" href="/scout/666969/" onclick="event.stopPropagation();">
                 PERFORMANCE AUDIT →
             </a>
           </div>
@@ -3672,37 +3800,37 @@ body.waiver-field-guide-open{
           <div class="metric-grid">
             
             <div class="metric metric-ownership-gate">
-              <span>Ownership Gate</span>
+              <span data-tooltip="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market." aria-label="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market.">Ownership Gate</span>
               <b>≤35%</b>
             </div>
             
             <div class="metric metric-signal-window">
-              <span>Signal Window</span>
+              <span data-tooltip="Signal Window: Time window or source window behind the current waiver signal." aria-label="Signal Window: Time window or source window behind the current waiver signal.">Signal Window</span>
               <b>72H</b>
             </div>
             
             <div class="metric metric-asset-type">
-              <span>Asset Type</span>
+              <span data-tooltip="Asset Type: Player asset classification used by the Waiver Wire surface." aria-label="Asset Type: Player asset classification used by the Waiver Wire surface.">Asset Type</span>
               <b>Arm</b>
             </div>
             
             <div class="metric metric-market-defect">
-              <span>Market Defect</span>
+              <span data-tooltip="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity." aria-label="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity.">Market Defect</span>
               <b>Market Lag</b>
             </div>
             
             <div class="metric metric-command">
-              <span>Command</span>
+              <span data-tooltip="Command: Plain-English deployment instruction for the current waiver asset." aria-label="Command: Plain-English deployment instruction for the current waiver asset.">Command</span>
               <b>Track</b>
             </div>
             
             <div class="metric metric-risk">
-              <span>Risk</span>
+              <span data-tooltip="Risk: Risk readout attached to the waiver recommendation." aria-label="Risk: Risk readout attached to the waiver recommendation.">Risk</span>
               <b>Med</b>
             </div>
             
             <div class="metric metric-status-source">
-              <span>Status Source</span>
+              <span data-tooltip="Status Source: Source rail that produced or verified the player status." aria-label="Status Source: Source rail that produced or verified the player status.">Status Source</span>
               <b>CANDIDATE FILE</b>
             </div>
             
@@ -3721,12 +3849,234 @@ body.waiver-field-guide-open{
           </div>
         </article>
         
+        <article
+          class="asset-card js-player-card"
+          data-search="tomoyuki sugano colorado rockies p watchlist provision apex extraction candidate deployment clear active"
+          data-audit-url="/scout/608372/"
+          data-player-id="608372"
+          data-player-name="Tomoyuki Sugano"
+          data-player-team="Colorado Rockies"
+          data-player-type="P"
+          data-profile-url="/scout/608372/"
+          data-source-tag="WAIVER_WIRE"
+          onclick="openPlayerAudit(this)"
+          tabindex="0"
+          role="button"
+          aria-label="Open performance audit for Tomoyuki Sugano"
+        >
+          <div class="asset-top">
+            <div>
+              <div class="asset-name">Tomoyuki Sugano</div>
+              <div class="asset-meta">Colorado Rockies // P // ROSTERED 6% // ID 608372</div>
+            </div>
+
+            <button
+              type="button"
+              class="claim-pill monitor js-add-to-roster"
+              data-player-id="608372"
+              data-player-name="Tomoyuki Sugano"
+              data-player-team="Colorado Rockies"
+              data-player-type="P"
+              data-profile-url="/scout/608372/"
+              data-source-tag="WAIVER_WIRE"
+              onclick="event.stopPropagation();"
+              aria-label="Initiate tracking for Tomoyuki Sugano"
+            >WATCHLIST PROVISION</button>
+          </div>
+
+          <div class="ops-strip deployment-clear">
+            <div>
+              <span>OPERATIONAL STATUS</span>
+              <b>DEPLOYMENT CLEAR</b>
+            </div>
+            <div>
+              <span>BODY / ROSTER STATE</span>
+              <b>ACTIVE</b>
+            </div>
+            <p>Candidate file source; verify status before deployment.</p>
+          </div>
+
+          <div class="asset-body">
+            <div class="readout">
+              <span>Surface suppression</span>
+              <p>Dynamic Waiver candidate sourced from APEX EXTRACTION.</p>
+            </div>
+
+            <div class="readout">
+              <span>Forensic trigger</span>
+              <p>Fresh upstream signal entered the open-market candidate pool.</p>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            
+            <div class="metric metric-ownership-gate">
+              <span data-tooltip="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market." aria-label="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market.">Ownership Gate</span>
+              <b>≤35%</b>
+            </div>
+            
+            <div class="metric metric-signal-window">
+              <span data-tooltip="Signal Window: Time window or source window behind the current waiver signal." aria-label="Signal Window: Time window or source window behind the current waiver signal.">Signal Window</span>
+              <b>72H</b>
+            </div>
+            
+            <div class="metric metric-asset-type">
+              <span data-tooltip="Asset Type: Player asset classification used by the Waiver Wire surface." aria-label="Asset Type: Player asset classification used by the Waiver Wire surface.">Asset Type</span>
+              <b>Arm</b>
+            </div>
+            
+            <div class="metric metric-market-defect">
+              <span data-tooltip="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity." aria-label="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity.">Market Defect</span>
+              <b>Market Lag</b>
+            </div>
+            
+            <div class="metric metric-command">
+              <span data-tooltip="Command: Plain-English deployment instruction for the current waiver asset." aria-label="Command: Plain-English deployment instruction for the current waiver asset.">Command</span>
+              <b>Track</b>
+            </div>
+            
+            <div class="metric metric-risk">
+              <span data-tooltip="Risk: Risk readout attached to the waiver recommendation." aria-label="Risk: Risk readout attached to the waiver recommendation.">Risk</span>
+              <b>Med</b>
+            </div>
+            
+            <div class="metric metric-status-source">
+              <span data-tooltip="Status Source: Source rail that produced or verified the player status." aria-label="Status Source: Source rail that produced or verified the player status.">Status Source</span>
+              <b>CANDIDATE FILE</b>
+            </div>
+            
+          </div>
+
+          <div class="verdict">
+            <span>Market read // APEX EXTRACTION CANDIDATE</span>
+            <p>APEX EXTRACTION</p>
+          </div>
+
+          <div class="card-action-row">
+            <span>OPEN PERFORMANCE AUDIT</span>
+            <a class="performance-audit-button" href="/scout/608372/" onclick="event.stopPropagation();">
+                PERFORMANCE AUDIT →
+            </a>
+          </div>
+        </article>
+        
+        <article
+          class="asset-card js-player-card"
+          data-search="george soriano st. louis cardinals p watchlist provision apex extraction candidate deployment clear active"
+          data-audit-url="/scout/666277/"
+          data-player-id="666277"
+          data-player-name="George Soriano"
+          data-player-team="St. Louis Cardinals"
+          data-player-type="P"
+          data-profile-url="/scout/666277/"
+          data-source-tag="WAIVER_WIRE"
+          onclick="openPlayerAudit(this)"
+          tabindex="0"
+          role="button"
+          aria-label="Open performance audit for George Soriano"
+        >
+          <div class="asset-top">
+            <div>
+              <div class="asset-name">George Soriano</div>
+              <div class="asset-meta">St. Louis Cardinals // P // ROSTERED 2% // ID 666277</div>
+            </div>
+
+            <button
+              type="button"
+              class="claim-pill monitor js-add-to-roster"
+              data-player-id="666277"
+              data-player-name="George Soriano"
+              data-player-team="St. Louis Cardinals"
+              data-player-type="P"
+              data-profile-url="/scout/666277/"
+              data-source-tag="WAIVER_WIRE"
+              onclick="event.stopPropagation();"
+              aria-label="Initiate tracking for George Soriano"
+            >WATCHLIST PROVISION</button>
+          </div>
+
+          <div class="ops-strip deployment-clear">
+            <div>
+              <span>OPERATIONAL STATUS</span>
+              <b>DEPLOYMENT CLEAR</b>
+            </div>
+            <div>
+              <span>BODY / ROSTER STATE</span>
+              <b>ACTIVE</b>
+            </div>
+            <p>Candidate file source; verify status before deployment.</p>
+          </div>
+
+          <div class="asset-body">
+            <div class="readout">
+              <span>Surface suppression</span>
+              <p>Dynamic Waiver candidate sourced from APEX EXTRACTION.</p>
+            </div>
+
+            <div class="readout">
+              <span>Forensic trigger</span>
+              <p>Fresh upstream signal entered the open-market candidate pool.</p>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            
+            <div class="metric metric-ownership-gate">
+              <span data-tooltip="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market." aria-label="Ownership Gate: Roster-availability gate showing whether the player is still broadly actionable in the market.">Ownership Gate</span>
+              <b>≤35%</b>
+            </div>
+            
+            <div class="metric metric-signal-window">
+              <span data-tooltip="Signal Window: Time window or source window behind the current waiver signal." aria-label="Signal Window: Time window or source window behind the current waiver signal.">Signal Window</span>
+              <b>72H</b>
+            </div>
+            
+            <div class="metric metric-asset-type">
+              <span data-tooltip="Asset Type: Player asset classification used by the Waiver Wire surface." aria-label="Asset Type: Player asset classification used by the Waiver Wire surface.">Asset Type</span>
+              <b>Arm</b>
+            </div>
+            
+            <div class="metric metric-market-defect">
+              <span data-tooltip="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity." aria-label="Market Defect: The market inefficiency or public-pricing gap creating the waiver opportunity.">Market Defect</span>
+              <b>Market Lag</b>
+            </div>
+            
+            <div class="metric metric-command">
+              <span data-tooltip="Command: Plain-English deployment instruction for the current waiver asset." aria-label="Command: Plain-English deployment instruction for the current waiver asset.">Command</span>
+              <b>Track</b>
+            </div>
+            
+            <div class="metric metric-risk">
+              <span data-tooltip="Risk: Risk readout attached to the waiver recommendation." aria-label="Risk: Risk readout attached to the waiver recommendation.">Risk</span>
+              <b>Med</b>
+            </div>
+            
+            <div class="metric metric-status-source">
+              <span data-tooltip="Status Source: Source rail that produced or verified the player status." aria-label="Status Source: Source rail that produced or verified the player status.">Status Source</span>
+              <b>CANDIDATE FILE</b>
+            </div>
+            
+          </div>
+
+          <div class="verdict">
+            <span>Market read // APEX EXTRACTION CANDIDATE</span>
+            <p>SUBSURFACE BREAKOUT</p>
+          </div>
+
+          <div class="card-action-row">
+            <span>OPEN PERFORMANCE AUDIT</span>
+            <a class="performance-audit-button" href="/scout/666277/" onclick="event.stopPropagation();">
+                PERFORMANCE AUDIT →
+            </a>
+          </div>
+        </article>
+        
       </section>
       
       
 
     <div class="footer-note">
-      Generated 2026-06-10T18:09:32Z // Waiver Wire Open Market v1 // Isolated fast builder // Desktop-first QA pass
+      Generated 2026-06-23T12:10:09Z // Waiver Wire Open Market v1 // Isolated fast builder // Desktop-first QA pass
     </div>
   
   <div class="waiver-field-guide-overlay" id="waiverFieldGuideOverlay" onclick="closeWaiverFieldGuide()"></div>
