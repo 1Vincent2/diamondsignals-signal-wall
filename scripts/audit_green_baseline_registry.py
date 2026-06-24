@@ -105,20 +105,23 @@ def main():
             print(f"OK: wired: {rel}")
 
     print("\n--- admin readiness classification ---")
+    admin_ui_seal = Path("ADMIN_UI_INTEGRATION_SEAL.md")
+    admin_ui_implemented = False
+    if admin_ui_seal.exists():
+        seal_text = admin_ui_seal.read_text(errors="ignore")
+        admin_ui_implemented = (
+            "admin_ui_implemented: true" in seal_text
+            and "PASS_ADMIN_GREEN_BASELINE_JOB_CONTRACT" in seal_text
+            and "Commit: c3802f7" in seal_text
+            and "Commit: 9f95e74" in seal_text
+        )
+
     print("audit_registry_machine_readable: true")
     print("green_baseline_runner_single_entrypoint: true")
     print("admin_tool_ready_for_future_button_or_job_wrapper: true")
-    admin_ui_seal = Path("ADMIN_UI_INTEGRATION_SEAL.md")
-admin_ui_implemented = False
-if admin_ui_seal.exists():
-    seal_text = admin_ui_seal.read_text(errors="ignore")
-    admin_ui_implemented = (
-        "admin_ui_implemented: true" in seal_text
-        and "PASS_ADMIN_GREEN_BASELINE_JOB_CONTRACT" in seal_text
-        and "Commit: c3802f7" in seal_text
-        and "Commit: 9f95e74" in seal_text
-    )
-print(f"admin_ui_implemented: {str(admin_ui_implemented).lower()}")
+    print(f"admin_ui_implemented: {str(admin_ui_implemented).lower()}")
+    if not admin_ui_implemented:
+        issues.append("admin UI integration seal is missing or incomplete")
 
     print("\n--- summary ---")
     print(f"baseline_invocations_checked: {len(invocations)}")
