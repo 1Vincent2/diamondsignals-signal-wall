@@ -70,7 +70,7 @@ require_includes("scripts/audit_report_payload_null_safety.py", "API/payload fai
 require_includes("scripts/audit_signal_wall_tracking_regression_lock.py", "tracking write handoff observability", [
     "FINAL_STATUS: PASS_SIGNAL_WALL_TRACKING_REGRESSION_LOCK",
     "FAIL",
-    "APP_WATCHLIST_STATUS_URL",
+    "signal_wall_tracking_regression_issues",
 ])
 
 require_includes("src/js/player-card-actions.js", "tracking status client observability", [
