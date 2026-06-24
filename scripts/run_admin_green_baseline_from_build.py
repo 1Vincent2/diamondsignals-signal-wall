@@ -68,23 +68,35 @@ def supabase_patch(job_id, patch):
 
 
 def run_audit():
-    started = time.time()
-    proc = subprocess.run(
-        ["bash", "scripts/run_green_baseline_audit.sh"],
-        text=True,
+    cmd = ["bash", "scripts/run_green_baseline_audit.sh"]
+    proc = subprocess.Popen(
+        cmd,
+        cwd=ROOT,
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        env={**os.environ, "CI": "1"},
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1,
     )
 
-    return {
-        "ok": proc.returncode == 0,
-        "exit_code": proc.returncode,
-        "duration_ms": int((time.time() - started) * 1000),
-        "stdout": tail(proc.stdout),
-        "stderr": tail(proc.stderr),
-    }
+    output_parts = []
+    assert proc.stdout is not None
 
+    for line in proc.stdout:
+        print(line, end="", flush=True)
+        output_parts.append(line)
+        if sum(len(part) for part in output_parts) > 12000:
+            joined = "".join(output_parts)
+            output_parts = [joined[-10000:]]
+
+    exit_code = proc.wait()
+    output = "".join(output_parts)
+
+    return {
+        "ok": exit_code == 0,
+        "exit_code": exit_code,
+        "stdout": tail(output),
+        "stderr": "",
+    }
 
 def main():
     job_id = find_job_id()
