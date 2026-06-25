@@ -1,0 +1,22 @@
+/*
+  DiamondSignals Mobile Expandable Cards
+
+  Collapsed card = Master Signal
+  Expanded tray = Logic Details
+*/
+
+@media (max-width: 640px) {
+  .ds-mobile-report-view .ds-mobile-card {
+    width: 100%;
+  }
+
+  .ds-mobile-report-view .ds-mobile-card-master {
+    min-height: 48px;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  .ds-mobile-report-view .ds-mobile-card-tray {
+    width: 100%;
+  }
+}

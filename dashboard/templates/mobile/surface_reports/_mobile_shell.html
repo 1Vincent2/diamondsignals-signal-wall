@@ -1,0 +1,12 @@
+{# 
+  DiamondSignals Mobile Surface Report Shell
+
+  Isolation rule:
+  This file is for mobile-only surface report rendering.
+  It must not change desktop report layout, desktop nav, desktop shell,
+  or shared desktop styling.
+#}
+
+<section class="ds-mobile-report-view" data-mobile-report="{{ report_slug | default('unknown') }}">
+  {% block mobile_report_content %}{% endblock %}
+</section>

@@ -1,0 +1,18 @@
+{#
+  Mobile Expandable Card Base
+
+  Collapsed Header = Master Signal
+  Expanded Tray = Logic Details
+
+  Do not duplicate metrics between header and tray.
+#}
+
+<article class="ds-mobile-card" data-mobile-card-id="{{ card_id | default('unknown') }}">
+  <button class="ds-mobile-card-master" type="button" aria-expanded="false">
+    {% block mobile_card_master %}{% endblock %}
+  </button>
+
+  <section class="ds-mobile-card-tray" hidden>
+    {% block mobile_card_tray %}{% endblock %}
+  </section>
+</article>

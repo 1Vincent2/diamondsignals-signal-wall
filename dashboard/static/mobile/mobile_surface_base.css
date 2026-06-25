@@ -1,0 +1,13 @@
+/*
+  DiamondSignals Mobile Surface Base
+
+  Isolation rule:
+  All selectors must remain scoped to .ds-mobile-report-view
+  or mobile-specific wrappers.
+*/
+
+@media (max-width: 640px) {
+  .ds-mobile-report-view {
+    display: block;
+  }
+}
