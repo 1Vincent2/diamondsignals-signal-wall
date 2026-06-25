@@ -769,3 +769,1320 @@ svg.ledger-sparkline {
     width: 100% !important;
   }
 }
+
+/* SIGNAL_WALL_MOBILE_SCAN_LIST_V2
+   True mobile scan mode: collapsed rows show player + one killer metric only. */
+.mobile-scan-row {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  body .app > section.board > .section .cards {
+    gap: 7px !important;
+  }
+
+  .player-card {
+    padding: 8px !important;
+  }
+
+  .mobile-scan-row {
+    appearance: none;
+    -webkit-appearance: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 58px;
+    padding: 9px 10px;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 13px;
+    background:
+      radial-gradient(circle at 0% 0%, rgba(183,240,0,0.06), transparent 52%),
+      rgba(255,255,255,0.018);
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-scan-identity {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .mobile-scan-rank {
+    display: block;
+    font-family: var(--mono);
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 0.11em;
+    line-height: 1;
+    text-transform: uppercase;
+    color: rgba(148,163,184,0.86);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mobile-scan-name {
+    display: block;
+    min-width: 0;
+    font-size: 18px;
+    line-height: 0.96;
+    letter-spacing: -0.04em;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: rgba(248,250,252,0.96);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mobile-scan-score {
+    display: grid;
+    justify-items: end;
+    gap: 2px;
+    min-width: 58px;
+    font-family: var(--mono);
+  }
+
+  .mobile-scan-score span {
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+    line-height: 1;
+    text-transform: uppercase;
+    color: rgba(148,163,184,0.78);
+  }
+
+  .mobile-scan-score strong {
+    display: block;
+    font-family: var(--sans);
+    font-size: 30px;
+    line-height: 0.9;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: -0.06em;
+    color: var(--hg-lime);
+    text-shadow: 0 0 10px rgba(183,240,0,0.20);
+  }
+
+  .player-card:not(.mobile-card-open) .player-top,
+  .player-card:not(.mobile-card-open) .provision-row-mobile,
+  .player-card:not(.mobile-card-open) .mobile-signal-detail {
+    display: none !important;
+  }
+
+  .player-card.mobile-card-open .provision-row-mobile,
+  .player-card.mobile-card-open .mobile-signal-detail {
+    display: block;
+  }
+
+  .player-card.mobile-card-open .player-top {
+    display: none !important;
+  }
+
+  .player-card.mobile-card-open .provision-row-mobile {
+    margin: 10px 0 10px;
+  }
+
+  .player-card.mobile-card-open .mobile-signal-toggle {
+    display: none !important;
+  }
+
+  .player-card.mobile-card-open .mobile-signal-detail:not([open]) > .mobile-signal-tray {
+    display: block !important;
+  }
+
+  .player-card.mobile-card-open {
+    padding: 10px !important;
+  }
+}
+
+/* SIGNAL_WALL_MOBILE_EXPANDED_DEDUP_V3
+   Expanded mobile mode uses the scan row as the header; avoids duplicate desktop identity block. */
+@media (max-width: 640px) {
+  .player-card.mobile-card-open .mobile-scan-row {
+    border-color: rgba(183,240,0,0.18);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.04),
+      0 0 18px rgba(183,240,0,0.08);
+  }
+
+  .player-card.mobile-card-open .mobile-signal-tray {
+    margin-top: 8px;
+  }
+}
+
+/* SIGNAL_WALL_MOBILE_PREMIUM_LEADERBOARD_TRAY_V4
+   Premium sports-analytics mobile pattern: dense leaderboard rows + active detail tray. */
+@media (max-width: 640px) {
+  body .app > section.board > .section .cards {
+    gap: 0 !important;
+    padding: 2px 8px 14px !important;
+  }
+
+  body .app > section.board .player-card {
+    padding: 0 !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+    border-bottom: 1px solid rgba(148,163,184,0.075) !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+  body .app > section.board .player-card::before {
+    display: none !important;
+  }
+
+  body .app > section.board .mobile-scan-row {
+    position: relative;
+    min-height: 48px;
+    padding: 8px 10px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    overflow: hidden;
+  }
+
+  body .app > section.board .mobile-scan-row::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(59,130,246,0.055), transparent 46%),
+      radial-gradient(circle at 92% 50%, rgba(183,240,0,0.055), transparent 34%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 160ms ease;
+  }
+
+  body .app > section.board .mobile-scan-row::after {
+    content: "";
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+    width: min(82px, calc(var(--edge-score) * 1px));
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(59,130,246,0.22), rgba(183,240,0,0.86));
+    opacity: 0.50;
+    pointer-events: none;
+  }
+
+  body .app > section.board .mobile-scan-rank {
+    font-family: var(--mono);
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    line-height: 1;
+    color: rgba(148,163,184,0.70);
+  }
+
+  body .app > section.board .mobile-scan-name {
+    font-size: 16px;
+    line-height: 0.96;
+    letter-spacing: -0.035em;
+    font-weight: 900;
+    color: rgba(248,250,252,0.97);
+  }
+
+  body .app > section.board .mobile-scan-score {
+    min-width: 64px;
+  }
+
+  body .app > section.board .mobile-scan-score span {
+    font-family: var(--mono);
+    font-size: 7px;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    color: rgba(148,163,184,0.68);
+  }
+
+  body .app > section.board .mobile-scan-score strong {
+    font-family: var(--mono);
+    font-size: 25px;
+    line-height: 0.9;
+    letter-spacing: -0.08em;
+    font-weight: 900;
+    color: var(--hg-lime);
+    text-shadow: 0 0 13px rgba(183,240,0,0.22);
+    font-variant-numeric: tabular-nums;
+  }
+
+  body .app > section.board .player-card.mobile-card-open {
+    margin: 8px 0 11px !important;
+    padding: 8px !important;
+    border: 1px solid rgba(59,130,246,0.24) !important;
+    border-radius: 22px !important;
+    background:
+      radial-gradient(circle at 84% 8%, rgba(183,240,0,0.14), transparent 30%),
+      radial-gradient(circle at 4% 0%, rgba(59,130,246,0.14), transparent 36%),
+      linear-gradient(180deg, rgba(11,20,35,0.92), rgba(2,6,12,0.98)) !important;
+    box-shadow:
+      0 0 0 1px rgba(183,240,0,0.035),
+      0 22px 42px rgba(0,0,0,0.50),
+      0 0 34px rgba(59,130,246,0.07),
+      0 0 24px rgba(183,240,0,0.045) !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-scan-row {
+    min-height: 56px;
+    padding: 9px 10px;
+    border: 1px solid rgba(96,165,250,0.28);
+    border-radius: 16px;
+    background:
+      linear-gradient(90deg, rgba(37,99,235,0.20), rgba(15,23,42,0.08)),
+      rgba(255,255,255,0.026);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.055),
+      0 0 18px rgba(59,130,246,0.12);
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-scan-row::before {
+    opacity: 1;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-scan-name {
+    font-size: 18px;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-scan-score strong {
+    font-size: 30px;
+    color: rgba(183,240,0,1);
+    text-shadow: 0 0 20px rgba(183,240,0,0.30);
+  }
+
+  body .app > section.board .player-card.mobile-card-open .player-top {
+    display: none !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .provision-row-mobile {
+    margin: 9px 0 8px !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .provision-btn {
+    min-height: 40px;
+    border-radius: 12px;
+    border-color: rgba(96,165,250,0.34);
+    background:
+      linear-gradient(180deg, rgba(12,24,44,0.98), rgba(4,8,14,0.98));
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.06),
+      0 0 18px rgba(59,130,246,0.13);
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-signal-detail {
+    margin-top: 8px;
+    padding: 10px;
+    border: 1px solid rgba(148,163,184,0.10);
+    border-radius: 18px;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.040), rgba(255,255,255,0.014));
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.05),
+      0 12px 26px rgba(0,0,0,0.28);
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-signal-tray {
+    display: grid !important;
+    gap: 8px;
+    margin-top: 0;
+    animation: mobileLeaderboardTrayIn 180ms ease-out both;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .sparkline-wrap,
+  body .app > section.board .player-card.mobile-card-open .badge-row,
+  body .app > section.board .player-card.mobile-card-open .metric-grid,
+  body .app > section.board .player-card.mobile-card-open .season-context-strip,
+  body .app > section.board .player-card.mobile-card-open .why {
+    margin-bottom: 0 !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric {
+    padding: 8px 7px;
+    border-radius: 11px;
+    background:
+      linear-gradient(180deg, rgba(15,23,42,0.54), rgba(2,6,12,0.36));
+    border-color: rgba(148,163,184,0.095);
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric-label,
+  body .app > section.board .player-card.mobile-card-open .sparkline-label,
+  body .app > section.board .player-card.mobile-card-open .sparkline-note,
+  body .app > section.board .player-card.mobile-card-open .status-badge {
+    font-size: 8px;
+    letter-spacing: 0.10em;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric-value {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .why {
+    padding: 9px 0 0;
+    border-top: 1px solid rgba(148,163,184,0.075);
+    font-size: 10px;
+    line-height: 1.45;
+  }
+
+  @keyframes mobileLeaderboardTrayIn {
+    from {
+      opacity: 0;
+      transform: translateY(-5px) scale(0.992);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+}
+
+/* SIGNAL_WALL_MOBILE_BOTTOM_DRAWER_V5
+   Active player opens as a bottom analytics drawer; the scan list remains visible above it. */
+@media (max-width: 640px) {
+  body.mobile-signal-drawer-active {
+    padding-bottom: 260px;
+  }
+
+  body .app > section.board .player-card.mobile-card-open {
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    bottom: max(10px, env(safe-area-inset-bottom)) !important;
+    z-index: 999 !important;
+    max-height: 48vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 !important;
+    padding: 10px !important;
+    border: 1px solid rgba(96,165,250,0.30) !important;
+    border-radius: 24px 24px 20px 20px !important;
+    background:
+      radial-gradient(circle at 84% 0%, rgba(183,240,0,0.16), transparent 32%),
+      radial-gradient(circle at 0% 0%, rgba(59,130,246,0.18), transparent 38%),
+      linear-gradient(180deg, rgba(10,20,34,0.97), rgba(2,6,12,0.99)) !important;
+    box-shadow:
+      0 -18px 52px rgba(0,0,0,0.58),
+      0 0 0 1px rgba(183,240,0,0.045),
+      0 0 38px rgba(59,130,246,0.12),
+      0 0 28px rgba(183,240,0,0.06) !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open::after {
+    content: "";
+    display: block;
+    width: 46px;
+    height: 4px;
+    border-radius: 999px;
+    margin: 0 auto 8px;
+    background: rgba(148,163,184,0.55);
+    order: -1;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-scan-row {
+    min-height: 54px;
+    border-radius: 16px;
+    border: 1px solid rgba(96,165,250,0.28);
+    background:
+      linear-gradient(90deg, rgba(37,99,235,0.18), rgba(15,23,42,0.08)),
+      rgba(255,255,255,0.026);
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-signal-detail {
+    display: block !important;
+    margin-top: 8px !important;
+    padding: 9px !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(148,163,184,0.11) !important;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.014)) !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-signal-detail[open] > .mobile-signal-tray {
+    display: grid !important;
+    gap: 8px !important;
+    animation: mobileBottomDrawerIn 180ms ease-out both;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-signal-toggle {
+    display: none !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .sparkline-wrap {
+    display: block !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .badge-row {
+    display: flex !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .season-context-strip {
+    display: grid !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .why {
+    display: block !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .provision-row-mobile {
+    display: block !important;
+    margin: 8px 0 !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .provision-btn {
+    min-height: 39px !important;
+    border-radius: 12px !important;
+    background:
+      linear-gradient(180deg, rgba(16,32,58,0.98), rgba(4,8,14,0.98)) !important;
+  }
+
+  @keyframes mobileBottomDrawerIn {
+    from {
+      opacity: 0;
+      transform: translateY(6px) scale(0.992);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+}
+
+/* SIGNAL_WALL_MOBILE_DRAWER_POLISH_V6
+   Bigger analytics metrics + stronger DiamondSignals overlay glow for the active bottom drawer. */
+@media (max-width: 640px) {
+  body .app > section.board .player-card.mobile-card-open {
+    border-color: rgba(183,240,0,0.30) !important;
+    background:
+      radial-gradient(circle at 82% 0%, rgba(183,240,0,0.22), transparent 34%),
+      radial-gradient(circle at 0% 0%, rgba(59,130,246,0.24), transparent 40%),
+      linear-gradient(180deg, rgba(11,23,39,0.985), rgba(2,6,12,0.995)) !important;
+    box-shadow:
+      0 -24px 64px rgba(0,0,0,0.68),
+      0 0 0 1px rgba(183,240,0,0.10),
+      0 0 44px rgba(59,130,246,0.20),
+      0 0 34px rgba(183,240,0,0.16),
+      inset 0 1px 0 rgba(255,255,255,0.06) !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open::before {
+    content: "";
+    display: block !important;
+    position: absolute;
+    inset: -1px;
+    border-radius: 24px 24px 20px 20px;
+    pointer-events: none;
+    background:
+      linear-gradient(135deg, rgba(183,240,0,0.25), transparent 22%, rgba(59,130,246,0.18) 70%, transparent);
+    opacity: 0.38;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    padding: 1px;
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-scan-row {
+    border-color: rgba(183,240,0,0.24);
+    background:
+      radial-gradient(circle at 90% 50%, rgba(183,240,0,0.16), transparent 36%),
+      linear-gradient(90deg, rgba(37,99,235,0.24), rgba(15,23,42,0.10)),
+      rgba(255,255,255,0.032);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.07),
+      0 0 22px rgba(59,130,246,0.17),
+      0 0 16px rgba(183,240,0,0.08);
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-signal-detail {
+    padding: 11px !important;
+    border-color: rgba(96,165,250,0.20) !important;
+    background:
+      radial-gradient(circle at 100% 0%, rgba(59,130,246,0.12), transparent 34%),
+      linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.065),
+      0 14px 30px rgba(0,0,0,0.34),
+      0 0 18px rgba(59,130,246,0.075);
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric-grid {
+    gap: 7px !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric {
+    min-height: 55px;
+    padding: 10px 8px !important;
+    border-radius: 12px !important;
+    background:
+      radial-gradient(circle at 100% 0%, rgba(59,130,246,0.10), transparent 42%),
+      linear-gradient(180deg, rgba(15,23,42,0.68), rgba(2,6,12,0.42)) !important;
+    border-color: rgba(148,163,184,0.13) !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric-label {
+    font-size: 9px !important;
+    line-height: 1.05;
+    letter-spacing: 0.13em !important;
+    color: rgba(148,163,184,0.86) !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric-value {
+    margin-top: 4px;
+    font-family: var(--mono);
+    font-size: 17px !important;
+    line-height: 1;
+    letter-spacing: -0.035em;
+    color: rgba(191,219,254,0.98) !important;
+    text-shadow: 0 0 12px rgba(59,130,246,0.16);
+    font-variant-numeric: tabular-nums;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric:nth-child(1) .metric-value,
+  body .app > section.board .player-card.mobile-card-open .metric:nth-child(2) .metric-value {
+    color: rgba(183,240,0,0.98) !important;
+    text-shadow: 0 0 13px rgba(183,240,0,0.22);
+  }
+
+  body .app > section.board .player-card.mobile-card-open .sparkline-wrap {
+    border-color: rgba(96,165,250,0.15) !important;
+    background:
+      linear-gradient(180deg, rgba(15,23,42,0.56), rgba(2,6,12,0.36)) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.045),
+      0 0 14px rgba(59,130,246,0.06);
+  }
+
+  body .app > section.board .player-card.mobile-card-open .sparkline-label,
+  body .app > section.board .player-card.mobile-card-open .sparkline-note {
+    font-size: 9px !important;
+    letter-spacing: 0.13em !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .status-badge {
+    font-size: 9px !important;
+    padding: 8px 12px !important;
+    border-radius: 999px !important;
+    box-shadow: 0 0 14px rgba(183,240,0,0.10);
+  }
+
+  body .app > section.board .player-card.mobile-card-open .why {
+    font-size: 11px !important;
+    line-height: 1.5 !important;
+    color: rgba(226,232,240,0.88) !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .provision-btn {
+    font-size: 12px !important;
+    letter-spacing: 0.13em !important;
+    border-color: rgba(96,165,250,0.42) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.07),
+      0 0 22px rgba(59,130,246,0.16);
+  }
+}
+
+/* SIGNAL_WALL_MOBILE_READABILITY_DRAWER_CONTRAST_V7
+   Mass-audience readability pass: tighter intro, initial caps, clearer signal labels, stronger drawer separation. */
+@media (max-width: 640px) {
+  /* Tighten the top report/hero module without changing desktop. */
+  body .app > section.board .terminal-hero,
+  body .app > section.board .hero-card,
+  body .app > section.board .surface-hero,
+  body .app > section.board .report-hero,
+  body .app > section.board .intro-card {
+    padding: 18px 18px 16px !important;
+    margin-bottom: 10px !important;
+  }
+
+  body .app > section.board .terminal-hero h1,
+  body .app > section.board .hero-card h1,
+  body .app > section.board .surface-hero h1,
+  body .app > section.board .report-hero h1,
+  body .app > section.board .intro-card h1 {
+    margin: 0 0 10px !important;
+    line-height: 0.94 !important;
+    letter-spacing: -0.055em !important;
+  }
+
+  body .app > section.board .terminal-hero p,
+  body .app > section.board .hero-card p,
+  body .app > section.board .surface-hero p,
+  body .app > section.board .report-hero p,
+  body .app > section.board .intro-card p {
+    margin: 0 0 8px !important;
+    line-height: 1.28 !important;
+  }
+
+  body .app > section.board .terminal-hero p:last-child,
+  body .app > section.board .hero-card p:last-child,
+  body .app > section.board .surface-hero p:last-child,
+  body .app > section.board .report-hero p:last-child,
+  body .app > section.board .intro-card p:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  /* Improve readability: labels should read like product UI, not debug text. */
+  body .app > section.board .mobile-scan-rank,
+  body .app > section.board .sparkline-label,
+  body .app > section.board .sparkline-note,
+  body .app > section.board .metric-label,
+  body .app > section.board .status-badge,
+  body .app > section.board .season-label,
+  body .app > section.board .season-title {
+    text-transform: none !important;
+  }
+
+  body .app > section.board .mobile-scan-rank {
+    font-size: 10px !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0.055em !important;
+    color: rgba(191,219,254,0.82) !important;
+  }
+
+  body .app > section.board .mobile-scan-name {
+    font-size: 17px !important;
+    line-height: 0.98 !important;
+  }
+
+  body .app > section.board .mobile-scan-score span {
+    text-transform: none !important;
+    font-size: 9px !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  /* Stronger bottom drawer separation from the list behind it. */
+  body .app > section.board .player-card.mobile-card-open {
+    max-height: 52vh !important;
+    padding: 11px !important;
+    border: 1px solid rgba(183,240,0,0.46) !important;
+    background:
+      radial-gradient(circle at 82% 0%, rgba(183,240,0,0.28), transparent 32%),
+      radial-gradient(circle at 0% 0%, rgba(59,130,246,0.30), transparent 38%),
+      linear-gradient(180deg, rgba(9,22,39,0.995), rgba(1,5,10,0.998)) !important;
+    box-shadow:
+      0 -30px 80px rgba(0,0,0,0.82),
+      0 0 0 1px rgba(183,240,0,0.18),
+      0 0 54px rgba(59,130,246,0.30),
+      0 0 42px rgba(183,240,0,0.24),
+      inset 0 1px 0 rgba(255,255,255,0.09) !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open::before {
+    opacity: 0.62 !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-scan-row {
+    min-height: 58px !important;
+    border-color: rgba(183,240,0,0.36) !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-signal-detail {
+    padding: 9px !important;
+    border: 1px solid rgba(96,165,250,0.28) !important;
+    background:
+      radial-gradient(circle at 100% 0%, rgba(59,130,246,0.16), transparent 34%),
+      linear-gradient(180deg, rgba(15,30,52,0.72), rgba(2,6,12,0.52)) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.075),
+      0 16px 34px rgba(0,0,0,0.40),
+      0 0 24px rgba(59,130,246,0.13);
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-signal-tray {
+    gap: 7px !important;
+  }
+
+  /* Condense while enlarging content. */
+  body .app > section.board .player-card.mobile-card-open .sparkline-wrap {
+    padding: 9px !important;
+    min-height: 72px !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .sparkline-label,
+  body .app > section.board .player-card.mobile-card-open .sparkline-note {
+    font-size: 10px !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0.045em !important;
+    color: rgba(191,219,254,0.78) !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .badge-row {
+    gap: 6px !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .status-badge {
+    font-size: 10px !important;
+    line-height: 1 !important;
+    letter-spacing: 0.055em !important;
+    padding: 7px 11px !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric {
+    min-height: 58px !important;
+    padding: 9px 8px !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric-label {
+    font-size: 10px !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0.045em !important;
+    color: rgba(191,219,254,0.80) !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric-value {
+    font-size: 19px !important;
+    line-height: 1 !important;
+    margin-top: 5px !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .season-context-strip {
+    gap: 7px !important;
+    padding: 9px !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .season-title,
+  body .app > section.board .player-card.mobile-card-open .season-label {
+    font-size: 10px !important;
+    letter-spacing: 0.045em !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .why {
+    padding-top: 8px !important;
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+  }
+}
+
+/* SIGNAL_WALL_MOBILE_LIVE_SELECTOR_CORRECTION_V8
+   Corrects V7 selector misses on /live/: hero compression, section labels, drawer label/value sizing. */
+@media (max-width: 640px) {
+  /* Correct target: hero is a sibling before .board, not inside .board. */
+  body .app > section.hero {
+    padding: 10px 10px 8px !important;
+    margin-bottom: 8px !important;
+  }
+
+  body .app > section.hero .hero-grid {
+    gap: 8px !important;
+  }
+
+  body .app > section.hero .hero-card {
+    padding: 16px 16px 14px !important;
+    border-radius: 18px !important;
+  }
+
+  body .app > section.hero .eyebrow {
+    margin-bottom: 8px !important;
+    font-size: 10px !important;
+    line-height: 1 !important;
+    letter-spacing: 0.20em !important;
+    text-transform: none !important;
+    color: rgba(96,165,250,0.96) !important;
+  }
+
+  body .app > section.hero .hero-title {
+    margin: 0 0 10px !important;
+    font-size: clamp(38px, 11vw, 54px) !important;
+    line-height: 0.92 !important;
+    letter-spacing: -0.065em !important;
+  }
+
+  body .app > section.hero .hero-copy {
+    margin: 0 0 7px !important;
+    font-size: 14px !important;
+    line-height: 1.28 !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  body .app > section.hero .hero-audit-copy {
+    display: grid !important;
+    grid-template-columns: auto 1fr;
+    column-gap: 8px;
+    align-items: baseline;
+  }
+
+  body .app > section.hero .hero-audit-label {
+    font-size: 10px !important;
+    letter-spacing: 0.16em !important;
+    white-space: nowrap;
+  }
+
+  body .app > section.hero .meta-grid {
+    gap: 7px !important;
+  }
+
+  body .app > section.hero .meta-card {
+    padding: 10px 12px !important;
+    border-radius: 14px !important;
+  }
+
+  body .app > section.hero .meta-label {
+    margin-bottom: 4px !important;
+    font-size: 9px !important;
+    letter-spacing: 0.14em !important;
+    text-transform: none !important;
+  }
+
+  body .app > section.hero .meta-value {
+    font-size: 14px !important;
+    line-height: 1.05 !important;
+  }
+
+  /* Fix misleading section language on mobile only. */
+  body .app > section.board .pitching-section .section-title,
+  body .app > section.board .hitting-section .section-title {
+    font-size: 0 !important;
+  }
+
+  body .app > section.board .pitching-section .section-title::after {
+    content: "Pitching Signals";
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  body .app > section.board .hitting-section .section-title::after {
+    content: "Hitting Signals";
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  body .app > section.board .section-kicker {
+    text-transform: none !important;
+    font-size: 10px !important;
+    letter-spacing: 0.14em !important;
+  }
+
+  /* Drawer: make season/command area readable and denser. */
+  body .app > section.board .player-card.mobile-card-open {
+    max-height: 56vh !important;
+    border-color: rgba(183,240,0,0.56) !important;
+    box-shadow:
+      0 -34px 86px rgba(0,0,0,0.86),
+      0 0 0 1px rgba(183,240,0,0.22),
+      0 0 64px rgba(59,130,246,0.34),
+      0 0 48px rgba(183,240,0,0.30),
+      inset 0 1px 0 rgba(255,255,255,0.10) !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-signal-tray {
+    gap: 6px !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric {
+    min-height: 54px !important;
+    padding: 8px 8px !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric-label {
+    font-size: 10px !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0.035em !important;
+    text-transform: none !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .metric-value {
+    font-size: 20px !important;
+    line-height: 0.98 !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .season-context-strip {
+    padding: 8px !important;
+    gap: 7px !important;
+    border-color: rgba(96,165,250,0.22) !important;
+    background:
+      radial-gradient(circle at 100% 0%, rgba(59,130,246,0.12), transparent 34%),
+      rgba(2,6,12,0.34) !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .season-context-head {
+    margin-bottom: 4px !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .season-context-head span {
+    font-size: 10px !important;
+    line-height: 1 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: none !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .season-context-head span:first-child {
+    font-size: 0 !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .season-context-head span:first-child::after {
+    content: "Command Profile";
+    font-size: 10px;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .season-context-grid {
+    gap: 6px !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .season-context-tile {
+    min-height: 48px !important;
+    padding: 8px 9px !important;
+    border-radius: 10px !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .season-context-tile span {
+    font-size: 10px !important;
+    line-height: 1 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: none !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .season-context-tile strong {
+    margin-top: 5px !important;
+    font-size: 17px !important;
+    line-height: 1 !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .why {
+    font-size: 12px !important;
+    line-height: 1.28 !important;
+    padding-top: 7px !important;
+  }
+}
+
+/* SIGNAL_WALL_MOBILE_HERO_META_CORRECTION_V9
+   Focused /live mobile correction: compact meta cards, restored audit copy, title-case hero. */
+@media (max-width: 640px) {
+  /* Title should read as product language, not all-caps shouting. */
+  body .app > section.hero .hero-title {
+    text-transform: none !important;
+    font-size: clamp(34px, 10vw, 48px) !important;
+    line-height: 0.96 !important;
+    letter-spacing: -0.055em !important;
+    margin-bottom: 10px !important;
+  }
+
+  body .app > section.hero .eyebrow {
+    text-transform: none !important;
+  }
+
+  /* Restore audit line to clean two-line block without weird indentation. */
+  body .app > section.hero .hero-audit-copy {
+    display: block !important;
+    margin-top: 8px !important;
+    line-height: 1.28 !important;
+  }
+
+  body .app > section.hero .hero-audit-label {
+    display: block !important;
+    margin-bottom: 3px !important;
+    font-size: 10px !important;
+    line-height: 1 !important;
+    letter-spacing: 0.17em !important;
+    text-transform: none !important;
+    white-space: normal !important;
+  }
+
+  /* The meta cards were the real vertical-height problem. */
+  body .app > section.hero .meta-grid {
+    gap: 6px !important;
+    margin-top: 8px !important;
+  }
+
+  body .app > section.hero .meta-card {
+    min-height: 0 !important;
+    padding: 8px 11px !important;
+    border-radius: 12px !important;
+  }
+
+  body .app > section.hero .meta-label {
+    margin: 0 0 3px !important;
+    font-size: 8px !important;
+    line-height: 1 !important;
+    letter-spacing: 0.13em !important;
+    text-transform: none !important;
+  }
+
+  body .app > section.hero .meta-value {
+    font-size: 13px !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0.02em !important;
+  }
+
+  body .app > section.hero .hero-card {
+    padding-bottom: 13px !important;
+  }
+}
+
+/* SIGNAL_WALL_MOBILE_FIELD_GUIDE_DRAWER_COORDINATION_V10
+   Prevents Field Guide / Live status collision and coordinates Field Guide with mobile player drawer. */
+@media (max-width: 640px) {
+  /* Give the top signal/status rail enough breathing room. */
+  body .app .signal-rail,
+  body .app .surface-rail,
+  body .app .top-rail,
+  body .app .status-rail,
+  body .app .masthead,
+  body .app .shell-masthead {
+    position: sticky;
+    top: 0;
+    z-index: 900;
+  }
+
+  /* Common Field Guide affordance protection. */
+  body .app a[href*="guide"],
+  body .app button[class*="guide"],
+  body .app [class*="field-guide"],
+  body .app [class*="FieldGuide"] {
+    max-width: min(46vw, 210px) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* Mobile top control row should not let the Field Guide run into Live. */
+  body .app .signal-rail,
+  body .app .surface-rail,
+  body .app .top-rail,
+  body .app .status-rail {
+    column-gap: 8px !important;
+  }
+
+  body .app .live-pill,
+  body .app .live-status,
+  body .app [class*="live"] {
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* When Field Guide opens, it must visually sit above player drawer. */
+  body .field-guide,
+  body .glossary-panel,
+  body .glossary-drawer,
+  body aside[class*="glossary"],
+  body aside[class*="guide"] {
+    z-index: 1200 !important;
+  }
+
+  body.mobile-field-guide-active .player-card.mobile-card-open {
+    display: none !important;
+  }
+
+  body.mobile-field-guide-active {
+    padding-bottom: 0 !important;
+  }
+}
+
+/* SIGNAL_WALL_MOBILE_DRAWER_CLOSE_TAP_SAFETY_V11
+   Adds an obvious drawer close control and prevents accidental profile navigation from the open metrics drawer. */
+@media (max-width: 640px) {
+  body .app > section.board .mobile-drawer-close {
+    display: none;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-drawer-close {
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    min-height: 34px;
+    margin: 8px 0 0;
+    padding: 7px 10px;
+    border: 1px solid rgba(148,163,184,0.18);
+    border-radius: 999px;
+    background:
+      linear-gradient(180deg, rgba(15,23,42,0.72), rgba(2,6,12,0.56));
+    color: rgba(226,232,240,0.90);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.05),
+      0 0 16px rgba(0,0,0,0.20);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-drawer-close span {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+    text-transform: none;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-drawer-close strong {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: rgba(183,240,0,0.12);
+    color: rgba(183,240,0,0.98);
+    font-family: var(--sans);
+    font-size: 18px;
+    line-height: 1;
+    box-shadow: 0 0 14px rgba(183,240,0,0.12);
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-drawer-close:active {
+    transform: translateY(1px);
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-signal-detail {
+    margin-bottom: 8px !important;
+  }
+}
+
+/* SIGNAL_WALL_MOBILE_DRAWER_CLOSE_AUDIT_SAFE_V11B
+   Keeps visible close control while avoiding extra per-card button elements that trip tracking audit. */
+@media (max-width: 640px) {
+  body .app > section.board .player-card.mobile-card-open .mobile-drawer-close {
+    user-select: none;
+    touch-action: manipulation;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-drawer-close:focus-visible {
+    outline: 2px solid rgba(183,240,0,0.78);
+    outline-offset: 3px;
+  }
+}
+
+/* SIGNAL_WALL_MOBILE_METRICS_CLOSE_OBVIOUS_V13
+   Makes the player metrics close affordance read as an obvious return action. */
+@media (max-width: 640px) {
+  body .app > section.board .player-card.mobile-card-open .mobile-drawer-close {
+    min-height: 42px !important;
+    margin: 8px 0 9px !important;
+    padding: 8px 10px 8px 13px !important;
+    border: 1px solid rgba(183,240,0,0.36) !important;
+    background:
+      radial-gradient(circle at 100% 50%, rgba(183,240,0,0.17), transparent 44%),
+      linear-gradient(180deg, rgba(15,23,42,0.88), rgba(2,6,12,0.72)) !important;
+    color: rgba(248,250,252,0.96) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.07),
+      0 0 20px rgba(183,240,0,0.14),
+      0 0 16px rgba(59,130,246,0.08) !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-drawer-close span {
+    font-size: 11px !important;
+    letter-spacing: 0.075em !important;
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-drawer-close span::before {
+    content: "Back to List · ";
+    color: rgba(183,240,0,0.98);
+  }
+
+  body .app > section.board .player-card.mobile-card-open .mobile-drawer-close strong {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 21px !important;
+    background: rgba(183,240,0,0.16) !important;
+    box-shadow: 0 0 18px rgba(183,240,0,0.18) !important;
+  }
+}
+
+/* SIGNAL_WALL_MOBILE_FIELD_GUIDE_TRIGGER_BOTTOM_ANCHOR_V14
+   /live mobile: Field Guide trigger is a bottom-anchored utility, not part of the top status rail. */
+@media (max-width: 640px) {
+  body:has(.hero-title) .info-trigger,
+  body:has(.hero-title) button.info-trigger,
+  body:has(.hero-title) button[onclick="openGlossary()"] {
+    position: fixed !important;
+    left: auto !important;
+    right: 14px !important;
+    bottom: max(18px, env(safe-area-inset-bottom)) !important;
+    top: auto !important;
+    z-index: 1185 !important;
+    width: auto !important;
+    min-width: 168px !important;
+    max-width: calc(100vw - 28px) !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 0 16px !important;
+    border-radius: 999px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    border: 1px solid rgba(183,240,0,0.34) !important;
+    background:
+      radial-gradient(circle at 0% 50%, rgba(183,240,0,0.16), transparent 42%),
+      linear-gradient(180deg, rgba(5,10,18,0.94), rgba(2,6,12,0.92)) !important;
+    color: rgba(248,250,252,0.98) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.07),
+      0 0 26px rgba(183,240,0,0.18),
+      0 0 22px rgba(59,130,246,0.10),
+      0 14px 32px rgba(0,0,0,0.42) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+    font-family: var(--mono) !important;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.13em !important;
+    text-transform: uppercase !important;
+    white-space: nowrap !important;
+    transform: none !important;
+  }
+
+  body:has(.hero-title) .info-trigger::before {
+    content: "ⓘ";
+    font-size: 13px;
+    line-height: 1;
+    color: rgba(191,219,254,0.94);
+  }
+
+  body.mobile-glossary-open:has(.hero-title) .info-trigger {
+    display: none !important;
+  }
+
+  body.mobile-signal-drawer-active:has(.hero-title) .info-trigger {
+    opacity: 0.36 !important;
+    pointer-events: none !important;
+  }
+
+  body:has(.hero-title) .topbar .info-trigger {
+    justify-self: auto !important;
+  }
+
+  body:has(.hero-title) .livebox {
+    padding-right: 0 !important;
+  }
+}
+
+/* SIGNAL_WALL_MOBILE_FIELD_GUIDE_DUPLICATE_ICON_FIX_V14B
+   Remove duplicate generated info icon from prior V14. The button text already includes ⓘ. */
+@media (max-width: 640px) {
+  .info-trigger::before,
+  button.info-trigger::before,
+  body:has(.hero-title) .info-trigger::before {
+    content: none !important;
+    display: none !important;
+  }
+}
+

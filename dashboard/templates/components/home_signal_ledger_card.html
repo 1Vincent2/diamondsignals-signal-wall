@@ -6,11 +6,40 @@
   data-player-team="MLB"
   data-profile-url="{% if row.resolved_player_id or row.player_id %}/scout/{{ row.resolved_player_id or row.player_id }}/{% else %}#{% endif %}"
 >
+  <button
+    type="button"
+    class="mobile-scan-row"
+    style="--edge-score: {{ row.edge_score }};"
+    aria-expanded="false"
+    onclick="event.preventDefault(); event.stopPropagation(); document.querySelectorAll('.player-card.mobile-card-open').forEach((openCard) => { if (openCard !== this.closest('.player-card')) { openCard.classList.remove('mobile-card-open'); const openBtn = openCard.querySelector('.mobile-scan-row'); if (openBtn) openBtn.setAttribute('aria-expanded', 'false'); const openDetail = openCard.querySelector('.mobile-signal-detail'); if (openDetail) openDetail.open = false; } }); const card = this.closest('.player-card'); const detail = card.querySelector('.mobile-signal-detail'); const isOpen = card.classList.toggle('mobile-card-open'); this.setAttribute('aria-expanded', isOpen ? 'true' : 'false'); if (detail) detail.open = isOpen; document.body.classList.toggle('mobile-signal-drawer-active', isOpen);"
+  >
+    <span class="mobile-scan-identity">
+      <span class="mobile-scan-rank">#{{ rank }} {{ trigger_label | replace('Pitcher Trigger', 'Pitching Signal') | replace('Hitter Trigger', 'Hitting Signal') }}</span>
+      <span class="mobile-scan-name">{{ row.player_name }}</span>
+    </span>
+    <span class="mobile-scan-score">
+      <span>Edge</span>
+      <strong>{{ row.edge_score }}</strong>
+    </span>
+  </button>
+
+  <div
+    class="mobile-drawer-close"
+    role="button"
+    tabindex="0"
+    aria-label="Close player metrics"
+    onclick="event.preventDefault(); event.stopPropagation(); const card = this.closest('.player-card'); if (card) { card.classList.remove('mobile-card-open'); const row = card.querySelector('.mobile-scan-row'); if (row) row.setAttribute('aria-expanded', 'false'); const detail = card.querySelector('.mobile-signal-detail'); if (detail) detail.open = false; } document.body.classList.remove('mobile-signal-drawer-active');"
+    onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); this.click(); }"
+  >
+    <span>Close Metrics</span>
+    <strong>×</strong>
+  </div>
+
   <div class="player-top">
     <div class="player-head">
       <div class="avatar">{{ row.player_name[:2]|upper }}</div>
       <div class="player-ident">
-        <div class="rankline">#{{ rank }} {{ trigger_label }}</div>
+        <div class="rankline">#{{ rank }} {{ trigger_label | replace('Pitcher Trigger', 'Pitching Signal') | replace('Hitter Trigger', 'Hitting Signal') }}</div>
         <h3 class="player-name">{{ row.player_name }}</h3>
         <div class="signal-line">{{ signal_line }}</div>
       </div>
@@ -121,3 +150,4 @@
     </div>
   </details>
 </article>
+
