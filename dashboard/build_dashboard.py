@@ -25,7 +25,9 @@ SNAPSHOT_DIR = DIST_DIR / "_snapshots" / "signal-wall"
 SIGNAL_WALL_STATUS_PATH = STATUS_DIR / "signal-wall.json"
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
-NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
+# Desktop uses compact pro nav; mobile keeps the existing shell menu contract.
+DESKTOP_NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav_v2.html").read_text(encoding="utf-8")
+MOBILE_NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
 SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
 FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
 SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
@@ -1995,6 +1997,239 @@ HTML_TEMPLATE = Template(
     .glossary-item { margin-bottom: 12px; }
     .glossary-term { display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text); font-weight: 800; font-family: var(--mono); }
     .glossary-definition { font-size: 13px; line-height: 1.5; color: var(--soft); }
+
+
+    /* SIGNAL_WALL_MOBILE_FIELD_GUIDE_RETURN_CONTROL_V13
+       Makes Field Guide bottom sheet and return-to-report action obvious on mobile. */
+    @media (max-width: 640px) {
+      .glossary-drawer {
+        top: auto !important;
+        left: 8px !important;
+        right: 8px !important;
+        bottom: max(76px, env(safe-area-inset-bottom)) !important;
+        width: auto !important;
+        height: min(68dvh, 620px) !important;
+        max-height: min(68dvh, 620px) !important;
+        border-radius: 24px 24px 18px 18px !important;
+        transform: translate3d(0, calc(100% + 96px), 0) !important;
+        z-index: 1300 !important;
+      }
+
+      .glossary-drawer.open {
+        transform: translate3d(0, 0, 0) !important;
+      }
+
+      .glossary-overlay {
+        z-index: 1260 !important;
+      }
+
+      .glossary-head {
+        padding: 13px 13px 11px !important;
+        gap: 10px !important;
+      }
+
+      .glossary-back-report {
+        width: auto !important;
+        min-width: 142px !important;
+        height: 40px !important;
+        min-height: 40px !important;
+        padding: 0 9px 0 13px !important;
+        gap: 9px !important;
+        border-radius: 999px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        border: 1px solid rgba(183,240,0,0.34) !important;
+        background:
+          radial-gradient(circle at 100% 50%, rgba(183,240,0,0.16), transparent 42%),
+          linear-gradient(180deg, rgba(15,23,42,0.88), rgba(2,6,12,0.72)) !important;
+        color: rgba(248,250,252,0.96) !important;
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.07),
+          0 0 18px rgba(183,240,0,0.14),
+          0 0 16px rgba(59,130,246,0.10) !important;
+      }
+
+      .glossary-back-report span {
+        display: inline-block !important;
+        font-family: var(--mono) !important;
+        font-size: 10px !important;
+        line-height: 1 !important;
+        font-weight: 900 !important;
+        letter-spacing: 0.08em !important;
+        text-transform: none !important;
+        white-space: nowrap !important;
+      }
+
+      .glossary-back-report strong {
+        display: grid !important;
+        place-items: center !important;
+        width: 24px !important;
+        height: 24px !important;
+        border-radius: 999px !important;
+        background: rgba(183,240,0,0.14) !important;
+        color: rgba(183,240,0,1) !important;
+        font-family: var(--sans) !important;
+        font-size: 18px !important;
+        line-height: 1 !important;
+        box-shadow: 0 0 14px rgba(183,240,0,0.16) !important;
+      }
+
+      .glossary-title {
+        font-size: 20px !important;
+      }
+
+      .glossary-body {
+        padding-bottom: 22px !important;
+      }
+    }
+
+    /* SIGNAL_WALL_MOBILE_FIELD_GUIDE_BOTTOM_SHEET_V12
+       /live mobile Field Guide behaves as a bottom sheet with clear close path back to player list. */
+    @media (max-width: 640px) {
+      .glossary-overlay {
+        z-index: 1180 !important;
+        background: rgba(0,0,0,0.46) !important;
+        backdrop-filter: blur(2px);
+      }
+
+      .glossary-drawer {
+        top: auto !important;
+        right: 10px !important;
+        bottom: max(10px, env(safe-area-inset-bottom)) !important;
+        left: 10px !important;
+        width: auto !important;
+        height: min(72vh, 660px) !important;
+        max-height: 72vh !important;
+        border-left: 1px solid rgba(183,240,0,0.22) !important;
+        border-right: 1px solid rgba(183,240,0,0.22) !important;
+        border-top: 1px solid rgba(96,165,250,0.24) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+        border-radius: 24px 24px 18px 18px !important;
+        background:
+          radial-gradient(circle at 86% 0%, rgba(183,240,0,0.16), transparent 34%),
+          radial-gradient(circle at 0% 0%, rgba(59,130,246,0.16), transparent 38%),
+          linear-gradient(180deg, rgba(10,20,34,0.985), rgba(2,6,12,0.995)) !important;
+        box-shadow:
+          0 -28px 70px rgba(0,0,0,0.72),
+          0 0 0 1px rgba(183,240,0,0.08),
+          0 0 38px rgba(59,130,246,0.16),
+          0 0 26px rgba(183,240,0,0.10) !important;
+        transform: translateY(calc(100% + 24px)) !important;
+        transition: transform 190ms ease-out !important;
+        z-index: 1220 !important;
+        overflow: hidden !important;
+      }
+
+      .glossary-drawer.open {
+        transform: translateY(0) !important;
+      }
+
+      .glossary-head {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 2 !important;
+        align-items: center !important;
+        padding: 12px 14px !important;
+        background:
+          linear-gradient(180deg, rgba(15,23,42,0.96), rgba(2,6,12,0.86)) !important;
+        border-bottom: 1px solid rgba(148,163,184,0.10) !important;
+      }
+
+      .glossary-head::before {
+        content: "";
+        position: absolute;
+        top: 6px;
+        left: 50%;
+        width: 46px;
+        height: 4px;
+        border-radius: 999px;
+        transform: translateX(-50%);
+        background: rgba(148,163,184,0.55);
+      }
+
+      .glossary-kicker {
+        margin-top: 8px !important;
+        margin-bottom: 3px !important;
+        font-size: 9px !important;
+        line-height: 1 !important;
+        letter-spacing: 0.14em !important;
+      }
+
+      .glossary-title {
+        font-size: 18px !important;
+        line-height: 1 !important;
+        letter-spacing: -0.025em !important;
+        text-transform: none !important;
+      }
+
+      .glossary-close {
+        position: static !important;
+        inset: auto !important;
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        padding: 0 !important;
+        border-radius: 999px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border: 1px solid rgba(183,240,0,0.22) !important;
+        background: rgba(183,240,0,0.08) !important;
+        color: rgba(183,240,0,0.98) !important;
+        font-family: var(--sans) !important;
+        font-size: 22px !important;
+        letter-spacing: 0 !important;
+        text-transform: none !important;
+        box-shadow: 0 0 14px rgba(183,240,0,0.12) !important;
+      }
+
+      .glossary-body {
+        padding: 12px 12px 18px !important;
+        gap: 10px !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .glossary-section {
+        padding: 12px !important;
+        border-radius: 15px !important;
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.040), rgba(255,255,255,0.014)) !important;
+        border-color: rgba(148,163,184,0.10) !important;
+      }
+
+      .glossary-section-title {
+        margin-bottom: 10px !important;
+        font-size: 11px !important;
+        line-height: 1.05 !important;
+        letter-spacing: 0.10em !important;
+      }
+
+      .glossary-item {
+        margin-bottom: 10px !important;
+      }
+
+      .glossary-term {
+        font-size: 11px !important;
+        line-height: 1.05 !important;
+        letter-spacing: 0.06em !important;
+      }
+
+      .glossary-definition {
+        font-size: 13px !important;
+        line-height: 1.38 !important;
+      }
+
+      body.mobile-glossary-open .player-card.mobile-card-open {
+        display: none !important;
+      }
+
+      body.mobile-glossary-open {
+        padding-bottom: 0 !important;
+      }
+    }
+
     .app { padding: 18px 0 34px; }
     .hero, .board { display: grid; gap: 16px; }
     .hero-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
@@ -2423,6 +2658,80 @@ HTML_TEMPLATE = Template(
       }
     }
 
+    /* SIGNAL_WALL_MOBILE_FIELD_GUIDE_TRUE_BOTTOM_ANCHOR_V14B
+       Hard override for /live: Field Guide trigger leaves top rail and anchors to bottom-right on mobile. */
+    @media (max-width: 640px) {
+      .topbar .info-trigger,
+      button.info-trigger,
+      button[onclick="openGlossary()"].info-trigger {
+        position: fixed !important;
+        top: auto !important;
+        left: auto !important;
+        right: 14px !important;
+        bottom: max(18px, env(safe-area-inset-bottom)) !important;
+        z-index: 1185 !important;
+
+        width: auto !important;
+        min-width: 150px !important;
+        max-width: calc(100vw - 28px) !important;
+        height: 42px !important;
+        min-height: 42px !important;
+        padding: 0 15px !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+
+        border-radius: 999px !important;
+        border: 1px solid rgba(183,240,0,0.34) !important;
+        background:
+          radial-gradient(circle at 0% 50%, rgba(183,240,0,0.16), transparent 42%),
+          linear-gradient(180deg, rgba(5,10,18,0.94), rgba(2,6,12,0.92)) !important;
+        color: rgba(248,250,252,0.98) !important;
+
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.07),
+          0 0 26px rgba(183,240,0,0.18),
+          0 0 22px rgba(59,130,246,0.10),
+          0 14px 32px rgba(0,0,0,0.42) !important;
+
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
+
+        font-family: var(--mono) !important;
+        font-size: 11px !important;
+        font-weight: 900 !important;
+        letter-spacing: 0.12em !important;
+        text-transform: uppercase !important;
+        white-space: nowrap !important;
+        transform: none !important;
+      }
+
+      .topbar .info-trigger::before,
+      button.info-trigger::before,
+      button[onclick="openGlossary()"].info-trigger::before {
+        content: none !important;
+        display: none !important;
+      }
+
+      body.mobile-glossary-open .topbar .info-trigger,
+      body.mobile-glossary-open button.info-trigger {
+        display: none !important;
+      }
+
+      body.mobile-signal-drawer-active .topbar .info-trigger,
+      body.mobile-signal-drawer-active button.info-trigger {
+        opacity: 0.32 !important;
+        pointer-events: none !important;
+      }
+
+      .topbar .livebox {
+        padding-right: 0 !important;
+      }
+    }
+
+
 
 
 
@@ -2492,7 +2801,66 @@ HTML_TEMPLATE = Template(
         }
       }
 
-    </style>
+    
+    /* SIGNAL_WALL_MOBILE_FIELD_GUIDE_ESCAPES_TOPBAR_V15B
+       Moves /live Field Guide trigger out of the top rail and anchors it as a true bottom utility. */
+    @media (max-width: 640px) {
+      body > .signal-wall-field-guide-float {
+        position: fixed !important;
+        top: auto !important;
+        left: auto !important;
+        right: 14px !important;
+        bottom: max(18px, env(safe-area-inset-bottom)) !important;
+        z-index: 1185 !important;
+        width: auto !important;
+        min-width: 148px !important;
+        max-width: calc(100vw - 28px) !important;
+        height: 42px !important;
+        min-height: 42px !important;
+        padding: 0 15px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        border-radius: 999px !important;
+        border: 1px solid rgba(183,240,0,0.34) !important;
+        background:
+          radial-gradient(circle at 0% 50%, rgba(183,240,0,0.16), transparent 42%),
+          linear-gradient(180deg, rgba(5,10,18,0.94), rgba(2,6,12,0.92)) !important;
+        color: rgba(248,250,252,0.98) !important;
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.07),
+          0 0 26px rgba(183,240,0,0.18),
+          0 0 22px rgba(59,130,246,0.10),
+          0 14px 32px rgba(0,0,0,0.42) !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
+        font-family: var(--mono) !important;
+        font-size: 11px !important;
+        font-weight: 900 !important;
+        letter-spacing: 0.12em !important;
+        text-transform: uppercase !important;
+        white-space: nowrap !important;
+        transform: none !important;
+      }
+
+      body > .signal-wall-field-guide-float::before,
+      body > .signal-wall-field-guide-float::after {
+        content: none !important;
+        display: none !important;
+      }
+
+      body.mobile-glossary-open > .signal-wall-field-guide-float {
+        display: none !important;
+      }
+
+      body.mobile-signal-drawer-active > .signal-wall-field-guide-float {
+        opacity: 0.32 !important;
+        pointer-events: none !important;
+      }
+    }
+
+</style>
 </head>
 <body>
   <div class="topbar">
@@ -2515,6 +2883,42 @@ HTML_TEMPLATE = Template(
   {{ nav_html | safe }}
   {{ search_html | safe }}
 
+  
+<script>
+(function () {
+  if (window.__diamondSignalsFieldGuideEscapesTopbarV15B) return;
+  window.__diamondSignalsFieldGuideEscapesTopbarV15B = true;
+
+  function escapeFieldGuide() {
+    if (!window.matchMedia || !window.matchMedia("(max-width: 640px)").matches) return;
+
+    var trigger = document.querySelector(".topbar .info-trigger, button.info-trigger");
+    if (!trigger) return;
+
+    trigger.classList.add("signal-wall-field-guide-float");
+
+    if (trigger.parentElement !== document.body) {
+      document.body.appendChild(trigger);
+    }
+
+    trigger.style.position = "fixed";
+    trigger.style.top = "auto";
+    trigger.style.left = "auto";
+    trigger.style.right = "14px";
+    trigger.style.bottom = "max(18px, env(safe-area-inset-bottom))";
+    trigger.style.zIndex = "1185";
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", escapeFieldGuide);
+  } else {
+    escapeFieldGuide();
+  }
+
+  window.addEventListener("resize", escapeFieldGuide);
+})();
+</script>
+
   <div id="glossaryOverlay" class="glossary-overlay" onclick="closeGlossary()"></div>
   <aside id="glossaryDrawer" class="glossary-drawer" aria-hidden="true">
     <div class="glossary-head">
@@ -2522,7 +2926,10 @@ HTML_TEMPLATE = Template(
         <div class="glossary-kicker">DiamondSignals Intelligence</div>
         <h2 class="glossary-title">Field Guide</h2>
       </div>
-      <button class="glossary-close" type="button" onclick="closeGlossary()" aria-label="Close field guide">×</button>
+      <button class="glossary-close glossary-back-report" type="button" onclick="closeGlossary()" aria-label="Back to report">
+          <span>Back to Report</span>
+          <strong>×</strong>
+        </button>
     </div>
     <div class="glossary-body">
       <section class="glossary-section">
@@ -2673,7 +3080,11 @@ def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
         threshold=f"{ALERT_THRESHOLD:.0f}+",
         timezone_label=TIMEZONE_LABEL,
-        nav_html=Template(NAV_TEMPLATE).render(active_nav="signal_wall"),
+        nav_html=(
+            Template(DESKTOP_NAV_TEMPLATE).render(active_nav="signal_wall")
+            + "\n"
+            + Template(MOBILE_NAV_TEMPLATE).render(active_nav="signal_wall")
+        ),
         search_html=SEARCH_TEMPLATE,
         footer_html=FOOTER_TEMPLATE,
         shell_styles=SHELL_STYLES_TEMPLATE,
