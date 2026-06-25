@@ -1990,6 +1990,137 @@ HTML_TEMPLATE = Template(
     .glossary-title { margin: 0; font-size: 20px; line-height: 1.05; letter-spacing: -0.03em; text-transform: uppercase; font-weight: 900; color: var(--text); }
     .glossary-close { width: 34px; height: 34px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.10); background: rgba(255,255,255,0.03); color: var(--text); display: inline-flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; }
     .glossary-body { overflow-y: auto; padding: 18px; display: grid; gap: 18px; }
+
+    
+    /* SIGNAL_WALL_MOBILE_FIELD_GUIDE_BOTTOM_SHEET_REPAIR_V12
+       Mobile-only: Field Guide becomes a bottom sheet with an obvious Back to Report control.
+       Desktop drawer behavior remains unchanged. */
+    .mobile-back-label {
+      display: none;
+    }
+    .desktop-close-symbol {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 640px) {
+      body.mobile-glossary-open,
+      body.mobile-field-guide-active {
+        overflow: hidden !important;
+        touch-action: none;
+      }
+
+      body .glossary-overlay {
+        z-index: 120 !important;
+        background: rgba(0,0,0,0.62) !important;
+        backdrop-filter: blur(4px);
+      }
+
+      body .glossary-drawer {
+        top: auto !important;
+        right: 8px !important;
+        left: 8px !important;
+        bottom: 0 !important;
+        width: auto !important;
+        height: min(78dvh, 680px) !important;
+        max-height: calc(100dvh - 72px) !important;
+        border-left: 1px solid rgba(255,255,255,0.10) !important;
+        border-right: 1px solid rgba(255,255,255,0.10) !important;
+        border-top: 1px solid rgba(182,255,0,0.18) !important;
+        border-bottom: 0 !important;
+        border-radius: 24px 24px 0 0 !important;
+        transform: translateY(calc(100% + 22px)) !important;
+        transition: transform 220ms ease, opacity 180ms ease !important;
+        z-index: 130 !important;
+        box-shadow:
+          0 -18px 50px rgba(0,0,0,0.58),
+          0 0 24px rgba(182,255,0,0.08) !important;
+        overflow: hidden !important;
+      }
+
+      body .glossary-drawer.open {
+        transform: translateY(0) !important;
+      }
+
+      body .glossary-head {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 2 !important;
+        align-items: center !important;
+        padding: 14px 14px 12px !important;
+        background:
+          linear-gradient(180deg, rgba(16,16,16,0.98), rgba(10,10,10,0.94)) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+      }
+
+      body .glossary-head::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 7px;
+        width: 46px;
+        height: 4px;
+        border-radius: 999px;
+        transform: translateX(-50%);
+        background: rgba(255,255,255,0.22);
+      }
+
+      body .glossary-kicker {
+        margin-top: 8px !important;
+        font-size: 8px !important;
+        letter-spacing: 0.16em !important;
+      }
+
+      body .glossary-title {
+        font-size: 18px !important;
+      }
+
+      body .glossary-close {
+        width: auto !important;
+        min-width: 132px !important;
+        height: 36px !important;
+        padding: 0 13px !important;
+        border-radius: 999px !important;
+        border-color: rgba(182,255,0,0.24) !important;
+        background: rgba(182,255,0,0.08) !important;
+        color: rgba(248,250,252,0.96) !important;
+        font-family: var(--mono) !important;
+        font-size: 10px !important;
+        font-weight: 900 !important;
+        letter-spacing: 0.10em !important;
+        text-transform: uppercase !important;
+      }
+
+      body .glossary-close .desktop-close-symbol {
+        display: none !important;
+      }
+
+      body .glossary-close .mobile-back-label {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+      }
+
+      body .glossary-body {
+        padding: 14px 14px calc(22px + env(safe-area-inset-bottom)) !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      body.mobile-glossary-open .player-card.mobile-card-open,
+      body.mobile-field-guide-active .player-card.mobile-card-open {
+        opacity: 0.52;
+        pointer-events: none;
+      }
+
+      body.mobile-glossary-open .info-trigger,
+      body.mobile-field-guide-active .info-trigger {
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+    }
     .glossary-section { border: 1px solid rgba(255,255,255,0.05); border-radius: 14px; background: rgba(255,255,255,0.02); padding: 14px; }
     .glossary-section-title { margin: 0 0 12px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--lime-hot); font-weight: 800; font-family: var(--mono); }
     .glossary-item { margin-bottom: 12px; }
@@ -2492,7 +2623,123 @@ HTML_TEMPLATE = Template(
         }
       }
 
-    </style>
+    
+    
+
+    
+
+
+    
+    /* SIGNAL_WALL_MOBILE_FIELD_GUIDE_MENU_TWIN_V16
+       True fix:
+       Field Guide is inserted into the same parent as the mobile Menu pill.
+       It behaves like Menu because it lives with Menu.
+       No independent top/right/bottom positioning. No scroll drift. */
+    @media (max-width: 640px) {
+      body .info-trigger.ds-original-field-guide-hidden {
+        display: none !important;
+      }
+
+      body .ds-mobile-menu-twin-host {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 12px !important;
+        overflow: visible !important;
+      }
+
+      body .ds-mobile-menu-twin-host .ds-field-guide-menu-twin {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+
+        height: 42px !important;
+        min-width: 156px !important;
+        width: auto !important;
+        padding: 0 18px !important;
+        margin: 0 !important;
+
+        border-radius: 999px !important;
+        border: 1px solid rgba(182,255,0,0.30) !important;
+        background:
+          radial-gradient(circle at 18% 0%, rgba(182,255,0,0.16), transparent 52%),
+          rgba(5,7,10,0.92) !important;
+        color: rgba(248,250,252,0.98) !important;
+        box-shadow:
+          0 10px 28px rgba(0,0,0,0.38),
+          0 0 18px rgba(182,255,0,0.11),
+          inset 0 1px 0 rgba(255,255,255,0.09) !important;
+        backdrop-filter: blur(14px) !important;
+
+        font-family: var(--mono) !important;
+        font-size: 10px !important;
+        font-weight: 900 !important;
+        letter-spacing: 0.13em !important;
+        line-height: 1 !important;
+        text-transform: uppercase !important;
+        white-space: nowrap !important;
+
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        cursor: pointer !important;
+        -webkit-tap-highlight-color: transparent !important;
+      }
+
+      body .ds-mobile-menu-twin-host .ds-field-guide-menu-twin .ds-field-guide-icon {
+        font-size: 15px !important;
+        line-height: 1 !important;
+        color: var(--hg-lime, #b6ff00) !important;
+        text-shadow: 0 0 12px rgba(182,255,0,0.28) !important;
+      }
+
+      body.mobile-glossary-open .ds-field-guide-menu-twin,
+      body.mobile-field-guide-active .ds-field-guide-menu-twin {
+        opacity: 0.38 !important;
+        pointer-events: none !important;
+      }
+
+      body .livebox,
+      body .live-label,
+      body .live-time {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+      }
+    }
+
+
+    
+    /* SIGNAL_WALL_MOBILE_HIDE_ORIGINAL_FIELD_GUIDE_TRIGGER_V17
+       Keep only the Field Guide twin beside Menu on mobile.
+       Hide the original topbar/hero Field Guide trigger so it cannot duplicate near LIVE. */
+    @media (max-width: 640px) {
+      body button.info-trigger[onclick="openGlossary()"]:not(.ds-field-guide-menu-twin),
+      body .topbar button.info-trigger[onclick="openGlossary()"]:not(.ds-field-guide-menu-twin),
+      body:has(.hero-title) button.info-trigger[onclick="openGlossary()"]:not(.ds-field-guide-menu-twin),
+      body .info-trigger.ds-original-field-guide-hidden {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        position: absolute !important;
+        width: 0 !important;
+        height: 0 !important;
+        min-width: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+      }
+
+      body .ds-field-guide-menu-twin {
+        display: inline-flex !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+      }
+    }
+
+</style>
 </head>
 <body>
   <div class="topbar">
@@ -2522,7 +2769,7 @@ HTML_TEMPLATE = Template(
         <div class="glossary-kicker">DiamondSignals Intelligence</div>
         <h2 class="glossary-title">Field Guide</h2>
       </div>
-      <button class="glossary-close" type="button" onclick="closeGlossary()" aria-label="Close field guide">×</button>
+      <button class="glossary-close" type="button" onclick="closeGlossary()" aria-label="Back to report"><span class="desktop-close-symbol">×</span><span class="mobile-back-label">← Back to Report</span></button>
     </div>
     <div class="glossary-body">
       <section class="glossary-section">
@@ -2635,6 +2882,66 @@ HTML_TEMPLATE = Template(
   <script src="/player-search.js"></script>
   <script src="/player-card-actions.js"></script>
   <script>
+
+
+    // SIGNAL_WALL_MOBILE_FIELD_GUIDE_MENU_TWIN_JS_V16
+    // Make Field Guide a true sibling/twin of the mobile Menu pill.
+    function dsInstallFieldGuideMenuTwin() {
+      const isMobile = window.matchMedia("(max-width: 640px)").matches;
+      const originalGuide = document.querySelector('button.info-trigger[onclick="openGlossary()"]');
+
+      const menu =
+        document.querySelector('.ds-mobile-menu-trigger') ||
+        document.querySelector('[data-mobile-menu-trigger]') ||
+        Array.from(document.querySelectorAll('button, a')).find(el =>
+          (el.textContent || '').trim().toUpperCase() === 'MENU' ||
+          (el.textContent || '').trim().toUpperCase().includes('MENU')
+        );
+
+      if (!originalGuide || !menu || !menu.parentElement) return;
+
+      let twin = document.querySelector('.ds-field-guide-menu-twin');
+
+      if (!isMobile) {
+        originalGuide.classList.remove('ds-original-field-guide-hidden');
+        if (twin) twin.remove();
+        menu.parentElement.classList.remove('ds-mobile-menu-twin-host');
+        return;
+      }
+
+      originalGuide.classList.add('ds-original-field-guide-hidden');
+
+      const host = menu.parentElement;
+      host.classList.add('ds-mobile-menu-twin-host');
+
+      if (!twin) {
+        twin = document.createElement('button');
+        twin.type = 'button';
+        twin.className = `${menu.className || ''} ds-field-guide-menu-twin`.trim();
+        twin.setAttribute('aria-label', 'Open Field Guide');
+        twin.innerHTML = '<span class="ds-field-guide-icon">ⓘ</span><span>Field Guide</span>';
+        twin.addEventListener('click', function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          openGlossary();
+        });
+      }
+
+      if (twin.parentElement !== host) {
+        host.insertBefore(twin, menu);
+      } else if (twin.nextElementSibling !== menu) {
+        host.insertBefore(twin, menu);
+      }
+    }
+
+    window.addEventListener("resize", dsInstallFieldGuideMenuTwin, { passive: true });
+    window.addEventListener("orientationchange", dsInstallFieldGuideMenuTwin, { passive: true });
+    window.addEventListener("load", dsInstallFieldGuideMenuTwin, { passive: true });
+    dsInstallFieldGuideMenuTwin();
+    setTimeout(dsInstallFieldGuideMenuTwin, 250);
+    setTimeout(dsInstallFieldGuideMenuTwin, 750);
+
+
     function openGlossary() {
       const overlay = document.getElementById("glossaryOverlay");
       const drawer = document.getElementById("glossaryDrawer");
