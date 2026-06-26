@@ -2710,6 +2710,26 @@ HTML_TEMPLATE = Template(
       }
     }
 
+    /* SIGNAL_WALL_MOBILE_TWIN_PILL_STYLE_POLISH_V18
+       Keep the approved twin layout, but make Field Guide match the Menu pill's
+       stronger border/glow language. Signal Wall mobile-only. */
+    @media (max-width: 640px) {
+      body .ds-mobile-menu-twin-host .ds-field-guide-menu-twin {
+        border-color: rgba(182,255,0,0.48) !important;
+        box-shadow:
+          0 10px 28px rgba(0,0,0,0.38),
+          0 0 22px rgba(182,255,0,0.20),
+          0 0 44px rgba(182,255,0,0.08),
+          inset 0 1px 0 rgba(255,255,255,0.11) !important;
+      }
+
+      body .ds-mobile-menu-twin-host .ds-field-guide-menu-twin .ds-field-guide-icon {
+        text-shadow:
+          0 0 12px rgba(182,255,0,0.42),
+          0 0 22px rgba(182,255,0,0.20) !important;
+      }
+    }
+
 
     
     /* SIGNAL_WALL_MOBILE_HIDE_ORIGINAL_FIELD_GUIDE_TRIGGER_V17
@@ -2738,6 +2758,8 @@ HTML_TEMPLATE = Template(
         opacity: 1 !important;
         visibility: visible !important;
         pointer-events: auto !important;
+      }
+    }
 
 /* SIGNAL_WALL_DESKTOP_LIVE_RAIL_REPAIR_V1
        Desktop-only /live rail repair.
@@ -2816,6 +2838,354 @@ HTML_TEMPLATE = Template(
         max-width: 100% !important;
         box-sizing: border-box !important;
       }
+
+      /* SIGNAL_WALL_DESKTOP_CARD_FIREWALL_V6
+         Desktop-only firewall.
+         Purpose: preserve approved mobile ledger/card CSS unchanged while preventing
+         mobile compact-row card behavior from taking over desktop /live.
+         Scope: Signal Wall body lock + desktop breakpoint only. */
+      body.signal-wall-v2-typography-lock .app > section.board .mobile-scan-row,
+      body.signal-wall-v2-typography-lock .app > section.board .mobile-drawer-close,
+      body.signal-wall-v2-typography-lock .app > section.board .mobile-signal-toggle,
+      body.signal-wall-v2-typography-lock .app > section.board .provision-row-mobile {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .player-card,
+      body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open),
+      body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open {
+        padding: 14px !important;
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+        background: var(--card-radial) !important;
+        border: 0.5px solid var(--border) !important;
+        border-radius: var(--radius) !important;
+        box-shadow: var(--shadow) !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .player-card .player-top,
+      body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .player-top,
+      body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .player-top {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        gap: 18px !important;
+        align-items: start !important;
+        margin-bottom: 12px !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .player-head {
+        display: flex !important;
+        align-items: start !important;
+        gap: 18px !important;
+        min-width: 0 !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .scorebox {
+        display: flex !important;
+        align-items: flex-start !important;
+        justify-content: flex-end !important;
+        gap: 8px !important;
+        min-width: 120px !important;
+        flex: 0 0 120px !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .provision-row-desktop {
+        display: flex !important;
+        visibility: visible !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .mobile-signal-detail,
+      body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .mobile-signal-detail,
+      body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .mobile-signal-detail {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        margin-top: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .mobile-signal-detail > summary {
+        display: none !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .mobile-signal-tray,
+      body.signal-wall-v2-typography-lock .app > section.board .mobile-signal-detail:not([open]) > .mobile-signal-tray,
+      body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .mobile-signal-tray {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        animation: none !important;
+      }
+
+
+      /* SIGNAL_WALL_DESKTOP_CARD_CONTENT_RESTORE_V7
+         Desktop-only add-on to V6.
+         V6 restored the desktop card shell; V7 restores the hidden audit content
+         that the compact/mobile ledger rules still suppress on wide screens. */
+      body.signal-wall-v2-typography-lock .app > section.board .sparkline-wrap {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        margin: 0 0 12px !important;
+        padding: 8px 10px !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .badge-row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        margin: 0 0 12px !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .metric-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        margin: 0 0 12px !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .metric {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        min-height: 0 !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .season-context-strip {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        margin: 0 0 12px !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .season-context-grid {
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 7px !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .why {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        margin-top: 10px !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .provision-row-desktop {
+        grid-column: 1 / -1 !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        margin: 10px 0 0 !important;
+        padding-top: 0 !important;
+        justify-content: flex-start !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .provision-row-desktop .provision-btn {
+        width: min(260px, 100%) !important;
+        max-width: 260px !important;
+        min-width: 0 !important;
+      }
+
+      
+      /* SIGNAL_WALL_DESKTOP_TRACKING_BUTTON_LAYOUT_V9
+         Desktop-only: move Initiate Tracking out of the identity/score collision zone.
+         Keeps approved mobile expandable-card layout untouched. */
+      body.signal-wall-v2-typography-lock .app > section.board .player-top {
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        grid-auto-flow: row !important;
+        align-items: start !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .player-head {
+        grid-column: 1 / 2 !important;
+        grid-row: 1 !important;
+        min-width: 0 !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .scorebox {
+        grid-column: 2 / 3 !important;
+        grid-row: 1 !important;
+        align-self: start !important;
+        justify-self: end !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .player-top > .provision-row-desktop {
+        grid-column: 1 / -1 !important;
+        grid-row: 2 !important;
+        position: static !important;
+        inset: auto !important;
+        transform: none !important;
+        z-index: auto !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        margin: 12px 0 0 !important;
+        padding: 0 !important;
+        display: flex !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .player-head .provision-row-desktop {
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        order: 99 !important;
+        margin: 10px 0 0 !important;
+        position: static !important;
+        transform: none !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .provision-row-desktop .provision-btn {
+        width: min(220px, 100%) !important;
+        max-width: 220px !important;
+        min-width: 0 !important;
+        height: 38px !important;
+        min-height: 38px !important;
+        padding: 0 18px !important;
+        position: static !important;
+        transform: none !important;
+        white-space: nowrap !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .mobile-signal-detail {
+        margin-top: 12px !important;
+      }
+
+
+      /* SIGNAL_WALL_DESKTOP_CARD_HEADER_GRID_V10
+         Desktop-only: stop tracking button from colliding with player name.
+         Creates a stable desktop card header grid while leaving mobile ledger CSS untouched. */
+      body.signal-wall-v2-typography-lock .app > section.board .player-card {
+        padding: 16px !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .player-top {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) 112px !important;
+        grid-template-rows: auto auto !important;
+        column-gap: 18px !important;
+        row-gap: 10px !important;
+        align-items: start !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .player-head {
+        grid-column: 1 / 2 !important;
+        grid-row: 1 / 2 !important;
+        display: grid !important;
+        grid-template-columns: 46px minmax(0, 1fr) !important;
+        grid-template-rows: auto auto !important;
+        column-gap: 14px !important;
+        row-gap: 8px !important;
+        align-items: start !important;
+        min-width: 0 !important;
+        width: 100% !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .avatar {
+        grid-column: 1 / 2 !important;
+        grid-row: 1 / 3 !important;
+        width: 42px !important;
+        height: 42px !important;
+        min-width: 42px !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .player-ident {
+        grid-column: 2 / 3 !important;
+        grid-row: 1 / 2 !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .player-name {
+        max-width: 100% !important;
+        overflow-wrap: normal !important;
+        word-break: normal !important;
+        white-space: normal !important;
+        line-height: 0.94 !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .player-head .provision-row-desktop,
+      body.signal-wall-v2-typography-lock .app > section.board .player-top > .provision-row-desktop {
+        grid-column: 2 / 3 !important;
+        grid-row: 2 / 3 !important;
+        display: flex !important;
+        position: static !important;
+        inset: auto !important;
+        transform: none !important;
+        z-index: auto !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        margin: 2px 0 0 !important;
+        padding: 0 !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .provision-row-desktop .provision-btn {
+        width: min(210px, 100%) !important;
+        max-width: 210px !important;
+        min-width: 0 !important;
+        height: 34px !important;
+        min-height: 34px !important;
+        padding: 0 16px !important;
+        font-size: 9px !important;
+        letter-spacing: 0.12em !important;
+        position: static !important;
+        inset: auto !important;
+        transform: none !important;
+        white-space: nowrap !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .scorebox {
+        grid-column: 2 / 3 !important;
+        grid-row: 1 / 2 !important;
+        justify-self: end !important;
+        align-self: start !important;
+        min-width: 96px !important;
+        flex: 0 0 96px !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .mobile-signal-detail {
+        margin-top: 14px !important;
+        clear: both !important;
+      }
+
+
     }
 
     @media screen and (min-width: 761px) and (max-width: 1100px) {
@@ -2977,16 +3347,29 @@ HTML_TEMPLATE = Template(
 
     // SIGNAL_WALL_MOBILE_FIELD_GUIDE_MENU_TWIN_JS_V16
     // Make Field Guide a true sibling/twin of the mobile Menu pill.
+    // SIGNAL_WALL_MOBILE_MENU_LABEL_MODULE_FEEDS_V18
+    // Signal Wall mobile-only brand label: Menu -> MODULE / FEEDS.
+    function dsSetSignalWallMobileMenuLabel(menu, label) {
+      if (!menu) return;
+      const spans = Array.from(menu.querySelectorAll('span'));
+      const labelSpan = spans.find((span) => !span.classList.contains('ds-mobile-menu-icon')) || spans[spans.length - 1];
+      if (labelSpan) labelSpan.textContent = label;
+    }
+
     function dsInstallFieldGuideMenuTwin() {
       const isMobile = window.matchMedia("(max-width: 640px)").matches;
       const originalGuide = document.querySelector('button.info-trigger[onclick="openGlossary()"]');
 
       const menu =
-        document.querySelector('.ds-mobile-menu-trigger') ||
-        document.querySelector('[data-mobile-menu-trigger]') ||
+        document.querySelector('.ds-mobile-menu-trigger:not(.ds-field-guide-menu-twin)') ||
+        document.querySelector('[data-mobile-menu-trigger]:not(.ds-field-guide-menu-twin)') ||
         Array.from(document.querySelectorAll('button, a')).find(el =>
-          (el.textContent || '').trim().toUpperCase() === 'MENU' ||
-          (el.textContent || '').trim().toUpperCase().includes('MENU')
+          !el.classList.contains('ds-field-guide-menu-twin') &&
+          (
+            (el.textContent || '').trim().toUpperCase() === 'MENU' ||
+            (el.textContent || '').trim().toUpperCase().includes('MENU') ||
+            (el.textContent || '').trim().toUpperCase().includes('MODULE / FEEDS')
+          )
         );
 
       if (!originalGuide || !menu || !menu.parentElement) return;
@@ -2994,6 +3377,7 @@ HTML_TEMPLATE = Template(
       let twin = document.querySelector('.ds-field-guide-menu-twin');
 
       if (!isMobile) {
+        dsSetSignalWallMobileMenuLabel(menu, 'Menu');
         originalGuide.classList.remove('ds-original-field-guide-hidden');
         if (twin) twin.remove();
         menu.parentElement.classList.remove('ds-mobile-menu-twin-host');
@@ -3004,19 +3388,23 @@ HTML_TEMPLATE = Template(
 
       const host = menu.parentElement;
       host.classList.add('ds-mobile-menu-twin-host');
+      dsSetSignalWallMobileMenuLabel(menu, 'MODULE / FEEDS');
 
       if (!twin) {
         twin = document.createElement('button');
         twin.type = 'button';
         twin.className = `${menu.className || ''} ds-field-guide-menu-twin`.trim();
         twin.setAttribute('aria-label', 'Open Field Guide');
-        twin.innerHTML = '<span class="ds-field-guide-icon">ⓘ</span><span>Field Guide</span>';
         twin.addEventListener('click', function(event) {
           event.preventDefault();
           event.stopPropagation();
           openGlossary();
         });
       }
+
+      // SIGNAL_WALL_MOBILE_FIELD_GUIDE_LABEL_RESET_V19
+      // Prevent MODULE / FEEDS from contaminating the Field Guide twin on reinstall.
+      twin.innerHTML = '<span class="ds-field-guide-icon">ⓘ</span><span>Field Guide</span>';
 
       if (twin.parentElement !== host) {
         host.insertBefore(twin, menu);
