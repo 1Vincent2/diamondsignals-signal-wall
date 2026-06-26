@@ -26,6 +26,7 @@ SIGNAL_WALL_STATUS_PATH = STATUS_DIR / "signal-wall.json"
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
+NAV_V2_TEMPLATE = (TEMPLATES_DIR / "shell_nav_v2.html").read_text(encoding="utf-8")
 SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
 FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
 SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
@@ -2492,9 +2493,100 @@ HTML_TEMPLATE = Template(
         }
       }
 
-    </style>
+    
+    
+    /* SIGNAL_WALL_DESKTOP_LIVE_RAIL_REPAIR_V1
+       Desktop-only /live rail repair.
+       Keeps the accepted pro nav, centers the hero/meta zone, and aligns the board rail.
+       Scoped to Signal Wall's body lock only. */
+    @media screen and (min-width: 761px) {
+      body.signal-wall-v2-typography-lock .topbar-inner,
+      body.signal-wall-v2-typography-lock .ds-pro-desktop-nav-inner,
+      body.signal-wall-v2-typography-lock .app {
+        width: min(1120px, calc(100vw - 96px)) !important;
+        max-width: 1120px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        box-sizing: border-box !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app {
+        display: block !important;
+        padding-top: 28px !important;
+        padding-bottom: 40px !important;
+        overflow: visible !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.hero {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        box-sizing: border-box !important;
+      }
+
+      body.signal-wall-v2-typography-lock .hero-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      body.signal-wall-v2-typography-lock .meta-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      body.signal-wall-v2-typography-lock .meta-card {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+        gap: 18px !important;
+        align-items: start !important;
+        box-sizing: border-box !important;
+        overflow: visible !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board > .section {
+        min-width: 0 !important;
+        width: auto !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      body.signal-wall-v2-typography-lock .app > section.board .cards,
+      body.signal-wall-v2-typography-lock .app > section.board .player-card {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+    }
+
+    @media screen and (min-width: 761px) and (max-width: 1100px) {
+      body.signal-wall-v2-typography-lock .app > section.board {
+        grid-template-columns: minmax(0, 1fr) !important;
+      }
+
+      body.signal-wall-v2-typography-lock .meta-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+      }
+    }
+
+</style>
 </head>
-<body>
+<body class="signal-wall-v2-typography-lock">
   <div class="topbar">
     <div class="topbar-inner">
       <div class="brand">
@@ -2512,6 +2604,7 @@ HTML_TEMPLATE = Template(
     </div>
   </div>
 
+  {{ desktop_nav_html | safe }}
   {{ nav_html | safe }}
   {{ search_html | safe }}
 
@@ -2673,6 +2766,7 @@ def render_html(pitchers: pd.DataFrame, hitters: pd.DataFrame) -> str:
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
         threshold=f"{ALERT_THRESHOLD:.0f}+",
         timezone_label=TIMEZONE_LABEL,
+        desktop_nav_html=Template(NAV_V2_TEMPLATE).render(active_nav="signal_wall"),
         nav_html=Template(NAV_TEMPLATE).render(active_nav="signal_wall"),
         search_html=SEARCH_TEMPLATE,
         footer_html=FOOTER_TEMPLATE,
