@@ -30,7 +30,15 @@ GUARD = r'''<script>
     window.location.hostname === "127.0.0.1" ||
     window.location.hostname === "";
 
-  if (isLocal || isGatePage || isPublicPromoPath) return;
+  /*
+    ACCESS_GATE_PREVIEW_HOST_ALLOWLIST_V1
+    Allows the quarantined Netlify preview project to serve branch pages
+    without escaping back to production. Production host gating remains intact.
+  */
+  var isPreviewHost =
+    window.location.hostname === "diamondsignals-mobile-preview.netlify.app";
+
+  if (isLocal || isPreviewHost || isGatePage || isPublicPromoPath) return;
 
   function readCookie(name) {
     return document.cookie
