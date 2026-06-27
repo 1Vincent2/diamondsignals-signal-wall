@@ -27,6 +27,91 @@ TEMPLATES_DIR = BASE_DIR / "templates"
 
 NAV_TEMPLATE = (TEMPLATES_DIR / "shell_nav.html").read_text(encoding="utf-8")
 NAV_V2_TEMPLATE = (TEMPLATES_DIR / "shell_nav_v2.html").read_text(encoding="utf-8")
+
+
+def build_mobile_nav_from_desktop_nav(nav_v2_html: str) -> str:
+    """PROMOTION_WATCH_NAV_SOURCE_OF_TRUTH_V1
+
+    Promotion Watch mobile navigation mirrors the correct desktop v2 nav.
+    The old shell_nav.html hardcoded mobile link list is intentionally bypassed
+    so stale mobile nav cannot re-enter this report.
+    """
+    raw_links = re.findall(
+        r'<a class="ds-pro-desktop-nav-link[^"]*" href="[^"]+"><span>.*?</span>.*?</a>',
+        nav_v2_html,
+        flags=re.S,
+    )
+
+    mobile_links = []
+    for raw in raw_links:
+        class_match = re.search(r'class="([^"]*)"', raw)
+        class_value = class_match.group(1) if class_match else ""
+        is_active = "active" in class_value.split()
+        new_class = "ds-mobile-menu-link active" if is_active else "ds-mobile-menu-link"
+        mobile_links.append(re.sub(r'class="[^"]*"', f'class="{new_class}"', raw, count=1))
+
+    links_html = "\n      ".join(mobile_links)
+
+    return f"""
+<!-- PROMOTION_WATCH_NAV_SOURCE_OF_TRUTH_V1: mobile menu mirrored from shell_nav_v2 desktop nav; old shell_nav mobile links bypassed. -->
+<div class="ds-mobile-nav-source-v2" data-promotion-mobile-nav-source="desktop-v2">
+  <button class="ds-mobile-menu-trigger" type="button" data-ds-mobile-menu-open onclick="window.dsOpenMobileMenu && window.dsOpenMobileMenu()" aria-controls="dsMobileMenu" aria-expanded="false">
+    <span class="ds-mobile-menu-icon">☰</span>
+    <span>Menu</span>
+  </button>
+</div>
+
+<div class="ds-mobile-menu-backdrop" data-ds-mobile-menu-close></div>
+
+<aside class="ds-mobile-menu-drawer" id="dsMobileMenu" aria-hidden="true">
+  <div class="ds-mobile-menu-shell">
+    <div class="ds-mobile-menu-head">
+      <div>
+        <div class="ds-mobile-menu-kicker">DIAMONDSIGNALS // DESKTOP NAV MIRROR</div>
+        <h2 class="ds-mobile-menu-title">Signal Surfaces</h2>
+      </div>
+      <button class="ds-mobile-menu-close" type="button" data-ds-mobile-menu-close onclick="window.dsCloseMobileMenu && window.dsCloseMobileMenu()" aria-label="Close menu">×</button>
+    </div>
+
+    <div class="ds-mobile-menu-links" data-nav-source="shell_nav_v2">
+      {links_html}
+    </div>
+
+    <div class="ds-mobile-menu-status">
+      LIVE SURFACE NAV // SOURCE: DESKTOP V2
+    </div>
+  </div>
+</aside>
+
+<script>
+(function () {{
+  // PROMOTION_WATCH_NAV_SOURCE_OF_TRUTH_JS_V1
+  const body = document.body;
+  const openBtn = document.querySelector("[data-ds-mobile-menu-open]");
+  const closeEls = document.querySelectorAll("[data-ds-mobile-menu-close]");
+
+  window.dsOpenMobileMenu = function () {{
+    body.classList.add("ds-mobile-menu-open");
+    if (openBtn) openBtn.setAttribute("aria-expanded", "true");
+    const drawer = document.getElementById("dsMobileMenu");
+    if (drawer) drawer.setAttribute("aria-hidden", "false");
+  }};
+
+  window.dsCloseMobileMenu = function () {{
+    body.classList.remove("ds-mobile-menu-open");
+    if (openBtn) openBtn.setAttribute("aria-expanded", "false");
+    const drawer = document.getElementById("dsMobileMenu");
+    if (drawer) drawer.setAttribute("aria-hidden", "true");
+  }};
+
+  closeEls.forEach((el) => el.addEventListener("click", window.dsCloseMobileMenu));
+  document.addEventListener("keydown", (event) => {{
+    if (event.key === "Escape") window.dsCloseMobileMenu();
+  }});
+}})();
+</script>
+"""
+
 SEARCH_TEMPLATE = (TEMPLATES_DIR / "shell_search.html").read_text(encoding="utf-8")
 FOOTER_TEMPLATE = (TEMPLATES_DIR / "shell_footer.html").read_text(encoding="utf-8")
 SHELL_STYLES_TEMPLATE = (TEMPLATES_DIR / "shell_styles.css").read_text(encoding="utf-8")
@@ -1256,6 +1341,183 @@ HTML_TEMPLATE = Template(
       border-color: rgba(255,255,255,0.13);
       transform: translateY(-1px);
     }
+
+
+    /* PROMOTION_WATCH_AAA_EXPANDABLE_CARD_CSS_V1
+       Mobile-only expandable AAA Promotion Watch cards.
+       Targets the AAA live_ledger_card component only; desktop remains unchanged. */
+    .aaa-mobile-scan-row {
+      display: none;
+    }
+
+    @media (max-width: 760px) {
+      #tab-72h .cards,
+      #tab-14d .cards,
+      #tab-aaa-gems .grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+      }
+
+      #tab-72h .player-card.player-audit-row,
+      #tab-14d .player-card.player-audit-row,
+      #tab-aaa-gems .player-card.player-audit-row {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        border-radius: 18px !important;
+      }
+
+      #tab-72h .player-card.player-audit-row:hover,
+      #tab-14d .player-card.player-audit-row:hover,
+      #tab-aaa-gems .player-card.player-audit-row:hover {
+        transform: none !important;
+      }
+
+      .aaa-mobile-scan-row {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto auto !important;
+        gap: 10px !important;
+        align-items: center !important;
+        width: 100% !important;
+        border: 0 !important;
+        border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+        background: rgba(255,255,255,0.035) !important;
+        color: inherit !important;
+        padding: 14px !important;
+        text-align: left !important;
+      }
+
+      .aaa-mobile-scan-main {
+        min-width: 0 !important;
+        display: grid !important;
+        gap: 4px !important;
+      }
+
+      .aaa-mobile-scan-kicker {
+        font-family: var(--mono);
+        font-size: 10px !important;
+        letter-spacing: 0.16em !important;
+        color: var(--blue-soft);
+        text-transform: uppercase;
+      }
+
+      .aaa-mobile-scan-name {
+        font-size: 18px !important;
+        line-height: 1.08 !important;
+        font-weight: 800 !important;
+        color: #fff !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+      }
+
+      .aaa-mobile-scan-context {
+        font-family: var(--mono);
+        font-size: 10px !important;
+        line-height: 1.25 !important;
+        color: var(--muted);
+        text-transform: uppercase;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+      }
+
+      .aaa-mobile-scan-score {
+        display: grid !important;
+        justify-items: end !important;
+        gap: 2px !important;
+        min-width: 54px !important;
+      }
+
+      .aaa-mobile-score-label {
+        font-family: var(--mono);
+        font-size: 9px !important;
+        letter-spacing: 0.16em !important;
+        color: var(--muted);
+      }
+
+      .aaa-mobile-score-value {
+        font-family: var(--mono);
+        font-size: 22px !important;
+        line-height: 1 !important;
+        font-weight: 900 !important;
+        color: var(--lime);
+      }
+
+      .aaa-mobile-scan-caret {
+        font-size: 20px !important;
+        color: var(--muted);
+        transition: transform 160ms ease;
+      }
+
+      .player-card.mobile-card-open .aaa-mobile-scan-caret {
+        transform: rotate(180deg);
+      }
+
+      #tab-72h .player-card.player-audit-row > .audit-left,
+      #tab-14d .player-card.player-audit-row > .audit-left,
+      #tab-aaa-gems .player-card.player-audit-row > .audit-left {
+        padding: 14px 14px 10px !important;
+      }
+
+      #tab-72h .player-card.player-audit-row > .audit-center,
+      #tab-72h .player-card.player-audit-row > .audit-right,
+      #tab-14d .player-card.player-audit-row > .audit-center,
+      #tab-14d .player-card.player-audit-row > .audit-right,
+      #tab-aaa-gems .player-card.player-audit-row > .audit-center,
+      #tab-aaa-gems .player-card.player-audit-row > .audit-right {
+        display: none !important;
+      }
+
+      #tab-72h .player-card.player-audit-row.mobile-card-open > .audit-center,
+      #tab-72h .player-card.player-audit-row.mobile-card-open > .audit-right,
+      #tab-14d .player-card.player-audit-row.mobile-card-open > .audit-center,
+      #tab-14d .player-card.player-audit-row.mobile-card-open > .audit-right,
+      #tab-aaa-gems .player-card.player-audit-row.mobile-card-open > .audit-center,
+      #tab-aaa-gems .player-card.player-audit-row.mobile-card-open > .audit-right {
+        display: block !important;
+      }
+
+      #tab-72h .player-card.player-audit-row > .audit-center,
+      #tab-14d .player-card.player-audit-row > .audit-center,
+      #tab-aaa-gems .player-card.player-audit-row > .audit-center {
+        padding: 0 14px 12px !important;
+      }
+
+      #tab-72h .player-card.player-audit-row > .audit-right,
+      #tab-14d .player-card.player-audit-row > .audit-right,
+      #tab-aaa-gems .player-card.player-audit-row > .audit-right {
+        padding: 0 14px 14px !important;
+      }
+
+      .player-card.player-audit-row .forensic-grid {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+      }
+
+      .player-card.player-audit-row .audit-context,
+      .player-card.player-audit-row .audit-why {
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+      }
+
+      .player-card.player-audit-row .audit-action-compact {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        align-items: stretch !important;
+      }
+
+      .player-card.player-audit-row .provision-btn {
+        width: 100% !important;
+        justify-content: center !important;
+      }
+    }
+
 
 
     /* Disabled audit routing contract:
@@ -4569,8 +4831,10 @@ def render_html() -> str:
         metric_tooltip_attr=metric_tooltip_attr,
         generated_at=datetime.now().strftime("%Y-%m-%d %I:%M %p"),
         timezone_label=TIMEZONE_LABEL,
-        nav_html=Template(NAV_TEMPLATE).render(active_nav="promotion_watch"),
         nav_v2_html=Template(NAV_V2_TEMPLATE).render(active_nav="promotion_watch"),
+        nav_html=build_mobile_nav_from_desktop_nav(
+            Template(NAV_V2_TEMPLATE).render(active_nav="promotion_watch")
+        ),
         search_html=SEARCH_TEMPLATE,
         footer_html=FOOTER_TEMPLATE,
         shell_styles=SHELL_STYLES_TEMPLATE,

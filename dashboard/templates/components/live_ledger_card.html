@@ -6,6 +6,25 @@
   data-player-team="{{ row.display_team }}"
   data-profile-url="#"
 >
+  <!-- PROMOTION_WATCH_AAA_EXPANDABLE_CARD_V1 -->
+  <button
+    type="button"
+    class="aaa-mobile-scan-row"
+    aria-expanded="false"
+    onclick="event.preventDefault(); event.stopPropagation(); const card = this.closest('.player-card'); const isOpen = card.classList.toggle('mobile-card-open'); this.setAttribute('aria-expanded', isOpen ? 'true' : 'false'); document.querySelectorAll('.player-card.mobile-card-open').forEach((openCard) => { if (openCard !== card) { openCard.classList.remove('mobile-card-open'); const btn = openCard.querySelector('.aaa-mobile-scan-row'); if (btn) btn.setAttribute('aria-expanded', 'false'); } });"
+  >
+    <span class="aaa-mobile-scan-main">
+      <span class="aaa-mobile-scan-kicker">&gt;_ LIVE_AAA_AUDIT</span>
+      <span class="aaa-mobile-scan-name">{{ row.player_name }}</span>
+      <span class="aaa-mobile-scan-context">{{ row.display_org }} // {{ row.display_team }} // {{ context_label }}</span>
+    </span>
+    <span class="aaa-mobile-scan-score">
+      <span class="aaa-mobile-score-label">LIVE</span>
+      <span class="aaa-mobile-score-value {{ row.score_class }}">{{ row.live_score_raw }}</span>
+    </span>
+    <span class="aaa-mobile-scan-caret" aria-hidden="true">⌄</span>
+  </button>
+
   <div class="audit-left">
     <div class="audit-trigger" role="button" tabindex="-1">
       <span class="audit-kicker">&gt;_ LIVE_AAA_AUDIT:</span>
