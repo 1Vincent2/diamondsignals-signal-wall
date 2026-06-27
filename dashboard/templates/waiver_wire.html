@@ -2034,6 +2034,420 @@ body.waiver-field-guide-open{
   }
 }
 
+
+
+/* WAIVER_MOBILE_CANARY_CHROME_PARITY_V11
+   Mobile-only chrome parity with approved Signal Wall canary:
+   Field Guide becomes the left twin of MODULE / FEEDS.
+   Original in-flow / bottom Field Guide pills are hidden on mobile only. */
+@media(max-width:760px){
+  body .ds-waiver-mobile-twin-host{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:12px !important;
+    width:100% !important;
+    overflow:visible !important;
+  }
+
+  body .ds-waiver-mobile-twin-host .ds-waiver-field-guide-menu-twin,
+  body .ds-waiver-mobile-twin-host .ds-mobile-menu-trigger{
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:8px !important;
+
+    height:42px !important;
+    min-width:156px !important;
+    width:auto !important;
+    padding:0 18px !important;
+    margin:0 !important;
+
+    border-radius:999px !important;
+    border:1px solid rgba(182,255,0,0.48) !important;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(182,255,0,0.16), transparent 52%),
+      rgba(5,7,10,0.92) !important;
+    color:rgba(248,250,252,0.98) !important;
+    box-shadow:
+      0 10px 28px rgba(0,0,0,0.38),
+      0 0 22px rgba(182,255,0,0.20),
+      0 0 44px rgba(182,255,0,0.08),
+      inset 0 1px 0 rgba(255,255,255,0.11) !important;
+    backdrop-filter:blur(14px) !important;
+
+    font-family:var(--mono) !important;
+    font-size:10px !important;
+    font-weight:900 !important;
+    letter-spacing:0.13em !important;
+    line-height:1 !important;
+    text-transform:uppercase !important;
+    white-space:nowrap !important;
+
+    -webkit-appearance:none !important;
+    appearance:none !important;
+    cursor:pointer !important;
+    -webkit-tap-highlight-color:transparent !important;
+  }
+
+  body .ds-waiver-mobile-twin-host .ds-waiver-field-guide-menu-twin{
+    order:1 !important;
+  }
+
+  body .ds-waiver-mobile-twin-host .ds-mobile-menu-trigger{
+    order:2 !important;
+  }
+
+  body .ds-waiver-field-guide-icon{
+    font-size:15px !important;
+    line-height:1 !important;
+    color:var(--hg-lime, #b6ff00) !important;
+    text-shadow:
+      0 0 12px rgba(182,255,0,0.42),
+      0 0 22px rgba(182,255,0,0.20) !important;
+  }
+
+  body.waiver-field-guide-open .ds-waiver-field-guide-menu-twin{
+    opacity:0.38 !important;
+    pointer-events:none !important;
+  }
+
+  body .waiver-field-guide-trigger.ds-waiver-original-field-guide-hidden,
+  body button.waiver-field-guide-trigger:not(.ds-waiver-field-guide-menu-twin){
+    display:none !important;
+    opacity:0 !important;
+    visibility:hidden !important;
+    pointer-events:none !important;
+    position:absolute !important;
+    left:-9999px !important;
+    right:auto !important;
+    bottom:auto !important;
+    width:0 !important;
+    min-width:0 !important;
+    height:0 !important;
+    min-height:0 !important;
+    padding:0 !important;
+    margin:0 !important;
+  }
+}
+
+
+
+/* WAIVER_MOBILE_CANARY_CHROME_ALIGNMENT_V12
+   Alignment correction after V11:
+   the inserted Field Guide twin must sit flush-left on the same baseline
+   as MODULE / FEEDS, matching the approved Signal Wall canary row. */
+@media(max-width:760px){
+  body .ds-waiver-mobile-twin-host{
+    position:fixed !important;
+    top:calc(58px + env(safe-area-inset-top)) !important;
+    left:32px !important;
+    right:32px !important;
+    width:auto !important;
+    max-width:none !important;
+
+    display:grid !important;
+    grid-template-columns:minmax(0, 1fr) minmax(0, 1fr) !important;
+    column-gap:54px !important;
+    align-items:center !important;
+    justify-items:stretch !important;
+
+    margin:0 !important;
+    padding:0 !important;
+    transform:none !important;
+    z-index:2400 !important;
+    pointer-events:none !important;
+    overflow:visible !important;
+  }
+
+  body .ds-waiver-mobile-twin-host .ds-waiver-field-guide-menu-twin,
+  body .ds-waiver-mobile-twin-host .ds-mobile-menu-trigger{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:none !important;
+    height:42px !important;
+    min-height:42px !important;
+    max-height:42px !important;
+
+    margin:0 !important;
+    padding:0 16px !important;
+    transform:none !important;
+
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    vertical-align:top !important;
+    pointer-events:auto !important;
+
+    font-size:10px !important;
+    line-height:1 !important;
+    letter-spacing:0.13em !important;
+  }
+
+  body .ds-waiver-mobile-twin-host .ds-waiver-field-guide-menu-twin{
+    grid-column:1 !important;
+    justify-self:stretch !important;
+  }
+
+  body .ds-waiver-mobile-twin-host .ds-mobile-menu-trigger{
+    grid-column:2 !important;
+    justify-self:stretch !important;
+  }
+
+  body .ds-waiver-mobile-twin-host .ds-waiver-field-guide-menu-twin > span,
+  body .ds-waiver-mobile-twin-host .ds-mobile-menu-trigger > span{
+    display:inline-flex !important;
+    align-items:center !important;
+    line-height:1 !important;
+  }
+
+  body .ds-waiver-mobile-twin-host .ds-waiver-field-guide-icon,
+  body .ds-waiver-mobile-twin-host .ds-mobile-menu-icon{
+    margin-top:0 !important;
+    transform:none !important;
+  }
+}
+
+
+
+/* WAIVER_MOBILE_DEDICATED_CANARY_CHROME_V13
+   Real fix after V11/V12:
+   do not rely on Waiver's existing right-side menu wrapper.
+   Build a dedicated fixed mobile chrome row that matches the approved Signal Wall canary:
+   FIELD GUIDE left, MODULE / FEEDS right, same row, same baseline. */
+@media(max-width:760px){
+  body .ds-waiver-canary-mobile-chrome{
+    position:fixed !important;
+    top:calc(18px + env(safe-area-inset-top)) !important;
+    left:32px !important;
+    right:32px !important;
+    z-index:32000 !important;
+
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:54px !important;
+    align-items:center !important;
+    justify-items:stretch !important;
+
+    width:auto !important;
+    height:42px !important;
+    margin:0 !important;
+    padding:0 !important;
+    pointer-events:none !important;
+  }
+
+  body .ds-waiver-canary-mobile-chrome .ds-waiver-field-guide-menu-twin,
+  body .ds-waiver-canary-mobile-chrome .ds-mobile-menu-trigger{
+    position:relative !important;
+    inset:auto !important;
+    transform:none !important;
+
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:8px !important;
+
+    width:100% !important;
+    min-width:0 !important;
+    max-width:none !important;
+    height:42px !important;
+    min-height:42px !important;
+    max-height:42px !important;
+
+    margin:0 !important;
+    padding:0 16px !important;
+
+    border-radius:999px !important;
+    border:1px solid rgba(182,255,0,0.48) !important;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(182,255,0,0.16), transparent 52%),
+      rgba(5,7,10,0.92) !important;
+    color:rgba(248,250,252,0.98) !important;
+    box-shadow:
+      0 10px 28px rgba(0,0,0,0.38),
+      0 0 22px rgba(182,255,0,0.20),
+      0 0 44px rgba(182,255,0,0.08),
+      inset 0 1px 0 rgba(255,255,255,0.11) !important;
+    backdrop-filter:blur(14px) !important;
+
+    font-family:var(--mono) !important;
+    font-size:10px !important;
+    font-weight:900 !important;
+    letter-spacing:0.13em !important;
+    line-height:1 !important;
+    text-transform:uppercase !important;
+    white-space:nowrap !important;
+
+    pointer-events:auto !important;
+    -webkit-appearance:none !important;
+    appearance:none !important;
+    cursor:pointer !important;
+    -webkit-tap-highlight-color:transparent !important;
+  }
+
+  body .ds-waiver-canary-mobile-chrome .ds-waiver-field-guide-menu-twin{
+    grid-column:1 !important;
+  }
+
+  body .ds-waiver-canary-mobile-chrome .ds-mobile-menu-trigger{
+    grid-column:2 !important;
+  }
+
+  body .ds-waiver-canary-mobile-chrome .ds-waiver-field-guide-icon,
+  body .ds-waiver-canary-mobile-chrome .ds-mobile-menu-icon{
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    line-height:1 !important;
+    margin:0 !important;
+    transform:none !important;
+    color:var(--hg-lime, #b6ff00) !important;
+    text-shadow:
+      0 0 12px rgba(182,255,0,0.42),
+      0 0 22px rgba(182,255,0,0.20) !important;
+  }
+
+  body .ds-waiver-canary-mobile-chrome span{
+    display:inline-flex !important;
+    align-items:center !important;
+    line-height:1 !important;
+  }
+
+  body.waiver-field-guide-open .ds-waiver-field-guide-menu-twin{
+    opacity:0.38 !important;
+    pointer-events:none !important;
+  }
+
+  /* Hide all original Waiver Field Guide triggers on mobile;
+     keep only the dedicated canary twin. */
+  body button.waiver-field-guide-trigger:not(.ds-waiver-field-guide-menu-twin),
+  body .waiver-field-guide-trigger.ds-waiver-original-field-guide-hidden{
+    display:none !important;
+    opacity:0 !important;
+    visibility:hidden !important;
+    pointer-events:none !important;
+    position:absolute !important;
+    left:-9999px !important;
+    width:0 !important;
+    height:0 !important;
+    min-width:0 !important;
+    min-height:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+
+  /* Neutralize V11/V12 host behavior when the real V13 host exists. */
+  body .ds-waiver-mobile-twin-host{
+    position:static !important;
+    display:contents !important;
+    width:auto !important;
+    height:auto !important;
+    margin:0 !important;
+    padding:0 !important;
+    transform:none !important;
+  }
+}
+
+
+
+/* WAIVER_MOBILE_SINGLE_ROW_CANARY_CHROME_V14
+   Fix V13 stacking:
+   force FIELD GUIDE and MODULE / FEEDS into one fixed row,
+   hard-cap pill widths, and override inherited full-width mobile button rules. */
+@media(max-width:760px){
+  body .ds-waiver-canary-mobile-chrome{
+    position:fixed !important;
+    top:calc(18px + env(safe-area-inset-top)) !important;
+    left:32px !important;
+    right:32px !important;
+    z-index:32000 !important;
+
+    display:flex !important;
+    flex-direction:row !important;
+    flex-wrap:nowrap !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:0 !important;
+
+    width:auto !important;
+    height:42px !important;
+    max-height:42px !important;
+    margin:0 !important;
+    padding:0 !important;
+    pointer-events:none !important;
+    overflow:visible !important;
+  }
+
+  body .ds-waiver-canary-mobile-chrome .ds-waiver-field-guide-menu-twin,
+  body .ds-waiver-canary-mobile-chrome .ds-mobile-menu-trigger{
+    flex:0 0 156px !important;
+    width:156px !important;
+    min-width:156px !important;
+    max-width:156px !important;
+
+    height:42px !important;
+    min-height:42px !important;
+    max-height:42px !important;
+
+    position:relative !important;
+    inset:auto !important;
+    display:inline-flex !important;
+    float:none !important;
+
+    margin:0 !important;
+    padding:0 12px !important;
+    transform:none !important;
+
+    align-items:center !important;
+    justify-content:center !important;
+    gap:8px !important;
+
+    box-sizing:border-box !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    pointer-events:auto !important;
+
+    font-size:10px !important;
+    line-height:1 !important;
+    letter-spacing:0.12em !important;
+  }
+
+  body .ds-waiver-canary-mobile-chrome .ds-waiver-field-guide-menu-twin{
+    order:1 !important;
+  }
+
+  body .ds-waiver-canary-mobile-chrome .ds-mobile-menu-trigger{
+    order:2 !important;
+  }
+
+  body .ds-waiver-canary-mobile-chrome .ds-waiver-field-guide-menu-twin span,
+  body .ds-waiver-canary-mobile-chrome .ds-mobile-menu-trigger span{
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+  }
+}
+
+@media(max-width:390px){
+  body .ds-waiver-canary-mobile-chrome{
+    left:24px !important;
+    right:24px !important;
+  }
+
+  body .ds-waiver-canary-mobile-chrome .ds-waiver-field-guide-menu-twin,
+  body .ds-waiver-canary-mobile-chrome .ds-mobile-menu-trigger{
+    flex-basis:148px !important;
+    width:148px !important;
+    min-width:148px !important;
+    max-width:148px !important;
+    padding:0 10px !important;
+    font-size:9.5px !important;
+    letter-spacing:0.11em !important;
+  }
+}
+
 </style>
 </head>
 
@@ -2585,6 +2999,227 @@ function closeWaiverFieldGuide() {
 document.addEventListener("keydown", function(event) {
   if (event.key === "Escape") closeWaiverFieldGuide();
 });
+</script>
+
+
+<script id="waiver-mobile-canary-chrome-parity-script">
+/* WAIVER_MOBILE_CANARY_CHROME_PARITY_JS_V11
+   Waiver-only clone of the approved Signal Wall mobile canary chrome:
+   insert Field Guide into the same parent as the mobile menu and rename Menu to MODULE / FEEDS. */
+(function(){
+  function setWaiverMobileMenuLabel(menu, label){
+    if (!menu) return;
+    const spans = Array.from(menu.querySelectorAll("span"));
+    const labelSpan = spans.find((span) => !span.classList.contains("ds-mobile-menu-icon")) || spans[spans.length - 1];
+    if (labelSpan) {
+      labelSpan.textContent = label;
+      return;
+    }
+
+    const raw = (menu.textContent || "").trim();
+    if (raw && raw.toUpperCase().includes("MENU")) {
+      menu.textContent = label;
+    }
+  }
+
+  function installWaiverFieldGuideMenuTwin(){
+    const isMobile = window.matchMedia("(max-width: 760px)").matches;
+
+    const menu =
+      document.querySelector(".ds-mobile-menu-trigger:not(.ds-waiver-field-guide-menu-twin)") ||
+      document.querySelector("[data-ds-mobile-menu-open]:not(.ds-waiver-field-guide-menu-twin)") ||
+      Array.from(document.querySelectorAll("button, a")).find(function(el){
+        const label = (el.textContent || "").trim().toUpperCase();
+        return !el.classList.contains("ds-waiver-field-guide-menu-twin") &&
+          (label === "MENU" || label.includes("MENU") || label.includes("MODULE / FEEDS"));
+      });
+
+    const originalGuides = Array.from(document.querySelectorAll(".waiver-field-guide-trigger:not(.ds-waiver-field-guide-menu-twin)"));
+    const originalGuide = originalGuides[0];
+
+    if (!menu || !menu.parentElement || !originalGuide) return;
+
+    let twin = document.querySelector(".ds-waiver-field-guide-menu-twin");
+
+    if (!isMobile) {
+      setWaiverMobileMenuLabel(menu, "Menu");
+      originalGuides.forEach(function(btn){
+        btn.classList.remove("ds-waiver-original-field-guide-hidden");
+      });
+      if (twin) twin.remove();
+      menu.parentElement.classList.remove("ds-waiver-mobile-twin-host");
+      return;
+    }
+
+    originalGuides.forEach(function(btn){
+      btn.classList.add("ds-waiver-original-field-guide-hidden");
+    });
+
+    const host = menu.parentElement;
+    host.classList.add("ds-waiver-mobile-twin-host");
+    setWaiverMobileMenuLabel(menu, "MODULE / FEEDS");
+
+    if (!twin) {
+      twin = document.createElement("button");
+      twin.type = "button";
+      twin.className = "waiver-field-guide-trigger ds-waiver-field-guide-menu-twin";
+      twin.setAttribute("aria-label", "Open Field Guide");
+      twin.setAttribute("aria-controls", "waiverFieldGuide");
+      twin.setAttribute("aria-expanded", "false");
+      twin.addEventListener("click", function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof openWaiverFieldGuide === "function") openWaiverFieldGuide();
+      });
+    }
+
+    twin.innerHTML = '<span class="ds-waiver-field-guide-icon">ⓘ</span><span>Field Guide</span>';
+
+    if (twin.parentElement !== host) {
+      host.insertBefore(twin, menu);
+    } else if (twin.nextElementSibling !== menu) {
+      host.insertBefore(twin, menu);
+    }
+  }
+
+  const originalOpen = window.openWaiverFieldGuide;
+  const originalClose = window.closeWaiverFieldGuide;
+
+  if (typeof originalOpen === "function" && !window.__waiverChromeParityOpenWrapped) {
+    window.openWaiverFieldGuide = function(){
+      originalOpen.apply(this, arguments);
+      document.querySelectorAll(".waiver-field-guide-trigger").forEach(function(btn){
+        btn.setAttribute("aria-expanded", "true");
+      });
+    };
+    window.__waiverChromeParityOpenWrapped = true;
+  }
+
+  if (typeof originalClose === "function" && !window.__waiverChromeParityCloseWrapped) {
+    window.closeWaiverFieldGuide = function(){
+      originalClose.apply(this, arguments);
+      document.querySelectorAll(".waiver-field-guide-trigger").forEach(function(btn){
+        btn.setAttribute("aria-expanded", "false");
+      });
+    };
+    window.__waiverChromeParityCloseWrapped = true;
+  }
+
+  window.dsInstallWaiverFieldGuideMenuTwin = installWaiverFieldGuideMenuTwin;
+
+  document.addEventListener("DOMContentLoaded", installWaiverFieldGuideMenuTwin);
+  window.addEventListener("resize", installWaiverFieldGuideMenuTwin);
+  window.addEventListener("orientationchange", installWaiverFieldGuideMenuTwin);
+  setTimeout(installWaiverFieldGuideMenuTwin, 250);
+})();
+</script>
+
+
+<script id="waiver-mobile-dedicated-canary-chrome-script">
+/* WAIVER_MOBILE_DEDICATED_CANARY_CHROME_JS_V13
+   Dedicated Waiver mobile chrome host.
+   This intentionally avoids relying on the existing Waiver menu parent because it is right-biased. */
+(function(){
+  function setMenuLabel(menu, label){
+    if (!menu) return;
+    const spans = Array.from(menu.querySelectorAll("span"));
+    const labelSpan = spans.find((span) => !span.classList.contains("ds-mobile-menu-icon")) || spans[spans.length - 1];
+    if (labelSpan) {
+      labelSpan.textContent = label;
+      return;
+    }
+    menu.textContent = label;
+  }
+
+  function installDedicatedWaiverChrome(){
+    const isMobile = window.matchMedia("(max-width:760px)").matches;
+
+    const menu =
+      document.querySelector(".ds-mobile-menu-trigger:not(.ds-waiver-field-guide-menu-twin)") ||
+      document.querySelector("[data-ds-mobile-menu-open]:not(.ds-waiver-field-guide-menu-twin)");
+
+    const originalGuides = Array.from(document.querySelectorAll(".waiver-field-guide-trigger:not(.ds-waiver-field-guide-menu-twin)"));
+
+    if (!menu || !originalGuides.length) return;
+
+    let host = document.querySelector(".ds-waiver-canary-mobile-chrome");
+    let twin = document.querySelector(".ds-waiver-field-guide-menu-twin");
+
+    if (!isMobile) {
+      setMenuLabel(menu, "Menu");
+      originalGuides.forEach(function(btn){
+        btn.classList.remove("ds-waiver-original-field-guide-hidden");
+      });
+      if (twin) twin.remove();
+      if (host) host.remove();
+      return;
+    }
+
+    if (!host) {
+      host = document.createElement("div");
+      host.className = "ds-waiver-canary-mobile-chrome";
+      document.body.insertBefore(host, document.body.firstChild);
+    }
+
+    originalGuides.forEach(function(btn){
+      btn.classList.add("ds-waiver-original-field-guide-hidden");
+    });
+
+    setMenuLabel(menu, "MODULE / FEEDS");
+
+    if (!twin) {
+      twin = document.createElement("button");
+      twin.type = "button";
+      twin.className = "waiver-field-guide-trigger ds-waiver-field-guide-menu-twin";
+      twin.setAttribute("aria-label", "Open Field Guide");
+      twin.setAttribute("aria-controls", "waiverFieldGuide");
+      twin.setAttribute("aria-expanded", "false");
+      twin.addEventListener("click", function(event){
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof openWaiverFieldGuide === "function") openWaiverFieldGuide();
+      });
+    }
+
+    twin.innerHTML = '<span class="ds-waiver-field-guide-icon">ⓘ</span><span>Field Guide</span>';
+
+    if (twin.parentElement !== host) host.appendChild(twin);
+    if (menu.parentElement !== host) host.appendChild(menu);
+
+    twin.setAttribute("aria-expanded", document.body.classList.contains("waiver-field-guide-open") ? "true" : "false");
+  }
+
+  const originalOpen = window.openWaiverFieldGuide;
+  const originalClose = window.closeWaiverFieldGuide;
+
+  if (typeof originalOpen === "function" && !window.__waiverDedicatedChromeOpenWrapped) {
+    window.openWaiverFieldGuide = function(){
+      originalOpen.apply(this, arguments);
+      document.querySelectorAll(".waiver-field-guide-trigger").forEach(function(btn){
+        btn.setAttribute("aria-expanded", "true");
+      });
+    };
+    window.__waiverDedicatedChromeOpenWrapped = true;
+  }
+
+  if (typeof originalClose === "function" && !window.__waiverDedicatedChromeCloseWrapped) {
+    window.closeWaiverFieldGuide = function(){
+      originalClose.apply(this, arguments);
+      document.querySelectorAll(".waiver-field-guide-trigger").forEach(function(btn){
+        btn.setAttribute("aria-expanded", "false");
+      });
+    };
+    window.__waiverDedicatedChromeCloseWrapped = true;
+  }
+
+  window.dsInstallDedicatedWaiverChrome = installDedicatedWaiverChrome;
+
+  document.addEventListener("DOMContentLoaded", installDedicatedWaiverChrome);
+  window.addEventListener("resize", installDedicatedWaiverChrome);
+  window.addEventListener("orientationchange", installDedicatedWaiverChrome);
+  setTimeout(installDedicatedWaiverChrome, 100);
+  setTimeout(installDedicatedWaiverChrome, 400);
+})();
 </script>
 
 </body>
