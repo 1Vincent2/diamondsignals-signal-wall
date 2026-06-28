@@ -6,40 +6,11 @@
   data-player-team="MLB"
   data-profile-url="{% if row.resolved_player_id or row.player_id %}/scout/{{ row.resolved_player_id or row.player_id }}/{% else %}#{% endif %}"
 >
-  <button
-    type="button"
-    class="mobile-scan-row"
-    style="--edge-score: {{ row.edge_score }};"
-    aria-expanded="false"
-    onclick="event.preventDefault(); event.stopPropagation(); document.querySelectorAll('.player-card.mobile-card-open').forEach((openCard) => { if (openCard !== this.closest('.player-card')) { openCard.classList.remove('mobile-card-open'); const openBtn = openCard.querySelector('.mobile-scan-row'); if (openBtn) openBtn.setAttribute('aria-expanded', 'false'); const openDetail = openCard.querySelector('.mobile-signal-detail'); if (openDetail) openDetail.open = false; } }); const card = this.closest('.player-card'); const detail = card.querySelector('.mobile-signal-detail'); const isOpen = card.classList.toggle('mobile-card-open'); this.setAttribute('aria-expanded', isOpen ? 'true' : 'false'); if (detail) detail.open = isOpen; document.body.classList.toggle('mobile-signal-drawer-active', isOpen);"
-  >
-    <span class="mobile-scan-identity">
-      <span class="mobile-scan-rank">#{{ rank }} {{ trigger_label | replace('Pitcher Trigger', 'Pitching Signal') | replace('Hitter Trigger', 'Hitting Signal') }}</span>
-      <span class="mobile-scan-name">{{ row.player_name }}</span>
-    </span>
-    <span class="mobile-scan-score">
-      <span>Edge</span>
-      <strong>{{ row.edge_score }}</strong>
-    </span>
-  </button>
-
-  <div
-    class="mobile-drawer-close"
-    role="button"
-    tabindex="0"
-    aria-label="Close player metrics"
-    onclick="event.preventDefault(); event.stopPropagation(); const card = this.closest('.player-card'); if (card) { card.classList.remove('mobile-card-open'); const row = card.querySelector('.mobile-scan-row'); if (row) row.setAttribute('aria-expanded', 'false'); const detail = card.querySelector('.mobile-signal-detail'); if (detail) detail.open = false; } document.body.classList.remove('mobile-signal-drawer-active');"
-    onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); this.click(); }"
-  >
-    <span>Close Metrics</span>
-    <strong>×</strong>
-  </div>
-
   <div class="player-top">
     <div class="player-head">
       <div class="avatar">{{ row.player_name[:2]|upper }}</div>
       <div class="player-ident">
-        <div class="rankline">#{{ rank }} {{ trigger_label | replace('Pitcher Trigger', 'Pitching Signal') | replace('Hitter Trigger', 'Hitting Signal') }}</div>
+        <div class="rankline">#{{ rank }} {{ trigger_label }}</div>
         <h3 class="player-name">{{ row.player_name }}</h3>
         <div class="signal-line">{{ signal_line }}</div>
       </div>
@@ -79,75 +50,66 @@
         >INITIATE TRACKING</button>
   </div>
 
-  <details class="mobile-signal-detail">
-    <summary class="mobile-signal-toggle" onclick="event.stopPropagation()">
-      <span>Signal Logic</span>
-      <span class="mobile-signal-toggle-icon" aria-hidden="true">+</span>
-    </summary>
-
-    <div class="mobile-signal-tray">
-      <div class="sparkline-wrap">
-        <div class="sparkline-head">
-          <div class="sparkline-label">7 Day Trend</div>
-          <div class="sparkline-note">7D Trend Analysis</div>
-        </div>
-        <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
-          <defs>
-            <linearGradient id="{{ gradient_id }}" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
-              <stop offset="100%" stop-color="{{ gradient_to }}" stop-opacity="1"></stop>
-            </linearGradient>
-          </defs>
-          <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#{{ gradient_id }})" points="{{ row.trend_points }}" />
-        </svg>
-      </div>
-
-      <div class="badge-row">
-        {% for badge in row.badges %}
-        <span class="status-badge {{ row.badge_classes[loop.index0] }} {% if pulse_badges and badge in pulse_badges %}active-pulse{% endif %}">{{ badge }}</span>
-        {% endfor %}
-      </div>
-
-      <div class="metric-grid">
-        <div class="metric">
-          <div class="metric-label">{{ row.metric_1_label }}</div>
-          <div class="metric-value {% if row.metric_1_label in ['Whiff %', 'Avg EV', 'Barrel-Like %', 'Miss Engine', 'Blast Path', 'Blast Rate'] %}value-edge{% elif row.metric_1_label in ['FB Velo', 'Max EV', 'Extension', 'Velocity Fuel', 'Apex Damage', 'Release Deception'] %}value-ballistics{% elif row.metric_1_label in ['Debut', 'Promoted', 'Apex Rise'] %}value-apex{% else %}value-pulse{% endif %}">{{ row.metric_1 }}</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">{{ row.metric_2_label }}</div>
-          <div class="metric-value {% if row.metric_2_label in ['Whiff %', 'Avg EV', 'Barrel-Like %', 'Miss Engine', 'Blast Path', 'Blast Rate'] %}value-edge{% elif row.metric_2_label in ['FB Velo', 'Max EV', 'Extension', 'Velocity Fuel', 'Apex Damage', 'Release Deception'] %}value-ballistics{% elif row.metric_2_label in ['Debut', 'Promoted', 'Apex Rise'] %}value-apex{% else %}value-pulse{% endif %}">{{ row.metric_2 }}</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">{{ row.metric_3_label }}</div>
-          <div class="metric-value {% if row.metric_3_label in ['Whiff %', 'Avg EV', 'Barrel-Like %', 'Miss Engine', 'Blast Path', 'Blast Rate'] %}value-edge{% elif row.metric_3_label in ['FB Velo', 'Max EV', 'Extension', 'Velocity Fuel', 'Apex Damage', 'Release Deception'] %}value-ballistics{% elif row.metric_3_label in ['Debut', 'Promoted', 'Apex Rise'] %}value-apex{% else %}value-pulse{% endif %}">{{ row.metric_3 }}</div>
-        </div>
-      </div>
-        {% if row.season_context %}
-        {% set ctx = row.season_context %}
-        {% set is_command = ctx.season_context == "COMMAND_PROFILE" %}
-        <div class="season-context-strip">
-          <div class="season-context-head">
-            <span>{% if is_command %}COMMAND_PROFILE{% else %}PLATE_DISCIPLINE{% endif %}</span>
-            <span>{{ ctx.season or "SEASON" }}</span>
-          </div>
-          <div class="season-context-grid">
-            {% if is_command %}
-            <div class="season-context-tile"><span>K%</span><strong>{{ ctx.k_pct or "—" }}</strong></div>
-            <div class="season-context-tile"><span>BB%</span><strong>{{ ctx.bb_pct or "—" }}</strong></div>
-            <div class="season-context-tile"><span {{ metric_tooltip_attr("K/BB") | safe }}>K/BB</span><strong>{{ ctx.k_bb_ratio or "—" }}</strong></div>
-            <div class="season-context-tile"><span {{ metric_tooltip_attr("BABIP") | safe }}>BABIP</span><strong>{{ ctx.babip or "N/A" }}</strong></div>
-            {% else %}
-            <div class="season-context-tile"><span>BB%</span><strong>{{ ctx.bb_pct or "—" }}</strong></div>
-            <div class="season-context-tile"><span {{ metric_tooltip_attr("BB/K") | safe }}>BB/K</span><strong>{{ ctx.bb_k_ratio or "—" }}</strong></div>
-            <div class="season-context-tile"><span {{ metric_tooltip_attr("SEAGER") | safe }}>SEAGER</span><strong>{{ row.seager_score if row.seager_score is not none else "—" }}</strong></div>
-            <div class="season-context-tile"><span {{ metric_tooltip_attr("BABIP") | safe }}>BABIP</span><strong>{{ ctx.babip or "N/A" }}</strong></div>
-            {% endif %}
-          </div>
-        </div>
-        {% endif %}
-
-      <div class="why">{{ row.why }}</div>
+  <div class="sparkline-wrap">
+    <div class="sparkline-head">
+      <div class="sparkline-label">7 Day Trend</div>
+      <div class="sparkline-note">7D Trend Analysis</div>
     </div>
-  </details>
-</article>
+    <svg class="sparkline" viewBox="0 0 120 34" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="{{ gradient_id }}" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#444444" stop-opacity="0.65"></stop>
+          <stop offset="100%" stop-color="{{ gradient_to }}" stop-opacity="1"></stop>
+        </linearGradient>
+      </defs>
+      <polyline class="sparkline-path {% if row.trend_glow %}glow{% endif %}" stroke="url(#{{ gradient_id }})" points="{{ row.trend_points }}" />
+    </svg>
+  </div>
 
+  <div class="badge-row">
+    {% for badge in row.badges %}
+    <span class="status-badge {{ row.badge_classes[loop.index0] }} {% if pulse_badges and badge in pulse_badges %}active-pulse{% endif %}">{{ badge }}</span>
+    {% endfor %}
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric">
+      <div class="metric-label">{{ row.metric_1_label }}</div>
+      <div class="metric-value {% if row.metric_1_label in ['Whiff %', 'Avg EV', 'Barrel-Like %', 'Miss Engine', 'Blast Path', 'Blast Rate'] %}value-edge{% elif row.metric_1_label in ['FB Velo', 'Max EV', 'Extension', 'Velocity Fuel', 'Apex Damage', 'Release Deception'] %}value-ballistics{% elif row.metric_1_label in ['Debut', 'Promoted', 'Apex Rise'] %}value-apex{% else %}value-pulse{% endif %}">{{ row.metric_1 }}</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">{{ row.metric_2_label }}</div>
+      <div class="metric-value {% if row.metric_2_label in ['Whiff %', 'Avg EV', 'Barrel-Like %', 'Miss Engine', 'Blast Path', 'Blast Rate'] %}value-edge{% elif row.metric_2_label in ['FB Velo', 'Max EV', 'Extension', 'Velocity Fuel', 'Apex Damage', 'Release Deception'] %}value-ballistics{% elif row.metric_2_label in ['Debut', 'Promoted', 'Apex Rise'] %}value-apex{% else %}value-pulse{% endif %}">{{ row.metric_2 }}</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">{{ row.metric_3_label }}</div>
+      <div class="metric-value {% if row.metric_3_label in ['Whiff %', 'Avg EV', 'Barrel-Like %', 'Miss Engine', 'Blast Path', 'Blast Rate'] %}value-edge{% elif row.metric_3_label in ['FB Velo', 'Max EV', 'Extension', 'Velocity Fuel', 'Apex Damage', 'Release Deception'] %}value-ballistics{% elif row.metric_3_label in ['Debut', 'Promoted', 'Apex Rise'] %}value-apex{% else %}value-pulse{% endif %}">{{ row.metric_3 }}</div>
+    </div>
+  </div>
+    {% if row.season_context %}
+    {% set ctx = row.season_context %}
+    {% set is_command = ctx.season_context == "COMMAND_PROFILE" %}
+    <div class="season-context-strip">
+      <div class="season-context-head">
+        <span>{% if is_command %}COMMAND_PROFILE{% else %}PLATE_DISCIPLINE{% endif %}</span>
+        <span>{{ ctx.season or "SEASON" }}</span>
+      </div>
+      <div class="season-context-grid">
+        {% if is_command %}
+        <div class="season-context-tile"><span>K%</span><strong>{{ ctx.k_pct or "—" }}</strong></div>
+        <div class="season-context-tile"><span>BB%</span><strong>{{ ctx.bb_pct or "—" }}</strong></div>
+        <div class="season-context-tile"><span {{ metric_tooltip_attr("K/BB") | safe }}>K/BB</span><strong>{{ ctx.k_bb_ratio or "—" }}</strong></div>
+        <div class="season-context-tile"><span {{ metric_tooltip_attr("BABIP") | safe }}>BABIP</span><strong>{{ ctx.babip or "N/A" }}</strong></div>
+        {% else %}
+        <div class="season-context-tile"><span>BB%</span><strong>{{ ctx.bb_pct or "—" }}</strong></div>
+        <div class="season-context-tile"><span {{ metric_tooltip_attr("BB/K") | safe }}>BB/K</span><strong>{{ ctx.bb_k_ratio or "—" }}</strong></div>
+        <div class="season-context-tile"><span {{ metric_tooltip_attr("SEAGER") | safe }}>SEAGER</span><strong>{{ row.seager_score if row.seager_score is not none else "—" }}</strong></div>
+        <div class="season-context-tile"><span {{ metric_tooltip_attr("BABIP") | safe }}>BABIP</span><strong>{{ ctx.babip or "N/A" }}</strong></div>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+
+  <div class="why">{{ row.why }}</div>
+</article>
