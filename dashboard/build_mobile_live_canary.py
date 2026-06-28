@@ -3666,133 +3666,6 @@ def scout_shell_html() -> str:
         }
       }
 
-
-/* MOBILE_LIVE_CANARY_FORCE_COMPACT_ROWS_V1
-   Final canary-only mobile override.
-   Purpose: undo the desktop firewall on /mobile-live-canary/ mobile widths and
-   restore the compact row-first expandable layout. Desktop /live/ is untouched. */
-@media (max-width: 760px) {
-  body.signal-wall-v2-typography-lock .app > section.board {
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  body.signal-wall-v2-typography-lock .app > section.board > .section {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 0 14px !important;
-  }
-
-  body.signal-wall-v2-typography-lock .app > section.board .cards {
-    gap: 0 !important;
-    padding: 2px 8px 16px !important;
-  }
-
-  body.signal-wall-v2-typography-lock .app > section.board .player-card,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) {
-    padding: 0 !important;
-    min-height: 0 !important;
-    height: auto !important;
-    border-radius: 0 !important;
-    border: 0 !important;
-    border-bottom: 1px solid rgba(148,163,184,0.10) !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    overflow: visible !important;
-  }
-
-  body.signal-wall-v2-typography-lock .app > section.board .mobile-scan-row,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .mobile-scan-row,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .mobile-scan-row {
-    display: grid !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    grid-template-columns: auto minmax(0, 1fr) auto !important;
-    align-items: center !important;
-    gap: 10px !important;
-    width: 100% !important;
-    min-height: 48px !important;
-    padding: 8px 10px !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    color: inherit !important;
-    text-align: left !important;
-    cursor: pointer !important;
-  }
-
-  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .player-top,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .provision-row-desktop,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .provision-row-mobile,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .mobile-drawer-close,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .mobile-signal-detail,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .mobile-signal-tray,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .sparkline-wrap,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .badge-row,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .metric-grid,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .season-context-strip,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .why {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-  }
-
-  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open {
-    padding: 10px !important;
-    margin: 8px 0 12px !important;
-    border: 1px solid rgba(148,163,184,0.20) !important;
-    border-radius: 18px !important;
-    background: var(--card-radial) !important;
-    box-shadow: var(--shadow) !important;
-    overflow: visible !important;
-  }
-
-  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .player-top {
-    display: grid !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    grid-template-columns: minmax(0, 1fr) auto !important;
-    gap: 12px !important;
-    margin-bottom: 10px !important;
-  }
-
-  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .mobile-drawer-close {
-    display: inline-flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
-
-  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .provision-row-mobile {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
-
-  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .mobile-signal-detail,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .mobile-signal-tray,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .sparkline-wrap,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .badge-row,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .metric-grid,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .season-context-strip,
-  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .why {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
-
-  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .metric-grid {
-    display: grid !important;
-  }
-}
-
 </style>
 </head>
 <body>
@@ -4525,6 +4398,144 @@ def apply_signal_wall_season_context(df):
     return out
 
 
+MOBILE_LIVE_CANARY_FORCE_COMPACT_ROWS_CSS = r"""<style>
+/* MOBILE_LIVE_CANARY_FORCE_COMPACT_ROWS_V1
+   Final canary-only mobile override.
+   Purpose: undo the desktop firewall on /mobile-live-canary/ mobile widths and
+   restore the compact row-first expandable layout. Desktop /live/ is untouched. */
+@media (max-width: 760px) {
+  body.signal-wall-v2-typography-lock .app > section.board {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  body.signal-wall-v2-typography-lock .app > section.board > .section {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 14px !important;
+  }
+
+  body.signal-wall-v2-typography-lock .app > section.board .cards {
+    gap: 0 !important;
+    padding: 2px 8px 16px !important;
+  }
+
+  body.signal-wall-v2-typography-lock .app > section.board .player-card,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) {
+    padding: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+    border-bottom: 1px solid rgba(148,163,184,0.10) !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+  body.signal-wall-v2-typography-lock .app > section.board .mobile-scan-row,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .mobile-scan-row,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .mobile-scan-row {
+    display: grid !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    grid-template-columns: auto minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    min-height: 48px !important;
+    padding: 8px 10px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: inherit !important;
+    text-align: left !important;
+    cursor: pointer !important;
+  }
+
+  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .player-top,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .provision-row-desktop,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .provision-row-mobile,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .mobile-drawer-close,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .mobile-signal-detail,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .mobile-signal-tray,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .sparkline-wrap,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .badge-row,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .metric-grid,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .season-context-strip,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card:not(.mobile-card-open) .why {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open {
+    padding: 10px !important;
+    margin: 8px 0 12px !important;
+    border: 1px solid rgba(148,163,184,0.20) !important;
+    border-radius: 18px !important;
+    background: var(--card-radial) !important;
+    box-shadow: var(--shadow) !important;
+    overflow: visible !important;
+  }
+
+  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .player-top {
+    display: grid !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 12px !important;
+    margin-bottom: 10px !important;
+  }
+
+  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .mobile-drawer-close {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .provision-row-mobile {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .mobile-signal-detail,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .mobile-signal-tray,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .sparkline-wrap,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .badge-row,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .metric-grid,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .season-context-strip,
+  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .why {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  body.signal-wall-v2-typography-lock .app > section.board .player-card.mobile-card-open .metric-grid {
+    display: grid !important;
+  }
+}
+</style>"""
+
+
+def inject_mobile_live_canary_force_compact_rows(html: str) -> str:
+    """Inject the canary-only compact row force layer into the actual live canary HTML."""
+    if "MOBILE_LIVE_CANARY_FORCE_COMPACT_ROWS_V1" in html:
+        return html
+    if "</head>" not in html:
+        raise RuntimeError("Could not inject mobile live canary compact row force layer: missing </head>")
+    return html.replace("</head>", MOBILE_LIVE_CANARY_FORCE_COMPACT_ROWS_CSS + "\n</head>", 1)
+
+
 def main() -> None:
     build_started_at = utc_now_iso()
     raw = fetch_statcast_window(START_DATE, END_DATE)
@@ -4594,6 +4605,7 @@ def main() -> None:
     )
 
     html = render_html(top_pitchers, top_hitters)
+    html = inject_mobile_live_canary_force_compact_rows(html)
 
     live_path = DIST_DIR / "mobile-live-canary" / "index.html"
     temp_live_path = write_temp_output(str(live_path), html)
