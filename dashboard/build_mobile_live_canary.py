@@ -1397,122 +1397,15 @@ def load_promotion_watch_dossier_players() -> list[dict]:
 
 def load_supplemental_milb_dossier_players() -> list[dict]:
     """
-    Supplemental identity universe for players not present in MLB statcast/raw dashboard data.
+    Disabled for the isolated mobile live canary route.
 
-    Priority:
-    - MLB raw dashboard data remains primary.
-    - AAA signal base supplements promoted/call-up candidates.
-    - milb_raw_weekly supplements broader AAA/AA/A player identity where available.
+    The canary route is a static visual/reference build and must not use
+    private Supabase service-role environment variables or supplemental
+    database reads. Normal production builders remain responsible for any
+    private-data-backed supplemental identity loading.
     """
-    try:
-        from supabase import create_client
-        import os
-
-        url = os.environ["SUPABASE_URL"]
-        key = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
-        sb = create_client(url, key)
-
-        rows: list[dict] = []
-
-        sources = [
-            {
-                "table": "milb_aaa_weekly_signal_base",
-                "select": "player_id,player_name,org,level,position_group,week_start",
-                "team_col": "org",
-                "limit": 2000,
-            },
-            {
-                "table": "milb_raw_weekly",
-                "select": "player_id,player_name,org_mlb_team,level,position_group,bats,throws,age,week_start,updated_at",
-                "team_col": "org_mlb_team",
-                "limit": 5000,
-            },
-        ]
-
-        for source in sources:
-            try:
-                resp = (
-                    sb.table(source["table"])
-                    .select(source["select"])
-                    .order("week_start", desc=True)
-                    .limit(source["limit"])
-                    .execute()
-                )
-                for row in resp.data or []:
-                    row["_team_col"] = source["team_col"]
-                    row["_source_table"] = source["table"]
-                    rows.append(row)
-            except Exception as exc:
-                print(f"[DOSSIER_SUPPLEMENT] skipped {source['table']}: {exc}")
-
-        if not rows:
-            return []
-
-        df_extra = pd.DataFrame(rows)
-        if df_extra.empty or "player_id" not in df_extra.columns:
-            return []
-
-        df_extra["player_id"] = pd.to_numeric(df_extra["player_id"], errors="coerce")
-        df_extra = df_extra[df_extra["player_id"].notna()].copy()
-        if df_extra.empty:
-            return []
-
-        df_extra["player_id"] = df_extra["player_id"].astype(int)
-
-        if "week_start" in df_extra.columns:
-            df_extra["week_start"] = pd.to_datetime(df_extra["week_start"], errors="coerce")
-
-        sort_cols = ["player_id"]
-        ascending = [True]
-
-        if "week_start" in df_extra.columns:
-            sort_cols.append("week_start")
-            ascending.append(False)
-
-        df_extra = (
-            df_extra.sort_values(sort_cols, ascending=ascending)
-            .drop_duplicates(subset=["player_id"], keep="first")
-        )
-
-        supplemental_players: list[dict] = []
-
-        for _, row in df_extra.iterrows():
-            pid = safe_int(row.get("player_id"))
-            if pid is None:
-                continue
-
-            full_name = str(row.get("player_name") or "").strip() or f"Player {pid}"
-            team_col = str(row.get("_team_col") or "org").strip()
-            team_value = str(row.get(team_col) or row.get("org") or row.get("org_mlb_team") or "").strip()
-            level_value = str(row.get("level") or "").strip()
-            position_value = str(row.get("position_group") or "").strip()
-
-            supplemental_players.append(
-                {
-                    "player_id": pid,
-                    "full_name": full_name,
-                    "first_name": "",
-                    "last_name": "",
-                    "team": team_value,
-                    "team_name": team_value,
-                    "level": level_value,
-                    "position": position_value,
-                    "bats": str(row.get("bats") or "").strip(),
-                    "throws": str(row.get("throws") or "").strip(),
-                    "age": row.get("age"),
-                    "status": "MILB_SUPPLEMENTAL_UNIVERSE",
-                    "headshot_url": build_headshot_url(pid),
-                }
-            )
-
-        print(f"[DOSSIER_SUPPLEMENT] supplemental MiLB players loaded: {len(supplemental_players)}")
-        return supplemental_players
-
-    except Exception as exc:
-        print(f"[DOSSIER_SUPPLEMENT] unavailable: {exc}")
-        return []
-
-
+    print("[MOBILE_LIVE_CANARY_ROUTE_V1] supplemental MiLB dossier loading disabled")
+    return []
 
 def load_player_signal_context_lookup() -> dict[str, dict]:
     """Load season-context + signal metrics keyed by canonical player_id for Performance Audit support tiles."""
