@@ -1,185 +1,457 @@
 {
-  "generated_at": "2026-05-14T15:53:33.804887+00:00",
+  "generated_at": "2026-09-14T22:45:53.824237+00:00",
   "source_count": 7,
-  "players_indexed": 129,
-  "missing_player_id_count": 19,
-  "missing_team_count": 0,
-  "missing_position_count": 0,
+  "players_indexed": 114,
+  "missing_player_id_count": 15,
+  "missing_team_count": 9,
+  "missing_position_count": 25,
   "duplicate_id_count": 0,
   "missing_player_id": [
     {
       "player_id": null,
-      "player_name": "Allan Winans",
-      "team": "New York Yankees",
-      "position": "P",
+      "player_name": "Anthony Molina",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Blaine Crim",
-      "team": "Texas Rangers",
-      "position": "1B",
+      "player_name": "Bennett Sousa",
+      "team": "TB",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Blake Hunt",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Blas Castaño",
-      "team": "UNK",
-      "position": "P",
+      "player_name": "Brendon Little",
+      "team": "TOR",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Brett Kerry",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Brennen Davis",
-      "team": "Seattle Mariners",
-      "position": "OF",
+      "player_name": "Derek Law",
+      "team": "AZ",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Eiberson Castellano",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Cameron Cauley",
-      "team": "Texas Rangers",
-      "position": "INF",
+      "player_name": "Jack Sinclair",
+      "team": "WSH",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Jacob Waguespack",
+      "team": "DET",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "John Rave",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Carlos Lagrange",
-      "team": "New York Yankees",
-      "position": "P",
+      "player_name": "Kyler Fedko",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Carlos Pérez",
-      "team": "Chicago Cubs",
-      "position": "C",
+      "player_name": "Luis Morales",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Cj Alexander",
-      "team": "Houston Astros",
-      "position": "INF",
+      "player_name": "Raynel Delgado",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Elieser Hernández",
-      "team": "Atlanta Braves",
-      "position": "P",
+      "player_name": "Sean Sullivan",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Isaac Coffey",
-      "team": "Boston Red Sox",
-      "position": "P",
+      "player_name": "Ty Johnson",
+      "team": "TB",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    }
+  ],
+  "missing_team": [
+    {
+      "player_id": null,
+      "player_name": "Anthony Molina",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Jhostynxon Garcia",
-      "team": "Boston Red Sox",
-      "position": "OF",
+      "player_name": "Blake Hunt",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Jonah Tong",
-      "team": "New York Mets",
-      "position": "P",
+      "player_name": "Brett Kerry",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Lucas Braun",
-      "team": "Atlanta Braves",
-      "position": "P",
+      "player_name": "Eiberson Castellano",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Nick Morabito",
-      "team": "New York Mets",
-      "position": "OF",
+      "player_name": "John Rave",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Nick Sogard",
-      "team": "Boston Red Sox",
-      "position": "INF",
+      "player_name": "Kyler Fedko",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Pedro Ramírez",
-      "team": "Chicago Cubs",
-      "position": "INF",
+      "player_name": "Luis Morales",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Sawyer Gipson-long",
-      "team": "Detroit Tigers",
-      "position": "P",
+      "player_name": "Raynel Delgado",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     },
     {
       "player_id": null,
-      "player_name": "Spencer Packard",
-      "team": "Seattle Mariners",
-      "position": "OF",
-      "reports_triggered": [
-        "Promotion Watch"
-      ]
-    },
-    {
-      "player_id": null,
-      "player_name": "William Fleming",
-      "team": "Seattle Mariners",
-      "position": "P",
+      "player_name": "Sean Sullivan",
+      "team": null,
+      "position": null,
       "reports_triggered": [
         "Promotion Watch"
       ]
     }
   ],
-  "missing_team": [],
-  "missing_position": [],
+  "missing_position": [
+    {
+      "player_id": null,
+      "player_name": "Anthony Molina",
+      "team": null,
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Bennett Sousa",
+      "team": "TB",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Blake Hunt",
+      "team": null,
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 605483,
+      "player_name": "Blake Snell",
+      "team": "MIA",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": 605540,
+      "player_name": "Brandon Woodruff",
+      "team": "MIL",
+      "position": null,
+      "reports_triggered": [
+        "Velocity Decay"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Brendon Little",
+      "team": "TOR",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Brett Kerry",
+      "team": null,
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 674003,
+      "player_name": "Cody Bradford",
+      "team": "SEA",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Derek Law",
+      "team": "AZ",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Eiberson Castellano",
+      "team": null,
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 641941,
+      "player_name": "Emilio Pagán",
+      "team": "CHC",
+      "position": null,
+      "reports_triggered": [
+        "Velocity Decay"
+      ]
+    },
+    {
+      "player_id": 666619,
+      "player_name": "Gregory Santos",
+      "team": "SF",
+      "position": null,
+      "reports_triggered": [
+        "Velocity Decay"
+      ]
+    },
+    {
+      "player_id": 667652,
+      "player_name": "Jack Ralston",
+      "team": "MIA",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Jack Sinclair",
+      "team": "WSH",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Jacob Waguespack",
+      "team": "DET",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "John Rave",
+      "team": null,
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Kyler Fedko",
+      "team": null,
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Luis Morales",
+      "team": null,
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 699044,
+      "player_name": "Miguel Ullola",
+      "team": "TB",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": 681320,
+      "player_name": "Nate Lavender",
+      "team": "MIA",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Raynel Delgado",
+      "team": null,
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": 669854,
+      "player_name": "Ronel Blanco",
+      "team": "TB",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Sean Sullivan",
+      "team": null,
+      "position": null,
+      "reports_triggered": [
+        "Promotion Watch"
+      ]
+    },
+    {
+      "player_id": null,
+      "player_name": "Ty Johnson",
+      "team": "TB",
+      "position": null,
+      "reports_triggered": [
+        "IVB Heat Map"
+      ]
+    },
+    {
+      "player_id": 579328,
+      "player_name": "Yusei Kikuchi",
+      "team": "CWS",
+      "position": null,
+      "reports_triggered": [
+        "Velocity Decay"
+      ]
+    }
+  ],
   "duplicate_ids": {}
 }

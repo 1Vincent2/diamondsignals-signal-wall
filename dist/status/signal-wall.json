@@ -5,14 +5,27 @@
   "used_fallback": false,
   "degraded": false,
   "threshold_minutes": 180,
-  "build_started_at": "2026-06-10T20:35:16.949089+00:00",
-  "build_finished_at": "2026-06-10T20:35:23.043795+00:00",
-  "source_updated_at": "2026-06-10T20:35:23.043795+00:00",
+  "build_started_at": "2026-09-14T22:45:54.750513+00:00",
+  "build_finished_at": "2026-09-14T22:46:05.493811+00:00",
+  "source_updated_at": "2026-09-14T22:46:05.493811+00:00",
   "source_age_minutes": 0.0,
   "section_counts": {
     "top_signals": 20
   },
   "errors": [],
   "notes": [],
-  "generated_at": "2026-06-10T20:35:23.043810+00:00"
+  "generated_at": "2026-09-14T22:46:05.493847+00:00",
+  "mode": "statcast_signal_wall_dynamic_v1_hardened",
+  "pipeline_layers": [
+    "statcast",
+    "player_lookup",
+    "canonical_dossier",
+    "scout_supporting_route"
+  ],
+  "hardening_notes": [
+    "hardened_signal_wall_mode:true",
+    "dynamic_terms:statcast",
+    "dynamic_terms:real_data",
+    "canonical_player_id_routes:true"
+  ]
 }
