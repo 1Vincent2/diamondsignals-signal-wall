@@ -4381,22 +4381,41 @@ def render_html() -> str:
     # not the larger upstream candidate pools. This keeps status JSON,
     # payload JSON, and rendered HTML aligned after display caps are applied.
     def export_records(records, limit: int) -> list:
-        """Return the exact final card rows exported/rendered for Promotion Watch."""
-        if isinstance(records, list):
-            return records[:limit]
-        try:
-            return list(records)[:limit]
-        except TypeError:
-            return []
+    """Return the exact final card rows exported/rendered for Promotion Watch."""
 
-    exported_sections = {
-        "pitchers_72hr": export_records(pitchers_72, 12),
-        "hitters_72hr": export_records(hitters_72, 12),
-        "pitchers_14day": export_records(pitchers_14, 12),
-        "hitters_14day": export_records(hitters_14, 12),
-        "recent_arrivals": export_records(archive_arrivals, 16),
-        "depth_radar": export_records(depth_radar_rows, 24),
-    }
+    if records is None:
+        return []
+
+    if isinstance(records, list):
+        return records[:limit]
+
+    # pandas DataFrame or DataFrame-like object.
+    # list(dataframe) returns column names, not row records.
+    if hasattr(records, "to_dict"):
+        try:
+            if hasattr(records, "head"):
+                return records.head(limit).to_dict(orient="records")
+
+            converted = records.to_dict(orient="records")
+            return converted[:limit] if isinstance(converted, list) else []
+        except (TypeError, AttributeError, ValueError):
+            pass
+
+    try:
+        values = list(records)
+        return values[:limit]
+    except TypeError:
+        return []
+
+
+exported_sections = {
+    "pitchers_72hr": export_records(pitchers_72, 12),
+    "hitters_72hr": export_records(hitters_72, 12),
+    "pitchers_14day": export_records(pitchers_14, 12),
+    "hitters_14day": export_records(hitters_14, 12),
+    "recent_arrivals": export_records(recent_arrivals, 16),
+    "depth_radar": export_records(depth_radar_rows, 24),
+}
 
     sections = {key: len(value) if isinstance(value, list) else 0 for key, value in exported_sections.items()}
 
