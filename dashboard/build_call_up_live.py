@@ -4381,32 +4381,31 @@ def render_html() -> str:
     # not the larger upstream candidate pools. This keeps status JSON,
     # payload JSON, and rendered HTML aligned after display caps are applied.
     def export_records(records, limit: int) -> list:
-    """Return the exact final card rows exported/rendered for Promotion Watch."""
+            """Return the exact final card rows exported/rendered for Promotion Watch."""
 
-    if records is None:
-        return []
+        if records is None:
+            return []
 
-    if isinstance(records, list):
-        return records[:limit]
+        if isinstance(records, list):
+            return records[:limit]
 
-    # pandas DataFrame or DataFrame-like object.
-    # list(dataframe) returns column names, not row records.
-    if hasattr(records, "to_dict"):
+        # pandas DataFrame or DataFrame-like object.
+        # list(dataframe) returns column names, not row records.
+        if hasattr(records, "to_dict"):
+            try:
+                if hasattr(records, "head"):
+                    return records.head(limit).to_dict(orient="records")
+
+                converted = records.to_dict(orient="records")
+                return converted[:limit] if isinstance(converted, list) else []
+            except (TypeError, AttributeError, ValueError):
+                pass
+
         try:
-            if hasattr(records, "head"):
-                return records.head(limit).to_dict(orient="records")
-
-            converted = records.to_dict(orient="records")
-            return converted[:limit] if isinstance(converted, list) else []
-        except (TypeError, AttributeError, ValueError):
-            pass
-
-    try:
-        values = list(records)
-        return values[:limit]
-    except TypeError:
-        return []
-
+            values = list(records)
+            return values[:limit]
+        except TypeError:
+            return []
 
 exported_sections = {
     "pitchers_72hr": export_records(pitchers_72, 12),
