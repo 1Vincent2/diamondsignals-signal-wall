@@ -4323,7 +4323,7 @@ def render_html() -> str:
 
     total_signals = len(hitters_72) + len(pitchers_72)
     total_14_signals = len(hitters_14) + len(pitchers_14)
-    _live_arrivals, archive_arrivals = load_arrivals_windows(live_limit=8, archive_limit=16)
+    recent_arrivals, archive_arrivals = load_arrivals_windows(live_limit=8, archive_limit=16)
     fresh_hitters_live = load_fresh_aaa_hitter_refresh()
     fresh_pitchers_live = load_fresh_aaa_pitcher_refresh()
 
@@ -4381,7 +4381,7 @@ def render_html() -> str:
     # not the larger upstream candidate pools. This keeps status JSON,
     # payload JSON, and rendered HTML aligned after display caps are applied.
     def export_records(records, limit: int) -> list:
-            """Return the exact final card rows exported/rendered for Promotion Watch."""
+        """Return the exact final card rows exported/rendered for Promotion Watch."""
 
         if records is None:
             return []
@@ -4407,14 +4407,14 @@ def render_html() -> str:
         except TypeError:
             return []
 
-exported_sections = {
-    "pitchers_72hr": export_records(pitchers_72, 12),
-    "hitters_72hr": export_records(hitters_72, 12),
-    "pitchers_14day": export_records(pitchers_14, 12),
-    "hitters_14day": export_records(hitters_14, 12),
-    "recent_arrivals": export_records(recent_arrivals, 16),
-    "depth_radar": export_records(depth_radar_rows, 24),
-}
+    exported_sections = {
+        "pitchers_72hr": export_records(pitchers_72, 12),
+        "hitters_72hr": export_records(hitters_72, 12),
+        "pitchers_14day": export_records(pitchers_14, 12),
+        "hitters_14day": export_records(hitters_14, 12),
+        "recent_arrivals": export_records(recent_arrivals, 16),
+        "depth_radar": export_records(depth_radar_rows, 24),
+    }
 
     sections = {key: len(value) if isinstance(value, list) else 0 for key, value in exported_sections.items()}
 
@@ -4609,6 +4609,7 @@ exported_sections = {
         pitchers_72=attach_profile_urls(pitchers_72.to_dict(orient="records")),
         hitters_14=attach_profile_urls(hitters_14.to_dict(orient="records")),
         pitchers_14=attach_profile_urls(pitchers_14.to_dict(orient="records")),
+        recent_arrivals=attach_profile_urls(recent_arrivals),
         archive_arrivals=attach_profile_urls(archive_arrivals),
         depth_radar_rows=attach_profile_urls(depth_radar_rows),
         pitchers_14_message=pitchers_14_message,
