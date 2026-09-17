@@ -167,9 +167,6 @@ exports.handler = async (event) => {
       {
         "Set-Cookie": [
           ACCESS_COOKIE + "=" + token,
-          ...(String(event.headers?.host || "").endsWith(".diamondsignals.ai")
-            ? ["Domain=.diamondsignals.ai"]
-            : []),
           "Path=/",
           "Max-Age=" + ACCESS_MAX_AGE,
           "HttpOnly",
