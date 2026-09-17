@@ -94,6 +94,37 @@ export default async (request: Request, context: any) => {
     return Response.redirect(url.toString(), 301);
   }
 
+  /*
+    The root remains the public front door for new visitors.
+    Returning visitors with a valid signed access credential
+    should skip the Unlock Access screen and go directly to
+    the live Signal Wall.
+  */
+  if (url.pathname === "/" || url.pathname === "/index.html") {
+    const rootSecret = String(
+      Netlify.env.get("SIGNALS_ACCESS_SECRET") || ""
+    ).trim();
+
+    if (rootSecret) {
+      const rootToken = readCookie(
+        request,
+        SIGNALS_ACCESS_COOKIE
+      );
+
+      const rootHasAccess = await verifySignalsAccessToken(
+        rootToken,
+        rootSecret
+      );
+
+      if (rootHasAccess) {
+        const liveUrl = new URL("/live/", url.origin);
+        return Response.redirect(liveUrl.toString(), 302);
+      }
+    }
+
+    return context.next();
+  }
+
   if (isPublicPath(url.pathname)) {
     return context.next();
   }
