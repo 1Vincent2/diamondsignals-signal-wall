@@ -43,7 +43,9 @@ def main() -> None:
         run_command(cmd, label)
     for module_name in MODULES:
         run_module(module_name)
-    run_command([sys.executable, "scripts/inject_access_gate_guard.py"], "scripts/inject_access_gate_guard.py")
+    # Access control is enforced centrally by the Netlify signals-gate
+    # edge function. The legacy generated-page JavaScript guard is
+    # intentionally no longer injected.
     print("\nAll dashboard builds completed successfully.")
 
 if __name__ == "__main__":

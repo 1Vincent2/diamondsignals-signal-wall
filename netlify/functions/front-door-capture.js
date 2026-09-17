@@ -1,3 +1,8 @@
+const crypto = require("crypto");
+
+const ACCESS_COOKIE = "ds_signals_access";
+const ACCESS_MAX_AGE = 60 * 60 * 24 * 365;
+
 exports.handler = async (event) => {
   try {
     if (event.httpMethod === "OPTIONS") {
@@ -10,13 +15,18 @@ exports.handler = async (event) => {
 
     const body = safeJson(event.body || "{}");
     const email = cleanEmail(body.email || "");
+    const next = safeNext(body.next);
+
     const source = String(body.source || "signals_front_door").trim();
-    const entry_surface = String(body.entry_surface || "signals_subdomain").trim();
+    const entry_surface = String(
+      body.entry_surface || "signals_subdomain"
+    ).trim();
     const referrer = String(body.referrer || "").trim();
     const utm_source = String(body.utm_source || "").trim();
     const utm_medium = String(body.utm_medium || "").trim();
     const utm_campaign = String(body.utm_campaign || "").trim();
     const first_name = String(body.first_name || "").trim();
+
     const user_agent = String(
       event.headers["user-agent"] ||
       event.headers["User-Agent"] ||
@@ -24,14 +34,36 @@ exports.handler = async (event) => {
     ).trim();
 
     if (!email || !isValidEmail(email)) {
-      return json(400, { ok: false, error: "Invalid email address" });
+      return json(400, {
+        ok: false,
+        error: "Invalid email address",
+      });
     }
 
-    const supabaseUrl = String(process.env.SUPABASE_URL || "").trim();
-    const supabaseKey = String(process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
+    const supabaseUrl = String(
+      process.env.SUPABASE_URL || ""
+    ).trim();
+
+    const supabaseKey = String(
+      process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+    ).trim();
+
+    const accessSecret = String(
+      process.env.SIGNALS_ACCESS_SECRET || ""
+    ).trim();
 
     if (!supabaseUrl || !supabaseKey) {
-      return json(500, { ok: false, error: "Missing Supabase environment variables" });
+      return json(500, {
+        ok: false,
+        error: "Missing Supabase environment variables",
+      });
+    }
+
+    if (!accessSecret) {
+      return json(500, {
+        ok: false,
+        error: "Missing Signal Wall access secret",
+      });
     }
 
     const payload = {
@@ -73,7 +105,10 @@ exports.handler = async (event) => {
       });
     }
 
-    let welcome = { attempted: false, ok: false };
+    let welcome = {
+      attempted: false,
+      ok: false,
+    };
 
     try {
       const welcomeResp = await fetch(
@@ -90,11 +125,17 @@ exports.handler = async (event) => {
         }
       );
 
-      const welcomeData = await welcomeResp.json().catch(() => ({}));
+      const welcomeData = await welcomeResp
+        .json()
+        .catch(() => ({}));
 
       welcome = {
         attempted: true,
-        ok: Boolean(welcomeResp.ok && welcomeData && welcomeData.ok),
+        ok: Boolean(
+          welcomeResp.ok &&
+          welcomeData &&
+          welcomeData.ok
+        ),
         status: welcomeResp.status,
         response: welcomeData,
       };
@@ -106,14 +147,35 @@ exports.handler = async (event) => {
       };
     }
 
-    return json(200, {
-      ok: true,
-      captured: true,
+    const token = createAccessToken(
       email,
-      next_url: "/live/",
-      record: Array.isArray(data) ? data[0] || null : data,
-      welcome,
-    });
+      accessSecret
+    );
+
+    return json(
+      200,
+      {
+        ok: true,
+        captured: true,
+        email,
+        next_url: next,
+        record: Array.isArray(data)
+          ? data[0] || null
+          : data,
+        welcome,
+      },
+      {
+        "Set-Cookie": [
+          ACCESS_COOKIE + "=" + token,
+          "Domain=.diamondsignals.ai",
+          "Path=/",
+          "Max-Age=" + ACCESS_MAX_AGE,
+          "HttpOnly",
+          "Secure",
+          "SameSite=Lax",
+        ].join("; "),
+      }
+    );
   } catch (err) {
     return json(500, {
       ok: false,
@@ -122,14 +184,58 @@ exports.handler = async (event) => {
   }
 };
 
-function json(statusCode, body) {
+function createAccessToken(email, secret) {
+  const payload = {
+    v: "v1",
+    email: cleanEmail(email),
+    issuedAt: Math.floor(Date.now() / 1000),
+  };
+
+  const encodedPayload = base64Url(
+    Buffer.from(JSON.stringify(payload), "utf8")
+  );
+
+  const signature = crypto
+    .createHmac("sha256", secret)
+    .update(encodedPayload)
+    .digest();
+
+  return encodedPayload + "." + base64Url(signature);
+}
+
+function base64Url(buffer) {
+  return buffer
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
+
+function safeNext(input) {
+  const value = String(input || "").trim();
+
+  if (
+    value.startsWith("/") &&
+    !value.startsWith("//")
+  ) {
+    return value;
+  }
+
+  return "/live/";
+}
+
+function json(statusCode, body, extraHeaders = {}) {
   return {
     statusCode,
     headers: {
       "Content-Type": "application/json",
       "Cache-Control": "no-store",
+      ...extraHeaders,
     },
-    body: typeof body === "string" ? body : JSON.stringify(body),
+    body:
+      typeof body === "string"
+        ? body
+        : JSON.stringify(body),
   };
 }
 

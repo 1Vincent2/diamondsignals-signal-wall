@@ -990,36 +990,24 @@
   return '';
 }
 
-      function setGalleryAccess(email) {
-        try {
-          document.cookie = "ds_founding_access=1; Domain=.diamondsignals.ai; Path=/; Max-Age=31536000; Secure; SameSite=Lax";
-          document.cookie = "ds_founding_access_email=" + encodeURIComponent(email || '') + "; Domain=.diamondsignals.ai; Path=/; Max-Age=31536000; Secure; SameSite=Lax";
-          document.cookie = "ds_captured=1; Domain=.diamondsignals.ai; Path=/; Max-Age=31536000; Secure; SameSite=Lax";
-        } catch (err) {
-          console.error('Could not set captured-session cookie', err);
+      function safeNextDestination() {
+        var params = new URLSearchParams(window.location.search);
+        var next = (params.get('next') || '').trim();
+
+        if (
+          next.indexOf('/') === 0 &&
+          next.indexOf('//') !== 0
+        ) {
+          return next;
         }
 
-        try {
-          localStorage.setItem('ds_gallery_access', '1');
-          localStorage.setItem('ds_gallery_email', email || '');
-        } catch (err) {
-          console.error('Could not set local gallery access state', err);
-        }
-      }
-
-      function hasGalleryAccess() {
-        var cookieAccess = readCookie('ds_founding_access') === '1' || readCookie('ds_captured') === '1';
-        var localAccess = false;
-
-        try {
-          localAccess = localStorage.getItem('ds_gallery_access') === '1';
-        } catch (err) {}
-
-        return cookieAccess || localAccess;
+        return '/live/';
       }
 
       function isValidEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+          String(email || '').trim()
+        );
       }
 
       var form = document.getElementById('signals-front-door-form');
@@ -1027,23 +1015,24 @@
       var submitBtn = document.getElementById('signals-front-door-submit');
       var progressBar = document.getElementById('signals-front-door-progress');
 
-      if (hasGalleryAccess()) {
-        window.location.replace('/live/');
-        return;
-      }
-
       if (!form || !emailInput || !submitBtn) return;
 
       window.setTimeout(function () {
-        try { emailInput.focus(); } catch (err) {}
+        try {
+          emailInput.focus();
+        } catch (err) {}
       }, 120);
 
       form.addEventListener('submit', function (event) {
         event.preventDefault();
 
         var email = (emailInput.value || '').trim();
+        var nextDestination = safeNextDestination();
+
         if (!isValidEmail(email)) {
-          try { emailInput.focus(); } catch (err) {}
+          try {
+            emailInput.focus();
+          } catch (err) {}
           return;
         }
 
@@ -1055,40 +1044,71 @@
           progressBar.classList.add('is-active');
         }
 
-        setGalleryAccess(email);
-
-        fetch('https://diamondsignals.ai/.netlify/functions/system-capture-lead', {
+        fetch('/.netlify/functions/front-door-capture', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             email: email,
+            next: nextDestination,
             source: 'signals_front_door',
             entry_surface: 'signals_subdomain',
             referrer: window.location.href,
-            utm_source: new URLSearchParams(window.location.search).get('utm_source') || '',
-            utm_medium: new URLSearchParams(window.location.search).get('utm_medium') || '',
-            utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign') || ''
+            utm_source:
+              new URLSearchParams(window.location.search).get('utm_source') || '',
+            utm_medium:
+              new URLSearchParams(window.location.search).get('utm_medium') || '',
+            utm_campaign:
+              new URLSearchParams(window.location.search).get('utm_campaign') || ''
           })
         })
         .then(function (response) {
-          return response.json().catch(function () { return {}; }).then(function (data) {
-            if (!response.ok || !data.ok) {
-              throw new Error((data && data.error) || 'Lead capture failed');
-            }
-            return data;
-          });
+          return response
+            .json()
+            .catch(function () {
+              return {};
+            })
+            .then(function (data) {
+              if (!response.ok || !data.ok) {
+                throw new Error(
+                  (data && data.error) || 'Access capture failed'
+                );
+              }
+
+              return data;
+            });
+        })
+        .then(function (data) {
+          submitBtn.textContent = 'Access Granted';
+
+          var destination =
+            data &&
+            typeof data.next_url === 'string' &&
+            data.next_url.indexOf('/') === 0 &&
+            data.next_url.indexOf('//') !== 0
+              ? data.next_url
+              : nextDestination;
+
+          window.setTimeout(function () {
+            window.location.href = destination;
+          }, 700);
         })
         .catch(function (err) {
-          console.error('Front door background capture failed', err);
+          console.error('Signal Wall access capture failed', err);
+
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Initialize Access';
+
+          if (progressBar) {
+            progressBar.classList.remove('is-active');
+            progressBar.hidden = true;
+          }
+
+          try {
+            emailInput.focus();
+          } catch (focusErr) {}
         });
-
-        submitBtn.textContent = 'Access Granted';
-
-        window.setTimeout(function () {
-          window.location.href = '/live/';
-        }, 1200);
       });
     })();
   </script>
