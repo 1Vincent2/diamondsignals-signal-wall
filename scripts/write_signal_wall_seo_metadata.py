@@ -143,8 +143,13 @@ def inject(path: Path, meta: dict[str, str]) -> bool:
     if "</head>" not in text:
         raise RuntimeError(f"missing </head>: {path.relative_to(ROOT)}")
 
-    text = text.replace("</head>", block + "\n</head>", 1)
-    path.write_text(text, encoding="utf-8")
+    updated_text = text.replace("</head>", block + "\n</head>", 1)
+
+    current_text = path.read_text(encoding="utf-8", errors="ignore")
+    if updated_text == current_text:
+        return False
+
+    path.write_text(updated_text, encoding="utf-8")
     return True
 
 def main() -> None:
