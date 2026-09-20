@@ -32,7 +32,11 @@ function isPublicPath(pathname: string): boolean {
     pathname.startsWith("/mobile-promotion-watch-canary/") ||
     pathname === "/mobile-velocity-decay-canary" ||
     pathname === "/mobile-velocity-decay-canary/" ||
-    pathname.startsWith("/mobile-velocity-decay-canary/") ||\n    pathname === "/mobile-stuff-disruption-canary" ||\n    pathname === "/mobile-stuff-disruption-canary/" ||\n    pathname.startsWith("/mobile-stuff-disruption-canary/")\n  ) {
+    pathname.startsWith("/mobile-velocity-decay-canary/") ||
+    pathname === "/mobile-stuff-disruption-canary" ||
+    pathname === "/mobile-stuff-disruption-canary/" ||
+    pathname.startsWith("/mobile-stuff-disruption-canary/")
+  ) {
     return true;
   }
 
