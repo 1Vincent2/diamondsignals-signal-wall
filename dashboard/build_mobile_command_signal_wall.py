@@ -24,15 +24,36 @@ def safe_id(row):
 def headshot(pid):
     return f"https://img.mlbstatic.com/mlb-photos/image/upload/w_360,q_90/v1/people/{pid}/headshot/67/current" if pid else ""
 
-def normalize(row,kind,rank):
-    pid=safe_id(row); name=row.get("player_name") or row.get("name") or "Unknown Player"
+def canonical_name(value):
+    text=str(value or "").strip()
+    if "," in text:
+        last,first=[part.strip() for part in text.split(",",1)]
+        if first and last: text=f"{first} {last}"
+    return " ".join(text.lower().split())
+
+def load_player_index():
+    path=DIST/"player_index.json"
+    if not path.exists(): return {}
+    payload=json.loads(path.read_text(encoding="utf-8"))
+    index={}
+    for p in payload.get("players",[]) or []:
+        names={p.get("full_name"),f'{p.get("first_name","")} {p.get("last_name","")}'}
+        for name in names:
+            key=canonical_name(name)
+            if key: index[key]=p
+    return index
+
+def normalize(row,kind,rank,player_index):
+    name=row.get("player_name") or row.get("name") or "Unknown Player"
+    match=player_index.get(canonical_name(name),{})
+    pid=safe_id(row) or safe_id(match)
     badges=row.get("badges") or []
     return {
       **row,"rank":rank,"player_id":pid,"player_name":name,"player_type":kind,
       "board_label":"PITCHER" if kind=="pitcher" else "HITTER",
-      "team":row.get("team") or row.get("player_team") or "",
+      "team":row.get("team") or row.get("player_team") or match.get("team") or match.get("team_name") or "",
       "profile_url":f"/scout/{pid}/" if pid else "#",
-      "headshot_url":headshot(pid),
+      "headshot_url":match.get("headshot_url") or headshot(pid),
       "avatar":"".join([p[0] for p in str(name).replace(","," ").split()[:2]]).upper() or "DS",
       "edge_score":row.get("edge_score","—"),"badges":badges,
       "metric_1_label":row.get("metric_1_label","SIGNAL 1"),"metric_1":row.get("metric_1","—"),
@@ -48,7 +69,7 @@ def main():
     for kind,key in (("pitcher","top_pitchers"),("hitter","top_hitters")):
         for row in payload.get(key,[]) or []: raw.append((kind,row))
     raw.sort(key=lambda item: float(item[1].get("edge_score") or 0),reverse=True)
-    players=[normalize(row,kind,i+1) for i,(kind,row) in enumerate(raw)]
+    player_index=load_player_index()\n    players=[normalize(row,kind,i+1,player_index) for i,(kind,row) in enumerate(raw)]
     tpl=Template(text(TEMPLATES/"mobile"/"surface_reports"/"signal_wall_command.html"))
     body=tpl.render(players=players,updated_label=datetime.now().strftime("%-I:%M %p"))
     css=text(MOBILE_STATIC/"mobile_surface_base.css")+"\n"+text(MOBILE_STATIC/"mobile_signal_wall_command.css")
