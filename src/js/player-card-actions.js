@@ -296,10 +296,8 @@
         watchButton.textContent = "ADDING TO TRACKING";
         showToast(`${player.playerName || "Player"} tracking request sent to Tracking Radar`);
 
-        window.setTimeout(() => {
-          watchButton.textContent = "TRACKING REQUEST SENT";
-          window.location.href = buildAppTrackingUrl(player);
-        }, 150);
+        watchButton.textContent = "TRACKING REQUEST SENT";
+        window.location.href = buildAppTrackingUrl(player);
       });
     }
   }
