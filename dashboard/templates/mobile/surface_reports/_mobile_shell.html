@@ -1,0 +1,7 @@
+{#
+  DiamondSignals Mobile Command Experience shell.
+  Mobile-only presentation boundary. Do not bind desktop layout/state here.
+#}
+<section class="ds-mobile-report-view" data-mobile-report="{{ report_slug | default('unknown') }}">
+  {% block mobile_report_content %}{% endblock %}
+</section>
