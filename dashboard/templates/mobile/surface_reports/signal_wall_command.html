@@ -1,0 +1,27 @@
+<section class="ds-mobile-report-view ds-mobile-signal-wall" data-mobile-report="signal-wall">
+<header class="ds-mobile-command-head"><div class="ds-mobile-brand"><i></i><strong>DIAMOND<span>SIGNALS</span></strong></div><button type="button" data-ds-mobile-menu-open>☰ MENU</button></header>
+<nav class="ds-mobile-core-rail"><a class="is-active" href="/mobile-live-canary/">SIGNALS</a><a href="https://app.diamondsignals.ai/auth?next=/watchlist">RADAR</a><a href="https://app.diamondsignals.ai/auth?next=/terminal">TERMINAL</a></nav>
+<div class="ds-mobile-hero"><div class="ds-mobile-eyebrow">TODAY'S EDGE</div><h1>Live intelligence.<br><span>Before the market moves.</span></h1><div class="ds-mobile-telemetry"><b>● LIVE</b><span>28D / 7D</span><span>EDGE ≥65</span><span>{{ updated_label }}</span></div></div>
+<div class="ds-mobile-modebar" role="tablist"><button class="is-active" type="button" data-ds-mobile-mode="discover">DISCOVER</button><button type="button" data-ds-mobile-mode="players">ALL PLAYERS</button></div>
+<section data-ds-mobile-panel="discover">
+<div class="ds-mobile-deck-head"><div><span>TOP SIGNALS</span><strong>Swipe today's highest-conviction movement</strong></div><button type="button" data-ds-open-scanner>{{ players|length }} PLAYERS</button></div>
+<div class="ds-mobile-deck" data-ds-mobile-deck>
+{% for player in players %}
+<article class="ds-mobile-signal-card js-player-card" data-card-index="{{ loop.index0 }}" data-player-id="{{ player.player_id }}" data-player-name="{{ player.player_name }}" data-player-type="{{ player.player_type }}" data-player-team="{{ player.team }}" data-profile-url="{{ player.profile_url }}" data-source-tag="LIVE_SIGNAL">
+<div class="ds-mobile-card-image">{% if player.headshot_url %}<img src="{{ player.headshot_url }}" alt="" loading="lazy">{% endif %}<div class="ds-mobile-card-rank">#{{ "%02d"|format(loop.index) }} {{ player.board_label }} SIGNAL</div><div class="ds-mobile-card-score"><span>EDGE SCORE</span><strong>{{ player.edge_score }}</strong><button type="button" data-ds-metric-info="EDGE SCORE">i</button></div></div>
+<div class="ds-mobile-card-body"><div class="ds-mobile-player-role">{{ player.board_label }} • {{ player.sample_note }}</div><h2>{{ player.player_name }}</h2>
+<div class="ds-mobile-signal-chips">{% for badge in player.badges[:3] %}<span>{{ badge }}</span>{% endfor %}</div>
+<div class="ds-mobile-metrics"><button type="button" data-ds-metric-info="{{ player.metric_1_label }}"><span>{{ player.metric_1_label }}</span><strong>{{ player.metric_1 }}</strong></button><button type="button" data-ds-metric-info="{{ player.metric_2_label }}"><span>{{ player.metric_2_label }}</span><strong>{{ player.metric_2 }}</strong></button><button type="button" data-ds-metric-info="{{ player.metric_3_label }}"><span>{{ player.metric_3_label }}</span><strong>{{ player.metric_3 }}</strong></button></div>
+<div class="ds-mobile-why"><span>WHY NOW</span><p>{{ player.why }}</p></div>
+<button class="ds-mobile-track js-add-to-roster" type="button" data-default-label="INITIATE TRACKING" data-player-id="{{ player.player_id }}" data-player-name="{{ player.player_name }}" data-player-type="{{ player.player_type }}" data-player-team="{{ player.team }}" data-profile-url="{{ player.profile_url }}">INITIATE TRACKING</button>
+<a class="ds-mobile-intel-link" href="{{ player.profile_url }}">VIEW INTELLIGENCE ›</a></div></article>
+{% endfor %}
+</div>
+<div class="ds-mobile-deck-nav"><button type="button" data-ds-deck-prev>‹</button><button class="ds-mobile-deck-count" type="button" data-ds-open-scanner><strong data-ds-current-index>1</strong> / {{ players|length }} <span>QUICK SCAN</span></button><button type="button" data-ds-deck-next>›</button></div>
+</section>
+<section class="ds-mobile-scanner" data-ds-mobile-panel="players" hidden>
+<div class="ds-mobile-scanner-tools"><label><span>FIND A PLAYER</span><input type="search" placeholder="Search today's signals…" data-ds-player-search></label><div class="ds-mobile-filterbar"><button class="is-active" type="button" data-ds-filter="all">ALL</button><button type="button" data-ds-filter="pitcher">PITCHERS</button><button type="button" data-ds-filter="hitter">HITTERS</button></div></div>
+<div class="ds-mobile-player-list">{% for player in players %}<button class="ds-mobile-player-row" type="button" data-ds-player-row data-card-index="{{ loop.index0 }}" data-player-type="{{ player.player_type }}" data-player-search="{{ player.player_name|lower }}"><span class="ds-mobile-row-rank">{{ "%02d"|format(loop.index) }}</span><span class="ds-mobile-row-avatar">{% if player.headshot_url %}<img src="{{ player.headshot_url }}" alt="" loading="lazy">{% else %}{{ player.avatar }}{% endif %}</span><span class="ds-mobile-row-ident"><strong>{{ player.player_name }}</strong><small>{{ player.board_label }} • {{ player.badges[0] if player.badges else 'LIVE SIGNAL' }}</small></span><span class="ds-mobile-row-score">{{ player.edge_score }}</span><span>›</span></button>{% endfor %}</div>
+</section>
+<div class="ds-mobile-explainer" data-ds-explainer hidden><button type="button" data-ds-explainer-close>×</button><div>FIELD GUIDE</div><h3 data-ds-explainer-title>EDGE SCORE</h3><p data-ds-explainer-copy>DiamondSignals metric context.</p></div>
+</section>
