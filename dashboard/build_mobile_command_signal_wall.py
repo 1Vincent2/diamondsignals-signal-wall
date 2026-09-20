@@ -69,7 +69,8 @@ def main():
     for kind,key in (("pitcher","top_pitchers"),("hitter","top_hitters")):
         for row in payload.get(key,[]) or []: raw.append((kind,row))
     raw.sort(key=lambda item: float(item[1].get("edge_score") or 0),reverse=True)
-    player_index=load_player_index()\n    players=[normalize(row,kind,i+1,player_index) for i,(kind,row) in enumerate(raw)]
+    player_index=load_player_index()
+    players=[normalize(row,kind,i+1,player_index) for i,(kind,row) in enumerate(raw)]
     tpl=Template(text(TEMPLATES/"mobile"/"surface_reports"/"signal_wall_command.html"))
     body=tpl.render(players=players,updated_label=datetime.now().strftime("%-I:%M %p"))
     css=text(MOBILE_STATIC/"mobile_surface_base.css")+"\n"+text(MOBILE_STATIC/"mobile_signal_wall_command.css")
