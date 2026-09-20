@@ -3,7 +3,7 @@
 import json,sys
 from pathlib import Path
 from jinja2 import Template
-ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/"dashboard"))
+ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/"dashboard"))
 from build_call_up_live import fetch_recent_aaa_weekly_signal_base,build_aaa_hitter_promotion_watch,build_aaa_pitcher_promotion_watch,build_trend_lookup
 DIST=ROOT/"dist";T=ROOT/"dashboard"/"templates";S=ROOT/"dashboard"/"static"/"mobile";OUT=DIST/"mobile-promotion-watch-canary"
 def txt(p):return p.read_text(encoding="utf-8")
