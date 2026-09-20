@@ -9,6 +9,7 @@ ALLOWED_PREFIXES = (
     "dashboard/static/mobile/",
     "docs/mobile-overhaul/",
     "scripts/audit_mobile_surface_isolation.py",
+    "dashboard/build_mobile_command_signal_wall.py",
 )
 
 HIGH_RISK_PREFIXES = (
@@ -27,6 +28,10 @@ REQUIRED = (
     Path("dashboard/templates/mobile/surface_reports/_mobile_shell.html"),
     Path("dashboard/static/mobile/mobile_surface_base.css"),
     Path("dashboard/static/mobile/mobile_command_experience.js"),
+    Path("dashboard/templates/mobile/surface_reports/signal_wall_command.html"),
+    Path("dashboard/static/mobile/mobile_signal_wall_command.css"),
+    Path("dashboard/static/mobile/mobile_signal_wall_command.js"),
+    Path("dashboard/build_mobile_command_signal_wall.py"),
 )
 
 def changed_paths():
