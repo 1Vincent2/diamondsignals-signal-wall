@@ -19,6 +19,18 @@ function readCookie(request: Request, name: string): string {
 }
 
 function isPublicPath(pathname: string): boolean {
+  /*
+    MOBILE COMMAND PREVIEW ONLY.
+    Path-scoped canary exception; remove before production merge.
+  */
+  if (
+    pathname === "/mobile-live-canary" ||
+    pathname === "/mobile-live-canary/" ||
+    pathname.startsWith("/mobile-live-canary/")
+  ) {
+    return true;
+  }
+
   if (pathname === "/" || pathname === "/index.html") {
     return true;
   }
