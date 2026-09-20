@@ -1,0 +1,18 @@
+/*
+  DiamondSignals Mobile Command Experience base.
+  Isolation rule: mobile selectors remain under .ds-mobile-report-view
+  or an explicit ds-mobile-* wrapper.
+*/
+
+.ds-mobile-report-view {
+  display: none;
+}
+
+@media screen and (max-width: 760px) {
+  .ds-mobile-report-view {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  }
+}
