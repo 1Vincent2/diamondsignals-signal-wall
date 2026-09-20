@@ -16,6 +16,7 @@ forbidden = [
     "data-opening-passport",
     "queued for Passport Tracking",
     "Passport Tracking",
+    'window.setTimeout(() => {\n          watchButton.textContent = "TRACKING REQUEST SENT";\n          window.location.href = buildAppTrackingUrl(player);',
 ]
 
 required = [
@@ -25,6 +26,7 @@ required = [
     "TRACKING REQUEST SENT",
     "ASSET TRACKED",
     "tracking request sent to Tracking Radar",
+    'window.location.href = buildAppTrackingUrl(player)',
 ]
 
 issues = []
