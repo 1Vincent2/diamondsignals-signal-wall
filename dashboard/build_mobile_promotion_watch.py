@@ -29,18 +29,24 @@ def norm(row,kind,idx):
  return {"player_name":r.get("player_name","Unknown"),"player_type":kind,"edge_score":r.get("edge_score","—"),"metric_1_label":r.get("metric_1_label","SIGNAL"),"metric_1":r.get("metric_1","—"),"metric_2_label":r.get("metric_2_label","SIGNAL"),"metric_2":r.get("metric_2","—"),"metric_3_label":r.get("metric_3_label","SIGNAL"),"metric_3":r.get("metric_3","—"),"why":r.get("why","Promotion pressure under evaluation."),"sample_note":r.get("sample_note","AAA WINDOW"),"badges":badges,"org":r.get("display_org") or r.get("display_team") or pi.get("team") or "AAA","avatar":r.get("avatar","DS"),"headshot_url":pi.get("headshot_url") or (f"https://img.mlbstatic.com/mlb-photos/image/upload/w_360,q_90/v1/people/{pid}/headshot/67/current" if pid else ""),"profile_url":f"/scout/{pid}/" if pid else "#"}
 def main():
  global PLAYERS
- base,weeks=fetch_recent_aaa_weekly_signal_base()
- if base is None or base.empty:raise SystemExit("Promotion Watch source frame unavailable")
- htrend=build_trend_lookup(base,"iso");ptrend=build_trend_lookup(base,"kbb_p")
- h=build_aaa_hitter_promotion_watch(base,htrend);p=build_aaa_pitcher_promotion_watch(base,ptrend)
- PLAYERS=index();items=[]
- for kind,df in (("hitter",h),("pitcher",p)):
-  if df is not None and not df.empty:
-   for _,row in df.iterrows():items.append(norm(row,kind,len(items)+1))
+ payload_path=DIST/"typical-call-up"/"promotion_watch.json"
+ if not payload_path.exists(): raise SystemExit("Promotion Watch canonical payload unavailable")
+ payload=json.loads(txt(payload_path)); PLAYERS=index(); items=[]
+ sections=payload.get("top_signals",{})
+ for key,kind in (("hitters_14day","hitter"),("pitchers_14day","pitcher")):
+  rows=sections.get(key) or []
+  if isinstance(rows,list) and rows and isinstance(rows[0],dict):
+   for row in rows: items.append(norm(row,kind,len(items)+1))
+ if not items:
+  for row in sections.get("depth_radar",[]) or []:
+   if isinstance(row,dict):
+    kind="pitcher" if str(row.get("signal_type","")).lower()=="pitcher" else "hitter"
+    items.append(norm(row,kind,len(items)+1))
+ if not items: raise SystemExit("Promotion Watch canonical payload contains no renderable player rows")
  items.sort(key=lambda x:float(x["edge_score"] or 0),reverse=True)
  body=Template(txt(T/"mobile"/"surface_reports"/"promotion_watch_command.html")).render(players=items)
  css=txt(S/"mobile_surface_base.css")+"\n"+txt(S/"mobile_signal_wall_command.css")
  js=txt(S/"mobile_command_experience.js")+"\n"+txt(S/"mobile_signal_wall_command.js")
  html=f'<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>DiamondSignals Mobile // Promotion Watch</title><style>{css}</style></head><body>{body}<script>{js}</script></body></html>'
- OUT.mkdir(parents=True,exist_ok=True);(OUT/"index.html").write_text(html,encoding="utf-8");print(f"Wrote Promotion Watch mobile canary with {len(items)} players")
+ OUT.mkdir(parents=True,exist_ok=True);(OUT/"index.html").write_text(html,encoding="utf-8");print(f"Wrote Promotion Watch mobile canary with {len(items)} players from canonical payload")
 if __name__=="__main__":main()
