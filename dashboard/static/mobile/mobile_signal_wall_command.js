@@ -8,6 +8,10 @@ const COPY={
 function init(root){
  if(!root||root.dataset.mobileSignalWallBound==="true")return; root.dataset.mobileSignalWallBound="true";
  const deck=root.querySelector("[data-ds-mobile-deck]"), cards=[...root.querySelectorAll(".ds-mobile-signal-card")];
+ const drawer=root.querySelector("[data-ds-mobile-menu-drawer]"), menuBtn=root.querySelector("[data-ds-mobile-menu-open]"), backdrop=root.querySelector(".ds-mobile-command-backdrop");
+ function menu(open){if(drawer){drawer.classList.toggle("is-open",open);drawer.setAttribute("aria-hidden",String(!open));}if(menuBtn)menuBtn.setAttribute("aria-expanded",String(open));if(backdrop){backdrop.hidden=!open;backdrop.classList.toggle("is-open",open);}}
+ menuBtn?.addEventListener("click",()=>menu(true));root.querySelectorAll("[data-ds-mobile-menu-close]").forEach(el=>el.addEventListener("click",()=>menu(false)));
+ const guide=root.querySelector("[data-ds-field-guide]");root.querySelector("[data-ds-field-guide-open]")?.addEventListener("click",()=>{if(guide)guide.hidden=false;});root.querySelector("[data-ds-field-guide-close]")?.addEventListener("click",()=>{if(guide)guide.hidden=true;});
  const modes=[...root.querySelectorAll("[data-ds-mobile-mode]")], panels=[...root.querySelectorAll("[data-ds-mobile-panel]")], count=root.querySelector("[data-ds-current-index]");
  function mode(name){modes.forEach(b=>{const on=b.dataset.dsMobileMode===name;b.classList.toggle("is-active",on);b.setAttribute("aria-selected",String(on));});panels.forEach(p=>p.hidden=p.dataset.dsMobilePanel!==name);}
  modes.forEach(b=>b.addEventListener("click",()=>mode(b.dataset.dsMobileMode)));
