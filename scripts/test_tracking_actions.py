@@ -23,6 +23,7 @@ RETIRED_WATCH_LIST_PAGE = "dist/watch-list/index.html"
 
 FORBIDDEN_EXACT_PATTERNS = [
     'window.location.href = "/watch-list/"',
+    'window.setTimeout(() => {\n          watchButton.textContent = "TRACKING REQUEST SENT";\n          window.location.href = buildAppTrackingUrl(player);',
 ]
 
 FORBIDDEN_ACTIVE_SURFACE_PATTERNS = [
@@ -56,6 +57,7 @@ REQUIRED_JS_PATTERNS = [
     'authUrl.searchParams.set("next", nextPath)',
     'watchButton.disabled = true',
     'window.location.href = buildAppTrackingUrl(player)',
+    'watchButton.textContent = "TRACKING REQUEST SENT"',
     'window.addEventListener("pageshow", scheduleProvisionSync)',
     'window.addEventListener("resize", scheduleProvisionSync)',
     'window.addEventListener("orientationchange", scheduleProvisionSync)',
