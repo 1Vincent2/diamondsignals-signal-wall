@@ -26,7 +26,14 @@ function isPublicPath(pathname: string): boolean {
   if (
     pathname === "/mobile-live-canary" ||
     pathname === "/mobile-live-canary/" ||
-    pathname.startsWith("/mobile-live-canary/") ||\n    pathname === "/mobile-promotion-watch-canary" ||\n    pathname === "/mobile-promotion-watch-canary/" ||\n    pathname.startsWith("/mobile-promotion-watch-canary/")\n  ) {
+    pathname.startsWith("/mobile-live-canary/") ||
+    pathname === "/mobile-promotion-watch-canary" ||
+    pathname === "/mobile-promotion-watch-canary/" ||
+    pathname.startsWith("/mobile-promotion-watch-canary/") ||
+    pathname === "/mobile-velocity-decay-canary" ||
+    pathname === "/mobile-velocity-decay-canary/" ||
+    pathname.startsWith("/mobile-velocity-decay-canary/")
+  ) {
     return true;
   }
 
