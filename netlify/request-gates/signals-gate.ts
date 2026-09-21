@@ -44,7 +44,10 @@ function isPublicPath(pathname: string): boolean {
     pathname.startsWith("/mobile-apex-extraction-canary/") ||
     pathname === "/mobile-mlb-extraction-canary" ||
     pathname === "/mobile-mlb-extraction-canary/" ||
-    pathname.startsWith("/mobile-mlb-extraction-canary/")
+    pathname.startsWith("/mobile-mlb-extraction-canary/") ||
+    pathname === "/mobile-waiver-wire-canary" ||
+    pathname === "/mobile-waiver-wire-canary/" ||
+    pathname.startsWith("/mobile-waiver-wire-canary/")
   ) {
     return true;
   }
