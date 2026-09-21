@@ -1,13 +1,47 @@
 (function(){
+const MOBILE_REPORTS=[
+["SIGNALS","/mobile-live-canary/"],["VELOCITY DECAY","/mobile-velocity-decay-canary/"],["STUFF+ DISRUPTION","/mobile-stuff-disruption-canary/"],["IVB HEAT MAP","/mobile-ivb-heat-map-canary/"],["APEX EXTRACTION","/mobile-apex-extraction-canary/"],["MLB EXTRACTION","/mobile-mlb-extraction-canary/"],["WAIVER WIRE","/mobile-waiver-wire-canary/"],["KINETIC DRIFT","/mobile-kinetic-drift-canary/"]
+];
 const COPY={
 "EDGE SCORE":"Composite DiamondSignals signal-strength score. Higher values indicate stronger underlying movement and conviction.",
 "SEAGER":"Hitter decision-quality signal: attacks in-zone pitches while refusing chase.",
 "BABIP":"Batting average on balls in play. Use with skill signals to separate surface results from underlying movement.",
-"K%":"Strikeout rate.","BB%":"Walk rate.","K/BB":"Strikeout-to-walk ratio.","BB/K":"Walk-to-strikeout ratio."
+"K%":"Strikeout rate.","BB%":"Walk rate.","K/BB":"Strikeout-to-walk ratio.","BB/K":"Walk-to-strikeout ratio.",
+"RISK SCORE":"Composite Velocity Decay risk score. Higher values indicate stronger evidence of fastball deterioration versus the pitcher’s recent baseline.",
+"VELOCITY DELTA":"Change in recent fastball velocity versus the comparison baseline.",
+"EXTENSION DELTA":"Change in release extension versus baseline; lost extension can reduce perceived velocity and alter pitch shape.",
+"PERCEIVED VELOCITY":"DiamondSignals proxy for how velocity and extension combine to affect the hitter’s effective reaction window.",
+"DISRUPTION SCORE":"Composite Stuff+ Disruption score measuring the strength of recent pitch-shape change.",
+"IVB DELTA":"Change in induced vertical break versus the pitcher’s baseline.",
+"VAA DELTA":"Change in vertical approach angle versus baseline.",
+"MOVEMENT DELTA":"Recent change in pitch movement profile versus baseline.",
+"IVB VS AVG":"Induced vertical break compared with the relevant velocity-band baseline.",
+"IVB RAW":"Measured induced vertical break for the fastball sample.",
+"VAA":"Vertical approach angle: the angle at which the pitch enters the hitting zone.",
+"DEAD ZONE":"Flags fastball shape that falls into the engine’s low-distinction movement band.",
+"APEX SCORE":"Composite Apex Extraction score for an underlying physical/skill shift that may be ahead of market recognition.",
+"PHYSICAL SHIFT":"Strength of the underlying physical-performance change detected by Apex.",
+"VISION DELTA":"Change in hitter decision/recognition quality captured by the Apex signal layer.",
+"MARKET LATENCY":"Estimated gap between the underlying player signal and what the market currently reflects.",
+"WAIVER SCORE":"Composite waiver command score for a verified, market-eligible player.",
+"OWNERSHIP GATE":"Market-eligibility check used before DiamondSignals will surface a waiver recommendation.",
+"SIGNAL WINDOW":"Recency window supporting the current waiver signal.",
+"DEPLOYMENT":"Current command state indicating whether the asset is actionable, surveillance-only, or locked.",
+"KDE SCORE":"Kinetic Drift Engine headline score: the strongest of KRS, KES, and KIS.",
+"KRS":"Kinetic Risk Score: deterioration and fatigue signals versus the pitcher’s own recent baseline.",
+"KES":"Kinetic Emergence Score: improving delivery or pitch-shape signals versus the pitcher’s baseline.",
+"KIS":"Kinetic Instability Score: unusual mechanical or pitch-shape variability across recent appearances."
 };
 function init(root){
  if(!root||root.dataset.mobileSignalWallBound==="true")return; root.dataset.mobileSignalWallBound="true";
  const deck=root.querySelector("[data-ds-mobile-deck]"), cards=[...root.querySelectorAll(".ds-mobile-signal-card")];
+ if(!root.querySelector("[data-ds-mobile-menu-drawer]")){
+   const active=root.dataset.mobileReport||"";
+   const backdrop=document.createElement("div");backdrop.className="ds-mobile-command-backdrop";backdrop.hidden=true;backdrop.setAttribute("data-ds-mobile-menu-close","");
+   const drawer=document.createElement("aside");drawer.className="ds-mobile-command-drawer";drawer.setAttribute("data-ds-mobile-menu-drawer","");drawer.setAttribute("aria-hidden","true");
+   drawer.innerHTML='<div class="ds-mobile-drawer-head"><div><span>DIAMONDSIGNALS</span><strong>COMMAND MENU</strong></div><button type="button" data-ds-mobile-menu-close>×</button></div><nav>'+MOBILE_REPORTS.map(([label,href])=>'<a href="'+href+'"'+(href.includes(active)&&active?' class="is-active"':'')+'>'+label+' <span>›</span></a>').join("")+'<a href="https://app.diamondsignals.ai/auth?next=/watchlist">TRACKING RADAR <span>›</span></a><a href="https://app.diamondsignals.ai/auth?next=/terminal">ROSTER TERMINAL <span>›</span></a></nav>';
+   root.append(backdrop,drawer);
+ }
  const drawer=root.querySelector("[data-ds-mobile-menu-drawer]"), menuBtn=root.querySelector("[data-ds-mobile-menu-open]"), backdrop=root.querySelector(".ds-mobile-command-backdrop");
  function menu(open){if(drawer){drawer.classList.toggle("is-open",open);drawer.setAttribute("aria-hidden",String(!open));}if(menuBtn)menuBtn.setAttribute("aria-expanded",String(open));if(backdrop){backdrop.hidden=!open;backdrop.classList.toggle("is-open",open);}}
  menuBtn?.addEventListener("click",()=>menu(true));root.querySelectorAll("[data-ds-mobile-menu-close]").forEach(el=>el.addEventListener("click",()=>menu(false)));
@@ -27,6 +61,12 @@ function init(root){
  const sheet=root.querySelector("[data-ds-explainer]"), title=root.querySelector("[data-ds-explainer-title]"), copy=root.querySelector("[data-ds-explainer-copy]");
  root.querySelectorAll("[data-ds-metric-info]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();const key=(b.dataset.dsMetricInfo||"METRIC").toUpperCase();if(title)title.textContent=key;if(copy)copy.textContent=COPY[key]||"DiamondSignals context for this live metric. Full Field Guide detail will be connected in the next refinement.";if(sheet)sheet.hidden=false;}));
  root.querySelector("[data-ds-explainer-close]")?.addEventListener("click",()=>{if(sheet)sheet.hidden=true;});
+ root.querySelectorAll(".ds-mobile-intel-link").forEach(link=>link.addEventListener("click",e=>{
+   const href=link.getAttribute("href");if(!href||href==="#")return;e.preventDefault();
+   let intel=root.querySelector("[data-ds-mobile-intelligence]");
+   if(!intel){intel=document.createElement("section");intel.className="ds-mobile-intelligence-sheet";intel.setAttribute("data-ds-mobile-intelligence","");intel.innerHTML='<div class="ds-mobile-intelligence-head"><div><span>PLAYER INTELLIGENCE</span><strong>SCOUT DOSSIER</strong></div><button type="button" aria-label="Close intelligence">×</button></div><iframe title="Player intelligence"></iframe>';root.append(intel);intel.querySelector("button").addEventListener("click",()=>{intel.classList.remove("is-open");document.body.classList.remove("ds-intel-open");});}
+   const frame=intel.querySelector("iframe");if(frame)frame.src=href;intel.classList.add("is-open");document.body.classList.add("ds-intel-open");
+ }));
 }
-function boot(){document.querySelectorAll(".ds-mobile-signal-wall").forEach(init);}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
+function boot(){if(!document.getElementById("ds-mobile-global-interaction-style")){const s=document.createElement("style");s.id="ds-mobile-global-interaction-style";s.textContent=".ds-mobile-intelligence-sheet{position:fixed;z-index:110;left:0;right:0;bottom:0;height:min(88vh,900px);background:#060a10;border-top:1px solid rgba(182,255,0,.35);border-radius:22px 22px 0 0;box-shadow:0 -30px 90px #000;transform:translateY(105%);transition:transform .24s ease;overflow:hidden}.ds-mobile-intelligence-sheet.is-open{transform:translateY(0)}.ds-mobile-intelligence-head{height:62px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.09);background:#09111a}.ds-mobile-intelligence-head span{display:block;color:#b6ff00;font:900 8px ui-monospace,monospace;letter-spacing:.12em}.ds-mobile-intelligence-head strong{display:block;margin-top:3px;font:900 14px ui-monospace,monospace;color:#fff}.ds-mobile-intelligence-head button{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:#111822;color:#fff;font-size:22px}.ds-mobile-intelligence-sheet iframe{display:block;width:100%;height:calc(100% - 62px);border:0;background:#060a10}.ds-intel-open{overflow:hidden}";document.head.appendChild(s);}document.querySelectorAll(".ds-mobile-signal-wall").forEach(init);}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
 })();
