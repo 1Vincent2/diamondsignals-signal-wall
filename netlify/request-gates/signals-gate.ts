@@ -64,6 +64,14 @@ function isPublicPath(pathname: string): boolean {
   }
 
   /*
+    Canonical player dossiers are a supporting route layer used by
+    report intelligence links, including the isolated mobile canaries.
+  */
+  if (pathname.startsWith("/scout/")) {
+    return true;
+  }
+
+  /*
     Static assets must remain public so the front door and protected
     pages can load their presentation resources normally.
   */

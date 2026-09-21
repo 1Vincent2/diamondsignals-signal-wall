@@ -1,6 +1,6 @@
 (function(){
 const MOBILE_REPORTS=[
-["SIGNALS","/mobile-live-canary/"],["VELOCITY DECAY","/mobile-velocity-decay-canary/"],["STUFF+ DISRUPTION","/mobile-stuff-disruption-canary/"],["IVB HEAT MAP","/mobile-ivb-heat-map-canary/"],["APEX EXTRACTION","/mobile-apex-extraction-canary/"],["MLB EXTRACTION","/mobile-mlb-extraction-canary/"],["WAIVER WIRE","/mobile-waiver-wire-canary/"],["KINETIC DRIFT","/mobile-kinetic-drift-canary/"]
+["SIGNALS","/mobile-live-canary/","signal-wall"],["VELOCITY DECAY","/mobile-velocity-decay-canary/","velocity-decay"],["STUFF+ DISRUPTION","/mobile-stuff-disruption-canary/","stuff-disruption"],["IVB HEAT MAP","/mobile-ivb-heat-map-canary/","ivb-heat-map"],["APEX EXTRACTION","/mobile-apex-extraction-canary/","apex-extraction"],["MLB EXTRACTION","/mobile-mlb-extraction-canary/","mlb-extraction"],["WAIVER WIRE","/mobile-waiver-wire-canary/","waiver-wire"],["KINETIC DRIFT","/mobile-kinetic-drift-canary/","kinetic-drift"]
 ];
 const COPY={
 "EDGE SCORE":"Composite DiamondSignals signal-strength score. Higher values indicate stronger underlying movement and conviction.",
@@ -32,19 +32,38 @@ const COPY={
 "KES":"Kinetic Emergence Score: improving delivery or pitch-shape signals versus the pitcher’s baseline.",
 "KIS":"Kinetic Instability Score: unusual mechanical or pitch-shape variability across recent appearances."
 };
+function menuMarkup(active){
+ return '<div class="ds-mobile-drawer-head"><div><span>DIAMONDSIGNALS</span><strong>COMMAND MENU</strong></div><button type="button" data-ds-mobile-menu-close>×</button></div><nav>'+MOBILE_REPORTS.map(([label,href,report])=>'<a href="'+href+'"'+(report===active?' class="is-active"':'')+'>'+label+' <span>›</span></a>').join("")+'<a href="https://app.diamondsignals.ai/auth?next=/watchlist">TRACKING RADAR <span>›</span></a><a href="https://app.diamondsignals.ai/auth?next=/terminal">ROSTER TERMINAL <span>›</span></a></nav>';
+}
+function ensureMenu(root){
+ let backdrop=root.querySelector(".ds-mobile-command-backdrop");
+ if(!backdrop){backdrop=document.createElement("div");backdrop.className="ds-mobile-command-backdrop";backdrop.hidden=true;backdrop.setAttribute("data-ds-mobile-menu-close","");root.append(backdrop);}
+ let drawer=root.querySelector("[data-ds-mobile-menu-drawer]");
+ if(!drawer){drawer=document.createElement("aside");drawer.className="ds-mobile-command-drawer";drawer.setAttribute("data-ds-mobile-menu-drawer","");drawer.setAttribute("aria-hidden","true");root.append(drawer);}
+ if(drawer.dataset.dsSharedMenu!=="true"){drawer.innerHTML=menuMarkup(root.dataset.mobileReport||"");drawer.dataset.dsSharedMenu="true";}
+ return {drawer,backdrop};
+}
 function init(root){
  if(!root||root.dataset.mobileSignalWallBound==="true")return; root.dataset.mobileSignalWallBound="true";
  const deck=root.querySelector("[data-ds-mobile-deck]"), cards=[...root.querySelectorAll(".ds-mobile-signal-card")];
- if(!root.querySelector("[data-ds-mobile-menu-drawer]")){
+ const parkedPromotion=root.dataset.mobileReport==="promotion-watch";
+ if(parkedPromotion&&!root.querySelector("[data-ds-mobile-menu-drawer]")){
    const active=root.dataset.mobileReport||"";
    const backdrop=document.createElement("div");backdrop.className="ds-mobile-command-backdrop";backdrop.hidden=true;backdrop.setAttribute("data-ds-mobile-menu-close","");
    const drawer=document.createElement("aside");drawer.className="ds-mobile-command-drawer";drawer.setAttribute("data-ds-mobile-menu-drawer","");drawer.setAttribute("aria-hidden","true");
    drawer.innerHTML='<div class="ds-mobile-drawer-head"><div><span>DIAMONDSIGNALS</span><strong>COMMAND MENU</strong></div><button type="button" data-ds-mobile-menu-close>×</button></div><nav>'+MOBILE_REPORTS.map(([label,href])=>'<a href="'+href+'"'+(href.includes(active)&&active?' class="is-active"':'')+'>'+label+' <span>›</span></a>').join("")+'<a href="https://app.diamondsignals.ai/auth?next=/watchlist">TRACKING RADAR <span>›</span></a><a href="https://app.diamondsignals.ai/auth?next=/terminal">ROSTER TERMINAL <span>›</span></a></nav>';
    root.append(backdrop,drawer);
  }
- const drawer=root.querySelector("[data-ds-mobile-menu-drawer]"), menuBtn=root.querySelector("[data-ds-mobile-menu-open]"), backdrop=root.querySelector(".ds-mobile-command-backdrop");
- function menu(open){if(drawer){drawer.classList.toggle("is-open",open);drawer.setAttribute("aria-hidden",String(!open));}if(menuBtn)menuBtn.setAttribute("aria-expanded",String(open));if(backdrop){backdrop.hidden=!open;backdrop.classList.toggle("is-open",open);}}
- menuBtn?.addEventListener("click",()=>menu(true));root.querySelectorAll("[data-ds-mobile-menu-close]").forEach(el=>el.addEventListener("click",()=>menu(false)));
+ const menuBtn=root.querySelector("[data-ds-mobile-menu-open]");
+ if(parkedPromotion){
+   const drawer=root.querySelector("[data-ds-mobile-menu-drawer]"),backdrop=root.querySelector(".ds-mobile-command-backdrop");
+   function menu(open){if(drawer){drawer.classList.toggle("is-open",open);drawer.setAttribute("aria-hidden",String(!open));}if(menuBtn)menuBtn.setAttribute("aria-expanded",String(open));if(backdrop){backdrop.hidden=!open;backdrop.classList.toggle("is-open",open);}}
+   menuBtn?.addEventListener("click",()=>menu(true));root.querySelectorAll("[data-ds-mobile-menu-close]").forEach(el=>el.addEventListener("click",()=>menu(false)));
+ }else{
+   ensureMenu(root);
+   function menu(open){const {drawer,backdrop}=ensureMenu(root);drawer.classList.toggle("is-open",open);drawer.setAttribute("aria-hidden",String(!open));if(menuBtn)menuBtn.setAttribute("aria-expanded",String(open));backdrop.hidden=!open;backdrop.classList.toggle("is-open",open);}
+   root.addEventListener("click",e=>{const target=e.target?.closest?.("[data-ds-mobile-menu-open],[data-ds-mobile-menu-close]");if(!target||!root.contains(target))return;if(target.matches("[data-ds-mobile-menu-open]"))menu(true);else menu(false);});
+ }
  const guide=root.querySelector("[data-ds-field-guide]");root.querySelector("[data-ds-field-guide-open]")?.addEventListener("click",()=>{if(guide)guide.hidden=false;});root.querySelector("[data-ds-field-guide-close]")?.addEventListener("click",()=>{if(guide)guide.hidden=true;});
  const modes=[...root.querySelectorAll("[data-ds-mobile-mode]")], panels=[...root.querySelectorAll("[data-ds-mobile-panel]")], count=root.querySelector("[data-ds-current-index]");
  function mode(name){modes.forEach(b=>{const on=b.dataset.dsMobileMode===name;b.classList.toggle("is-active",on);b.setAttribute("aria-selected",String(on));});panels.forEach(p=>p.hidden=p.dataset.dsMobilePanel!==name);}
@@ -61,7 +80,7 @@ function init(root){
  const sheet=root.querySelector("[data-ds-explainer]"), title=root.querySelector("[data-ds-explainer-title]"), copy=root.querySelector("[data-ds-explainer-copy]");
  root.querySelectorAll("[data-ds-metric-info]").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();const key=(b.dataset.dsMetricInfo||"METRIC").toUpperCase();if(title)title.textContent=key;if(copy)copy.textContent=COPY[key]||"DiamondSignals context for this live metric. Full Field Guide detail will be connected in the next refinement.";if(sheet)sheet.hidden=false;}));
  root.querySelector("[data-ds-explainer-close]")?.addEventListener("click",()=>{if(sheet)sheet.hidden=true;});
- root.querySelectorAll(".ds-mobile-intel-link").forEach(link=>link.addEventListener("click",e=>{
+ if(parkedPromotion)root.querySelectorAll(".ds-mobile-intel-link").forEach(link=>link.addEventListener("click",e=>{
    const href=link.getAttribute("href");if(!href||href==="#")return;e.preventDefault();
    let intel=root.querySelector("[data-ds-mobile-intelligence]");
    if(!intel){intel=document.createElement("section");intel.className="ds-mobile-intelligence-sheet";intel.setAttribute("data-ds-mobile-intelligence","");intel.innerHTML='<div class="ds-mobile-intelligence-head"><div><span>PLAYER INTELLIGENCE</span><strong>SCOUT DOSSIER</strong></div><button type="button" aria-label="Close intelligence">×</button></div><iframe title="Player intelligence"></iframe>';root.append(intel);intel.querySelector("button").addEventListener("click",()=>{intel.classList.remove("is-open");document.body.classList.remove("ds-intel-open");});}
