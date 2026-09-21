@@ -35,7 +35,10 @@ function isPublicPath(pathname: string): boolean {
     pathname.startsWith("/mobile-velocity-decay-canary/") ||
     pathname === "/mobile-stuff-disruption-canary" ||
     pathname === "/mobile-stuff-disruption-canary/" ||
-    pathname.startsWith("/mobile-stuff-disruption-canary/")
+    pathname.startsWith("/mobile-stuff-disruption-canary/") ||
+    pathname === "/mobile-ivb-heat-map-canary" ||
+    pathname === "/mobile-ivb-heat-map-canary/" ||
+    pathname.startsWith("/mobile-ivb-heat-map-canary/")
   ) {
     return true;
   }
