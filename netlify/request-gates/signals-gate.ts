@@ -1,3 +1,4 @@
+import { mobilePreviewLauncher } from "../shared/mobile-preview-launcher.ts";
 import {
   SIGNALS_ACCESS_COOKIE,
   verifySignalsAccessToken,
@@ -129,6 +130,8 @@ function safeReturnDestination(url: URL): string {
 
 export default async (request: Request, context: any) => {
   const url = new URL(request.url);
+  const preview = mobilePreviewLauncher(url);
+  if (preview) return preview;
 
   if (
     url.pathname === "/hidden-gems" ||

@@ -3,6 +3,17 @@ const MOBILE_REPORTS=[
 ["SIGNALS","/mobile-live-canary/","signal-wall"],["VELOCITY DECAY","/mobile-velocity-decay-canary/","velocity-decay"],["STUFF+ DISRUPTION","/mobile-stuff-disruption-canary/","stuff-disruption"],["IVB HEAT MAP","/mobile-ivb-heat-map-canary/","ivb-heat-map"],["APEX EXTRACTION","/mobile-apex-extraction-canary/","apex-extraction"],["MLB EXTRACTION","/mobile-mlb-extraction-canary/","mlb-extraction"],["WAIVER WIRE","/mobile-waiver-wire-canary/","waiver-wire"],["KINETIC DRIFT","/mobile-kinetic-drift-canary/","kinetic-drift"]
 ];
 const COPY={
+"BLAST PATH":"Recent average exit velocity on batted balls, in mph.",
+"BLAST RATE":"Recent barrel rate as a percentage of batted balls.",
+"APEX DAMAGE":"Maximum exit velocity in the recent sample, in mph.",
+"MISS ENGINE":"Swinging strikes and blocked swinging strikes as a percentage of all recent pitches; this is not whiffs per swing.",
+"VELOCITY FUEL":"Recent average fastball velocity, in mph.",
+"RELEASE DECEPTION":"Recent average release extension, in feet.",
+"PHYSICS CORE":"MLB Extraction underlying-trait measure. The ledger model supplies a trait score; Statcast fallback profiles use exit velocity for hitters or whiff rate for pitchers. Read the displayed units and source context.",
+"MARKET GAP":"MLB Extraction surface-pressure measure. The ledger model supplies a surface-pressure score; Statcast fallback profiles use exit-velocity change for hitters or velocity change for pitchers. It is not a price or ownership percentage.",
+"MARKET ATTENTION FEED":"MLB Extraction market measure: a market score in ledger profiles or rostered percentage when an ownership feed is supplied. FEED OFFLINE means that feed is unavailable.",
+"MARKET ATTENTION":"MLB Extraction market measure: a market score in ledger profiles or rostered percentage when an ownership feed is supplied. A dash means no value was provided.",
+
 "EDGE SCORE":"Composite DiamondSignals signal-strength score. Higher values indicate stronger underlying movement and conviction.",
 "SEAGER":"Hitter decision-quality signal: attacks in-zone pitches while refusing chase.",
 "BABIP":"Batting average on balls in play. Use with skill signals to separate surface results from underlying movement.",
@@ -47,6 +58,15 @@ function init(root){
  if(!root||root.dataset.mobileSignalWallBound==="true")return; root.dataset.mobileSignalWallBound="true";
  const deck=root.querySelector("[data-ds-mobile-deck]"), cards=[...root.querySelectorAll(".ds-mobile-signal-card")];
  const parkedPromotion=root.dataset.mobileReport==="promotion-watch";
+ // Preserve native dossier navigation; only attach a known mobile origin.
+ const originReport=MOBILE_REPORTS.find(([,path,key])=>key===root.dataset.mobileReport && window.location.pathname.replace(/\/$/,"")===path.replace(/\/$/,""));
+ if(!parkedPromotion&&originReport)root.querySelectorAll(".ds-mobile-intel-link").forEach(link=>{
+   const target=new URL(link.getAttribute("href")||"",window.location.href);
+   if(target.origin===window.location.origin&&/^\/scout\/\d+\/$/.test(target.pathname)){
+     target.searchParams.set("mobile_origin",originReport[2]);
+     link.setAttribute("href",target.pathname+target.search+target.hash);
+   }
+ });
  if(parkedPromotion&&!root.querySelector("[data-ds-mobile-menu-drawer]")){
    const active=root.dataset.mobileReport||"";
    const backdrop=document.createElement("div");backdrop.className="ds-mobile-command-backdrop";backdrop.hidden=true;backdrop.setAttribute("data-ds-mobile-menu-close","");

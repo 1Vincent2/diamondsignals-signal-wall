@@ -3093,7 +3093,7 @@ def scout_shell_html() -> str:
         </div>
       </div>
       <div class="header-actions">
-        <a class="info-trigger" href="/">Back to Signal Wall</a>
+        <a class="info-trigger" id="scoutReturnLink" href="/">Back to Signal Wall</a>
       </div>
     </div>
   </div>
@@ -3404,6 +3404,16 @@ def scout_shell_html() -> str:
       }
     }
 
+    // Mobile origins are fixed report keys, never arbitrary return URLs.
+    function setMobileDossierReturn() {
+      const routes = {"signal-wall": ["/mobile-live-canary/", "BACK TO SIGNAL WALL"], "velocity-decay": ["/mobile-velocity-decay-canary/", "BACK TO VELOCITY DECAY"], "stuff-disruption": ["/mobile-stuff-disruption-canary/", "BACK TO STUFF+ DISRUPTION"], "ivb-heat-map": ["/mobile-ivb-heat-map-canary/", "BACK TO IVB HEAT MAP"], "apex-extraction": ["/mobile-apex-extraction-canary/", "BACK TO APEX EXTRACTION"], "mlb-extraction": ["/mobile-mlb-extraction-canary/", "BACK TO MLB EXTRACTION"], "waiver-wire": ["/mobile-waiver-wire-canary/", "BACK TO WAIVER WIRE"], "kinetic-drift": ["/mobile-kinetic-drift-canary/", "BACK TO KINETIC DRIFT"]};
+      const key = new URLSearchParams(window.location.search).get("mobile_origin");
+      if (!Object.prototype.hasOwnProperty.call(routes, key)) return;
+      const link = document.getElementById("scoutReturnLink");
+      link.setAttribute("href", routes[key][0]);
+      link.textContent = routes[key][1];
+    }
+    setMobileDossierReturn();
     loadScoutPlayer();
   </script>
 </body>
