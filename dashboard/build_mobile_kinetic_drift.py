@@ -2,7 +2,8 @@
 """Build the DiamondSignals Kinetic Drift mobile canary."""
 import json
 from pathlib import Path
-from jinja2 import Template
+from mobile_hybrid_cards import template_for
+Template = template_for("kinetic-drift")
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
@@ -39,13 +40,13 @@ def main():
     body = Template(
         read(TEMPLATES / "mobile" / "surface_reports" / "kinetic_drift_command.html")
     ).render(players=clean)
-    css = read(STATIC / "mobile_surface_base.css") + "\n" + read(STATIC / "mobile_signal_wall_command.css")
-    js = read(STATIC / "mobile_command_experience.js") + "\n" + read(STATIC / "mobile_signal_wall_command.js")
+    css = read(STATIC / "mobile_surface_base.css") + "\n" + read(STATIC / "mobile_signal_wall_command.css") + "\n" + read(STATIC / "mobile_hybrid_cards.css")
+    js = read(STATIC / "mobile_command_experience.js") + "\n" + read(STATIC / "mobile_signal_wall_command.js") + "\n" + read(STATIC / "mobile_hybrid_cards.js")
     html = (
         '<!doctype html><html><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
         '<title>DiamondSignals Mobile // Kinetic Drift</title>'
-        f"<style>{css}</style></head><body>{body}<script>{js}</script></body></html>"
+        f'<style>{css}</style></head><body>{body}<script src="/player-card-actions.js"></script><script>{js}</script></body></html>'
     )
 
     OUT.mkdir(parents=True, exist_ok=True)

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Build the quarantined DiamondSignals Mobile Signal Wall preview from current canonical artifacts."""
 import json
-from datetime import datetime
 from pathlib import Path
-from jinja2 import Template
+from mobile_hybrid_cards import template_for
+Template = template_for("signal-wall")
 
 ROOT=Path(__file__).resolve().parents[1]
 DIST=ROOT/"dist"
@@ -72,9 +72,9 @@ def main():
     player_index=load_player_index()
     players=[normalize(row,kind,i+1,player_index) for i,(kind,row) in enumerate(raw)]
     tpl=Template(text(TEMPLATES/"mobile"/"surface_reports"/"signal_wall_command.html"))
-    body=tpl.render(players=players,updated_label=datetime.now().strftime("%-I:%M %p"))
-    css=text(MOBILE_STATIC/"mobile_surface_base.css")+"\n"+text(MOBILE_STATIC/"mobile_signal_wall_command.css")
-    js=text(MOBILE_STATIC/"mobile_command_experience.js")+"\n"+text(MOBILE_STATIC/"mobile_signal_wall_command.js")
+    body=tpl.render(players=players,updated_label=("Updated " + str(payload["generated_at"])[:10]) if payload.get("generated_at") else "Timestamp not retained")
+    css=text(MOBILE_STATIC/"mobile_surface_base.css")+"\n"+text(MOBILE_STATIC/"mobile_signal_wall_command.css") + "\n" + text(MOBILE_STATIC / "mobile_hybrid_cards.css")
+    js=text(MOBILE_STATIC/"mobile_command_experience.js")+"\n"+text(MOBILE_STATIC/"mobile_signal_wall_command.js") + "\n" + text(MOBILE_STATIC / "mobile_hybrid_cards.js")
     html=f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>DiamondSignals Mobile // Today's Edge</title><style>{css}</style></head><body>{body}<script src="/player-card-actions.js"></script><script>{js}</script></body></html>"""
     OUT.mkdir(parents=True,exist_ok=True);(OUT/"index.html").write_text(html,encoding="utf-8")
     print(f"Wrote {OUT/'index.html'} with {len(players)} signals")

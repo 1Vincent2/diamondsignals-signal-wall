@@ -1,0 +1,22 @@
+{% macro hybrid_card(p, index, family) %}
+{% set s = p.story %}
+<article class="ds-mobile-signal-card ds-hybrid-card js-player-card" data-card-index="{{ index }}" data-player-id="{{ s.player_id }}" data-player-name="{{ s.name }}" data-player-type="{{ s.kind }}" data-player-team="{{ s.team }}" data-profile-url="{{ s.profile }}" data-source-tag="{{ family|upper }}" data-report-context="{{ family }}">
+  <div class="ds-hybrid-identity">
+    {% if s.image %}<img src="{{ s.image }}" alt="" loading="lazy">{% endif %}
+    <div><div class="ds-mobile-player-role">{{ s.team }} · {{ s.role|upper }}</div><h2>{{ s.name }}</h2></div>
+  </div>
+  <div class="ds-mobile-card-body">
+    <section class="ds-hybrid-story"><h3>WHAT CHANGED{% if family in ['ivb-heat-map','apex-extraction'] %} / STOOD OUT{% endif %}</h3><p>{{ s.changed }}</p></section>
+    <section class="ds-hybrid-meaning"><h3>WHY IT MATTERS</h3><p>{{ s.why }}</p></section>
+    <section class="ds-hybrid-evidence"><h3>KEY EVIDENCE</h3><dl>{% for m in s.evidence %}<div><dt>{{ m.label }}</dt><dd>{{ m.value }}<small>{{ m.context }}</small></dd></div>{% else %}<div><dt>Component measurements</dt><dd>Not retained</dd></div>{% endfor %}</dl></section>
+    {% if s.score is not none and s.score != '' %}<div class="ds-hybrid-score"><span>{{ s.score_label }} <strong>{{ s.score }}</strong></span>{% if s.score_note %}<span>— {{ s.score_note }}</span>{% endif %}</div>{% endif %}
+    <section class="ds-hybrid-watch"><h3>WHAT TO WATCH NEXT</h3><p>{{ s.watch }}</p></section>
+    <button class="ds-mobile-track js-add-to-roster" type="button" data-default-label="INITIATE TRACKING" {% if not s.player_id %}disabled title="Player identity unavailable"{% endif %}>INITIATE TRACKING</button>
+    {% if s.profile != '#' %}<a class="ds-mobile-intel-link" href="{{ s.profile }}" data-player-id="{{ s.player_id }}" data-report-context="{{ family }}">VIEW INTELLIGENCE ›</a>{% else %}<p class="ds-hybrid-unavailable">Player intelligence awaits a verified identity.</p>{% endif %}
+    <details class="ds-hybrid-depth"><summary>Supporting evidence &amp; methodology</summary><p>{{ s.context }}</p><time>Source updated: {{ s.generated_at }}</time><p class="ds-hybrid-source">Canonical source: {{ s.source }}</p>
+      {% if s.tags %}<div class="ds-mobile-signal-chips">{% for tag in s.tags %}<span>{{ tag }}</span>{% endfor %}</div>{% endif %}
+      <dl>{% for m in s.detail %}<div><dt>{{ m.label }}</dt><dd>{{ m.value }}</dd></div>{% endfor %}</dl>
+    </details>
+  </div>
+</article>
+{% endmacro %}
