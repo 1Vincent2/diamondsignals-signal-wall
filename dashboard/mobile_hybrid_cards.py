@@ -30,13 +30,144 @@ def direction(value, label):
         return None
     return f'{label} {"rose" if n > 0 else "fell" if n < 0 else "held steady"}'
 
+def trace(values, label, unit='', labels=None):
+    """Chart only retained finite values, with a readable equivalent."""
+    if not values or any(number(v) is None for v in values):
+        return None
+    values = [number(v) for v in values]
+    lo, hi = min(values), max(values)
+    points = ' '.join(f'{8 + i * 264 / max(1,len(values)-1):.1f},{64 - (v-lo) * 56 / (hi-lo):.1f}' if hi != lo else f'{8 + i * 264 / max(1,len(values)-1):.1f},36' for i,v in enumerate(values))
+    text = ' → '.join((str(labels[i])+': ' if labels else '') + fmt(v,unit) for i,v in enumerate(values))
+    return dict(label=label,points=points,values=text)
+
+def refine_story(p, s, family):
+    """Map retained observations into a common view contract; never calculate a score."""
+    s.update(level=p.get('level') or p.get('current_level') or '',
+             observed_at=p.get('observation_timestamp') or p.get('latest_game_date') or p.get('signal_timestamp') or p.get('observed_at') or '',
+             generated_at=p.get('source_updated_at') or p.get('generated_at') or '', trace=None)
+    if family == 'signal-wall':
+        badges=p.get('badges') or []
+        if s['kind']=='hitter':
+            if 'EV Burst' in badges and 'Barrel Jump' in badges:
+                s['why']='Harder contact is also arriving at productive launch angles, which can support more extra-base hits.'
+                s['watch']='Do both average exit velocity and the barrel-like contact share remain elevated over the next several games?'
+            elif 'EV Burst' in badges:
+                s['why']='Higher average contact speed is the supported change; a broader contact-quality improvement still needs confirmation.'
+                s['watch']='Does average exit velocity stay above the earlier baseline as more batted balls are recorded?'
+            elif 'Barrel Jump' in badges:
+                s['why']='More contact is combining speed with productive launch angles, which can make extra-base hits more likely.'
+                s['watch']='Does the barrel-like contact share remain elevated as the batted-ball sample grows?'
+            elif number(p.get('metric_3')) is not None:
+                s['changed']=f"Peak exit velocity reached {fmt(p['metric_3'],' mph')} in the retained sample; a historical increase is not established."
+                s['why']='A peak contact-speed measurement shows one part of the contact profile; it does not establish repeatable improvement.'
+                s['watch']='Do additional batted balls support the peak contact speed with stronger average contact?'
+            else:
+                s.update(changed='The report surfaced this hitter, but contact-change evidence is not retained.',why='The ranking needs supporting contact measurements before its meaning can be assessed.',watch='Does the next refresh retain contact measurements and a valid earlier baseline?')
+        else:
+            active=[(badge,label) for badge,label in [('Whiff Lift','swinging-strike rate'),('Velo Jump','fastball velocity'),('Extension Gain','release extension')] if badge in badges]
+            if active:
+                labels=' and '.join(label for _,label in active)
+                s['why']=('More swinging strikes provide observed bat-missing support for the changed pitch traits.' if 'Whiff Lift' in badges and len(active)>1 else
+                          'More pitches are producing swinging strikes, a direct measure of bat-missing in this sample.' if 'Whiff Lift' in badges else
+                          'The retained change concerns '+labels+'; improved bat-missing outcomes are not established by those traits alone.')
+                s['watch']='Does '+labels+' remain above the earlier baseline in the next appearances?'
+            else:
+                s['why']='These current pitch measurements provide context, but do not establish an improvement from the earlier baseline.'
+                s['watch']='Does the next sample retain a supported change in swinging strikes, speed or extension?'
+        season=p.get('season_context') or {}
+        s['detail'] += [evidence(label,season[key]) for key,label in [('season','Season'),('k_pct','Season strikeout rate'),('bb_pct','Season walk rate'),('batters_faced','Season batters faced')] if key in season]
+    elif family == 'velocity-decay':
+        d=number(p.get('velo_delta')); trend=p.get('trend_values') or []
+        if d is not None:
+            change='loss' if d<0 else 'gain' if d>0 else 'stability'
+            if d==0:s['changed']='Fastball velocity matches the prior-appearance average.'
+            s['why']=f"The {fmt(abs(d),' mph')} velocity {change} changes the speed context of the arsenal; the measurement does not identify a cause." if d else 'The latest speed measurement does not show a departure from the prior-appearance average.'
+            s['watch']=('Does fastball velocity recover toward the prior-appearance average or remain lower?' if d<0 else 'Does the higher fastball velocity persist in the next appearances?' if d>0 else 'Does velocity remain near the prior-appearance average as the sample grows?')
+        else:s.update(why='Without a retained velocity comparison, the report cannot establish the size or direction of a speed change.',watch='Does the next refresh provide latest and baseline fastball velocity?')
+        s['trace']=trace(trend,'Fastball velocity · latest appearance first',' mph')
+        s['score']=p.get('risk_score',p.get('risk_score_label'));s['score_note']=p.get('risk_tier') or ''
+    elif family == 'stuff-disruption':
+        measured=[(key,label,unit) for key,label,unit in [('ivb_delta','vertical break',' in'),('vaa_delta','approach angle','°')] if number(p.get(key)) is not None]
+        if measured:
+            s['changed']='; '.join(f"{label} changed {fmt(p[key],unit,True)}" for key,label,unit in measured).capitalize()+' versus the prior-appearance average.'
+            labels=' and '.join(label for _,label,_ in measured)
+            s['why']='The observed '+labels+' shifts describe a different fastball shape; their effect on hitters still needs outcome evidence.'
+            s['watch']='Do the '+labels+' shifts recur in the next appearances, alongside swinging-strike and contact results?'
+        else:s.update(changed='The report surfaced a shape signal, but component changes are not retained.',why='A shape interpretation requires the missing component measurements.',watch='Does the next refresh retain vertical-break or approach-angle comparisons?')
+        s['trace']=trace(p.get('trend_values') or [],'Fastball vertical break · latest appearance first',' in')
+        s['score']=p.get('disruption_score',p.get('disruption_score_label'));s['score_note']=p.get('apex_tier') or ''
+    elif family == 'ivb-heat-map':
+        match=re.search(r'[+-]?\d+(?:\.\d+)?',str(p.get('ivb_vs_avg') or ''));d=number(match.group()) if match else None
+        if d is not None:
+            side='more' if d>0 else 'less' if d<0 else 'the same'
+            s['why']='This fastball has '+side+' induced vertical break than its velocity peers; that is a shape distinction, not evidence of a recent improvement.'
+            if d==0:s['changed']='Fastball vertical break matches the velocity-peer baseline.'
+            s['watch']='Does the fastball remain '+('above' if d>0 else 'below' if d<0 else 'near')+' its velocity-peer baseline in the next sample?'
+    elif family == 'apex-extraction':
+        arm=p.get('signal_family')=='APEX ARM'
+        usable=[m for m in s['evidence'] if m['value'] not in (None,'','Not retained')]
+        if usable:
+            lead=usable[0]
+            s['changed']=f"{lead['label']} is {lead['value']}"+(' versus prior fastball appearances.' if arm and 'change' in lead['label'].lower() else ' in the retained profile.')
+            if arm:
+                labels=' and '.join(m['label'].lower() for m in usable[:2])
+                s['why']='The '+labels+' measurements describe the pitch-shape signal; they do not independently establish better results.'
+                s['watch']='Do the retained '+labels+' measurements persist in subsequent fastball appearances?'
+            else:
+                gap=next((m for m in usable if m['label']=='xBA minus AVG'),None)
+                s['why']=('Expected batting average differs from actual average by '+str(gap['value'])+'; this is a model-to-results gap, not a promised correction.' if gap else 'The retained contact measurement describes this sample; repeatability is not established by the ranking.')
+                s['watch']='Does '+lead['label'].lower()+' remain supported by new batted balls'+(', and does the expected-versus-actual average gap narrow?' if gap else '?')
+        else:s.update(changed='The Apex ranking has no retained component measurements.',why='The score alone does not establish a physical or performance change.',watch='Does the next refresh include measurements supporting the Apex ranking?')
+    elif family == 'mlb-extraction':
+        r=p.get('raw') or {};hitter=s['kind']=='hitter';key='ev_delta' if hitter else 'whiff_delta';d=number(r.get(key));label='average exit velocity' if hitter else 'swinging-strike rate'
+        if d is not None and number(r.get('recent_ev' if hitter else 'recent_whiff_rate')) is not None:
+            s['changed']=f"{label.capitalize()} changed {fmt(d if hitter else d*100,' mph' if hitter else ' percentage points',True)} versus the earlier baseline."
+            s['why']=('The contact-speed comparison is '+('higher' if d>0 else 'lower' if d<0 else 'unchanged')+' in the recent sample; this does not establish future hitting production.' if hitter else 'The share of pitches generating swinging strikes is '+('higher' if d>0 else 'lower' if d<0 else 'unchanged')+'; sample size matters when interpreting that comparison.')
+            s['watch']='Does '+label+' remain '+('above' if d>0 else 'below' if d<0 else 'near')+' the earlier baseline as the '+('batted-ball' if hitter else 'pitch')+' sample grows?'
+            s['detail'] += [evidence(label_,r[key_]) for key_,label_ in [('recent_pitches','Recent pitches'),('baseline_pitches','Baseline pitches'),('recent_bbe','Recent batted balls'),('baseline_bbe','Baseline batted balls')] if r.get(key_) is not None]
+        elif s['evidence']:
+            s['why']='The retained model components describe a traits-versus-results ranking; physical measurements and a historical change are not established.'
+            s['watch']='Does the next ledger refresh retain physical measurements or a supported comparison behind this ranking?'
+    elif family == 'waiver-wire':
+        if p.get('deployment_label'):
+            s['why']='The retained opportunity status is '+str(p['deployment_label'])+'; roster relevance still depends on playing time and league availability.'
+            s['watch']='Does the reported '+str(p['deployment_label'])+' opportunity persist, with availability confirmed in your league?'
+    elif family == 'kinetic-drift':
+        m=p.get('metrics') or {};d=number(m.get('release_speed_delta'));e=number(m.get('release_extension_delta'))
+        if d is not None:
+            s['changed']='Fastball velocity changed '+fmt(d,' mph',True)+((' and extension '+fmt(e,' ft',True)) if e is not None else '')+' versus the own-player baseline.'
+            s['why']='The '+('lower' if d<0 else 'higher' if d>0 else 'unchanged')+' speed'+(' and shorter release extension' if e is not None and e<0 else ' and longer release extension' if e is not None and e>0 else '')+' describe the observed delivery profile; the measurements do not establish fatigue, injury or another cause.'
+            s['watch']='Does fastball velocity move back toward the own-player baseline'+(' along with release extension' if e is not None and e!=0 else '')+' in the next appearances?'
+        points=p.get('drift_trace') or []
+        s['trace']=trace([x.get('drift_index') for x in points],'Drift index · earliest observation first',labels=[x.get('game_date','Date not retained') for x in points])
+        s['score_note']=p.get('kde_band') or ''
+    # Explicit narrative fields can be supplied by a future canonical refresh without
+    # changing card markup. Legacy `analysis`/`why` is not blindly promoted: some
+    # engines use diagnostic or causal language unsupported by retained evidence.
+    for source,target in [('what_changed','changed'),('why_it_matters','why'),('watch_next','watch'),('what_to_watch_next','watch')]:
+        if isinstance(p.get(source),str) and p[source].strip():s[target]=p[source].strip()
+    score_descriptions={
+        'signal-wall':'Retained Edge score summarizes this signal ranking; it is not a probability of future success.',
+        'velocity-decay':'Retained risk score summarizes the velocity report. It is not a diagnosis of fatigue or injury.',
+        'stuff-disruption':'Retained disruption score summarizes pitch-shape movement. It is not a numeric Stuff+ rating.',
+        'apex-extraction':'Retained Apex score combines model components that can share inputs; it is not independent confirmation or a success probability.',
+        'mlb-extraction':'Retained Edge score is supplied by the MLB Extraction payload; it is not a forecast of production.',
+        'waiver-wire':'Retained waiver score ranks candidates in this feed; it does not establish availability or value in your league.',
+        'kinetic-drift':'Retained KDE score summarizes delivery movement relative to the player baseline; it does not diagnose the cause.'}
+    s['score_explanation']=score_descriptions.get(family,'No comparable score is retained for this report.')
+    if number(s.get('score')) is None:s['score']=None;s['score_note']=''
+    s['evidence']=s['evidence'][:3]
+    for item in s['evidence']:
+        if item['value'] is None or item['value'] == '':
+            item['value'] = 'Not retained'
+
 def adapt(row, family):
     p = dict(row)
     name = p.get('player_name') or p.get('name') or 'Unknown player'
     if ',' in name:
         last, first = name.split(',', 1); name = f'{first.strip()} {last.strip()}'
     pid = str(p.get('player_id') or '')
-    kind = p.get('player_type') or p.get('kind') or ('hitter' if p.get('role') == 'BAT' else 'pitcher')
+    kind = p.get('player_type') or p.get('kind') or ('hitter' if p.get('role') == 'BAT' or p.get('signal_family') == 'APEX BAT' else 'pitcher')
     role = p.get('position') or p.get('role') or kind
     s = dict(name=name, team=p.get('team') or 'Team not supplied', role=role,
              player_id=pid, kind=kind, image=p.get('headshot_url') or (f'https://img.mlbstatic.com/mlb-photos/image/upload/w_360,q_90/v1/people/{pid}/headshot/67/current' if pid else ''),
@@ -151,6 +282,7 @@ def adapt(row, family):
                 item['value'] = '15–25° band'
                 item['context'] = 'Range indicated by source classification'
         s['changed'] = ('Changes in fastball carry, approach angle and sideways movement are surfacing together.' if arm else 'Peak contact quality and expected-versus-actual hitting results stand out together.')
+    refine_story(p,s,family)
     s['evidence']=s['evidence'][:3]
     s['tags']=[t for t in s['tags'] if t]
     s['detail']=[m for m in s['detail'] if m['value'] is not None and m['value']!='']
@@ -167,6 +299,6 @@ def template_for(family):
             payload = json.loads((Path(__file__).resolve().parents[1] / 'dist' / source).read_text())
             for player in context['players']:
                 player['story']['source'] = source
-                player['story']['generated_at'] = payload.get('source_updated_at') or payload.get('generated_at') or 'Not retained'
+                player['story']['generated_at'] = player['story']['generated_at'] or payload.get('source_updated_at') or payload.get('generated_at') or 'Not retained'
             return self.template.render(**context)
     return MobileTemplate

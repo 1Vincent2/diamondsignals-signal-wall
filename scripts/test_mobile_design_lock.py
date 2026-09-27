@@ -42,6 +42,24 @@ class CardTruth(unittest.TestCase):
     def test_apex_category_uses_supported_range(self):
         s=adapt({'signal_family':'APEX BAT','forensic_metrics':[{'code':'LA_CONSISTENCY','value':'Surgical'}]},'apex-extraction')['story']
         self.assertEqual(s['evidence'][0]['value'],'15–25° band')
+    def test_refresh_changes_explanation_and_watch_next(self):
+        low=adapt({'velo_delta':-2,'risk_score':60,'trend_values':[93,95]},'velocity-decay')['story']
+        high=adapt({'velo_delta':2,'risk_score':20,'trend_values':[97,95]},'velocity-decay')['story']
+        self.assertNotEqual(low['changed'],high['changed'])
+        self.assertNotEqual(low['watch'],high['watch'])
+        self.assertEqual(low['score'],60)
+        self.assertEqual(high['score'],20)
+    def test_explicit_canonical_narrative_and_observation(self):
+        s=adapt({'what_changed':'Retained observation','why_it_matters':'Supported meaning','what_to_watch_next':'Next observation','observed_at':'2027-04-01'},'signal-wall')['story']
+        self.assertEqual(s['changed'],'Retained observation')
+        self.assertEqual(s['watch'],'Next observation')
+        self.assertEqual(s['observed_at'],'2027-04-01')
+        self.assertIsNone(s['score'])
+    def test_missing_waiver_measurements_are_explicit(self):
+        s=adapt({},'waiver-wire')['story']
+        self.assertTrue(all(m['value']=='Not retained' for m in s['evidence']))
+    def test_apex_bat_identity(self):
+        self.assertEqual(adapt({'signal_family':'APEX BAT'},'apex-extraction')['story']['kind'],'hitter')
     def test_no_mutation_of_canonical_row(self):
         r={'player_name':'Test','ivb_vs_avg':'+3.0"'}; before=dict(r);adapt(r,'ivb-heat-map');self.assertEqual(r,before)
 

@@ -22,3 +22,17 @@
 @media(max-width:760px){.ds-hybrid-depth time{display:block;margin-top:8px;color:#a7b9ca;font-size:11px;overflow-wrap:anywhere}}
 
 @media(max-width:760px){.ds-mobile-report-view:has(.ds-hybrid-card) .ds-mobile-hero{padding-top:16px}.ds-mobile-report-view:has(.ds-hybrid-card) .ds-mobile-hero h1{font-size:27px;line-height:1.08}.ds-mobile-report-view:has(.ds-hybrid-card) .ds-mobile-telemetry{flex-wrap:wrap;overflow:visible}}
+/* Hybrid Intelligence Card v1.1: reuse the established palette and typography. */
+@media(max-width:760px){
+.ds-hybrid-identity{background:none}
+.ds-hybrid-score{margin:0 0 14px;align-items:center;column-gap:10px}
+.ds-hybrid-score-info{flex-basis:100%}.ds-hybrid-score-info summary{display:flex;align-items:center;min-height:44px;width:fit-content;cursor:pointer;text-decoration:underline;color:#b8c7d8;font-size:11px}.ds-hybrid-score-info p{font-size:12px;margin-bottom:8px}
+.ds-hybrid-evidence dl{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.ds-hybrid-evidence dl>div{display:block;padding:10px 8px;border:1px solid var(--line);border-radius:9px;background:#0a1420;min-width:0}
+.ds-hybrid-evidence dt{font-size:11px;min-height:30px}.ds-hybrid-evidence dd{margin-top:7px;font-size:15px;line-height:1.3}.ds-hybrid-evidence small{font-size:11px;line-height:1.4}
+.ds-hybrid-actions{display:grid;gap:8px}.ds-hybrid-toggle,.ds-hybrid-close{min-height:46px;padding:12px 8px;border:1px solid var(--line);border-radius:10px;background:#0b1521;color:#eef4fa;font:800 11px ui-monospace,monospace;cursor:pointer;width:100%}
+.ds-hybrid-depth[hidden]{display:none!important}.ds-hybrid-depth{padding-top:18px;margin-top:18px}.ds-hybrid-depth .ds-hybrid-score-context{margin-top:12px}.ds-hybrid-depth .ds-mobile-intel-link{margin:14px 0;min-height:46px}.ds-hybrid-depth time{margin-top:10px}.ds-hybrid-source{margin-top:8px!important}
+.ds-hybrid-trace{margin:16px 0;color:var(--cyan)}.ds-hybrid-trace figcaption{font-size:12px;color:#b8c7d8}.ds-hybrid-trace svg{display:block;width:100%;height:auto;margin:8px 0}.ds-hybrid-trace p{color:#a7b9ca;font-size:11px}
+}
+@media(max-width:360px){.ds-hybrid-evidence dl{grid-template-columns:repeat(2,minmax(0,1fr))}.ds-hybrid-evidence dl>div:last-child:nth-child(odd){grid-column:1/-1}}
+@media(prefers-reduced-motion:reduce){.ds-hybrid-card,.ds-hybrid-card *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

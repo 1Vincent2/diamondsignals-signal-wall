@@ -13,12 +13,19 @@ const actions=fs.readFileSync('src/js/player-card-actions.js','utf8').replace('w
   else assert(cards.length>0,family);
   for(const card of cards){
    assert(card.querySelectorAll('.ds-hybrid-evidence dl>div').length<=3);
-   const headings=[...card.querySelectorAll('section h3')].map(x=>x.textContent);
+   const headings=[...card.querySelectorAll('.ds-mobile-card-body > section > h3')].map(x=>x.textContent);
    assert.deepEqual(headings.map(x=>x.split(' /')[0]),['WHAT CHANGED','WHY IT MATTERS','KEY EVIDENCE','WHAT TO WATCH NEXT']);
    assert.match(card.dataset.playerId,/^\d+$/);assert(card.querySelector('time').textContent.includes('Source updated:'));
    assert.equal(new URL(card.querySelector('.ds-mobile-intel-link').href).searchParams.get('mobile_origin'),family);
-   assert.equal(new URL(card.dataset.profileUrl,d.window.location).searchParams.get('mobile_origin'),family);
-   const details=card.querySelector('details');let bubbled=false;card.addEventListener('click',()=>bubbled=true);details.querySelector('summary').click();assert.equal(bubbled,false);assert(details.open);
+   assert.equal(card.dataset.profileUrl,'#');
+   const toggle=card.querySelector('.ds-hybrid-toggle'),panel=card.querySelector('.ds-hybrid-depth');
+   assert.equal(panel.hidden,true);assert.equal(toggle.getAttribute('aria-controls'),panel.id);
+   const originalUrl=d.window.location.href; toggle.click();
+   assert.equal(panel.hidden,false);assert.equal(toggle.getAttribute('aria-expanded'),'true');
+   assert.equal(toggle.textContent,'HIDE INTELLIGENCE');assert.equal(d.window.location.href,originalUrl);
+   card.querySelector('.ds-hybrid-close').click();assert.equal(panel.hidden,true);
+   assert.equal(toggle.getAttribute('aria-expanded'),'false');assert.equal(doc.activeElement,toggle);
+   const details=card.querySelector('details');if(details){let bubbled=false;card.addEventListener('click',()=>bubbled=true);details.querySelector('summary').click();assert.equal(bubbled,false);assert(details.open);}
    const button=card.querySelector('.js-add-to-roster');assert.equal(button.disabled,false);button.click();
    const target=new URL(d.window.__trackingTarget),next=new URL(target.searchParams.get('next'),target.origin);
    assert.equal(target.origin,'https://app.diamondsignals.ai');assert.equal(next.pathname,'/watchlist');assert.equal(next.searchParams.get('add_player_id'),card.dataset.playerId);assert.equal(next.searchParams.get('player_name'),card.dataset.playerName);
