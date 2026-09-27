@@ -91,7 +91,8 @@ def adapt(row, family):
                  tags=[p.get('band_label'),p.get('transition_badge')],
                  context='IVB is induced vertical break. This comparison is against velocity peers, not the player’s prior outing.')
         s['evidence']=[evidence('Current IVB',p.get('ivb_raw','Not retained'),'Fastball sample'),evidence('IVB vs velocity peers',p.get('ivb_vs_avg','Not retained'),'Velocity-bucket baseline'),evidence('Velocity context',p.get('velocity_bucket') or 'Not retained','Fastball speed band')]
-        s['detail']=[evidence('Vertical approach angle',p.get('vaa')),evidence('Dead-zone status',p.get('dead_zone_label'))]
+        if not p.get('velocity_bucket'): s['evidence'] = s['evidence'][:2]
+        s['detail']=[evidence('Velocity context',p.get('velocity_bucket') or 'Not retained'),evidence('Vertical approach angle',p.get('vaa')),evidence('Dead-zone status',p.get('dead_zone_label'))]
     elif family == 'apex-extraction':
         arm=p.get('signal_family')=='APEX ARM'; ms={m.get('code'):m for m in p.get('forensic_metrics',[])}
         triggered=[label for key,label in [('physical_shift','physical traits'),('vision_delta','pitch deception' if arm else 'contact/decision traits'),('market_latency','the model’s results-gap proxy')] if p.get(key)]
@@ -105,7 +106,7 @@ def adapt(row, family):
             for code,label,ctx in [('VAA_DELTA','Approach angle change','vs prior fastball appearances'),('SSW_PROXY','Horizontal movement','Magnitude of change; causality unproven')]:
                 if code in ms:s['evidence'].append(evidence(label,ms[code].get('value'),ctx))
         else:
-            for code,label,ctx in [('DHH_PROXY','Maximum exit velocity','Peak contact speed; not a DHH measurement'),('LA_CONSISTENCY','Launch angle','Recent mean, or model classification'),('HIGH_STAKES_DELTA','xBA minus AVG','Expected vs actual batting average; not a historical change')]:
+            for code,label,ctx in [('DHH_PROXY','Maximum exit velocity','Peak contact speed'),('LA_CONSISTENCY','Launch angle','Recent mean, or model classification'),('HIGH_STAKES_DELTA','xBA minus AVG','Expected vs actual batting average; not a historical change')]:
                 if code in ms:s['evidence'].append(evidence(label,ms[code].get('value'),ctx))
         s['detail']=[evidence('Physical component',p.get('physical_shift_score')),evidence('Vision/deception component',p.get('vision_delta_score')),evidence('Results-gap proxy component',p.get('market_latency_score')),evidence('Supporting measurements',p.get('supporting_metric'))]
     elif family == 'mlb-extraction':
@@ -145,6 +146,10 @@ def adapt(row, family):
         s['detail']=[evidence(label,fmt(m[key],unit,True)) for key,label,unit in available]+[evidence('Risk component',p.get('kinetic_risk_score')),evidence('Emergence component',p.get('kinetic_emergence_score')),evidence('Instability component',p.get('kinetic_instability_score'))]
         if p.get('drift_trace'):s['detail'].append(evidence('Drift index trace (earliest first)', ' → '.join(str(x.get('game_date','')) + ': ' + str(x.get('drift_index','—')) for x in p['drift_trace'])))
     if family == 'apex-extraction':
+        for item in s['evidence']:
+            if item['label'] == 'Launch angle' and item['value'] == 'Surgical':
+                item['value'] = '15–25° band'
+                item['context'] = 'Range indicated by source classification'
         s['changed'] = ('Changes in fastball carry, approach angle and sideways movement are surfacing together.' if arm else 'Peak contact quality and expected-versus-actual hitting results stand out together.')
     s['evidence']=s['evidence'][:3]
     s['tags']=[t for t in s['tags'] if t]

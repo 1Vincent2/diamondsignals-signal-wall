@@ -17,7 +17,8 @@ class CardTruth(unittest.TestCase):
         s=adapt(dict(ivb_raw='21.4"',ivb_vs_avg='+9.5"'),'ivb-heat-map')['story']
         self.assertIn('velocity-peer baseline',s['changed'])
         self.assertNotIn('rose',s['changed'])
-        self.assertEqual(s['evidence'][2]['value'],'Not retained')
+        self.assertEqual(len(s['evidence']),2)
+        self.assertEqual(s['detail'][0]['value'],'Not retained')
     def test_missing_values_are_not_zero(self):
         s=adapt({},'velocity-decay')['story']
         self.assertIn('unavailable',s['changed'])
@@ -38,6 +39,9 @@ class CardTruth(unittest.TestCase):
         self.assertIn('do not establish fatigue',s['why'])
         self.assertIn('3 appearances versus 8',s['context'])
         self.assertEqual(len(s['evidence']),3)
+    def test_apex_category_uses_supported_range(self):
+        s=adapt({'signal_family':'APEX BAT','forensic_metrics':[{'code':'LA_CONSISTENCY','value':'Surgical'}]},'apex-extraction')['story']
+        self.assertEqual(s['evidence'][0]['value'],'15–25° band')
     def test_no_mutation_of_canonical_row(self):
         r={'player_name':'Test','ivb_vs_avg':'+3.0"'}; before=dict(r);adapt(r,'ivb-heat-map');self.assertEqual(r,before)
 
