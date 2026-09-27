@@ -3,7 +3,7 @@ import sys
 import unittest
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'dashboard'))
-from mobile_hybrid_cards import adapt
+from mobile_hybrid_cards import adapt, ENV
 
 class CardTruth(unittest.TestCase):
     def test_fry_has_no_invented_barrel_baseline(self):
@@ -60,6 +60,12 @@ class CardTruth(unittest.TestCase):
         self.assertTrue(all(m['value']=='Not retained' for m in s['evidence']))
     def test_apex_bat_identity(self):
         self.assertEqual(adapt({'signal_family':'APEX BAT'},'apex-extraction')['story']['kind'],'hitter')
+    def test_trace_renders_values_not_dictionary_method(self):
+        p=adapt({'player_id':123,'velo_delta':-2,'trend_values':[93,95]},'velocity-decay')
+        p['story']['source']='velocity_decay_monitor.json'
+        markup=ENV.from_string('{% from "_hybrid_card.html" import hybrid_card %}{{ hybrid_card(p, 0, "velocity-decay") }}').render(p=p)
+        self.assertIn('93.0 mph → 95.0 mph',markup)
+        self.assertNotIn('built-in method',markup)
     def test_no_mutation_of_canonical_row(self):
         r={'player_name':'Test','ivb_vs_avg':'+3.0"'}; before=dict(r);adapt(r,'ivb-heat-map');self.assertEqual(r,before)
 

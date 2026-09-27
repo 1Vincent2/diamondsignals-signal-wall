@@ -18,7 +18,7 @@
       {% if s.score is not none and s.score != '' %}<p class="ds-hybrid-score-context">{{ s.score_label }} {{ s.score }}: {{ s.score_explanation }}</p>{% endif %}
       {% if s.tags %}<div class="ds-mobile-signal-chips" aria-label="Supporting signal tags">{% for tag in s.tags %}<span>{{ tag }}</span>{% endfor %}</div>{% endif %}
       <dl>{% for m in s.detail %}<div><dt>{{ m.label }}</dt><dd>{{ m.value }}</dd></div>{% endfor %}</dl>
-      {% if s.trace %}<figure class="ds-hybrid-trace"><figcaption>{{ s.trace.label }}</figcaption><svg viewBox="0 0 280 72" role="img" aria-label="{{ s.trace.label }}: {{ s.trace.values }}"><polyline points="{{ s.trace.points }}" fill="none" stroke="currentColor" stroke-width="2"/></svg><p>{{ s.trace.values }}</p></figure>{% endif %}
+      {% if s.trace %}<figure class="ds-hybrid-trace"><figcaption>{{ s.trace.label }}</figcaption><svg viewBox="0 0 280 72" role="img" aria-label="{{ s.trace.label }}: {{ s.trace['values'] }}"><polyline points="{{ s.trace.points }}" fill="none" stroke="currentColor" stroke-width="2"/></svg><p>{{ s.trace['values'] }}</p></figure>{% endif %}
       <time>Source updated: {{ s.generated_at }}</time>{% if s.observed_at %}<time>Observation: {{ s.observed_at }}</time>{% endif %}<p class="ds-hybrid-source">Canonical source: {{ s.source }}</p>
       {% if s.profile != '#' %}<a class="ds-mobile-intel-link" href="{{ s.profile }}" data-player-id="{{ s.player_id }}" data-report-context="{{ family }}">OPEN FULL DOSSIER ›</a>{% else %}<p class="ds-hybrid-unavailable">Full dossier awaits a verified identity.</p>{% endif %}
       <button class="ds-hybrid-close" type="button" aria-controls="{{ panel_id }}">HIDE INTELLIGENCE</button>
