@@ -3,25 +3,28 @@
 <article class="ds-mobile-signal-card ds-hybrid-card js-player-card" data-card-index="{{ index }}" data-player-id="{{ s.player_id }}" data-player-name="{{ s.name }}" data-player-type="{{ s.kind }}" data-player-team="{{ s.team }}" data-profile-url="#" data-source-tag="{{ family|upper }}" data-report-context="{{ family }}">
   <div class="ds-hybrid-identity">
     {% if s.image %}<img src="{{ s.image }}" alt="" loading="lazy">{% endif %}
-    <div><div class="ds-mobile-player-role">{{ s.team }}{% if s.level %} · {{ s.level }}{% endif %} · {{ s.role|upper }}</div><h2>{{ s.name }}</h2></div>
+    <div class="ds-hybrid-player"><div class="ds-mobile-player-role">{{ s.team }}{% if s.level %} · {{ s.level }}{% endif %} · {{ s.role|upper }}</div><h2>{{ s.name }}</h2>
+      {% if s.score is not none and s.score != '' %}<div class="ds-hybrid-score"><span>{{ s.score_label }} <strong>{{ s.score }}</strong></span>{% if s.score_note %}<span>{{ s.score_note }}</span>{% endif %}</div><details class="ds-hybrid-score-info"><summary aria-label="Explain {{ s.score_label|lower }} for {{ s.name }}">About this score</summary><p>{{ s.score_explanation }}</p></details>{% endif %}
+    </div>
   </div>
   <div class="ds-mobile-card-body">
-    {% if s.score is not none and s.score != '' %}<div class="ds-hybrid-score"><span>{{ s.score_label }} <strong>{{ s.score }}</strong></span>{% if s.score_note %}<span>{{ s.score_note }}</span>{% endif %}<details class="ds-hybrid-score-info"><summary aria-label="Explain {{ s.score_label|lower }} for {{ s.name }}">About this score</summary><p>{{ s.score_explanation }}</p></details></div>{% endif %}
     <section class="ds-hybrid-story"><h3>WHAT CHANGED{% if family in ['ivb-heat-map','apex-extraction'] %} / STOOD OUT{% endif %}</h3><p>{{ s.changed }}</p></section>
     <section class="ds-hybrid-meaning"><h3>WHY IT MATTERS</h3><p>{{ s.why }}</p></section>
     <section class="ds-hybrid-evidence"><h3>KEY EVIDENCE</h3><dl>{% for m in s.evidence %}<div><dt>{{ m.label }}</dt><dd>{{ m.value }}{% if m.context %}<small>{{ m.context }}</small>{% endif %}</dd></div>{% else %}<div><dt>Component measurements</dt><dd>Not retained</dd></div>{% endfor %}</dl></section>
     <section class="ds-hybrid-watch"><h3>WHAT TO WATCH NEXT</h3><p>{{ s.watch }}</p></section>
-    <div class="ds-hybrid-actions"><button class="ds-mobile-track js-add-to-roster" type="button" data-default-label="INITIATE TRACKING" {% if not s.player_id %}disabled title="Player identity unavailable"{% endif %}>INITIATE TRACKING</button>
-    <button class="ds-hybrid-toggle" type="button" aria-expanded="false" aria-controls="{{ panel_id }}">VIEW INTELLIGENCE</button></div>
+    <div class="ds-hybrid-actions"><button class="ds-hybrid-toggle" type="button" aria-expanded="false" aria-controls="{{ panel_id }}">DEEPER INTELLIGENCE</button><button class="ds-mobile-track js-add-to-roster" type="button" data-default-label="INITIATE TRACKING" {% if not s.player_id %}disabled title="Player identity unavailable"{% endif %}>INITIATE TRACKING</button></div>
     <div class="ds-hybrid-depth" id="{{ panel_id }}" role="region" aria-label="Deeper intelligence for {{ s.name }}" hidden>
-      <h3>DEEPER INTELLIGENCE</h3><p>{{ s.context }}</p>
-      {% if s.score is not none and s.score != '' %}<p class="ds-hybrid-score-context">{{ s.score_label }} {{ s.score }}: {{ s.score_explanation }}</p>{% endif %}
-      {% if s.tags %}<div class="ds-mobile-signal-chips" aria-label="Supporting signal tags">{% for tag in s.tags %}<span>{{ tag }}</span>{% endfor %}</div>{% endif %}
-      <dl>{% for m in s.detail %}<div><dt>{{ m.label }}</dt><dd>{{ m.value }}</dd></div>{% endfor %}</dl>
-      {% if s.trace %}<figure class="ds-hybrid-trace"><figcaption>{{ s.trace.label }}</figcaption><svg viewBox="0 0 280 72" role="img" aria-label="{{ s.trace.label }}: {{ s.trace['values'] }}"><polyline points="{{ s.trace.points }}" fill="none" stroke="currentColor" stroke-width="2"/></svg><p>{{ s.trace['values'] }}</p></figure>{% endif %}
-      <time>Source updated: {{ s.generated_at }}</time>{% if s.observed_at %}<time>Observation: {{ s.observed_at }}</time>{% endif %}<p class="ds-hybrid-source">Canonical source: {{ s.source }}</p>
-      {% if s.profile != '#' %}<a class="ds-mobile-intel-link" href="{{ s.profile }}" data-player-id="{{ s.player_id }}" data-report-context="{{ family }}">OPEN FULL DOSSIER ›</a>{% else %}<p class="ds-hybrid-unavailable">Full dossier awaits a verified identity.</p>{% endif %}
-      <button class="ds-hybrid-close" type="button" aria-controls="{{ panel_id }}">HIDE INTELLIGENCE</button>
+      <h3>DEEPER INTELLIGENCE</h3>
+      <div class="ds-hybrid-tabs" role="tablist" aria-label="Intelligence for {{ s.name }}">{% for tab in ['trends','metrics','context','method'] %}<button type="button" role="tab" id="{{ panel_id }}-tab-{{ tab }}" aria-controls="{{ panel_id }}-{{ tab }}" aria-selected="{{ 'true' if loop.first else 'false' }}" tabindex="{{ '0' if loop.first else '-1' }}">{{ tab|upper }}</button>{% endfor %}</div>
+      <div class="ds-hybrid-tab-panel" id="{{ panel_id }}-trends" role="tabpanel" aria-labelledby="{{ panel_id }}-tab-trends" tabindex="0">
+        {% if s.trace %}<figure class="ds-hybrid-trace"><figcaption>{{ s.trace.label }}</figcaption><svg viewBox="0 0 280 72" role="img" aria-label="{{ s.trace.label }}: {{ s.trace['values'] }}"><path class="ds-hybrid-chart-grid" d="M8 8H272M8 36H272M8 64H272M8 8V64M96 8V64M184 8V64M272 8V64"/><polyline points="{{ s.trace.points }}" fill="none" stroke="currentColor" stroke-width="2"/></svg><p>{{ s.trace['values'] }}</p></figure>{% else %}<p class="ds-hybrid-no-trend">A historical time series is not retained for this signal. Available measurements are shown below; no trend is inferred.</p>{% endif %}
+        {% if s.detail %}<dl class="ds-hybrid-metric-grid">{% for m in s.summary_metrics %}<div><dt>{{ m.label }}</dt><dd>{{ m.value }}</dd></div>{% endfor %}</dl>{% endif %}
+      </div>
+      <div class="ds-hybrid-tab-panel" id="{{ panel_id }}-metrics" role="tabpanel" aria-labelledby="{{ panel_id }}-tab-metrics" tabindex="0" hidden><dl class="ds-hybrid-metric-grid">{% for m in s.detail %}<div><dt>{{ m.label }}</dt><dd>{{ m.value }}</dd></div>{% else %}<div><dt>Additional measurements</dt><dd>Not retained</dd></div>{% endfor %}</dl></div>
+      <div class="ds-hybrid-tab-panel" id="{{ panel_id }}-context" role="tabpanel" aria-labelledby="{{ panel_id }}-tab-context" tabindex="0" hidden><p>{{ s.context }}</p>{% if s.tags %}<div class="ds-mobile-signal-chips" aria-label="Supporting signal tags">{% for tag in s.tags %}<span>{{ tag }}</span>{% endfor %}</div>{% endif %}</div>
+      <div class="ds-hybrid-tab-panel" id="{{ panel_id }}-method" role="tabpanel" aria-labelledby="{{ panel_id }}-tab-method" tabindex="0" hidden><p>{{ s.context }}</p>{% if s.score is not none %}<p class="ds-hybrid-score-context">{{ s.score_label }} {{ s.score }}: {{ s.score_explanation }}</p>{% endif %}</div>
+      <div class="ds-hybrid-provenance"><time>Source updated: {{ s.generated_at }}</time>{% if s.observed_at %}<time>Observation: {{ s.observed_at }}</time>{% endif %}<p class="ds-hybrid-source">Canonical source: {{ s.source }}</p></div>
+      {% if s.profile != '#' %}<a class="ds-mobile-intel-link" href="{{ s.profile }}" data-player-id="{{ s.player_id }}" data-report-context="{{ family }}">OPEN FULL DOSSIER <span aria-hidden="true">↗</span></a>{% else %}<p class="ds-hybrid-unavailable">Full dossier awaits a verified identity.</p>{% endif %}
     </div>
   </div>
 </article>

@@ -23,7 +23,14 @@ const actions=fs.readFileSync('src/js/player-card-actions.js','utf8').replace('w
    const originalUrl=d.window.location.href; toggle.click();
    assert.equal(panel.hidden,false);assert.equal(toggle.getAttribute('aria-expanded'),'true');
    assert.equal(toggle.textContent,'HIDE INTELLIGENCE');assert.equal(d.window.location.href,originalUrl);
-   card.querySelector('.ds-hybrid-close').click();assert.equal(panel.hidden,true);
+   assert.equal(card.querySelectorAll('.ds-hybrid-close').length,0);
+   const tabs=[...card.querySelectorAll('[role=tab]')];assert.equal(tabs.length,4);
+   tabs[1].click();assert.equal(tabs[1].getAttribute('aria-selected'),'true');
+   assert.equal(doc.getElementById(tabs[1].getAttribute('aria-controls')).hidden,false);
+   tabs[1].dispatchEvent(new d.window.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));
+   assert.equal(tabs[2].getAttribute('aria-selected'),'true');
+   toggle.focus();toggle.click();assert.equal(panel.hidden,true);
+   assert.equal(toggle.textContent,'DEEPER INTELLIGENCE');
    assert.equal(toggle.getAttribute('aria-expanded'),'false');assert.equal(doc.activeElement,toggle);
    const details=card.querySelector('details');if(details){let bubbled=false;card.addEventListener('click',()=>bubbled=true);details.querySelector('summary').click();assert.equal(bubbled,false);assert(details.open);}
    const button=card.querySelector('.js-add-to-roster');assert.equal(button.disabled,false);button.click();

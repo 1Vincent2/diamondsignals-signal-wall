@@ -286,6 +286,7 @@ def adapt(row, family):
     s['evidence']=s['evidence'][:3]
     s['tags']=[t for t in s['tags'] if t]
     s['detail']=[m for m in s['detail'] if m['value'] is not None and m['value']!='']
+    s['summary_metrics']=[m for m in s['detail'] if m['label'] != 'Season' and 'trace' not in m['label'].lower()][:3]
     p['story']=s
     return p
 
