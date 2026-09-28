@@ -90,3 +90,40 @@
 .ds-hybrid-actions button{font-size:11px;letter-spacing:-.035em}
 .ds-hybrid-actions .ds-mobile-track{letter-spacing:.01em}
 }
+/* DESIGN LOCK v2.1: presentation-only player Spotlight and full member labels. */
+@media(max-width:760px){
+.ds-mobile-command-head{gap:6px;padding:8px 12px}
+.ds-mobile-header-actions{display:flex;align-items:center;gap:6px;flex:none}
+.ds-mobile-header-actions button{min-height:44px;padding:5px 9px;border:1px solid #648b0a;border-radius:24px;color:var(--lime);background:#061009;font:800 11px/1.2 ui-monospace,monospace;white-space:nowrap}
+.ds-mobile-command-head .ds-mobile-brand{gap:5px;min-width:0}
+.ds-mobile-command-head .ds-mobile-brand strong{font-size:14px;letter-spacing:-.02em}
+.ds-mobile-command-head .ds-mobile-brand i{width:10px;height:10px}
+.ds-mobile-core-rail{display:grid;grid-template-columns:.8fr 1.1fr 1.1fr}
+.ds-mobile-core-rail a{font-size:10px;letter-spacing:0;min-width:0;min-height:44px;display:grid;place-items:center;padding:8px 3px;white-space:nowrap}
+.ds-mobile-modebar button{font-size:12px;letter-spacing:.03em;min-height:44px}
+.ds-hybrid-card{background:#030e14;border-radius:0;border-left:0;border-right:0}
+.ds-player-spotlight{position:relative;isolation:isolate;min-height:205px;background:radial-gradient(ellipse at 50% 60%,#16313a 0%,#06141b 48%,#030e14 78%)}
+.ds-spotlight-image{position:absolute;z-index:-1;left:50%;bottom:0;transform:translateX(-50%);width:70%;height:200px;object-fit:contain;object-position:center bottom;border:0;border-radius:0;background:transparent;mask-image:linear-gradient(to bottom,#000 72%,transparent 100%);-webkit-mask-image:linear-gradient(to bottom,#000 72%,transparent 100%)}
+.ds-spotlight-family{position:absolute;left:12px;top:10px;max-width:75%;padding:6px 9px;border:1px solid #365965;border-radius:20px;background:#020c13;font:800 10px/1.3 ui-monospace,monospace;color:#eef7fb;overflow-wrap:anywhere}
+.ds-spotlight-score{position:absolute;right:10px;top:65px;text-align:right}
+.ds-spotlight-score-label{font:800 10px/1.35 ui-monospace,monospace;color:#afd3ea;text-shadow:0 1px 5px #001016}
+.ds-spotlight-score-value{display:flex;align-items:center;justify-content:flex-end;gap:2px}
+.ds-spotlight-score-value>strong{font:850 43px/1.1 system-ui,sans-serif;letter-spacing:-.04em;color:var(--lime);text-shadow:0 2px 8px #031016}
+.ds-spotlight-score-info{position:static}
+.ds-spotlight-score-info summary{list-style:none;display:grid;place-items:center;min-width:44px;min-height:44px;cursor:pointer;color:var(--lime);font:22px/1 system-ui,sans-serif}
+.ds-spotlight-score-info summary::-webkit-details-marker{display:none}
+.ds-spotlight-score-info p{position:absolute;right:0;top:100%;z-index:5;width:min(260px,75vw);padding:12px;background:#061923;border:1px solid var(--cyan);border-radius:8px;color:#d7e4ee;font-size:13px;line-height:1.45;text-align:left;box-shadow:0 5px 15px #0009}
+.ds-spotlight-player{position:absolute;left:12px;right:12px;bottom:8px;text-shadow:0 2px 6px #000}
+.ds-spotlight-context{max-width:60%;font:600 10px/1.4 ui-monospace,monospace;color:#a5c8df;overflow-wrap:anywhere}
+.ds-spotlight-player h2{margin:4px 0 0;font:850 25px/1.1 system-ui,sans-serif;letter-spacing:-.04em;text-transform:uppercase;color:#f5f8fc;overflow-wrap:anywhere}
+.ds-hybrid-card .ds-mobile-card-body{padding-top:6px}
+}
+@media(max-width:360px){.ds-mobile-command-head{flex-wrap:wrap}.ds-mobile-header-actions{margin-left:auto}.ds-player-spotlight{min-height:220px}.ds-spotlight-image{height:210px}.ds-spotlight-score-value>strong{font-size:36px}}
+@media(max-width:760px){
+body:has(> .ds-mobile-report-view){margin:0;background:#030e14}
+.ds-mobile-report-view:has(.ds-player-spotlight) .ds-mobile-deck{padding:0;gap:12px}
+.ds-hybrid-card{flex-basis:100%;box-shadow:none}
+.ds-spotlight-image{width:68%;height:205px;object-fit:contain}
+.ds-spotlight-family{left:14px}.ds-spotlight-player{left:14px;right:14px}
+.ds-hybrid-card .ds-mobile-card-body{padding-left:14px;padding-right:14px}
+}

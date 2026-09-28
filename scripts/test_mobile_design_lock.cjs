@@ -9,10 +9,15 @@ const actions=fs.readFileSync('src/js/player-card-actions.js','utf8').replace('w
   await new Promise(r=>d.window.addEventListener('load',r));d.window.eval(actions);
   await new Promise(r=>setTimeout(r,0));const doc=d.window.document,cards=[...doc.querySelectorAll('.ds-hybrid-card')];
   assert(html.includes('<script src="/player-card-actions.js">'));
+  assert.deepEqual([...doc.querySelectorAll('.ds-mobile-core-rail a')].map(a=>a.textContent),['SIGNALS','TRACKING RADAR','ROSTER TERMINAL']);
+  assert.equal(doc.querySelector('.ds-mobile-header-actions [data-ds-field-guide-open]').textContent,'GUIDE');
+  if(cards.length)assert.equal(doc.querySelector('[data-ds-mobile-mode=discover]').textContent,'SPOTLIGHT');
   if(family==='waiver-wire'&&!cards.length){assert.match(doc.body.textContent,/feed is unavailable/);assert.equal(doc.querySelector('.js-add-to-roster'),null);}
   else assert(cards.length>0,family);
   for(const card of cards){
    assert(card.querySelectorAll('.ds-hybrid-evidence dl>div').length<=3);
+   assert(card.querySelector('.ds-player-spotlight'));assert(card.querySelector('.ds-spotlight-family'));assert(card.querySelector('.ds-spotlight-player h2'));
+   assert.equal(card.querySelector('.ds-hybrid-identity'),null);
    const headings=[...card.querySelectorAll('.ds-mobile-card-body > section > h3')].map(x=>x.textContent);
    assert.deepEqual(headings.map(x=>x.split(' /')[0]),['WHAT CHANGED','WHY IT MATTERS','KEY EVIDENCE','WHAT TO WATCH NEXT']);
    assert.match(card.dataset.playerId,/^\d+$/);assert(card.querySelector('time').textContent.includes('Source updated:'));

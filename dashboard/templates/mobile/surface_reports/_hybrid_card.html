@@ -1,11 +1,12 @@
 {% macro hybrid_card(p, index, family) %}
 {% set s = p.story %}{% set panel_id = 'intelligence-' ~ family ~ '-' ~ index %}
 <article class="ds-mobile-signal-card ds-hybrid-card js-player-card" data-card-index="{{ index }}" data-player-id="{{ s.player_id }}" data-player-name="{{ s.name }}" data-player-type="{{ s.kind }}" data-player-team="{{ s.team }}" data-profile-url="#" data-source-tag="{{ family|upper }}" data-report-context="{{ family }}">
-  <div class="ds-hybrid-identity">
-    {% if s.image %}<img src="{{ s.image }}" alt="" loading="lazy">{% endif %}
-    <div class="ds-hybrid-player"><div class="ds-mobile-player-role">{{ s.team }}{% if s.level %} · {{ s.level }}{% endif %} · {{ s.role|upper }}</div><h2>{{ s.name }}</h2>
-      {% if s.score is not none and s.score != '' %}<div class="ds-hybrid-score"><span>{{ s.score_label }} <strong>{{ s.score }}</strong></span>{% if s.score_note %}<span>{{ s.score_note }}</span>{% endif %}</div><details class="ds-hybrid-score-info"><summary aria-label="Explain {{ s.score_label|lower }} for {{ s.name }}">About this score</summary><p>{{ s.score_explanation }}</p></details>{% endif %}
-    </div>
+  {% set family_labels = {'signal-wall':'PLAYER SIGNAL','velocity-decay':'VELOCITY DECAY','stuff-disruption':'STUFF+ DISRUPTION','ivb-heat-map':'IVB HEAT MAP','apex-extraction':'APEX EXTRACTION','mlb-extraction':'MLB EXTRACTION','waiver-wire':'WAIVER WIRE','kinetic-drift':'KINETIC DRIFT'} %}
+  <div class="ds-player-spotlight">
+    {% if s.image %}<img class="ds-spotlight-image" src="{{ 'https://img.mlbstatic.com/mlb-photos/image/upload/w_480,f_png/v1/people/' ~ s.player_id ~ '/headshot/silo/current' if s.player_id and 'img.mlbstatic.com' in s.image else s.image }}" alt="" loading="lazy">{% endif %}
+    <span class="ds-spotlight-family">#{{ index + 1 }} {{ p.signal_family or family_labels[family] }}</span>
+    {% if s.score is not none and s.score != '' %}<div class="ds-spotlight-score"><span class="ds-spotlight-score-label">{{ s.score_label }}</span><div class="ds-spotlight-score-value"><strong>{{ s.score }}</strong><details class="ds-spotlight-score-info"><summary aria-label="Explain {{ s.score_label|lower }} for {{ s.name }}">ⓘ</summary><p>{{ s.score_explanation }}</p></details></div></div>{% endif %}
+    <div class="ds-spotlight-player"><div class="ds-spotlight-context">{{ s.team }}{% if s.level %} • {{ s.level }}{% endif %} • {% if p.trend_values %}{{ p.trend_values|length }} appearance trend{% else %}{{ s.role|upper }}{% endif %}</div><h2>{{ s.name }}</h2></div>
   </div>
   <div class="ds-mobile-card-body">
     <section class="ds-hybrid-story"><h3>WHAT CHANGED{% if family in ['ivb-heat-map','apex-extraction'] %} / STOOD OUT{% endif %}</h3><p>{{ s.changed }}</p></section>
